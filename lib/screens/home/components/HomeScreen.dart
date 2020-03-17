@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -9,8 +8,6 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
 import 'BannerListSlider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,16 +18,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final RefreshController _mainRefreshController = RefreshController();
-
-  String odpCount = '';
-  String pdpCount = '';
-  String positifCount = '';
 
   @override
   void initState() {
     super.initState();
-    _loadStatistics();
   }
 
   _buildButtonColumn(String iconPath, String label, String route) {
@@ -208,150 +199,60 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             children: <Widget>[
               Expanded(
-                child: SmartRefresher(
-                  controller: _mainRefreshController,
-                  enablePullDown: true,
-                  header: WaterDropMaterialHeader(),
-                  onRefresh: () async {
-                    _mainRefreshController.refreshCompleted();
-                  },
-                  child: ListView(children: [
-                    Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                        child: BannerListSlider()),
-                    Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                        child: Statistics(odpCount: odpCount,
-                            pdpCount: pdpCount,
-                            positifCount: positifCount)),
-                    topContainer,
-                    SizedBox(
-                      height: 8.0,
-                      child: Container(
-                        color: Color(0xFFE5E5E5),
-                      ),
+                child: ListView(children: [
+                  Container(
+                      margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                      child: BannerListSlider()),
+                  Container(
+                      margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                      child: Statistics()),
+                  topContainer,
+                  SizedBox(
+                    height: 8.0,
+                    child: Container(
+                      color: Color(0xFFE5E5E5),
                     ),
-                    Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: <Widget>[
-                          // ImportantInfoListHome(),
-                          // Container(
-                          //              padding: EdgeInsets.all(15.0),
-                          //              child: Row(
-                          //                mainAxisAlignment:
-                          //                    MainAxisAlignment.spaceBetween,
-                          //                children: <Widget>[
-                          //                  Text(
-                          //                    Dictionary.titleHumasJabar,
-                          //                    style: TextStyle(
-                          //                        color:
-                          //                            Color.fromRGBO(0, 0, 0, 0.73),
-                          //                        fontWeight: FontWeight.bold,
-                          //                        fontFamily:
-                          //                            FontsFamily.productSans,
-                          //                        fontSize: 18.0),
-                          //                  ),
-                          //                  TextButton(
-                          //                    title: Dictionary.viewAll,
-                          //                    textStyle: TextStyle(
-                          //                        color: Colors.green,
-                          //                        fontWeight: FontWeight.w600,
-                          //                        fontSize: 13.0),
-                          //                    onTap: () {
-                          //                      Navigator.push(
-                          //                        context,
-                          //                        MaterialPageRoute(
-                          //                          builder: (context) =>
-                          //                              BrowserScreen(
-                          //                            url: UrlThirdParty
-                          //                                .newsHumasJabarTerkini,
-                          //                          ),
-                          //                        ),
-                          //                      );
-
-                          //                      AnalyticsHelper.setLogEvent(
-                          //                        Analytics.EVENT_VIEW_LIST_HUMAS,
-                          //                      );
-                          //                    },
-                          //                  ),
-                          //                ],
-                          //              ),
-                          //            ),
-                          //            HumasJabarListScreen(),
-                          //            Container(
-                          //              child: Column(
-                          //                crossAxisAlignment:
-                          //                    CrossAxisAlignment.start,
-                          //                children: <Widget>[
-                          //                  ListTile(
-                          //                    leading: Text(
-                          //                      Dictionary.news,
-                          //                      style: TextStyle(
-                          //                          color: Color.fromRGBO(
-                          //                              0, 0, 0, 0.73),
-                          //                          fontWeight: FontWeight.bold,
-                          //                          fontFamily:
-                          //                              FontsFamily.productSans,
-                          //                          fontSize: 18.0),
-                          //                    ),
-                          //                  ),
-                          //                  SingleChildScrollView(
-                          //                    scrollDirection: Axis.horizontal,
-                          //                    child: Row(
-                          //                      crossAxisAlignment:
-                          //                          CrossAxisAlignment.start,
-                          //                      children: <Widget>[
-                          //                        NewsListScreen(isIdKota: false),
-                          //                        NewsListScreen(isIdKota: true)
-                          //                      ],
-                          //                    ),
-                          //                  ),
-                          //                ],
-                          //              ),
-                          //            ),
-                          Container(
-                            child: DefaultTabController(
-                              length: 2,
-                              child: Column(
-                                children: <Widget>[
-                                  TabBar(
-                                    labelColor: Colors.black,
-                                    tabs: <Widget>[
-                                      Tab(text: Dictionary.liveUpdate),
-                                      Tab(text: Dictionary.persRilis),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: DefaultTabController(
+                            length: 2,
+                            child: Column(
+                              children: <Widget>[
+                                TabBar(
+                                  labelColor: Colors.black,
+                                  tabs: <Widget>[
+                                    Tab(text: Dictionary.liveUpdate),
+                                    Tab(text: Dictionary.persRilis),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 10),
+                                  height: 390,
+                                  child: TabBarView(
+                                    children: <Widget>[
+                                      NewsScreen(
+                                          isLiveUpdate: true, maxLength: 3),
+                                      NewsScreen(
+                                          isLiveUpdate: false, maxLength: 3),
                                     ],
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.only(top: 10),
-                                    height: 390,
-                                    child: TabBarView(
-                                      children: <Widget>[
-                                        NewsScreen(
-                                            isLiveUpdate: true, maxLength: 3),
-                                        NewsScreen(
-                                            isLiveUpdate: false, maxLength: 3),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           ),
-                          Container(
-                            padding: EdgeInsets.only(top: 16.0),
-                            child: VideoList(),
-                          ),
-                          //            Container(
-                          //              padding:
-                          //                  EdgeInsets.symmetric(vertical: 16.0),
-                          //              child: VideoListKokab(),
-                          //            )
-                        ],
-                      ),
-                    )
-                  ]),
-                ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: VideoList(),
+                        ),
+                      ],
+                    ),
+                  )
+                ]),
               )
             ],
           )
@@ -438,31 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           );
-        });
-  }
-
-  void _loadStatistics() {
-    Firestore.instance
-        .collection('statistics')
-        .document('jabar-dan-nasional')
-        .get()
-        .then((DocumentSnapshot ds) {
-      odpCount = ds['odp']['total']['jabar'] != null
-          ? '${ds['odp']['total']['jabar']}'
-          : '-';
-      pdpCount = ds['pdp']['total']['jabar'] != null
-          ? '${ds['pdp']['total']['jabar']}'
-          : '-';
-      positifCount =
-      ds['aktif']['jabar'] != null ? '${ds['aktif']['jabar']}' : '-';
-
-      setState(() {});
-    },
-        onError: (error) {
-          odpCount = '-';
-          pdpCount = '-';
-          positifCount = '-';
-          setState(() {});
         });
   }
 
