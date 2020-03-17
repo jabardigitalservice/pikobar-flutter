@@ -6,6 +6,10 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
  import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../constants/Colors.dart';
+import '../../../constants/Colors.dart';
+import 'BannerListSlider.dart';
+
 
  class HomeScreen extends StatefulWidget {
    HomeScreen();
@@ -15,20 +19,11 @@ import 'package:pikobar_flutter/environment/Environment.dart';
  }
 
  class _HomeScreenState extends State<HomeScreen> {
-   /*BannerListBloc _bannerListBloc;
-   ImportantInfoHomeBloc _importantInfoHomeBloc;
-   HumasJabarListBloc _humasJabarListBloc;
-   VideoListJabarBloc _videoListJabarBloc;
-   VideoListKokabBloc _videoListKokabBloc;
-   */
+
    final RefreshController _mainRefreshController = RefreshController();
 
    @override
    void initState() {
-     /*AnalyticsHelper.setCurrentScreen(Analytics.HOME,
-         screenClassOverride: 'BerandaScreen');
-     _notificationBadgeBloc = BlocProvider.of<NotificationBadgeBloc>(context);
-     _notificationBadgeBloc.add(CheckNotificationBadge());*/
 
      super.initState();
    }
@@ -160,22 +155,39 @@ import 'package:pikobar_flutter/environment/Environment.dart';
      );
 
      return Scaffold(
-                 backgroundColor: Colors.white,
+                 backgroundColor: ColorBase.grey,
                  appBar: AppBar(
                    elevation: 0.0,
-                   backgroundColor: Colors.blue,
+                   backgroundColor: ColorBase.green,
                    title: Row(
                      children: <Widget>[
+                       Image.asset('${Environment.logoAssets}logo.png',
+                           width: 35.0, height: 35.0),
                        Container(
-                           padding: const EdgeInsets.all(5.0),
-                           child: Text(
-                             Dictionary.appName,
-                             style: TextStyle(
-                               color: Colors.white,
-                               fontSize: 25,
-                               fontWeight: FontWeight.bold,
-                               fontFamily: FontsFamily.intro,
-                             ),
+                           padding: const EdgeInsets.all(10.0),
+                           child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: <Widget>[
+                               Text(
+                                 Dictionary.title,
+                                 style: TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 12,
+                                   fontWeight: FontWeight.bold,
+                                   fontFamily: FontsFamily.intro,
+                                 ),
+                               ),
+
+                               Text(
+                                 Dictionary.provJabar,
+                                 style: TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 10,
+                                   fontWeight: FontWeight.bold,
+                                   fontFamily: FontsFamily.intro,
+                                 ),
+                               )
+                             ],
                            ))
                      ],
                    ),
@@ -183,8 +195,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
                  body: Stack(
                    children: <Widget>[
                      Container(
-                       height: MediaQuery.of(context).size.height * 0.16,
-                       color: Colors.blue,
+                       height: MediaQuery.of(context).size.height * 0.15,
+                       color: ColorBase.green,
                      ),
                      Column(
                        children: <Widget>[
@@ -200,8 +212,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
                              child: ListView(children: [
                                Container(
                                    margin:
-                                       EdgeInsets.fromLTRB(0.0, 21.0, 0.0, 10.0),
-                                   //child: BannerListSlider()
+                                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                   child: BannerListSlider()
                                 ),
                                topContainer,
                                SizedBox(
