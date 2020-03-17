@@ -288,7 +288,7 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0+hotfix.1"
+    version: "4.4.0+hotfix.2"
   permission_handler_platform_interface:
     dependency: transitive
     description:
