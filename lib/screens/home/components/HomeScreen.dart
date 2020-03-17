@@ -5,11 +5,12 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
+import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'BannerListSlider.dart';
-
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
@@ -19,12 +20,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final RefreshController _mainRefreshController = RefreshController();
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -51,11 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
-          SizedBox(height: 5.0),
+          SizedBox(height: 12.0),
           Text(label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12.0,
                 color: Theme.of(context).textTheme.body1.color,
               ))
         ],
@@ -66,43 +65,33 @@ class _HomeScreenState extends State<HomeScreen> {
   _buildButtonColumnLayananLain(String iconPath, String label) {
     return Expanded(
         child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(2.0),
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  blurRadius: 10.0,
-                  color: Colors.black.withOpacity(.2),
-                  offset: Offset(2.0, 2.0),
-                ),
-              ],
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: Colors.white),
-              child: IconButton(
-                color: Theme
-                    .of(context)
-                    .textTheme
-                    .body1
-                    .color,
-                icon: Image.asset(iconPath),
-                onPressed: () {
-                  _mainHomeBottomSheet(context);
-                },
-              ),
+      children: [
+        Container(
+          padding: EdgeInsets.all(2.0),
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              blurRadius: 10.0,
+              color: Colors.black.withOpacity(.2),
+              offset: Offset(2.0, 2.0),
             ),
-            SizedBox(height: 5.0),
-            Text(label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme
-                      .of(context)
-                      .textTheme
-                      .body1
-                      .color,
-                ))
-          ],
-        ));
+          ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
+          child: IconButton(
+            color: Theme.of(context).textTheme.body1.color,
+            icon: Image.asset(iconPath),
+            onPressed: () {
+              _mainHomeBottomSheet(context);
+            },
+          ),
+        ),
+        SizedBox(height: 12.0),
+        Text(label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).textTheme.body1.color,
+            ))
+      ],
+    ));
   }
 
   @override
@@ -113,13 +102,13 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}phonebook.png',
-              Dictionary.survey, NavigationConstrants.Phonebook),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+          _buildButtonColumn('${Environment.iconAssets}logistic.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+          _buildButtonColumn('${Environment.iconAssets}virus.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
         ],
       ),
@@ -131,14 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+          _buildButtonColumn('${Environment.iconAssets}completed.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+          _buildButtonColumn('${Environment.iconAssets}network.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.phoneBook, NavigationConstrants.Pikobar),
+          _buildButtonColumn('${Environment.iconAssets}network.png',
+              Dictionary.phoneBookEmergency, NavigationConstrants.Pikobar),
           _buildButtonColumnLayananLain(
-              '${Environment.iconAssets}pikobar.png', Dictionary.otherMenus),
+              '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),
         ],
       ),
     );
@@ -187,7 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontFamily: FontsFamily.intro,
                       ),
                     ),
-
                     Text(
                       Dictionary.provJabar,
                       style: TextStyle(
@@ -205,10 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: <Widget>[
           Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.15,
+            height: MediaQuery.of(context).size.height * 0.15,
             color: ColorBase.green,
           ),
           Column(
@@ -223,15 +208,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: ListView(children: [
                     Container(
-                        margin:
-                        EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                        child: BannerListSlider()
-                    ),
+                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                        child: BannerListSlider()),
                     Container(
-                        margin:
-                        EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                        child: Statistics()
-                    ),
+                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                        child: Statistics()),
                     topContainer,
                     SizedBox(
                       height: 8.0,
@@ -244,89 +225,115 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         children: <Widget>[
                           // ImportantInfoListHome(),
-                          /*Container(
-                                       padding: EdgeInsets.all(15.0),
-                                       child: Row(
-                                         mainAxisAlignment:
-                                             MainAxisAlignment.spaceBetween,
-                                         children: <Widget>[
-                                           Text(
-                                             Dictionary.titleHumasJabar,
-                                             style: TextStyle(
-                                                 color:
-                                                     Color.fromRGBO(0, 0, 0, 0.73),
-                                                 fontWeight: FontWeight.bold,
-                                                 fontFamily:
-                                                     FontsFamily.productSans,
-                                                 fontSize: 18.0),
-                                           ),
-                                           TextButton(
-                                             title: Dictionary.viewAll,
-                                             textStyle: TextStyle(
-                                                 color: Colors.green,
-                                                 fontWeight: FontWeight.w600,
-                                                 fontSize: 13.0),
-                                             onTap: () {
-                                               Navigator.push(
-                                                 context,
-                                                 MaterialPageRoute(
-                                                   builder: (context) =>
-                                                       BrowserScreen(
-                                                     url: UrlThirdParty
-                                                         .newsHumasJabarTerkini,
-                                                   ),
-                                                 ),
-                                               );
+                          // Container(
+                          //              padding: EdgeInsets.all(15.0),
+                          //              child: Row(
+                          //                mainAxisAlignment:
+                          //                    MainAxisAlignment.spaceBetween,
+                          //                children: <Widget>[
+                          //                  Text(
+                          //                    Dictionary.titleHumasJabar,
+                          //                    style: TextStyle(
+                          //                        color:
+                          //                            Color.fromRGBO(0, 0, 0, 0.73),
+                          //                        fontWeight: FontWeight.bold,
+                          //                        fontFamily:
+                          //                            FontsFamily.productSans,
+                          //                        fontSize: 18.0),
+                          //                  ),
+                          //                  TextButton(
+                          //                    title: Dictionary.viewAll,
+                          //                    textStyle: TextStyle(
+                          //                        color: Colors.green,
+                          //                        fontWeight: FontWeight.w600,
+                          //                        fontSize: 13.0),
+                          //                    onTap: () {
+                          //                      Navigator.push(
+                          //                        context,
+                          //                        MaterialPageRoute(
+                          //                          builder: (context) =>
+                          //                              BrowserScreen(
+                          //                            url: UrlThirdParty
+                          //                                .newsHumasJabarTerkini,
+                          //                          ),
+                          //                        ),
+                          //                      );
 
-                                               AnalyticsHelper.setLogEvent(
-                                                 Analytics.EVENT_VIEW_LIST_HUMAS,
-                                               );
-                                             },
-                                           ),
-                                         ],
-                                       ),
-                                     ),
-                                     HumasJabarListScreen(),
-                                     Container(
-                                       child: Column(
-                                         crossAxisAlignment:
-                                             CrossAxisAlignment.start,
-                                         children: <Widget>[
-                                           ListTile(
-                                             leading: Text(
-                                               Dictionary.news,
-                                               style: TextStyle(
-                                                   color: Color.fromRGBO(
-                                                       0, 0, 0, 0.73),
-                                                   fontWeight: FontWeight.bold,
-                                                   fontFamily:
-                                                       FontsFamily.productSans,
-                                                   fontSize: 18.0),
-                                             ),
-                                           ),
-                                           SingleChildScrollView(
-                                             scrollDirection: Axis.horizontal,
-                                             child: Row(
-                                               crossAxisAlignment:
-                                                   CrossAxisAlignment.start,
-                                               children: <Widget>[
-                                                 NewsListScreen(isIdKota: false),
-                                                 NewsListScreen(isIdKota: true)
-                                               ],
-                                             ),
-                                           ),
-                                         ],
-                                       ),
-                                     ),
-                                     Container(
-                                       padding: EdgeInsets.only(top: 16.0),
-                                       child: VideoListJabar(),
-                                     ),
-                                     Container(
-                                       padding:
-                                           EdgeInsets.symmetric(vertical: 16.0),
-                                       child: VideoListKokab(),
-                                     )*/
+                          //                      AnalyticsHelper.setLogEvent(
+                          //                        Analytics.EVENT_VIEW_LIST_HUMAS,
+                          //                      );
+                          //                    },
+                          //                  ),
+                          //                ],
+                          //              ),
+                          //            ),
+                          //            HumasJabarListScreen(),
+                          //            Container(
+                          //              child: Column(
+                          //                crossAxisAlignment:
+                          //                    CrossAxisAlignment.start,
+                          //                children: <Widget>[
+                          //                  ListTile(
+                          //                    leading: Text(
+                          //                      Dictionary.news,
+                          //                      style: TextStyle(
+                          //                          color: Color.fromRGBO(
+                          //                              0, 0, 0, 0.73),
+                          //                          fontWeight: FontWeight.bold,
+                          //                          fontFamily:
+                          //                              FontsFamily.productSans,
+                          //                          fontSize: 18.0),
+                          //                    ),
+                          //                  ),
+                          //                  SingleChildScrollView(
+                          //                    scrollDirection: Axis.horizontal,
+                          //                    child: Row(
+                          //                      crossAxisAlignment:
+                          //                          CrossAxisAlignment.start,
+                          //                      children: <Widget>[
+                          //                        NewsListScreen(isIdKota: false),
+                          //                        NewsListScreen(isIdKota: true)
+                          //                      ],
+                          //                    ),
+                          //                  ),
+                          //                ],
+                          //              ),
+                          //            ),
+                          Container(
+                            child: DefaultTabController(
+                              length: 2,
+                              child: Column(
+                                children: <Widget>[
+                                  TabBar(
+                                    labelColor: Colors.black,
+                                    tabs: <Widget>[
+                                      Tab(text: Dictionary.liveUpdate),
+                                      Tab(text: Dictionary.persRilis),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(top: 10),
+                                    height: 390,
+                                    child: TabBarView(
+                                      children: <Widget>[
+                                        NewsScreen(isLiveUpdate: true, maxLength: 3),
+                                        NewsScreen(isLiveUpdate: false, maxLength: 3),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: VideoList(),
+                          ),
+                          //            Container(
+                          //              padding:
+                          //                  EdgeInsets.symmetric(vertical: 16.0),
+                          //              child: VideoListKokab(),
+                          //            )
                         ],
                       ),
                     )
@@ -339,7 +346,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   void _mainHomeBottomSheet(context) {
     showModalBottomSheet(
@@ -368,15 +374,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Container(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
+                  width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
                   child: Text(
                     Dictionary.otherMenus,
                     style:
-                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Container(
@@ -424,7 +427,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         });
   }
-
 
   @override
   void deactivate() {

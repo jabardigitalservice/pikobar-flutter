@@ -8,13 +8,17 @@ class Dictionary {
   static String home = 'Beranda';
   static String message = 'Pesan';
   static String pikobar = 'Info Corona';
-  static String phoneBook = 'Nomor Penting';
+  static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Update Terkini';
   static String help = 'Bantuan';
   static String saberHoax = 'Jabar Saber Hoax';
   static String survey = 'Survei';
   static String otherMenus = 'Menu lainnya';
+  static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
+  static String address = 'Alamat';
+  static String emptyDataPhoneBook = 'Nomor darurat tidak ada';
+  static String nomorDarurat = 'Detail Nomor Darurat';
   static String odp = 'ODP';
   static String pdp = 'PDP';
   static String positif = 'Positif';
@@ -46,5 +50,8 @@ class Dictionary {
   static String errorStatusUnActive = 'Username belum aktif';
   static String errorListComment = 'Tidak dapat menampilkan komentar';
   static String somethingWrong = 'Terjadi kesalahan';
-
+  static String liveUpdate = 'Live Update';
+  static String persRilis = 'Pers Rilis';
+  static String news = 'Berita';
+  static String more = 'Selengkapnya';
 }
