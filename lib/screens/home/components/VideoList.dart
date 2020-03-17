@@ -107,11 +107,18 @@ class _VideoListState extends State<VideoList> {
                 final DocumentSnapshot document =
                     snapshot.data.documents[index];
                 return Container(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                      blurRadius: 20.0,
+                      color: Colors.black.withOpacity(.2),
+                      offset: Offset(4.0, 4.0),
+                      spreadRadius: -20,
+                    ),
+                  ], borderRadius: BorderRadius.circular(12.0)),
                   margin: EdgeInsets.only(right: 8.0),
                   width: MediaQuery.of(context).size.width * 0.8,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  // decoration: BoxDecoration(shape: BoxShape.circle),
                   child: Card(
-                    elevation: 5.0,
                     margin: EdgeInsets.symmetric(vertical: 15.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -132,8 +139,8 @@ class _VideoListState extends State<VideoList> {
                                       Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(5.0),
-                                          topRight: Radius.circular(5.0)),
+                                          topLeft: Radius.circular(6.0),
+                                          topRight: Radius.circular(6.0)),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.fill,
@@ -151,9 +158,6 @@ class _VideoListState extends State<VideoList> {
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(5.0),
-                                            topRight: Radius.circular(5.0)),
                                         image: DecorationImage(
                                           image: imageProvider,
                                           fit: BoxFit.fill,
