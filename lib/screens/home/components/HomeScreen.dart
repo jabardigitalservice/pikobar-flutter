@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBook, NavigationConstrants.Phonebook),
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
           _buildButtonColumn('${Environment.iconAssets}logistic.png',
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildButtonColumn('${Environment.iconAssets}network.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
           _buildButtonColumn('${Environment.iconAssets}network.png',
-              Dictionary.phoneBook, NavigationConstrants.Pikobar),
+              Dictionary.phoneBookEmergency, NavigationConstrants.Pikobar),
           _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),
         ],
