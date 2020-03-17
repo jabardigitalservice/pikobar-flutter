@@ -23,16 +23,19 @@ class _MessagesState extends State<Messages> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Pesan'),
+          title: Text(Dictionary.message),
         ),
-        body: SmartRefresher(
-            controller: _mainRefreshController,
-            enablePullDown: true,
-            header: WaterDropMaterialHeader(),
-            onRefresh: () async {
-              _mainRefreshController.refreshCompleted();
-            },
-            child: StreamBuilder<QuerySnapshot>(
+        body: 
+        // SmartRefresher(
+        //     controller: _mainRefreshController,
+        //     enablePullDown: true,
+        //     header: WaterDropMaterialHeader(),
+        //     onRefresh: () async {
+
+        //       _mainRefreshController.refreshCompleted();
+        //     },
+        //     child:
+             StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('broadcasts').snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -45,7 +48,8 @@ class _MessagesState extends State<Messages> {
                     return _buildContent(snapshot);
                 }
               },
-            )));
+            // )
+            ));
   }
 
   String _parseHtmlString(String htmlString) {
