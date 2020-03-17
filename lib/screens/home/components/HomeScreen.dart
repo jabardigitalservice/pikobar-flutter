@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -22,9 +23,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final RefreshController _mainRefreshController = RefreshController();
 
+  String odpCount = '';
+  String pdpCount = '';
+  String positifCount = '';
+
   @override
   void initState() {
     super.initState();
+    _loadStatistics();
   }
 
   _buildButtonColumn(String iconPath, String label, String route) {
@@ -65,33 +71,33 @@ class _HomeScreenState extends State<HomeScreen> {
   _buildButtonColumnLayananLain(String iconPath, String label) {
     return Expanded(
         child: Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(2.0),
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              blurRadius: 10.0,
-              color: Colors.black.withOpacity(.2),
-              offset: Offset(2.0, 2.0),
+          children: [
+            Container(
+              padding: EdgeInsets.all(2.0),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  blurRadius: 10.0,
+                  color: Colors.black.withOpacity(.2),
+                  offset: Offset(2.0, 2.0),
+                ),
+              ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
+              child: IconButton(
+                color: Theme.of(context).textTheme.body1.color,
+                icon: Image.asset(iconPath),
+                onPressed: () {
+                  _mainHomeBottomSheet(context);
+                },
+              ),
             ),
-          ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
-          child: IconButton(
-            color: Theme.of(context).textTheme.body1.color,
-            icon: Image.asset(iconPath),
-            onPressed: () {
-              _mainHomeBottomSheet(context);
-            },
-          ),
-        ),
-        SizedBox(height: 12.0),
-        Text(label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).textTheme.body1.color,
-            ))
-      ],
-    ));
+            SizedBox(height: 12.0),
+            Text(label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).textTheme.body1.color,
+                ))
+          ],
+        ));
   }
 
   @override
@@ -212,7 +218,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: BannerListSlider()),
                     Container(
                         margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                        child: Statistics()),
+                        child: Statistics(odpCount: odpCount,
+                            pdpCount: pdpCount,
+                            positifCount: positifCount)),
                     topContainer,
                     SizedBox(
                       height: 8.0,
@@ -379,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     Dictionary.otherMenus,
                     style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Container(
@@ -425,6 +433,31 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           );
+        });
+  }
+
+  void _loadStatistics() {
+    Firestore.instance
+        .collection('statistics')
+        .document('jabar-dan-nasional')
+        .get()
+        .then((DocumentSnapshot ds) {
+      odpCount = ds['odp']['total']['jabar'] != null
+          ? '${ds['odp']['total']['jabar']}'
+          : '-';
+      pdpCount = ds['pdp']['total']['jabar'] != null
+          ? '${ds['pdp']['total']['jabar']}'
+          : '-';
+      positifCount =
+      ds['aktif']['jabar'] != null ? '${ds['aktif']['jabar']}' : '-';
+
+      setState(() {});
+    },
+        onError: (error) {
+          odpCount = '-';
+          pdpCount = '-';
+          positifCount = '-';
+          setState(() {});
         });
   }
 

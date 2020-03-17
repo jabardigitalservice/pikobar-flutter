@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -7,44 +6,23 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
 class Statistics extends StatefulWidget {
+  String odpCount = '';
+  String pdpCount = '';
+  String positifCount = '';
+
+  Statistics({this.odpCount, this.pdpCount, this.positifCount});
+
   @override
   _StatisticsState createState() => _StatisticsState();
 }
 
 class _StatisticsState extends State<Statistics> {
-  String odpCount = '';
-  String pdpCount = '';
-  String positifCount = '';
-
   @override
   Widget build(BuildContext context) {
     return _buildContent();
   }
 
   Container _buildContent() {
-    Firestore.instance
-        .collection('statistics')
-        .document('jabar-dan-nasional')
-        .get()
-        .then((DocumentSnapshot ds) {
-      odpCount = ds['odp']['total']['jabar'] != null
-          ? '${ds['odp']['total']['jabar']}'
-          : '-';
-      pdpCount = ds['pdp']['total']['jabar'] != null
-          ? '${ds['pdp']['total']['jabar']}'
-          : '-';
-      positifCount =
-      ds['aktif']['jabar'] != null ? '${ds['aktif']['jabar']}' : '-';
-
-      setState(() {});
-    },
-        onError: (error) {
-          odpCount = '-';
-          pdpCount = '-';
-          positifCount = '-';
-          setState(() {});
-        });
-
     return Container(
       color: Colors.white,
       padding: EdgeInsets.all(16.0),
@@ -65,13 +43,13 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               _buildContainer(
                   '${Environment.iconAssets}stethoscope.png', Dictionary.odp,
-                  Dictionary.opdDesc, odpCount),
+                  Dictionary.opdDesc, widget.odpCount),
               _buildContainer(
                   '${Environment.iconAssets}doctor.png', Dictionary.pdp,
-                  Dictionary.pdpDesc, pdpCount),
+                  Dictionary.pdpDesc, widget.pdpCount),
               _buildContainer(
                   '${Environment.iconAssets}infected.png', Dictionary.positif,
-                  Dictionary.infected, positifCount),
+                  Dictionary.infected, widget.positifCount),
             ],
           )
         ],
