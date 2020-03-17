@@ -56,8 +56,7 @@ dependencies:
     git:
       url: https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git
       path: firebase_messaging-5.1.6
-  flutter_html: ^0.10.4
-
+  flutter_html: ^0.11.1
 
   # for now not use
   # flutter_local_notifications: ^1.2.2

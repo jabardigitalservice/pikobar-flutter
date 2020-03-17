@@ -6,28 +6,24 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen();
+import '../../../constants/Colors.dart';
+import '../../../constants/Colors.dart';
+import 'BannerListSlider.dart';
 
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
 
-class _HomeScreenState extends State<HomeScreen> {
-  /*BannerListBloc _bannerListBloc;
-   ImportantInfoHomeBloc _importantInfoHomeBloc;
-   HumasJabarListBloc _humasJabarListBloc;
-   VideoListJabarBloc _videoListJabarBloc;
-   VideoListKokabBloc _videoListKokabBloc;
-   */
-  final RefreshController _mainRefreshController = RefreshController();
+ class HomeScreen extends StatefulWidget {
+   HomeScreen();
 
-  @override
-  void initState() {
-    /*AnalyticsHelper.setCurrentScreen(Analytics.HOME,
-         screenClassOverride: 'BerandaScreen');
-     _notificationBadgeBloc = BlocProvider.of<NotificationBadgeBloc>(context);
-     _notificationBadgeBloc.add(CheckNotificationBadge());*/
+   @override
+   _HomeScreenState createState() => _HomeScreenState();
+ }
+
+ class _HomeScreenState extends State<HomeScreen> {
+
+   final RefreshController _mainRefreshController = RefreshController();
+
+   @override
+   void initState() {
 
     super.initState();
   }
@@ -158,61 +154,80 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.blue,
-        title: Row(
-          children: <Widget>[
-            Container(
-                padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  Dictionary.appName,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: FontsFamily.intro,
-                  ),
-                ))
-          ],
-        ),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height * 0.16,
-            color: Colors.blue,
-          ),
-          Column(
-            children: <Widget>[
-              Expanded(
-                child: SmartRefresher(
-                  controller: _mainRefreshController,
-                  enablePullDown: true,
-                  header: WaterDropMaterialHeader(),
-                  onRefresh: () async {
-                    _mainRefreshController.refreshCompleted();
-                  },
-                  child: ListView(children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0.0, 21.0, 0.0, 10.0),
-                      //child: BannerListSlider()
-                    ),
-                    topContainer,
-                    SizedBox(
-                      height: 8.0,
-                      child: Container(
-                        color: Color(0xFFE5E5E5),
-                      ),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: <Widget>[
-                          // ImportantInfoListHome(),
-                          /*Container(
+     return Scaffold(
+                 backgroundColor: ColorBase.grey,
+                 appBar: AppBar(
+                   elevation: 0.0,
+                   backgroundColor: ColorBase.green,
+                   title: Row(
+                     children: <Widget>[
+                       Image.asset('${Environment.logoAssets}logo.png',
+                           width: 35.0, height: 35.0),
+                       Container(
+                           padding: const EdgeInsets.all(10.0),
+                           child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: <Widget>[
+                               Text(
+                                 Dictionary.title,
+                                 style: TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 12,
+                                   fontWeight: FontWeight.bold,
+                                   fontFamily: FontsFamily.intro,
+                                 ),
+                               ),
+
+                               Text(
+                                 Dictionary.provJabar,
+                                 style: TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 10,
+                                   fontWeight: FontWeight.bold,
+                                   fontFamily: FontsFamily.intro,
+                                 ),
+                               )
+                             ],
+                           ))
+                     ],
+                   ),
+                   ),
+                 body: Stack(
+                   children: <Widget>[
+                     Container(
+                       height: MediaQuery.of(context).size.height * 0.15,
+                       color: ColorBase.green,
+                     ),
+                     Column(
+                       children: <Widget>[
+                         Expanded(
+                           child: SmartRefresher(
+                             controller: _mainRefreshController,
+                             enablePullDown: true,
+                             header: WaterDropMaterialHeader(),
+                             onRefresh: () async {
+
+                               _mainRefreshController.refreshCompleted();
+                             },
+                             child: ListView(children: [
+                               Container(
+                                   margin:
+                                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                   child: BannerListSlider()
+                                ),
+                               topContainer,
+                               SizedBox(
+                                 height: 8.0,
+                                 child: Container(
+                                   color: Color(0xFFE5E5E5),
+                                 ),
+                               ),
+                               Container(
+                                 color: Colors.white,
+                                 child: Column(
+                                   children: <Widget>[
+                                     // ImportantInfoListHome(),
+                                     /*Container(
                                        padding: EdgeInsets.all(15.0),
                                        child: Row(
                                          mainAxisAlignment:
