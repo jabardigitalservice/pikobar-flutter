@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 

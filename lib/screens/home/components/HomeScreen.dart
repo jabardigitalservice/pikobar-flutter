@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
-import 'package:pikobar_flutter/screens/news/News.dart';
-import 'package:pikobar_flutter/utilities/FireStoreSetup.dart';
+import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
+import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import 'BannerListSlider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen();
@@ -17,21 +20,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  /*BannerListBloc _bannerListBloc;
-   ImportantInfoHomeBloc _importantInfoHomeBloc;
-   HumasJabarListBloc _humasJabarListBloc;
-   VideoListJabarBloc _videoListJabarBloc;
-   VideoListKokabBloc _videoListKokabBloc;
-   */
   final RefreshController _mainRefreshController = RefreshController();
 
   @override
   void initState() {
-    /*AnalyticsHelper.setCurrentScreen(Analytics.HOME,
-         screenClassOverride: 'BerandaScreen');
-     _notificationBadgeBloc = BlocProvider.of<NotificationBadgeBloc>(context);
-     _notificationBadgeBloc.add(CheckNotificationBadge());*/
-
     super.initState();
   }
 
@@ -115,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildButtonColumn('${Environment.iconAssets}phonebook.png',
               Dictionary.survey, NavigationConstrants.Phonebook),
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.polling, NavigationConstrants.Pikobar),
+              Dictionary.survey, NavigationConstrants.Pikobar),
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.survey, NavigationConstrants.Pikobar),
         ],
@@ -129,9 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.aspiration, NavigationConstrants.Pikobar),
+              Dictionary.survey, NavigationConstrants.Pikobar),
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.aspiration, NavigationConstrants.Pikobar),
+              Dictionary.survey, NavigationConstrants.Pikobar),
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.phoneBook, NavigationConstrants.Pikobar),
           _buildButtonColumnLayananLain(
@@ -162,22 +154,38 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorBase.grey,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.blue,
+        backgroundColor: ColorBase.green,
         title: Row(
           children: <Widget>[
+            Image.asset('${Environment.logoAssets}logo.png',
+                width: 35.0, height: 35.0),
             Container(
-                padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  Dictionary.appName,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: FontsFamily.intro,
-                  ),
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Dictionary.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.intro,
+                      ),
+                    ),
+                    Text(
+                      Dictionary.provJabar,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.intro,
+                      ),
+                    )
+                  ],
                 ))
           ],
         ),
@@ -185,8 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height * 0.16,
-            color: Colors.blue,
+            height: MediaQuery.of(context).size.height * 0.15,
+            color: ColorBase.green,
           ),
           Column(
             children: <Widget>[
@@ -200,9 +208,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: ListView(children: [
                     Container(
-                      margin: EdgeInsets.fromLTRB(0.0, 21.0, 0.0, 10.0),
-                      //child: BannerListSlider()
-                    ),
+                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                        child: BannerListSlider()),
+                    Container(
+                        margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                        child: Statistics()),
                     topContainer,
                     SizedBox(
                       height: 8.0,
@@ -214,6 +224,81 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                       child: Column(
                         children: <Widget>[
+                          // ImportantInfoListHome(),
+                          // Container(
+                          //              padding: EdgeInsets.all(15.0),
+                          //              child: Row(
+                          //                mainAxisAlignment:
+                          //                    MainAxisAlignment.spaceBetween,
+                          //                children: <Widget>[
+                          //                  Text(
+                          //                    Dictionary.titleHumasJabar,
+                          //                    style: TextStyle(
+                          //                        color:
+                          //                            Color.fromRGBO(0, 0, 0, 0.73),
+                          //                        fontWeight: FontWeight.bold,
+                          //                        fontFamily:
+                          //                            FontsFamily.productSans,
+                          //                        fontSize: 18.0),
+                          //                  ),
+                          //                  TextButton(
+                          //                    title: Dictionary.viewAll,
+                          //                    textStyle: TextStyle(
+                          //                        color: Colors.green,
+                          //                        fontWeight: FontWeight.w600,
+                          //                        fontSize: 13.0),
+                          //                    onTap: () {
+                          //                      Navigator.push(
+                          //                        context,
+                          //                        MaterialPageRoute(
+                          //                          builder: (context) =>
+                          //                              BrowserScreen(
+                          //                            url: UrlThirdParty
+                          //                                .newsHumasJabarTerkini,
+                          //                          ),
+                          //                        ),
+                          //                      );
+
+                          //                      AnalyticsHelper.setLogEvent(
+                          //                        Analytics.EVENT_VIEW_LIST_HUMAS,
+                          //                      );
+                          //                    },
+                          //                  ),
+                          //                ],
+                          //              ),
+                          //            ),
+                          //            HumasJabarListScreen(),
+                          //            Container(
+                          //              child: Column(
+                          //                crossAxisAlignment:
+                          //                    CrossAxisAlignment.start,
+                          //                children: <Widget>[
+                          //                  ListTile(
+                          //                    leading: Text(
+                          //                      Dictionary.news,
+                          //                      style: TextStyle(
+                          //                          color: Color.fromRGBO(
+                          //                              0, 0, 0, 0.73),
+                          //                          fontWeight: FontWeight.bold,
+                          //                          fontFamily:
+                          //                              FontsFamily.productSans,
+                          //                          fontSize: 18.0),
+                          //                    ),
+                          //                  ),
+                          //                  SingleChildScrollView(
+                          //                    scrollDirection: Axis.horizontal,
+                          //                    child: Row(
+                          //                      crossAxisAlignment:
+                          //                          CrossAxisAlignment.start,
+                          //                      children: <Widget>[
+                          //                        NewsListScreen(isIdKota: false),
+                          //                        NewsListScreen(isIdKota: true)
+                          //                      ],
+                          //                    ),
+                          //                  ),
+                          //                ],
+                          //              ),
+                          //            ),
                           Container(
                             child: DefaultTabController(
                               length: 2,
@@ -239,91 +324,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
-                          )
-                          // ImportantInfoListHome(),
-                          /*Container(
-                                       padding: EdgeInsets.all(15.0),
-                                       child: Row(
-                                         mainAxisAlignment:w
-                                             MainAxisAlignment.spaceBetween,
-                                         children: <Widget>[
-                                           Text(
-                                             Dictionary.titleHumasJabar,
-                                             style: TextStyle(
-                                                 color:
-                                                     Color.fromRGBO(0, 0, 0, 0.73),
-                                                 fontWeight: FontWeight.bold,
-                                                 fontFamily:
-                                                     FontsFamily.productSans,
-                                                 fontSize: 18.0),
-                                           ),
-                                           TextButton(
-                                             title: Dictionary.viewAll,
-                                             textStyle: TextStyle(
-                                                 color: Colors.green,
-                                                 fontWeight: FontWeight.w600,
-                                                 fontSize: 13.0),
-                                             onTap: () {
-                                               Navigator.push(
-                                                 context,
-                                                 MaterialPageRoute(
-                                                   builder: (context) =>
-                                                       BrowserScreen(
-                                                     url: UrlThirdParty
-                                                         .newsHumasJabarTerkini,
-                                                   ),
-                                                 ),
-                                               );
-
-                                               AnalyticsHelper.setLogEvent(
-                                                 Analytics.EVENT_VIEW_LIST_HUMAS,
-                                               );
-                                             },
-                                           ),
-                                         ],
-                                       ),
-                                     ),
-                                     HumasJabarListScreen(),
-                                     Container(
-                                       child: Column(
-                                         crossAxisAlignment:
-                                             CrossAxisAlignment.start,
-                                         children: <Widget>[
-                                           ListTile(
-                                             leading: Text(
-                                               Dictionary.news,
-                                               style: TextStyle(
-                                                   color: Color.fromRGBO(
-                                                       0, 0, 0, 0.73),
-                                                   fontWeight: FontWeight.bold,
-                                                   fontFamily:
-                                                       FontsFamily.productSans,
-                                                   fontSize: 18.0),
-                                             ),
-                                           ),
-                                           SingleChildScrollView(
-                                             scrollDirection: Axis.horizontal,
-                                             child: Row(
-                                               crossAxisAlignment:
-                                                   CrossAxisAlignment.start,
-                                               children: <Widget>[
-                                                 NewsListScreen(isIdKota: false),
-                                                 NewsListScreen(isIdKota: true)
-                                               ],
-                                             ),
-                                           ),
-                                         ],
-                                       ),
-                                     ),
-                                     Container(
-                                       padding: EdgeInsets.only(top: 16.0),
-                                       child: VideoListJabar(),
-                                     ),
-                                     Container(
-                                       padding:
-                                           EdgeInsets.symmetric(vertical: 16.0),
-                                       child: VideoListKokab(),
-                                     )*/
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: VideoList(),
+                          ),
+                          //            Container(
+                          //              padding:
+                          //                  EdgeInsets.symmetric(vertical: 16.0),
+                          //              child: VideoListKokab(),
+                          //            )
                         ],
                       ),
                     )
@@ -391,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             _buildButtonColumn(
                                 '${Environment.iconAssets}pikobar.png',
-                                Dictionary.infoPKB,
+                                Dictionary.survey,
                                 NavigationConstrants.infoPKB),
                             _buildButtonColumn(
                                 '${Environment.iconAssets}pikobar.png',
@@ -399,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 NavigationConstrants.SaberHoax),
                             _buildButtonColumn(
                                 '${Environment.iconAssets}pikobar.png',
-                                Dictionary.administration,
+                                Dictionary.survey,
                                 NavigationConstrants.AdministrationList),
                           ],
                         ),
