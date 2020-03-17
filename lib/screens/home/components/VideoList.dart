@@ -43,7 +43,7 @@ class _VideoListState extends State<VideoList> {
         Padding(
           padding: const EdgeInsets.only(left: 16.0, bottom: 10.0),
           child: Text(
-            Dictionary.videoPostJabar,
+            Dictionary.videoUpToDate,
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
@@ -95,7 +95,7 @@ class _VideoListState extends State<VideoList> {
         Padding(
           padding: const EdgeInsets.only(left: 16.0, bottom: 10.0),
           child: Text(
-            Dictionary.videoPostJabar,
+            Dictionary.videoUpToDate,
             style: TextStyle(
                 color: Color.fromRGBO(0, 0, 0, 0.73),
                 fontWeight: FontWeight.bold,

@@ -14,6 +14,7 @@ class Dictionary {
   static String saberHoax = 'Jabar Saber Hoax';
   static String survey = 'Survei';
   static String otherMenus = 'Menu lainnya';
+  static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
 
   // Button Text
@@ -40,5 +41,4 @@ class Dictionary {
   static String errorStatusUnActive = 'Username belum aktif';
   static String errorListComment = 'Tidak dapat menampilkan komentar';
   static String somethingWrong = 'Terjadi kesalahan';
-
 }
