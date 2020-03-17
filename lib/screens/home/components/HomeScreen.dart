@@ -110,12 +110,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}logistic.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}virus.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
+          _buildButtonColumn(
+              '${Environment.iconAssets}pikobar.png', Dictionary.survey, ''),
+          _buildButtonColumn(
+              '${Environment.iconAssets}logistic.png', Dictionary.survey, ''),
+          _buildButtonColumn(
+              '${Environment.iconAssets}virus.png', Dictionary.survey, ''),
         ],
       ),
     );
@@ -126,12 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildButtonColumn('${Environment.iconAssets}completed.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
+          _buildButtonColumn(
+              '${Environment.iconAssets}completed.png', Dictionary.survey, ''),
+          _buildButtonColumn(
+              '${Environment.iconAssets}network.png', Dictionary.survey, ''),
           _buildButtonColumn('${Environment.iconAssets}network.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}network.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Pikobar),
+              Dictionary.phoneBookEmergency, ''),
           _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),
         ],
@@ -324,8 +324,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 390,
                                     child: TabBarView(
                                       children: <Widget>[
-                                        NewsScreen(isLiveUpdate: true, maxLength: 3),
-                                        NewsScreen(isLiveUpdate: false, maxLength: 3),
+                                        NewsScreen(
+                                            isLiveUpdate: true, maxLength: 3),
+                                        NewsScreen(
+                                            isLiveUpdate: false, maxLength: 3),
                                       ],
                                     ),
                                   )
