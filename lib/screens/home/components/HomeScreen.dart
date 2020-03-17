@@ -1,13 +1,13 @@
  import 'package:flutter/material.dart';
+ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+ import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
  import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../../constants/Colors.dart';
-import '../../../constants/Colors.dart';
 import 'BannerListSlider.dart';
 
 
@@ -108,7 +108,7 @@ import 'BannerListSlider.dart';
            _buildButtonColumn('${Environment.iconAssets}phonebook.png',
                Dictionary.survey, NavigationConstrants.Phonebook),
            _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-               Dictionary.polling, NavigationConstrants.Pikobar),
+               Dictionary.survey, NavigationConstrants.Pikobar),
            _buildButtonColumn('${Environment.iconAssets}pikobar.png',
                Dictionary.survey, NavigationConstrants.Pikobar),
          ],
@@ -122,9 +122,9 @@ import 'BannerListSlider.dart';
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
            _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-               Dictionary.aspiration, NavigationConstrants.Pikobar),
+               Dictionary.survey, NavigationConstrants.Pikobar),
            _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-               Dictionary.aspiration, NavigationConstrants.Pikobar),
+               Dictionary.survey, NavigationConstrants.Pikobar),
            _buildButtonColumn('${Environment.iconAssets}pikobar.png',
                Dictionary.phoneBook, NavigationConstrants.Pikobar),
            _buildButtonColumnLayananLain(
@@ -215,6 +215,11 @@ import 'BannerListSlider.dart';
                                        EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                                    child: BannerListSlider()
                                 ),
+                               Container(
+                                   margin:
+                                   EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                   child: Statistics()
+                               ),
                                topContainer,
                                SizedBox(
                                  height: 8.0,
@@ -378,7 +383,7 @@ import 'BannerListSlider.dart';
                            children: [
                              _buildButtonColumn(
                                  '${Environment.iconAssets}pikobar.png',
-                                 Dictionary.infoPKB,
+                                 Dictionary.survey,
                                  NavigationConstrants.infoPKB),
                              _buildButtonColumn(
                                  '${Environment.iconAssets}pikobar.png',
@@ -386,7 +391,7 @@ import 'BannerListSlider.dart';
                                  NavigationConstrants.SaberHoax),
                              _buildButtonColumn(
                                  '${Environment.iconAssets}pikobar.png',
-                                 Dictionary.administration,
+                                 Dictionary.survey,
                                  NavigationConstrants.AdministrationList),
                            ],
                          ),
