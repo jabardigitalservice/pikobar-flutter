@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class BrowserScreen extends StatefulWidget {
   final String url;
@@ -18,8 +15,6 @@ class BrowserScreen extends StatefulWidget {
 
 class _BrowserScreenState extends State<BrowserScreen> {
   double progress = 0.0;
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
 
   @override
   void initState() {
