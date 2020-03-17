@@ -19,6 +19,12 @@ class Dictionary {
   static String address = 'Alamat';
   static String emptyDataPhoneBook = 'Nomor darurat tidak ada';
   static String nomorDarurat = 'Detail Nomor Darurat';
+  static String odp = 'ODP';
+  static String pdp = 'PDP';
+  static String positif = 'Positif';
+  static String opdDesc = 'Orang Dalam Pemantauan';
+  static String pdpDesc = 'Pasien Dalam Pengawasan';
+  static String infected = 'Pasien Positif Covid-19';
 
   // Button Text
   static String yes = 'Ya';
