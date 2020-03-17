@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 
@@ -18,6 +19,8 @@ Route generateRoutes(RouteSettings settings) {
       return buildRoute(settings, News());
     case NavigationConstrants.Phonebook:
       return buildRoute(settings, Phonebook());
+      case NavigationConstrants.BroadcastDetail:
+      return buildRoute(settings, MessageDetailcreen(document: args,));
 
     default:
       return null;
