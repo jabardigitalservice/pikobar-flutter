@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../../constants/Colors.dart';
-import '../../../constants/Colors.dart';
 import 'BannerListSlider.dart';
 
 
@@ -95,43 +95,43 @@ import 'BannerListSlider.dart';
     ));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Widget firstRowShortcuts = Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}phonebook.png',
-              Dictionary.survey, NavigationConstrants.Phonebook),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.polling, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.survey, NavigationConstrants.Pikobar),
-        ],
-      ),
-    );
+   @override
+   Widget build(BuildContext context) {
+     Widget firstRowShortcuts = Container(
+       padding: EdgeInsets.symmetric(vertical: 8),
+       child: Row(
+         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}phonebook.png',
+               Dictionary.survey, NavigationConstrants.Phonebook),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
+         ],
+       ),
+     );
 
-    Widget secondRowShortcuts = Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.aspiration, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.aspiration, NavigationConstrants.Pikobar),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.phoneBook, NavigationConstrants.Pikobar),
-          _buildButtonColumnLayananLain(
-              '${Environment.iconAssets}pikobar.png', Dictionary.otherMenus),
-        ],
-      ),
-    );
+     Widget secondRowShortcuts = Container(
+       padding: EdgeInsets.symmetric(vertical: 8),
+       child: Row(
+         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.phoneBook, NavigationConstrants.Pikobar),
+           _buildButtonColumnLayananLain(
+               '${Environment.iconAssets}pikobar.png', Dictionary.otherMenus),
+         ],
+       ),
+     );
 
     Widget topContainer = Container(
       alignment: Alignment.topCenter,
@@ -215,6 +215,11 @@ import 'BannerListSlider.dart';
                                        EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                                    child: BannerListSlider()
                                 ),
+                               Container(
+                                   margin:
+                                   EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                   child: Statistics()
+                               ),
                                topContainer,
                                SizedBox(
                                  height: 8.0,
@@ -391,18 +396,86 @@ import 'BannerListSlider.dart';
                         ),
                       ),
 
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      // secondRowShortcuts
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
+   void _mainHomeBottomSheet(context) {
+     showModalBottomSheet(
+         context: context,
+         shape: RoundedRectangleBorder(
+           borderRadius: BorderRadius.only(
+             topLeft: Radius.circular(10.0),
+             topRight: Radius.circular(10.0),
+           ),
+         ),
+         elevation: 60.0,
+         builder: (BuildContext context) {
+           return Container(
+             margin: EdgeInsets.only(bottom: 20.0),
+             child: Wrap(
+               children: <Widget>[
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: <Widget>[
+                     Container(
+                       margin: EdgeInsets.only(top: 14.0),
+                       color: Colors.black,
+                       height: 1.5,
+                       width: 40.0,
+                     ),
+                   ],
+                 ),
+                 Container(
+                   width: MediaQuery.of(context).size.width,
+                   margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
+                   child: Text(
+                     Dictionary.otherMenus,
+                     style:
+                         TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                   ),
+                 ),
+                 Container(
+                   alignment: Alignment.topCenter,
+                   padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                   decoration: BoxDecoration(boxShadow: [
+                     BoxShadow(
+                       color: Colors.white.withOpacity(0.05),
+                       offset: Offset(0.0, 0.05),
+                     ),
+                   ]),
+                   child: Column(
+                     children: <Widget>[
+                       Container(
+                         padding: EdgeInsets.symmetric(vertical: 8),
+                         child: Row(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                           children: [
+                             _buildButtonColumn(
+                                 '${Environment.iconAssets}pikobar.png',
+                                 Dictionary.survey,
+                                 NavigationConstrants.infoPKB),
+                             _buildButtonColumn(
+                                 '${Environment.iconAssets}pikobar.png',
+                                 Dictionary.saberHoax,
+                                 NavigationConstrants.SaberHoax),
+                             _buildButtonColumn(
+                                 '${Environment.iconAssets}pikobar.png',
+                                 Dictionary.survey,
+                                 NavigationConstrants.AdministrationList),
+                           ],
+                         ),
+                       ),
+
+                       SizedBox(
+                         height: 8.0,
+                       ),
+                       // secondRowShortcuts
+                     ],
+                   ),
+                 )
+               ],
+             ),
+           );
+         });
+   }
 
   @override
   void deactivate() {
