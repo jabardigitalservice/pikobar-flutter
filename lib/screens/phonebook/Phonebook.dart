@@ -151,10 +151,15 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
             ),
           ),
         ),
-        Positioned(bottom: 13,
-          child: Align(alignment: Alignment.bottomLeft,
-              child: Visibility(
-                  visible: !_isSearch, child: Text(Dictionary.noTelp))),
+        Positioned(
+          bottom: 13,
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Visibility(
+              visible: !_isSearch,
+              child: Text(Dictionary.phoneBookEmergency),
+            ),
+          ),
         ),
       ],
     );
