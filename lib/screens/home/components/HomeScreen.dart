@@ -111,11 +111,11 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
           _buildButtonColumn(
-              '${Environment.iconAssets}pikobar.png', Dictionary.survey, ''),
+              '${Environment.iconAssets}pikobar.png', Dictionary.pikobar, ''),
           _buildButtonColumn(
-              '${Environment.iconAssets}logistic.png', Dictionary.survey, ''),
+              '${Environment.iconAssets}logistic.png', Dictionary.logistic, ''),
           _buildButtonColumn(
-              '${Environment.iconAssets}virus.png', Dictionary.survey, ''),
+              '${Environment.iconAssets}virus.png', Dictionary.kawalCorona, ''),
         ],
       ),
     );
@@ -129,11 +129,14 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildButtonColumn(
               '${Environment.iconAssets}completed.png', Dictionary.survey, ''),
           _buildButtonColumn(
-              '${Environment.iconAssets}network.png', Dictionary.survey, ''),
+              '${Environment.iconAssets}network.png', Dictionary.selfDiagnose, ''),
           _buildButtonColumn('${Environment.iconAssets}network.png',
-              Dictionary.phoneBookEmergency, ''),
-          _buildButtonColumnLayananLain(
-              '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),
+              Dictionary.selfTracing, ''),
+
+          _buildButtonColumn('${Environment.iconAssets}menu-other.png',
+              Dictionary.otherMenus, ''),
+          /*_buildButtonColumnLayananLain(
+              '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),*/
         ],
       ),
     );

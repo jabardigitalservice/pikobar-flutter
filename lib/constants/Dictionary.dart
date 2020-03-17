@@ -10,9 +10,13 @@ class Dictionary {
   static String pikobar = 'Info Corona';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Update Terkini';
-  static String help = 'Bantuan';
+  static String help = 'FAQ';
   static String saberHoax = 'Jabar Saber Hoax';
   static String survey = 'Survei';
+  static String logistic = 'Info Logistik';
+  static String kawalCorona = 'Kawal Corona';
+  static String selfDiagnose = 'Self Diagnose';
+  static String selfTracing = 'Self Tracing';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';

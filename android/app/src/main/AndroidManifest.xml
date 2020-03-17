@@ -12,7 +12,7 @@
     <application
         android:name=".Application"
         android:label="pikobar_flutter"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
 
         <activity

@@ -65,6 +65,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   pedantic: ^1.8.0+1
+  flutter_launcher_icons: ^0.7.4
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -103,5 +109,19 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+
+  fonts:
+    - family: product-sans
+      fonts:
+        - asset: assets/fonts/product-sans/Product-Sans-Regular.ttf
+
+    - family: source-sans-pro
+      fonts:
+        - asset: assets/fonts/source-sans-pro/SourceSansPro-Regular.ttf
+
+    - family: intro
+      fonts:
+        - asset: assets/fonts/intro/Intro.otf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
