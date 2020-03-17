@@ -1,19 +1,11 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pikobar_flutter/components/LoadingScreen.dart';
-import 'package:pikobar_flutter/configs/FlavorConfig.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
-import 'package:pikobar_flutter/screens/onBoarding/Onboarding.dart';
-import 'package:pikobar_flutter/screens/splashScreen/SplashScreen.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
-// import 'package:pikobar_flutter/utilities/SentryHandler.dart';
 
 import 'configs/Routes.dart';
 

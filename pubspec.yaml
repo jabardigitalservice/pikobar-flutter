@@ -37,6 +37,7 @@ dependencies:
   timeago: ^2.0.26
   package_info: ^0.4.0+16
   shimmer: ^1.1.0
+  pull_to_refresh: ^1.5.7
   # flutter_inappwebview: ^2.1.0+1
   # webview_flutter:
   #   git:

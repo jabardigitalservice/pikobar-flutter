@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -27,8 +23,6 @@ class _IndexScreenState extends State<IndexScreen> {
   @override
   void initState() {
     initializeDateFormatting();
-
-    _sendFirebaseUserProperties();
 
     _initializeBottomNavigationBar();
 
@@ -61,12 +55,12 @@ class _IndexScreenState extends State<IndexScreen> {
     // _firebaseMessaging.requestNotificationPermissions(
     //     IosNotificationSettings(sound: true, badge: true, alert: true));
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(milliseconds: 500), () {
         _checkUnread();
         _checkNotification();
       });
-    });
+    });*/
 
     super.initState();
   }
@@ -189,7 +183,7 @@ class _IndexScreenState extends State<IndexScreen> {
   Widget _buildContent(int index) {
     switch (index) {
       case 0:
-      // return HomeScreen(_popupInformationBloc, _showcaseHomeBloc);
+       return HomeScreen();
       case 1:
       // return BroadcastListScreen();
 
