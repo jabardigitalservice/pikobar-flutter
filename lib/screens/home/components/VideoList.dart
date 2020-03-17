@@ -7,6 +7,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VideoList extends StatefulWidget {
@@ -21,14 +22,7 @@ class _VideoListState extends State<VideoList> {
       stream: Firestore.instance.collection('videos').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
-          final int messageCount = snapshot.data.documents.length;
-          return ListView.builder(
-            itemCount: messageCount,
-            padding: EdgeInsets.only(bottom: 30.0),
-            itemBuilder: (_, int index) {
-              return _buildContent(snapshot.data.documents[index]);
-            },
-          );
+          return _buildContent(snapshot);
         } else {
           return _buildLoading();
         }
@@ -88,7 +82,7 @@ class _VideoListState extends State<VideoList> {
     );
   }
 
-  Widget _buildContent(dataVideo) {
+  Widget _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -108,10 +102,11 @@ class _VideoListState extends State<VideoList> {
           child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
               scrollDirection: Axis.horizontal,
-              itemCount: dataVideo.records.length,
+              itemCount: snapshot.data.documents.length,
               itemBuilder: (context, index) {
+                final DocumentSnapshot document =
+                    snapshot.data.documents[index];
                 return Container(
-                  height: 280.0,
                   margin: EdgeInsets.only(right: 8.0),
                   width: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(shape: BoxShape.circle),
@@ -131,8 +126,7 @@ class _VideoListState extends State<VideoList> {
                               children: <Widget>[
                                 CachedNetworkImage(
                                   imageUrl: _youtubeThumbnail(
-                                      youtubeUrl:
-                                          'https://www.youtube.com/watch?v=yX1rIKgdnNk',
+                                      youtubeUrl: document['url'],
                                       error: false),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
@@ -152,8 +146,7 @@ class _VideoListState extends State<VideoList> {
                                   errorWidget: (context, url, error) =>
                                       CachedNetworkImage(
                                     imageUrl: _youtubeThumbnail(
-                                        youtubeUrl:
-                                            'https://www.youtube.com/watch?v=yX1rIKgdnNk',
+                                        youtubeUrl: document['url'],
                                         error: true),
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
@@ -177,22 +170,21 @@ class _VideoListState extends State<VideoList> {
                                   ),
                                 ),
                                 Image.asset(
-                                  'assets/icons/play_button.png',
+                                  '${Environment.iconAssets}play_button.png',
                                   scale: 1.5,
                                 )
                               ],
                             ),
                           ),
                           onTap: () {
-                            _launchURL(
-                                'https://www.youtube.com/watch?v=yX1rIKgdnNk');
+                            _launchURL(document['url']);
                           },
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.all(15.0),
                           child: Text(
-                            dataVideo.records[index].title,
+                            document['title'],
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -218,15 +210,6 @@ class _VideoListState extends State<VideoList> {
       throw 'Could not launch $youtubeUrl';
     }
   }
-
-  // _playVideo(String url) {
-  //   FlutterYoutube.playYoutubeVideoByUrl(
-  //     apiKey: Environment.googleApiKey,
-  //     videoUrl: url,
-  //     fullScreen: true,
-  //     autoPlay: true,
-  //   );
-  // }
 
   String _youtubeThumbnail({String youtubeUrl, bool error}) {
     Uri uri = Uri.parse(youtubeUrl);
