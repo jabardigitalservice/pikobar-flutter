@@ -3,7 +3,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class CustomAppBar {
-  AppBar defaultAppBar(
+  static AppBar defaultAppBar(
       {Widget leading, @required String title, List<Widget> actions}) {
     return AppBar(
       leading: leading,

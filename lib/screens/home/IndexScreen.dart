@@ -1,11 +1,12 @@
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
+import 'package:pikobar_flutter/screens/messages/messages.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -98,14 +99,6 @@ class _IndexScreenState extends State<IndexScreen> {
               Text(Dictionary.help),
             ],
           )),
-      BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.user, size: 16),
-          title: Column(
-            children: <Widget>[
-              SizedBox(height: 4),
-              Text(Dictionary.account),
-            ],
-          ))
     ];
   }
 
@@ -185,10 +178,10 @@ class _IndexScreenState extends State<IndexScreen> {
       case 0:
        return HomeScreen();
       case 1:
-      // return BroadcastListScreen();
+        return Messages();
 
       case 2:
-      // return HelpScreen();
+        return FaqScreen();
 
       case 3:
       // return ProfileScreen();

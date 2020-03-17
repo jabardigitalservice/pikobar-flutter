@@ -1,5 +1,4 @@
  import 'package:flutter/material.dart';
- import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -109,14 +108,14 @@ import 'package:pikobar_flutter/environment/Environment.dart';
          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
-           _buildButtonColumn('${Environment.iconAssets}survey.png',
-               Dictionary.survey, NavigationConstrants.Survey),
-           _buildButtonColumn('${Environment.iconAssets}survey.png',
-               Dictionary.survey, NavigationConstrants.Survey),
-           _buildButtonColumn('${Environment.iconAssets}polling.png',
-               Dictionary.polling, NavigationConstrants.Polling),
-           _buildButtonColumn('${Environment.iconAssets}survey.png',
-               Dictionary.survey, NavigationConstrants.Survey),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}phonebook.png',
+               Dictionary.survey, NavigationConstrants.Phonebook),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.polling, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.survey, NavigationConstrants.Pikobar),
          ],
        ),
      );
@@ -127,14 +126,14 @@ import 'package:pikobar_flutter/environment/Environment.dart';
          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
-           _buildButtonColumn('${Environment.iconAssets}aspirasi.png',
-               Dictionary.aspiration, NavigationConstrants.Aspirasi),
-           _buildButtonColumn('${Environment.iconAssets}aspirasi.png',
-               Dictionary.aspiration, NavigationConstrants.Aspirasi),
-           _buildButtonColumn('${Environment.iconAssets}nomorpenting.png',
-               Dictionary.phoneBook, NavigationConstrants.Phonebook),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.aspiration, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.aspiration, NavigationConstrants.Pikobar),
+           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+               Dictionary.phoneBook, NavigationConstrants.Pikobar),
            _buildButtonColumnLayananLain(
-               '${Environment.iconAssets}other.png', Dictionary.otherMenus),
+               '${Environment.iconAssets}pikobar.png', Dictionary.otherMenus),
          ],
        ),
      );
@@ -366,15 +365,15 @@ import 'package:pikobar_flutter/environment/Environment.dart';
                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                            children: [
                              _buildButtonColumn(
-                                 '${Environment.iconAssets}icon_esamsat.png',
+                                 '${Environment.iconAssets}pikobar.png',
                                  Dictionary.infoPKB,
                                  NavigationConstrants.infoPKB),
                              _buildButtonColumn(
-                                 '${Environment.iconAssets}saber_hoax.png',
+                                 '${Environment.iconAssets}pikobar.png',
                                  Dictionary.saberHoax,
                                  NavigationConstrants.SaberHoax),
                              _buildButtonColumn(
-                                 '${Environment.iconAssets}administrasi-1.png',
+                                 '${Environment.iconAssets}pikobar.png',
                                  Dictionary.administration,
                                  NavigationConstrants.AdministrationList),
                            ],
