@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -298,6 +299,32 @@ class _HomeScreenState extends State<HomeScreen> {
                           //                ],
                           //              ),
                           //            ),
+                          Container(
+                            child: DefaultTabController(
+                              length: 2,
+                              child: Column(
+                                children: <Widget>[
+                                  TabBar(
+                                    labelColor: Colors.black,
+                                    tabs: <Widget>[
+                                      Tab(text: Dictionary.liveUpdate),
+                                      Tab(text: Dictionary.persRilis),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(top: 10),
+                                    height: 390,
+                                    child: TabBarView(
+                                      children: <Widget>[
+                                        NewsScreen(isLiveUpdate: true, maxLength: 3),
+                                        NewsScreen(isLiveUpdate: false, maxLength: 3),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                           Container(
                             padding: EdgeInsets.only(top: 16.0),
                             child: VideoList(),

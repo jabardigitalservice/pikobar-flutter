@@ -46,4 +46,8 @@ class Dictionary {
   static String errorStatusUnActive = 'Username belum aktif';
   static String errorListComment = 'Tidak dapat menampilkan komentar';
   static String somethingWrong = 'Terjadi kesalahan';
+  static String liveUpdate = 'Live Update';
+  static String persRilis = 'Pers Rilis';
+  static String news = 'Berita';
+  static String more = 'Selengkapnya';
 }
