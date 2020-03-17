@@ -104,6 +104,7 @@ class Dictionary {
   static String contentNotPermittedRWActivities =
       'Postingan anda tidak sesuai dengan panduan komunitas.';
   static String readMore = ' Baca Selengkapnya';
+  static String more = 'Selengkapnya';
   static String sharedFrom = '\n_dibagikan dari Sapawarga App_';
 
   static String later = 'Nanti';
@@ -360,6 +361,8 @@ class Dictionary {
       'Anda belum menyelesaikan posting Anda. Apakah ingin menyimpan sebagai draft?';
   static String usulan = 'Usulan';
   static String general = 'Umum';
+  static String liveUpdate = 'Live Update';
+  static String persRilis = 'Pers Rilis';
   static String myUsulan = 'Usulan Saya';
   static String addTitleUsulan = 'Judul Usulan';
   static String editUsulan = 'Edit Usulan';
