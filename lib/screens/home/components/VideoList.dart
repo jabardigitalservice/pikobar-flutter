@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -16,13 +17,23 @@ class VideoList extends StatefulWidget {
 class _VideoListState extends State<VideoList> {
   @override
   Widget build(BuildContext context) {
-    // return BlocBuilder<VideoListBloc, VideoListState>(
-    //   builder: (context, state) => state is VideoListLoading
-    //       ? _buildLoading()
-    //       : state is VideoListLoaded
-    //           ? _buildContent(state)
-    //           : Container(),
-    // );
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('videos').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData) {
+          final int messageCount = snapshot.data.documents.length;
+          return ListView.builder(
+            itemCount: messageCount,
+            padding: EdgeInsets.only(bottom: 30.0),
+            itemBuilder: (_, int index) {
+              return _buildContent(snapshot.data.documents[index]);
+            },
+          );
+        } else {
+          return _buildLoading();
+        }
+      },
+    );
   }
 
   Widget _buildLoading() {
@@ -77,7 +88,7 @@ class _VideoListState extends State<VideoList> {
     );
   }
 
-  Widget _buildContent(state) {
+  Widget _buildContent(dataVideo) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -97,9 +108,10 @@ class _VideoListState extends State<VideoList> {
           child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
               scrollDirection: Axis.horizontal,
-              itemCount: state.records.length,
+              itemCount: dataVideo.records.length,
               itemBuilder: (context, index) {
                 return Container(
+                  height: 280.0,
                   margin: EdgeInsets.only(right: 8.0),
                   width: MediaQuery.of(context).size.width * 0.8,
                   decoration: BoxDecoration(shape: BoxShape.circle),
@@ -119,7 +131,8 @@ class _VideoListState extends State<VideoList> {
                               children: <Widget>[
                                 CachedNetworkImage(
                                   imageUrl: _youtubeThumbnail(
-                                      youtubeUrl: state.records[index].videoUrl,
+                                      youtubeUrl:
+                                          'https://www.youtube.com/watch?v=yX1rIKgdnNk',
                                       error: false),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
@@ -140,7 +153,7 @@ class _VideoListState extends State<VideoList> {
                                       CachedNetworkImage(
                                     imageUrl: _youtubeThumbnail(
                                         youtubeUrl:
-                                            state.records[index].videoUrl,
+                                            'https://www.youtube.com/watch?v=yX1rIKgdnNk',
                                         error: true),
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
@@ -171,14 +184,15 @@ class _VideoListState extends State<VideoList> {
                             ),
                           ),
                           onTap: () {
-                            _launchURL(state.records[index].videoUrl);
+                            _launchURL(
+                                'https://www.youtube.com/watch?v=yX1rIKgdnNk');
                           },
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.all(15.0),
                           child: Text(
-                            state.records[index].title,
+                            dataVideo.records[index].title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
