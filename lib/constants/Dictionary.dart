@@ -15,6 +15,12 @@ class Dictionary {
   static String survey = 'Survei';
   static String otherMenus = 'Menu lainnya';
   static String hintSearch = 'Ketikkan kata kunci ...';
+  static String odp = 'ODP';
+  static String pdp = 'PDP';
+  static String positif = 'Positif';
+  static String opdDesc = 'Orang Dalam Pemantauan';
+  static String pdpDesc = 'Pasien Dalam Pengawasan';
+  static String infected = 'Pasien Positif Covid-19';
 
   // Button Text
   static String yes = 'Ya';

@@ -37,7 +37,13 @@ class _StatisticsState extends State<Statistics> {
       ds['aktif']['jabar'] != null ? '${ds['aktif']['jabar']}' : '-';
 
       setState(() {});
-    });
+    },
+        onError: (error) {
+          odpCount = '-';
+          pdpCount = '-';
+          positifCount = '-';
+          setState(() {});
+        });
 
     return Container(
       color: Colors.white,
@@ -57,13 +63,15 @@ class _StatisticsState extends State<Statistics> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              _buildContainer('${Environment.iconAssets}stethoscope.png', 'ODP',
-                  'Orang Dalam Pemantauan', odpCount),
-              _buildContainer('${Environment.iconAssets}doctor.png', 'PDP',
-                  'Pasien Dalam Pengawasan', pdpCount),
               _buildContainer(
-                  '${Environment.iconAssets}infected.png', 'Positif',
-                  'Pasien Positif Covid-19', positifCount),
+                  '${Environment.iconAssets}stethoscope.png', Dictionary.odp,
+                  Dictionary.opdDesc, odpCount),
+              _buildContainer(
+                  '${Environment.iconAssets}doctor.png', Dictionary.pdp,
+                  Dictionary.pdpDesc, pdpCount),
+              _buildContainer(
+                  '${Environment.iconAssets}infected.png', Dictionary.positif,
+                  Dictionary.infected, positifCount),
             ],
           )
         ],
