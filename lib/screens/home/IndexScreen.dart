@@ -187,7 +187,7 @@ class _IndexScreenState extends State<IndexScreen> {
       // return ProfileScreen();
 
       default:
-      // return HomeScreen(_popupInformationBloc, _showcaseHomeBloc);
+        return HomeScreen();
     }
   }
 
