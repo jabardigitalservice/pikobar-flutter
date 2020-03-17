@@ -101,10 +101,10 @@ class Dictionary {
   static String viewAll = 'Lihat Semua';
   static String attachment = 'Lampiran';
   static String contentNotPermitted = 'Mengandung konten yang tidak diizinkan';
-  static String contentNotPermittedRWActivities = 'Postingan anda tidak sesuai dengan panduan komunitas.';
+  static String contentNotPermittedRWActivities =
+      'Postingan anda tidak sesuai dengan panduan komunitas.';
   static String readMore = ' Baca Selengkapnya';
   static String sharedFrom = '\n_dibagikan dari Sapawarga App_';
-
 
   static String later = 'Nanti';
   static String next = 'Lanjut';
@@ -224,12 +224,15 @@ class Dictionary {
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
   static String confirmExitTitle = 'Tutup Aplikasi?';
   static String confirmExit = 'Yakin akan keluar dari Sapawarga?';
-  static String accountLoginInfo = 'Untuk mendapatkan username dan password, anda dapat menghubungi nomor berikut (WhatsApp atau Telpon)\n\n';
-  static String forgotEmailInfo = 'Jika anda lupa email atau kata sandi, anda dapat menghubungi nomor berikut (WhatsApp atau Telpon)\n\n';
+  static String accountLoginInfo =
+      'Untuk mendapatkan username dan password, anda dapat menghubungi nomor berikut (WhatsApp atau Telpon)\n\n';
+  static String forgotEmailInfo =
+      'Jika anda lupa email atau kata sandi, anda dapat menghubungi nomor berikut (WhatsApp atau Telpon)\n\n';
   static String csPhoneNumber = '081212124023';
   static String helpAdminWA = 'Halo Admin,\nSaya lupa password / butuh akun.';
   static String titleRate = 'Bantu Sapawarga Jadi Lebih Baik';
-  static String descriptionRate = 'Seberapa puas Anda dalam menggunakan aplikasi Sapawarga?';
+  static String descriptionRate =
+      'Seberapa puas Anda dalam menggunakan aplikasi Sapawarga?';
 
   // Loading
   static String loadingLogin = 'Masuk...';
@@ -260,10 +263,8 @@ class Dictionary {
   static String emptyDataMessages = 'Tidak ada data dalam list Pesan';
   static String emptyDataImportantInfo =
       'Tidak ada data dalam list Info Penting';
-  static String emptyDataQnA =
-      'Tidak ada data dalam list Tanya Jawab';
-  static String emptyDataRWActivity =
-      'Tidak ada data dalam list Kegiatan RW';
+  static String emptyDataQnA = 'Tidak ada data dalam list Tanya Jawab';
+  static String emptyDataRWActivity = 'Tidak ada data dalam list Kegiatan RW';
   static String emptyComments = 'Belum ada komentar';
 
   //Form Edit Profile
@@ -327,8 +328,7 @@ class Dictionary {
   static String skip = 'Lewati';
 
   static String titleOnboarding1 = 'Selamat datang di versi terbaru Sapawarga!';
-  static String textOnboarding1 =
-      'Apa saja yang baru di Sapawarga?';
+  static String textOnboarding1 = 'Apa saja yang baru di Sapawarga?';
 
   static String titleOnboarding2 = importantInfo;
   static String textOnboarding2 =
@@ -401,16 +401,21 @@ class Dictionary {
       'Bagikan cerita dan foto kegiatan sekitar Anda dengan RW se-Jabar';
   static String showcaseHome2 =
       'Dapatkan info penting tentang beasiswa, lowongan kerja, jadwal SIM Keliling, dll.';
-  static String showcaseHome3 = 'Ikuti informasi dan perkembangan terbaru penyakit novel coronavirus (COVID-19) di fitur ini';
-  static String showcaseImportantInfo1 = 'Saring untuk tampilkan info penting sesuai dengan kategori yang Anda mau\n\nGeser ke kanan untuk melihat kategori lainnya';
-  static String showcaseImportantInfo2 = 'Cari info penting yang Anda mau tampilkan dengan ketikkan kata kunci';
-  static String showcaseEditEducation = 'Masukkan tingkat pendidikan terakhir dan pekerjaan Anda saat ini';
+  static String showcaseHome3 =
+      'Ikuti informasi dan perkembangan terbaru penyakit novel coronavirus (COVID-19) di fitur ini';
+  static String showcaseImportantInfo1 =
+      'Saring untuk tampilkan info penting sesuai dengan kategori yang Anda mau\n\nGeser ke kanan untuk melihat kategori lainnya';
+  static String showcaseImportantInfo2 =
+      'Cari info penting yang Anda mau tampilkan dengan ketikkan kata kunci';
+  static String showcaseEditEducation =
+      'Masukkan tingkat pendidikan terakhir dan pekerjaan Anda saat ini';
 
   //Broadcast
   static String successDelete = 'Pesan berhasil dihapus';
   static String delete = 'Hapus';
   static String deleteMessage = 'Hapus Pesan';
-  static String confirmDeleteMessage = 'Apakah Anda yakin ingin menghapus pesan ini?';
+  static String confirmDeleteMessage =
+      'Apakah Anda yakin ingin menghapus pesan ini?';
 
   //Esamsat
   static String payEsamsatVia = 'Bayar pajak via';
@@ -423,50 +428,71 @@ class Dictionary {
   static String governorJabar = 'Gubernur Jawa Barat';
 
   //Qna
-  static String showCaseQna1 = 'Bagikan foto dokumentasi kegiatan yang ada di lingkungan RW Anda!';
+  static String showCaseQna1 =
+      'Bagikan foto dokumentasi kegiatan yang ada di lingkungan RW Anda!';
   static String showCaseQna2 = 'Berikan komentar dan sukai kegiatan RW lain';
-  static String showCaseQna3 = 'Kirim pertanyaan anda dengan menekan tombol ini';
-  static String showCaseQna4 = 'Disini kamu bisa memberikan LIKE untuk setiap pertanyaan yang menurut kamu menarik.';
+  static String showCaseQna3 =
+      'Kirim pertanyaan anda dengan menekan tombol ini';
+  static String showCaseQna4 =
+      'Disini kamu bisa memberikan LIKE untuk setiap pertanyaan yang menurut kamu menarik.';
   static String welcomeQna = 'Selamat datang ';
   static String welcomeQna2 = 'Di fitur Tanya Jawab Gubernur';
-  static String descQna = 'Tanya Gubernur merupakan fitur terbaru dari aplikasi sapawarga, anda dapat melakukan tanya jawab langsung dengan Gubernur Pertanyaan yang anda tanyakan akan direspon oleh Gubernur ketika mendapatkan jempol paling banyak Respon jawaban akan disampaikan secara langsung dan dijawab pada setiap minggunya';
+  static String descQna =
+      'Tanya Gubernur merupakan fitur terbaru dari aplikasi sapawarga, anda dapat melakukan tanya jawab langsung dengan Gubernur Pertanyaan yang anda tanyakan akan direspon oleh Gubernur ketika mendapatkan jempol paling banyak Respon jawaban akan disampaikan secara langsung dan dijawab pada setiap minggunya';
   static String titleShowCaseQna1 = 'Sukai Pertanyaan';
   static String titleShowCaseQna2 = 'Buat Pertanyaan';
   static String titleHelpQna1 = 'Selamat Datang di Fitur Tanya Jawab Gubernur';
-  static String titleHelpQna2 = 'Sampaikan pertanyaan Anda langsung kepada pimpinan!';
-  static String deschelpQna1 = 'Tanya Jawab Gubernur adalah fitur terbaru di aplikasi Sapawarga. Anda dapat memberikan pertanyaan kepada Gubernur.';
-  static String deschelpQna2 = 'Pertanyaan teratas yang Anda berikan akan dijawab langsung oleh Gubernur.';
+  static String titleHelpQna2 =
+      'Sampaikan pertanyaan Anda langsung kepada pimpinan!';
+  static String deschelpQna1 =
+      'Tanya Jawab Gubernur adalah fitur terbaru di aplikasi Sapawarga. Anda dapat memberikan pertanyaan kepada Gubernur.';
+  static String deschelpQna2 =
+      'Pertanyaan teratas yang Anda berikan akan dijawab langsung oleh Gubernur.';
   static String writeQuestion = 'Tulis pertanyaan ...';
   static String buttonNext = 'Selanjutnya';
   static String buttonStartQna = 'Mulai Pertanyaan';
   static String buttonStartRwActivities = 'Mulai Post Kegiatan';
 
   //RW Activities
-  static String RW = 'RW';
-  static String showCaseRwActivity1 = 'Untuk dapat menambahkan kegiatan dapat menekan tombol berikut';
-  static String showCaseRwActivity2 = 'Anda dapat melakukan likes dengan menekan tombol berikut';
-  static String showCaseRwActivity3 = 'Anda dapat memberikan komentar dengan menekan tomboll berikut';
+  static String rW = 'RW';
+  static String showCaseRwActivity1 =
+      'Untuk dapat menambahkan kegiatan dapat menekan tombol berikut';
+  static String showCaseRwActivity2 =
+      'Anda dapat melakukan likes dengan menekan tombol berikut';
+  static String showCaseRwActivity3 =
+      'Anda dapat memberikan komentar dengan menekan tomboll berikut';
   static String welcomeRwActivity = 'Di fitur Kegiatan RW';
   static String titleShowCaseRwActivity = 'Bagikan Kegiatan';
   static String titleShowCaseRwActivity2 = 'Komentar dan Sukai';
   static String titleShowCaseRwActivity3 = 'Komentar';
-  static String showCaseRW1 = 'Sampaikan pertanyaan Anda kepada Gubernur terkait pembangunan, program pemerintah, fasilitas umum, dsb.';
-  static String showCaseRW2 = 'Tekan ikon jempol untuk menyukai pertanyaan yang menurut Anda menarik';
+  static String showCaseRW1 =
+      'Sampaikan pertanyaan Anda kepada Gubernur terkait pembangunan, program pemerintah, fasilitas umum, dsb.';
+  static String showCaseRW2 =
+      'Tekan ikon jempol untuk menyukai pertanyaan yang menurut Anda menarik';
   static String titleHelpRwActivities1 = 'Selamat datang di fitur Kegiatan RW!';
-  static String titleHelpRwActivities2 = 'Berikan komentar dan sukai kegiatan RW lain';
+  static String titleHelpRwActivities2 =
+      'Berikan komentar dan sukai kegiatan RW lain';
   static String titleHelpRwActivities3 = 'Jadi inspirasi';
-  static String deschelpRwActivities1 = 'Kegiatan RW adalah fitur terbaru di aplikasi Sapawarga. Bagikan foto kegiatan RW di sekitar Anda di sini!';
-  static String deschelpRwActivities2 = 'Anda dapat menyukai kegiatan dan berbagi komentar dengan pengguna lain';
-  static String deschelpRwActivities3= 'Bagikan foto dan cerita kegiatan RW Anda dan jadilah inspirasi bagi RW se-Jawa Barat';
-  static String errorLengthTextDescription= 'Deskripsi kegiatan minimal 10 karakter';
-  static String postRWActivitiesRejected= 'Post kegiatan ditolak';
-  static String searchHintRwActivities= 'Cari Deskripsi, Nama RW';
-  static String titleGovernor= 'Gubernur Provinsi Jawa Barat';
-  static String fotoRwActivitiesIsEmpty = 'Foto belum ditambahkan, silahkan upload foto kegiatan anda';
-  static String descRwActivitiesIsEmpty = 'Deskripsi kegiatan belum ditambahkan, silahkan tambah deskripsi kegiatan anda';
-  static String tagRwActivitiesIsEmpty = 'Tag kegiatan belum ditambahkan, silahkan tambah tag kegiatan anda';
+  static String deschelpRwActivities1 =
+      'Kegiatan RW adalah fitur terbaru di aplikasi Sapawarga. Bagikan foto kegiatan RW di sekitar Anda di sini!';
+  static String deschelpRwActivities2 =
+      'Anda dapat menyukai kegiatan dan berbagi komentar dengan pengguna lain';
+  static String deschelpRwActivities3 =
+      'Bagikan foto dan cerita kegiatan RW Anda dan jadilah inspirasi bagi RW se-Jawa Barat';
+  static String errorLengthTextDescription =
+      'Deskripsi kegiatan minimal 10 karakter';
+  static String postRWActivitiesRejected = 'Post kegiatan ditolak';
+  static String searchHintRwActivities = 'Cari Deskripsi, Nama RW';
+  static String titleGovernor = 'Gubernur Provinsi Jawa Barat';
+  static String fotoRwActivitiesIsEmpty =
+      'Foto belum ditambahkan, silahkan upload foto kegiatan anda';
+  static String descRwActivitiesIsEmpty =
+      'Deskripsi kegiatan belum ditambahkan, silahkan tambah deskripsi kegiatan anda';
+  static String tagRwActivitiesIsEmpty =
+      'Tag kegiatan belum ditambahkan, silahkan tambah tag kegiatan anda';
   static String infoTag = 'Tambahkan tag untuk post kegiatan anda';
-  static String maxPhotoLength = 'Anda hanya dapat menyertakan maksimal 5 foto saja';
+  static String maxPhotoLength =
+      'Anda hanya dapat menyertakan maksimal 5 foto saja';
   static String tagTitle = 'Tag Kegiatan RW';
   static String displayTag = 'display';
   static String valueTag = 'value';
@@ -485,12 +511,8 @@ class Dictionary {
   static String detailOnProgressMission = 'Detail On Progres';
   static String overviewMission = 'Mission Overview';
   static String startMission = 'Mulai Misi';
-  static String emptyDataOnProgress =
-      'Tidak ada data dalam List On Progress';
-  static String emptyDataHistory =
-      'Tidak ada data dalam List Misi Sebelumnya';
-  static String emptyDataNewMission =
-      'Tidak ada data dalam List Misi Baru';
-  static String badge =
-      'Medali';
+  static String emptyDataOnProgress = 'Tidak ada data dalam List On Progress';
+  static String emptyDataHistory = 'Tidak ada data dalam List Misi Sebelumnya';
+  static String emptyDataNewMission = 'Tidak ada data dalam List Misi Baru';
+  static String badge = 'Medali';
 }
