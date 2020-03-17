@@ -37,11 +37,11 @@ dependencies:
   timeago: ^2.0.26
   package_info: ^0.4.0+16
   shimmer: ^1.1.0
-  flutter_inappwebview: ^2.1.0+1
-  webview_flutter:
-    git:
-      url: https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git
-      path: webview_flutter-0.3.17
+  # flutter_inappwebview: ^2.1.0+1
+  # webview_flutter:
+  #   git:
+  #     url: https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git
+  #     path: webview_flutter-0.3.17
   device_info: ^0.4.2+1
   flare_flutter: ^2.0.1
   photo_view: ^0.9.2

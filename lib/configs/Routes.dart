@@ -8,11 +8,11 @@ Route generateRoutes(RouteSettings settings) {
 
   switch (settings.name) {
     case NavigationConstrants.Browser:
-      return buildRoute(
-          settings,
-          BrowserScreen(
-            url: args,
-          ));
+    // return buildRoute(
+    //     settings,
+    //     BrowserScreen(
+    //       url: args,
+    //     ));
     // case NavigationConstrants.NotificationList:
     //   return buildRoute(settings, NotificationListScreen());
     // case NavigationConstrants.SubProfile:

@@ -85,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.16.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -146,13 +139,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.3"
-  flutter_inappwebview:
-    dependency: "direct main"
-    description:
-      name: flutter_inappwebview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -177,13 +163,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.7.0"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.14.0+3"
   http:
     dependency: "direct main"
     description:
@@ -226,13 +205,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
-  mime:
-    dependency: transitive
-    description:
-      name: mime
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.6+3"
   nested:
     dependency: transitive
     description:
@@ -476,15 +448,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
-  webview_flutter:
-    dependency: "direct main"
-    description:
-      path: "webview_flutter-0.3.17"
-      ref: HEAD
-      resolved-ref: "7d41d2a023315babdcee4e9073b5898030a68fbc"
-      url: "https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git"
-    source: git
-    version: "0.3.17"
   xml:
     dependency: transitive
     description:
