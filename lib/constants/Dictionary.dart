@@ -16,6 +16,11 @@ class Dictionary {
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
+  static String address = 'Alamat';
+  static String noTelp='Nomor Darurat';
+  static String emptyDataPhoneBook='Nomor darurat tidak ada';
+  static String nomorDarurat='Detail Nomor Darurat';
+
 
   // Button Text
   static String yes = 'Ya';
