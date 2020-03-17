@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   shared_preferences: ^0.5.6+3
+  path_provider: ^1.6.5
   sqflite: ^1.3.0
   http: ^0.12.0+4
   flutter_bloc: ^3.2.0
@@ -49,6 +50,12 @@ dependencies:
   bottom_navigation_badge: ^1.0.3
   fluttertoast: ^3.1.3
   font_awesome_flutter: ^8.7.0
+  cloud_firestore: ^0.13.4+2
+  firebase_core: ^0.4.0+9
+  firebase_messaging:
+    git:
+      url: https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git
+      path: firebase_messaging-5.1.6
 
 
   # for now not use
