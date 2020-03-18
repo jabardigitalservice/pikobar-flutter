@@ -3,6 +3,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
+import 'package:pikobar_flutter/screens/survey/surveysScreen.dart';
 
 Route generateRoutes(RouteSettings settings) {
   // getting arguments passed
@@ -25,6 +26,9 @@ Route generateRoutes(RouteSettings settings) {
           MessageDetailcreen(
             document: args,
           ));
+
+    case NavigationConstrants.Survey:
+      return buildRoute(settings, SurveysScreen());
 
     default:
       return null;
