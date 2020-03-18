@@ -46,7 +46,7 @@ class _FaqScreenState extends State<FaqScreen> {
               itemCount: messageCount,
               padding: EdgeInsets.only(bottom: 30.0),
               itemBuilder: (_, int index) {
-                if (searchQuery != null || searchQuery != '') {
+                if (searchQuery != null) {
                   if (snapshot.data.documents[index]['title']
                       .toLowerCase()
                       .contains(searchQuery)) {
@@ -138,7 +138,7 @@ class _FaqScreenState extends State<FaqScreen> {
   void _clearSearchQuery() {
     setState(() {
       _searchController.clear();
-      updateSearchQuery("");
+      updateSearchQuery(null);
     });
   }
 
@@ -156,84 +156,84 @@ class _FaqScreenState extends State<FaqScreen> {
     });
   }
 
+  Widget _buildLoading() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) => Card(
+        margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+        child: ListTile(
+          title: Skeleton(
+            width: MediaQuery.of(context).size.width - 140,
+            height: 20.0,
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Skeleton(
+              width: MediaQuery.of(context).size.width - 190,
+              height: 20.0,
+            ),
+          ),
+          trailing: Skeleton(
+            width: 20.0,
+            height: 20.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _cardContent(dataHelp) {
+    return ExpandableNotifier(
+      child: ScrollOnExpand(
+        scrollOnExpand: false,
+        scrollOnCollapse: true,
+        child: Card(
+          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+          clipBehavior: Clip.antiAlias,
+          child: ScrollOnExpand(
+            scrollOnExpand: true,
+            scrollOnCollapse: false,
+            child: ExpandablePanel(
+              tapHeaderToExpand: true,
+              tapBodyToCollapse: true,
+              headerAlignment: ExpandablePanelHeaderAlignment.center,
+              header: Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  dataHelp['title'],
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+                ),
+              ),
+              expanded: Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Html(
+                    data: dataHelp['content'].replaceAll('\n', '</br>'),
+                    defaultTextStyle:
+                        TextStyle(color: Colors.black, fontSize: 14.0),
+                    customTextAlign: (dom.Node node) {
+                      return TextAlign.justify;
+                    }),
+              ),
+              builder: (_, collapsed, expanded) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: Expandable(
+                    collapsed: collapsed,
+                    expanded: expanded,
+                    crossFadePoint: 0,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-}
-
-Widget _buildLoading() {
-  return ListView.builder(
-    itemCount: 5,
-    itemBuilder: (context, index) => Card(
-      margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-      child: ListTile(
-        title: Skeleton(
-          width: MediaQuery.of(context).size.width - 140,
-          height: 20.0,
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Skeleton(
-            width: MediaQuery.of(context).size.width - 190,
-            height: 20.0,
-          ),
-        ),
-        trailing: Skeleton(
-          width: 20.0,
-          height: 20.0,
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _cardContent(dataHelp) {
-  return ExpandableNotifier(
-    child: ScrollOnExpand(
-      scrollOnExpand: false,
-      scrollOnCollapse: true,
-      child: Card(
-        margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-        clipBehavior: Clip.antiAlias,
-        child: ScrollOnExpand(
-          scrollOnExpand: true,
-          scrollOnCollapse: false,
-          child: ExpandablePanel(
-            tapHeaderToExpand: true,
-            tapBodyToCollapse: true,
-            headerAlignment: ExpandablePanelHeaderAlignment.center,
-            header: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                dataHelp['title'],
-                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            expanded: Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Html(
-                  data: dataHelp['content'].replaceAll('\n', '</br>'),
-                  defaultTextStyle:
-                      TextStyle(color: Colors.black, fontSize: 14.0),
-                  customTextAlign: (dom.Node node) {
-                    return TextAlign.justify;
-                  }),
-            ),
-            builder: (_, collapsed, expanded) {
-              return Padding(
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: Expandable(
-                  collapsed: collapsed,
-                  expanded: expanded,
-                  crossFadePoint: 0,
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    ),
-  );
 }
