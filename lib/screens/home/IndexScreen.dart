@@ -1,5 +1,6 @@
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -7,6 +8,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
+import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -14,7 +16,7 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  // FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   int _currentIndex = 0;
 
@@ -27,41 +29,28 @@ class _IndexScreenState extends State<IndexScreen> {
 
     _initializeBottomNavigationBar();
 
-    // _firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage: $message");
-    //     NotificationHelper().showNotification(
-    //         message['notification']['title'], message['notification']['body'],
-    //         payload: jsonEncode(message['data']).toString(),
-    //         onSelectNotification: onSelectNotification);
+     _firebaseMessaging.configure(
+       onMessage: (Map<String, dynamic> message) async {
+         print("onMessage: $message");
+         NotificationHelper().showNotification(
+             message['notification']['title'], message['notification']['body'],
+             payload: 'payload',
+             onSelectNotification: onSelectNotification);
+       },
+       onLaunch: (Map<String, dynamic> message) async {
+         print("onLaunch: $message");
+       },
+       onResume: (Map<String, dynamic> message) async {
+         print("onResume: $message");
+       },
+     );
 
-    //     _checkNotification();
+     //_firebaseMessaging.getToken().then((token) => print(token));
 
-    //     if (message['data']['target'] == 'broadcast') {
-    //       _checkUnread();
-    //     }
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch: $message");
-    //     _actionNotification(jsonEncode(message['data']).toString());
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume: $message");
-    //     _actionNotification(jsonEncode(message['data']).toString());
-    //   },
-    // );
+    _firebaseMessaging.subscribeToTopic('general');
 
-    // _firebaseMessaging.getToken().then((token) => print(token));
-
-    // _firebaseMessaging.requestNotificationPermissions(
-    //     IosNotificationSettings(sound: true, badge: true, alert: true));
-
-    /*WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(milliseconds: 500), () {
-        _checkUnread();
-        _checkNotification();
-      });
-    });*/
+     _firebaseMessaging.requestNotificationPermissions(
+         IosNotificationSettings(sound: true, badge: true, alert: true));
 
     super.initState();
   }
@@ -84,7 +73,7 @@ class _IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.envelopeOpen, size: 16),
+          icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -92,7 +81,7 @@ class _IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.questionCircle, size: 16),
+          icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -102,54 +91,11 @@ class _IndexScreenState extends State<IndexScreen> {
     ];
   }
 
-  // Future<void> onSelectNotification(String payload) async {
-  //   if (payload != null) {
-  //     debugPrint('notification payload: ' + payload);
-  //     _actionNotification(payload);
-  //   }
-  // }
-
-  // _actionNotification(String payload) {
-  //   final data = json.decode(payload);
-  //   if (data['target'] == 'notifikasi') {
-  //     switch (jsonDecode(data['meta'])['target'].toString()) {
-  //       case 'polling':
-  //         _openDetailPolling(jsonDecode(data['meta'])['id']);
-  //         break;
-  //       case 'survey':
-  //         _openDetailSurvey(url: jsonDecode(data['meta'])['url']);
-  //         break;
-  //       case 'news':
-  //         _openDetailNews(jsonDecode(data['meta'])['id']);
-  //         break;
-  //       case 'saber-hoax':
-  //         _openDetailSaberHoax(jsonDecode(data['meta'])['id']);
-  //         break;
-  //       case 'aspirasi':
-  //         _openDetailUsulan(jsonDecode(data['meta'])['id']);
-  //         break;
-  //       case 'news-important':
-  //         _openDetailImportantInfo(jsonDecode(data['meta'])['id']);
-  //         break;
-  //       case 'user-post':
-  //         _openDetailRwActivities(
-  //             jsonDecode(data['meta'])['id'], data['title']);
-  //         break;
-  //       case 'url':
-  //         _launchURL(jsonDecode(data['meta'])['url']);
-  //         break;
-  //     }
-  //   }
-
-  //   if (data['target'] == 'broadcast') {
-  //     print('id = ' + data['id']);
-  //     _openDetailBroadcast(jsonDecode(data['id']));
-  //   }
-
-  //   if (data['target'] == 'url') {
-  //     _launchURL(jsonDecode(data['meta'])['url']);
-  //   }
-  // }
+   Future<void> onSelectNotification(String payload) async {
+     if (payload != null) {
+       debugPrint('notification payload: ' + payload);
+     }
+   }
 
   void onTabTapped(int index) {
     setState(() {
@@ -183,54 +129,10 @@ class _IndexScreenState extends State<IndexScreen> {
       case 2:
         return FaqScreen();
 
-      case 3:
-      // return ProfileScreen();
-
       default:
         return HomeScreen();
     }
   }
-
-  // _checkUnread() async {
-  //   try {
-  //     await BroadcastRepository().fetchRecords(1);
-  //     await _messageBadgeBloc.add(CheckMessageBadge(fromNotification: true));
-  //   } catch (_) {}
-  // }
-
-  // _checkNotification() async {
-  //   try {
-  //     await NotificationRepository().fetchRecords(1);
-  //     await _notificationBadgeBloc.add(CheckNotificationBadge());
-  //   } catch (_) {}
-  // }
-
-  // _actionPopupInformation(PopupInformationModel record) {
-  //   if (record.type == 'internal') {
-  //     switch (record.internalObjectType) {
-  //       case 'news':
-  //         _openDetailNews(record.internalObjectId);
-  //         break;
-
-  //       case 'polling':
-  //         _openDetailPolling(record.internalObjectId);
-  //         break;
-
-  //       case 'survey':
-  //         _openDetailSurvey(id: record.internalObjectId);
-  //         break;
-
-  //       case 'saber-hoax':
-  //         _openDetailSaberHoax(record.internalObjectId);
-  //         break;
-  //       case 'gamification':
-  //         _openGamification();
-  //         break;
-  //     }
-  //   } else {
-  //     _openInAppBrowser(record.linkUrl);
-  //   }
-  // }
 
   @override
   void dispose() {
