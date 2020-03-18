@@ -22,12 +22,14 @@ class _NewsState extends State<News> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: <Widget>[
-            NewsScreen(isLiveUpdate: true),
-            NewsScreen(isLiveUpdate: false),
-          ],
-        ),
+        body: Container(
+          child: TabBarView(
+            children: <Widget>[
+              NewsScreen(isLiveUpdate: true),
+              NewsScreen(isLiveUpdate: false),
+            ],
+          ),
+        )
       ),
     );
   }
