@@ -1,4 +1,3 @@
-/*
  import 'package:flutter/material.dart';
  import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -38,7 +37,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
        body: Column(
          children: <Widget>[
            Container(
-               padding: EdgeInsets.all(10.0),
+               padding: progress < 1.0 ? EdgeInsets.symmetric(vertical: 5.0) : null,
                child: progress < 1.0
                    ? LinearProgressIndicator(value: progress)
                    : Container()),
@@ -68,4 +67,3 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
      );
    }
  }
-*/

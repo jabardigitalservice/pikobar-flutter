@@ -10,11 +10,14 @@ class Dictionary {
   static String pikobar = 'Info Corona';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Update Terkini';
+  static String menus = 'Pusat Layanan &  Informasi';
   static String help = 'FAQ';
   static String saberHoax = 'Jabar Saber Hoax';
   static String survey = 'Survei';
   static String logistic = 'Info Logistik';
   static String kawalCorona = 'Kawal Corona';
+  static String worldInfo = 'Informasi Dunia';
+  static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Self Diagnose';
   static String selfTracing = 'Self Tracing';
   static String otherMenus = 'Menu lainnya';
@@ -55,6 +58,8 @@ class Dictionary {
   static String errorStatusUnActive = 'Username belum aktif';
   static String errorListComment = 'Tidak dapat menampilkan komentar';
   static String somethingWrong = 'Terjadi kesalahan';
+
+
   static String liveUpdate = 'Live Update';
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
@@ -65,4 +70,5 @@ class Dictionary {
   // text
   static String fieldSurvey = 'Isi Survei';
   static String loadingData = 'Sedang mengambil data ...';
+  static String onDevelopment = 'Dalam proses pengembangan';
 }
