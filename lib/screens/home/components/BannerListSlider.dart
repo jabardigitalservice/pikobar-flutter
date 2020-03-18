@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BannerListSlider extends StatefulWidget {
   @override
@@ -61,10 +62,10 @@ class BannerListSliderState extends State<BannerListSlider> {
   _buildSlider(AsyncSnapshot<QuerySnapshot> snapshot) {
     return CarouselSlider(
       initialPage: 0,
-      enableInfiniteScroll: true,
+      enableInfiniteScroll: snapshot.data.documents.length > 1 ? true : false,
       aspectRatio: 21 / 9,
-      viewportFraction: 0.9,
-      autoPlay: true,
+      viewportFraction: snapshot.data.documents.length > 1 ? 0.9 : 0.95,
+      autoPlay: snapshot.data.documents.length > 1 ? true : false,
       autoPlayInterval: Duration(seconds: 5),
       items: snapshot.data.documents.map((DocumentSnapshot document) {
         return Builder(builder: (BuildContext context) {
@@ -75,7 +76,7 @@ class BannerListSliderState extends State<BannerListSlider> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: CachedNetworkImage(
-                    imageUrl: document['action_url'],
+                    imageUrl: document['url'],
                     imageBuilder: (context, imageProvider) =>
                         Container(
                           decoration: BoxDecoration(
@@ -106,7 +107,7 @@ class BannerListSliderState extends State<BannerListSlider> {
               ),
             ),
             onTap: () {
-              //_clickAction(data);
+              _clickAction(document['action_url']);
             },
           );
         });
@@ -117,99 +118,12 @@ class BannerListSliderState extends State<BannerListSlider> {
     );
   }
 
-/*_clickAction(BannerModel record) {
-     if (record.type == 'internal') {
-       switch (record.internalCategory) {
-         case 'news':
-           _openDetailNews(record.internalEntityId);
-           break;
-
-         case 'polling':
-           _openDetailPolling(record.internalEntityId);
-           break;
-
-         case 'survey':
-           _openDetailSurvey(record.internalEntityId);
-           break;
-
-         case 'news-important':
-           _openDetailImportantInfo(record.internalEntityId);
-           break;
-       }
-     } else {
-       _openInAppBrowser(record.linkUrl);
-     }
-   }
-
-   _openDetailNews(int id) {
-     Navigator.of(context).push(MaterialPageRoute(
-         builder: (context) => NewsDetailScreen(newsId: id, isIdKota: false)));
-   }
-
-   _openDetailSurvey(int id) async {
-     try {
-       String externalUrl = await SurveyRepository().getUrl(id);
-       await Navigator.pushNamed(context, NavigationConstrants.Browser,
-           arguments: externalUrl);
-     } catch (e) {
-       unawaited(Fluttertoast.showToast(
-           msg: CustomException.onConnectionException(e.toString()),
-           toastLength: Toast.LENGTH_LONG,
-           gravity: ToastGravity.TOP,
-           backgroundColor: Colors.red,
-           textColor: Colors.white));
-     }
-   }
-
-   _openDetailImportantInfo(int id) {
-     Navigator.push(
-         context,
-         MaterialPageRoute(
-             builder: (context) => ImportantInfoDetailScreen(id: id)));
-   }
-
-   _openDetailPolling(int id) async {
-     PollingRepository _pollingRepository = PollingRepository();
-
-     try {
-       bool isVoted = await _pollingRepository.getVoteStatus(pollingId: id);
-
-       if (!isVoted) {
-         PollingModel record = await _pollingRepository.getDetail(id);
-         await Navigator.pushNamed(context, NavigationConstrants.PollingDetail,
-             arguments: record);
-       } else {
-         unawaited(Fluttertoast.showToast(
-             msg: Dictionary.pollingHasVotedMessage,
-             toastLength: Toast.LENGTH_LONG,
-             gravity: ToastGravity.TOP,
-             backgroundColor: Colors.blue,
-             textColor: Colors.white));
-       }
-     } catch (e) {
-       unawaited(Fluttertoast.showToast(
-           msg: CustomException.onConnectionException(e.toString()),
-           toastLength: Toast.LENGTH_LONG,
-           gravity: ToastGravity.TOP,
-           backgroundColor: Colors.red,
-           textColor: Colors.white));
-     }
-   }
-
-   _openInAppBrowser(String externalUrl) async {
-     if (externalUrl != null) {
-       if (externalUrl.contains('market') ||
-           externalUrl.contains('play.google')) {
-         if (await canLaunch(externalUrl)) {
-           await launch(externalUrl);
-         } else {
-           throw 'Could not launch $externalUrl';
-         }
-       } else {
-         await Navigator.pushNamed(context, NavigationConstrants.Browser,
-             arguments: externalUrl);
-       }
-     }
-   }*/
+  _clickAction(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
 }
