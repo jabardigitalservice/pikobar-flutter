@@ -64,6 +64,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  cloud_firestore:
+    dependency: "direct main"
+    description:
+      name: cloud_firestore
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.4+2"
+  cloud_firestore_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_firestore_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
+  cloud_firestore_web:
+    dependency: transitive
+    description:
+      name: cloud_firestore_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+1"
   collection:
     dependency: transitive
     description:
@@ -113,6 +134,43 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  firebase:
+    dependency: transitive
+    description:
+      name: firebase
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.2.1"
+  firebase_core:
+    dependency: "direct main"
+    description:
+      name: firebase_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.4+3"
+  firebase_core_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_core_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
+  firebase_core_web:
+    dependency: transitive
+    description:
+      name: firebase_core_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+2"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      path: "firebase_messaging-5.1.6"
+      ref: HEAD
+      resolved-ref: "7d41d2a023315babdcee4e9073b5898030a68fbc"
+      url: "https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git"
+    source: git
+    version: "5.1.6"
   flare_dart:
     dependency: transitive
     description:
@@ -146,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.3"
+  flutter_html:
+    dependency: "direct main"
+    description:
+      name: flutter_html
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.11.1"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -153,20 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0+1"
-  flutter_local_notifications:
-    dependency: "direct main"
+  flutter_launcher_icons:
+    dependency: "direct dev"
     description:
-      name: flutter_local_notifications
+      name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.2"
-  flutter_local_notifications_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_local_notifications_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
+    version: "0.7.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -226,6 +284,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1+1"
   matcher:
     dependency: transitive
     description:
@@ -269,7 +334,7 @@ packages:
     source: hosted
     version: "1.6.4"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -302,7 +367,7 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0+hotfix.1"
+    version: "4.4.0+hotfix.2"
   permission_handler_platform_interface:
     dependency: transitive
     description:
@@ -345,6 +410,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.4"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.8"
   quiver:
     dependency: transitive
     description:
@@ -476,6 +548,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.4.2"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+4"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+1"
   uuid:
     dependency: transitive
     description:
@@ -490,15 +590,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
-  webview_flutter:
-    dependency: "direct main"
-    description:
-      path: "webview_flutter-0.3.17"
-      ref: HEAD
-      resolved-ref: "7d41d2a023315babdcee4e9073b5898030a68fbc"
-      url: "https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git"
-    source: git
-    version: "0.3.17"
   xml:
     dependency: transitive
     description:
@@ -506,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.5.0"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
