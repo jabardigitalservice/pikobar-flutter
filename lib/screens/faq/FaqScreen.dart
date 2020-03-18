@@ -95,7 +95,7 @@ class _FaqScreenState extends State<FaqScreen> {
           icon: const Icon(Icons.clear),
           onPressed: () {
             if (_searchController == null || _searchController.text.isEmpty) {
-              Navigator.pop(context);
+              _stopSearching();
               return;
             }
             _clearSearchQuery();
@@ -113,9 +113,6 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
-        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
-
     setState(() {
       _isSearch = true;
     });
