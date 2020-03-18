@@ -29,6 +29,7 @@ class Dictionary {
   static String opdDesc = 'Orang Dalam Pemantauan';
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
+  static String faq = 'FAQ';
 
   // Button Text
   static String yes = 'Ya';
@@ -58,4 +59,10 @@ class Dictionary {
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
   static String more = 'Selengkapnya';
+  static String heroImageTag = 'preview';
+  static String otherNews = 'Berita Lainnya';
+
+  // text
+  static String fieldSurvey = 'Isi Survei';
+  static String loadingData = 'Sedang mengambil data ...';
 }

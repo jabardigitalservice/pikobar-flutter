@@ -4,6 +4,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 
 class FaqScreen extends StatefulWidget {
   @override
@@ -20,10 +22,10 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FAQ'),
+        title: Text(Dictionary.faq),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection("faqs").snapshots(),
+        stream: Firestore.instance.collection(Collections.faq).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             final int messageCount = snapshot.data.documents.length;
