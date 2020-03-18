@@ -9,18 +9,22 @@ Route generateRoutes(RouteSettings settings) {
   final args = settings.arguments;
 
   switch (settings.name) {
-  /*case NavigationConstrants.Browser:
+    /*case NavigationConstrants.Browser:
      return buildRoute(
          settings,
          BrowserScreen(
            url: args,
          ));*/
-    case NavigationConstrants.Pikobar:
+    case NavigationConstrants.News:
       return buildRoute(settings, News());
     case NavigationConstrants.Phonebook:
       return buildRoute(settings, Phonebook());
-      case NavigationConstrants.BroadcastDetail:
-      return buildRoute(settings, MessageDetailcreen(document: args,));
+    case NavigationConstrants.BroadcastDetail:
+      return buildRoute(
+          settings,
+          MessageDetailcreen(
+            document: args,
+          ));
 
     default:
       return null;

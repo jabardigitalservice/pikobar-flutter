@@ -4,6 +4,7 @@ class NavigationConstrants {
   static final navKey = GlobalKey<NavigatorState>();
 
   // Pages routes
+  static const String News = "/news";
   static const String Service = "/layanan";
   static const String Survey = "/survey";
   static const String Polling = "/polling";
