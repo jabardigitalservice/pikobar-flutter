@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
+import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -32,7 +34,9 @@ class _NewsScreenState extends State<NewsScreen> {
           case ConnectionState.waiting:
             return _buildLoading();
           default:
-            return _buildContent(snapshot);
+            return widget.maxLength != null
+                ? _buildContent(snapshot)
+                : _buildContentList(snapshot);
         }
       },
     );
@@ -50,27 +54,25 @@ class _NewsScreenState extends State<NewsScreen> {
             ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: widget.maxLength != null
-                    ? snapshot.data.documents.length > 3
-                        ? 3
-                        : snapshot.data.documents.length
+                itemCount: snapshot.data.documents.length > 3
+                    ? 3
                     : snapshot.data.documents.length,
                 padding: const EdgeInsets.only(bottom: 10.0),
                 itemBuilder: (BuildContext context, int index) {
-                  var document = snapshot.data.documents[index];
+                  var document =
+                      snapshot.data.documents[index];
                   return SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: RaisedButton(
                         elevation: 0,
                         color: Colors.white,
                         onPressed: () {
-//                          Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => NewsDetailScreen(
-//                                      newsId: state.listtNews[index].id,
-//                                      isIdKota: _isIdKota))
-//                          );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewsDetailScreen(
+                                      documents: document,
+                                      isLiveUpdate: widget.isLiveUpdate)));
                         },
                         child: Container(
                           padding: EdgeInsets.all(5),
@@ -164,18 +166,120 @@ class _NewsScreenState extends State<NewsScreen> {
                   minWidth: MediaQuery.of(context).size.width,
                   title: Dictionary.more,
                   borderRadius: BorderRadius.circular(5.0),
-                  color: Colors.green,
+                  color: ColorBase.green,
                   textStyle: Theme.of(context).textTheme.subhead.copyWith(
                       color: Colors.white, fontWeight: FontWeight.bold),
                   onPressed: () {
-//                    Navigator.push(context,
-//                        MaterialPageRoute(builder: (context) => News()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => News()));
                   }),
             ),
           ],
         ),
       ),
     );
+  }
+
+  _buildContentList(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return ListView.builder(
+        itemCount: snapshot.data.documents.length,
+        padding: const EdgeInsets.only(bottom: 10.0),
+        itemBuilder: (BuildContext context, int index) {
+          var document = snapshot.data.documents[index];
+          return Card(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: RaisedButton(
+                elevation: 0,
+                color: Colors.white,
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: 70,
+                        height: 70,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: CachedNetworkImage(
+                            imageUrl: document['image'],
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                                heightFactor: 4.2,
+                                child: CupertinoActivityIndicator()),
+                            errorWidget: (context, url, error) => Container(
+                                height: MediaQuery.of(context).size.height / 3.3,
+                                color: Colors.grey[200],
+                                child: Image.asset(
+                                    '${Environment.imageAssets}placeholder_square.png',
+                                    fit: BoxFit.fitWidth)),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        width: MediaQuery.of(context).size.width - 120,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              document['title'],
+                              style: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.left,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Container(
+                                padding: EdgeInsets.only(top: 5.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Image.network(
+                                          document['news_channel_icon'],
+                                          width: 25.0,
+                                          height: 25.0,
+                                        ),
+                                        SizedBox(width: 3.0),
+                                        Text(
+                                          document['news_channel'],
+                                          style: TextStyle(
+                                              fontSize: 12.0, color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      unixTimeStampToDateTime(
+                                          document['published_at'].seconds),
+                                      style: TextStyle(
+                                          fontSize: 12.0, color: Colors.grey),
+                                    ),
+                                  ],
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NewsDetailScreen(
+                              documents: document,
+                              isLiveUpdate: widget.isLiveUpdate)));
+                },
+              ),
+            ),
+          );
+        },
+       );
   }
 
   _buildLoading() {
@@ -207,7 +311,7 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ), //
             ListView.separated(
-                shrinkWrap:  true,
+                shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: 3,
                 padding: const EdgeInsets.all(10.0),

@@ -58,4 +58,6 @@ class Dictionary {
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
   static String more = 'Selengkapnya';
+  static String heroImageTag = 'preview';
+  static String otherNews = 'Berita Lainnya';
 }
