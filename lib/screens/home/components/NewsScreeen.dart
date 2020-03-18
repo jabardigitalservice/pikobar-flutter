@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -94,7 +95,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                 3.3,
                                         color: Colors.grey[200],
                                         child: Image.asset(
-                                            '${Environment.imageAssets}placeholder_square.png',
+                                            '${Environment.iconAssets}pikobar.png',
                                             fit: BoxFit.fitWidth)),
                                   ),
                                 ),
@@ -160,7 +161,7 @@ class _NewsScreenState extends State<NewsScreen> {
               margin: EdgeInsets.only(bottom: 20, top: 5),
               padding: EdgeInsets.only(left: 10, right: 10),
               child: RoundedButton(
-                  height: 52,
+                  height: 60,
                   minWidth: MediaQuery.of(context).size.width,
                   title: Dictionary.more,
                   borderRadius: BorderRadius.circular(5.0),
@@ -168,6 +169,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   textStyle: Theme.of(context).textTheme.subhead.copyWith(
                       color: Colors.white, fontWeight: FontWeight.bold),
                   onPressed: () {
+                    Navigator.pushNamed(context, NavigationConstrants.News);
 //                    Navigator.push(context,
 //                        MaterialPageRoute(builder: (context) => News()));
                   }),
@@ -207,7 +209,7 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ), //
             ListView.separated(
-                shrinkWrap:  true,
+                shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: 3,
                 padding: const EdgeInsets.all(10.0),
