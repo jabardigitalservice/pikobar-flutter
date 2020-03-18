@@ -115,7 +115,7 @@ class _StatisticsState extends State<Statistics> {
       padding: EdgeInsets.all(Dimens.padding),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[400]),
-          borderRadius: BorderRadius.circular(5.0)),
+          borderRadius: BorderRadius.circular(8.0)),
       child: Column(
         children: <Widget>[
           Image.asset(icon,

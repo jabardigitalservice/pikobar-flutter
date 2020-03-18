@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+
 import 'BannerListSlider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.black.withOpacity(.2),
                 offset: Offset(2.0, 4.0),
               ),
-            ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
+            ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
             child: IconButton(
               color: Theme.of(context).textTheme.body1.color,
               icon: Image.asset(iconPath),
@@ -59,36 +59,87 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  _buildButtonColumnLayananLain(String iconPath, String label) {
+  _buildButtonDisable(String iconPath, String label) {
     return Expanded(
+      child: GestureDetector(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.all(2.0),
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  blurRadius: 10.0,
-                  color: Colors.black.withOpacity(.2),
-                  offset: Offset(2.0, 2.0),
+            Stack(children: [
+              Container(
+                padding: EdgeInsets.all(2.0),
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 6.0,
+                        color: Colors.black.withOpacity(.2),
+                        offset: Offset(2.0, 4.0),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: Colors.white),
+                child: IconButton(
+                  color: Theme.of(context).textTheme.body1.color,
+                  icon: Image.asset(iconPath),
+                  onPressed: null,
                 ),
-              ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
-              child: IconButton(
-                color: Theme.of(context).textTheme.body1.color,
-                icon: Image.asset(iconPath),
-                onPressed: () {
-                  _mainHomeBottomSheet(context);
-                },
               ),
-            ),
+              Positioned(
+                  right: 2.0,
+                  child: Image.asset(
+                    '${Environment.iconAssets}bookmark_1.png',
+                    width: 18.0,
+                    height: 18.0,
+                  ))
+            ]),
             SizedBox(height: 12.0),
             Text(label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.0,
                   color: Theme.of(context).textTheme.body1.color,
                 ))
           ],
-        ));
+        ),
+        onTap: () {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('Dalam proses pengembangan'),
+            duration: Duration(seconds: 1),
+          ));
+        },
+      ),
+    );
+  }
+
+  _buildButtonColumnLayananLain(String iconPath, String label) {
+    return Expanded(
+        child: Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(2.0),
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              blurRadius: 10.0,
+              color: Colors.black.withOpacity(.2),
+              offset: Offset(2.0, 2.0),
+            ),
+          ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
+          child: IconButton(
+            color: Theme.of(context).textTheme.body1.color,
+            icon: Image.asset(iconPath),
+            onPressed: () {
+              _mainHomeBottomSheet(context);
+            },
+          ),
+        ),
+        SizedBox(height: 12.0),
+        Text(label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).textTheme.body1.color,
+            ))
+      ],
+    ));
   }
 
   @override
@@ -119,13 +170,13 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildButtonColumn(
               '${Environment.iconAssets}completed.png', Dictionary.survey, ''),
-          _buildButtonColumn(
-              '${Environment.iconAssets}network.png', Dictionary.selfDiagnose, ''),
-          _buildButtonColumn('${Environment.iconAssets}network.png',
-              Dictionary.selfTracing, ''),
+          _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
+              Dictionary.selfDiagnose),
+          _buildButtonDisable(
+              '${Environment.iconAssets}network.png', Dictionary.selfTracing),
+          _buildButtonDisable(
+              '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
 
-          _buildButtonColumn('${Environment.iconAssets}menu-other.png',
-              Dictionary.otherMenus, ''),
           /*_buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),*/
         ],
@@ -293,7 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     Dictionary.otherMenus,
                     style:
-                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Container(
