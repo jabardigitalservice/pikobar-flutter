@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class FaqScreen extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class FaqScreen extends StatefulWidget {
 
 class _FaqScreenState extends State<FaqScreen> {
   TextEditingController _searchController = TextEditingController();
-  String searchQuery;
+  String searchQuery = '';
   Timer _debounce;
 
   bool _isSearch = false;
@@ -41,20 +42,25 @@ class _FaqScreenState extends State<FaqScreen> {
         stream: Firestore.instance.collection(Collections.faq).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            final int messageCount = snapshot.data.documents.length;
+            List dataFaq;
+
+            // if search ative
+            if (searchQuery.isNotEmpty) {
+              dataFaq = snapshot.data.documents
+                  .where((test) => test['title']
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase()))
+                  .toList();
+            } else {
+              dataFaq = snapshot.data.documents;
+            }
+
+            final int messageCount = dataFaq.length;
             return ListView.builder(
               itemCount: messageCount,
               padding: EdgeInsets.only(bottom: 30.0),
               itemBuilder: (_, int index) {
-                if (searchQuery != null) {
-                  if (snapshot.data.documents[index]['title']
-                      .toLowerCase()
-                      .contains(searchQuery)) {
-                    return _cardContent(snapshot.data.documents[index]);
-                  }
-                } else {
-                  return _cardContent(snapshot.data.documents[index]);
-                }
+                return _cardContent(dataFaq[index]);
               },
             );
           } else {
@@ -95,7 +101,7 @@ class _FaqScreenState extends State<FaqScreen> {
           icon: const Icon(Icons.clear),
           onPressed: () {
             if (_searchController == null || _searchController.text.isEmpty) {
-              Navigator.pop(context);
+              _stopSearching();
               return;
             }
             _clearSearchQuery();
@@ -113,9 +119,6 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
-        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
-
     setState(() {
       _isSearch = true;
     });
@@ -138,7 +141,7 @@ class _FaqScreenState extends State<FaqScreen> {
   void _clearSearchQuery() {
     setState(() {
       _searchController.clear();
-      updateSearchQuery(null);
+      updateSearchQuery('');
     });
   }
 
@@ -207,12 +210,16 @@ class _FaqScreenState extends State<FaqScreen> {
               expanded: Padding(
                 padding: EdgeInsets.only(bottom: 10),
                 child: Html(
-                    data: dataHelp['content'].replaceAll('\n', '</br>'),
-                    defaultTextStyle:
-                        TextStyle(color: Colors.black, fontSize: 14.0),
-                    customTextAlign: (dom.Node node) {
-                      return TextAlign.justify;
-                    }),
+                  data: dataHelp['content'].replaceAll('\n', '</br>'),
+                  defaultTextStyle:
+                      TextStyle(color: Colors.black, fontSize: 14.0),
+                  onLinkTap: (url) {
+                    launchExternal(url);
+                  },
+                  customTextAlign: (dom.Node node) {
+                    return TextAlign.justify;
+                  },
+                ),
               ),
               builder: (_, collapsed, expanded) {
                 return Padding(
