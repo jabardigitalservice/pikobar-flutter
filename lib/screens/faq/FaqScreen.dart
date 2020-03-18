@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class FaqScreen extends StatefulWidget {
   @override
@@ -209,12 +210,16 @@ class _FaqScreenState extends State<FaqScreen> {
               expanded: Padding(
                 padding: EdgeInsets.only(bottom: 10),
                 child: Html(
-                    data: dataHelp['content'].replaceAll('\n', '</br>'),
-                    defaultTextStyle:
-                        TextStyle(color: Colors.black, fontSize: 14.0),
-                    customTextAlign: (dom.Node node) {
-                      return TextAlign.justify;
-                    }),
+                  data: dataHelp['content'].replaceAll('\n', '</br>'),
+                  defaultTextStyle:
+                      TextStyle(color: Colors.black, fontSize: 14.0),
+                  onLinkTap: (url) {
+                    launchExternal(url);
+                  },
+                  customTextAlign: (dom.Node node) {
+                    return TextAlign.justify;
+                  },
+                ),
               ),
               builder: (_, collapsed, expanded) {
                 return Padding(
