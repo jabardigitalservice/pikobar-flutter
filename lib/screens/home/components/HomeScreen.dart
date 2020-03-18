@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'BannerListSlider.dart';
 
@@ -24,7 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  _buildButtonColumn(String iconPath, String label, String route) {
+  _buildButtonColumn(String iconPath, String label, String route,
+      {Object arguments}) {
     return Expanded(
       child: Column(
         children: [
@@ -42,7 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Image.asset(iconPath),
               onPressed: () {
                 if (route != null) {
-                  Navigator.pushNamed(context, route);
+                  switch (route) {
+                    case UrlThirdParty.urlCoronaEscort:
+                      _launchUrl(route);
+                      break;
+                    case UrlThirdParty.urlIGSaberHoax:
+                      _launchUrl(route);
+                      break;
+                    default:
+                      Navigator.pushNamed(context, route, arguments: arguments);
+                  }
                 }
               },
             ),
@@ -101,10 +114,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         onTap: () {
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text('Dalam proses pengembangan'),
-            duration: Duration(seconds: 1),
-          ));
+          if (label == Dictionary.qna) {
+            Fluttertoast.showToast(
+                msg: Dictionary.onDevelopment,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1);
+          } else {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(Dictionary.onDevelopment),
+              duration: Duration(seconds: 1),
+            ));
+          }
         },
       ),
     );
@@ -152,12 +173,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
-          _buildButtonColumn(
-              '${Environment.iconAssets}pikobar.png', Dictionary.pikobar, ''),
-          _buildButtonColumn(
-              '${Environment.iconAssets}logistic.png', Dictionary.logistic, ''),
-          _buildButtonColumn(
-              '${Environment.iconAssets}virus.png', Dictionary.kawalCorona, ''),
+          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
+              Dictionary.pikobar, NavigationConstrants.Browser,
+              arguments: UrlThirdParty.urlCoronaInfo),
+          _buildButtonColumn('${Environment.iconAssets}logistic.png',
+              Dictionary.logistic, NavigationConstrants.Browser,
+              arguments: UrlThirdParty.urlLogisticsInfo),
+          _buildButtonColumn('${Environment.iconAssets}virus.png',
+              Dictionary.kawalCorona, UrlThirdParty.urlCoronaEscort),
         ],
       ),
     );
@@ -168,25 +191,24 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildButtonColumn(
-              '${Environment.iconAssets}completed.png', Dictionary.survey, NavigationConstrants.Survey),
+          _buildButtonColumn('${Environment.iconAssets}completed.png',
+              Dictionary.survey, NavigationConstrants.Survey),
           _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
               Dictionary.selfDiagnose),
           _buildButtonDisable(
               '${Environment.iconAssets}network.png', Dictionary.selfTracing),
-          _buildButtonDisable(
+          _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
-
-          /*_buildButtonColumnLayananLain(
-              '${Environment.iconAssets}menu-other.png', Dictionary.otherMenus),*/
         ],
       ),
     );
 
     Widget topContainer = Container(
       alignment: Alignment.topCenter,
-      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+      padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),
+      decoration: BoxDecoration(
+        color: ColorBase.grey,
+          boxShadow: [
         BoxShadow(
           color: Colors.white.withOpacity(0.05),
           //            blurRadius: 5,
@@ -195,6 +217,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ]),
       child: Column(
         children: <Widget>[
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text(
+              Dictionary.menus,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: FontsFamily.productSans,
+                  fontSize: 16.0),
+            ),
+          ),
+          SizedBox(height: Dimens.padding),
           firstRowShortcuts,
           SizedBox(
             height: 8.0,
@@ -222,24 +256,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       Dictionary.title,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.intro,
-                      ),
-                    ),
-                    Text(
-                      Dictionary.provJabar,
-                      style: TextStyle(
-                        color: Colors.white,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.intro,
+                        fontFamily: FontsFamily.productSans,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        Dictionary.provJabar,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.productSans,
+                        ),
                       ),
                     )
                   ],
                 ))
           ],
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.notifications,
+                size: 20.0, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(Dictionary.onDevelopment),
+                duration: Duration(seconds: 1),
+              ));
+            },
+          )
+        ],
       ),
       body: Stack(
         children: <Widget>[
@@ -255,15 +304,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
                   Container(
-                      margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                    color: ColorBase.grey,
+                      margin: EdgeInsets.only(top: 10.0),
+                      padding: EdgeInsets.only(bottom: 10.0),
                       child: Statistics()),
                   topContainer,
-                  SizedBox(
-                    height: 8.0,
-                    child: Container(
-                      color: Color(0xFFE5E5E5),
-                    ),
-                  ),
                   Container(
                     color: Colors.white,
                     child: Column(
@@ -365,17 +410,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildButtonColumn(
-                                '${Environment.iconAssets}pikobar.png',
-                                Dictionary.survey,
-                                NavigationConstrants.infoPKB),
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}pikobar.png',
+                                '${Environment.iconAssets}saber_hoax.png',
                                 Dictionary.saberHoax,
-                                NavigationConstrants.SaberHoax),
+                                UrlThirdParty.urlIGSaberHoax),
                             _buildButtonColumn(
-                                '${Environment.iconAssets}pikobar.png',
-                                Dictionary.survey,
-                                NavigationConstrants.AdministrationList),
+                                '${Environment.iconAssets}world.png',
+                                Dictionary.worldInfo,
+                                NavigationConstrants.Browser,
+                                arguments: UrlThirdParty.urlWorldCoronaInfo),
+                            _buildButtonDisable(
+                                '${Environment.iconAssets}conversation.png',
+                                Dictionary.qna),
                           ],
                         ),
                       ),
@@ -391,6 +436,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         });
+  }
+
+  _launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override

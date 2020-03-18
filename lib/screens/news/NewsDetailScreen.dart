@@ -51,7 +51,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                               height: MediaQuery.of(context).size.height / 3.3,
                               color: Colors.grey[200],
                               child: Image.asset(
-                                  '${Environment.imageAssets}placeholder.png',
+                                  '${Environment.iconAssets}pikobar.png',
                                   fit: BoxFit.fitWidth)),
                         ),
                       ),
@@ -62,7 +62,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           MaterialPageRoute(
                               builder: (_) => HeroImagePreview(
                                     Dictionary.heroImageTag,
-                                    imageUrl: widget.documents['images'],
+                                    imageUrl: widget.documents['image'],
                                   )));
                     },
                   ),

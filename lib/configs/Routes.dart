@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/BrowserScreen.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
@@ -10,12 +11,12 @@ Route generateRoutes(RouteSettings settings) {
   final args = settings.arguments;
 
   switch (settings.name) {
-    /*case NavigationConstrants.Browser:
+    case NavigationConstrants.Browser:
      return buildRoute(
          settings,
          BrowserScreen(
            url: args,
-         ));*/
+         ));
     case NavigationConstrants.News:
       return buildRoute(settings, News());
     case NavigationConstrants.Phonebook:
