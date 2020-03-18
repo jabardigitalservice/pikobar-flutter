@@ -167,7 +167,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                       ],
                                     ),
                                     Text(
-                                      unixTimeStampToDateTime(
+                                      unixTimeStampToDate(
                                           document['published_at'].seconds),
                                       style: TextStyle(
                                           fontSize: 12.0, color: Colors.grey),
@@ -196,7 +196,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 },
                 child: Container(
                   padding:
-                      EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
+                      EdgeInsets.only(left: 5, right: 5, top: 13, bottom: 13.5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -221,7 +221,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      unixTimeStampToDateTime(
+                                      unixTimeStampToDate(
                                           document['published_at'].seconds),
                                       style: TextStyle(
                                           fontSize: 12.0, color: Colors.grey),
