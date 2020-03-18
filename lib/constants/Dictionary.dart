@@ -15,7 +15,7 @@ class Dictionary {
   static String saberHoax = 'Jabar Saber Hoax';
   static String survey = 'Survei';
   static String logistic = 'Info Logistik';
-  static String kawalCorona = 'Kawal Corona';
+  static String kawalCorona = 'KawalCOVID19';
   static String worldInfo = 'Informasi Dunia';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Self Diagnose';
