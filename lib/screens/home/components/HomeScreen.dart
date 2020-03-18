@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn(
-              '${Environment.iconAssets}completed.png', Dictionary.survey, ''),
+              '${Environment.iconAssets}completed.png', Dictionary.survey, NavigationConstrants.Survey),
           _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
               Dictionary.selfDiagnose),
           _buildButtonDisable(
