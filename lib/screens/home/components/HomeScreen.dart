@@ -206,9 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Widget topContainer = Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),
-      decoration: BoxDecoration(
-        color: ColorBase.grey,
-          boxShadow: [
+      decoration: BoxDecoration(color: ColorBase.grey, boxShadow: [
         BoxShadow(
           color: Colors.white.withOpacity(0.05),
           //            blurRadius: 5,
@@ -279,8 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.notifications,
-                size: 20.0, color: Colors.white),
+            icon: Icon(Icons.notifications, size: 20.0, color: Colors.white),
             onPressed: () {
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: Text(Dictionary.onDevelopment),
@@ -304,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
                   Container(
-                    color: ColorBase.grey,
+                      color: ColorBase.grey,
                       margin: EdgeInsets.only(top: 10.0),
                       padding: EdgeInsets.only(bottom: 10.0),
                       child: Statistics()),
@@ -321,8 +318,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 TabBar(
                                   labelColor: Colors.black,
                                   tabs: <Widget>[
-                                    Tab(text: Dictionary.liveUpdate),
-                                    Tab(text: Dictionary.persRilis),
+                                    Tab(
+                                      child: Text(
+                                        Dictionary.liveUpdate,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: FontsFamily.productSans,
+                                            fontSize: 14.0),
+                                      ),
+                                    ),
+                                    Tab(
+                                        child: Text(
+                                      Dictionary.persRilis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: FontsFamily.productSans,
+                                          fontSize: 14.0),
+                                    )),
                                   ],
                                 ),
                                 Container(
