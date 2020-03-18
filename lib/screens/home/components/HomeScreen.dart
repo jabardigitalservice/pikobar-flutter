@@ -327,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(top: 10),
-                                  height: 390,
+                                  height: 400,
                                   child: TabBarView(
                                     children: <Widget>[
                                       NewsScreen(
