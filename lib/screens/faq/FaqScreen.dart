@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
-import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -16,14 +15,12 @@ class FaqScreen extends StatefulWidget {
 }
 
 class _FaqScreenState extends State<FaqScreen> {
-  AnimationController _animationController;
-  final _searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
+  String searchQuery;
   Timer _debounce;
 
   bool _isSearch = false;
   final containerWidth = 40.0;
-
-  final _nodeOne = FocusNode();
 
   @override
   void initState() {
@@ -37,16 +34,9 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(Dictionary.faq), actions: [
-        IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              print('masuk');
-              // Navigator.of(context).push(PageTransition(
-              //     child: ImportantInfoSearchScreen(),
-              //     type: PageTransitionType.fade));
-            }),
-      ]),
+      appBar: AppBar(
+          title: _isSearch ? _buildSearchField() : Text(Dictionary.faq),
+          actions: _buildActions()),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection(Collections.faq).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -56,7 +46,15 @@ class _FaqScreenState extends State<FaqScreen> {
               itemCount: messageCount,
               padding: EdgeInsets.only(bottom: 30.0),
               itemBuilder: (_, int index) {
-                return _cardContent(snapshot.data.documents[index]);
+                if (searchQuery != null || searchQuery != '') {
+                  if (snapshot.data.documents[index]['title']
+                      .toLowerCase()
+                      .contains(searchQuery)) {
+                    return _cardContent(snapshot.data.documents[index]);
+                  }
+                } else {
+                  return _cardContent(snapshot.data.documents[index]);
+                }
               },
             );
           } else {
@@ -67,57 +65,81 @@ class _FaqScreenState extends State<FaqScreen> {
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(title: _titleBar(), actions: <Widget>[
-      RotationTransition(
-        turns: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-        child: IconButton(
-          icon: _isSearch ? Icon(Icons.close) : Icon(Icons.search),
-          onPressed: () {
-            // _searchPressed();
-          },
-        ),
+  Widget _buildSearchField() {
+    return Container(
+      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      height: 40.0,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(20.0)),
+      child: TextField(
+        controller: _searchController,
+        autofocus: true,
+        decoration: InputDecoration(
+            hintText: "Cari FAQ",
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.black54),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
+        style: TextStyle(color: Colors.black, fontSize: 16.0),
+        onChanged: (query) => updateSearchQuery,
       ),
-      // action button
-    ]);
+    );
   }
 
-  Widget _titleBar() {
-    return Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerRight,
-          child: AnimatedOpacity(
-            opacity: _isSearch ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 500),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              width: containerWidth,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: TextField(
-                controller: _searchController,
-                autofocus: false,
-                focusNode: _nodeOne,
-                textInputAction: TextInputAction.go,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0)),
-              ),
-            ),
-          ),
+  List<Widget> _buildActions() {
+    if (_isSearch) {
+      return <Widget>[
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (_searchController == null || _searchController.text.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            _clearSearchQuery();
+          },
         ),
-        Align(
-            alignment: Alignment.centerLeft,
-            child:
-                Visibility(visible: !_isSearch, child: Text(Dictionary.faq))),
-      ],
-    );
+      ];
+    }
+
+    return <Widget>[
+      IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  void _startSearch() {
+    ModalRoute.of(context)
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearch = true;
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearch = false;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      updateSearchQuery("");
+    });
   }
 
   void _onSearchChanged() {
@@ -125,11 +147,11 @@ class _FaqScreenState extends State<FaqScreen> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         print(_searchController.text);
-        // _resultList.clear();
-        // _page = 1;
-        // _importantInfoSearchBloc
-        //     .add(ImportantInfoSearch(_searchController.text, _page));
-
+        setState(() {
+          searchQuery = _searchController.text;
+        });
+      } else {
+        _clearSearchQuery();
       }
     });
   }
