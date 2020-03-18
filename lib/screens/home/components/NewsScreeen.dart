@@ -309,7 +309,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                       ],
                                     ),
                                     Text(
-                                      unixTimeStampToDateTime(
+                                      unixTimeStampToDate(
                                           document['published_at'].seconds),
                                       style: TextStyle(
                                           fontSize: 12.0, color: Colors.grey),
@@ -366,7 +366,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      unixTimeStampToDateTime(
+                                      unixTimeStampToDate(
                                           document['published_at'].seconds),
                                       style: TextStyle(
                                           fontSize: 12.0,
