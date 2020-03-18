@@ -71,33 +71,33 @@ class _HomeScreenState extends State<HomeScreen> {
   _buildButtonColumnLayananLain(String iconPath, String label) {
     return Expanded(
         child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(2.0),
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  blurRadius: 10.0,
-                  color: Colors.black.withOpacity(.2),
-                  offset: Offset(2.0, 2.0),
-                ),
-              ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
-              child: IconButton(
-                color: Theme.of(context).textTheme.body1.color,
-                icon: Image.asset(iconPath),
-                onPressed: () {
-                  _mainHomeBottomSheet(context);
-                },
-              ),
+      children: [
+        Container(
+          padding: EdgeInsets.all(2.0),
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              blurRadius: 10.0,
+              color: Colors.black.withOpacity(.2),
+              offset: Offset(2.0, 2.0),
             ),
-            SizedBox(height: 12.0),
-            Text(label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).textTheme.body1.color,
-                ))
-          ],
-        ));
+          ], borderRadius: BorderRadius.circular(12.0), color: Colors.white),
+          child: IconButton(
+            color: Theme.of(context).textTheme.body1.color,
+            icon: Image.asset(iconPath),
+            onPressed: () {
+              _mainHomeBottomSheet(context);
+            },
+          ),
+        ),
+        SizedBox(height: 12.0),
+        Text(label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).textTheme.body1.color,
+            ))
+      ],
+    ));
   }
 
   @override
@@ -126,13 +126,12 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildButtonColumn(
-              '${Environment.iconAssets}completed.png', Dictionary.survey, ''),
-          _buildButtonColumn(
-              '${Environment.iconAssets}network.png', Dictionary.selfDiagnose, ''),
+          _buildButtonColumn('${Environment.iconAssets}completed.png',
+              Dictionary.survey, NavigationConstrants.Survey),
+          _buildButtonColumn('${Environment.iconAssets}network.png',
+              Dictionary.selfDiagnose, ''),
           _buildButtonColumn('${Environment.iconAssets}network.png',
               Dictionary.selfTracing, ''),
-
           _buildButtonColumn('${Environment.iconAssets}menu-other.png',
               Dictionary.otherMenus, ''),
           /*_buildButtonColumnLayananLain(
@@ -221,7 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: BannerListSlider()),
                     Container(
                         margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                        child: Statistics(odpCount: odpCount,
+                        child: Statistics(
+                            odpCount: odpCount,
                             pdpCount: pdpCount,
                             positifCount: positifCount)),
                     topContainer,
@@ -392,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     Dictionary.otherMenus,
                     style:
-                    TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Container(
@@ -454,16 +454,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ? '${ds['pdp']['total']['jabar']}'
           : '-';
       positifCount =
-      ds['aktif']['jabar'] != null ? '${ds['aktif']['jabar']}' : '-';
+          ds['aktif']['jabar'] != null ? '${ds['aktif']['jabar']}' : '-';
 
       setState(() {});
-    },
-        onError: (error) {
-          odpCount = '-';
-          pdpCount = '-';
-          positifCount = '-';
-          setState(() {});
-        });
+    }, onError: (error) {
+      odpCount = '-';
+      pdpCount = '-';
+      positifCount = '-';
+      setState(() {});
+    });
   }
 
   @override
