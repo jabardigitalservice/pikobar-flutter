@@ -16,7 +16,7 @@ class FaqScreen extends StatefulWidget {
 
 class _FaqScreenState extends State<FaqScreen> {
   TextEditingController _searchController = TextEditingController();
-  String searchQuery;
+  String searchQuery = '';
   Timer _debounce;
 
   bool _isSearch = false;
@@ -41,20 +41,25 @@ class _FaqScreenState extends State<FaqScreen> {
         stream: Firestore.instance.collection(Collections.faq).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            final int messageCount = snapshot.data.documents.length;
+            List dataFaq;
+
+            // if search ative
+            if (searchQuery.isNotEmpty) {
+              dataFaq = snapshot.data.documents
+                  .where((test) => test['title']
+                      .toLowerCase()
+                      .contains(searchQuery.toLowerCase()))
+                  .toList();
+            } else {
+              dataFaq = snapshot.data.documents;
+            }
+
+            final int messageCount = dataFaq.length;
             return ListView.builder(
               itemCount: messageCount,
               padding: EdgeInsets.only(bottom: 30.0),
               itemBuilder: (_, int index) {
-                if (searchQuery != null) {
-                  if (snapshot.data.documents[index]['title']
-                      .toLowerCase()
-                      .contains(searchQuery)) {
-                    return _cardContent(snapshot.data.documents[index]);
-                  }
-                } else {
-                  return _cardContent(snapshot.data.documents[index]);
-                }
+                return _cardContent(dataFaq[index]);
               },
             );
           } else {
@@ -135,7 +140,7 @@ class _FaqScreenState extends State<FaqScreen> {
   void _clearSearchQuery() {
     setState(() {
       _searchController.clear();
-      updateSearchQuery(null);
+      updateSearchQuery('');
     });
   }
 
