@@ -56,11 +56,11 @@ class _StatisticsState extends State<Statistics> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _buildContainer('${Environment.iconAssets}virus_2.png',
-                    Dictionary.positif, Dictionary.positif, '-', 3, Dictionary.active),
+                    Dictionary.positif, Dictionary.positif, '-', 3, Dictionary.people),
                 _buildContainer('${Environment.iconAssets}man.png',
-                    Dictionary.recover, Dictionary.recover, '-', 3, ''),
+                    Dictionary.recover, Dictionary.recover, '-', 3, Dictionary.people),
                 _buildContainer('${Environment.iconAssets}tombstone.png',
-                    Dictionary.die, Dictionary.die, '-', 3, ''),
+                    Dictionary.die, Dictionary.die, '-', 3, Dictionary.people),
               ],
             ),
             SizedBox(height: Dimens.padding),
@@ -120,19 +120,19 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.positif,
                   Dictionary.positif,
                   '${data['aktif']['jabar']}',
-                  3, Dictionary.active),
+                  3, Dictionary.people),
               _buildContainer(
                   '${Environment.iconAssets}man.png',
                   Dictionary.recover,
                   Dictionary.recover,
                   '${data['sembuh']['jabar']}',
-                  3, ''),
+                  3, Dictionary.people),
               _buildContainer(
                   '${Environment.iconAssets}tombstone.png',
                   Dictionary.die,
                   Dictionary.die,
                   '${data['meninggal']['jabar']}',
-                  3, ''),
+                  3, Dictionary.people),
             ],
           ),
           SizedBox(height: Dimens.padding),
@@ -171,7 +171,7 @@ class _StatisticsState extends State<Statistics> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(icon, width: 20.0, height: 20.0),
+              Image.asset(icon, width: 16.0, height: 16.0),
               Container(
                 margin: EdgeInsets.only(left: 5.0),
                 child: Text(title,
@@ -195,15 +195,15 @@ class _StatisticsState extends State<Statistics> {
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.productSans)),
               ),
-              label != '' ?Container(
-                margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 1.0),
+              Container(
+                margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 2.0),
                 child: Text(label,
                     style: TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey[600],
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.productSans)),
-              ):Container(),
+              )
             ],
           )
         ],

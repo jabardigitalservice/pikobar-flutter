@@ -98,7 +98,7 @@ class Dictionary {
   static String loadingData = 'Sedang mengambil data ...';
   static String onDevelopment = 'Dalam proses pengembangan';
   static String process = 'Proses';
-  static String active = 'Aktif';
+  static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
