@@ -317,14 +317,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Tab(
-                                        child:  Text(
-                                          Dictionary.nationalNews,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: FontsFamily.productSans,
-                                              fontSize: 13.0),
-                                        ),
+                                      child: Text(
+                                        Dictionary.nationalNews,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: FontsFamily.productSans,
+                                            fontSize: 13.0),
+                                      ),
                                     ),
                                     Tab(
                                         child: Text(
@@ -406,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      await remoteConfig.fetch();
+      await remoteConfig.fetch(expiration: Duration(minutes: 10));
       await remoteConfig.activateFetched();
 
       checkVersion(context, remoteConfig);
