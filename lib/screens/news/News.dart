@@ -18,6 +18,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     new Tab(
       child: Text(
         Dictionary.latestNews,
+        textAlign: TextAlign.center,
         style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -28,6 +29,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     new Tab(
         child: Text(
       Dictionary.nationalNews,
+          textAlign: TextAlign.center,
       style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,
@@ -37,6 +39,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     new Tab(
         child: Text(
       Dictionary.worldNews,
+          textAlign: TextAlign.center,
       style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,
