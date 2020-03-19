@@ -1,5 +1,5 @@
 class Dictionary {
-  static String appName = 'Pikobar';
+  static String appName = 'PIKOBAR';
   static String title = 'Pusat Informasi & Koordinasi COVID-19';
   static String provJabar = 'Provinsi Jawa Barat';
   static String version = '0.0.3';
@@ -12,7 +12,7 @@ class Dictionary {
   static String statistics = 'Update Terkini';
   static String menus = 'Pusat Layanan &  Informasi';
   static String help = 'FAQ';
-  static String saberHoax = 'Jabar Saber Hoax';
+  static String saberHoax = 'Saber Hoax';
   static String survey = 'Survei';
   static String logistic = 'Info Logistik';
   static String kawalCorona = 'KawalCOVID19';
