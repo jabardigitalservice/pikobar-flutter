@@ -108,9 +108,9 @@ class ListViewPhoneBooks extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: ListTile(
                 leading: Container(
-                    height: 25,
+                    height: 32,
                     child: Image.asset(
-                        '${Environment.iconAssets}conversations.png')),
+                        '${Environment.iconAssets}whatsapp.png')),
                 title: Text(Dictionary.dinasKesehatan),
                 onTap: () {
                   _launchURL(Dictionary.waNumberDinasKesehatan, 'whatsapp');
