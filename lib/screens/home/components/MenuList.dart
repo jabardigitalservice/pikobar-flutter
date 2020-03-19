@@ -307,6 +307,14 @@ class _MenuListState extends State<MenuList> {
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1);
+
+            if (label == Dictionary.selfDiagnose) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+            } else if (label == Dictionary.selfTracing) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedSelfTracing);
+            } else if (label == Dictionary.qna) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+            }
           },
         ),
       ),
@@ -331,6 +339,8 @@ class _MenuListState extends State<MenuList> {
             icon: Image.asset(iconPath),
             onPressed: () {
               _mainHomeBottomSheet(context);
+
+              AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
             },
           ),
         ),
