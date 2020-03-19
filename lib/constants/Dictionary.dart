@@ -11,7 +11,7 @@ class Dictionary {
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Update Terkini';
   static String menus = 'Pusat Layanan &  Informasi';
-  static String newsUpdate = 'Beita Terkini';
+  static String newsUpdate = 'Berita Terkini';
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
   static String survey = 'Survei';
