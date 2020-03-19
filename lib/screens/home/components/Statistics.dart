@@ -17,7 +17,10 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return new StreamBuilder(
-        stream: Firestore.instance.collection('statistics').document('jabar-dan-nasional').snapshots(),
+        stream: Firestore.instance
+            .collection('statistics')
+            .document('jabar-dan-nasional')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Container();
@@ -29,9 +32,7 @@ class _StatisticsState extends State<Statistics> {
             var userDocument = snapshot.data;
             return _buildContent(userDocument);
           }
-        }
-    );
-
+        });
   }
 
   _buildLoading() {
@@ -54,17 +55,24 @@ class _StatisticsState extends State<Statistics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer(
-                    '${Environment.iconAssets}stethoscope.png', Dictionary.odp,
-                    Dictionary.opdDesc, '-'),
-                _buildContainer(
-                    '${Environment.iconAssets}doctor.png', Dictionary.pdp,
-                    Dictionary.pdpDesc, '-'),
-                _buildContainer(
-                    '${Environment.iconAssets}infected.png', Dictionary.positif,
-                    Dictionary.infected, '-'),
+                _buildContainer('${Environment.iconAssets}virus_2.png',
+                    Dictionary.positif, Dictionary.infected, '-', 3, true),
+                _buildContainer('${Environment.iconAssets}man.png',
+                    Dictionary.underSupervision, Dictionary.recover, '-', 3, false),
+                _buildContainer('${Environment.iconAssets}tombstone.png',
+                    Dictionary.inMonitoring, Dictionary.die, '-', 3, false),
               ],
-            )
+            ),
+            SizedBox(height: Dimens.padding),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _buildContainer('${Environment.iconAssets}doctor.png',
+                    Dictionary.underSupervision, Dictionary.pdpDesc, '-', 2, true),
+                _buildContainer('${Environment.iconAssets}stethoscope.png',
+                    Dictionary.inMonitoring, Dictionary.opdDesc, '-', 2, true),
+              ],
+            ),
           ],
         ),
       ),
@@ -74,14 +82,11 @@ class _StatisticsState extends State<Statistics> {
   Container _buildContent(DocumentSnapshot data) {
     return Container(
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-          boxShadow: [
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          offset: Offset(0.0, 1),
-          blurRadius: 4.0
-        ),
+            color: Colors.black.withOpacity(0.1),
+            offset: Offset(0.0, 1),
+            blurRadius: 4.0),
       ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +102,6 @@ class _StatisticsState extends State<Statistics> {
                     fontFamily: FontsFamily.productSans,
                     fontSize: 16.0),
               ),
-
               Text(
                 unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
                 style: TextStyle(
@@ -112,14 +116,41 @@ class _StatisticsState extends State<Statistics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}stethoscope.png', Dictionary.odp,
-                  Dictionary.opdDesc, '${data['odp']['total']['jabar']}'),
+                  '${Environment.iconAssets}virus_2.png',
+                  Dictionary.positif,
+                  Dictionary.infected,
+                  '${data['aktif']['jabar']}',
+                  3, true),
               _buildContainer(
-                  '${Environment.iconAssets}doctor.png', Dictionary.pdp,
-                  Dictionary.pdpDesc, '${data['pdp']['total']['jabar']}'),
+                  '${Environment.iconAssets}man.png',
+                  Dictionary.recover,
+                  Dictionary.recover,
+                  '${data['sembuh']['jabar']}',
+                  3, false),
               _buildContainer(
-                  '${Environment.iconAssets}infected.png', Dictionary.positif,
-                  Dictionary.infected, '${data['aktif']['jabar']}'),
+                  '${Environment.iconAssets}tombstone.png',
+                  Dictionary.die,
+                  Dictionary.die,
+                  '${data['meninggal']['jabar']}',
+                  3, false),
+            ],
+          ),
+          SizedBox(height: Dimens.padding),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _buildContainer(
+                  '${Environment.iconAssets}doctor.png',
+                  Dictionary.underSupervision,
+                  Dictionary.pdpDesc,
+                  '${data['pdp']['total']['jabar']}',
+                  2, true),
+              _buildContainer(
+                  '${Environment.iconAssets}stethoscope.png',
+                  Dictionary.inMonitoring,
+                  Dictionary.opdDesc,
+                  '${data['odp']['total']['jabar']}',
+                  2, true),
             ],
           )
         ],
@@ -127,47 +158,54 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContainer(String icon, String title, String description,
-      String count) {
+  Container _buildContainer(
+      String icon, String title, String description, String count, int length, bool isActive) {
     return Container(
-      width: (MediaQuery
-          .of(context)
-          .size
-          .width / 3) - 21.4,
-      padding: EdgeInsets.all(Dimens.padding),
+      width: (MediaQuery.of(context).size.width / length) - 21.4,
+      padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 10, bottom: 10),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[400]),
           borderRadius: BorderRadius.circular(8.0)),
       child: Column(
         children: <Widget>[
-          Image.asset(icon,
-              width: 32.0, height: 32.0),
-
-          Container(
-            margin: EdgeInsets.only(top: Dimens.padding, bottom: 5.0),
-            child: Text(title,
-                style: TextStyle(
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: FontsFamily.productSans)),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(icon, width: 20.0, height: 20.0),
+              Container(
+                margin: EdgeInsets.only(left: 5.0),
+                child: Text(title,
+                    style: TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.productSans)),
+              ),
+            ],
           ),
-
-          Text(description,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 10.0,
-                  color: Colors.grey[600],
-                  fontFamily: FontsFamily.productSans)),
-
-          Container(
-            margin: EdgeInsets.only(top: Dimens.padding),
-            child: Text(count,
-                style: TextStyle(
-                    fontSize: 24.0,
-                    color: ColorBase.green,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: FontsFamily.productSans)),
-          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: Dimens.padding),
+                child: Text(count,
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        color: ColorBase.green,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.productSans)),
+              ),
+              isActive ?Container(
+                margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 1.0),
+                child: Text('Aktif',
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.productSans)),
+              ):Container(),
+            ],
+          )
         ],
       ),
     );

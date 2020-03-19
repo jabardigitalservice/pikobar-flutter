@@ -329,6 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Tab(
                                       child: Text(
                                         Dictionary.latestNews,
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
@@ -336,16 +337,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Tab(
-                                        child: Text(
-                                      Dictionary.nationalNews,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: FontsFamily.productSans,
-                                          fontSize: 14.0),
-                                    )),
+                                        child:  Text(
+                                          Dictionary.nationalNews,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: FontsFamily.productSans,
+                                              fontSize: 14.0),
+                                        ),
+                                    ),
                                     Tab(
                                         child: Text(
                                       Dictionary.worldNews,
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
