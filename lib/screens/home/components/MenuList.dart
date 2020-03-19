@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -12,6 +13,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MenuList extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -77,8 +79,7 @@ class _MenuListState extends State<MenuList> {
               Dictionary.pikobar, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaInfo),
           _buildButtonColumn('${Environment.iconAssets}virus.png',
-              Dictionary.nationalInfo, UrlThirdParty.urlCoronaEscort,
-              openBrowser: true),
+              Dictionary.nationalInfo, NavigationConstrants.Browser, arguments: UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
               Dictionary.worldInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlWorldCoronaInfo),
@@ -154,11 +155,10 @@ class _MenuListState extends State<MenuList> {
               _remoteConfig.getString(FirebaseConfig.nationalInfoCaption) !=
                       null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoCaption)
-                  : Dictionary.nationalInfo,
-              _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) != null
+                  : Dictionary.nationalInfo, NavigationConstrants.Browser,
+              arguments: _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) != null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
-                  : UrlThirdParty.urlCoronaEscort,
-              openBrowser: true),
+                  : UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn(
               '${Environment.iconAssets}world.png',
               _remoteConfig.getString(FirebaseConfig.worldInfoCaption) != null
@@ -354,7 +354,11 @@ class _MenuListState extends State<MenuList> {
                           Analytics.tappedJabarSaberHoax);
                     }
                   } else {
-                    Navigator.pushNamed(context, route, arguments: arguments);
+                    if (iconPath == '${Environment.iconAssets}help.png') {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => InWebView(url: arguments)));
+                    } else {
+                      Navigator.pushNamed(context, route, arguments: arguments);
+                    }
 
                     // record event to analytics
                     if (label == Dictionary.phoneBookEmergency) {
