@@ -29,10 +29,10 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: widget.news == Dictionary.latestNews
-          ? Firestore.instance.collection('articles').snapshots()
+          ? Firestore.instance.collection('articles').orderBy('published_at', descending: true).snapshots()
           : widget.news == Dictionary.nationalNews
-              ? Firestore.instance.collection('articles_national').snapshots()
-              : Firestore.instance.collection('articles_world').snapshots(),
+              ? Firestore.instance.collection('articles_national').orderBy('published_at', descending: true).snapshots()
+              : Firestore.instance.collection('articles_world').orderBy('published_at', descending: true).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
