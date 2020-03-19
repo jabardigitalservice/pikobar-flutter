@@ -15,7 +15,7 @@ class Dictionary {
   static String saberHoax = 'Jabar Saber Hoax';
   static String survey = 'Survei';
   static String logistic = 'Info Logistik';
-  static String kawalCorona = 'Kawal Corona';
+  static String kawalCorona = 'KawalCOVID19';
   static String worldInfo = 'Informasi Dunia';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Self Diagnose';
@@ -33,6 +33,15 @@ class Dictionary {
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
+  static String phoneBookEmergencyInformation='Informasi Nomor Darurat';
+  static String waNumberDinasKesehatan='+628112093306';
+  static String phoneBookEmergencyInformationCaption='Segera hubungi nomor dibawah ini untuk informasi darurat';
+  static String callCenterNumber='119';
+  static String callCenter='119 Call Center';
+  static String dinasKesehatan='Dinas Kesehatan Jawa Barat';
+  static String daftarRumahSakitRujukan='Daftar Rumah Sakit Rujukan';
+  static String daftarRumahSakitRujukanCaption='Segera hubungi nomor dibawah ini untuk rumah sakit rujukan';
+
 
   // Button Text
   static String yes = 'Ya';

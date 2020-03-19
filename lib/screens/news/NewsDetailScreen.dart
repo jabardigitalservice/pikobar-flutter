@@ -142,7 +142,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => News()));
+                                      builder: (context) => News(isLiveUpdate: widget.isLiveUpdate)));
                             },
                           ),
                         ),
