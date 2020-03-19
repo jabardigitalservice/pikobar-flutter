@@ -242,30 +242,30 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: <Widget>[
             Image.asset('${Environment.logoAssets}logo.png',
-                width: 35.0, height: 35.0),
+                width: 40.0, height: 40.0),
             Container(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      Dictionary.title,
+                      Dictionary.appName,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans,
+                        fontFamily: FontsFamily.intro,
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 2.0),
+                      padding: EdgeInsets.only(top: 4.0),
                       child: Text(
-                        Dictionary.provJabar,
+                        Dictionary.subTitle,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 8,
                           fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans,
+                          fontFamily: FontsFamily.intro,
                         ),
                       ),
                     )
