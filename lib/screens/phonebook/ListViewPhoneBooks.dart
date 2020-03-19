@@ -108,7 +108,7 @@ class ListViewPhoneBooks extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: ListTile(
                 leading: Container(
-                    height: 32,
+                    height: 25,
                     child: Image.asset(
                         '${Environment.iconAssets}whatsapp.png')),
                 title: Text(Dictionary.dinasKesehatan),

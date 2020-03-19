@@ -2,12 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
@@ -15,10 +13,10 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsScreen extends StatefulWidget {
-  final bool isLiveUpdate;
+  final String news;
   final int maxLength;
 
-  NewsScreen({@required this.isLiveUpdate, this.maxLength});
+  NewsScreen({@required this.news, this.maxLength});
 
   @override
   _NewsScreenState createState() => _NewsScreenState();
@@ -28,9 +26,11 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: widget.isLiveUpdate
+      stream: widget.news == Dictionary.latestNews
           ? Firestore.instance.collection('articles').snapshots()
-          : Firestore.instance.collection('articles').snapshots(),
+          : widget.news == Dictionary.nationalNews
+              ? Firestore.instance.collection('articles_national').snapshots()
+              : Firestore.instance.collection('articles_world').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -79,8 +79,11 @@ class _NewsScreenState extends State<NewsScreen> {
                   textStyle: Theme.of(context).textTheme.subhead.copyWith(
                       color: Colors.white, fontWeight: FontWeight.bold),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => News(isLiveUpdate: widget.isLiveUpdate)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                News(news: widget.news)));
                   }),
             ),
           ],
@@ -90,317 +93,195 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget designNewsHome(DocumentSnapshot document) {
-    return widget.isLiveUpdate
-        ? SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: RaisedButton(
-                elevation: 0,
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewsDetailScreen(
-                              documents: document,
-                              isLiveUpdate: widget.isLiveUpdate)));
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: Row(
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: RaisedButton(
+          elevation: 0,
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NewsDetailScreen(
+                        documents: document,
+                        news: widget.news)));
+          },
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 70,
+                  height: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl: document['image'],
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                          heightFactor: 4.2,
+                          child: CupertinoActivityIndicator()),
+                      errorWidget: (context, url, error) => Container(
+                          height:
+                          MediaQuery.of(context).size.height / 3.3,
+                          color: Colors.grey[200],
+                          child: Image.asset(
+                              '${Environment.iconAssets}pikobar.png',
+                              fit: BoxFit.fitWidth)),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  width: MediaQuery.of(context).size.width - 120,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        width: 70,
-                        height: 70,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: CachedNetworkImage(
-                            imageUrl: document['image'],
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
-                                heightFactor: 4.2,
-                                child: CupertinoActivityIndicator()),
-                            errorWidget: (context, url, error) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 3.3,
-                                color: Colors.grey[200],
-                                child: Image.asset(
-                                    '${Environment.iconAssets}pikobar.png',
-                                    fit: BoxFit.fitWidth)),
-                          ),
-                        ),
+                      Text(
+                        document['title'],
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Container(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        width: MediaQuery.of(context).size.width - 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              document['title'],
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Container(
-                                padding: EdgeInsets.only(top: 5.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Image.network(
-                                          document['news_channel_icon'],
-                                          width: 25.0,
-                                          height: 25.0,
-                                        ),
-                                        SizedBox(width: 3.0),
-                                        Text(
-                                          document['news_channel'],
-                                          style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      unixTimeStampToDate(
-                                          document['published_at'].seconds),
-                                      style: TextStyle(
-                                          fontSize: 12.0, color: Colors.grey),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
-                      ),
+                          padding: EdgeInsets.only(top: 5.0),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Image.network(
+                                    document['news_channel_icon'],
+                                    width: 25.0,
+                                    height: 25.0,
+                                  ),
+                                  SizedBox(width: 3.0),
+                                  Text(
+                                    document['news_channel'],
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                unixTimeStampToDate(
+                                    document['published_at'].seconds),
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.grey),
+                              ),
+                            ],
+                          )),
                     ],
                   ),
-                )),
-          )
-        : SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: RaisedButton(
-                elevation: 0,
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewsDetailScreen(
-                              documents: document,
-                              isLiveUpdate: widget.isLiveUpdate)));
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.only(left: 5, right: 5, top: 13, bottom: 13.5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              document['title'],
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Container(
-                                padding: EdgeInsets.only(top: 5.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      unixTimeStampToDate(
-                                          document['published_at'].seconds),
-                                      style: TextStyle(
-                                          fontSize: 12.0, color: Colors.grey),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-          );
+                ),
+              ],
+            ),
+          )),
+    );
   }
 
   Widget designListNews(DocumentSnapshot document) {
-    return widget.isLiveUpdate
-        ? Card(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: RaisedButton(
-                elevation: 0,
-                color: Colors.white,
-                child: Container(
-                  padding: EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
-                  child: Row(
+    return Card(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          elevation: 0,
+          color: Colors.white,
+          child: Container(
+            padding:
+            EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 70,
+                  height: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl: document['image'],
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                          heightFactor: 4.2,
+                          child: CupertinoActivityIndicator()),
+                      errorWidget: (context, url, error) => Container(
+                          height:
+                          MediaQuery.of(context).size.height / 3.3,
+                          color: Colors.grey[200],
+                          child: Image.asset(
+                              '${Environment.iconAssets}pikobar.png',
+                              fit: BoxFit.fitWidth)),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  width: MediaQuery.of(context).size.width - 120,
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        width: 70,
-                        height: 70,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: CachedNetworkImage(
-                            imageUrl: document['image'],
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
-                                heightFactor: 4.2,
-                                child: CupertinoActivityIndicator()),
-                            errorWidget: (context, url, error) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 3.3,
-                                color: Colors.grey[200],
-                                child: Image.asset(
-                                    '${Environment.iconAssets}pikobar.png',
-                                    fit: BoxFit.fitWidth)),
-                          ),
-                        ),
+                      Text(
+                        document['title'],
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Container(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        width: MediaQuery.of(context).size.width - 120,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              document['title'],
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Container(
-                                padding: EdgeInsets.only(top: 5.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Image.network(
-                                          document['news_channel_icon'],
-                                          width: 25.0,
-                                          height: 25.0,
-                                        ),
-                                        SizedBox(width: 3.0),
-                                        Text(
-                                          document['news_channel'],
-                                          style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      unixTimeStampToDate(
-                                          document['published_at'].seconds),
-                                      style: TextStyle(
-                                          fontSize: 12.0, color: Colors.grey),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
-                      ),
+                          padding: EdgeInsets.only(top: 5.0),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Image.network(
+                                    document['news_channel_icon'],
+                                    width: 25.0,
+                                    height: 25.0,
+                                  ),
+                                  SizedBox(width: 3.0),
+                                  Text(
+                                    document['news_channel'],
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                unixTimeStampToDate(
+                                    document['published_at'].seconds),
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.grey),
+                              ),
+                            ],
+                          )),
                     ],
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewsDetailScreen(
-                              documents: document,
-                              isLiveUpdate: widget.isLiveUpdate)));
-                },
-              ),
+              ],
             ),
-          )
-        : Card(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: RaisedButton(
-                elevation: 0,
-                color: Colors.white,
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              document['title'],
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Container(
-                                padding: EdgeInsets.only(top: 5.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      unixTimeStampToDate(
-                                          document['published_at'].seconds),
-                                      style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Colors.grey[600], fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                )),
-                            Html(data: '<p>'+document['content'].toString().split('<p>')[1],
-                                defaultTextStyle: TextStyle(
-                                    color: Colors.grey[600], fontSize: 12.0),
-                                customTextAlign: (dom.Node node) {
-                                  return TextAlign.justify;
-                                },
-                                onLinkTap: (url) {
-                                  _launchURL(url);
-                                })
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NewsDetailScreen(
-                              documents: document,
-                              isLiveUpdate: widget.isLiveUpdate)));
-                },
-              ),
-            ),
-          );
+          ),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NewsDetailScreen(
+                        documents: document,
+                        news: widget.news)));
+          },
+        ),
+      ),
+    );
   }
 
   _buildContentList(AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -11,6 +11,7 @@ class Dictionary {
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Update Terkini';
   static String menus = 'Pusat Layanan &  Informasi';
+  static String newsUpdate = 'Beita Terkini';
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
   static String survey = 'Survei';
@@ -70,6 +71,9 @@ class Dictionary {
   static String somethingWrong = 'Terjadi kesalahan';
 
   static String liveUpdate = 'Live Update';
+  static String latestNews = 'Berita Jabar';
+  static String worldNews = 'Berita Dunia';
+  static String nationalNews = 'Berita Nasional';
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
   static String more = 'Selengkapnya';
