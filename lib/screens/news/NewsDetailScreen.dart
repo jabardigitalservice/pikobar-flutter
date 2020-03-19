@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:url_launcher/url_launcher.dart';
@@ -25,9 +27,17 @@ class NewsDetailScreen extends StatefulWidget {
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
+  void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.news);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(
+        appBar: AppBar(
+            title: Text(
           Dictionary.news,
           style: TextStyle(
               color: Colors.white,
@@ -149,7 +159,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => News(news: widget.news)));
+                                      builder: (context) =>
+                                          News(news: widget.news)));
                             },
                           ),
                         ),

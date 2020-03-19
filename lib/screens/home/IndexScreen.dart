@@ -8,11 +8,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -32,7 +34,7 @@ class _IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
 
-    checkAppVersion();
+    // checkAppVersion();
     _initializeBottomNavigationBar();
 
     _firebaseMessaging.configure(
@@ -164,9 +166,11 @@ class _IndexScreenState extends State<IndexScreen> {
       case 0:
         return HomeScreen();
       case 1:
+        AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
         return Messages();
 
       case 2:
+        AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen();
 
       default:

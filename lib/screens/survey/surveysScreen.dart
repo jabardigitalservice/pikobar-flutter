@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -16,6 +18,7 @@ class SurveysScreen extends StatefulWidget {
 class _SurveysScreenState extends State<SurveysScreen> {
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.survey);
     super.initState();
   }
 

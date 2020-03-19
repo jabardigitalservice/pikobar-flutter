@@ -7,8 +7,10 @@ import 'package:html/dom.dart' as dom;
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class FaqScreen extends StatefulWidget {
@@ -26,6 +28,8 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.faq);
+
     _searchController.addListener((() {
       _onSearchChanged();
     }));
@@ -130,6 +134,8 @@ class _FaqScreenState extends State<FaqScreen> {
     setState(() {
       _isSearch = true;
     });
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedFaqSearch);
   }
 
   void updateSearchQuery(String newQuery) {

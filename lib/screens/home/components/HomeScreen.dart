@@ -1,5 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -11,6 +13,9 @@ import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/checkVersion.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'BannerListSlider.dart';
 
@@ -24,8 +29,166 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.home);
+
     super.initState();
   }
+
+  // _buildButtonColumn(String iconPath, String label, String route,
+  //     {Object arguments}) {
+  //   return Expanded(
+  //     child: Column(
+  //       children: [
+  //         Container(
+  //           padding: EdgeInsets.all(2.0),
+  //           decoration: BoxDecoration(boxShadow: [
+  //             BoxShadow(
+  //               blurRadius: 6.0,
+  //               color: Colors.black.withOpacity(.2),
+  //               offset: Offset(2.0, 4.0),
+  //             ),
+  //           ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
+  //           child: IconButton(
+  //             color: Theme.of(context).textTheme.body1.color,
+  //             icon: Image.asset(iconPath),
+  //             onPressed: () {
+  //               if (route != null) {
+  //                 switch (route) {
+  //                   case UrlThirdParty.urlCoronaEscort:
+  //                     _launchUrl(route);
+  //                     AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
+  //                     break;
+  //                   case UrlThirdParty.urlIGSaberHoax:
+  //                     _launchUrl(route);
+  //                     AnalyticsHelper.setLogEvent(
+  //                         Analytics.tappedJabarSaberHoax);
+  //                     break;
+  //                   default:
+  //                     Navigator.pushNamed(context, route, arguments: arguments);
+
+  //                     // record event to analytics
+  //                     if (label == Dictionary.phoneBookEmergency) {
+  //                       AnalyticsHelper.setLogEvent(
+  //                           Analytics.tappedphoneBookEmergency);
+  //                     } else if (label == Dictionary.pikobar) {
+  //                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+  //                     } else if (label == Dictionary.logistic) {
+  //                       AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+  //                     } else if (label == Dictionary.survey) {
+  //                       AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
+  //                     } else if (label == Dictionary.worldInfo) {
+  //                       AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+  //                     }
+  //                 }
+  //               }
+  //             },
+  //           ),
+  //         ),
+  //         SizedBox(height: 12.0),
+  //         Text(label,
+  //             textAlign: TextAlign.center,
+  //             style: TextStyle(
+  //               fontSize: 12.0,
+  //               color: Theme.of(context).textTheme.body1.color,
+  //             ))
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // _buildButtonDisable(String iconPath, String label) {
+  //   return Expanded(
+  //     child: GestureDetector(
+  //       child: Column(
+  //         children: [
+  //           Stack(children: [
+  //             Container(
+  //               padding: EdgeInsets.all(2.0),
+  //               decoration: BoxDecoration(
+  //                   boxShadow: [
+  //                     BoxShadow(
+  //                       blurRadius: 6.0,
+  //                       color: Colors.black.withOpacity(.2),
+  //                       offset: Offset(2.0, 4.0),
+  //                     ),
+  //                   ],
+  //                   borderRadius: BorderRadius.circular(8.0),
+  //                   color: Colors.white),
+  //               child: IconButton(
+  //                 color: Theme.of(context).textTheme.body1.color,
+  //                 icon: Image.asset(iconPath),
+  //                 onPressed: null,
+  //               ),
+  //             ),
+  //             Positioned(
+  //                 right: 2.0,
+  //                 child: Image.asset(
+  //                   '${Environment.iconAssets}bookmark_1.png',
+  //                   width: 18.0,
+  //                   height: 18.0,
+  //                 ))
+  //           ]),
+  //           SizedBox(height: 12.0),
+  //           Text(label,
+  //               textAlign: TextAlign.center,
+  //               style: TextStyle(
+  //                 fontSize: 12.0,
+  //                 color: Theme.of(context).textTheme.body1.color,
+  //               ))
+  //         ],
+  //       ),
+  //       onTap: () {
+  //         Fluttertoast.showToast(
+  //             msg: Dictionary.onDevelopment,
+  //             toastLength: Toast.LENGTH_SHORT,
+  //             gravity: ToastGravity.BOTTOM,
+  //             timeInSecForIos: 1);
+
+  //         if (label == Dictionary.selfDiagnose) {
+  //           AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+  //         } else if (label == Dictionary.selfTracing) {
+  //           AnalyticsHelper.setLogEvent(Analytics.tappedSelfTracing);
+  //         } else if (label == Dictionary.qna) {
+  //           AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // _buildButtonColumnLayananLain(String iconPath, String label) {
+  //   return Expanded(
+  //       child: Column(
+  //     children: [
+  //       Container(
+  //         padding: EdgeInsets.all(2.0),
+  //         decoration: BoxDecoration(boxShadow: [
+  //           BoxShadow(
+  //             blurRadius: 10.0,
+  //             color: Colors.black.withOpacity(.2),
+  //             offset: Offset(2.0, 2.0),
+  //           ),
+  //         ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
+  //         child: IconButton(
+  //           color: Theme.of(context).textTheme.body1.color,
+  //           icon: Image.asset(iconPath),
+  //           onPressed: () {
+  //             _mainHomeBottomSheet(context);
+
+  //             AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
+  //           },
+  //         ),
+  //       ),
+  //       SizedBox(height: 12.0),
+  //       Text(label,
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             color: Theme.of(context).textTheme.body1.color,
+  //           ))
+  //     ],
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 content: Text(Dictionary.onDevelopment),
                 duration: Duration(seconds: 1),
               ));
+
+              AnalyticsHelper.setLogEvent(Analytics.tappedNotification);
             },
           )
         ],
@@ -102,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       future: setupRemoteConfig(),
                       builder: (BuildContext context,
                           AsyncSnapshot<RemoteConfig> snapshot) {
-                            return MenuList(snapshot.data);
+                        return MenuList(snapshot.data);
                       }),
                   Container(
                     color: Colors.white,
@@ -126,6 +291,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               children: <Widget>[
                                 TabBar(
+                                  onTap: (index) {
+                                    if (index == 0) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsJabar);
+                                    } else if (index == 1) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsNational);
+                                    } else if (index == 2) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsWorld);
+                                    }
+                                  },
                                   labelColor: Colors.black,
                                   indicatorColor: ColorBase.green,
                                   indicatorWeight: 2.8,
@@ -133,6 +310,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Tab(
                                       child: Text(
                                         Dictionary.latestNews,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: FontsFamily.productSans,
+                                            fontSize: 13.0),
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: Text(
+                                        Dictionary.nationalNews,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
@@ -141,19 +327,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Tab(
-                                        child:  Text(
-                                          Dictionary.nationalNews,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: FontsFamily.productSans,
-                                              fontSize: 13.0),
-                                        ),
-                                    ),
-                                    Tab(
                                         child: Text(
                                       Dictionary.worldNews,
-                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
@@ -167,11 +342,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: TabBarView(
                                     children: <Widget>[
                                       NewsScreen(
-                                          news: Dictionary.latestNews, maxLength: 3),
+                                          news: Dictionary.latestNews,
+                                          maxLength: 3),
                                       NewsScreen(
-                                          news: Dictionary.nationalNews, maxLength: 3),
+                                          news: Dictionary.nationalNews,
+                                          maxLength: 3),
                                       NewsScreen(
-                                          news: Dictionary.worldNews, maxLength: 3),
+                                          news: Dictionary.worldNews,
+                                          maxLength: 3),
                                     ],
                                   ),
                                 )
@@ -228,8 +406,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      await remoteConfig.fetch(expiration: const Duration(minutes: 10));
+      await remoteConfig.fetch(expiration: Duration(minutes: 10));
       await remoteConfig.activateFetched();
+
+      checkVersion(context, remoteConfig);
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
