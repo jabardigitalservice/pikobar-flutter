@@ -6,6 +6,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class Statistics extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(var data) {
+  Container _buildContent(DocumentSnapshot data) {
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -85,13 +86,26 @@ class _StatisticsState extends State<Statistics> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            Dictionary.statistics,
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontFamily: FontsFamily.productSans,
-                fontSize: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                Dictionary.statistics,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: FontsFamily.productSans,
+                    fontSize: 16.0),
+              ),
+
+              Text(
+                unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
+                style: TextStyle(
+                    color: Colors.grey[650],
+                    fontFamily: FontsFamily.productSans,
+                    fontSize: 12.0),
+              ),
+            ],
           ),
           SizedBox(height: Dimens.padding),
           Row(

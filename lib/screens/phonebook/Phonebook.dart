@@ -21,7 +21,7 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
   bool _hasChange = false;
   var containerWidth = 40.0;
   final _nodeOne = FocusNode();
-  final _searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
   Timer _debounce;
 
   @override
@@ -33,6 +33,7 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
     _searchController.addListener((() {
       _onSearchChanged();
     }));
+
     super.initState();
   }
 
@@ -41,8 +42,12 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
     return Scaffold(
         appBar: _buildAppBar(),
         body: StreamBuilder<QuerySnapshot>(
-          stream:
-              Firestore.instance.collection('emergency_numbers').snapshots(),
+          stream: _searchController.text == ''
+              ? Firestore.instance.collection('emergency_numbers').snapshots()
+              : Firestore.instance
+                  .collection('emergency_numbers')
+                  .where('name',isGreaterThanOrEqualTo:  _searchController.text)
+                  .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return ErrorContent(error: snapshot.error);
@@ -116,7 +121,6 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         _hasChange = true;
-        //  snaps
       }
     });
   }
@@ -138,10 +142,15 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(30.0),
               ),
               child: TextField(
-                controller: _searchController,
+                // controller: _searchController,
                 autofocus: false,
                 focusNode: _nodeOne,
-                textInputAction: TextInputAction.go,
+                onChanged: (String value) {
+                  setState(() {
+                    _searchController.text = value;
+                  });
+                },
+                textInputAction: TextInputAction.go, textCapitalization: TextCapitalization.words,
                 style: TextStyle(color: Colors.black, fontSize: 16.0),
                 decoration: InputDecoration(
                     border: InputBorder.none,

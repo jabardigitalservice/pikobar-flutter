@@ -53,6 +53,7 @@ class _NewsScreenState extends State<NewsScreen> {
         elevation: 3.0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             ListView.separated(
                 shrinkWrap: true,
@@ -79,7 +80,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       color: Colors.white, fontWeight: FontWeight.bold),
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => News()));
+                        MaterialPageRoute(builder: (context) => News(isLiveUpdate: widget.isLiveUpdate)));
                   }),
             ),
           ],
