@@ -7,6 +7,13 @@ String unixTimeStampToDateTime(int millisecond) {
   return dateTimeString;
 }
 
+String unixTimeStampToDateTimeWithoutDay(int millisecond) {
+  var format = DateFormat('dd MMMM yyyy HH:mm', 'id');
+  var dateTimeString = format.format(DateTime.fromMillisecondsSinceEpoch(millisecond * 1000));
+
+  return dateTimeString;
+}
+
 String unixTimeStampToDate(int millisecond) {
   var format = DateFormat.yMMMMEEEEd('id');
   var dateString = format.format(DateTime.fromMillisecondsSinceEpoch(millisecond * 1000));
