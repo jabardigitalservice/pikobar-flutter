@@ -15,14 +15,14 @@ class Dictionary {
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
   static String survey = 'Survei';
-  static String logistic = 'Info Logistik';
+  static String logistic = 'Permohonan';
   static String kawalCorona = 'KawalCOVID19';
   static String worldInfo = 'Data Dunia';
   static String nationalInfo = 'Data Nasional';
   static String caseReport = 'Lapor Kasus';
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Bantu Kita';
-  static String qna = 'Tanya Jawab';
+  static String qna = 'Forum';
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String otherMenus = 'Menu lainnya';
