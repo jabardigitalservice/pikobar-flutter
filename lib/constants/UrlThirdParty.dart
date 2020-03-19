@@ -11,7 +11,7 @@ class UrlThirdParty {
   static const String urlQNA = '';
   static const String urlSelfTracing = '';
   static const String urlVolunteer = '';
-  static const String urlSelfDiagnose = 'http://dev.engine.prixa.ai/?token=2YJB7LqMXkFEBBpj&pId=f22f2364-44d2-4431-bf11-a6bb83898db2&appId=a9cc08ae-127a-47a4-b62b-a384f2127cfb#';
+  static const String urlSelfDiagnose = 'http://dev.engine.prixa.ai/';
 
 
 }
