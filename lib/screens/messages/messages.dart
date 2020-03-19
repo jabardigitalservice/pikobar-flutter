@@ -120,60 +120,63 @@ class _MessagesState extends State<Messages> {
   _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
     return ListView.builder(
       controller: _scrollController,
-      padding: EdgeInsets.only(bottom: 10.0),
+      padding: EdgeInsets.all(15.0),
       itemCount: snapshot.data.documents.length,
       itemBuilder: (context, index) {
         final DocumentSnapshot document = snapshot.data.documents[index];
-        return GestureDetector(
-          child: Card(
-              margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
-              elevation: 0.2,
-              child: Container(
-                margin: EdgeInsets.all(15.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(right: 10.0, top: 5.0),
-                        child: Image.asset(
-                          '${Environment.iconAssets}broadcast.png',
-                          width: 24.0,
-                          height: 24.0,
-                        )),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            document['title'],
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.grey[700]),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 8.0, bottom: 15.0),
-                            child: Text(
-                              _parseHtmlString(document['content']),
-                              maxLines: 3,
-                              overflow: TextOverflow.clip,
+        return Padding(
+          padding:  EdgeInsets.only(bottom: 15),
+          child: GestureDetector(
+            child: Card(
+                margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
+                elevation: 0.5,
+                child: Container(
+                  margin: EdgeInsets.all(15.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(right: 10.0, top: 5.0),
+                          child: Image.asset(
+                            '${Environment.iconAssets}broadcast.png',
+                            width: 24.0,
+                            height: 24.0,
+                          )),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              document['title'],
                               style: TextStyle(
-                                  fontSize: 15.0, color: Colors.grey[700]),
+                                  fontSize: 16.0, color: Color(0xff4F4F4F),fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          Text(
-                            unixTimeStampToDateTime(
-                                document['published_at'].seconds),
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.grey),
-                          ),
-                        ],
+                            Container(
+                              margin: EdgeInsets.only(top: 8.0, bottom: 15.0),
+                              child: Text(
+                                _parseHtmlString(document['content']),
+                                maxLines: 3,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Color(0xff828282)),
+                              ),
+                            ),
+                            Text(
+                              unixTimeStampToDateTime(
+                                  document['published_at'].seconds),
+                              style:
+                                  TextStyle(fontSize: 12.0, color: Color(0xffBDBDBD)),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )),
-          onTap: () {
-            _openDetail(snapshot.data.documents[index]);
-          },
+                    ],
+                  ),
+                )),
+            onTap: () {
+              _openDetail(snapshot.data.documents[index]);
+            },
+          ),
         );
       },
     );
