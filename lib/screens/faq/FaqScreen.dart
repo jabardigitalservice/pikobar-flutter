@@ -134,6 +134,8 @@ class _FaqScreenState extends State<FaqScreen> {
     setState(() {
       _isSearch = true;
     });
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedFaqSearch);
   }
 
   void updateSearchQuery(String newQuery) {

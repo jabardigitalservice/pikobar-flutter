@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -80,10 +82,13 @@ class _NewsScreenState extends State<NewsScreen> {
                       color: Colors.white, fontWeight: FontWeight.bold),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                News(news: widget.news)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => News(news: widget.news),
+                      ),
+                    );
+
+                    AnalyticsHelper.setLogEvent(Analytics.tappedMore);
                   }),
             ),
           ],
@@ -100,11 +105,15 @@ class _NewsScreenState extends State<NewsScreen> {
           color: Colors.white,
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NewsDetailScreen(
-                        documents: document,
-                        news: widget.news)));
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    NewsDetailScreen(documents: document, news: widget.news),
+              ),
+            );
+
+            AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+                <String, dynamic>{'title': document['title']});
           },
           child: Container(
             padding: EdgeInsets.all(5),
@@ -123,8 +132,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           heightFactor: 4.2,
                           child: CupertinoActivityIndicator()),
                       errorWidget: (context, url, error) => Container(
-                          height:
-                          MediaQuery.of(context).size.height / 3.3,
+                          height: MediaQuery.of(context).size.height / 3.3,
                           color: Colors.grey[200],
                           child: Image.asset(
                               '${Environment.iconAssets}pikobar.png',
@@ -150,8 +158,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       Container(
                           padding: EdgeInsets.only(top: 5.0),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
@@ -164,8 +171,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   Text(
                                     document['news_channel'],
                                     style: TextStyle(
-                                        fontSize: 12.0,
-                                        color: Colors.grey),
+                                        fontSize: 12.0, color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -194,8 +200,7 @@ class _NewsScreenState extends State<NewsScreen> {
           elevation: 0,
           color: Colors.white,
           child: Container(
-            padding:
-            EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
+            padding: EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -211,8 +216,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           heightFactor: 4.2,
                           child: CupertinoActivityIndicator()),
                       errorWidget: (context, url, error) => Container(
-                          height:
-                          MediaQuery.of(context).size.height / 3.3,
+                          height: MediaQuery.of(context).size.height / 3.3,
                           color: Colors.grey[200],
                           child: Image.asset(
                               '${Environment.iconAssets}pikobar.png',
@@ -238,8 +242,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       Container(
                           padding: EdgeInsets.only(top: 5.0),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
@@ -252,8 +255,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   Text(
                                     document['news_channel'],
                                     style: TextStyle(
-                                        fontSize: 12.0,
-                                        color: Colors.grey),
+                                        fontSize: 12.0, color: Colors.grey),
                                   ),
                                 ],
                               ),
@@ -273,11 +275,14 @@ class _NewsScreenState extends State<NewsScreen> {
           ),
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NewsDetailScreen(
-                        documents: document,
-                        news: widget.news)));
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    NewsDetailScreen(documents: document, news: widget.news),
+              ),
+            );
+            AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+                <String, dynamic>{'title': document['title']});
           },
         ),
       ),

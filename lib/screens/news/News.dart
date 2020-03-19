@@ -83,6 +83,15 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
             indicatorWeight: 2.8,
             tabs: myTabs,
             controller: tabController,
+            onTap: (index) {
+              if (index == 0) {
+                AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
+              } else if (index == 1) {
+                AnalyticsHelper.setLogEvent(Analytics.tappedNewsNational);
+              } else if (index == 2) {
+                AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
+              }
+            },
           ),
         ),
         body: Container(

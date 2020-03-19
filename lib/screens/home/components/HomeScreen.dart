@@ -53,12 +53,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   switch (route) {
                     case UrlThirdParty.urlCoronaEscort:
                       _launchUrl(route);
+                      AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
                       break;
                     case UrlThirdParty.urlIGSaberHoax:
                       _launchUrl(route);
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedJabarSaberHoax);
                       break;
                     default:
                       Navigator.pushNamed(context, route, arguments: arguments);
+
+                      // record event to analytics
+                      if (label == Dictionary.phoneBookEmergency) {
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedphoneBookEmergency);
+                      } else if (label == Dictionary.pikobar) {
+                        AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+                      } else if (label == Dictionary.logistic) {
+                        AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+                      } else if (label == Dictionary.survey) {
+                        AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
+                      } else if (label == Dictionary.worldInfo) {
+                        AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+                      }
                   }
                 }
               },
@@ -123,6 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIos: 1);
+
+          if (label == Dictionary.selfDiagnose) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+          } else if (label == Dictionary.selfTracing) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedSelfTracing);
+          } else if (label == Dictionary.qna) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+          }
         },
       ),
     );
@@ -146,6 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Image.asset(iconPath),
             onPressed: () {
               _mainHomeBottomSheet(context);
+
+              AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
             },
           ),
         ),
@@ -281,6 +308,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 content: Text(Dictionary.onDevelopment),
                 duration: Duration(seconds: 1),
               ));
+
+              AnalyticsHelper.setLogEvent(Analytics.tappedNotification);
             },
           )
         ],
@@ -326,6 +355,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               children: <Widget>[
                                 TabBar(
+                                  onTap: (index) {
+                                    if (index == 0) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsJabar);
+                                    } else if (index == 1) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsNational);
+                                    } else if (index == 2) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsWorld);
+                                    }
+                                  },
                                   labelColor: Colors.black,
                                   indicatorColor: ColorBase.green,
                                   indicatorWeight: 2.8,
@@ -333,17 +374,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Tab(
                                       child: Text(
                                         Dictionary.latestNews,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: FontsFamily.productSans,
-                                            fontSize: 14.0),
-                                      ),
-                                    ),
-                                    Tab(
-                                      child: Text(
-                                        Dictionary.nationalNews,
-                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
@@ -352,8 +382,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     Tab(
                                         child: Text(
+                                      Dictionary.nationalNews,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: FontsFamily.productSans,
+                                          fontSize: 14.0),
+                                    )),
+                                    Tab(
+                                        child: Text(
                                       Dictionary.worldNews,
-                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,

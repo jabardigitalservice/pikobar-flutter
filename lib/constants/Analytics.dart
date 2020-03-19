@@ -1,11 +1,12 @@
 class Analytics {
   // Screen Names
-  static String home = 'Home'; //done
-  static String message = 'Pesan'; //done
-  static String faq = 'FAQ'; //done
-  static String survey = 'Survei'; //done
-  static String phoneBookEmergency = 'Nomor Darurat'; //done
-  static String news = 'News'; //done
+  static String home = 'Home';
+  static String message = 'Pesan';
+  static String faq = 'FAQ';
+  static String survey = 'Survei';
+  static String phoneBookEmergency = 'Nomor Darurat';
+  static String news = 'News';
+  // TODO: belum di implementasikan
   static String notifications = 'Notifikasi';
 
   // event home
@@ -15,10 +16,12 @@ class Analytics {
   static String tappedJabarSaberHoax = 'tapped_menu_jabar_saber_hoax';
   static String tappedWorldInfo = 'tapped_menu_informasi_dunia';
   static String tappedLogistic = 'tapped_menu_logistik';
+  static String tappedKawalCovid19 = 'tapped_menu_kawal_covid_19';
   static String tappedSelfDiagnose = 'tapped_menu_self_diagnose';
   static String tappedSelfTracing = 'tapped_menu_self_tracing';
-  static String tappedMessage = 'tapped_menu_pesan'; //done
-  static String tappedFaq = 'tapped_menu_faq'; //done
+  static String tappedQna = 'tapped_menu_qna';
+  static String tappedMessage = 'tapped_menu_pesan';
+  static String tappedFaq = 'tapped_menu_faq';
   static String tappedBanner = 'tapped_banner';
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';
@@ -33,5 +36,4 @@ class Analytics {
 
   // event FAQ
   static String tappedFaqSearch = 'tapped_faq_pencarian';
-  static String tappedFaqDetail = 'tapped_faq_detail';
 }

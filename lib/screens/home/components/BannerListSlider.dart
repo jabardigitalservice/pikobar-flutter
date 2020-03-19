@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BannerListSlider extends StatefulWidget {
@@ -97,12 +99,15 @@ class BannerListSliderState extends State<BannerListSlider> {
               ),
             ),
             onTap: () {
-              _clickAction(document['action_url']);
+              if (document['action_url'] != null) {
+                _clickAction(document['action_url']);
+                AnalyticsHelper.setLogEvent(Analytics.tappedBanner,
+                    <String, dynamic>{'url': document['action_url']});
+              }
             },
           );
         });
       }).toList(),
-      onPageChanged: (index) {},
     );
   }
 
