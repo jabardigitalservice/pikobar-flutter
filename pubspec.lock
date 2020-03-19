@@ -171,6 +171,13 @@ packages:
       url: "https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git"
     source: git
     version: "5.1.6"
+  firebase_remote_config:
+    dependency: "direct main"
+    description:
+      name: firebase_remote_config
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0+3"
   flare_dart:
     dependency: transitive
     description:
