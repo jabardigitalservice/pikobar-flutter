@@ -7,7 +7,7 @@ class Dictionary {
   // Menu & Title
   static String home = 'Beranda';
   static String message = 'Pesan';
-  static String pikobar = 'Info Corona';
+  static String pikobar = 'Data Jabar';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Update Terkini Jawa Barat';
   static String menus = 'Pusat Layanan &  Informasi';
@@ -17,9 +17,13 @@ class Dictionary {
   static String survey = 'Survei';
   static String logistic = 'Info Logistik';
   static String kawalCorona = 'KawalCOVID19';
-  static String worldInfo = 'Informasi Dunia';
+  static String worldInfo = 'Data Dunia';
+  static String nationalInfo = 'Data Nasional';
+  static String caseReport = 'Lapor Kasus';
+  static String volunteer = 'Daftar Relawan';
+  static String donation = 'Bantu Kita';
   static String qna = 'Tanya Jawab';
-  static String selfDiagnose = 'Self Diagnose';
+  static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
