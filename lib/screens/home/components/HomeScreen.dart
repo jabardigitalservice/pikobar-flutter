@@ -114,11 +114,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         onTap: () {
-            Fluttertoast.showToast(
-                msg: Dictionary.onDevelopment,
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1);
+          Fluttertoast.showToast(
+              msg: Dictionary.onDevelopment,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1);
         },
       ),
     );
@@ -186,14 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}completed.png',
               Dictionary.survey, NavigationConstrants.Survey),
-          _buildButtonColumn(
-              '${Environment.iconAssets}saber_hoax.png',
-              Dictionary.saberHoax,
-              UrlThirdParty.urlIGSaberHoax),
-          _buildButtonColumn(
-              '${Environment.iconAssets}world.png',
-              Dictionary.worldInfo,
-              NavigationConstrants.Browser,
+          _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
+              Dictionary.saberHoax, UrlThirdParty.urlIGSaberHoax),
+          _buildButtonColumn('${Environment.iconAssets}world.png',
+              Dictionary.worldInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlWorldCoronaInfo),
           _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
@@ -309,16 +305,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: <Widget>[
                         Container(
+                          padding: EdgeInsets.all(Dimens.padding),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            Dictionary.newsUpdate,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: FontsFamily.productSans,
+                                fontSize: 16.0),
+                          ),
+                        ),
+                        Container(
                           child: DefaultTabController(
-                            length: 2,
+                            length: 3,
                             child: Column(
                               children: <Widget>[
                                 TabBar(
                                   labelColor: Colors.black,
+                                  indicatorColor: ColorBase.green,
+                                  indicatorWeight: 2.8,
                                   tabs: <Widget>[
                                     Tab(
                                       child: Text(
-                                        Dictionary.liveUpdate,
+                                        Dictionary.latestNews,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
@@ -327,7 +337,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     Tab(
                                         child: Text(
-                                      Dictionary.persRilis,
+                                      Dictionary.nationalNews,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: FontsFamily.productSans,
+                                          fontSize: 14.0),
+                                    )),
+                                    Tab(
+                                        child: Text(
+                                      Dictionary.worldNews,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
@@ -341,9 +359,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: TabBarView(
                                     children: <Widget>[
                                       NewsScreen(
-                                          isLiveUpdate: true, maxLength: 3),
+                                          news: Dictionary.latestNews, maxLength: 3),
                                       NewsScreen(
-                                          isLiveUpdate: false, maxLength: 3),
+                                          news: Dictionary.nationalNews, maxLength: 3),
+                                      NewsScreen(
+                                          news: Dictionary.worldNews, maxLength: 3),
                                     ],
                                   ),
                                 )
@@ -419,10 +439,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
+                            _buildButtonDisable(
+                                '${Environment.iconAssets}magnifying_glass.png',
                                 Dictionary.selfDiagnose),
                             _buildButtonDisable(
-                                '${Environment.iconAssets}network.png', Dictionary.selfTracing),
+                                '${Environment.iconAssets}network.png',
+                                Dictionary.selfTracing),
                             _buildButtonDisable(
                                 '${Environment.iconAssets}conversation.png',
                                 Dictionary.qna),

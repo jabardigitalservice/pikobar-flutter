@@ -15,9 +15,9 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class NewsDetailScreen extends StatefulWidget {
   final DocumentSnapshot documents;
-  final bool isLiveUpdate;
+  final String news;
 
-  NewsDetailScreen({this.documents, this.isLiveUpdate});
+  NewsDetailScreen({this.documents, this.news});
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
@@ -27,7 +27,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(Dictionary.news)),
+        appBar: AppBar(title: Text(
+          Dictionary.news,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontFamily: FontsFamily.productSans,
+              fontSize: 17.0),
+        )),
         body: Container(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -142,7 +149,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => News(isLiveUpdate: widget.isLiveUpdate)));
+                                      builder: (context) => News(news: widget.news)));
                             },
                           ),
                         ),
