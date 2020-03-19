@@ -313,24 +313,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
-                                            fontSize: 14.0),
+                                            fontSize: 13.0),
                                       ),
                                     ),
                                     Tab(
-                                        child: Text(
-                                      Dictionary.nationalNews,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: FontsFamily.productSans,
-                                          fontSize: 14.0),
-                                    )),
+                                        child:  Text(
+                                          Dictionary.nationalNews,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: FontsFamily.productSans,
+                                              fontSize: 13.0),
+                                        ),
+                                    ),
                                     Tab(
                                         child: Text(
                                       Dictionary.worldNews,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
-                                          fontSize: 14.0),
+                                          fontSize: 13.0),
                                     )),
                                   ],
                                 ),
