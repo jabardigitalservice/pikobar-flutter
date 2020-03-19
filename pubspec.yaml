@@ -54,7 +54,7 @@ dependencies:
   flutter_html: ^0.11.1
   flutter_inappwebview: ^2.1.0+1
   flutter_local_notifications: ^1.2.2
-
+  firebase_remote_config: ^0.3.0+3
 
 dev_dependencies:
   flutter_test:
@@ -63,9 +63,9 @@ dev_dependencies:
   flutter_launcher_icons: ^0.7.4
 
 flutter_icons:
-  android: "launcher_icon"
+  android: 'launcher_icon'
   ios: true
-  image_path: "assets/logo/logo.png"
+  image_path: 'assets/logo/logo.png'
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -117,6 +117,5 @@ flutter:
     - family: intro
       fonts:
         - asset: assets/fonts/intro/Intro.otf
-
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
