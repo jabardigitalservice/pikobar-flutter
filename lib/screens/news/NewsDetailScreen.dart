@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:url_launcher/url_launcher.dart';
@@ -15,9 +17,9 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class NewsDetailScreen extends StatefulWidget {
   final DocumentSnapshot documents;
-  final bool isLiveUpdate;
+  final String news;
 
-  NewsDetailScreen({this.documents, this.isLiveUpdate});
+  NewsDetailScreen({this.documents, this.news});
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
@@ -25,9 +27,24 @@ class NewsDetailScreen extends StatefulWidget {
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
+  void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.news);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(Dictionary.news)),
+        appBar: AppBar(
+            title: Text(
+          Dictionary.news,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontFamily: FontsFamily.productSans,
+              fontSize: 17.0),
+        )),
         body: Container(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
@@ -142,7 +159,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => News(isLiveUpdate: widget.isLiveUpdate)));
+                                      builder: (context) =>
+                                          News(news: widget.news)));
                             },
                           ),
                         ),

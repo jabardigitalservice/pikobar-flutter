@@ -141,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.2.1"
+  firebase_analytics:
+    dependency: "direct main"
+    description:
+      name: firebase_analytics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.11"
   firebase_core:
     dependency: "direct main"
     description:
@@ -171,6 +178,13 @@ packages:
       url: "https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git"
     source: git
     version: "5.1.6"
+  firebase_remote_config:
+    dependency: "direct main"
+    description:
+      name: firebase_remote_config
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0+3"
   flare_dart:
     dependency: transitive
     description:
@@ -604,6 +618,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.19+9"
   xml:
     dependency: transitive
     description:

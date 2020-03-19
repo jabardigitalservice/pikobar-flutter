@@ -4,10 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class FaqScreen extends StatefulWidget {
@@ -25,6 +28,8 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.faq);
+
     _searchController.addListener((() {
       _onSearchChanged();
     }));
@@ -56,6 +61,13 @@ class _FaqScreenState extends State<FaqScreen> {
             }
 
             final int messageCount = dataFaq.length;
+
+            // check if data is empty
+            if (dataFaq.length == 0) {
+              return EmptyData(
+                  message: '${Dictionary.emptyData} ${Dictionary.faq}');
+            }
+
             return ListView.builder(
               itemCount: messageCount,
               padding: EdgeInsets.only(bottom: 30.0),
@@ -83,7 +95,7 @@ class _FaqScreenState extends State<FaqScreen> {
         controller: _searchController,
         autofocus: true,
         decoration: InputDecoration(
-            hintText: "Cari FAQ",
+            hintText: Dictionary.findFaq,
             border: InputBorder.none,
             hintStyle: TextStyle(color: Colors.black54),
             contentPadding:
@@ -122,6 +134,8 @@ class _FaqScreenState extends State<FaqScreen> {
     setState(() {
       _isSearch = true;
     });
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedFaqSearch);
   }
 
   void updateSearchQuery(String newQuery) {
@@ -149,7 +163,6 @@ class _FaqScreenState extends State<FaqScreen> {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
-        print(_searchController.text);
         setState(() {
           searchQuery = _searchController.text;
         });

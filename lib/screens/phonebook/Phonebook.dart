@@ -6,30 +6,29 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/phonebook/ListViewPhoneBooks.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class Phonebook extends StatefulWidget {
   @override
   _PhonebookState createState() => _PhonebookState();
 }
 
-class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
+class _PhonebookState extends State<Phonebook> {
   ScrollController _scrollController = ScrollController();
   bool _isSearch = false;
-  AnimationController _animationController;
-  bool _hasChange = false;
   var containerWidth = 40.0;
-  final _nodeOne = FocusNode();
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
+  String searchQuery;
 
   @override
   void initState() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
+    AnalyticsHelper.setCurrentScreen(Analytics.phoneBookEmergency);
+
     _searchController.addListener((() {
       _onSearchChanged();
     }));
@@ -42,135 +41,118 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
     return Scaffold(
         appBar: _buildAppBar(),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _searchController.text == ''
-              ? Firestore.instance.collection('emergency_numbers').snapshots()
-              : Firestore.instance
-                  .collection('emergency_numbers')
-                  .where('name',isGreaterThanOrEqualTo:  _searchController.text)
-                  .snapshots(),
+          stream: Firestore.instance
+              .collection(Collections.emergencyNumbers)
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) return ErrorContent(error: snapshot.error);
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: _buildLoading());
-              default:
-                return snapshot.data.documents.isEmpty
-                    ? EmptyData(message: Dictionary.emptyDataPhoneBook)
-                    : ListViewPhoneBooks(
-                        snapshot: snapshot,
-                        scrollController: _scrollController,
-                        // maxDataLength: maxDatalength,
-                      );
+            if (snapshot.hasData) {
+              return snapshot.data.documents.isEmpty
+                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  : ListViewPhoneBooks(
+                      snapshot: snapshot,
+                      scrollController: _scrollController,
+                      searchQuery: searchQuery,
+                    );
+            } else {
+              return Center(child: _buildLoading());
             }
           },
-          // )
         ));
   }
 
   AppBar _buildAppBar() {
-    return AppBar(title: _titleBar(), actions: <Widget>[
-      // action button
-      // Visibility(
-      //   visible: !_isSearch,
-      //   child: IconButton(
-      //       icon: Icon(Icons.map),
-      //       onPressed: () {
-      //         // _openMaps();
-      //       }),
-      // ),
-
-      // RotationTransition(
-      //   turns: Tween(begin: 0.0, end: 1.0).animate(_animationController),
-      //   child: IconButton(
-      //     icon: _isSearch ? Icon(Icons.close) : Icon(Icons.search),
-      //     onPressed: () {
-      //       _searchPressed();
-      //     },
-      //   ),
-      // ),
-      // action button
-    ]);
+    return AppBar(
+        title: _isSearch
+            ? _buildSearchField()
+            : Text(Dictionary.phoneBookEmergency),
+        actions: _buildActions());
   }
 
-  void _searchPressed() {
-    return setState(() {
-      _isSearch = !_isSearch;
-      _animationController.forward(from: 0.0);
-      _showSearch();
+  List<Widget> _buildActions() {
+    if (_isSearch) {
+      return <Widget>[
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (_searchController == null || _searchController.text.isEmpty) {
+              _stopSearching();
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+
+    return <Widget>[
+      IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  void _startSearch() {
+    setState(() {
+      _isSearch = true;
     });
   }
 
-  void _showSearch() {
-    if (!_isSearch) {
-      if (_hasChange) {
-        _hasChange = false;
-        // _refresh();
-      }
-      containerWidth = 50.0;
-      FocusScope.of(context).unfocus();
-    } else {
-      containerWidth = MediaQuery.of(context).size.width;
-      FocusScope.of(context).requestFocus(_nodeOne);
-    }
-    _searchController.clear();
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearch = false;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      updateSearchQuery(null);
+    });
   }
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
-        _hasChange = true;
+        setState(() {
+          searchQuery = _searchController.text;
+        });
+      } else {
+        _clearSearchQuery();
       }
     });
   }
 
-  Widget _titleBar() {
-    return Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerRight,
-          child: AnimatedOpacity(
-            opacity: _isSearch ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 500),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              width: containerWidth,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: TextField(
-                // controller: _searchController,
-                autofocus: false,
-                focusNode: _nodeOne,
-                onChanged: (String value) {
-                  setState(() {
-                    _searchController.text = value;
-                  });
-                },
-                textInputAction: TextInputAction.go, textCapitalization: TextCapitalization.words,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0)),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 13,
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Visibility(
-              visible: !_isSearch,
-              child: Text(Dictionary.phoneBookEmergency),
-            ),
-          ),
-        ),
-      ],
+  Widget _buildSearchField() {
+    return Container(
+      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      height: 40.0,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(20.0)),
+      child: TextField(
+        controller: _searchController,
+        autofocus: true,
+        decoration: InputDecoration(
+            hintText: Dictionary.findEmergencyPhone,
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.black54),
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
+        style: TextStyle(color: Colors.black, fontSize: 16.0),
+        onChanged: (query) => updateSearchQuery,
+      ),
     );
   }
 
@@ -193,5 +175,11 @@ class _PhonebookState extends State<Phonebook> with TickerProviderStateMixin {
             ),
           ));
         });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

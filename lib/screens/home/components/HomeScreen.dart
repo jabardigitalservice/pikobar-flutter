@@ -1,15 +1,20 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/checkVersion.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'BannerListSlider.dart';
@@ -24,218 +29,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.home);
+
     super.initState();
-  }
-
-  _buildButtonColumn(String iconPath, String label, String route,
-      {Object arguments}) {
-    return Expanded(
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(2.0),
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                blurRadius: 6.0,
-                color: Colors.black.withOpacity(.2),
-                offset: Offset(2.0, 4.0),
-              ),
-            ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
-            child: IconButton(
-              color: Theme.of(context).textTheme.body1.color,
-              icon: Image.asset(iconPath),
-              onPressed: () {
-                if (route != null) {
-                  switch (route) {
-                    case UrlThirdParty.urlCoronaEscort:
-                      _launchUrl(route);
-                      break;
-                    case UrlThirdParty.urlIGSaberHoax:
-                      _launchUrl(route);
-                      break;
-                    default:
-                      Navigator.pushNamed(context, route, arguments: arguments);
-                  }
-                }
-              },
-            ),
-          ),
-          SizedBox(height: 12.0),
-          Text(label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Theme.of(context).textTheme.body1.color,
-              ))
-        ],
-      ),
-    );
-  }
-
-  _buildButtonDisable(String iconPath, String label) {
-    return Expanded(
-      child: GestureDetector(
-        child: Column(
-          children: [
-            Stack(children: [
-              Container(
-                padding: EdgeInsets.all(2.0),
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 6.0,
-                        color: Colors.black.withOpacity(.2),
-                        offset: Offset(2.0, 4.0),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.white),
-                child: IconButton(
-                  color: Theme.of(context).textTheme.body1.color,
-                  icon: Image.asset(iconPath),
-                  onPressed: null,
-                ),
-              ),
-              Positioned(
-                  right: 2.0,
-                  child: Image.asset(
-                    '${Environment.iconAssets}bookmark_1.png',
-                    width: 18.0,
-                    height: 18.0,
-                  ))
-            ]),
-            SizedBox(height: 12.0),
-            Text(label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12.0,
-                  color: Theme.of(context).textTheme.body1.color,
-                ))
-          ],
-        ),
-        onTap: () {
-          if (label == Dictionary.qna) {
-            Fluttertoast.showToast(
-                msg: Dictionary.onDevelopment,
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1);
-          } else {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(Dictionary.onDevelopment),
-              duration: Duration(seconds: 1),
-            ));
-          }
-        },
-      ),
-    );
-  }
-
-  _buildButtonColumnLayananLain(String iconPath, String label) {
-    return Expanded(
-        child: Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(2.0),
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              blurRadius: 10.0,
-              color: Colors.black.withOpacity(.2),
-              offset: Offset(2.0, 2.0),
-            ),
-          ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
-          child: IconButton(
-            color: Theme.of(context).textTheme.body1.color,
-            icon: Image.asset(iconPath),
-            onPressed: () {
-              _mainHomeBottomSheet(context);
-            },
-          ),
-        ),
-        SizedBox(height: 12.0),
-        Text(label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).textTheme.body1.color,
-            ))
-      ],
-    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget firstRowShortcuts = Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.pikobar, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlCoronaInfo),
-          _buildButtonColumn('${Environment.iconAssets}logistic.png',
-              Dictionary.logistic, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlLogisticsInfo),
-          _buildButtonColumn('${Environment.iconAssets}virus.png',
-              Dictionary.kawalCorona, UrlThirdParty.urlCoronaEscort),
-        ],
-      ),
-    );
-
-    Widget secondRowShortcuts = Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildButtonColumn('${Environment.iconAssets}completed.png',
-              Dictionary.survey, NavigationConstrants.Survey),
-          _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
-              Dictionary.selfDiagnose),
-          _buildButtonDisable(
-              '${Environment.iconAssets}network.png', Dictionary.selfTracing),
-          _buildButtonColumnLayananLain(
-              '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
-        ],
-      ),
-    );
-
-    Widget topContainer = Container(
-      alignment: Alignment.topCenter,
-      padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),
-      decoration: BoxDecoration(color: ColorBase.grey, boxShadow: [
-        BoxShadow(
-          color: Colors.white.withOpacity(0.05),
-          //            blurRadius: 5,
-          offset: Offset(0.0, 0.05),
-        ),
-      ]),
-      child: Column(
-        children: <Widget>[
-          Container(
-            alignment: Alignment.topLeft,
-            child: Text(
-              Dictionary.menus,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: FontsFamily.productSans,
-                  fontSize: 16.0),
-            ),
-          ),
-          SizedBox(height: Dimens.padding),
-          firstRowShortcuts,
-          SizedBox(
-            height: 8.0,
-          ),
-          secondRowShortcuts
-        ],
-      ),
-    );
-
     return Scaffold(
       backgroundColor: ColorBase.grey,
       appBar: AppBar(
@@ -244,30 +44,30 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: <Widget>[
             Image.asset('${Environment.logoAssets}logo.png',
-                width: 35.0, height: 35.0),
+                width: 40.0, height: 40.0),
             Container(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      Dictionary.title,
+                      Dictionary.appName,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans,
+                        fontFamily: FontsFamily.intro,
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 2.0),
+                      padding: EdgeInsets.only(top: 4.0),
                       child: Text(
-                        Dictionary.provJabar,
+                        Dictionary.subTitle,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 8,
                           fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans,
+                          fontFamily: FontsFamily.intro,
                         ),
                       ),
                     )
@@ -283,6 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 content: Text(Dictionary.onDevelopment),
                 duration: Duration(seconds: 1),
               ));
+
+              AnalyticsHelper.setLogEvent(Analytics.tappedNotification);
             },
           )
         ],
@@ -305,35 +107,76 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.only(top: 10.0),
                       padding: EdgeInsets.only(bottom: 10.0),
                       child: Statistics()),
-                  topContainer,
+                  FutureBuilder<RemoteConfig>(
+                      future: setupRemoteConfig(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<RemoteConfig> snapshot) {
+                        return MenuList(snapshot.data);
+                      }),
                   Container(
                     color: Colors.white,
                     child: Column(
                       children: <Widget>[
                         Container(
+                          padding: EdgeInsets.all(Dimens.padding),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            Dictionary.newsUpdate,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: FontsFamily.productSans,
+                                fontSize: 16.0),
+                          ),
+                        ),
+                        Container(
                           child: DefaultTabController(
-                            length: 2,
+                            length: 3,
                             child: Column(
                               children: <Widget>[
                                 TabBar(
+                                  onTap: (index) {
+                                    if (index == 0) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsJabar);
+                                    } else if (index == 1) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsNational);
+                                    } else if (index == 2) {
+                                      AnalyticsHelper.setLogEvent(
+                                          Analytics.tappedNewsWorld);
+                                    }
+                                  },
                                   labelColor: Colors.black,
+                                  indicatorColor: ColorBase.green,
+                                  indicatorWeight: 2.8,
                                   tabs: <Widget>[
                                     Tab(
                                       child: Text(
-                                        Dictionary.liveUpdate,
+                                        Dictionary.latestNews,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
-                                            fontSize: 14.0),
+                                            fontSize: 13.0),
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: Text(
+                                        Dictionary.nationalNews,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: FontsFamily.productSans,
+                                            fontSize: 13.0),
                                       ),
                                     ),
                                     Tab(
                                         child: Text(
-                                      Dictionary.persRilis,
+                                      Dictionary.worldNews,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
-                                          fontSize: 14.0),
+                                          fontSize: 13.0),
                                     )),
                                   ],
                                 ),
@@ -343,9 +186,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: TabBarView(
                                     children: <Widget>[
                                       NewsScreen(
-                                          isLiveUpdate: true, maxLength: 3),
+                                          news: Dictionary.latestNews,
+                                          maxLength: 3),
                                       NewsScreen(
-                                          isLiveUpdate: false, maxLength: 3),
+                                          news: Dictionary.nationalNews,
+                                          maxLength: 3),
+                                      NewsScreen(
+                                          news: Dictionary.worldNews,
+                                          maxLength: 3),
                                     ],
                                   ),
                                 )
@@ -369,93 +217,49 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _mainHomeBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-          ),
-        ),
-        elevation: 60.0,
-        builder: (BuildContext context) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 20.0),
-            child: Wrap(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 14.0),
-                      color: Colors.black,
-                      height: 1.5,
-                      width: 40.0,
-                    ),
-                  ],
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
-                  child: Text(
-                    Dictionary.otherMenus,
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.05),
-                      offset: Offset(0.0, 0.05),
-                    ),
-                  ]),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}saber_hoax.png',
-                                Dictionary.saberHoax,
-                                UrlThirdParty.urlIGSaberHoax),
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}world.png',
-                                Dictionary.worldInfo,
-                                NavigationConstrants.Browser,
-                                arguments: UrlThirdParty.urlWorldCoronaInfo),
-                            _buildButtonDisable(
-                                '${Environment.iconAssets}conversation.png',
-                                Dictionary.qna),
-                          ],
-                        ),
-                      ),
+  Future<RemoteConfig> setupRemoteConfig() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      FirebaseConfig.jshCaption: Dictionary.saberHoax,
+      FirebaseConfig.jshUrl: UrlThirdParty.urlIGSaberHoax,
+      FirebaseConfig.pikobarCaption: Dictionary.pikobar,
+      FirebaseConfig.pikobarUrl: UrlThirdParty.urlCoronaInfo,
+      FirebaseConfig.worldInfoCaption: Dictionary.worldInfo,
+      FirebaseConfig.worldInfoUrl: UrlThirdParty.urlWorldCoronaInfo,
+      FirebaseConfig.nationalInfoCaption: Dictionary.nationalInfo,
+      FirebaseConfig.nationalInfoUrl: UrlThirdParty.urlCoronaEscort,
+      FirebaseConfig.donationCaption: Dictionary.donation,
+      FirebaseConfig.donationUrl: UrlThirdParty.urlDonation,
+      FirebaseConfig.logisticCaption: Dictionary.logistic,
+      FirebaseConfig.logisticUrl: UrlThirdParty.urlLogisticsInfo,
+      FirebaseConfig.reportEnabled: false,
+      FirebaseConfig.reportCaption: Dictionary.caseReport,
+      FirebaseConfig.reportUrl: UrlThirdParty.urlCaseReport,
+      FirebaseConfig.qnaEnabled: false,
+      FirebaseConfig.qnaCaption: Dictionary.qna,
+      FirebaseConfig.qnaUrl: UrlThirdParty.urlQNA,
+      FirebaseConfig.selfTracingEnabled: false,
+      FirebaseConfig.selfTracingCaption: Dictionary.selfTracing,
+      FirebaseConfig.selfTracingUrl: UrlThirdParty.urlSelfTracing,
+      FirebaseConfig.volunteerEnabled: false,
+      FirebaseConfig.volunteerCaption: Dictionary.volunteer,
+      FirebaseConfig.volunteerUrl: UrlThirdParty.urlVolunteer,
+      FirebaseConfig.selfDiagnoseEnabled: false,
+      FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
+      FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
+    });
 
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      // secondRowShortcuts
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
+    try {
+      await remoteConfig.fetch(expiration: Duration(minutes: 10));
+      await remoteConfig.activateFetched();
 
-  _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+      checkVersion(context, remoteConfig);
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
     }
+
+    return remoteConfig;
   }
 
   @override
