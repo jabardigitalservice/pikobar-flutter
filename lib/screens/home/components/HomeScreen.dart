@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -5,9 +6,10 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
@@ -189,78 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget firstRowShortcuts = Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
-          _buildButtonColumn('${Environment.iconAssets}pikobar.png',
-              Dictionary.pikobar, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlCoronaInfo),
-          _buildButtonColumn('${Environment.iconAssets}logistic.png',
-              Dictionary.logistic, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlLogisticsInfo),
-          _buildButtonColumn('${Environment.iconAssets}virus.png',
-              Dictionary.kawalCorona, UrlThirdParty.urlCoronaEscort),
-        ],
-      ),
-    );
-
-    Widget secondRowShortcuts = Container(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildButtonColumn('${Environment.iconAssets}completed.png',
-              Dictionary.survey, NavigationConstrants.Survey),
-          _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
-              Dictionary.saberHoax, UrlThirdParty.urlIGSaberHoax),
-          _buildButtonColumn('${Environment.iconAssets}world.png',
-              Dictionary.worldInfo, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlWorldCoronaInfo),
-          _buildButtonColumnLayananLain(
-              '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
-        ],
-      ),
-    );
-
-    Widget topContainer = Container(
-      alignment: Alignment.topCenter,
-      padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),
-      decoration: BoxDecoration(color: ColorBase.grey, boxShadow: [
-        BoxShadow(
-          color: Colors.white.withOpacity(0.05),
-          //            blurRadius: 5,
-          offset: Offset(0.0, 0.05),
-        ),
-      ]),
-      child: Column(
-        children: <Widget>[
-          Container(
-            alignment: Alignment.topLeft,
-            child: Text(
-              Dictionary.menus,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: FontsFamily.productSans,
-                  fontSize: 16.0),
-            ),
-          ),
-          SizedBox(height: Dimens.padding),
-          firstRowShortcuts,
-          SizedBox(
-            height: 8.0,
-          ),
-          secondRowShortcuts
-        ],
-      ),
-    );
-
     return Scaffold(
       backgroundColor: ColorBase.grey,
       appBar: AppBar(
@@ -332,7 +262,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.only(top: 10.0),
                       padding: EdgeInsets.only(bottom: 10.0),
                       child: Statistics()),
-                  topContainer,
+                  FutureBuilder<RemoteConfig>(
+                      future: setupRemoteConfig(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<RemoteConfig> snapshot) {
+                            return MenuList(snapshot.data);
+                      }),
                   Container(
                     color: Colors.white,
                     child: Column(
@@ -435,90 +370,47 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _mainHomeBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-          ),
-        ),
-        elevation: 60.0,
-        builder: (BuildContext context) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 20.0),
-            child: Wrap(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 14.0),
-                      color: Colors.black,
-                      height: 1.5,
-                      width: 40.0,
-                    ),
-                  ],
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
-                  child: Text(
-                    Dictionary.otherMenus,
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.05),
-                      offset: Offset(0.0, 0.05),
-                    ),
-                  ]),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildButtonDisable(
-                                '${Environment.iconAssets}magnifying_glass.png',
-                                Dictionary.selfDiagnose),
-                            _buildButtonDisable(
-                                '${Environment.iconAssets}network.png',
-                                Dictionary.selfTracing),
-                            _buildButtonDisable(
-                                '${Environment.iconAssets}conversation.png',
-                                Dictionary.qna),
-                          ],
-                        ),
-                      ),
+  Future<RemoteConfig> setupRemoteConfig() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      FirebaseConfig.jshCaption: Dictionary.saberHoax,
+      FirebaseConfig.jshUrl: UrlThirdParty.urlIGSaberHoax,
+      FirebaseConfig.pikobarCaption: Dictionary.pikobar,
+      FirebaseConfig.pikobarUrl: UrlThirdParty.urlCoronaInfo,
+      FirebaseConfig.worldInfoCaption: Dictionary.worldInfo,
+      FirebaseConfig.worldInfoUrl: UrlThirdParty.urlWorldCoronaInfo,
+      FirebaseConfig.nationalInfoCaption: Dictionary.nationalInfo,
+      FirebaseConfig.nationalInfoUrl: UrlThirdParty.urlCoronaEscort,
+      FirebaseConfig.donationCaption: Dictionary.donation,
+      FirebaseConfig.donationUrl: UrlThirdParty.urlDonation,
+      FirebaseConfig.logisticCaption: Dictionary.logistic,
+      FirebaseConfig.logisticUrl: UrlThirdParty.urlLogisticsInfo,
+      FirebaseConfig.reportEnabled: false,
+      FirebaseConfig.reportCaption: Dictionary.caseReport,
+      FirebaseConfig.reportUrl: UrlThirdParty.urlCaseReport,
+      FirebaseConfig.qnaEnabled: false,
+      FirebaseConfig.qnaCaption: Dictionary.qna,
+      FirebaseConfig.qnaUrl: UrlThirdParty.urlQNA,
+      FirebaseConfig.selfTracingEnabled: false,
+      FirebaseConfig.selfTracingCaption: Dictionary.selfTracing,
+      FirebaseConfig.selfTracingUrl: UrlThirdParty.urlSelfTracing,
+      FirebaseConfig.volunteerEnabled: false,
+      FirebaseConfig.volunteerCaption: Dictionary.volunteer,
+      FirebaseConfig.volunteerUrl: UrlThirdParty.urlVolunteer,
+      FirebaseConfig.selfDiagnoseEnabled: false,
+      FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
+      FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
+    });
 
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      // secondRowShortcuts
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+    try {
+      await remoteConfig.fetch(expiration: const Duration(minutes: 10));
+      await remoteConfig.activateFetched();
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
     }
+
+    return remoteConfig;
   }
 
   @override
