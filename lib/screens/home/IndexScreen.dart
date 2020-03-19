@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
@@ -71,11 +72,25 @@ class _IndexScreenState extends State<IndexScreen> {
       await remoteConfig.fetch();
       await remoteConfig.activateFetched();
 
-      print(remoteConfig.getString('force_update_current_version'));
-      print('versi device $appVersion');
-      if (appVersion !=
-          remoteConfig.getString('force_update_current_version')) {
-        _showAlert(context, remoteConfig.getString('force_update_store_url'));
+      bool forceUpdateRequired =
+          remoteConfig.getString(FirebaseConfig.forceUpdateRequired) == 'false'
+              ? false
+              : true;
+      String storeUrl = remoteConfig.getString(FirebaseConfig.storeUrl);
+      String currentVersion =
+          remoteConfig.getString(FirebaseConfig.currentVersion);
+
+      if (forceUpdateRequired && appVersion != currentVersion) {
+        showDialog(
+            context: context,
+            builder: (context) => WillPopScope(
+                onWillPop: () {
+                  return;
+                },
+                child: DialogUpdateApp(
+                  linkUpdate: storeUrl,
+                )),
+            barrierDismissible: false);
       }
     }
   }
@@ -157,19 +172,6 @@ class _IndexScreenState extends State<IndexScreen> {
       default:
         return HomeScreen();
     }
-  }
-
-  void _showAlert(BuildContext context, String urlStore) {
-    showDialog(
-        context: context,
-        builder: (context) => WillPopScope(
-            onWillPop: () {
-              return;
-            },
-            child: DialogUpdateApp(
-              linkUpdate: urlStore,
-            )),
-        barrierDismissible: false);
   }
 
   @override
