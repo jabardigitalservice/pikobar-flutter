@@ -26,7 +26,7 @@ class ListViewPhoneBooks extends StatelessWidget {
         leading: Container(
             height: 25,
             child: Image.asset('${Environment.iconAssets}office.png')),
-        title: Text(document['name']),
+        title: Text(document['name'],style: TextStyle(color: Color(0xff4F4F4F),fontWeight: FontWeight.bold),),
         onTap: () => _onTapItem(context, document),
       );
     }
@@ -89,7 +89,7 @@ class ListViewPhoneBooks extends StatelessWidget {
                 leading: Container(
                     height: 25,
                     child: Image.asset('${Environment.iconAssets}office.png')),
-                title: Text(Dictionary.callCenter),
+                title: Text(Dictionary.callCenter,style: TextStyle(color: Color(0xff4F4F4F),fontWeight: FontWeight.bold)),
                 onTap: () {
                   _launchURL(Dictionary.callCenterNumber, 'number');
                 }),
@@ -104,17 +104,17 @@ class ListViewPhoneBooks extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: ListTile(
                 leading: Container(
-                    height: 32,
+                    height: 25,
                     child: Image.asset(
                         '${Environment.iconAssets}whatsapp.png')),
-                title: Text(Dictionary.dinasKesehatan),
+                title: Text(Dictionary.dinasKesehatan,style: TextStyle(color: Color(0xff4F4F4F),fontWeight: FontWeight.bold)),
                 onTap: () {
                   _launchURL(Dictionary.waNumberDinasKesehatan, 'whatsapp');
                 }),
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
         _buildCardHeader(
             context,

@@ -2,6 +2,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -108,16 +109,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: <Widget>[
                         Container(
+                          padding: EdgeInsets.all(Dimens.padding),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            Dictionary.newsUpdate,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: FontsFamily.productSans,
+                                fontSize: 16.0),
+                          ),
+                        ),
+                        Container(
                           child: DefaultTabController(
-                            length: 2,
+                            length: 3,
                             child: Column(
                               children: <Widget>[
                                 TabBar(
                                   labelColor: Colors.black,
+                                  indicatorColor: ColorBase.green,
+                                  indicatorWeight: 2.8,
                                   tabs: <Widget>[
                                     Tab(
                                       child: Text(
-                                        Dictionary.liveUpdate,
+                                        Dictionary.latestNews,
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
@@ -125,8 +141,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Tab(
+                                        child:  Text(
+                                          Dictionary.nationalNews,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: FontsFamily.productSans,
+                                              fontSize: 14.0),
+                                        ),
+                                    ),
+                                    Tab(
                                         child: Text(
-                                      Dictionary.persRilis,
+                                      Dictionary.worldNews,
+                                      textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
@@ -140,9 +167,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: TabBarView(
                                     children: <Widget>[
                                       NewsScreen(
-                                          isLiveUpdate: true, maxLength: 3),
+                                          news: Dictionary.latestNews, maxLength: 3),
                                       NewsScreen(
-                                          isLiveUpdate: false, maxLength: 3),
+                                          news: Dictionary.nationalNews, maxLength: 3),
+                                      NewsScreen(
+                                          news: Dictionary.worldNews, maxLength: 3),
                                     ],
                                   ),
                                 )

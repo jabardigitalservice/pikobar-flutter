@@ -1,29 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 
 class News extends StatefulWidget {
- final bool isLiveUpdate;
+  final String news;
 
-  News({this.isLiveUpdate});
+  News({this.news});
 
   @override
   _NewsState createState() => _NewsState();
 }
 
-class _NewsState extends State<News>  with SingleTickerProviderStateMixin {
+class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
-    new Tab(text: Dictionary.liveUpdate),
-    new Tab(text: Dictionary.persRilis),
+    new Tab(
+      child: Text(
+        Dictionary.latestNews,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontFamily: FontsFamily.productSans,
+            fontSize: 14.0),
+      ),
+    ),
+    new Tab(
+        child: Text(
+      Dictionary.nationalNews,
+          textAlign: TextAlign.center,
+      style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontFamily: FontsFamily.productSans,
+          fontSize: 14.0),
+    )),
+    new Tab(
+        child: Text(
+      Dictionary.worldNews,
+          textAlign: TextAlign.center,
+      style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+          fontFamily: FontsFamily.productSans,
+          fontSize: 14.0),
+    )),
   ];
   TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    tabController = new TabController(vsync: this,length: 2);
-    if(!widget.isLiveUpdate){
-      tabController.animateTo((tabController.index + 1) % 2);
+    tabController = new TabController(vsync: this, length: myTabs.length);
+    if (widget.news == Dictionary.latestNews) {
+      tabController.animateTo(0);
+    } else if (widget.news == Dictionary.nationalNews) {
+      tabController.animateTo(1);
+    } else {
+      tabController.animateTo(2);
     }
   }
 
@@ -31,9 +66,18 @@ class _NewsState extends State<News>  with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(Dictionary.news),
+          title: Text(
+            Dictionary.news,
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontFamily: FontsFamily.productSans,
+                fontSize: 17.0),
+          ),
           bottom: TabBar(
-            tabs:myTabs,
+            indicatorColor: ColorBase.orange,
+            indicatorWeight: 2.8,
+            tabs: myTabs,
             controller: tabController,
           ),
         ),
@@ -41,13 +85,14 @@ class _NewsState extends State<News>  with SingleTickerProviderStateMixin {
           child: TabBarView(
             controller: tabController,
             children: <Widget>[
-              NewsScreen(isLiveUpdate: true),
-              NewsScreen(isLiveUpdate: false),
+              NewsScreen(news: Dictionary.latestNews),
+              NewsScreen(news: Dictionary.nationalNews),
+              NewsScreen(news: Dictionary.worldNews),
             ],
           ),
-        )
-    );
+        ));
   }
+
   @override
   void dispose() {
     tabController.dispose();
