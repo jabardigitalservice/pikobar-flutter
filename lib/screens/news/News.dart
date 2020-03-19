@@ -23,7 +23,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
             color: Colors.white,
             fontWeight: FontWeight.w600,
             fontFamily: FontsFamily.productSans,
-            fontSize: 14.0),
+            fontSize: 13.0),
       ),
     ),
     new Tab(
@@ -34,7 +34,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           color: Colors.white,
           fontWeight: FontWeight.w600,
           fontFamily: FontsFamily.productSans,
-          fontSize: 14.0),
+          fontSize: 13.0),
     )),
     new Tab(
         child: Text(
@@ -44,7 +44,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           color: Colors.white,
           fontWeight: FontWeight.w600,
           fontFamily: FontsFamily.productSans,
-          fontSize: 14.0),
+          fontSize: 13.0),
     )),
   ];
   TabController tabController;

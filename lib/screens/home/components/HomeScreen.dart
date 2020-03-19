@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: FontsFamily.productSans,
-                                            fontSize: 14.0),
+                                            fontSize: 13.0),
                                       ),
                                     ),
                                     Tab(
@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontFamily: FontsFamily.productSans,
-                                              fontSize: 14.0),
+                                              fontSize: 13.0),
                                         ),
                                     ),
                                     Tab(
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
-                                          fontSize: 14.0),
+                                          fontSize: 13.0),
                                     )),
                                   ],
                                 ),
