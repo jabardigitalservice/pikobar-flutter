@@ -1,9 +1,13 @@
+import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:package_info/package_info.dart';
+import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
@@ -16,7 +20,7 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   int _currentIndex = 0;
 
@@ -27,32 +31,53 @@ class _IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
 
+    checkAppVersion();
     _initializeBottomNavigationBar();
 
-     _firebaseMessaging.configure(
-       onMessage: (Map<String, dynamic> message) async {
-         print("onMessage: $message");
-         NotificationHelper().showNotification(
-             message['notification']['title'], message['notification']['body'],
-             payload: 'payload',
-             onSelectNotification: onSelectNotification);
-       },
-       onLaunch: (Map<String, dynamic> message) async {
-         print("onLaunch: $message");
-       },
-       onResume: (Map<String, dynamic> message) async {
-         print("onResume: $message");
-       },
-     );
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        NotificationHelper().showNotification(
+            message['notification']['title'], message['notification']['body'],
+            payload: 'payload', onSelectNotification: onSelectNotification);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
 
-     //_firebaseMessaging.getToken().then((token) => print(token));
+    //_firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
-     _firebaseMessaging.requestNotificationPermissions(
-         IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
 
     super.initState();
+  }
+
+  Future<void> checkAppVersion() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+
+    String appVersion;
+    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      appVersion = packageInfo.version;
+    });
+
+    if (Platform.isAndroid) {
+      await remoteConfig.fetch();
+      await remoteConfig.activateFetched();
+
+      print(remoteConfig.getString('force_update_current_version'));
+      print('versi device $appVersion');
+      if (appVersion !=
+          remoteConfig.getString('force_update_current_version')) {
+        _showAlert(context, remoteConfig.getString('force_update_store_url'));
+      }
+    }
   }
 
   _initializeBottomNavigationBar() {
@@ -91,11 +116,11 @@ class _IndexScreenState extends State<IndexScreen> {
     ];
   }
 
-   Future<void> onSelectNotification(String payload) async {
-     if (payload != null) {
-       debugPrint('notification payload: ' + payload);
-     }
-   }
+  Future<void> onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+  }
 
   void onTabTapped(int index) {
     setState(() {
@@ -122,7 +147,7 @@ class _IndexScreenState extends State<IndexScreen> {
   Widget _buildContent(int index) {
     switch (index) {
       case 0:
-       return HomeScreen();
+        return HomeScreen();
       case 1:
         return Messages();
 
@@ -132,6 +157,19 @@ class _IndexScreenState extends State<IndexScreen> {
       default:
         return HomeScreen();
     }
+  }
+
+  void _showAlert(BuildContext context, String urlStore) {
+    showDialog(
+        context: context,
+        builder: (context) => WillPopScope(
+            onWillPop: () {
+              return;
+            },
+            child: DialogUpdateApp(
+              linkUpdate: urlStore,
+            )),
+        barrierDismissible: false);
   }
 
   @override
