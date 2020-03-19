@@ -1,6 +1,6 @@
 class Dictionary {
   static String appName = 'PIKOBAR';
-  static String title = 'Pusat Informasi & Koordinasi COVID-19';
+  static String subTitle = 'Pusat Informasi & Koordinasi\nProvinsi Jawa Barat';
   static String provJabar = 'Provinsi Jawa Barat';
   static String version = '0.0.3';
 
