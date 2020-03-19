@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -16,6 +17,8 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(

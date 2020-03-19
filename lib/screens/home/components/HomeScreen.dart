@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -10,6 +11,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'BannerListSlider.dart';
@@ -24,6 +26,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.home);
+
     super.initState();
   }
 
@@ -359,11 +363,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: TabBarView(
                                     children: <Widget>[
                                       NewsScreen(
-                                          news: Dictionary.latestNews, maxLength: 3),
+                                          news: Dictionary.latestNews,
+                                          maxLength: 3),
                                       NewsScreen(
-                                          news: Dictionary.nationalNews, maxLength: 3),
+                                          news: Dictionary.nationalNews,
+                                          maxLength: 3),
                                       NewsScreen(
-                                          news: Dictionary.worldNews, maxLength: 3),
+                                          news: Dictionary.worldNews,
+                                          maxLength: 3),
                                     ],
                                   ),
                                 )
