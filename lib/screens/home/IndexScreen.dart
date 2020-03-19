@@ -34,7 +34,7 @@ class _IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
 
-    checkAppVersion();
+    // checkAppVersion();
     _initializeBottomNavigationBar();
 
     _firebaseMessaging.configure(
