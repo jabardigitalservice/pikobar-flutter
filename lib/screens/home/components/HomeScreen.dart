@@ -114,18 +114,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         onTap: () {
-          if (label == Dictionary.qna) {
             Fluttertoast.showToast(
                 msg: Dictionary.onDevelopment,
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1);
-          } else {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(Dictionary.onDevelopment),
-              duration: Duration(seconds: 1),
-            ));
-          }
         },
       ),
     );
@@ -193,10 +186,15 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}completed.png',
               Dictionary.survey, NavigationConstrants.Survey),
-          _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
-              Dictionary.selfDiagnose),
-          _buildButtonDisable(
-              '${Environment.iconAssets}network.png', Dictionary.selfTracing),
+          _buildButtonColumn(
+              '${Environment.iconAssets}saber_hoax.png',
+              Dictionary.saberHoax,
+              UrlThirdParty.urlIGSaberHoax),
+          _buildButtonColumn(
+              '${Environment.iconAssets}world.png',
+              Dictionary.worldInfo,
+              NavigationConstrants.Browser,
+              arguments: UrlThirdParty.urlWorldCoronaInfo),
           _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
         ],
@@ -421,15 +419,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}saber_hoax.png',
-                                Dictionary.saberHoax,
-                                UrlThirdParty.urlIGSaberHoax),
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}world.png',
-                                Dictionary.worldInfo,
-                                NavigationConstrants.Browser,
-                                arguments: UrlThirdParty.urlWorldCoronaInfo),
+                            _buildButtonDisable('${Environment.iconAssets}magnifying_glass.png',
+                                Dictionary.selfDiagnose),
+                            _buildButtonDisable(
+                                '${Environment.iconAssets}network.png', Dictionary.selfTracing),
                             _buildButtonDisable(
                                 '${Environment.iconAssets}conversation.png',
                                 Dictionary.qna),
