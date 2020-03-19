@@ -6,16 +6,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/phonebook/ListViewPhoneBooks.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class Phonebook extends StatefulWidget {
   @override
   _PhonebookState createState() => _PhonebookState();
 }
 
-class _PhonebookState extends State<Phonebook>  {
+class _PhonebookState extends State<Phonebook> {
   ScrollController _scrollController = ScrollController();
   bool _isSearch = false;
   var containerWidth = 40.0;
@@ -25,6 +27,8 @@ class _PhonebookState extends State<Phonebook>  {
 
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.phoneBookEmergency);
+
     _searchController.addListener((() {
       _onSearchChanged();
     }));
@@ -37,8 +41,9 @@ class _PhonebookState extends State<Phonebook>  {
     return Scaffold(
         appBar: _buildAppBar(),
         body: StreamBuilder<QuerySnapshot>(
-          stream:
-              Firestore.instance.collection(Collections.emergencyNumbers).snapshots(),
+          stream: Firestore.instance
+              .collection(Collections.emergencyNumbers)
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData) {
@@ -151,7 +156,6 @@ class _PhonebookState extends State<Phonebook>  {
     );
   }
 
-
   Widget _buildLoading() {
     return ListView.builder(
         itemCount: 10,
@@ -173,7 +177,7 @@ class _PhonebookState extends State<Phonebook>  {
         });
   }
 
-    @override
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();

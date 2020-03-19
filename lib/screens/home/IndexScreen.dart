@@ -164,7 +164,6 @@ class _IndexScreenState extends State<IndexScreen> {
   Widget _buildContent(int index) {
     switch (index) {
       case 0:
-        AnalyticsHelper.setLogEvent(Analytics.tappedHome);
         return HomeScreen();
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);

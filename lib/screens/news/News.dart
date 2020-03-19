@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class News extends StatefulWidget {
   final String news;
@@ -29,7 +31,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     new Tab(
         child: Text(
       Dictionary.nationalNews,
-          textAlign: TextAlign.center,
+      textAlign: TextAlign.center,
       style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,
@@ -39,7 +41,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     new Tab(
         child: Text(
       Dictionary.worldNews,
-          textAlign: TextAlign.center,
+      textAlign: TextAlign.center,
       style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,
@@ -51,6 +53,8 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.news);
+
     super.initState();
     tabController = new TabController(vsync: this, length: myTabs.length);
     if (widget.news == Dictionary.latestNews) {

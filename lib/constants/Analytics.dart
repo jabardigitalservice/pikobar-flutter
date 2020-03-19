@@ -1,18 +1,14 @@
 class Analytics {
   // Screen Names
-  static String home = 'Home';
-  static String message = 'Pesan';
-  static String faq = 'FAQ';
-  static String survey = 'Survei';
-  static String phoneBookEmergency = 'Nomor Darurat';
-  static String logistic = 'Info Logistik';
-  static String news = 'News';
+  static String home = 'Home'; //done
+  static String message = 'Pesan'; //done
+  static String faq = 'FAQ'; //done
+  static String survey = 'Survei'; //done
+  static String phoneBookEmergency = 'Nomor Darurat'; //done
+  static String news = 'News'; //done
   static String notifications = 'Notifikasi';
-  static String saberHoax = 'Jabar Saber Hoax';
-  static String pikobar = 'Info Corona';
 
   // event home
-  static String tappedHome = 'tapped_menu_home'; //done
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
   static String tappedInfoCorona = 'tapped_menu_info_corona';
   static String tappedSurvey = 'tapped_menu_survei';
@@ -36,7 +32,6 @@ class Analytics {
   static String tappedMore = 'tapped_berita_selengkapnya';
 
   // event FAQ
-
   static String tappedFaqSearch = 'tapped_faq_pencarian';
   static String tappedFaqDetail = 'tapped_faq_detail';
 }

@@ -341,14 +341,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Tab(
-                                        child:  Text(
-                                          Dictionary.nationalNews,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: FontsFamily.productSans,
-                                              fontSize: 14.0),
-                                        ),
+                                      child: Text(
+                                        Dictionary.nationalNews,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: FontsFamily.productSans,
+                                            fontSize: 14.0),
+                                      ),
                                     ),
                                     Tab(
                                         child: Text(
