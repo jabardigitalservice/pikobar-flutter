@@ -56,11 +56,11 @@ class _StatisticsState extends State<Statistics> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _buildContainer('${Environment.iconAssets}virus_2.png',
-                    Dictionary.positif, Dictionary.positif, '-', 3, true),
+                    Dictionary.positif, Dictionary.positif, '-', 3, Dictionary.active),
                 _buildContainer('${Environment.iconAssets}man.png',
-                    Dictionary.recover, Dictionary.recover, '-', 3, false),
+                    Dictionary.recover, Dictionary.recover, '-', 3, ''),
                 _buildContainer('${Environment.iconAssets}tombstone.png',
-                    Dictionary.die, Dictionary.die, '-', 3, false),
+                    Dictionary.die, Dictionary.die, '-', 3, ''),
               ],
             ),
             SizedBox(height: Dimens.padding),
@@ -68,9 +68,9 @@ class _StatisticsState extends State<Statistics> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _buildContainer('${Environment.iconAssets}doctor.png',
-                    Dictionary.underSupervision, Dictionary.pdpDesc, '-', 2, true),
+                    Dictionary.underSupervision, Dictionary.pdpDesc, '-', 2, Dictionary.process),
                 _buildContainer('${Environment.iconAssets}stethoscope.png',
-                    Dictionary.inMonitoring, Dictionary.opdDesc, '-', 2, true),
+                    Dictionary.inMonitoring, Dictionary.opdDesc, '-', 2, Dictionary.process),
               ],
             ),
           ],
@@ -118,21 +118,21 @@ class _StatisticsState extends State<Statistics> {
               _buildContainer(
                   '${Environment.iconAssets}virus_2.png',
                   Dictionary.positif,
-                  Dictionary.infected,
+                  Dictionary.positif,
                   '${data['aktif']['jabar']}',
-                  3, true),
+                  3, Dictionary.active),
               _buildContainer(
                   '${Environment.iconAssets}man.png',
                   Dictionary.recover,
                   Dictionary.recover,
                   '${data['sembuh']['jabar']}',
-                  3, false),
+                  3, ''),
               _buildContainer(
                   '${Environment.iconAssets}tombstone.png',
                   Dictionary.die,
                   Dictionary.die,
                   '${data['meninggal']['jabar']}',
-                  3, false),
+                  3, ''),
             ],
           ),
           SizedBox(height: Dimens.padding),
@@ -144,13 +144,13 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.underSupervision,
                   Dictionary.pdpDesc,
                   '${data['pdp']['total']['jabar']}',
-                  2, true),
+                  2, Dictionary.process),
               _buildContainer(
                   '${Environment.iconAssets}stethoscope.png',
                   Dictionary.inMonitoring,
                   Dictionary.opdDesc,
                   '${data['odp']['total']['jabar']}',
-                  2, true),
+                  2, Dictionary.process),
             ],
           )
         ],
@@ -159,7 +159,7 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Container _buildContainer(
-      String icon, String title, String description, String count, int length, bool isActive) {
+      String icon, String title, String description, String count, int length, String label) {
     return Container(
       width: (MediaQuery.of(context).size.width / length) - 21.4,
       padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 10, bottom: 10),
@@ -195,9 +195,9 @@ class _StatisticsState extends State<Statistics> {
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.productSans)),
               ),
-              isActive ?Container(
+              label != '' ?Container(
                 margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 1.0),
-                child: Text('Aktif',
+                child: Text(label,
                     style: TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey[600],

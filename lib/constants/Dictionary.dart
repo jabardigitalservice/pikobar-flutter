@@ -9,7 +9,7 @@ class Dictionary {
   static String message = 'Pesan';
   static String pikobar = 'Info Corona';
   static String phoneBookEmergency = 'Nomor Darurat';
-  static String statistics = 'Update Terkini';
+  static String statistics = 'Update Terkini Jawa Barat';
   static String menus = 'Pusat Layanan &  Informasi';
   static String newsUpdate = 'Berita Terkini';
   static String help = 'FAQ';
@@ -93,6 +93,8 @@ class Dictionary {
   static String fieldSurvey = 'Isi Survei';
   static String loadingData = 'Sedang mengambil data ...';
   static String onDevelopment = 'Dalam proses pengembangan';
+  static String process = 'Proses';
+  static String active = 'Aktif';
   static String emptyData = 'Tidak ada data';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
