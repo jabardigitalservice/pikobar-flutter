@@ -34,68 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  // _buildButtonColumn(String iconPath, String label, String route,
-  //     {Object arguments}) {
-  //   return Expanded(
-  //     child: Column(
-  //       children: [
-  //         Container(
-  //           padding: EdgeInsets.all(2.0),
-  //           decoration: BoxDecoration(boxShadow: [
-  //             BoxShadow(
-  //               blurRadius: 6.0,
-  //               color: Colors.black.withOpacity(.2),
-  //               offset: Offset(2.0, 4.0),
-  //             ),
-  //           ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
-  //           child: IconButton(
-  //             color: Theme.of(context).textTheme.body1.color,
-  //             icon: Image.asset(iconPath),
-  //             onPressed: () {
-  //               if (route != null) {
-  //                 switch (route) {
-  //                   case UrlThirdParty.urlCoronaEscort:
-  //                     _launchUrl(route);
-  //                     AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-  //                     break;
-  //                   case UrlThirdParty.urlIGSaberHoax:
-  //                     _launchUrl(route);
-  //                     AnalyticsHelper.setLogEvent(
-  //                         Analytics.tappedJabarSaberHoax);
-  //                     break;
-  //                   default:
-  //                     Navigator.pushNamed(context, route, arguments: arguments);
-
-  //                     // record event to analytics
-  //                     if (label == Dictionary.phoneBookEmergency) {
-  //                       AnalyticsHelper.setLogEvent(
-  //                           Analytics.tappedphoneBookEmergency);
-  //                     } else if (label == Dictionary.pikobar) {
-  //                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
-  //                     } else if (label == Dictionary.logistic) {
-  //                       AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
-  //                     } else if (label == Dictionary.survey) {
-  //                       AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
-  //                     } else if (label == Dictionary.worldInfo) {
-  //                       AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
-  //                     }
-  //                 }
-  //               }
-  //             },
-  //           ),
-  //         ),
-  //         SizedBox(height: 12.0),
-  //         Text(label,
-  //             textAlign: TextAlign.center,
-  //             style: TextStyle(
-  //               fontSize: 12.0,
-  //               color: Theme.of(context).textTheme.body1.color,
-  //             ))
-  //       ],
-  //     ),
-  //   );
-  // }
-
   // _buildButtonDisable(String iconPath, String label) {
   //   return Expanded(
   //     child: GestureDetector(
