@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
@@ -10,14 +11,13 @@ import 'package:url_launcher/url_launcher.dart';
 class ListViewPhoneBooks extends StatelessWidget {
   AsyncSnapshot<QuerySnapshot> snapshot;
   final ScrollController scrollController;
-  // final int maxDataLength;
+  String searchQuery;
 
-  ListViewPhoneBooks({
-    Key key,
-    @required this.snapshot,
-    this.scrollController,
-    // this.maxDataLength
-  }) : super(key: key);
+  ListViewPhoneBooks(
+      {Key key, @required this.snapshot, this.scrollController, this.searchQuery
+      
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,41 +40,37 @@ class ListViewPhoneBooks extends StatelessWidget {
           ));
     }
 
-    return ListView.builder(
-        controller: scrollController,
-        padding: EdgeInsets.all(20),
-        itemCount: snapshot.data.documents.length,
-        itemBuilder: (context, index) {
-          // if (position == records.length) {
-          //   if (records.length > 15 && maxDataLength != records.length) {
-          //     return Padding(
-          //       padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-          //       child: Column(
-          //         children: <Widget>[
-          //           CupertinoActivityIndicator(),
-          //           SizedBox(
-          //             height: 5.0,
-          //           ),
-          //           Text(Dictionary.loadingData),
-          //         ],
-          //       ),
-          //     );
-          //   } else {
-          //     return Container();
-          //   }
-          // }
-          final DocumentSnapshot document = snapshot.data.documents[index];
-
-          return Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Column(
-              children: <Widget>[
-                index == 0 ? _buildDaruratNumber(context) : Container(),
-                _card(document)
-              ],
-            ),
-          );
-        });
+    List dataNomorDarurat;
+    if (searchQuery != null) {
+      dataNomorDarurat = snapshot.data.documents
+          .where((test) =>
+              test['name'].toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    } else {
+      dataNomorDarurat = snapshot.data.documents;
+    }
+    final int emergencyPhoneCount = dataNomorDarurat.length;
+    print(emergencyPhoneCount);
+    return emergencyPhoneCount == 0
+        ? EmptyData(
+            message: '${Dictionary.emptyData} ${Dictionary.phoneBookEmergency}')
+        : ListView.builder(
+            controller: scrollController,
+            padding: EdgeInsets.all(20),
+            itemCount: emergencyPhoneCount,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Column(
+                  children: <Widget>[
+                    index == 0 && searchQuery == null
+                        ? _buildDaruratNumber(context)
+                        : Container(),
+                    _card(dataNomorDarurat[index])
+                  ],
+                ),
+              );
+            });
   }
 
   Widget _buildDaruratNumber(BuildContext context) {
@@ -120,7 +116,10 @@ class ListViewPhoneBooks extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        _buildCardHeader(context, 'hospital.png', Dictionary.daftarRumahSakitRujukan,
+        _buildCardHeader(
+            context,
+            'hospital.png',
+            Dictionary.daftarRumahSakitRujukan,
             Dictionary.daftarRumahSakitRujukanCaption),
       ],
     );
@@ -194,4 +193,6 @@ class ListViewPhoneBooks extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
+
+  
 }

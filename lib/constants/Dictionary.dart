@@ -78,6 +78,7 @@ class Dictionary {
 
   // placeholder / hint text
   static String findFaq = 'Cari FAQ';
+  static String findEmergencyPhone = 'Cari Nomor Darurat';
 
   // text
   static String fieldSurvey = 'Isi Survei';
