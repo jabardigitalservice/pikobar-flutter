@@ -59,7 +59,9 @@ class _MenuListState extends State<MenuList> {
           _remoteConfig == null ? _defaultRowMenusTwo() : _remoteRowMenusTwo(),
           //_defaultRowMenusTwo(),
           SizedBox(height: 5.0),
-          _remoteConfig == null ? _defaultRowMenusThree() : _remoteRowMenusThree()
+          _remoteConfig == null
+              ? _defaultRowMenusThree()
+              : _remoteRowMenusThree()
           //_defaultRowMenusThree()
         ],
       ),
@@ -79,7 +81,8 @@ class _MenuListState extends State<MenuList> {
               Dictionary.pikobar, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaInfo),
           _buildButtonColumn('${Environment.iconAssets}virus.png',
-              Dictionary.nationalInfo, NavigationConstrants.Browser, arguments: UrlThirdParty.urlCoronaEscort),
+              Dictionary.nationalInfo, NavigationConstrants.Browser,
+              arguments: UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
               Dictionary.worldInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlWorldCoronaInfo),
@@ -119,13 +122,14 @@ class _MenuListState extends State<MenuList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
-              Dictionary.saberHoax, UrlThirdParty.urlIGSaberHoax, openBrowser: true),
-          _buildButtonDisable('${Environment.iconAssets}relawan.png',
-              Dictionary.volunteer),
+              Dictionary.saberHoax, UrlThirdParty.urlIGSaberHoax,
+              openBrowser: true),
+          _buildButtonDisable(
+              '${Environment.iconAssets}relawan.png', Dictionary.volunteer),
           _buildButtonDisable('${Environment.iconAssets}report_case.png',
               Dictionary.caseReport),
-          _buildButtonDisable('${Environment.iconAssets}conversation.png',
-              Dictionary.qna),
+          _buildButtonDisable(
+              '${Environment.iconAssets}conversation.png', Dictionary.qna),
         ],
       ),
     );
@@ -155,10 +159,13 @@ class _MenuListState extends State<MenuList> {
               _remoteConfig.getString(FirebaseConfig.nationalInfoCaption) !=
                       null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoCaption)
-                  : Dictionary.nationalInfo, NavigationConstrants.Browser,
-              arguments: _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) != null
-                  ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
-                  : UrlThirdParty.urlCoronaEscort),
+                  : Dictionary.nationalInfo,
+              NavigationConstrants.Browser,
+              arguments:
+                  _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) !=
+                          null
+                      ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
+                      : UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn(
               '${Environment.iconAssets}world.png',
               _remoteConfig.getString(FirebaseConfig.worldInfoCaption) != null
@@ -191,10 +198,8 @@ class _MenuListState extends State<MenuList> {
                   _remoteConfig.getString(FirebaseConfig.donationUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.donationUrl)
                       : UrlThirdParty.urlDonation),
-
           _buildButtonColumn('${Environment.iconAssets}completed.png',
               Dictionary.survey, NavigationConstrants.Survey),
-
           _remoteConfig.getBool(FirebaseConfig.selfDiagnoseEnabled)
               ? _buildButtonColumn(
                   '${Environment.iconAssets}self_diagnose.png',
@@ -216,22 +221,18 @@ class _MenuListState extends State<MenuList> {
                       ? _remoteConfig
                           .getString(FirebaseConfig.selfDiagnoseCaption)
                       : Dictionary.selfDiagnose),
-
-
           _buildButtonColumn(
               '${Environment.iconAssets}logistics.png',
-              _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.logisticCaption) !=
-                  null
-                  ? _remoteConfig.getString(
-                  FirebaseConfig.logisticCaption)
+              _remoteConfig != null &&
+                      _remoteConfig.getString(FirebaseConfig.logisticCaption) !=
+                          null
+                  ? _remoteConfig.getString(FirebaseConfig.logisticCaption)
                   : Dictionary.logistic,
               NavigationConstrants.Browser,
-              arguments: _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.logisticUrl) !=
-                  null
-                  ? _remoteConfig
-                  .getString(FirebaseConfig.logisticUrl)
+              arguments: _remoteConfig != null &&
+                      _remoteConfig.getString(FirebaseConfig.logisticUrl) !=
+                          null
+                  ? _remoteConfig.getString(FirebaseConfig.logisticUrl)
                   : UrlThirdParty.urlLogisticsInfo),
         ],
       ),
@@ -247,80 +248,68 @@ class _MenuListState extends State<MenuList> {
         children: [
           _buildButtonColumn(
               '${Environment.iconAssets}saber_hoax.png',
-              _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.jshCaption) !=
-                  null
-                  ? _remoteConfig
-                  .getString(FirebaseConfig.jshCaption)
+              _remoteConfig != null &&
+                      _remoteConfig.getString(FirebaseConfig.jshCaption) != null
+                  ? _remoteConfig.getString(FirebaseConfig.jshCaption)
                   : Dictionary.saberHoax,
-              _remoteConfig != null && _remoteConfig
-                  .getString(FirebaseConfig.jshUrl) !=
-                  null
-                  ? _remoteConfig
-                  .getString(FirebaseConfig.jshUrl)
+              _remoteConfig != null &&
+                      _remoteConfig.getString(FirebaseConfig.jshUrl) != null
+                  ? _remoteConfig.getString(FirebaseConfig.jshUrl)
                   : UrlThirdParty.urlIGSaberHoax,
               openBrowser: true),
-
-          _remoteConfig != null && _remoteConfig.getBool(FirebaseConfig.volunteerEnabled)
+          _remoteConfig != null &&
+                  _remoteConfig.getBool(FirebaseConfig.volunteerEnabled)
               ? _buildButtonColumn(
-              '${Environment.iconAssets}relawan.png',
-              _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.volunteerCaption) !=
-                  null
-                  ? _remoteConfig.getString(
-                  FirebaseConfig.volunteerCaption)
-                  : Dictionary.volunteer,
-              NavigationConstrants.Browser,
-              arguments: _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.volunteerUrl) !=
-                  null
-                  ? _remoteConfig
-                  .getString(FirebaseConfig.volunteerUrl)
-                  : UrlThirdParty.urlVolunteer)
+                  '${Environment.iconAssets}relawan.png',
+                  _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.volunteerCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.volunteerCaption)
+                      : Dictionary.volunteer,
+                  NavigationConstrants.Browser,
+                  arguments: _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.volunteerUrl) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
+                      : UrlThirdParty.urlVolunteer)
               : _buildButtonDisable(
-              '${Environment.iconAssets}relawan.png',
-              Dictionary.volunteer),
-
-          _remoteConfig != null && _remoteConfig.getBool(FirebaseConfig.reportEnabled)
+                  '${Environment.iconAssets}relawan.png', Dictionary.volunteer),
+          _remoteConfig != null &&
+                  _remoteConfig.getBool(FirebaseConfig.reportEnabled)
               ? _buildButtonColumn(
-              '${Environment.iconAssets}report_case.png',
-              _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.reportCaption) !=
-                  null
-                  ? _remoteConfig.getString(
-                  FirebaseConfig.reportCaption)
-                  : Dictionary.caseReport,
-              NavigationConstrants.Browser,
-              arguments: _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.reportUrl) !=
-                  null
-                  ? _remoteConfig
-                  .getString(FirebaseConfig.reportUrl)
-                  : UrlThirdParty.urlCaseReport)
-              : _buildButtonDisable(
-              '${Environment.iconAssets}report_case.png',
-              Dictionary.caseReport),
-
-          _remoteConfig != null && _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
+                  '${Environment.iconAssets}report_case.png',
+                  _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.reportCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.reportCaption)
+                      : Dictionary.caseReport,
+                  NavigationConstrants.Browser,
+                  arguments: _remoteConfig != null &&
+                          _remoteConfig.getString(FirebaseConfig.reportUrl) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.reportUrl)
+                      : UrlThirdParty.urlCaseReport)
+              : _buildButtonDisable('${Environment.iconAssets}report_case.png',
+                  Dictionary.caseReport),
+          _remoteConfig != null &&
+                  _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
               ? _buildButtonColumn(
-              '${Environment.iconAssets}conversation.png',
-              _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.qnaCaption) !=
-                  null
-                  ? _remoteConfig.getString(
-                  FirebaseConfig.qnaCaption)
-                  : Dictionary.qna,
-              NavigationConstrants.Browser,
-              arguments: _remoteConfig != null && _remoteConfig.getString(
-                  FirebaseConfig.qnaUrl) !=
-                  null
-                  ? _remoteConfig
-                  .getString(FirebaseConfig.qnaUrl)
-                  : UrlThirdParty.urlQNA)
+                  '${Environment.iconAssets}conversation.png',
+                  _remoteConfig != null &&
+                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
+                      : Dictionary.qna,
+                  NavigationConstrants.Browser,
+                  arguments: _remoteConfig != null &&
+                          _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
+                      ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
+                      : UrlThirdParty.urlQNA)
               : _buildButtonDisable(
-              '${Environment.iconAssets}conversation.png',
-              Dictionary.qna),
-
+                  '${Environment.iconAssets}conversation.png', Dictionary.qna),
         ],
       ),
     );
@@ -347,15 +336,16 @@ class _MenuListState extends State<MenuList> {
                 if (route != null) {
                   if (openBrowser) {
                     _launchUrl(route);
-                    if (label == UrlThirdParty.urlCoronaEscort) {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-                    } else if (label == UrlThirdParty.urlIGSaberHoax) {
+                    if (label == Dictionary.saberHoax) {
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedJabarSaberHoax);
                     }
                   } else {
                     if (iconPath == '${Environment.iconAssets}help.png') {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => InWebView(url: arguments)));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => InWebView(url: arguments)));
+
+                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
                     } else {
                       Navigator.pushNamed(context, route, arguments: arguments);
                     }
@@ -366,6 +356,10 @@ class _MenuListState extends State<MenuList> {
                           Analytics.tappedphoneBookEmergency);
                     } else if (label == Dictionary.pikobar) {
                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+                    } else if (label == Dictionary.nationalInfo) {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
+                    } else if (label == Dictionary.selfDiagnose) {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
                     } else if (label == Dictionary.logistic) {
                       AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
                     } else if (label == Dictionary.survey) {
@@ -443,10 +437,10 @@ class _MenuListState extends State<MenuList> {
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1);
 
-            if (label == Dictionary.selfDiagnose) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
-            } else if (label == Dictionary.selfTracing) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedSelfTracing);
+            if (label == Dictionary.volunteer) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
+            } else if (label == Dictionary.caseReport) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
             } else if (label == Dictionary.qna) {
               AnalyticsHelper.setLogEvent(Analytics.tappedQna);
             }
@@ -456,243 +450,244 @@ class _MenuListState extends State<MenuList> {
     );
   }
 
-  _buildButtonColumnLayananLain(String iconPath, String label) {
-    return Expanded(
-        child: Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(2.0),
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              blurRadius: 10.0,
-              color: Colors.black.withOpacity(.2),
-              offset: Offset(2.0, 2.0),
-            ),
-          ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
-          child: IconButton(
-            color: Theme.of(context).textTheme.body1.color,
-            icon: Image.asset(iconPath),
-            onPressed: () {
-              _mainHomeBottomSheet(context);
+// TODO: unsed widget
+  // _buildButtonColumnLayananLain(String iconPath, String label) {
+  //   return Expanded(
+  //       child: Column(
+  //     children: [
+  //       Container(
+  //         padding: EdgeInsets.all(2.0),
+  //         decoration: BoxDecoration(boxShadow: [
+  //           BoxShadow(
+  //             blurRadius: 10.0,
+  //             color: Colors.black.withOpacity(.2),
+  //             offset: Offset(2.0, 2.0),
+  //           ),
+  //         ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
+  //         child: IconButton(
+  //           color: Theme.of(context).textTheme.body1.color,
+  //           icon: Image.asset(iconPath),
+  //           onPressed: () {
+  //             _mainHomeBottomSheet(context);
 
-              AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
-            },
-          ),
-        ),
-        SizedBox(height: 12.0),
-        Text(label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).textTheme.body1.color,
-            ))
-      ],
-    ));
-  }
+  //             AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
+  //           },
+  //         ),
+  //       ),
+  //       SizedBox(height: 12.0),
+  //       Text(label,
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             color: Theme.of(context).textTheme.body1.color,
+  //           ))
+  //     ],
+  //   ));
+  // }
 
-  void _mainHomeBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-          ),
-        ),
-        elevation: 60.0,
-        builder: (BuildContext context) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 20.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 14.0),
-                  color: Colors.black,
-                  height: 1.5,
-                  width: 40.0,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
-                  child: Text(
-                    Dictionary.otherMenus,
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.05),
-                      offset: Offset(0.0, 0.05),
-                    ),
-                  ]),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}saber_hoax.png',
-                                _remoteConfig != null &&
-                                        _remoteConfig.getString(
-                                                FirebaseConfig.jshCaption) !=
-                                            null
-                                    ? _remoteConfig
-                                        .getString(FirebaseConfig.jshCaption)
-                                    : Dictionary.saberHoax,
-                                _remoteConfig != null &&
-                                        _remoteConfig.getString(
-                                                FirebaseConfig.jshUrl) !=
-                                            null
-                                    ? _remoteConfig
-                                        .getString(FirebaseConfig.jshUrl)
-                                    : UrlThirdParty.urlIGSaberHoax,
-                                openBrowser: true),
-                            _buildButtonColumn(
-                                '${Environment.iconAssets}package.png',
-                                _remoteConfig != null &&
-                                        _remoteConfig.getString(FirebaseConfig
-                                                .logisticCaption) !=
-                                            null
-                                    ? _remoteConfig.getString(
-                                        FirebaseConfig.logisticCaption)
-                                    : Dictionary.logistic,
-                                NavigationConstrants.Browser,
-                                arguments: _remoteConfig != null &&
-                                        _remoteConfig.getString(
-                                                FirebaseConfig.logisticUrl) !=
-                                            null
-                                    ? _remoteConfig
-                                        .getString(FirebaseConfig.logisticUrl)
-                                    : UrlThirdParty.urlLogisticsInfo),
-                            _remoteConfig != null &&
-                                    _remoteConfig
-                                        .getBool(FirebaseConfig.qnaEnabled)
-                                ? _buildButtonColumn(
-                                    '${Environment.iconAssets}conversation.png',
-                                    _remoteConfig != null &&
-                                            _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                                                null
-                                        ? _remoteConfig.getString(
-                                            FirebaseConfig.qnaCaption)
-                                        : Dictionary.qna,
-                                    NavigationConstrants.Browser,
-                                    arguments: _remoteConfig != null &&
-                                            _remoteConfig.getString(
-                                                    FirebaseConfig.qnaUrl) !=
-                                                null
-                                        ? _remoteConfig
-                                            .getString(FirebaseConfig.qnaUrl)
-                                        : UrlThirdParty.urlQNA)
-                                : _buildButtonDisable(
-                                    '${Environment.iconAssets}conversation.png',
-                                    Dictionary.qna),
-                            _remoteConfig != null &&
-                                    _remoteConfig.getBool(
-                                        FirebaseConfig.volunteerEnabled)
-                                ? _buildButtonColumn(
-                                    '${Environment.iconAssets}relawan.png',
-                                    _remoteConfig != null &&
-                                            _remoteConfig.getString(FirebaseConfig.volunteerCaption) !=
-                                                null
-                                        ? _remoteConfig.getString(
-                                            FirebaseConfig.volunteerCaption)
-                                        : Dictionary.volunteer,
-                                    NavigationConstrants.Browser,
-                                    arguments: _remoteConfig != null &&
-                                            _remoteConfig.getString(FirebaseConfig.volunteerUrl) !=
-                                                null
-                                        ? _remoteConfig.getString(
-                                            FirebaseConfig.volunteerUrl)
-                                        : UrlThirdParty.urlVolunteer)
-                                : _buildButtonDisable(
-                                    '${Environment.iconAssets}relawan.png',
-                                    Dictionary.volunteer),
-                          ],
-                        ),
-                      ),
+  // void _mainHomeBottomSheet(context) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.only(
+  //           topLeft: Radius.circular(10.0),
+  //           topRight: Radius.circular(10.0),
+  //         ),
+  //       ),
+  //       elevation: 60.0,
+  //       builder: (BuildContext context) {
+  //         return Container(
+  //           margin: EdgeInsets.only(bottom: 20.0),
+  //           child: Wrap(
+  //             alignment: WrapAlignment.center,
+  //             children: <Widget>[
+  //               Container(
+  //                 margin: EdgeInsets.only(top: 14.0),
+  //                 color: Colors.black,
+  //                 height: 1.5,
+  //                 width: 40.0,
+  //               ),
+  //               Container(
+  //                 width: MediaQuery.of(context).size.width,
+  //                 margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
+  //                 child: Text(
+  //                   Dictionary.otherMenus,
+  //                   style:
+  //                       TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+  //                 ),
+  //               ),
+  //               Container(
+  //                 alignment: Alignment.topCenter,
+  //                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+  //                 decoration: BoxDecoration(boxShadow: [
+  //                   BoxShadow(
+  //                     color: Colors.white.withOpacity(0.05),
+  //                     offset: Offset(0.0, 0.05),
+  //                   ),
+  //                 ]),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   children: <Widget>[
+  //                     Container(
+  //                       padding: EdgeInsets.symmetric(vertical: 8),
+  //                       child: Row(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                         children: [
+  //                           _buildButtonColumn(
+  //                               '${Environment.iconAssets}saber_hoax.png',
+  //                               _remoteConfig != null &&
+  //                                       _remoteConfig.getString(
+  //                                               FirebaseConfig.jshCaption) !=
+  //                                           null
+  //                                   ? _remoteConfig
+  //                                       .getString(FirebaseConfig.jshCaption)
+  //                                   : Dictionary.saberHoax,
+  //                               _remoteConfig != null &&
+  //                                       _remoteConfig.getString(
+  //                                               FirebaseConfig.jshUrl) !=
+  //                                           null
+  //                                   ? _remoteConfig
+  //                                       .getString(FirebaseConfig.jshUrl)
+  //                                   : UrlThirdParty.urlIGSaberHoax,
+  //                               openBrowser: true),
+  //                           _buildButtonColumn(
+  //                               '${Environment.iconAssets}package.png',
+  //                               _remoteConfig != null &&
+  //                                       _remoteConfig.getString(FirebaseConfig
+  //                                               .logisticCaption) !=
+  //                                           null
+  //                                   ? _remoteConfig.getString(
+  //                                       FirebaseConfig.logisticCaption)
+  //                                   : Dictionary.logistic,
+  //                               NavigationConstrants.Browser,
+  //                               arguments: _remoteConfig != null &&
+  //                                       _remoteConfig.getString(
+  //                                               FirebaseConfig.logisticUrl) !=
+  //                                           null
+  //                                   ? _remoteConfig
+  //                                       .getString(FirebaseConfig.logisticUrl)
+  //                                   : UrlThirdParty.urlLogisticsInfo),
+  //                           _remoteConfig != null &&
+  //                                   _remoteConfig
+  //                                       .getBool(FirebaseConfig.qnaEnabled)
+  //                               ? _buildButtonColumn(
+  //                                   '${Environment.iconAssets}conversation.png',
+  //                                   _remoteConfig != null &&
+  //                                           _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+  //                                               null
+  //                                       ? _remoteConfig.getString(
+  //                                           FirebaseConfig.qnaCaption)
+  //                                       : Dictionary.qna,
+  //                                   NavigationConstrants.Browser,
+  //                                   arguments: _remoteConfig != null &&
+  //                                           _remoteConfig.getString(
+  //                                                   FirebaseConfig.qnaUrl) !=
+  //                                               null
+  //                                       ? _remoteConfig
+  //                                           .getString(FirebaseConfig.qnaUrl)
+  //                                       : UrlThirdParty.urlQNA)
+  //                               : _buildButtonDisable(
+  //                                   '${Environment.iconAssets}conversation.png',
+  //                                   Dictionary.qna),
+  //                           _remoteConfig != null &&
+  //                                   _remoteConfig.getBool(
+  //                                       FirebaseConfig.volunteerEnabled)
+  //                               ? _buildButtonColumn(
+  //                                   '${Environment.iconAssets}relawan.png',
+  //                                   _remoteConfig != null &&
+  //                                           _remoteConfig.getString(FirebaseConfig.volunteerCaption) !=
+  //                                               null
+  //                                       ? _remoteConfig.getString(
+  //                                           FirebaseConfig.volunteerCaption)
+  //                                       : Dictionary.volunteer,
+  //                                   NavigationConstrants.Browser,
+  //                                   arguments: _remoteConfig != null &&
+  //                                           _remoteConfig.getString(FirebaseConfig.volunteerUrl) !=
+  //                                               null
+  //                                       ? _remoteConfig.getString(
+  //                                           FirebaseConfig.volunteerUrl)
+  //                                       : UrlThirdParty.urlVolunteer)
+  //                               : _buildButtonDisable(
+  //                                   '${Environment.iconAssets}relawan.png',
+  //                                   Dictionary.volunteer),
+  //                         ],
+  //                       ),
+  //                     ),
 
-                      SizedBox(
-                        height: 8.0,
-                      ),
+  //                     SizedBox(
+  //                       height: 8.0,
+  //                     ),
 
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _remoteConfig != null &&
-                                    _remoteConfig
-                                        .getBool(FirebaseConfig.reportEnabled)
-                                ? _buildButtonColumn(
-                                    '${Environment.iconAssets}report_case.png',
-                                    _remoteConfig != null &&
-                                            _remoteConfig.getString(FirebaseConfig.reportCaption) !=
-                                                null
-                                        ? _remoteConfig.getString(
-                                            FirebaseConfig.reportCaption)
-                                        : Dictionary.caseReport,
-                                    NavigationConstrants.Browser,
-                                    arguments: _remoteConfig != null &&
-                                            _remoteConfig.getString(
-                                                    FirebaseConfig.reportUrl) !=
-                                                null
-                                        ? _remoteConfig
-                                            .getString(FirebaseConfig.reportUrl)
-                                        : UrlThirdParty.urlCaseReport)
-                                : _buildButtonDisable(
-                                    '${Environment.iconAssets}report_case.png',
-                                    Dictionary.caseReport),
-                            _remoteConfig != null &&
-                                    _remoteConfig.getBool(
-                                        FirebaseConfig.selfTracingEnabled)
-                                ? _buildButtonColumn(
-                                    '${Environment.iconAssets}network.png',
-                                    _remoteConfig != null &&
-                                            _remoteConfig.getString(FirebaseConfig.selfTracingCaption) !=
-                                                null
-                                        ? _remoteConfig.getString(
-                                            FirebaseConfig.selfTracingCaption)
-                                        : Dictionary.selfTracing,
-                                    NavigationConstrants.Browser,
-                                    arguments: _remoteConfig != null &&
-                                            _remoteConfig.getString(FirebaseConfig.selfTracingUrl) !=
-                                                null
-                                        ? _remoteConfig.getString(
-                                            FirebaseConfig.selfTracingUrl)
-                                        : UrlThirdParty.urlSelfTracing)
-                                : _buildButtonDisable(
-                                    '${Environment.iconAssets}network.png',
-                                    Dictionary.selfTracing),
-                            _buildButtonDisable(
-                                '${Environment.iconAssets}report_case.png',
-                                Dictionary.volunteer,
-                                visible: false),
-                            _buildButtonDisable(
-                                '${Environment.iconAssets}report_case.png',
-                                Dictionary.volunteer,
-                                visible: false)
-                          ],
-                        ),
-                      ),
-                      // secondRowShortcuts
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
+  //                     Container(
+  //                       padding: EdgeInsets.symmetric(vertical: 8),
+  //                       child: Row(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                         children: [
+  //                           _remoteConfig != null &&
+  //                                   _remoteConfig
+  //                                       .getBool(FirebaseConfig.reportEnabled)
+  //                               ? _buildButtonColumn(
+  //                                   '${Environment.iconAssets}report_case.png',
+  //                                   _remoteConfig != null &&
+  //                                           _remoteConfig.getString(FirebaseConfig.reportCaption) !=
+  //                                               null
+  //                                       ? _remoteConfig.getString(
+  //                                           FirebaseConfig.reportCaption)
+  //                                       : Dictionary.caseReport,
+  //                                   NavigationConstrants.Browser,
+  //                                   arguments: _remoteConfig != null &&
+  //                                           _remoteConfig.getString(
+  //                                                   FirebaseConfig.reportUrl) !=
+  //                                               null
+  //                                       ? _remoteConfig
+  //                                           .getString(FirebaseConfig.reportUrl)
+  //                                       : UrlThirdParty.urlCaseReport)
+  //                               : _buildButtonDisable(
+  //                                   '${Environment.iconAssets}report_case.png',
+  //                                   Dictionary.caseReport),
+  //                           _remoteConfig != null &&
+  //                                   _remoteConfig.getBool(
+  //                                       FirebaseConfig.selfTracingEnabled)
+  //                               ? _buildButtonColumn(
+  //                                   '${Environment.iconAssets}network.png',
+  //                                   _remoteConfig != null &&
+  //                                           _remoteConfig.getString(FirebaseConfig.selfTracingCaption) !=
+  //                                               null
+  //                                       ? _remoteConfig.getString(
+  //                                           FirebaseConfig.selfTracingCaption)
+  //                                       : Dictionary.selfTracing,
+  //                                   NavigationConstrants.Browser,
+  //                                   arguments: _remoteConfig != null &&
+  //                                           _remoteConfig.getString(FirebaseConfig.selfTracingUrl) !=
+  //                                               null
+  //                                       ? _remoteConfig.getString(
+  //                                           FirebaseConfig.selfTracingUrl)
+  //                                       : UrlThirdParty.urlSelfTracing)
+  //                               : _buildButtonDisable(
+  //                                   '${Environment.iconAssets}network.png',
+  //                                   Dictionary.selfTracing),
+  //                           _buildButtonDisable(
+  //                               '${Environment.iconAssets}report_case.png',
+  //                               Dictionary.volunteer,
+  //                               visible: false),
+  //                           _buildButtonDisable(
+  //                               '${Environment.iconAssets}report_case.png',
+  //                               Dictionary.volunteer,
+  //                               visible: false)
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     // secondRowShortcuts
+  //                   ],
+  //                 ),
+  //               )
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 
   _launchUrl(String url) async {
     if (await canLaunch(url)) {
