@@ -97,6 +97,8 @@ class _PhonebookState extends State<Phonebook> {
     setState(() {
       _isSearch = true;
     });
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencySearch);
   }
 
   void updateSearchQuery(String newQuery) {

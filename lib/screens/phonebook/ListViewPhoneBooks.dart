@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ListViewPhoneBooks extends StatelessWidget {
@@ -14,9 +16,10 @@ class ListViewPhoneBooks extends StatelessWidget {
   String searchQuery;
 
   ListViewPhoneBooks(
-      {Key key, @required this.snapshot, this.scrollController, this.searchQuery
-      
-      })
+      {Key key,
+      @required this.snapshot,
+      this.scrollController,
+      this.searchQuery})
       : super(key: key);
 
   @override
@@ -26,7 +29,11 @@ class ListViewPhoneBooks extends StatelessWidget {
         leading: Container(
             height: 25,
             child: Image.asset('${Environment.iconAssets}office.png')),
-        title: Text(document['name'],style: TextStyle(color: Color(0xff4F4F4F),fontWeight: FontWeight.bold),),
+        title: Text(
+          document['name'],
+          style:
+              TextStyle(color: Color(0xff4F4F4F), fontWeight: FontWeight.bold),
+        ),
         onTap: () => _onTapItem(context, document),
       );
     }
@@ -50,7 +57,6 @@ class ListViewPhoneBooks extends StatelessWidget {
       dataNomorDarurat = snapshot.data.documents;
     }
     final int emergencyPhoneCount = dataNomorDarurat.length;
-    print(emergencyPhoneCount);
     return emergencyPhoneCount == 0
         ? EmptyData(
             message: '${Dictionary.emptyData} ${Dictionary.phoneBookEmergency}')
@@ -89,9 +95,17 @@ class ListViewPhoneBooks extends StatelessWidget {
                 leading: Container(
                     height: 25,
                     child: Image.asset('${Environment.iconAssets}office.png')),
-                title: Text(Dictionary.callCenter,style: TextStyle(color: Color(0xff4F4F4F),fontWeight: FontWeight.bold)),
+                title: Text(Dictionary.callCenter,
+                    style: TextStyle(
+                        color: Color(0xff4F4F4F), fontWeight: FontWeight.bold)),
                 onTap: () {
                   _launchURL(Dictionary.callCenterNumber, 'number');
+
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
+                    'title': Dictionary.callCenter,
+                    'telp': Dictionary.callCenterNumber
+                  });
                 }),
           ),
         ),
@@ -105,11 +119,19 @@ class ListViewPhoneBooks extends StatelessWidget {
             child: ListTile(
                 leading: Container(
                     height: 25,
-                    child: Image.asset(
-                        '${Environment.iconAssets}whatsapp.png')),
-                title: Text(Dictionary.dinasKesehatan,style: TextStyle(color: Color(0xff4F4F4F),fontWeight: FontWeight.bold)),
+                    child:
+                        Image.asset('${Environment.iconAssets}whatsapp.png')),
+                title: Text(Dictionary.dinasKesehatan,
+                    style: TextStyle(
+                        color: Color(0xff4F4F4F), fontWeight: FontWeight.bold)),
                 onTap: () {
                   _launchURL(Dictionary.waNumberDinasKesehatan, 'whatsapp');
+
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.tappedphoneBookEmergencyWa, <String, dynamic>{
+                    'title': Dictionary.dinasKesehatan,
+                    'wa': Dictionary.waNumberDinasKesehatan
+                  });
                 }),
           ),
         ),
@@ -177,6 +199,9 @@ class ListViewPhoneBooks extends StatelessWidget {
         builder: (context) => PhoneBookDetailScreen(document: document),
       ),
     );
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencyDetail,
+        <String, dynamic>{'title': document['name']});
   }
 
   _launchURL(String launchUrl, tipeURL) async {
@@ -193,6 +218,4 @@ class ListViewPhoneBooks extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
-
-  
 }
