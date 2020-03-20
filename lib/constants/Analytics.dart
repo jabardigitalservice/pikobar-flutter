@@ -34,6 +34,14 @@ class Analytics {
   static String tappedNewsWorld = 'tapped_berita_dunia';
   static String tappedMore = 'tapped_berita_selengkapnya';
 
+  // event phoneBook Emergency
+  static String tappedphoneBookEmergencyDetail = 'tapped_nomor_darurat_detail';
+  static String tappedphoneBookEmergencySearch =
+      'tapped_nomor_darurat_pencarian';
+  static String tappedphoneBookEmergencyWa = 'tapped_nomor_darurat_wa';
+  static String tappedphoneBookEmergencyTelp = 'tapped_nomor_darurat_telp';
+  static String tappedphoneBookEmergencyWeb = 'tapped_nomor_darurat_web';
+
   // event FAQ
   static String tappedFaqSearch = 'tapped_faq_pencarian';
 }
