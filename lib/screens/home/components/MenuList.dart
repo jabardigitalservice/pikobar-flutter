@@ -139,7 +139,7 @@ class _MenuListState extends State<MenuList> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
@@ -185,7 +185,7 @@ class _MenuListState extends State<MenuList> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn(
@@ -243,7 +243,7 @@ class _MenuListState extends State<MenuList> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn(
@@ -317,11 +317,11 @@ class _MenuListState extends State<MenuList> {
 
   _buildButtonColumn(String iconPath, String label, String route,
       {Object arguments, bool openBrowser = false}) {
-    return Expanded(
+    return Container(
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(2.0),
+            padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 blurRadius: 6.0,
@@ -331,7 +331,10 @@ class _MenuListState extends State<MenuList> {
             ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
             child: IconButton(
               color: Theme.of(context).textTheme.body1.color,
-              icon: Image.asset(iconPath),
+              iconSize: 40.0,
+              icon: Image.asset(
+                iconPath,
+              ),
               onPressed: () {
                 if (route != null) {
                   if (openBrowser) {
@@ -385,7 +388,7 @@ class _MenuListState extends State<MenuList> {
   }
 
   _buildButtonDisable(String iconPath, String label, {bool visible = true}) {
-    return Expanded(
+    return Container(
       child: Visibility(
         visible: visible,
         maintainState: visible ? false : true,
@@ -396,7 +399,7 @@ class _MenuListState extends State<MenuList> {
             children: [
               Stack(children: [
                 Container(
-                  padding: EdgeInsets.all(2.0),
+                  padding: EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -409,7 +412,10 @@ class _MenuListState extends State<MenuList> {
                       color: Colors.white),
                   child: IconButton(
                     color: Theme.of(context).textTheme.body1.color,
-                    icon: Image.asset(iconPath),
+                    iconSize: 40.0,
+                    icon: Image.asset(
+                      iconPath,
+                    ),
                     onPressed: null,
                   ),
                 ),
