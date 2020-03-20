@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
@@ -124,7 +125,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           textColor: Colors.white,
                           child: Text(Dictionary.fieldSurvey),
                           onPressed: () {
-                            launchExternal(document['url']);
+                            Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: document['url']);
                           },
                         ),
                       )

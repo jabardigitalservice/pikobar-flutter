@@ -20,10 +20,8 @@ checkVersion(BuildContext context, RemoteConfig remoteConfig) async {
     String storeUrl = remoteConfig.getString(FirebaseConfig.storeUrl);
     String currentVersion =
         remoteConfig.getString(FirebaseConfig.currentVersion);
-
-    print(currentVersion);
-    print(appVersion);
-    if (forceUpdateRequired && appVersion != currentVersion) {
+    
+    if (forceUpdateRequired && extractNumber(appVersion) < extractNumber(currentVersion)) {
       showDialog(
           context: context,
           builder: (context) => WillPopScope(
@@ -36,4 +34,8 @@ checkVersion(BuildContext context, RemoteConfig remoteConfig) async {
           barrierDismissible: false);
     }
   }
+}
+
+int extractNumber(String version) {
+  return int.parse(version.replaceAll(RegExp("\\D+"),""));
 }

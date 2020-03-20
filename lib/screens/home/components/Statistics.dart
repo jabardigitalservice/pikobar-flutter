@@ -143,19 +143,25 @@ class _StatisticsState extends State<Statistics> {
                   '${Environment.iconAssets}doctor.png',
                   Dictionary.underSupervision,
                   Dictionary.pdpDesc,
-                  '${data['pdp']['total']['jabar']}',
+                  getDataProcess(data['pdp']['total']['jabar'], data['pdp']['selesai']['jabar']),
                   2, Dictionary.process),
               _buildContainer(
                   '${Environment.iconAssets}stethoscope.png',
                   Dictionary.inMonitoring,
                   Dictionary.opdDesc,
-                  '${data['odp']['total']['jabar']}',
+                  getDataProcess(data['odp']['total']['jabar'],data['odp']['selesai']['jabar']),
                   2, Dictionary.process),
             ],
           )
         ],
       ),
     );
+  }
+
+  String getDataProcess(int totalData, int dataDone){
+    int processData = totalData - dataDone;
+    return processData.toString();
+
   }
 
   Container _buildContainer(
