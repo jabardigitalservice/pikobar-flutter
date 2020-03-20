@@ -168,7 +168,7 @@ class _StatisticsState extends State<Statistics> {
       String icon, String title, String description, String count, int length, String label) {
     return Container(
       width: (MediaQuery.of(context).size.width / length) - 21.4,
-      padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 10, bottom: 10),
+      padding: EdgeInsets.only(left: 10.0, right: 5.0, top: 10, bottom: 10),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.grey[400]),
           borderRadius: BorderRadius.circular(8.0)),
@@ -179,7 +179,7 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               Image.asset(icon, width: 16.0, height: 16.0),
               Container(
-                margin: EdgeInsets.only(left: 5.0),
+                margin: EdgeInsets.only(left: 10.0),
                 child: Text(title,
                     style: TextStyle(
                         fontSize: 13.0,

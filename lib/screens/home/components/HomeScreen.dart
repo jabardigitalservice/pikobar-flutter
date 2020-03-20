@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -27,10 +28,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _versionText = Dictionary.version;
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
-
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() {
+        _versionText = packageInfo.version != null
+            ? packageInfo.version
+            : Dictionary.version;
+      });
+    });
     super.initState();
   }
 
@@ -76,17 +84,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications, size: 20.0, color: Colors.white),
-            onPressed: () {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text(Dictionary.onDevelopment),
-                duration: Duration(seconds: 1),
-              ));
+          
+          // IconButton(
+          //   icon: Icon(Icons.notifications, size: 20.0, color: Colors.white),
+          //   onPressed: () {
+          //     Scaffold.of(context).showSnackBar(SnackBar(
+          //       content: Text(Dictionary.onDevelopment),
+          //       duration: Duration(seconds: 1),
+          //     ));
 
-              AnalyticsHelper.setLogEvent(Analytics.tappedNotification);
-            },
-          )
+          //     AnalyticsHelper.setLogEvent(Analytics.tappedNotification);
+          //   },
+          // )
         ],
       ),
       body: Stack(
@@ -99,6 +108,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Expanded(
                 child: ListView(children: [
+                  Padding(
+                    padding:  EdgeInsets.only(left: 20),
+                    child: Text(Dictionary.versionText +
+                    ' ' +
+                    _versionText +
+                    ' ' +
+                    Dictionary.betaText,style: TextStyle(color: Colors.white),),
+                  ),
                   Container(
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
