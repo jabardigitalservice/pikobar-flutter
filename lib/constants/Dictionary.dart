@@ -3,6 +3,10 @@ class Dictionary {
   static String subTitle = 'Pusat Informasi & Koordinasi\nProvinsi Jawa Barat';
   static String provJabar = 'Provinsi Jawa Barat';
   static String version = '0.0.3';
+  static String versionText = 'App Version';
+  static String betaText = '(Beta)';
+
+
 
   // Menu & Title
   static String home = 'Beranda';
