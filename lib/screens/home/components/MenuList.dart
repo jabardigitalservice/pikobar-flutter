@@ -321,7 +321,7 @@ class _MenuListState extends State<MenuList> {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 blurRadius: 6.0,
@@ -331,6 +331,7 @@ class _MenuListState extends State<MenuList> {
             ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
             child: IconButton(
               color: Theme.of(context).textTheme.body1.color,
+              iconSize: 40.0,
               icon: Image.asset(
                 iconPath,
               ),
@@ -398,7 +399,7 @@ class _MenuListState extends State<MenuList> {
             children: [
               Stack(children: [
                 Container(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -411,6 +412,7 @@ class _MenuListState extends State<MenuList> {
                       color: Colors.white),
                   child: IconButton(
                     color: Theme.of(context).textTheme.body1.color,
+                    iconSize: 40.0,
                     icon: Image.asset(
                       iconPath,
                     ),
