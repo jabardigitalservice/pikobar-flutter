@@ -143,13 +143,13 @@ class _StatisticsState extends State<Statistics> {
                   '${Environment.iconAssets}doctor.png',
                   Dictionary.underSupervision,
                   Dictionary.pdpDesc,
-                  '${data['pdp']['total']['jabar']}',
+                  getDataProcess(data['pdp']['total']['jabar'], data['pdp']['selesai']['jabar']),
                   2, Dictionary.process),
               _buildContainer(
                   '${Environment.iconAssets}stethoscope.png',
                   Dictionary.inMonitoring,
                   Dictionary.opdDesc,
-                  '${data['odp']['total']['jabar']}',
+                  getDataProcess(data['odp']['total']['jabar'],data['odp']['selesai']['jabar']),
                   2, Dictionary.process),
             ],
           )
@@ -158,55 +158,64 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContainer(
+  String getDataProcess(int totalData, int dataDone){
+    int processData = totalData - dataDone;
+    return processData.toString();
+
+  }
+
+  _buildContainer(
       String icon, String title, String description, String count, int length, String label) {
-    return Container(
-      width: (MediaQuery.of(context).size.width / length) - 21.4,
-      padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 10, bottom: 10),
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[400]),
-          borderRadius: BorderRadius.circular(8.0)),
-      child: Column(
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(icon, width: 16.0, height: 16.0),
-              Container(
-                margin: EdgeInsets.only(left: 5.0),
-                child: Text(title,
-                    style: TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(top: Dimens.padding),
-                child: Text(count,
-                    style: TextStyle(
-                        fontSize: 22.0,
-                        color: ColorBase.green,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 2.0),
-                child: Text(label,
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
-              )
-            ],
-          )
-        ],
+    return Expanded(
+      child: Container(
+        width: (MediaQuery.of(context).size.width / length),
+        padding: EdgeInsets.only(left: 5, right: 5.0, top: 10, bottom: 10),
+        margin: EdgeInsets.symmetric(horizontal: 2.5),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[400]),
+            borderRadius: BorderRadius.circular(8.0)),
+        child: Column(
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(icon, width: 16.0, height: 16.0),
+                Container(
+                  margin: EdgeInsets.only(left: 5.0),
+                  child: Text(title,
+                      style: TextStyle(
+                          fontSize: 13.0,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.productSans)),
+                ),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: Dimens.padding),
+                  child: Text(count,
+                      style: TextStyle(
+                          fontSize: 22.0,
+                          color: ColorBase.green,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.productSans)),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 2.0),
+                  child: Text(label,
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.productSans)),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

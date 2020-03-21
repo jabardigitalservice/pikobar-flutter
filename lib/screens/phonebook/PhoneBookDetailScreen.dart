@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PhoneBookDetailScreen extends StatelessWidget {
@@ -96,20 +98,27 @@ Widget mainSection(BuildContext context, DocumentSnapshot document) {
                 itemCount: document['phones'].length,
                 itemBuilder: (context, position) {
                   return ListTile(
-                    contentPadding: EdgeInsets.all(0),
-                    trailing: Icon(Icons.call),
-                    title: Text(
-                      document['phones'][position],
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                    onTap: () =>
-                        _launchURL(document['phones'][position], 'number'),
-                  );
+                      contentPadding: EdgeInsets.all(0),
+                      trailing: Icon(Icons.call),
+                      title: Text(
+                        document['phones'][position],
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      onTap: () {
+                        _launchURL(document['phones'][position], 'number');
+
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedphoneBookEmergencyTelp,
+                            <String, dynamic>{
+                              'title': document['name'],
+                              'telp': document['phones'][position]
+                            });
+                      });
                 })
             : Container(),
-            document['phones'] != null && document['phones'].isNotEmpty
-            ?
-            Divider():Container(),
+        document['phones'] != null && document['phones'].isNotEmpty
+            ? Divider()
+            : Container(),
         document['web'] != null && document['web'].isNotEmpty
             ? ListTile(
                 contentPadding: EdgeInsets.all(0),
@@ -118,8 +127,15 @@ Widget mainSection(BuildContext context, DocumentSnapshot document) {
                   document['web'],
                   style: TextStyle(fontSize: 16.0),
                 ),
-                onTap: () => _launchURL(document['web'], 'web'),
-              )
+                onTap: () {
+                  _launchURL(document['web'], 'web');
+
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.tappedphoneBookEmergencyWeb, <String, dynamic>{
+                    'title': document['name'],
+                    'web': document['web']
+                  });
+                })
             : Container()
       ],
     ),

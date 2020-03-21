@@ -3,6 +3,10 @@ class Dictionary {
   static String subTitle = 'Pusat Informasi & Koordinasi\nProvinsi Jawa Barat';
   static String provJabar = 'Provinsi Jawa Barat';
   static String version = '0.0.3';
+  static String versionText = 'App Version';
+  static String betaText = '(Beta)';
+
+
 
   // Menu & Title
   static String home = 'Beranda';
@@ -15,7 +19,7 @@ class Dictionary {
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
   static String survey = 'Survei';
-  static String logistic = 'Permohonan';
+  static String logistic = 'Logistik';
   static String kawalCorona = 'KawalCOVID19';
   static String worldInfo = 'Data Dunia';
   static String nationalInfo = 'Data Nasional';
