@@ -77,7 +77,7 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.pikobar, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaInfo),
-          _buildButtonColumn('${Environment.iconAssets}virus.png',
+          _buildButtonColumn('${Environment.iconAssets}virus_shield.png',
               Dictionary.nationalInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
@@ -152,7 +152,7 @@ class _MenuListState extends State<MenuList> {
                       ? _remoteConfig.getString(FirebaseConfig.pikobarUrl)
                       : UrlThirdParty.urlCoronaInfo),
           _buildButtonColumn(
-              '${Environment.iconAssets}virus.png',
+              '${Environment.iconAssets}virus_shield.png',
               _remoteConfig.getString(FirebaseConfig.nationalInfoCaption) !=
                       null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoCaption)

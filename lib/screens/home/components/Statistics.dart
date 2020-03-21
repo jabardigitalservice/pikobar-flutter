@@ -181,7 +181,7 @@ class _StatisticsState extends State<Statistics> {
               children: <Widget>[
                 Image.asset(icon, width: 16.0, height: 16.0),
                 Container(
-                  margin: EdgeInsets.only(left: 10.0),
+                  margin: EdgeInsets.only(left: 5.0),
                   child: Text(title,
                       style: TextStyle(
                           fontSize: 13.0,
