@@ -13,7 +13,6 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class MenuList extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -59,9 +58,7 @@ class _MenuListState extends State<MenuList> {
           _remoteConfig == null ? _defaultRowMenusTwo() : _remoteRowMenusTwo(),
           //_defaultRowMenusTwo(),
           SizedBox(height: 5.0),
-          _remoteConfig == null
-              ? _defaultRowMenusThree()
-              : _remoteRowMenusThree()
+          _remoteConfig == null ? _defaultRowMenusThree() : _remoteRowMenusThree()
           //_defaultRowMenusThree()
         ],
       ),
@@ -72,7 +69,7 @@ class _MenuListState extends State<MenuList> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
@@ -95,7 +92,7 @@ class _MenuListState extends State<MenuList> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}help.png',
@@ -118,7 +115,7 @@ class _MenuListState extends State<MenuList> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
@@ -317,11 +314,13 @@ class _MenuListState extends State<MenuList> {
 
   _buildButtonColumn(String iconPath, String label, String route,
       {Object arguments, bool openBrowser = false}) {
-    return Container(
+    return Expanded(
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(12.0),
+            width: 70.0,
+            height: 70.0,
+            padding: EdgeInsets.all(10.0),
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 blurRadius: 6.0,
@@ -331,7 +330,7 @@ class _MenuListState extends State<MenuList> {
             ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
             child: IconButton(
               color: Theme.of(context).textTheme.body1.color,
-              iconSize: 40.0,
+              iconSize: 32.0,
               icon: Image.asset(
                 iconPath,
               ),
@@ -379,8 +378,9 @@ class _MenuListState extends State<MenuList> {
           Text(label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 12.0,
+                fontSize: 11.0,
                 color: Theme.of(context).textTheme.body1.color,
+                fontFamily: FontsFamily.productSans
               ))
         ],
       ),
@@ -388,7 +388,7 @@ class _MenuListState extends State<MenuList> {
   }
 
   _buildButtonDisable(String iconPath, String label, {bool visible = true}) {
-    return Container(
+    return Expanded(
       child: Visibility(
         visible: visible,
         maintainState: visible ? false : true,
@@ -399,7 +399,9 @@ class _MenuListState extends State<MenuList> {
             children: [
               Stack(children: [
                 Container(
-                  padding: EdgeInsets.all(12.0),
+                  width: 70.0,
+                  height: 70.0,
+                  padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
@@ -412,7 +414,7 @@ class _MenuListState extends State<MenuList> {
                       color: Colors.white),
                   child: IconButton(
                     color: Theme.of(context).textTheme.body1.color,
-                    iconSize: 40.0,
+                    iconSize: 32.0,
                     icon: Image.asset(
                       iconPath,
                     ),
@@ -431,8 +433,9 @@ class _MenuListState extends State<MenuList> {
               Text(label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 12.0,
+                    fontSize: 11.0,
                     color: Theme.of(context).textTheme.body1.color,
+                    fontFamily: FontsFamily.productSans
                   ))
             ],
           ),
