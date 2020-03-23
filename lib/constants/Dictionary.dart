@@ -46,6 +46,7 @@ class Dictionary {
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
+  static String profile='Profile';
   static String phoneBookEmergencyInformation = 'Informasi Nomor Darurat';
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -100,6 +101,10 @@ class Dictionary {
   // text
   static String fieldSurvey = 'Isi Survei';
   static String loadingData = 'Sedang mengambil data ...';
+  static String loading='Tunggu Sebentar...';
+  static String textLoginButton='Masuk Melalui Google';
+  static String textLogin='Anda belum login';
+  static String textLogoutButton='Keluar';
   static String onDevelopment = 'Dalam proses pengembangan';
   static String process = 'Proses';
   static String people = 'Orang';

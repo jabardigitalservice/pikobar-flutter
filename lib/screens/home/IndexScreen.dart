@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
+import 'package:pikobar_flutter/screens/myAccount/myAccount.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
@@ -130,6 +131,15 @@ class _IndexScreenState extends State<IndexScreen> {
               Text(Dictionary.help),
             ],
           )),
+
+           BottomNavigationBarItem(
+          icon: Icon(Icons.person, size: 16),
+          title: Column(
+            children: <Widget>[
+              SizedBox(height: 4),
+              Text(Dictionary.profile),
+            ],
+          )),
     ];
   }
 
@@ -172,6 +182,9 @@ class _IndexScreenState extends State<IndexScreen> {
       case 2:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen();
+
+         case 3:
+        return MyAccount();
 
       default:
         return HomeScreen();
