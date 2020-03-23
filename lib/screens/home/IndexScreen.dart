@@ -54,12 +54,14 @@ class _IndexScreenState extends State<IndexScreen> {
       },
     );
 
-    //_firebaseMessaging.getToken().then((token) => print(token));
+//    _firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
     _firebaseMessaging.requestNotificationPermissions(
         IosNotificationSettings(sound: true, badge: true, alert: true));
+
+    firebaseInAppMsg.setAutomaticDataCollectionEnabled(true);
 
     super.initState();
   }
