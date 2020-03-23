@@ -39,3 +39,4 @@ lib/generated_plugin_registrant.dart
 # credentials
 android/app/google-services.json
 android/app/src/main/google-services.json
+/ios/Runner/GoogleService-Info.plist
