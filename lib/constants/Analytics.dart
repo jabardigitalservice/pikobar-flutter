@@ -35,6 +35,7 @@ class Analytics {
   static String tappedNewsNational = 'tapped_berita_nasional';
   static String tappedNewsWorld = 'tapped_berita_dunia';
   static String tappedMore = 'tapped_berita_selengkapnya';
+  static String tappedShareNews = 'tapped_share_news';
 
   // event phoneBook Emergency
   static String tappedphoneBookEmergencyDetail = 'tapped_nomor_darurat_detail';
@@ -43,6 +44,9 @@ class Analytics {
   static String tappedphoneBookEmergencyWa = 'tapped_nomor_darurat_wa';
   static String tappedphoneBookEmergencyTelp = 'tapped_nomor_darurat_telp';
   static String tappedphoneBookEmergencyWeb = 'tapped_nomor_darurat_web';
+
+  //message
+  static String tappedShareNewsFromMessage = 'tapped_share_news_from_message';
 
   // event FAQ
   static String tappedFaqSearch = 'tapped_faq_pencarian';
