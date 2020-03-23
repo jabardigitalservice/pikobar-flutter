@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
@@ -11,10 +12,13 @@ import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
+import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
+import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
@@ -44,13 +48,16 @@ class _IndexScreenState extends State<IndexScreen> {
         print("onMessage: $message");
         NotificationHelper().showNotification(
             message['notification']['title'], message['notification']['body'],
-            payload: 'payload', onSelectNotification: onSelectNotification);
+            payload: jsonEncode(message['data']),
+            onSelectNotification: onSelectNotification);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        _actionNotification(jsonEncode(message['data']));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
+        _actionNotification(jsonEncode(message['data']));
       },
     );
 
@@ -140,6 +147,47 @@ class _IndexScreenState extends State<IndexScreen> {
   Future<void> onSelectNotification(String payload) async {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
+
+      _actionNotification(payload);
+
+    }
+  }
+
+  _actionNotification(String payload) {
+    final data = jsonDecode(payload);
+    if (data['target'] == 'news') {
+      String newsType;
+
+      switch (data['type']) {
+        case NewsType.articles :
+          newsType = Dictionary.latestNews;
+          break;
+
+        case NewsType.articlesNational :
+          newsType = Dictionary.nationalNews;
+          break;
+
+        case NewsType.articlesWorld :
+          newsType = Dictionary.worldNews;
+          break;
+
+        default:
+          newsType = Dictionary.latestNews;
+      }
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => NewsDetailScreen(
+            id: data['id'],
+            news: newsType,
+            isFromNotification: true,
+          )));
+    } else if (data['target'] == 'broadcast') {
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MessageDetailScreen(
+            id: data['id'],
+            isFromNotification: true,
+          )));
     }
   }
 
