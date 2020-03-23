@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class IndexScreen extends StatefulWidget {
 
 class _IndexScreenState extends State<IndexScreen> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  static FirebaseInAppMessaging firebaseInAppMsg = FirebaseInAppMessaging();
 
   int _currentIndex = 0;
 
