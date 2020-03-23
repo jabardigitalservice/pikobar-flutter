@@ -21,7 +21,10 @@ class _VideoListState extends State<VideoList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('videos').snapshots(),
+      stream: Firestore.instance
+          .collection('videos')
+          .orderBy('sequence')
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData) {
           return _buildContent(snapshot);
