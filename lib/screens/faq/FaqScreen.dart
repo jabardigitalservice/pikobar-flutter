@@ -46,7 +46,7 @@ class _FaqScreenState extends State<FaqScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
             .collection(Collections.faq)
-            .orderBy('sequence')
+            .orderBy('sequence_number')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
