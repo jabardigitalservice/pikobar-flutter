@@ -19,7 +19,10 @@ class BannerListSliderState extends State<BannerListSlider> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('banners').snapshots(),
+      stream: Firestore.instance
+          .collection('banners')
+          .orderBy('sequence')
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
