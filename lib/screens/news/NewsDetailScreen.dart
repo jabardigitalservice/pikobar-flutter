@@ -7,11 +7,13 @@ import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
@@ -44,7 +46,21 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               fontWeight: FontWeight.w600,
               fontFamily: FontsFamily.productSans,
               fontSize: 17.0),
-        )),
+        ), actions: <Widget>[
+          Container(
+              margin: EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                icon: Icon(Icons.share),
+                onPressed: () {
+                  Share.share(
+                      '${widget.documents['title']}\nBaca Selengkapnya di aplikasi Pikobar: ${UrlThirdParty.pathPlaystore}');
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.tappedShareNews, <String, dynamic>{
+                    'title': widget.documents['title']
+                  });
+                },
+              ))
+        ]),
         body: Container(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,

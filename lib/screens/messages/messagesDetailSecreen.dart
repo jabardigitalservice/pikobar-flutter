@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class MessageDetailcreen extends StatefulWidget {
   DocumentSnapshot document;
   MessageDetailcreen({this.document});
@@ -19,7 +24,21 @@ class MessageDetailcreen extends StatefulWidget {
 class _MessageDetailcreenState extends State<MessageDetailcreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text(Dictionary.message)),
+    return Scaffold(appBar: AppBar(title: Text(Dictionary.message), actions: <Widget>[
+      Container(
+          margin: EdgeInsets.only(right: 10.0),
+          child: IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+              Share.share(
+                  '${widget.document['title']}\nBaca Selengkapnya di aplikasi Pikobar: ${UrlThirdParty.pathPlaystore}');
+              AnalyticsHelper.setLogEvent(
+                  Analytics.tappedShareNewsFromMessage, <String, dynamic>{
+                'title': widget.document['title']
+              });
+            },
+          ))
+    ]),
       body:  ListView(
       padding: EdgeInsets.all(Dimens.padding),
       children: <Widget>[
