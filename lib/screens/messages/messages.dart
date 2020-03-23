@@ -44,7 +44,10 @@ class _MessagesState extends State<Messages> {
             //     },
             //     child:
             StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('broadcasts').snapshots(),
+          stream: Firestore.instance
+              .collection('broadcasts')
+              .orderBy('published_at', descending: true)
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return ErrorContent(error: snapshot.error);
