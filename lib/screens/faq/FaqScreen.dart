@@ -44,7 +44,10 @@ class _FaqScreenState extends State<FaqScreen> {
           title: _isSearch ? _buildSearchField() : Text(Dictionary.faq),
           actions: _buildActions()),
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection(Collections.faq).snapshots(),
+        stream: Firestore.instance
+            .collection(Collections.faq)
+            .orderBy('sequence_number')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             List dataFaq;
