@@ -37,30 +37,32 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('cekkk dong bosqueee ' + widget.documents['action_url'].toString());
     return Scaffold(
         appBar: AppBar(
             title: Text(
-          Dictionary.news,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 17.0),
-        ), actions: <Widget>[
-          Container(
-              margin: EdgeInsets.only(right: 10.0),
-              child: IconButton(
-                icon: Icon(Icons.share),
-                onPressed: () {
-                  Share.share(
-                      '${widget.documents['title']}\nBaca Selengkapnya di aplikasi Pikobar: ${UrlThirdParty.pathPlaystore}');
-                  AnalyticsHelper.setLogEvent(
-                      Analytics.tappedShareNews, <String, dynamic>{
-                    'title': widget.documents['title']
-                  });
-                },
-              ))
-        ]),
+              Dictionary.news,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: FontsFamily.productSans,
+                  fontSize: 17.0),
+            ),
+            actions: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(right: 10.0),
+                  child: IconButton(
+                    icon: Icon(Icons.share),
+                    onPressed: () {
+                      Share.share(
+                          '${widget.documents['title']}\n${widget.documents['backlink'] != null ? widget.documents['backlink']+'\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedShareNews, <String, dynamic>{
+                        'title': widget.documents['title']
+                      });
+                    },
+                  ))
+            ]),
         body: Container(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
