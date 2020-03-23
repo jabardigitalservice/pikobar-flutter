@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -12,40 +14,160 @@ import 'package:html/dom.dart' as dom;
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// ignore: must_be_immutable
-class MessageDetailcreen extends StatefulWidget {
-  DocumentSnapshot document;
+class MessageDetailScreen extends StatefulWidget {
+  final DocumentSnapshot document;
+  final String id;
+  final bool isFromNotification;
 
-  MessageDetailcreen({this.document});
+  MessageDetailScreen({this.document, this.id, this.isFromNotification = false});
 
   @override
-  _MessageDetailcreenState createState() => _MessageDetailcreenState();
+  _MessageDetailScreenState createState() => _MessageDetailScreenState();
 }
 
-class _MessageDetailcreenState extends State<MessageDetailcreen> {
+class _MessageDetailScreenState extends State<MessageDetailScreen> {
+
+  DocumentSnapshot _document;
+  String _title = '';
+  String _backLink = '';
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+
+    _document = widget.document;
+
+    if (_document != null) {
+      _isLoaded = true;
+      _title = widget.document['title'];
+      _backLink = widget.document['backlink'];
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(Dictionary.message), actions: <Widget>[
-          Container(
+          _isLoaded ? Container(
               margin: EdgeInsets.only(right: 10.0),
               child: IconButton(
                 icon: Icon(Icons.share),
                 onPressed: () {
                   Share.share(
-                      '${widget.document['title']}\n${widget.document['backlink'] != null ? widget.document['backlink']+'\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
+                      '$_title\n${_backLink != null ? _backLink+'\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
                   AnalyticsHelper.setLogEvent(
                       Analytics.tappedShareNewsFromMessage,
                       <String, dynamic>{'title': widget.document['title']});
                 },
-              ))
+              )) : Container()
         ]),
-        body: ListView(
+        body: Container(
+          child: _document == null ? FutureBuilder<DocumentSnapshot>(
+            future: Firestore.instance
+                .collection('broadcasts')
+                .document(widget.id)
+                .get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return _buildLoading(context);
+              } else {
+                if (snapshot.data.data != null) {
+                  _document = snapshot.data;
+                  _isLoaded = true;
+                  _title = snapshot.data['title'];
+                  _backLink = snapshot.data['backlink'] != null ? snapshot.data['backlink'] : '';
+
+                  if (widget.isFromNotification) {
+                    SchedulerBinding.instance.addPostFrameCallback((_) =>
+                        setState(() {}));
+                  }
+
+                  return _buildContent(context, _document);
+                } else {
+                  return _buildLoading(context);
+                }
+              }
+
+            }
+          ) : _buildContent(context, _document),
+        ));
+  }
+
+  _buildLoading(BuildContext context) {
+    return Skeleton(
+      child: Padding(
+        padding: const EdgeInsets.all(Dimens.padding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              height: 20.0,
+              color: Colors.grey,
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 5.0),
+              width: MediaQuery.of(context).size.width / 3,
+              height: 10.0,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 20.0),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 200.0,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 10.0),
+            _loadingText(),
+            SizedBox(height: 10.0),
+            _loadingText(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _loadingText() {
+    List<Widget> widgets = [];
+
+    for(int i=0; i<4; i++) {
+      widgets.add(Container(
+        margin: EdgeInsets.only(bottom: 5.0),
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        height: 18.0,
+        color: Colors.grey,
+      ));
+    }
+
+    widgets.add(Container(
+      margin: EdgeInsets.only(bottom: 5.0),
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 2,
+      height: 18.0,
+      color: Colors.grey,
+    ));
+
+    return Column( crossAxisAlignment: CrossAxisAlignment.start,children: widgets);
+  }
+
+  _buildContent(BuildContext context, DocumentSnapshot data) {
+    return ListView(
           padding: EdgeInsets.all(Dimens.padding),
           children: <Widget>[
             _buildText(
                 Text(
-                  widget.document['title'],
+                  data['title'],
                   style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.black,
@@ -55,7 +177,7 @@ class _MessageDetailcreenState extends State<MessageDetailcreen> {
             _buildText(
                 Text(
                   unixTimeStampToDateTime(
-                      widget.document['published_at'].seconds),
+                      data['published_at'].seconds),
                   style: TextStyle(fontSize: 12.0, color: Colors.grey),
                 ),
                 context),
@@ -63,7 +185,7 @@ class _MessageDetailcreenState extends State<MessageDetailcreen> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 6, bottom: Dimens.padding),
               child: Html(
-                  data: widget.document['content'],
+                  data: data['content'],
                   defaultTextStyle: TextStyle(
                       color: Colors.grey[800],
                       fontSize: 14.0,
@@ -88,7 +210,7 @@ class _MessageDetailcreenState extends State<MessageDetailcreen> {
               height: Dimens.sbHeight,
             ),
           ],
-        ));
+        );
   }
 
   _buildText(Text text, context) {

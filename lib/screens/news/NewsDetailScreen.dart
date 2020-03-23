@@ -23,8 +23,9 @@ class NewsDetailScreen extends StatefulWidget {
   final String id;
   final DocumentSnapshot documents;
   final String news;
+  final bool isFromNotification;
 
-  NewsDetailScreen({this.id, this.documents, this.news});
+  NewsDetailScreen({this.id, this.documents, this.news, this.isFromNotification = false});
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
@@ -90,11 +91,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   )) : Container()
             ]),
         body: Container(
-          child: _document == null ? StreamBuilder<DocumentSnapshot>(
-              stream: Firestore.instance
+          child: _document == null ? FutureBuilder<DocumentSnapshot>(
+              future: Firestore.instance
                   .collection(_newsType)
                   .document(widget.id)
-                  .snapshots(),
+                  .get(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError)
@@ -109,8 +110,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     _title = snapshot.data['title'];
                     _backLink = snapshot.data['backlink'] != null ? snapshot.data['backlink'] : '';
 
-                    SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {}));
-
+                    if (widget.isFromNotification) {
+                      SchedulerBinding.instance.addPostFrameCallback((_) =>
+                          setState(() {}));
+                    }
                     return _buildContent(context, _document);
                   } else {
                     return _buildLoading(context);
