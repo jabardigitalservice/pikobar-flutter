@@ -37,9 +37,9 @@ class Dictionary {
   static String nomorDarurat = 'Detail Nomor Darurat';
   static String odp = 'ODP';
   static String pdp = 'PDP';
-  static String underSupervision = 'Dalam Pengawasan';
-  static String inMonitoring = 'Dalam Pemantauan';
-  static String positif = 'Positif';
+  static String underSupervision = 'Pasien Dalam Pengawasan';
+  static String inMonitoring = 'Orang Dalam Pemantauan';
+  static String positif = 'Positif Covid-19';
   static String recover = 'Sembuh';
   static String die = 'Meninggal';
   static String opdDesc = 'Orang Dalam Pemantauan';
