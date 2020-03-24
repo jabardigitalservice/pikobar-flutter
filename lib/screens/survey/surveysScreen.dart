@@ -8,7 +8,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SurveysScreen extends StatefulWidget {
@@ -125,7 +124,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           textColor: Colors.white,
                           child: Text(Dictionary.fieldSurvey),
                           onPressed: () {
-                            Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: document['url']);
+                            Navigator.of(context).pushNamed(
+                                NavigationConstrants.Browser,
+                                arguments: document['url']);
                           },
                         ),
                       )
