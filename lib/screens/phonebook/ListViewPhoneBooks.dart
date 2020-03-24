@@ -24,7 +24,7 @@ class ListViewPhoneBooks extends StatefulWidget {
 
 class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Map<String, bool> _categoryExpansionStateMap = Map<String, bool>();
-
+int callCenterPhoneCount,   emergencyPhoneCount;
   @override
   void initState() {
     super.initState();
@@ -154,11 +154,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       dataNomorDarurat = snapshot.data.documents;
     }
 
-    final int emergencyPhoneCount = dataNomorDarurat.length;
+     emergencyPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
       Column column = Column(
         children: <Widget>[
-          emergencyPhoneCount == 0
+          emergencyPhoneCount == 0 && callCenterPhoneCount==0
               ? EmptyData(
                   message:
                       '${Dictionary.emptyData} ${Dictionary.phoneBookEmergency}')
@@ -217,15 +217,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       dataNomorDarurat = snapshot.data.documents;
     }
 
-    final int emergencyPhoneCount = dataNomorDarurat.length;
-    for (int i = 0; i < emergencyPhoneCount; i++) {
+     callCenterPhoneCount = dataNomorDarurat.length;
+    for (int i = 0; i < callCenterPhoneCount; i++) {
       Column column = Column(
         children: <Widget>[
-          emergencyPhoneCount == 0
-              ? EmptyData(
-                  message:
-                      '${Dictionary.emptyData} ${Dictionary.phoneBookEmergency}')
-              : widget.searchQuery != null
+           widget.searchQuery != null
                   ? _card(dataNomorDarurat[i])
                   : _categoryExpansionStateMap["CallCenter"]
                       ? _card(dataNomorDarurat[i])
@@ -244,47 +240,43 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Widget _buildLoading() {
     return Column(
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              color: Color(0xffF2C94C),
-              borderRadius: BorderRadius.all(Radius.circular(8))),
-          child: Padding(
-            padding: EdgeInsets.all(17.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Skeleton(
-                  height: 80,
-                  width: MediaQuery.of(context).size.width / 4,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: 90,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Skeleton(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        height: 10,
-                      ),
-                      Skeleton(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        height: 10,
-                      ),
-                    ],
+        Skeleton(
+          child: Container(
+            decoration: BoxDecoration(color: Colors.grey[300],
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Padding(
+              padding: EdgeInsets.all(17.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Skeleton(
+                    height: 80,
+                    width: MediaQuery.of(context).size.width / 4,
                   ),
-                ),
-                Skeleton(
-                  child: Icon(
-                    Icons.keyboard_arrow_up,
-                    size: 30,
+                  SizedBox(
+                    width: 10,
                   ),
-                )
-              ],
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 90,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Skeleton(
+                          width: MediaQuery.of(context).size.width / 3,
+                          height: 10,
+                        ),
+                        Skeleton(
+                          width: MediaQuery.of(context).size.width / 3,
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                 
+                ],
+              ),
             ),
           ),
         ),
