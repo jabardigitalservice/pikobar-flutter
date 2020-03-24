@@ -33,4 +33,5 @@ class NavigationConstrants {
   static const String SubProfile = "/sub-profile";
   static const String SubContact = "/sub-contact";
   static const String SubAddress = "/sub-address";
+  static const String VideoList = "/videos";
 }

@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 import 'package:pikobar_flutter/screens/survey/surveysScreen.dart';
+import 'package:pikobar_flutter/screens/videos/videosScreen.dart';
 
 Route generateRoutes(RouteSettings settings) {
   // getting arguments passed
@@ -12,11 +13,11 @@ Route generateRoutes(RouteSettings settings) {
 
   switch (settings.name) {
     case NavigationConstrants.Browser:
-     return buildRoute(
-         settings,
-         BrowserScreen(
-           url: args,
-         ));
+      return buildRoute(
+          settings,
+          BrowserScreen(
+            url: args,
+          ));
     case NavigationConstrants.News:
       return buildRoute(settings, News());
     case NavigationConstrants.Phonebook:
@@ -30,6 +31,9 @@ Route generateRoutes(RouteSettings settings) {
 
     case NavigationConstrants.Survey:
       return buildRoute(settings, SurveysScreen());
+
+    case NavigationConstrants.VideoList:
+      return buildRoute(settings, VideosScreen());
 
     default:
       return null;
