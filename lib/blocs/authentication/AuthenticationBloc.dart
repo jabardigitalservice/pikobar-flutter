@@ -26,7 +26,6 @@ class AuthenticationBloc
 
     if (event is AppStarted) {
       final bool hasToken = await authRepository.hasToken();
-      print(hasToken);
       if (hasToken) {
         yield AuthenticationLoading();
         record = await authRepository.getUserInfo();
@@ -47,7 +46,6 @@ class AuthenticationBloc
         );
         yield AuthenticationAuthenticated(record: record);
       } catch (e) {
-        print(e.toString());
         yield AuthenticationFailure(error: e.toString());
       }
     }

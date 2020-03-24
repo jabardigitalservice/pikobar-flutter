@@ -38,7 +38,6 @@ class _MyAccountState extends State<MyAccount> {
               ..add(AppStarted()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
-            print(state);
 
             if (state is AuthenticationFailure) {
               showDialog(

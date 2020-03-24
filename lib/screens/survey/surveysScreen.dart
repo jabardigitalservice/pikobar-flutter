@@ -38,8 +38,6 @@ class _SurveysScreenState extends State<SurveysScreen> {
               ..add(AppStarted()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
-            print(state);
-
             if (state is AuthenticationFailure) {
               showDialog(
                   context: context,

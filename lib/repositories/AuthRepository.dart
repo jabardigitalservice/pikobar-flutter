@@ -24,8 +24,6 @@ class AuthRepository {
 
     final AuthResult authResult = await _auth.signInWithCredential(credential);
     final FirebaseUser user = authResult.user;
-    print(authResult.additionalUserInfo.profile);
-
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
