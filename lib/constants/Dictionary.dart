@@ -48,6 +48,10 @@ class Dictionary {
   static String faq = 'FAQ';
   static String profile='Profile';
   static String phoneBookEmergencyInformation = 'Informasi Nomor Darurat';
+  static String callCenterTitle = 'Call Center Kota/Kab. Lainnya';
+  static String callCenterCaption = 'Segera hubungi nomor dibawah ini untuk call center terdekat';
+
+
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
       'Segera hubungi nomor dibawah ini untuk informasi darurat';
