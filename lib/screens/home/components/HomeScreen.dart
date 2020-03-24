@@ -26,7 +26,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
@@ -99,17 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Expanded(
                 child: ListView(children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      Dictionary.versionText +
-                          ' ' +
-                          _versionText +
-                          ' ' +
-                          Dictionary.betaText,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
                   Container(
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
