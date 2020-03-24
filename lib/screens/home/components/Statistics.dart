@@ -55,57 +55,22 @@ class _StatisticsState extends State<Statistics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer(
-                    '',
-                    Dictionary.positif,
-                    Dictionary.positif,
-                    '-',
-                    3,
-                    Dictionary.people,
-                    Colors.grey[600],
-                    Colors.grey[600]),
-                _buildContainer(
-                    '',
-                    Dictionary.recover,
-                    Dictionary.recover,
-                    '-',
-                    3,
-                    Dictionary.people,
-                    Colors.grey[600],
-                    Colors.grey[600]),
-                _buildContainer(
-                    '',
-                    Dictionary.die,
-                    Dictionary.die,
-                    '-',
-                    3,
-                    Dictionary.people,
-                    Colors.grey[600],
-                    Colors.grey[600]),
+                _buildContainer('', Dictionary.positif, Dictionary.positif, '-',
+                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                _buildContainer('', Dictionary.recover, Dictionary.recover, '-',
+                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                _buildContainer('', Dictionary.die, Dictionary.die, '-', 3,
+                    Dictionary.people, Colors.grey[600], Colors.grey[600]),
               ],
             ),
             SizedBox(height: Dimens.padding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer(
-                    '',
-                    Dictionary.pdpDesc,
-                    Dictionary.pdpDesc,
-                    '-',
-                    2,
-                    '(%)',
-                    Colors.grey[600],
-                    Colors.grey[600]),
-                _buildContainer(
-                    '',
-                    Dictionary.opdDesc,
-                    Dictionary.opdDesc,
-                    '-',
-                    2,
-                    '(%)',
-                    Colors.grey[600],
-                    Colors.grey[600]),
+                _buildContainer('', Dictionary.pdpDesc, Dictionary.pdpDesc, '-',
+                    2, '(%)', Colors.grey[600], Colors.grey[600]),
+                _buildContainer('', Dictionary.opdDesc, Dictionary.opdDesc, '-',
+                    2, '(%)', Colors.grey[600], Colors.grey[600]),
               ],
             ),
           ],
@@ -221,7 +186,7 @@ class _StatisticsState extends State<Statistics> {
     double processData =
         100 - num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
 
-    return '('+ processData.toString() + '%)';
+    return '(' + processData.toString() + '%)';
   }
 
   _buildContainer(String image, String title, String description, String count,
@@ -244,15 +209,16 @@ class _StatisticsState extends State<Statistics> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-//                Image.asset(icon, width: 16.0, height: 16.0),
-                Container(
-                  margin: EdgeInsets.only(left: 5.0),
-                  child: Text(title,
-                      style: TextStyle(
-                          fontSize: 13.0,
-                          color: colorTextTitle,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 5.0),
+                    child: Text(title,
+                        style: TextStyle(
+                            fontSize: 13.0,
+                            color: colorTextTitle,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.productSans)),
+                  ),
                 ),
               ],
             ),
@@ -264,20 +230,21 @@ class _StatisticsState extends State<Statistics> {
                   child: Text(count,
                       style: TextStyle(
                           fontSize: 22.0,
-//                          color: ColorBase.green,
                           color: colorNumber,
                           fontWeight: FontWeight.bold,
                           fontFamily: FontsFamily.productSans)),
                 ),
-                Container(
-                  margin: EdgeInsets.only(
-                      top: Dimens.padding, left: 4.0, bottom: 2.0),
-                  child: Text(label,
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          color: colorTextTitle,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: Dimens.padding, left: 4.0, bottom: 2.0),
+                    child: Text(label,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: colorTextTitle,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.productSans)),
+                  ),
                 )
               ],
             )
