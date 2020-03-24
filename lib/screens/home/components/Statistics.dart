@@ -67,9 +67,9 @@ class _StatisticsState extends State<Statistics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer('', Dictionary.pdpDesc, Dictionary.pdpDesc, '-',
+                _buildContainer('', Dictionary.underSupervision, Dictionary.underSupervision, '-',
                     2, '(%)', Colors.grey[600], Colors.grey[600]),
-                _buildContainer('', Dictionary.opdDesc, Dictionary.opdDesc, '-',
+                _buildContainer('', Dictionary.inMonitoring, Dictionary.inMonitoring, '-',
                     2, '(%)', Colors.grey[600], Colors.grey[600]),
               ],
             ),
@@ -213,11 +213,13 @@ class _StatisticsState extends State<Statistics> {
                   child: Container(
                     margin: EdgeInsets.only(left: 5.0),
                     child: Text(title,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 13.0,
                             color: colorTextTitle,
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.productSans
+                        )),
                   ),
                 ),
               ],
