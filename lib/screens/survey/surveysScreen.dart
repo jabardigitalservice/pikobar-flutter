@@ -1,12 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/screens/myAccount/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:shimmer/shimmer.dart';
@@ -17,6 +22,8 @@ class SurveysScreen extends StatefulWidget {
 }
 
 class _SurveysScreenState extends State<SurveysScreen> {
+  final AuthRepository _authRepository = AuthRepository();
+  AuthenticationBloc _authenticationBloc;
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.survey);
@@ -25,25 +32,85 @@ class _SurveysScreenState extends State<SurveysScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(Dictionary.survey),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection(Collections.surveys).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.documents.isNotEmpty) {
-              return _buildContent(snapshot);
+    return BlocProvider<AuthenticationBloc>(
+        create: (BuildContext context) => _authenticationBloc =
+            AuthenticationBloc(authRepository: _authRepository)
+              ..add(AppStarted()),
+        child: BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            print(state);
+
+            if (state is AuthenticationFailure) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => DialogTextOnly(
+                        description: state.error.toString(),
+                        buttonText: "OK",
+                        onOkPressed: () {
+                          Navigator.of(context).pop(); // To close the dialog
+                        },
+                      ));
+              Scaffold.of(context).hideCurrentSnackBar();
+            } else if (state is AuthenticationLoading) {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  content: Row(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      Container(
+                        margin: EdgeInsets.only(left: 15.0),
+                        child: Text(Dictionary.loading),
+                      )
+                    ],
+                  ),
+                  duration: Duration(seconds: 5),
+                ),
+              );
             } else {
-              return EmptyData(message: 'Tidak ada data survei');
+              Scaffold.of(context).hideCurrentSnackBar();
             }
-          } else {
-            return _buildLoading();
-          }
-        },
-      ),
-    );
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(Dictionary.survey),
+            ),
+            body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (
+                BuildContext context,
+                AuthenticationState state,
+              ) {
+                if (state is AuthenticationUnauthenticated ||
+                    state is AuthenticationLoading) {
+                  return LoginScreen(
+                    authenticationBloc: _authenticationBloc,
+                  );
+                } else if (state is AuthenticationAuthenticated ||
+                    state is AuthenticationLoading) {
+                  return StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance
+                        .collection(Collections.surveys)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data.documents.isNotEmpty) {
+                          return _buildContent(snapshot);
+                        } else {
+                          return EmptyData(message: 'Tidak ada data survei');
+                        }
+                      } else {
+                        return _buildLoading();
+                      }
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          ),
+        ));
   }
 
   _buildLoading() {
@@ -125,7 +192,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           textColor: Colors.white,
                           child: Text(Dictionary.fieldSurvey),
                           onPressed: () {
-                            Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: document['url']);
+                            Navigator.of(context).pushNamed(
+                                NavigationConstrants.Browser,
+                                arguments: document['url']);
                           },
                         ),
                       )
@@ -136,8 +205,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
     );
   }
 
-  @override
+    @override
   void dispose() {
+    _authenticationBloc.close();
     super.dispose();
   }
 }
