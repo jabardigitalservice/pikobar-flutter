@@ -20,6 +20,18 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # firebase deps
+  firebase_core: ^0.4.0+9
+  firebase_messaging:
+    git:
+      url: https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git
+      path: firebase_messaging-5.1.6
+  firebase_remote_config: ^0.3.0+3
+  firebase_analytics: ^5.0.11
+  firebase_in_app_messaging: ^0.1.1+3
+  firebase_auth: ^0.15.0+1
+  firebase_crashlytics: ^0.1.1+2
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -46,21 +58,12 @@ dependencies:
   fluttertoast: ^3.1.3
   font_awesome_flutter: ^8.7.0
   cloud_firestore: ^0.13.4+2
-  firebase_core: ^0.4.0+9
-  firebase_messaging:
-    git:
-      url: https://gitlab.com/jdsteam/sapa-warga/sapawarga-flutter-dependencies.git
-      path: firebase_messaging-5.1.6
   flutter_html: ^0.11.1
   flutter_inappwebview: ^2.1.0+1
   flutter_local_notifications: ^1.2.2
-  firebase_remote_config: ^0.3.0+3
-  firebase_analytics: ^5.0.11
   webview_flutter: ^0.3.19+9
-  firebase_in_app_messaging: ^0.1.1+3
-  share: ^0.6.3+1
-  firebase_auth: ^0.15.0+1
   google_sign_in: ^4.2.0
+  share: ^0.6.3+1
 
 
 dev_dependencies:
