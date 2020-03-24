@@ -13,7 +13,6 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SurveysScreen extends StatefulWidget {

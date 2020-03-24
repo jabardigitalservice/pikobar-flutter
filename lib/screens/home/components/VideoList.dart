@@ -8,9 +8,11 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:pikobar_flutter/utilities/launchExternal.dart';
+import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
 class VideoList extends StatefulWidget {
   @override
@@ -92,14 +94,34 @@ class _VideoListState extends State<VideoList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 10.0),
-          child: Text(
-            Dictionary.videoUpToDate,
-            style: TextStyle(
-                color: Color.fromRGBO(0, 0, 0, 0.73),
-                fontWeight: FontWeight.bold,
-                fontFamily: FontsFamily.productSans,
-                fontSize: 18.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                Dictionary.videoUpToDate,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: FontsFamily.productSans,
+                    fontSize: 16.0),
+              ),
+              InkWell(
+                child: Text(
+                  Dictionary.more,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: FontsFamily.productSans,
+                      fontSize: 16.0),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, NavigationConstrants.VideoList);
+
+                  AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
+                },
+              ),
+            ],
           ),
         ),
         Container(
@@ -137,7 +159,7 @@ class _VideoListState extends State<VideoList> {
                               alignment: Alignment.center,
                               children: <Widget>[
                                 CachedNetworkImage(
-                                  imageUrl: _youtubeThumbnail(
+                                  imageUrl: getYtThumbnail(
                                       youtubeUrl: document['url'],
                                       error: false),
                                   imageBuilder: (context, imageProvider) =>
@@ -157,7 +179,7 @@ class _VideoListState extends State<VideoList> {
                                       child: CupertinoActivityIndicator()),
                                   errorWidget: (context, url, error) =>
                                       CachedNetworkImage(
-                                    imageUrl: _youtubeThumbnail(
+                                    imageUrl: getYtThumbnail(
                                         youtubeUrl: document['url'],
                                         error: true),
                                     imageBuilder: (context, imageProvider) =>
@@ -186,7 +208,7 @@ class _VideoListState extends State<VideoList> {
                             ),
                           ),
                           onTap: () {
-                            _launchURL(document['url']);
+                            launchExternal(document['url']);
 
                             AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
                                 <String, dynamic>{'title': document['title']});
@@ -213,26 +235,5 @@ class _VideoListState extends State<VideoList> {
         ),
       ],
     );
-  }
-
-  _launchURL(String youtubeUrl) async {
-    if (await canLaunch(youtubeUrl)) {
-      await launch(youtubeUrl);
-    } else {
-      throw 'Could not launch $youtubeUrl';
-    }
-  }
-
-  String _youtubeThumbnail({String youtubeUrl, bool error}) {
-    Uri uri = Uri.parse(youtubeUrl);
-    String thumbnailUrl = "";
-    if (!error) {
-      thumbnailUrl =
-          'https://img.youtube.com/vi/${uri.queryParameters['v']}/maxresdefault.jpg';
-    } else {
-      thumbnailUrl =
-          'https://img.youtube.com/vi/${uri.queryParameters['v']}/hqdefault.jpg';
-    }
-    return thumbnailUrl;
   }
 }
