@@ -18,7 +18,6 @@ class Phonebook extends StatefulWidget {
 }
 
 class _PhonebookState extends State<Phonebook> {
-  ScrollController _scrollController = ScrollController();
   bool _isSearch = false;
   var containerWidth = 40.0;
   TextEditingController _searchController = TextEditingController();
@@ -40,24 +39,8 @@ class _PhonebookState extends State<Phonebook> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _buildAppBar(),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-              .collection(Collections.emergencyNumbers)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data.documents.isEmpty
-                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
-                  : ListViewPhoneBooks(
-                      snapshot: snapshot,
-                      scrollController: _scrollController,
-                      searchQuery: searchQuery,
-                    );
-            } else {
-              return Center(child: _buildLoading());
-            }
-          },
+        body: ListViewPhoneBooks(
+          searchQuery: searchQuery,
         ));
   }
 
@@ -158,26 +141,7 @@ class _PhonebookState extends State<Phonebook> {
     );
   }
 
-  Widget _buildLoading() {
-    return ListView.builder(
-        itemCount: 10,
-        padding: EdgeInsets.all(6),
-        itemBuilder: (context, index) {
-          return Card(
-              child: Padding(
-            padding: EdgeInsets.all(10),
-            child: ListTile(
-              leading: Skeleton(
-                child: Icon(FontAwesomeIcons.building),
-              ),
-              title: Skeleton(
-                width: MediaQuery.of(context).size.width / 4,
-                height: 20,
-              ),
-            ),
-          ));
-        });
-  }
+ 
 
   @override
   void dispose() {
