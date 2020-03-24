@@ -12,7 +12,6 @@ import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NewsScreen extends StatefulWidget {
   final String news;
@@ -29,10 +28,19 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: widget.news == Dictionary.latestNews
-          ? Firestore.instance.collection('articles').orderBy('published_at', descending: true).snapshots()
+          ? Firestore.instance
+              .collection('articles')
+              .orderBy('published_at', descending: true)
+              .snapshots()
           : widget.news == Dictionary.nationalNews
-              ? Firestore.instance.collection('articles_national').orderBy('published_at', descending: true).snapshots()
-              : Firestore.instance.collection('articles_world').orderBy('published_at', descending: true).snapshots(),
+              ? Firestore.instance
+                  .collection('articles_national')
+                  .orderBy('published_at', descending: true)
+                  .snapshots()
+              : Firestore.instance
+                  .collection('articles_world')
+                  .orderBy('published_at', descending: true)
+                  .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
@@ -383,13 +391,5 @@ class _NewsScreenState extends State<NewsScreen> {
         ),
       ),
     );
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -16,7 +15,6 @@ import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/checkVersion.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'BannerListSlider.dart';
 
@@ -84,7 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: <Widget>[
-          
           // IconButton(
           //   icon: Icon(Icons.notifications, size: 20.0, color: Colors.white),
           //   onPressed: () {
@@ -109,12 +106,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: ListView(children: [
                   Padding(
-                    padding:  EdgeInsets.only(left: 20),
-                    child: Text(Dictionary.versionText +
-                    ' ' +
-                    _versionText +
-                    ' ' +
-                    Dictionary.betaText,style: TextStyle(color: Colors.white),),
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      Dictionary.versionText +
+                          ' ' +
+                          _versionText +
+                          ' ' +
+                          Dictionary.betaText,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   Container(
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
