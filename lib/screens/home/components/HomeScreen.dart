@@ -26,17 +26,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _versionText = Dictionary.version;
+
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      setState(() {
-        _versionText = packageInfo.version != null
-            ? packageInfo.version
-            : Dictionary.version;
-      });
-    });
+
     super.initState();
   }
 

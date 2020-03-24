@@ -298,7 +298,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       defaultTextStyle:
                           TextStyle(color: Colors.black, fontSize: 15.0),
                       customTextAlign: (dom.Node node) {
-                        return TextAlign.justify;
+                        return TextAlign.left;
                       },
                       onLinkTap: (url) {
                         _launchURL(url);

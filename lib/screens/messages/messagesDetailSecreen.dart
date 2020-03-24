@@ -191,7 +191,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                       fontSize: 14.0,
                       fontFamily: FontsFamily.productSans),
                   customTextAlign: (dom.Node node) {
-                    return TextAlign.justify;
+                    return TextAlign.left;
                   },
                   onLinkTap: (url) {
                     _launchURL(url);
