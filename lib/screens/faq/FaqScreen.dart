@@ -233,7 +233,7 @@ class _FaqScreenState extends State<FaqScreen> {
                     launchExternal(url);
                   },
                   customTextAlign: (dom.Node node) {
-                    return TextAlign.justify;
+                    return TextAlign.left;
                   },
                 ),
               ),
