@@ -24,7 +24,7 @@ Route generateRoutes(RouteSettings settings) {
     case NavigationConstrants.BroadcastDetail:
       return buildRoute(
           settings,
-          MessageDetailcreen(
+          MessageDetailScreen(
             document: args,
           ));
 
