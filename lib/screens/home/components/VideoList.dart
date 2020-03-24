@@ -117,6 +117,8 @@ class _VideoListState extends State<VideoList> {
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.VideoList);
+
+                  AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
                 },
               ),
             ],

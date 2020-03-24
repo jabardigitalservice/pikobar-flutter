@@ -8,6 +8,7 @@ class Analytics {
   static String news = 'News';
   // TODO: belum di implementasikan
   static String notifications = 'Notifikasi';
+  static String video = 'Video Terkini';
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -28,6 +29,7 @@ class Analytics {
   static String tappedBanner = 'tapped_banner';
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';
+  static String tappedVideoMore = 'tapped_video_selengkapnya';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
@@ -50,4 +52,7 @@ class Analytics {
 
   // event FAQ
   static String tappedFaqSearch = 'tapped_faq_pencarian';
+
+  // event Videos
+  static String tappedVideoShare = 'tapped_video_share';
 }

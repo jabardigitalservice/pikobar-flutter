@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
@@ -17,6 +19,12 @@ class VideosScreen extends StatefulWidget {
 }
 
 class _VideosScreenState extends State<VideosScreen> {
+  @override
+  void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.video);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +127,9 @@ class _VideosScreenState extends State<VideosScreen> {
                   ),
                   onTap: () {
                     launchExternal(document['url']);
+
+                    AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
+                        <String, dynamic>{'title': document['title']});
                   },
                 ),
                 Container(
@@ -155,6 +166,9 @@ class _VideosScreenState extends State<VideosScreen> {
   _shareApp(String title, String sourceUrl) {
     Share.share(
         '$title\nBaca Selengkapnya: $sourceUrl\n\ndibagikan dari Pikobar');
+
+    AnalyticsHelper.setLogEvent(
+        Analytics.tappedVideoShare, <String, dynamic>{'title': title});
   }
 
   @override
