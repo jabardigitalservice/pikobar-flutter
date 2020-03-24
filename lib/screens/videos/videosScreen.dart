@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
+import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 
 class VideosScreen extends StatefulWidget {
@@ -121,25 +122,39 @@ class _VideosScreenState extends State<VideosScreen> {
                   },
                 ),
                 Container(
-                  padding: EdgeInsets.all(17),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        document['title'],
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
+                    padding: EdgeInsets.all(17),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            document['title'],
+                            style: TextStyle(
+                                fontSize: 15.0, fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.left,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          child: IconButton(
+                            icon: Icon(Icons.share),
+                            onPressed: () {
+                              _shareApp(document['title'], document['url']);
+                            },
+                          ),
+                        )
+                      ],
+                    )),
                 SizedBox(height: 10),
               ],
             );
           }),
     );
+  }
+
+  _shareApp(String title, String sourceUrl) {
+    Share.share(
+        '$title\nBaca Selengkapnya: $sourceUrl\n\ndibagikan dari Pikobar');
   }
 
   @override
