@@ -197,7 +197,7 @@ class _StatisticsState extends State<Statistics> {
         padding: EdgeInsets.only(left: 5, right: 5.0, top: 10, bottom: 10),
         margin: EdgeInsets.symmetric(horizontal: 2.5),
         decoration: BoxDecoration(
-            image: image != '' || image != null
+            image: image != '' && image != null
                 ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
                 : null,
             border: image == null || image == ''
