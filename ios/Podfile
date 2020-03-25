@@ -35,7 +35,7 @@ end
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
-  
+
   # Flutter Pod
 
   copied_flutter_dir = File.join(__dir__, 'Flutter')
@@ -88,9 +88,3 @@ post_install do |installer|
     end
   end
 end
-
-# add the Firebase pod for Google Analytics
-pod 'Firebase/Analytics'
-pod 'Firebase/Messaging'
-# add pods for any other desired Firebase products
-# https://firebase.google.com/docs/ios/setup#available-pods

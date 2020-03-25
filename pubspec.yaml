@@ -11,7 +11,11 @@ description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.2+7
+
+# GDrive version 1.2.0+8
+# PlayStore version 1.1.2+7
+
+version: 1.2.1+8
 
 environment:
   sdk: '>=2.7.1 <3.0.0'
@@ -29,7 +33,7 @@ dependencies:
   firebase_remote_config: ^0.3.0+3
   firebase_analytics: ^5.0.11
   firebase_in_app_messaging: ^0.1.1+3
-  firebase_auth: ^0.15.0+1
+  firebase_auth: ^0.15.5+3
   firebase_crashlytics: ^0.1.1+2
 
   # The following adds the Cupertino Icons font to your application.
