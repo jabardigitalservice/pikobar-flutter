@@ -68,9 +68,8 @@ dependencies:
   webview_flutter: ^0.3.19+9
   google_sign_in: ^4.2.0
   share: ^0.6.3+1
+  geolocator: ^5.3.0
   pinput: ^0.1.10
-
-  # QR Code
   pretty_qr_code: ^1.0.1
 
 dev_dependencies:

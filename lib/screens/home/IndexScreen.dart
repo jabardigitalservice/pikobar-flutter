@@ -42,7 +42,6 @@ class _IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
 
-    // checkAppVersion();
     _initializeBottomNavigationBar();
     setStatAnnouncement();
 

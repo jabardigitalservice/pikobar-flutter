@@ -114,6 +114,9 @@ class Dictionary {
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
 
+  // Popup Permission Redaction
+  static String permissionLocationSpread = 'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
+
   // text
   static String fieldSurvey = 'Isi Survei';
   static String loadingData = 'Sedang mengambil data ...';
@@ -128,6 +131,7 @@ class Dictionary {
   static String updateProfile = 'Profil berhasil diperbaharui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
+  static String spreadRedaction = 'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
 
   //announcement
   static String infoTextAnnouncement = 'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';

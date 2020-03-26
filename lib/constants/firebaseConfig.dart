@@ -33,4 +33,5 @@ class FirebaseConfig {
   static String selfDiagnoseEnabled = 'selfdiagnose_enabled';
   static String selfDiagnoseUrl = 'selfdiagnose_url';
   static String selfDiagnoseCaption = 'selfdiagnose_caption';
+  static String spreadCheckLocation = 'ceksebaran_location';
 }
