@@ -29,9 +29,11 @@ class AuthRepository {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-       Map userInfoMap = authResult.additionalUserInfo.profile;
-
-    return UserModel.fromJson(userInfoMap);
+    return UserModel(
+        uid: currentUser.uid,
+        email: currentUser.email,
+        name: currentUser.displayName,
+        photoUrlFull: currentUser.photoUrl);
   }
 
   Future signOutGoogle() async {
@@ -40,7 +42,7 @@ class AuthRepository {
     await deleteLocalUserInfo();
   }
 
-   Future<void> deleteToken() async {
+  Future<void> deleteToken() async {
     /// delete from keystore/keychain
     await Future.delayed(Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
@@ -56,7 +58,7 @@ class AuthRepository {
     return;
   }
 
-   Future<void> persistUserInfo(UserModel authUserInfo) async {
+  Future<void> persistUserInfo(UserModel authUserInfo) async {
     final prefs = await SharedPreferences.getInstance();
     Map authUserInfoJson = authUserInfo.toJson();
     await prefs.setString('auth_user_info', json.encode(authUserInfoJson));
@@ -83,7 +85,7 @@ class AuthRepository {
   Future<UserModel> getUserInfo() async {
     UserModel authUserInfo;
     bool hasUserInfo = await hasLocalUserInfo();
-    if (hasUserInfo == false ) {
+    if (hasUserInfo == false) {
       authUserInfo = await signInWithGoogle();
       await persistUserInfo(authUserInfo);
     } else {
@@ -93,7 +95,7 @@ class AuthRepository {
     return authUserInfo;
   }
 
-   Future<void> deleteLocalUserInfo() async {
+  Future<void> deleteLocalUserInfo() async {
     await Future.delayed(Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_user_info');
