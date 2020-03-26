@@ -7,7 +7,9 @@ import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:share/share.dart';
 
 class InfoGraphicsScreen extends StatefulWidget {
   @override
@@ -100,17 +102,38 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              IconButton(
-                  icon: Icon(
-                    FontAwesomeIcons.ellipsisH,
-                    size: 17,
-                  ),
-                  onPressed: null)
+              PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_horiz,
+                ),
+                onSelected: (value) {
+                  choiceAction(value, data.documentID, data['title']);
+                },
+                itemBuilder: (BuildContext context) {
+                  List<String> choice = <String>['Unduh', 'Bagikan'];
+                  return choice.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(choice),
+                    );
+                  }).toList();
+                },
+              ),
             ],
           ),
         ),
         // SizedBox(height: 16),
       ],
     );
+  }
+
+  void choiceAction(String choice, String id, String title) {
+    if (choice == 'Unduh') {
+    } else if (choice == 'Bagikan') {
+      final _backLink = '${UrlThirdParty.urlCoronaInfo}infographics/$id';
+
+      Share.share(
+          '$title\n\n${_backLink != null ? _backLink + '\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
+    }
   }
 }
