@@ -31,9 +31,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
    @override
    Widget build(BuildContext context) {
      return WillPopScope(
-       onWillPop: () {
-         return _exitWebView(context);
-       },
+       onWillPop: _exitWebView,
        child: Scaffold(
          appBar: AppBar(
            title: Text(Dictionary.appName),
@@ -72,13 +70,13 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
      );
    }
 
-   _exitWebView(BuildContext context) async {
+   Future<bool> _exitWebView() async {
      if (await webView.canGoBack()) {
        webView.goBack();
-       return Future.value(true);
+       return Future.value(false);
      } else {
        Navigator.of(context).pop();
-       return Future.value(false);
+       return Future.value(true);
      }
    }
  }
