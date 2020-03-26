@@ -1,5 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 
 class InfoGraphicsScreen extends StatefulWidget {
   @override
@@ -10,51 +17,83 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Dictionary.infoGraphics),
-      ),
-    );
+        appBar: AppBar(
+          title: Text(Dictionary.infoGraphics),
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: Firestore.instance
+              .collection(Collections.infographics)
+              .orderBy('published_date', descending: true)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              final List data = snapshot.data.documents;
+              final int dataCount = data.length;
+
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: dataCount,
+                padding: EdgeInsets.only(bottom: 30.0, top: 10.0),
+                itemBuilder: (_, int index) {
+                  return _cardContent(data[index]);
+                },
+              );
+            } else {
+              return Container();
+            }
+          },
+        ));
     //   body:
-    //   StreamBuilder<QuerySnapshot>(
-    //     stream: Firestore.instance
-    //         .collection(Collections.faq)
-    //         .orderBy('sequence_number')
-    //         .snapshots(),
-    //     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //       if (snapshot.hasData) {
-    //         List dataFaq;
+  }
 
-    //         // if search ative
-    //         if (searchQuery.isNotEmpty) {
-    //           dataFaq = snapshot.data.documents
-    //               .where((test) => test['title']
-    //                   .toLowerCase()
-    //                   .contains(searchQuery.toLowerCase()))
-    //               .toList();
-    //         } else {
-    //           dataFaq = snapshot.data.documents;
-    //         }
-
-    //         final int messageCount = dataFaq.length;
-
-    //         // check if data is empty
-    //         if (dataFaq.length == 0) {
-    //           return EmptyData(
-    //               message: '${Dictionary.emptyData} ${Dictionary.faq}');
-    //         }
-
-    //         return ListView.builder(
-    //           itemCount: messageCount,
-    //           padding: EdgeInsets.only(bottom: 30.0),
-    //           itemBuilder: (_, int index) {
-    //             return _cardContent(dataFaq[index]);
-    //           },
-    //         );
-    //       } else {
-    //         return _buildLoading();
-    //       }
-    //     },
-    //   ),
-    // );
+  Widget _cardContent(data) {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10.0),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.3,
+          margin: EdgeInsets.symmetric(horizontal: 8.0),
+          decoration: BoxDecoration(shape: BoxShape.circle),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: CachedNetworkImage(
+                imageUrl: data['images'][0] ?? '',
+                imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5.0),
+                            topRight: Radius.circular(5.0)),
+                        image: DecorationImage(
+                          alignment: Alignment.topCenter,
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                placeholder: (context, url) => Center(
+                    heightFactor: 10.2, child: CupertinoActivityIndicator()),
+                errorWidget: (context, url, error) => Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5.0),
+                          topRight: Radius.circular(5.0)),
+                    ),
+                    child: PikobarPlaceholder())),
+          ),
+        ),
+        SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text('data'),
+            Text('data'),
+          ],
+        ),
+        SizedBox(height: 16),
+      ],
+    );
   }
 }

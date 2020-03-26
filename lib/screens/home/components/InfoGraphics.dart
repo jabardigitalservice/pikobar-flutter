@@ -47,7 +47,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Info Praktikal',
+                Dictionary.infoGraphics,
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
