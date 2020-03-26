@@ -25,13 +25,13 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
     VideoListEvent event,
   ) async* {
     if (event is LoadVideos) {
-      yield* _mapLoadTodosToState();
+      yield* _mapLoadVideosToState();
     } else if (event is VideosUpdated) {
-      yield* _mapTodosUpdateToState(event);
+      yield* _mapVideosUpdateToState(event);
     }
   }
 
-  Stream<VideoListState> _mapLoadTodosToState() async* {
+  Stream<VideoListState> _mapLoadVideosToState() async* {
     yield VideosLoading();
     _videosSubscription?.cancel();
     _videosSubscription = _videoRepository.getVideo().listen(
@@ -39,7 +39,7 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
         );
   }
 
-  Stream<VideoListState> _mapTodosUpdateToState(VideosUpdated event) async* {
+  Stream<VideoListState> _mapVideosUpdateToState(VideosUpdated event) async* {
     yield VideosLoaded(event.videos);
   }
 
