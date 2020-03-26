@@ -23,7 +23,7 @@ class ListViewPhoneBooks extends StatefulWidget {
 
 class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Map<String, bool> _categoryExpansionStateMap = Map<String, bool>();
-int callCenterPhoneCount,   emergencyPhoneCount;
+  int callCenterPhoneCount, emergencyPhoneCount;
   @override
   void initState() {
     super.initState();
@@ -153,11 +153,11 @@ int callCenterPhoneCount,   emergencyPhoneCount;
       dataNomorDarurat = snapshot.data.documents;
     }
 
-     emergencyPhoneCount = dataNomorDarurat.length;
+    emergencyPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
       Column column = Column(
         children: <Widget>[
-          emergencyPhoneCount == 0 && callCenterPhoneCount==0
+          emergencyPhoneCount == 0 && callCenterPhoneCount == 0
               ? EmptyData(
                   message:
                       '${Dictionary.emptyData} ${Dictionary.phoneBookEmergency}')
@@ -216,15 +216,15 @@ int callCenterPhoneCount,   emergencyPhoneCount;
       dataNomorDarurat = snapshot.data.documents;
     }
 
-     callCenterPhoneCount = dataNomorDarurat.length;
+    callCenterPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < callCenterPhoneCount; i++) {
       Column column = Column(
         children: <Widget>[
-           widget.searchQuery != null
+          widget.searchQuery != null
+              ? _card(dataNomorDarurat[i])
+              : _categoryExpansionStateMap["CallCenter"]
                   ? _card(dataNomorDarurat[i])
-                  : _categoryExpansionStateMap["CallCenter"]
-                      ? _card(dataNomorDarurat[i])
-                      : Container(),
+                  : Container(),
           SizedBox(
             height: 10,
           )
@@ -241,7 +241,8 @@ int callCenterPhoneCount,   emergencyPhoneCount;
       children: <Widget>[
         Skeleton(
           child: Container(
-            decoration: BoxDecoration(color: Colors.grey[300],
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             child: Padding(
               padding: EdgeInsets.all(17.0),
@@ -273,7 +274,6 @@ int callCenterPhoneCount,   emergencyPhoneCount;
                       ],
                     ),
                   ),
-                 
                 ],
               ),
             ),
@@ -380,30 +380,28 @@ int callCenterPhoneCount,   emergencyPhoneCount;
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                      height: 80,
-                      child: Image.asset('${Environment.iconAssets}$iconPath')),
-                  SizedBox(
-                    width: 10,
+                  Row(
+                    children: <Widget>[
+                      Container(
+                          height: 60,
+                          child: Image.asset(
+                              '${Environment.iconAssets}$iconPath')),
+                              SizedBox(width: 20,),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text(content, style: TextStyle(fontSize: 11))
+                        ],
+                      ),
+                    ],
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 90,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                            width: MediaQuery.of(context).size.width / 2.5,
-                            child: Text(
-                              title,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            )),
-                        Text(content, style: TextStyle(fontSize: 12))
-                      ],
-                    ),
-                  ),
+                  
                   Icon(
                     isExpand
                         ? Icons.keyboard_arrow_up
