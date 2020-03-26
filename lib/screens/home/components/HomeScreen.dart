@@ -1,6 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -104,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
                   FutureBuilder<RemoteConfig>(
-                      future: setupRemoteConfig(),
+                      future: setupRemoteConfigAnnouncement(),
                       builder: (BuildContext context,
                           AsyncSnapshot<RemoteConfig> snapshot) {
                         return AnnouncementScreen(snapshot.data);
@@ -262,6 +261,24 @@ class _HomeScreenState extends State<HomeScreen> {
       await remoteConfig.activateFetched();
 
       checkVersion(context, remoteConfig);
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
+    }
+
+    return remoteConfig;
+  }
+
+  Future<RemoteConfig> setupRemoteConfigAnnouncement() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      FirebaseConfig.announcement: false,
+    });
+
+    try {
+      await remoteConfig.fetch(expiration: Duration(seconds: 2));
+      await remoteConfig.activateFetched();
+
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
