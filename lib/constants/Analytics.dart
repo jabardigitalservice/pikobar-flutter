@@ -55,4 +55,9 @@ class Analytics {
 
   // event Videos
   static String tappedVideoShare = 'tapped_video_share';
+
+  // event for permission
+  static String permissionGrantedLocation = 'permission_granted_location';
+  static String permissionDeniedLocation = 'permission_denied_location';
+  static String permissionDismissLocation = 'permission_dismiss_location';
 }

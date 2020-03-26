@@ -1,6 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -9,8 +8,10 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
+import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/screens/home/components/infoPractical.dart';
@@ -99,20 +100,43 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Expanded(
                 child: ListView(children: [
+                  /// Banners Section
                   Container(
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
+
+                  /// Statistics Announcement
+                  FutureBuilder<RemoteConfig>(
+                      future: setupRemoteConfigAnnouncement(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<RemoteConfig> snapshot) {
+                        return AnnouncementScreen(snapshot.data);
+                      }),
+
+                  /// Statistics Section
                   Container(
                       color: ColorBase.grey,
                       margin: EdgeInsets.only(top: 10.0),
                       padding: EdgeInsets.only(bottom: 10.0),
                       child: Statistics()),
+
+                  /// Menus & Spread Sections
                   FutureBuilder<RemoteConfig>(
                       future: setupRemoteConfig(),
                       builder: (BuildContext context,
                           AsyncSnapshot<RemoteConfig> snapshot) {
-                        return MenuList(snapshot.data);
+                        return Column(
+                          children: <Widget>[
+                            /// Menus Section
+                            MenuList(snapshot.data),
+
+                            /// Spread Section
+                            SpreadSection(snapshot.data),
+                          ],
+                        );
                       }),
+
+                  /// News & Videos Sections
                   Container(
                     color: Colors.white,
                     child: Column(
@@ -263,13 +287,32 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseEnabled: false,
       FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
+      FirebaseConfig.spreadCheckLocation: ''
     });
 
     try {
-      await remoteConfig.fetch(expiration: Duration(minutes: 10));
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
 
       checkVersion(context, remoteConfig);
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
+    }
+
+    return remoteConfig;
+  }
+
+  Future<RemoteConfig> setupRemoteConfigAnnouncement() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      FirebaseConfig.announcement: false,
+    });
+
+    try {
+      await remoteConfig.fetch(expiration: Duration(seconds: 5));
+      await remoteConfig.activateFetched();
+
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');

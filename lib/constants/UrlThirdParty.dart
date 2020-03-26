@@ -12,4 +12,6 @@ class UrlThirdParty {
   static const String urlSelfTracing = '';
   static const String urlVolunteer = '';
   static const String urlSelfDiagnose = 'http://dev.engine.prixa.ai/';
+  static const String urlGoogle = 'https://www.google.com';
+
 }

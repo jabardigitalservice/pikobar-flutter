@@ -6,6 +6,7 @@ class FirebaseConfig {
   /// Remote config parameter key
   /// for menus
   static String jshUrl = 'jabarsaberhoax_url';
+  static String announcement = 'announcement';
   static String jshCaption = 'jabarsaberhoax_caption';
   static String pikobarCaption = 'pikobar_caption';
   static String pikobarUrl = 'pikobar_url';
@@ -32,4 +33,5 @@ class FirebaseConfig {
   static String selfDiagnoseEnabled = 'selfdiagnose_enabled';
   static String selfDiagnoseUrl = 'selfdiagnose_url';
   static String selfDiagnoseCaption = 'selfdiagnose_caption';
+  static String spreadCheckLocation = 'ceksebaran_location';
 }
