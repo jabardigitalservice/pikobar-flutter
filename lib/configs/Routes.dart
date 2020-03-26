@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/BrowserScreen.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 import 'package:pikobar_flutter/screens/survey/surveysScreen.dart';
@@ -34,6 +37,13 @@ Route generateRoutes(RouteSettings settings) {
 
     case NavigationConstrants.VideoList:
       return buildRoute(settings, VideosScreen());
+
+    case NavigationConstrants.Edit:
+      return buildRoute(settings, Edit(state: args,));
+
+      case NavigationConstrants.Verification:
+      UserModel argumentsModel = args;
+      return buildRoute(settings, Verification(phoneNumber: args,uid: argumentsModel.uid,));
 
     default:
       return null;

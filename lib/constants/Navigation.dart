@@ -34,4 +34,8 @@ class NavigationConstrants {
   static const String SubContact = "/sub-contact";
   static const String SubAddress = "/sub-address";
   static const String VideoList = "/videos";
+  static const String Edit = "/edit";
+  static const String Verification = "/verifikasi";
+
+
 }

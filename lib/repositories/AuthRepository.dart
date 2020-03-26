@@ -29,11 +29,12 @@ class AuthRepository {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
+    print(currentUser.phoneNumber);
     return UserModel(
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
-        photoUrlFull: currentUser.photoUrl);
+        photoUrlFull: currentUser.photoUrl,phoneNumber: currentUser.phoneNumber);
   }
 
   Future signOutGoogle() async {
