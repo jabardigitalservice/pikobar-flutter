@@ -45,10 +45,10 @@ class Dictionary {
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
   static String profile = 'Profil';
-  static String phoneBookEmergencyInformation = 'Informasi Nomor Darurat';
-  static String callCenterTitle = 'Call Center Kota/Kab. Lainnya';
+  static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
+  static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
-      'Segera hubungi nomor dibawah ini untuk call center terdekat';
+      'Segera hubungi nomor dibawah \nini untuk call center terdekat';
   static String edit = 'Edit Profil';
   static String name = 'Nama';
   static String email = 'Email';
@@ -57,13 +57,13 @@ class Dictionary {
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
-      'Segera hubungi nomor dibawah ini untuk informasi darurat';
+      'Segera hubungi nomor dibawah \nini untuk informasi darurat';
   static String callCenterNumber = '119';
   static String callCenter = '119 Call Center';
   static String dinasKesehatan = 'Dinas Kesehatan Jawa Barat';
-  static String daftarRumahSakitRujukan = 'Daftar Rumah Sakit Rujukan';
+  static String daftarRumahSakitRujukan = 'Daftar Rumah Sakit \nRujukan';
   static String daftarRumahSakitRujukanCaption =
-      'Segera hubungi nomor dibawah ini untuk rumah sakit rujukan';
+      'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String statusUser='Status : Sehat';
 
