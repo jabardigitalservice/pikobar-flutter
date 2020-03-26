@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
@@ -13,12 +12,12 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:share/share.dart';
 
-class InfoPractical extends StatefulWidget {
+class InfoGraphics extends StatefulWidget {
   @override
-  _InfoPracticalState createState() => _InfoPracticalState();
+  _InfoGraphicsState createState() => _InfoGraphicsState();
 }
 
-class _InfoPracticalState extends State<InfoPractical> {
+class _InfoGraphicsState extends State<InfoGraphics> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -65,7 +64,8 @@ class _InfoPracticalState extends State<InfoPractical> {
                       fontSize: 14.0),
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.VideoList);
+                  Navigator.pushNamed(
+                      context, NavigationConstrants.InfoGraphics);
 
                   // AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
                 },

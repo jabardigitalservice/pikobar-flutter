@@ -27,6 +27,7 @@ class Dictionary {
   static String qna = 'Forum';
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
+  static String infoGraphics = 'Info Praktikal';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -65,7 +66,7 @@ class Dictionary {
   static String daftarRumahSakitRujukanCaption =
       'Segera hubungi nomor dibawah ini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
-  static String statusUser='Status : Sehat';
+  static String statusUser = 'Status : Sehat';
 
   // Button Text
   static String yes = 'Ya';
@@ -115,7 +116,8 @@ class Dictionary {
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
 
   // Popup Permission Redaction
-  static String permissionLocationSpread = 'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
+  static String permissionLocationSpread =
+      'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -131,9 +133,11 @@ class Dictionary {
   static String updateProfile = 'Profil berhasil diperbaharui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
-  static String spreadRedaction = 'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
+  static String spreadRedaction =
+      'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
 
   //announcement
-  static String infoTextAnnouncement = 'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
+  static String infoTextAnnouncement =
+      'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String moreDetail = ' Selengkapnya';
 }

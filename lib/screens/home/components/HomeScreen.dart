@@ -9,12 +9,12 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
-import 'package:pikobar_flutter/screens/home/components/infoPractical.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/checkVersion.dart';
 
@@ -237,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Container(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: InfoPractical(),
+                          child: InfoGraphics(),
                         ),
                         SizedBox(
                           height: 24,
@@ -312,7 +312,6 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       await remoteConfig.fetch(expiration: Duration(seconds: 5));
       await remoteConfig.activateFetched();
-
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
