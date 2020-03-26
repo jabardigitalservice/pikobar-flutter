@@ -21,6 +21,7 @@ import 'package:pikobar_flutter/screens/myAccount/myAccount.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -41,8 +42,8 @@ class _IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
 
-    // checkAppVersion();
     _initializeBottomNavigationBar();
+    setStatAnnouncement();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -72,6 +73,10 @@ class _IndexScreenState extends State<IndexScreen> {
     firebaseInAppMsg.setAutomaticDataCollectionEnabled(true);
 
     super.initState();
+  }
+
+   setStatAnnouncement()async{
+    await AnnouncementSharedPreference.setAnnounceScreen(true);
   }
 
   Future<void> checkAppVersion() async {
