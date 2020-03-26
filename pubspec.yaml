@@ -69,6 +69,9 @@ dependencies:
   google_sign_in: ^4.2.0
   share: ^0.6.3+1
 
+  # QR Code
+  pretty_qr_code: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
