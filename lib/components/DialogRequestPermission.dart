@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 
@@ -7,6 +8,7 @@ class DialogRequestPermission extends StatelessWidget {
   final Image image;
   final Icon icon;
   final GestureTapCallback onOkPressed;
+  final GestureTapCallback onCancelPressed;
 
   DialogRequestPermission(
       {this.title,
@@ -14,7 +16,8 @@ class DialogRequestPermission extends StatelessWidget {
       this.buttonText,
       this.image,
       this.icon,
-      @required this.onOkPressed});
+      @required this.onOkPressed,
+      this.onCancelPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +79,13 @@ class DialogRequestPermission extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               FlatButton(
-                onPressed: () {
+                onPressed: onCancelPressed != null ? onCancelPressed : () {
                   Navigator.of(context).pop(); // To close the dialog
                 },
                 child: Text(
                   Dictionary.later.toUpperCase(),
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.blue),
+                      fontWeight: FontWeight.bold, color: Colors.grey[600]),
                 ),
               ),
               FlatButton(
@@ -90,7 +93,7 @@ class DialogRequestPermission extends StatelessWidget {
                 child: Text(
                   Dictionary.next.toUpperCase(),
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.blue),
+                      fontWeight: FontWeight.bold, color: ColorBase.green),
                 ),
               ),
             ],
@@ -105,7 +108,7 @@ class DialogRequestPermission extends StatelessWidget {
       left: Dimens.padding,
       right: Dimens.padding,
       child: CircleAvatar(
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: ColorBase.green,
           radius: Dimens.avatarRadius,
           child: Container(
               width: 50.0, height: 50.0, child: image != null ? image : icon)),

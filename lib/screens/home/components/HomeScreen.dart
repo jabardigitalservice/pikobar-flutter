@@ -1,6 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -11,6 +10,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
+import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -98,20 +98,35 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               Expanded(
                 child: ListView(children: [
+                  /// Banners Section
                   Container(
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
+
+                  /// Statistics Section
                   Container(
                       color: ColorBase.grey,
                       margin: EdgeInsets.only(top: 10.0),
                       padding: EdgeInsets.only(bottom: 10.0),
                       child: Statistics()),
+
+                  /// Menus & Spread Sections
                   FutureBuilder<RemoteConfig>(
                       future: setupRemoteConfig(),
                       builder: (BuildContext context,
                           AsyncSnapshot<RemoteConfig> snapshot) {
-                        return MenuList(snapshot.data);
+                        return Column(
+                          children: <Widget>[
+                            /// Menus Section
+                            MenuList(snapshot.data),
+
+                            /// Spread Section
+                            SpreadSection(snapshot.data),
+                          ],
+                        );
                       }),
+
+                  /// News & Videos Sections
                   Container(
                     color: Colors.white,
                     child: Column(
@@ -246,6 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseEnabled: false,
       FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
+      FirebaseConfig.spreadCheckLocation: ''
     });
 
     try {
