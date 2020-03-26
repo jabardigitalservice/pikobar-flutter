@@ -30,6 +30,7 @@ class Analytics {
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';
   static String tappedVideoMore = 'tapped_video_selengkapnya';
+  static String tappedSpreadCheck = 'tapped_cek_sebaran';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
