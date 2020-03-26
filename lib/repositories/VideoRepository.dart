@@ -1,0 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/models/VideoModel.dart';
+
+class VideoRepository {
+  final videoCollection = Firestore.instance.collection(Collections.videos);
+
+  Stream<List<VideoModel>> getVideo() {
+    return videoCollection.orderBy('sequence').snapshots().map(
+        (QuerySnapshot snapshot) => snapshot.documents
+            .map((doc) => VideoModel.fromFirestore(doc))
+            .toList());
+  }
+}

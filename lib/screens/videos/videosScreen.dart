@@ -1,27 +1,44 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/video_list_bloc.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/VideoRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 
-class VideosScreen extends StatefulWidget {
+class VideosScreen extends StatelessWidget {
   @override
-  _VideosScreenState createState() => _VideosScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<VideoListBloc>(
+      create: (context) => VideoListBloc(
+        videoRepository: VideoRepository(),
+      )..add(LoadVideos()),
+      child: VideosList(),
+    );
+  }
 }
 
-class _VideosScreenState extends State<VideosScreen> {
+class VideosList extends StatefulWidget {
+  @override
+  _VideosListState createState() => _VideosListState();
+}
+
+class _VideosListState extends State<VideosList> {
+  VideoListBloc _videoListBloc;
+
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.video);
+
+    _videoListBloc = BlocProvider.of<VideoListBloc>(context);
     super.initState();
   }
 
@@ -31,21 +48,12 @@ class _VideosScreenState extends State<VideosScreen> {
       appBar: AppBar(
         title: Text(Dictionary.videoUpToDate),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
-            .collection(Collections.videos)
-            .orderBy('sequence')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.documents.isNotEmpty) {
-              return _buildContent(snapshot);
-            } else {
-              return EmptyData(message: Dictionary.emptyData);
-            }
-          } else {
-            return _buildLoading();
-          }
+      body: BlocBuilder<VideoListBloc, VideoListState>(
+        bloc: _videoListBloc,
+        builder: (context, state) {
+          return state is VideosLoading
+              ? _buildLoading()
+              : state is VideosLoaded ? _buildContent(state) : Container();
         },
       ),
     );
@@ -92,14 +100,12 @@ class _VideosScreenState extends State<VideosScreen> {
     );
   }
 
-  _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
+  _buildContent(VideosLoaded state) {
     return Container(
       child: ListView.builder(
-          itemCount: snapshot.data.documents.length,
+          itemCount: state.videos.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            final DocumentSnapshot document = snapshot.data.documents[index];
-
             return Column(
               children: <Widget>[
                 GestureDetector(
@@ -109,7 +115,8 @@ class _VideosScreenState extends State<VideosScreen> {
                       children: <Widget>[
                         CachedNetworkImage(
                           imageUrl: getYtThumbnail(
-                              youtubeUrl: document['url'], error: false),
+                              youtubeUrl: state.videos[index].url,
+                              error: false),
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Center(
                             heightFactor: 4.2,
@@ -126,10 +133,10 @@ class _VideosScreenState extends State<VideosScreen> {
                     ),
                   ),
                   onTap: () {
-                    launchExternal(document['url']);
+                    launchExternal(state.videos[index].url);
 
                     AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
-                        <String, dynamic>{'title': document['title']});
+                        <String, dynamic>{'title': state.videos[index].title});
                   },
                 ),
                 Container(
@@ -138,7 +145,7 @@ class _VideosScreenState extends State<VideosScreen> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            document['title'],
+                            state.videos[index].title,
                             style: TextStyle(
                                 fontSize: 15.0, fontWeight: FontWeight.w600),
                             textAlign: TextAlign.left,
@@ -150,7 +157,8 @@ class _VideosScreenState extends State<VideosScreen> {
                           child: IconButton(
                             icon: Icon(Icons.share),
                             onPressed: () {
-                              _shareApp(document['title'], document['url']);
+                              _shareApp(state.videos[index].title,
+                                  state.videos[index].url);
                             },
                           ),
                         )
