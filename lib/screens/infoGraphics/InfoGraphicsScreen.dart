@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -84,15 +85,31 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     child: PikobarPlaceholder())),
           ),
         ),
-        SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text('data'),
-            Text('data'),
-          ],
+        // SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                data['title'],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.ellipsisH,
+                    size: 17,
+                  ),
+                  onPressed: null)
+            ],
+          ),
         ),
-        SizedBox(height: 16),
+        // SizedBox(height: 16),
       ],
     );
   }
