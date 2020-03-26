@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                       margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: BannerListSlider()),
+                  FutureBuilder<RemoteConfig>(
+                      future: setupRemoteConfig(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<RemoteConfig> snapshot) {
+                        return AnnouncementScreen(snapshot.data);
+                      }),
                   Container(
                       color: ColorBase.grey,
                       margin: EdgeInsets.only(top: 10.0),
@@ -246,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseEnabled: false,
       FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
+      FirebaseConfig.announcement: false,
     });
 
     try {

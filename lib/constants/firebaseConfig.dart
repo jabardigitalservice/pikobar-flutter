@@ -6,6 +6,7 @@ class FirebaseConfig {
   /// Remote config parameter key
   /// for menus
   static String jshUrl = 'jabarsaberhoax_url';
+  static String announcement = 'announcement';
   static String jshCaption = 'jabarsaberhoax_caption';
   static String pikobarCaption = 'pikobar_caption';
   static String pikobarUrl = 'pikobar_url';

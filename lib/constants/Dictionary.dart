@@ -128,4 +128,8 @@ class Dictionary {
   static String updateProfile = 'Profil berhasil diperbaharui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
+
+  //announcement
+  static String infoTextAnnouncement = 'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
+  static String moreDetail = ' Selengkapnya';
 }
