@@ -35,7 +35,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           .decode(widget.remoteConfig.getString(FirebaseConfig.announcement));
     }
     return widget.remoteConfig != null &&
-            dataAnnouncement['enabled'] == false &&
+            dataAnnouncement['enabled'] == true &&
             isCloseAnnouncement == true
         ? Container(
             width: (MediaQuery.of(context).size.width),
