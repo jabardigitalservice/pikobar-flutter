@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/screens/home/components/infoPractical.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/checkVersion.dart';
 
@@ -203,6 +204,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           padding: EdgeInsets.only(top: 16.0),
                           child: VideoList(),
+                        ),
+                        SizedBox(
+                          height: 24,
+                          child: Container(
+                            color: ColorBase.grey,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: InfoPractical(),
+                        ),
+                        SizedBox(
+                          height: 24,
+                          child: Container(
+                            color: ColorBase.grey,
+                          ),
                         ),
                       ],
                     ),
