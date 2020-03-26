@@ -3,6 +3,7 @@ class UserModel {
   String name;
   String photoUrlFull;
   String email;
+  String phoneNumber;
 
 
 
@@ -10,7 +11,7 @@ class UserModel {
     this.uid,
     this.name,
     this.photoUrlFull,
-    this.email,
+    this.email,this.phoneNumber
  
   });
 
