@@ -76,7 +76,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                                           arguments:
                                               dataAnnouncement['action_url']);
                                     })
-                              : Container()
+                              :  TextSpan(text: '')
                         ]),
                       )),
                 ),
