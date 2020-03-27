@@ -29,6 +29,13 @@ class DBProvider {
           "id INTEGER PRIMARY KEY,"
           "last_shown TEXT"
           ")");
+      await db.execute("CREATE TABLE Message ("
+          "id INTEGER PRIMARY KEY,"
+          "backlink TEXT,"
+          "content TEXT,"
+          "title TEXT,"
+          "pubilshedAt INTEGER"
+          ")");
     });
   }
 }
