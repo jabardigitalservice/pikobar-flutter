@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
 import 'package:share/share.dart';
 
 class InfoGraphics extends StatefulWidget {
@@ -156,13 +157,16 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                               children: <Widget>[
                                 RaisedButton.icon(
                                   onPressed: () {
-                                    print('Button Clicked.');
+                                    InfoGraphicsServices().downloadFile(
+                                        context,
+                                        document['title'],
+                                        document['images'][0]);
                                   },
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0))),
                                   icon: Padding(
-                                    padding: const EdgeInsets.only(left: 18),
+                                    padding: const EdgeInsets.only(left: 10),
                                     child: Icon(
                                       FontAwesomeIcons.download,
                                       color: Colors.white,
@@ -170,7 +174,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                     ),
                                   ),
                                   label: Padding(
-                                    padding: const EdgeInsets.only(right: 18),
+                                    padding: const EdgeInsets.only(right: 10),
                                     child: Text(
                                       'Unduh',
                                       style: TextStyle(color: Colors.white),
@@ -201,7 +205,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                   ),
                                   icon: Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 18,
+                                      left: 10,
                                     ),
                                     child: Icon(
                                       FontAwesomeIcons.shareSquare,
@@ -210,7 +214,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                     ),
                                   ),
                                   label: Padding(
-                                    padding: const EdgeInsets.only(right: 18),
+                                    padding: const EdgeInsets.only(right: 10),
                                     child: Text(
                                       'Bagikan',
                                     ),
