@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -11,6 +10,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class InfoGraphicsScreen extends StatefulWidget {
   @override
@@ -58,17 +58,20 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   }
 
   Widget _cardContent(DocumentSnapshot data) {
-    return Column(
-      children: <Widget>[
-        InkWell(
-          child: Container(
-            padding: EdgeInsets.all(10.0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.3,
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      elevation: 1.5,
+      margin: EdgeInsets.only(top: 14, left: 14, right: 14),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: <Widget>[
+          InkWell(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.3,
+              decoration: BoxDecoration(shape: BoxShape.circle),
               child: CachedNetworkImage(
                 imageUrl: data['images'][0] ?? '',
                 imageBuilder: (context, imageProvider) => Container(
@@ -96,72 +99,85 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 ),
               ),
             ),
-          ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => HeroImagePreview(
-                    Dictionary.heroImageTag,
-                    imageUrl: data['images'][0],
-                  ),
-                ));
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => HeroImagePreview(
+                      Dictionary.heroImageTag,
+                      imageUrl: data['images'][0],
+                    ),
+                  ));
 
-            AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
-                <String, dynamic>{'title': data['title']});
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              InkWell(
-                child: Text(
-                  data['title'],
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => HeroImagePreview(
-                          Dictionary.heroImageTag,
-                          imageUrl: data['images'][0],
+              AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
+                  <String, dynamic>{'title': data['title']});
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 14.0, right: 0, top: 14.0, bottom: 14.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => HeroImagePreview(
+                              Dictionary.heroImageTag,
+                              imageUrl: data['images'][0],
+                            ),
+                          ));
+
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedInfoGraphicsDetail,
+                          <String, dynamic>{'title': data['title']});
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          data['title'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ));
-
-                  AnalyticsHelper.setLogEvent(
-                      Analytics.tappedInfoGraphicsDetail,
-                      <String, dynamic>{'title': data['title']});
-                },
-              ),
-              PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_horiz,
+                        SizedBox(height: 8),
+                        Text(
+                          unixTimeStampToDateWithoutDay(
+                              data['published_date'].seconds),
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-                onSelected: (value) {
-                  InfoGraphicsServices().choiceAction(context, value, data);
-                },
-                itemBuilder: (BuildContext context) {
-                  List<String> choice = <String>['Unduh', 'Bagikan'];
-                  return choice.map((String choice) {
-                    return PopupMenuItem<String>(
-                      value: choice,
-                      child: Text(choice),
-                    );
-                  }).toList();
-                },
-              ),
-            ],
+                Container(
+                  child: IconButton(
+                    icon: Icon(FontAwesomeIcons.solidShareSquare,
+                        size: 17, color: Color(0xFF27AE60)),
+                    onPressed: () {
+                      InfoGraphicsServices()
+                          .shareInfoGraphics(data['title'], data.documentID);
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

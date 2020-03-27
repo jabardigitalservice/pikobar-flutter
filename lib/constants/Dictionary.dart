@@ -119,8 +119,6 @@ class Dictionary {
   // Popup Permission Redaction
   static String permissionLocationSpread =
       'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
-  static String permissionDownloadFile =
-      'Untuk mengunduh, izinkan aplikasi Sapawarga untuk mengakses penyimpanan Anda.';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -140,8 +138,10 @@ class Dictionary {
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
 
   // OnBoarding Login
-  static String titleOnBoardingLogin = 'Bantu stop penyebaran COVID-19 dengan\nmelakukan login pada app PIKOBAR';
-  static String disclaimerOnBoardingLogin = 'Data Anda akan aman dan tidak akan pernah diakses,\nkecuali jika Anda dekat dengan kasus positif COVID-19.';
+  static String titleOnBoardingLogin =
+      'Bantu stop penyebaran COVID-19 dengan\nmelakukan login pada app PIKOBAR';
+  static String disclaimerOnBoardingLogin =
+      'Data Anda akan aman dan tidak akan pernah diakses,\nkecuali jika Anda dekat dengan kasus positif COVID-19.';
 
   //announcement
   static String infoTextAnnouncement =
