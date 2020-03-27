@@ -79,7 +79,7 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.pikobar, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaInfo),
-          _buildButtonColumn('${Environment.iconAssets}garuda_Pancasila.png',
+          _buildButtonColumn('${Environment.iconAssets}garuda_pancasila.png',
               Dictionary.nationalInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
@@ -161,7 +161,7 @@ class _MenuListState extends State<MenuList> {
           /// Menu Button Data National
           /// Remote Config : caption & url
           _buildButtonColumn(
-              '${Environment.iconAssets}garuda_Pancasila.png',
+              '${Environment.iconAssets}garuda_pancasila.png',
               _remoteConfig.getString(FirebaseConfig.nationalInfoCaption) !=
                       null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoCaption)
@@ -414,7 +414,7 @@ class _MenuListState extends State<MenuList> {
                         '${Environment.iconAssets}pikobar.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
                     } else if (iconPath ==
-                        '${Environment.iconAssets}garuda_Pancasila.png') {
+                        '${Environment.iconAssets}garuda_pancasila.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
                     } else if (iconPath ==
                         '${Environment.iconAssets}world.png') {

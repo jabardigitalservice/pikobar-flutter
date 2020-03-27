@@ -73,7 +73,7 @@ class _StatisticsState extends State<Statistics> {
                     Dictionary.underSupervision,
                     '-',
                     2,
-                    '(%)',
+                    Dictionary.people,
                     Colors.grey[600],
                     Colors.grey[600]),
                 _buildContainer(
@@ -82,7 +82,7 @@ class _StatisticsState extends State<Statistics> {
                     Dictionary.inMonitoring,
                     '-',
                     2,
-                    '(%)',
+                    Dictionary.people,
                     Colors.grey[600],
                     Colors.grey[600]),
               ],
@@ -169,8 +169,9 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
                   2,
-                  getDataProcessPercent(data['odp']['total']['jabar'],
-                      data['odp']['selesai']['jabar']),
+                  /*getDataProcessPercent(data['odp']['total']['jabar'],
+                      data['odp']['selesai']['jabar']),*/
+                  Dictionary.people,
                   Colors.grey[600],
                   ColorBase.green),
               _buildContainer(
@@ -180,8 +181,9 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
                   2,
-                  getDataProcessPercent(data['pdp']['total']['jabar'],
-                      data['pdp']['selesai']['jabar']),
+                  /*getDataProcessPercent(data['pdp']['total']['jabar'],
+                      data['pdp']['selesai']['jabar']),*/
+                  Dictionary.people,
                   Colors.grey[600],
                   ColorBase.green),
             ],
