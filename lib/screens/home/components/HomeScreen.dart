@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
           future: setupRemoteConfig(),
           builder: (BuildContext context,
               AsyncSnapshot<RemoteConfig> snapshot) {
-            return buildContent(snapshot.data);
+            return snapshot.hasData ? buildContent(snapshot.data):Container();
           }),
     );
   }
