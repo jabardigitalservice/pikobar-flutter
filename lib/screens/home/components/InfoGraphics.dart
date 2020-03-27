@@ -6,14 +6,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:share/share.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class InfoGraphics extends StatefulWidget {
   @override
@@ -127,111 +127,66 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             <String, dynamic>{'title': document['title']});
                       },
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      width: MediaQuery.of(context).size.width - 110,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          InkWell(
-                            child: Text(
-                              document['title'],
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            InkWell(
+                              child: Text(
+                                document['title'],
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => HeroImagePreview(
+                                        Dictionary.heroImageTag,
+                                        imageUrl: document['images'][0],
+                                      ),
+                                    ));
+
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedInfoGraphicsDetail,
+                                    <String, dynamic>{
+                                      'title': document['title']
+                                    });
+                              },
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              unixTimeStampToDateWithoutDay(
+                                  document['published_date'].seconds),
                               style: TextStyle(
-                                  fontSize: 14.0, fontWeight: FontWeight.w600),
+                                  color: Colors.grey,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w600),
                               textAlign: TextAlign.left,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => HeroImagePreview(
-                                      Dictionary.heroImageTag,
-                                      imageUrl: document['images'][0],
-                                    ),
-                                  ));
-
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedInfoGraphicsDetail,
-                                  <String, dynamic>{
-                                    'title': document['title']
-                                  });
-                            },
-                          ),
-                          Container(
-                            // color: Colors.grey,
-                            padding: EdgeInsets.only(top: 5.0),
-                            child: ButtonBar(
-                              buttonPadding: EdgeInsets.all(0),
-                              alignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                RaisedButton.icon(
-                                  onPressed: () {
-                                    InfoGraphicsServices().downloadFile(
-                                        context,
-                                        document['title'],
-                                        document['images'][0]);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0))),
-                                  icon: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Icon(
-                                      FontAwesomeIcons.download,
-                                      color: Colors.white,
-                                      size: 15,
-                                    ),
-                                  ),
-                                  label: Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Text(
-                                      'Unduh',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                  textColor: Colors.white,
-                                  splashColor: Colors.green[300],
-                                  color: Color(0xFF27AE60),
-                                ),
-                                RaisedButton.icon(
-                                  onPressed: () {
-                                    InfoGraphicsServices().shareInfoGraphics(
-                                        document['title'], document.documentID);
-                                  },
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5.0)),
-                                    side: BorderSide(color: Color(0xFF27AE60)),
-                                  ),
-                                  icon: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 10,
-                                    ),
-                                    child: Icon(
-                                      FontAwesomeIcons.shareSquare,
-                                      size: 15,
-                                      color: Color(0xFF27AE60),
-                                    ),
-                                  ),
-                                  label: Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Text(
-                                      'Bagikan',
-                                    ),
-                                  ),
-                                  textColor: Colors.green,
-                                  splashColor: Colors.green[300],
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
+                    Container(
+                      child: IconButton(
+                        icon: Icon(FontAwesomeIcons.solidShareSquare,
+                            size: 17, color: Color(0xFF27AE60)),
+                        onPressed: () {
+                          InfoGraphicsServices().shareInfoGraphics(
+                              document['title'], document.documentID);
+                        },
+                      ),
+                    )
                   ],
                 ),
               );
