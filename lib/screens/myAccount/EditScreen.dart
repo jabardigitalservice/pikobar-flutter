@@ -107,54 +107,43 @@ class _EditState extends State<Edit> {
 
   _onSaveProfileButtonPressed() async {
     if (_formKey.currentState.validate()) {
-      try {
-        bool isConnected =
-            await Connection().checkConnection(UrlThirdParty.urlGoogle);
-        if (isConnected) {
-           _scaffoldState.currentState.showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  content: Row(
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Container(
-                        margin: EdgeInsets.only(left: 15.0),
-                        child: Text(Dictionary.loading),
-                      )
-                    ],
-                  ),
-                  duration: Duration(seconds: 5),
+      FocusScope.of(context).unfocus();
+      if (widget.state.data['phone_number'] ==
+          Dictionary.inaCode + _phoneNumberController.text) {
+        Navigator.pop(context);
+      } else {
+        try {
+          bool isConnected =
+              await Connection().checkConnection(UrlThirdParty.urlGoogle);
+          if (isConnected) {
+            _scaffoldState.currentState.showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                content: Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Container(
+                      margin: EdgeInsets.only(left: 15.0),
+                      child: Text(Dictionary.loading),
+                    )
+                  ],
                 ),
-              );
-          await Firestore.instance
-              .collection('users')
-              .document(widget.state.data['id'])
-              .updateData({
-            'phone_number': Dictionary.inaCode + _phoneNumberController.text
-          });
-          _scaffoldState.currentState.hideCurrentSnackBar();
-          showDialog(
+                duration: Duration(seconds: 5),
+              ),
+            );
+            await sendCodeToPhoneNumber();
+          }
+        } catch (error) {
+          await showDialog(
               context: context,
               builder: (BuildContext context) => DialogTextOnly(
-                    description: Dictionary.updateProfile,
+                    description: error.toString(),
                     buttonText: Dictionary.ok,
                     onOkPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); // To close the dialog
                     },
                   ));
-          // await sendCodeToPhoneNumber();
         }
-      } catch (error) {
-        await showDialog(
-            context: context,
-            builder: (BuildContext context) => DialogTextOnly(
-                  description: error.toString(),
-                  buttonText: Dictionary.ok,
-                  onOkPressed: () {
-                    Navigator.of(context).pop(); // To close the dialog
-                  },
-                ));
       }
     }
   }
@@ -281,15 +270,23 @@ class _EditState extends State<Edit> {
 
   Future<void> sendCodeToPhoneNumber() async {
     final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential user) {
+        (AuthCredential credential) {
       _scaffoldState.currentState.hideCurrentSnackBar();
-
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'No hp telah tersimpan',
+                description: 'No hp telah terverifikasi',
                 buttonText: "OK",
                 onOkPressed: () async {
+                    Navigator.pop(context);
+                  Navigator.pop(context);
+                  final FirebaseUser user =
+                      await FirebaseAuth.instance.currentUser();
+                  List<UserInfo> providerList = user.providerData;
+                  if (providerList.length > 2) {
+                    await user.unlinkFromProvider(credential.providerId);
+                  }
+                  await user.linkWithCredential(credential);
                   await Firestore.instance
                       .collection('users')
                       .document(widget.state.data['id'])
@@ -297,14 +294,12 @@ class _EditState extends State<Edit> {
                     'phone_number':
                         Dictionary.inaCode + _phoneNumberController.text
                   });
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop(); // To close the dialog
-                  // To close the dialog
+                
                 },
               ));
       setState(() {
         print(
-            'Inside _sendCodeToPhoneNumber: signInWithPhoneNumber auto succeeded: $user');
+            'Inside _sendCodeToPhoneNumber: signInWithPhoneNumber auto succeeded: $credential');
       });
     };
 
@@ -347,6 +342,7 @@ class _EditState extends State<Edit> {
                         builder: (context) => Verification(
                               phoneNumber: _phoneNumberController.text,
                               uid: widget.state.data['id'],
+                              verificationID: verificationId,
                             )),
                   );
                 },
@@ -356,18 +352,7 @@ class _EditState extends State<Edit> {
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
       this.verificationID = verificationId;
-      _scaffoldState.currentState.hideCurrentSnackBar();
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogTextOnly(
-                description: "Waktu habis silahkan coba lagi",
-                buttonText: "OK",
-                onOkPressed: () {
-                  Navigator.of(context).pop(); // To close the dialog
-                },
-              ));
-      print("time out");
+     
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
