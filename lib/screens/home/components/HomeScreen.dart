@@ -90,170 +90,169 @@ class _HomeScreenState extends State<HomeScreen> {
           // )
         ],
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height * 0.15,
-            color: ColorBase.green,
-          ),
-          Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView(children: [
-                  /// Banners Section
-                  Container(
-                      margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                      child: BannerListSlider()),
+      body: FutureBuilder<RemoteConfig>(
+          future: setupRemoteConfig(),
+          builder:
+              (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+            return snapshot.hasData ? buildContent(snapshot.data) : Container();
+          }),
+    );
+  }
 
-                  /// Statistics Announcement
-                  FutureBuilder<RemoteConfig>(
-                      future: setupRemoteConfigAnnouncement(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<RemoteConfig> snapshot) {
-                        return AnnouncementScreen(snapshot.data);
-                      }),
+  Widget buildContent(RemoteConfig remoteConfig) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.15,
+          color: ColorBase.green,
+        ),
+        Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView(children: [
+                /// Banners Section
+                Container(
+                    margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                    child: BannerListSlider()),
 
-                  /// Statistics Section
-                  Container(
-                      color: ColorBase.grey,
-                      margin: EdgeInsets.only(top: 10.0),
-                      padding: EdgeInsets.only(bottom: 10.0),
-                      child: Statistics()),
+                /// Statistics Announcement
+                AnnouncementScreen(remoteConfig),
 
-                  /// Menus & Spread Sections
-                  FutureBuilder<RemoteConfig>(
-                      future: setupRemoteConfig(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<RemoteConfig> snapshot) {
-                        return Column(
-                          children: <Widget>[
-                            /// Menus Section
-                            MenuList(snapshot.data),
+                /// Statistics Section
+                Container(
+                    color: ColorBase.grey,
+                    margin: EdgeInsets.only(top: 10.0),
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    child: Statistics()),
 
-                            /// Spread Section
-                            SpreadSection(snapshot.data),
-                          ],
-                        );
-                      }),
+                /// Menus & Spread Sections
+                Column(
+                  children: <Widget>[
+                    /// Menus Section
+                    MenuList(remoteConfig),
 
-                  /// News & Videos Sections
-                  Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(Dimens.padding),
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            Dictionary.newsUpdate,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: FontsFamily.productSans,
-                                fontSize: 16.0),
-                          ),
+                    /// Spread Section
+                    SpreadSection(remoteConfig),
+                  ],
+                ),
+
+                /// News & Videos Sections
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(Dimens.padding),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          Dictionary.newsUpdate,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.productSans,
+                              fontSize: 16.0),
                         ),
-                        Container(
-                          child: DefaultTabController(
-                            length: 3,
-                            child: Column(
-                              children: <Widget>[
-                                TabBar(
-                                  onTap: (index) {
-                                    if (index == 0) {
-                                      AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedNewsJabar);
-                                    } else if (index == 1) {
-                                      AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedNewsNational);
-                                    } else if (index == 2) {
-                                      AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedNewsWorld);
-                                    }
-                                  },
-                                  labelColor: Colors.black,
-                                  indicatorColor: ColorBase.green,
-                                  indicatorWeight: 2.8,
-                                  tabs: <Widget>[
-                                    Tab(
-                                      child: Text(
-                                        Dictionary.latestNews,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: FontsFamily.productSans,
-                                            fontSize: 13.0),
-                                      ),
-                                    ),
-                                    Tab(
-                                      child: Text(
-                                        Dictionary.nationalNews,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: FontsFamily.productSans,
-                                            fontSize: 13.0),
-                                      ),
-                                    ),
-                                    Tab(
-                                        child: Text(
-                                      Dictionary.worldNews,
+                      ),
+                      Container(
+                        child: DefaultTabController(
+                          length: 3,
+                          child: Column(
+                            children: <Widget>[
+                              TabBar(
+                                onTap: (index) {
+                                  if (index == 0) {
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.tappedNewsJabar);
+                                  } else if (index == 1) {
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.tappedNewsNational);
+                                  } else if (index == 2) {
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.tappedNewsWorld);
+                                  }
+                                },
+                                labelColor: Colors.black,
+                                indicatorColor: ColorBase.green,
+                                indicatorWeight: 2.8,
+                                tabs: <Widget>[
+                                  Tab(
+                                    child: Text(
+                                      Dictionary.latestNews,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: FontsFamily.productSans,
                                           fontSize: 13.0),
-                                    )),
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: Text(
+                                      Dictionary.nationalNews,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: FontsFamily.productSans,
+                                          fontSize: 13.0),
+                                    ),
+                                  ),
+                                  Tab(
+                                      child: Text(
+                                    Dictionary.worldNews,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: FontsFamily.productSans,
+                                        fontSize: 13.0),
+                                  )),
+                                ],
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(top: 10),
+                                height: 400,
+                                child: TabBarView(
+                                  children: <Widget>[
+                                    NewsScreen(
+                                        news: Dictionary.latestNews,
+                                        maxLength: 3),
+                                    NewsScreen(
+                                        news: Dictionary.nationalNews,
+                                        maxLength: 3),
+                                    NewsScreen(
+                                        news: Dictionary.worldNews,
+                                        maxLength: 3),
                                   ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(top: 10),
-                                  height: 400,
-                                  child: TabBarView(
-                                    children: <Widget>[
-                                      NewsScreen(
-                                          news: Dictionary.latestNews,
-                                          maxLength: 3),
-                                      NewsScreen(
-                                          news: Dictionary.nationalNews,
-                                          maxLength: 3),
-                                      NewsScreen(
-                                          news: Dictionary.worldNews,
-                                          maxLength: 3),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: VideoList(),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: VideoList(),
+                      ),
+                      SizedBox(
+                        height: 24,
+                        child: Container(
+                          color: ColorBase.grey,
                         ),
-                        SizedBox(
-                          height: 24,
-                          child: Container(
-                            color: ColorBase.grey,
-                          ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: InfoGraphics(),
+                      ),
+                      SizedBox(
+                        height: 24,
+                        child: Container(
+                          color: ColorBase.grey,
                         ),
-                        Container(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: InfoGraphics(),
-                        ),
-                        SizedBox(
-                          height: 24,
-                          child: Container(
-                            color: ColorBase.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]),
-              )
-            ],
-          )
-        ],
-      ),
+                      ),
+                    ],
+                  ),
+                )
+              ]),
+            )
+          ],
+        )
+      ],
     );
   }
 
@@ -287,7 +286,8 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseEnabled: false,
       FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
-      FirebaseConfig.spreadCheckLocation: ''
+      FirebaseConfig.spreadCheckLocation: '',
+      FirebaseConfig.announcement: false,
     });
 
     try {
@@ -295,23 +295,6 @@ class _HomeScreenState extends State<HomeScreen> {
       await remoteConfig.activateFetched();
 
       checkVersion(context, remoteConfig);
-    } catch (exception) {
-      print('Unable to fetch remote config. Cached or default values will be '
-          'used');
-    }
-
-    return remoteConfig;
-  }
-
-  Future<RemoteConfig> setupRemoteConfigAnnouncement() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
-      FirebaseConfig.announcement: false,
-    });
-
-    try {
-      await remoteConfig.fetch(expiration: Duration(seconds: 5));
-      await remoteConfig.activateFetched();
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
