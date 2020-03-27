@@ -5,6 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
@@ -41,6 +42,7 @@ void main() {
 
   runZoned<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await FlutterDownloader.initialize();
     runApp(App());
   }, onError: Crashlytics.instance.recordError);
 }
