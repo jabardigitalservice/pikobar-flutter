@@ -243,7 +243,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         size: 17, color: Color(0xFF27AE60)),
                     onPressed: () {
                       InfoGraphicsServices().shareInfoGraphics(
-                          document['title'], document.documentID);
+                          document['title'], document['images'][0]);
                     },
                   ),
                 )

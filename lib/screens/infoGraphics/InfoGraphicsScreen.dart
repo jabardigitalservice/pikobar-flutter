@@ -228,7 +228,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         size: 17, color: Color(0xFF27AE60)),
                     onPressed: () {
                       InfoGraphicsServices()
-                          .shareInfoGraphics(data['title'], data.documentID);
+                          .shareInfoGraphics(data['title'], data['images'][0]);
                     },
                   ),
                 )

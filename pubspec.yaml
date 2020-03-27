@@ -71,6 +71,7 @@ dependencies:
   geolocator: ^5.3.0
   pinput: ^0.1.10
   pretty_qr_code: ^1.0.1
+  esys_flutter_share: ^1.0.2
 
 dev_dependencies:
   flutter_test:
