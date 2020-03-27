@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info/package_info.dart';
@@ -8,16 +9,17 @@ import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
-import 'package:pikobar_flutter/screens/myAccount/OnboardLogin.dart';
+import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 
-class MyAccount extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   @override
-  _MyAccountState createState() => _MyAccountState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _MyAccountState extends State<MyAccount> {
+class _ProfileScreenState extends State<ProfileScreen> {
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
@@ -83,7 +85,7 @@ class _MyAccountState extends State<MyAccount> {
                 ) {
                   if (state is AuthenticationUnauthenticated ||
                       state is AuthenticationLoading) {
-                    return OnBoardingLogin(
+                    return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
                     );
                   } else if (state is AuthenticationAuthenticated ||
@@ -141,47 +143,63 @@ class _MyAccountState extends State<MyAccount> {
               SizedBox(
                 width: 20,
               ),
+
               Container(
                 height: 98,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                     _profilLoaded.record.name,
-                      style: TextStyle(
-                          color: Color(0xff4F4F4F),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(_profilLoaded.record.email,
-                        style: TextStyle(
-                          color: Color(0xff828282),
-                          fontSize: 14,
-                        )),
                     Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xff27AE60),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                height: 12,
-                                child: Image.asset(
-                                    '${Environment.iconAssets}sthetoscope.png')),
-                            SizedBox(width: 5),
-                            Text(Dictionary.statusUser,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                )),
-                          ],
-                        ),
+                      height: 32.0,
+                      child: Text(
+                       _profilLoaded.record.name,
+                        style: TextStyle(
+                            color: Color(0xff4F4F4F),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
+                    Container(
+                      height: 32.0,
+                      child: Text(_profilLoaded.record.email,
+                          style: TextStyle(
+                            color: Color(0xff828282),
+                            fontSize: 14,
+                          )),
+                    ),
+
+                    FutureBuilder<RemoteConfig>(
+                        future: setupRemoteConfig(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+
+                          bool visible = snapshot.data != null && snapshot.data.getBool(FirebaseConfig.healthStatusVisible) != null ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible) : false;
+
+                          return visible ? Container(
+                            decoration: BoxDecoration(
+                                color: Color(0xff27AE60),
+                                borderRadius: BorderRadius.circular(4)),
+                            child: Padding(
+                              padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                      height: 12,
+                                      child: Image.asset(
+                                          '${Environment.iconAssets}sthetoscope.png')),
+                                  SizedBox(width: 5),
+                                  Text(Dictionary.statusUser,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ) : SizedBox(height: 32.0,);
+                        }),
                   ],
                 ),
               )
@@ -342,6 +360,24 @@ class _MyAccountState extends State<MyAccount> {
         ],
       ),
     ));
+  }
+
+  Future<RemoteConfig> setupRemoteConfig() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      FirebaseConfig.healthStatusVisible: false,
+    });
+
+    try {
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
+      await remoteConfig.activateFetched();
+
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
+    }
+
+    return remoteConfig;
   }
 
   @override

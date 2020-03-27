@@ -17,8 +17,8 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
-import 'package:pikobar_flutter/screens/myAccount/myAccount.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
@@ -237,7 +237,7 @@ class _IndexScreenState extends State<IndexScreen> {
         return FaqScreen();
 
       case 3:
-        return MyAccount();
+        return ProfileScreen();
 
       default:
         return HomeScreen();

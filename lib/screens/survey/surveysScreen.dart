@@ -11,7 +11,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
-import 'package:pikobar_flutter/screens/myAccount/OnboardLogin.dart';
+import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -81,7 +81,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
               ) {
                 if (state is AuthenticationUnauthenticated ||
                     state is AuthenticationLoading) {
-                  return OnBoardingLogin(
+                  return OnBoardingLoginScreen(
                     authenticationBloc: _authenticationBloc,
                     positionBottom: 20.0,
                   );
