@@ -67,10 +67,24 @@ class _StatisticsState extends State<Statistics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer('', Dictionary.underSupervision, Dictionary.underSupervision, '-',
-                    2, '(%)', Colors.grey[600], Colors.grey[600]),
-                _buildContainer('', Dictionary.inMonitoring, Dictionary.inMonitoring, '-',
-                    2, '(%)', Colors.grey[600], Colors.grey[600]),
+                _buildContainer(
+                    '',
+                    Dictionary.underSupervision,
+                    Dictionary.underSupervision,
+                    '-',
+                    2,
+                    '(%)',
+                    Colors.grey[600],
+                    Colors.grey[600]),
+                _buildContainer(
+                    '',
+                    Dictionary.inMonitoring,
+                    Dictionary.inMonitoring,
+                    '-',
+                    2,
+                    '(%)',
+                    Colors.grey[600],
+                    Colors.grey[600]),
               ],
             ),
           ],
@@ -194,7 +208,7 @@ class _StatisticsState extends State<Statistics> {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / length),
-        padding: EdgeInsets.only(left: 5, right: 5.0, top: 10, bottom: 10),
+        padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 2.5),
         decoration: BoxDecoration(
             image: image != '' && image != null
@@ -218,8 +232,7 @@ class _StatisticsState extends State<Statistics> {
                             fontSize: 13.0,
                             color: colorTextTitle,
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans
-                        )),
+                            fontFamily: FontsFamily.productSans)),
                   ),
                 ),
               ],
@@ -228,7 +241,7 @@ class _StatisticsState extends State<Statistics> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: Dimens.padding),
+                  margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                   child: Text(count,
                       style: TextStyle(
                           fontSize: 22.0,

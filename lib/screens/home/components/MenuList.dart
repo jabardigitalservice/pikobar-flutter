@@ -79,7 +79,7 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.pikobar, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaInfo),
-          _buildButtonColumn('${Environment.iconAssets}virus_shield.png',
+          _buildButtonColumn('${Environment.iconAssets}garuda_Pancasila.png',
               Dictionary.nationalInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
@@ -161,7 +161,7 @@ class _MenuListState extends State<MenuList> {
           /// Menu Button Data National
           /// Remote Config : caption & url
           _buildButtonColumn(
-              '${Environment.iconAssets}virus_shield.png',
+              '${Environment.iconAssets}garuda_Pancasila.png',
               _remoteConfig.getString(FirebaseConfig.nationalInfoCaption) !=
                       null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoCaption)
@@ -410,23 +410,31 @@ class _MenuListState extends State<MenuList> {
                     if (label == Dictionary.phoneBookEmergency) {
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedphoneBookEmergency);
-                    } else if (iconPath == '${Environment.iconAssets}pikobar.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}pikobar.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
-                    } else if (iconPath == '${Environment.iconAssets}virus_shield.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}garuda_Pancasila.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-                    } else if (iconPath == '${Environment.iconAssets}world.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}world.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
                     } else if (label == Dictionary.survey) {
                       AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
-                    } else if (iconPath == '${Environment.iconAssets}self_diagnose.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}self_diagnose.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
-                    } else if (iconPath == '${Environment.iconAssets}logistics.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}logistics.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
-                    } else if (iconPath == '${Environment.iconAssets}relawan_active.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}relawan_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
-                    } else if (iconPath == '${Environment.iconAssets}report_case_active.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}report_case_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-                    } else if (iconPath == '${Environment.iconAssets}conversation_active.png') {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}conversation_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     }
                   }

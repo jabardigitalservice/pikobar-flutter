@@ -75,7 +75,7 @@ class _IndexScreenState extends State<IndexScreen> {
     super.initState();
   }
 
-   setStatAnnouncement()async{
+  setStatAnnouncement() async {
     await AnnouncementSharedPreference.setAnnounceScreen(true);
   }
 
@@ -147,12 +147,10 @@ class _IndexScreenState extends State<IndexScreen> {
               Text(Dictionary.help),
             ],
           )),
-
-           BottomNavigationBarItem(
-          icon: Icon(Icons.person, size: 16),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.person),
           title: Column(
             children: <Widget>[
-              SizedBox(height: 4),
               Text(Dictionary.profile),
             ],
           )),
@@ -164,7 +162,6 @@ class _IndexScreenState extends State<IndexScreen> {
       debugPrint('notification payload: ' + payload);
 
       _actionNotification(payload);
-
     }
   }
 
@@ -174,15 +171,15 @@ class _IndexScreenState extends State<IndexScreen> {
       String newsType;
 
       switch (data['type']) {
-        case NewsType.articles :
+        case NewsType.articles:
           newsType = Dictionary.latestNews;
           break;
 
-        case NewsType.articlesNational :
+        case NewsType.articlesNational:
           newsType = Dictionary.nationalNews;
           break;
 
-        case NewsType.articlesWorld :
+        case NewsType.articlesWorld:
           newsType = Dictionary.worldNews;
           break;
 
@@ -192,17 +189,16 @@ class _IndexScreenState extends State<IndexScreen> {
 
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => NewsDetailScreen(
-            id: data['id'],
-            news: newsType,
-            isFromNotification: true,
-          )));
+                id: data['id'],
+                news: newsType,
+                isFromNotification: true,
+              )));
     } else if (data['target'] == 'broadcast') {
-
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => MessageDetailScreen(
-            id: data['id'],
-            isFromNotification: true,
-          )));
+                id: data['id'],
+                isFromNotification: true,
+              )));
     }
   }
 
@@ -240,7 +236,7 @@ class _IndexScreenState extends State<IndexScreen> {
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen();
 
-         case 3:
+      case 3:
         return MyAccount();
 
       default:
