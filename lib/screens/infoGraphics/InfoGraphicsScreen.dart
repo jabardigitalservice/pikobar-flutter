@@ -73,7 +73,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             height: MediaQuery.of(context).size.height * 0.3,
             decoration: BoxDecoration(shape: BoxShape.circle),
             child: Skeleton(
-              height: 20.0,
               width: MediaQuery.of(context).size.width,
               padding: 10.0,
             ),
