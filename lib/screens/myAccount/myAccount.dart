@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
@@ -11,7 +10,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
-import 'package:pikobar_flutter/screens/myAccount/LoginScreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/OnboardLogin.dart';
 
 class MyAccount extends StatefulWidget {
   @override
@@ -84,7 +83,7 @@ class _MyAccountState extends State<MyAccount> {
                 ) {
                   if (state is AuthenticationUnauthenticated ||
                       state is AuthenticationLoading) {
-                    return LoginScreen(
+                    return OnBoardingLogin(
                       authenticationBloc: _authenticationBloc,
                     );
                   } else if (state is AuthenticationAuthenticated ||
@@ -106,10 +105,9 @@ class _MyAccountState extends State<MyAccount> {
                                 child: CircularProgressIndicator(),
                               );
                             default:
-                              return _buildContent(snapshot);
+                              return _buildContent(snapshot,_profilLoaded);
                           }
                         });
-                    // _buildContent(state);
                   } else {
                     return Container();
                   }
@@ -118,7 +116,7 @@ class _MyAccountState extends State<MyAccount> {
         ));
   }
 
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state) {
+  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,AuthenticationAuthenticated _profilLoaded) {
     return Center(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -135,8 +133,8 @@ class _MyAccountState extends State<MyAccount> {
                 child: CircleAvatar(
                   minRadius: 90,
                   maxRadius: 150,
-                  backgroundImage: state.data['photo_url'] != null
-                      ? NetworkImage(state.data['photo_url'])
+                  backgroundImage: (_profilLoaded.record.photoUrlFull) != null
+                      ? NetworkImage(_profilLoaded.record.photoUrlFull)
                       : ExactAssetImage('${Environment.imageAssets}user.png'),
                 ),
               ),
@@ -150,13 +148,13 @@ class _MyAccountState extends State<MyAccount> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      state.data['name'],
+                     _profilLoaded.record.name,
                       style: TextStyle(
                           color: Color(0xff4F4F4F),
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text(state.data['email'],
+                    Text(_profilLoaded.record.email,
                         style: TextStyle(
                           color: Color(0xff828282),
                           fontSize: 14,

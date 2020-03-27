@@ -36,6 +36,5 @@ class NavigationConstrants {
   static const String VideoList = "/videos";
   static const String Edit = "/edit";
   static const String Verification = "/verifikasi";
-
-
+  static const String InfoGraphics = "/Info-graphics";
 }

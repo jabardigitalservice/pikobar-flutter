@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
@@ -241,6 +242,35 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         )
       ],
+                        Container(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: VideoList(),
+                        ),
+                        SizedBox(
+                          height: 24,
+                          child: Container(
+                            color: ColorBase.grey,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: InfoGraphics(),
+                        ),
+                        SizedBox(
+                          height: 24,
+                          child: Container(
+                            color: ColorBase.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ]),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
