@@ -8,7 +8,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
-import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
+import 'package:pikobar_flutter/utilities/sharedpreference/AnnouncementSharedPreference.dart';
 
 class AnnouncementScreen extends StatefulWidget {
   final RemoteConfig remoteConfig;

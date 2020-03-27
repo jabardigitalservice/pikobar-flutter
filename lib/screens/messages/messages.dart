@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/parser.dart';
+import 'package:pikobar_flutter/utilities/sharedpreference/MessageSharedPreference.dart';
 
 class Messages extends StatefulWidget {
   @override
@@ -127,6 +128,10 @@ class _MessagesState extends State<Messages> {
   }
 
   _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
+    Future.delayed(Duration(milliseconds: 0), () async {
+      await MessageSharedPreference.setMessageData(snapshot.data.documents);
+    });
+
     return ListView.builder(
       controller: _scrollController,
       padding: EdgeInsets.all(15.0),
@@ -137,6 +142,7 @@ class _MessagesState extends State<Messages> {
           padding: EdgeInsets.only(bottom: 15),
           child: GestureDetector(
             child: Card(
+              color: !checkReadData(document['title']) ? Color(0xFFFFF9EE):null,
                 margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
                 elevation: 0.5,
                 child: Container(
@@ -196,5 +202,29 @@ class _MessagesState extends State<Messages> {
   _openDetail(DocumentSnapshot document) async {
     await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
         arguments: document);
+  }
+
+  bool checkReadData(String title){
+    List<String> listReadDataMessage = [];
+    String checkReadMessage='';
+    Future.delayed(Duration(milliseconds: 0), () async {
+      listReadDataMessage = await MessageSharedPreference.getMessageData();
+      print('ini isinya jadi berapa? '+listReadDataMessage.length.toString());
+    });
+    print('length list bos '+listReadDataMessage.length.toString());
+    for(int i=0;i<listReadDataMessage.length;i++){
+      print('cekk isinya '+listReadDataMessage[i]);
+      if(listReadDataMessage.contains(title)){
+        checkReadMessage =  listReadDataMessage[i].split('##')[0];
+      }
+    }
+
+    print('cekkk bos '+checkReadMessage);
+
+    if(checkReadMessage == 'true'){
+      return true;
+    }else{
+      return false;
+    }
   }
 }
