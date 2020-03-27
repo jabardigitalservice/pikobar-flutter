@@ -24,16 +24,23 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   Map<String, dynamic> dataAnnouncement;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     Future.delayed(Duration(milliseconds: 0), () async {
       isCloseAnnouncement =
           await AnnouncementSharedPreference.getAnnounceScreen();
+      setState(() {});
     });
+    // TODO: implement initState
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     if (widget.remoteConfig != null) {
       dataAnnouncement = json
           .decode(widget.remoteConfig.getString(FirebaseConfig.announcement));
     }
+
     return widget.remoteConfig != null &&
             dataAnnouncement['enabled'] == true &&
             isCloseAnnouncement == true
@@ -76,7 +83,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                                           arguments:
                                               dataAnnouncement['action_url']);
                                     })
-                              :  TextSpan(text: '')
+                              : TextSpan(text: '')
                         ]),
                       )),
                 ),
