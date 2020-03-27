@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
+import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -49,12 +50,70 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               },
             );
           } else {
-            return Container();
+            return _buildLoading();
           }
         },
       ),
     );
     //   body:
+  }
+
+  _buildLoading() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      elevation: 1.5,
+      margin: EdgeInsets.only(top: 14, left: 14, right: 14),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.3,
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            child: Skeleton(
+              width: MediaQuery.of(context).size.width,
+              padding: 10.0,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 14.0, right: 14.0, top: 14.0, bottom: 14.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Skeleton(
+                        height: 20.0,
+                        width: MediaQuery.of(context).size.width / 1.4,
+                        padding: 10.0,
+                      ),
+                      SizedBox(height: 8),
+                      Skeleton(
+                        height: 20.0,
+                        width: MediaQuery.of(context).size.width / 2,
+                        padding: 10.0,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Skeleton(
+                    height: 30.0,
+                    width: 30,
+                    padding: 20.0,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _cardContent(DocumentSnapshot data) {
