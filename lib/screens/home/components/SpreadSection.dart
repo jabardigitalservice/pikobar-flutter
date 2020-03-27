@@ -90,6 +90,9 @@ class _SpreadSectionState extends State<SpreadSection> {
         Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
       }
+
+      AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
+
     } else {
       showDialog(
           context: context,
