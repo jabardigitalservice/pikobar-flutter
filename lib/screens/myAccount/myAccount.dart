@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
@@ -11,7 +10,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
-import 'package:pikobar_flutter/screens/myAccount/LoginScreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/OnboardLogin.dart';
 
 class MyAccount extends StatefulWidget {
   @override
@@ -84,7 +83,7 @@ class _MyAccountState extends State<MyAccount> {
                 ) {
                   if (state is AuthenticationUnauthenticated ||
                       state is AuthenticationLoading) {
-                    return LoginScreen(
+                    return OnBoardingLogin(
                       authenticationBloc: _authenticationBloc,
                     );
                   } else if (state is AuthenticationAuthenticated ||
