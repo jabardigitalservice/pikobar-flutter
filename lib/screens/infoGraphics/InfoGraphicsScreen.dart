@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class InfoGraphicsScreen extends StatefulWidget {
   @override
@@ -17,6 +19,12 @@ class InfoGraphicsScreen extends StatefulWidget {
 }
 
 class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
+  @override
+  void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.infoGraphics);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +107,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     imageUrl: data['images'][0],
                   ),
                 ));
+
+            AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
+                <String, dynamic>{'title': data['title']});
           },
         ),
         Padding(
@@ -125,6 +136,10 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           imageUrl: data['images'][0],
                         ),
                       ));
+
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.tappedInfoGraphicsDetail,
+                      <String, dynamic>{'title': data['title']});
                 },
               ),
               PopupMenuButton<String>(

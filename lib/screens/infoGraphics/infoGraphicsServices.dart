@@ -6,9 +6,11 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:share/share.dart';
 
 class InfoGraphicsServices {
@@ -17,11 +19,10 @@ class InfoGraphicsServices {
     if (choice == 'Unduh') {
       downloadFile(context, data['title'], data['images'][0]);
     } else if (choice == 'Bagikan') {
-      final _backLink =
-          '${UrlThirdParty.urlCoronaInfo}infographics/${data.documentID}';
+      shareInfoGraphics(data['title'], data.documentID);
 
-      Share.share(
-          '${data['title']}\n\n${_backLink != null ? _backLink + '\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
+      AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsShare,
+          <String, dynamic>{'title': data['title']});
     }
   }
 
@@ -68,11 +69,15 @@ class InfoGraphicsServices {
             true, // click on notification to open downloaded file (for Android)
       );
 
-      // await AnalyticsHelper.setLogEvent(
-      //     Analytics.EVENT_DOWNLOAD_ATTACHMENT_IMPORTANT_INFO, <String, dynamic>{
-      //   'important_info_id': _id,
-      //   'attachment_name': name,
-      // });
+      AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDownload,
+          <String, dynamic>{'title': name});
     }
+  }
+
+  shareInfoGraphics(title, documentID) {
+    final _backLink = '${UrlThirdParty.urlCoronaInfo}infographics/$documentID';
+
+    Share.share(
+        '$title\n\n${_backLink != null ? _backLink + '\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
@@ -11,6 +12,7 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:share/share.dart';
 
 class InfoGraphics extends StatefulWidget {
@@ -68,7 +70,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                   Navigator.pushNamed(
                       context, NavigationConstrants.InfoGraphics);
 
-                  // AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
+                  AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsMore);
                 },
               ),
             ],
@@ -119,6 +121,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 imageUrl: document['images'][0],
                               ),
                             ));
+
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedInfoGraphicsDetail,
+                            <String, dynamic>{'title': document['title']});
                       },
                     ),
                     Container(
@@ -146,6 +152,12 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       imageUrl: document['images'][0],
                                     ),
                                   ));
+
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedInfoGraphicsDetail,
+                                  <String, dynamic>{
+                                    'title': document['title']
+                                  });
                             },
                           ),
                           Container(
@@ -186,17 +198,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 ),
                                 RaisedButton.icon(
                                   onPressed: () {
-                                    final _title = document['title'];
-                                    final _backLink =
-                                        '${UrlThirdParty.urlCoronaInfo}infographics/${document.documentID}';
-
-                                    Share.share(
-                                        '$_title\n\n${_backLink != null ? _backLink + '\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
-
-                                    // AnalyticsHelper.setLogEvent(
-                                    //     Analytics.tappedShareNews, <String, dynamic>{
-                                    //   'title': widget.documents['title']
-                                    // });
+                                    InfoGraphicsServices().shareInfoGraphics(
+                                        document['title'], document.documentID);
                                   },
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
