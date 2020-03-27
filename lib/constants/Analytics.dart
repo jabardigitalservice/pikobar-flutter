@@ -66,6 +66,5 @@ class Analytics {
 
   // event Info Graphics
   static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
-  static String tappedInfoGraphicsDownload = 'tapped_info_praktikal_unduh';
   static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
 }

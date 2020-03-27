@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -98,6 +97,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: CachedNetworkImage(
                             imageUrl: document['images'][0],
+                            alignment: Alignment.topCenter,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Center(
                                 heightFactor: 4.2,
