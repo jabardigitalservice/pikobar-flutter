@@ -6,17 +6,17 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
-class OnBoardingLogin extends StatefulWidget {
+class OnBoardingLoginScreen extends StatefulWidget {
   final AuthenticationBloc authenticationBloc;
   final double positionBottom;
 
-  OnBoardingLogin({this.authenticationBloc, this.positionBottom});
+  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom});
 
   @override
-  _OnBoardingLoginState createState() => _OnBoardingLoginState();
+  _OnBoardingLoginScreenState createState() => _OnBoardingLoginScreenState();
 }
 
-class _OnBoardingLoginState extends State<OnBoardingLogin> {
+class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
