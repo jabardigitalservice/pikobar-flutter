@@ -128,14 +128,28 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       },
                     ),
                     Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            InkWell(
-                              child: Text(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => HeroImagePreview(
+                                  Dictionary.heroImageTag,
+                                  imageUrl: document['images'][0],
+                                ),
+                              ));
+
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedInfoGraphicsDetail,
+                              <String, dynamic>{'title': document['title']});
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
                                 document['title'],
                                 style: TextStyle(
                                     fontSize: 14.0,
@@ -144,36 +158,20 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => HeroImagePreview(
-                                        Dictionary.heroImageTag,
-                                        imageUrl: document['images'][0],
-                                      ),
-                                    ));
-
-                                AnalyticsHelper.setLogEvent(
-                                    Analytics.tappedInfoGraphicsDetail,
-                                    <String, dynamic>{
-                                      'title': document['title']
-                                    });
-                              },
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              unixTimeStampToDateWithoutDay(
-                                  document['published_date'].seconds),
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          ],
+                              SizedBox(height: 8),
+                              Text(
+                                unixTimeStampToDateWithoutDay(
+                                    document['published_date'].seconds),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

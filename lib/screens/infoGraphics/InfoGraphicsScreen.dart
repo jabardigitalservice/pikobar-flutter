@@ -120,11 +120,25 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      InkWell(
-                        child: Text(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => HeroImagePreview(
+                              Dictionary.heroImageTag,
+                              imageUrl: data['images'][0],
+                            ),
+                          ));
+
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedInfoGraphicsDetail,
+                          <String, dynamic>{'title': data['title']});
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
                           data['title'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -133,34 +147,20 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => HeroImagePreview(
-                                  Dictionary.heroImageTag,
-                                  imageUrl: data['images'][0],
-                                ),
-                              ));
-
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedInfoGraphicsDetail,
-                              <String, dynamic>{'title': data['title']});
-                        },
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        unixTimeStampToDateWithoutDay(
-                            data['published_date'].seconds),
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    ],
+                        SizedBox(height: 8),
+                        Text(
+                          unixTimeStampToDateWithoutDay(
+                              data['published_date'].seconds),
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Container(
