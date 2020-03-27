@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -162,7 +161,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             ],
           ),
         ),
-        // SizedBox(height: 16),
       ],
     );
   }
