@@ -92,9 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: FutureBuilder<RemoteConfig>(
           future: setupRemoteConfig(),
-          builder: (BuildContext context,
-              AsyncSnapshot<RemoteConfig> snapshot) {
-            return snapshot.hasData ? buildContent(snapshot.data):Container();
+          builder:
+              (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+            return snapshot.hasData ? buildContent(snapshot.data) : Container();
           }),
     );
   }
@@ -103,17 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       children: <Widget>[
         Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.15,
+          height: MediaQuery.of(context).size.height * 0.15,
           color: ColorBase.green,
         ),
         Column(
           children: <Widget>[
             Expanded(
               child: ListView(children: [
-
                 /// Banners Section
                 Container(
                     margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
@@ -132,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 /// Menus & Spread Sections
                 Column(
                   children: <Widget>[
-
                     /// Menus Section
                     MenuList(remoteConfig),
 
@@ -201,12 +196,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   Tab(
                                       child: Text(
-                                        Dictionary.worldNews,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: FontsFamily.productSans,
-                                            fontSize: 13.0),
-                                      )),
+                                    Dictionary.worldNews,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: FontsFamily.productSans,
+                                        fontSize: 13.0),
+                                  )),
                                 ],
                               ),
                               Container(
@@ -234,6 +229,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: EdgeInsets.only(top: 16.0),
                         child: VideoList(),
                       ),
+                      SizedBox(
+                        height: 24,
+                        child: Container(
+                          color: ColorBase.grey,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: InfoGraphics(),
+                      ),
+                      SizedBox(
+                        height: 24,
+                        child: Container(
+                          color: ColorBase.grey,
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -242,38 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         )
       ],
-                        Container(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: VideoList(),
-                        ),
-                        SizedBox(
-                          height: 24,
-                          child: Container(
-                            color: ColorBase.grey,
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 16.0),
-                          child: InfoGraphics(),
-                        ),
-                        SizedBox(
-                          height: 24,
-                          child: Container(
-                            color: ColorBase.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]),
-              )
-            ],
-          )
-        ],
-      ),
     );
   }
-
 
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
