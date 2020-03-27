@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -39,6 +40,7 @@ class _SpreadSectionState extends State<SpreadSection> {
               height: 98.0,
               padding: EdgeInsets.fromLTRB(
                   Dimens.padding, 0.0, Dimens.padding, Dimens.padding),
+              color: ColorBase.grey,
               child: RaisedButton(
                   splashColor: Colors.green,
                   padding: EdgeInsets.all(0.0),
