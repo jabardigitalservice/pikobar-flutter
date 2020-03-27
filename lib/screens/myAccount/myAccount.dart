@@ -105,10 +105,9 @@ class _MyAccountState extends State<MyAccount> {
                                 child: CircularProgressIndicator(),
                               );
                             default:
-                              return _buildContent(snapshot);
+                              return _buildContent(snapshot,_profilLoaded);
                           }
                         });
-                    // _buildContent(state);
                   } else {
                     return Container();
                   }
@@ -117,7 +116,7 @@ class _MyAccountState extends State<MyAccount> {
         ));
   }
 
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state) {
+  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,AuthenticationAuthenticated _profilLoaded) {
     return Center(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -134,8 +133,8 @@ class _MyAccountState extends State<MyAccount> {
                 child: CircleAvatar(
                   minRadius: 90,
                   maxRadius: 150,
-                  backgroundImage: state.data['photo_url'] != null
-                      ? NetworkImage(state.data['photo_url'])
+                  backgroundImage: (_profilLoaded.record.photoUrlFull) != null
+                      ? NetworkImage(_profilLoaded.record.photoUrlFull)
                       : ExactAssetImage('${Environment.imageAssets}user.png'),
                 ),
               ),
@@ -149,13 +148,13 @@ class _MyAccountState extends State<MyAccount> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      state.data['name'],
+                     _profilLoaded.record.name,
                       style: TextStyle(
                           color: Color(0xff4F4F4F),
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
-                    Text(state.data['email'],
+                    Text(_profilLoaded.record.email,
                         style: TextStyle(
                           color: Color(0xff828282),
                           fontSize: 14,
