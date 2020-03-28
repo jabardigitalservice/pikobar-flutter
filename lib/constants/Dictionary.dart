@@ -101,6 +101,8 @@ class Dictionary {
   static String errorInvalidPhone = 'Format nomor telepon tidak sesuai';
   static String errorMinimumPhone =
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
+  static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
   static String worldNews = 'Berita Dunia';

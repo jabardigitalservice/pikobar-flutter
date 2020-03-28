@@ -96,8 +96,15 @@ class _StatisticsState extends State<Statistics> {
   Container _buildContent(DocumentSnapshot data) {
     if (!data.exists)
       return Container(
+        padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0.0, 1),
+              blurRadius: 4.0),
+        ]),
         child: Center(
-          child: Text("Data statistik saat ini tidak tersedia, silahkan coba kembali beberapa saat"),
+          child: Text(Dictionary.errorStatisticsNotExists),
         ),
       );
     
