@@ -80,6 +80,13 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Container _buildContent(DocumentSnapshot data) {
+    if (!data.exists)
+      return Container(
+        child: Center(
+          child: Text("Data statistik saat ini tidak tersedia, silahkan coba kembali beberapa saat"),
+        ),
+      );
+    
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
