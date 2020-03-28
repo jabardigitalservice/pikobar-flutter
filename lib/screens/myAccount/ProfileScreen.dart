@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  GlobalKey _tooltipKey = GlobalKey();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
@@ -90,12 +92,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
-                    AuthenticationAuthenticated _profilLoaded =
+                    AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     return StreamBuilder<DocumentSnapshot>(
                         stream: Firestore.instance
                             .collection('users')
-                            .document(_profilLoaded.record.uid)
+                            .document(_profileLoaded.record.uid)
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -107,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             default:
-                              return _buildContent(snapshot,_profilLoaded);
+                              return _buildContent(snapshot,_profileLoaded);
                           }
                         });
                   } else {
@@ -118,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ));
   }
 
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,AuthenticationAuthenticated _profilLoaded) {
+  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,AuthenticationAuthenticated _profileLoaded) {
     return Center(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -135,8 +137,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircleAvatar(
                   minRadius: 90,
                   maxRadius: 150,
-                  backgroundImage: (_profilLoaded.record.photoUrlFull) != null
-                      ? NetworkImage(_profilLoaded.record.photoUrlFull)
+                  backgroundImage: (_profileLoaded.record.photoUrlFull) != null
+                      ? NetworkImage(_profileLoaded.record.photoUrlFull)
                       : ExactAssetImage('${Environment.imageAssets}user.png'),
                 ),
               ),
@@ -151,9 +153,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      height: 32.0,
+                      height: 30.0,
                       child: Text(
-                       _profilLoaded.record.name,
+                       _profileLoaded.record.name,
                         style: TextStyle(
                             color: Color(0xff4F4F4F),
                             fontSize: 18,
@@ -161,45 +163,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Container(
-                      height: 32.0,
-                      child: Text(_profilLoaded.record.email,
+                      height: 30.0,
+                      child: Text(_profileLoaded.record.email,
                           style: TextStyle(
                             color: Color(0xff828282),
                             fontSize: 14,
                           )),
                     ),
 
-                    FutureBuilder<RemoteConfig>(
-                        future: setupRemoteConfig(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-
-                          bool visible = snapshot.data != null && snapshot.data.getBool(FirebaseConfig.healthStatusVisible) != null ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible) : false;
-
-                          return visible ? Container(
-                            decoration: BoxDecoration(
-                                color: Color(0xff27AE60),
-                                borderRadius: BorderRadius.circular(4)),
-                            child: Padding(
-                              padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                      height: 12,
-                                      child: Image.asset(
-                                          '${Environment.iconAssets}sthetoscope.png')),
-                                  SizedBox(width: 5),
-                                  Text(Dictionary.statusUser,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ) : SizedBox(height: 32.0,);
-                        }),
+                    state.data != null ? _healthStatus(state.data) : SizedBox(height: 38.0),
                   ],
                 ),
               )
@@ -360,6 +332,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     ));
+  }
+
+  FutureBuilder<RemoteConfig> _healthStatus(DocumentSnapshot data) {
+    return FutureBuilder<RemoteConfig>(
+                      future: setupRemoteConfig(),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+
+                        bool visible = snapshot.data != null && snapshot.data.getBool(FirebaseConfig.healthStatusVisible) != null ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible) : false;
+
+                        return visible && data['health_status_text'] != null ? Container(
+                          decoration: BoxDecoration(
+                              color: Color(0xff27AE60),
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Padding(
+                            padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                        height: 12,
+                                        child: Image.asset(
+                                            '${Environment.iconAssets}sthetoscope.png')),
+                                    SizedBox(width: 5),
+                                    Text('Status: ' + data['health_status_text'],
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12,
+                                        )),
+                                  ],
+                                ),
+                                data['health_status_check'] != null ? Text(unixTimeStampToDateTimeWithoutDay(data['health_status_check'].seconds),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    )) : Container(),
+                              ],
+                            ),
+                          ),
+                        ) : SizedBox(height: 38.0,);
+                      });
   }
 
   Future<RemoteConfig> setupRemoteConfig() async {
