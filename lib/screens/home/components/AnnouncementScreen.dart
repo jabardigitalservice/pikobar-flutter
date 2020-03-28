@@ -30,7 +30,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           await AnnouncementSharedPreference.getAnnounceScreen();
       setState(() {});
     });
-    // TODO: implement initState
     super.initState();
   }
 
@@ -87,7 +86,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                         ]),
                       )),
                 ),
-                GestureDetector(
+                /*GestureDetector(
                   child: Icon(
                     Icons.close,
                     color: Colors.grey[600],
@@ -99,7 +98,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                     });
                     await AnnouncementSharedPreference.setAnnounceScreen(false);
                   },
-                )
+                )*/
               ],
             ),
           )
