@@ -145,6 +145,7 @@ class _PhonebookState extends State<Phonebook> {
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }
