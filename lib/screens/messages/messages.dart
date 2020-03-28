@@ -198,4 +198,10 @@ class _MessagesState extends State<Messages> {
     await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
         arguments: document);
   }
+  
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 }
