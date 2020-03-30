@@ -1,17 +1,8 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 
 openChromeSafariBrowser({@required String url}) async {
-  await ChromeSafariBrowser(bFallback: InAppBrowser()).open(
-      url: url,
-      options: ChromeSafariBrowserClassOptions(
-          androidChromeCustomTabsOptions:
-          AndroidChromeCustomTabsOptions(
-              addShareButton: false,
-              toolbarBackgroundColor: "#009D57",
-              showTitle: false,
-              enableUrlBarHiding: true
-          ),
-          iosSafariOptions: IosSafariOptions(
-              barCollapsingEnabled: true)));
+  await FlutterWebBrowser.openWebPage(url: url, androidToolbarColor: ColorBase.green);
 }
