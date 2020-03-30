@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MenuList extends StatefulWidget {
@@ -402,6 +403,11 @@ class _MenuListState extends State<MenuList> {
                           builder: (context) => InWebView(url: arguments)));
 
                       AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}conversation_active.png') {
+                      openChromeSafariBrowser(url: arguments);
+
+                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     } else {
                       Navigator.pushNamed(context, route, arguments: arguments);
                     }
@@ -433,9 +439,6 @@ class _MenuListState extends State<MenuList> {
                     } else if (iconPath ==
                         '${Environment.iconAssets}report_case_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}conversation_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     }
                   }
                 }
