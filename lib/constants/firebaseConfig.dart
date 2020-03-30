@@ -38,4 +38,6 @@ class FirebaseConfig {
   /// Remote config parameter key
   /// Profile
   static String healthStatusVisible = 'health_status_visible';
+  static String otpEnabled = 'otp_enabled';
+
 }

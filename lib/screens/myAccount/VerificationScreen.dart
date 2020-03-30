@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class Verification extends StatefulWidget {
@@ -53,7 +52,7 @@ class _VerificationState extends State<Verification> {
                       Container(
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
-                        child: Text("OTP telah dikirimkan ke nomor",
+                        child: Text(Dictionary.otpHasBeenSent,
                             style: TextStyle(
                               color: Color(0xff828282),
                             )),
@@ -75,7 +74,7 @@ class _VerificationState extends State<Verification> {
                       Container(
                         padding: EdgeInsets.only(
                             top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
-                        child: Text("Silahkan masukan 6-digit kode disini",
+                        child: Text(Dictionary.inputOTP,
                             style: TextStyle(
                               color: Color(0xff828282),
                             )),
@@ -84,8 +83,9 @@ class _VerificationState extends State<Verification> {
                         height: 40,
                       ),
                       Container(
-                        height: 50,
+                        height: 70,
                         child: PinPut(
+                            textStyle: TextStyle(fontSize: 20),
                             clearButtonIcon: Icon(Icons.backspace),
                             inputDecoration: InputDecoration(
                                 hintText: '-',
@@ -104,7 +104,6 @@ class _VerificationState extends State<Verification> {
                             actionButtonsEnabled: true,
                             fieldsCount: 6,
                             keyboardAction: TextInputAction.go,
-//                                 onSubmit: (String pin) => _showSnackBar(pin, context),
                             onSubmit: (String pin) {
                               setState(() {
                                 smsCode = pin;
@@ -118,7 +117,7 @@ class _VerificationState extends State<Verification> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text("Tidak menerima sms?",
+                            Text(Dictionary.otpNotSent,
                                 style: TextStyle(
                                   color: Colors.grey,
                                 )),
@@ -127,7 +126,7 @@ class _VerificationState extends State<Verification> {
                               onTap: () {
                                 sendCodeToPhoneNumber();
                               },
-                              child: Text('Kirim ulang kode',
+                              child: Text(Dictionary.sendAgainOTP,
                                   style: TextStyle(
                                     color: Color(0xff2D9CDB),
                                   )),
@@ -183,7 +182,7 @@ class _VerificationState extends State<Verification> {
     );
     signInWithPhoneNumber(smsCode).then((FirebaseUser user) async {
       await Firestore.instance
-          .collection('users')
+          .collection(Collections.users)
           .document(widget.uid)
           .updateData(
               {'phone_number': Dictionary.inaCode + widget.phoneNumber});
@@ -192,8 +191,8 @@ class _VerificationState extends State<Verification> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'Nomor telepon telah diverifikasi',
-                buttonText: "OK",
+                description: Dictionary.codeVerified,
+                buttonText: Dictionary.ok,
                 onOkPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -203,8 +202,10 @@ class _VerificationState extends State<Verification> {
     }).catchError((e) => showDialog(
         context: context,
         builder: (BuildContext context) => DialogTextOnly(
-              description: e.toString().contains('is invalid')?'Kode OTP anda salah, silahkan cek kembali... ' : e.toString(),
-              buttonText: "OK",
+              description: e.toString().contains('is invalid')
+                  ? Dictionary.codeWrong
+                  : e.toString(),
+              buttonText: Dictionary.ok,
               onOkPressed: () {
                 _scaffoldState.currentState.hideCurrentSnackBar();
 
@@ -220,10 +221,10 @@ class _VerificationState extends State<Verification> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'No hp telah terverifikasi',
-                buttonText: "OK",
+                description: Dictionary.codeVerified,
+                buttonText: Dictionary.ok,
                 onOkPressed: () async {
-                    Navigator.pop(context);
+                  Navigator.pop(context);
                   Navigator.pop(context);
                   final FirebaseUser user =
                       await FirebaseAuth.instance.currentUser();
@@ -236,16 +237,11 @@ class _VerificationState extends State<Verification> {
                       .collection('users')
                       .document(widget.uid)
                       .updateData({
-                    'phone_number':
-                        Dictionary.inaCode + widget.phoneNumber,
+                    'phone_number': Dictionary.inaCode + widget.phoneNumber,
                   });
-                
                 },
               ));
-      setState(() {
-        print(
-            'Inside _sendCodeToPhoneNumber: signInWithPhoneNumber auto succeeded: $credential');
-      });
+      
     };
 
     final PhoneVerificationFailed verificationFailed =
@@ -255,16 +251,13 @@ class _VerificationState extends State<Verification> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'Nomor telepon salah silahkan cek kembali',
-                buttonText: "OK",
+                description: Dictionary.codeSendFailed,
+                buttonText: Dictionary.ok,
                 onOkPressed: () {
                   Navigator.of(context).pop(); // To close the dialog
                 },
               ));
-      setState(() {
-        print(
-            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-      });
+      
     };
 
     final PhoneCodeSent codeSent =
@@ -275,8 +268,8 @@ class _VerificationState extends State<Verification> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: "Kode terkirim ke nomor " + widget.phoneNumber,
-                buttonText: "OK",
+                description: Dictionary.codeSend + widget.phoneNumber,
+                buttonText: Dictionary.ok,
                 onOkPressed: () async {
                   Navigator.of(context).pop(); // To close the dialog
                 },

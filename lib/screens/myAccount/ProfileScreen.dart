@@ -109,7 +109,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             default:
-                              return _buildContent(snapshot,_profileLoaded);
+                              return snapshot.data.exists
+                                  ? _buildContent(snapshot, _profileLoaded)
+                                  : Center(
+                                      child: CircularProgressIndicator(),
+                                    );
                           }
                         });
                   } else {
@@ -120,7 +124,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ));
   }
 
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,AuthenticationAuthenticated _profileLoaded) {
+  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
+      AuthenticationAuthenticated _profileLoaded) {
     return Center(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -145,7 +150,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 width: 20,
               ),
-
               Container(
                 height: 98,
                 child: Column(
@@ -155,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: 30.0,
                       child: Text(
-                       _profileLoaded.record.name,
+                        _profileLoaded.record.name,
                         style: TextStyle(
                             color: Color(0xff4F4F4F),
                             fontSize: 18,
@@ -170,8 +174,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fontSize: 14,
                           )),
                     ),
-
-                    state.data != null ? _healthStatus(state.data) : SizedBox(height: 38.0),
+                    state.data != null
+                        ? _healthStatus(state.data)
+                        : SizedBox(height: 38.0),
                   ],
                 ),
               )
@@ -238,11 +243,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: EdgeInsets.all(15.0),
               child: Column(
                 children: <Widget>[
-                  InkWell(onTap: () {
-                            Navigator.pushNamed(
-                                context, NavigationConstrants.Edit,
-                                arguments: state);
-                          },
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, NavigationConstrants.Edit,
+                          arguments: state);
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -336,46 +341,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   FutureBuilder<RemoteConfig> _healthStatus(DocumentSnapshot data) {
     return FutureBuilder<RemoteConfig>(
-                      future: setupRemoteConfig(),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+        future: setupRemoteConfig(),
+        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+          bool visible = snapshot.data != null &&
+                  snapshot.data.getBool(FirebaseConfig.healthStatusVisible) !=
+                      null
+              ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible)
+              : false;
 
-                        bool visible = snapshot.data != null && snapshot.data.getBool(FirebaseConfig.healthStatusVisible) != null ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible) : false;
-
-                        return visible && data['health_status_text'] != null ? Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xff27AE60),
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 12,
-                                        child: Image.asset(
-                                            '${Environment.iconAssets}sthetoscope.png')),
-                                    SizedBox(width: 5),
-                                    Text('Status: ' + data['health_status_text'],
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                        )),
-                                  ],
-                                ),
-                                data['health_status_check'] != null ? Text(unixTimeStampToDateTimeWithoutDay(data['health_status_check'].seconds),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    )) : Container(),
-                              ],
-                            ),
-                          ),
-                        ) : SizedBox(height: 38.0,);
-                      });
+          return visible && data['health_status_text'] != null
+              ? Container(
+                  decoration: BoxDecoration(
+                      color: Color(0xff27AE60),
+                      borderRadius: BorderRadius.circular(4)),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(
+                                height: 12,
+                                child: Image.asset(
+                                    '${Environment.iconAssets}sthetoscope.png')),
+                            SizedBox(width: 5),
+                            Text(Dictionary.statusUser + data['health_status_text'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                )),
+                          ],
+                        ),
+                        data['health_status_check'] != null
+                            ? Text(
+                                unixTimeStampToDateTimeWithoutDay(
+                                    data['health_status_check'].seconds),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ))
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  height: 38.0,
+                );
+        });
   }
 
   Future<RemoteConfig> setupRemoteConfig() async {
@@ -387,7 +401,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
-
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');
