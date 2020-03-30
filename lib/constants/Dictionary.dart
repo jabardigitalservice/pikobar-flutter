@@ -46,6 +46,7 @@ class Dictionary {
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
   static String profile = 'Profil';
+  static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
@@ -67,10 +68,10 @@ class Dictionary {
       'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String statusUser = 'Status: ';
-  static String sendAgainOTP='Kirim ulang kode';
-  static String otpNotSent='Tidak menerima sms?';
-  static String inputOTP='Silahkan masukan 6-digit kode disini';
-  static String otpHasBeenSent='OTP telah dikirimkan ke nomor';
+  static String sendAgainOTP = 'Kirim ulang kode';
+  static String otpNotSent = 'Tidak menerima sms?';
+  static String inputOTP = 'Silahkan masukan 6-digit kode disini';
+  static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
 
   // Button Text
   static String yes = 'Ya';
@@ -105,11 +106,12 @@ class Dictionary {
   static String errorInvalidPhone = 'Format nomor telepon tidak sesuai';
   static String errorMinimumPhone =
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
-  static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
-  static String codeSend='Kode terkirim ke nomor ';
-  static String codeSendFailed='Nomor telepon salah silahkan cek kembali';
-  static String codeVerified='No hp telah terverifikasi';
-  static String codeWrong='Kode OTP anda salah, silahkan cek kembali... ';
+  static String errorStatisticsNotExists =
+      'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+  static String codeSend = 'Kode terkirim ke nomor ';
+  static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
+  static String codeVerified = 'No hp telah terverifikasi';
+  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali... ';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
