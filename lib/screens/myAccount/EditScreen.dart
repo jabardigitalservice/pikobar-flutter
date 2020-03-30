@@ -159,7 +159,7 @@ class _EditState extends State<Edit> {
           }
         } else {
           await Firestore.instance
-              .collection('users')
+              .collection(Collections.users)
               .document(widget.state.data['id'])
               .updateData({
             'phone_number': Dictionary.inaCode + _phoneNumberController.text
