@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
@@ -43,106 +44,127 @@ class _EditState extends State<Edit> {
       appBar: AppBar(
         title: Text(Dictionary.edit),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.all(10),
-          children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    buildTextField(
-                        title: Dictionary.name,
-                        controller: _nameController,
-                        isEdit: false),
-                    SizedBox(
-                      height: 20,
+      body: FutureBuilder<RemoteConfig>(
+          future: setupRemoteConfig(),
+          builder:
+              (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+            bool otpEnabled = snapshot.data != null &&
+                    snapshot.data.getBool(FirebaseConfig.otpEnabled) != null
+                ? snapshot.data.getBool(FirebaseConfig.otpEnabled)
+                : false;
+            return Form(
+              key: _formKey,
+              child: ListView(
+                padding: EdgeInsets.all(10),
+                children: <Widget>[
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        children: <Widget>[
+                          buildTextField(
+                              title: Dictionary.name,
+                              controller: _nameController,
+                              isEdit: false),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          buildTextField(
+                              title: Dictionary.email,
+                              controller: _emailController,
+                              isEdit: false),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          buildPhoneField(
+                              title: Dictionary.phoneNumber,
+                              controller: _phoneNumberController,
+                              validation: Validations.phoneValidation,
+                              isEdit: true,
+                              hintText: Dictionary.phoneNumberPlaceholder),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
                     ),
-                    buildTextField(
-                        title: Dictionary.email,
-                        controller: _emailController,
-                        isEdit: false),
-                    SizedBox(
-                      height: 20,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  RaisedButton(
+                    color: Color(0xff27AE60),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    onPressed: () {
+                      _onSaveProfileButtonPressed(otpEnabled);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 13),
+                      child: Text(
+                        Dictionary.save,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    buildPhoneField(
-                        title: Dictionary.phoneNumber,
-                        controller: _phoneNumberController,
-                        validation: Validations.phoneValidation,
-                        isEdit: true,
-                        hintText: Dictionary.phoneNumberPlaceholder),
-                    SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            RaisedButton(
-              color: Color(0xff27AE60),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              onPressed: _onSaveProfileButtonPressed,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 13),
-                child: Text(
-                  Dictionary.save,
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 
-  _onSaveProfileButtonPressed() async {
+  _onSaveProfileButtonPressed(bool otpEnabled) async {
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
       if (widget.state.data['phone_number'] ==
           Dictionary.inaCode + _phoneNumberController.text) {
         Navigator.pop(context);
       } else {
-        try {
-          bool isConnected =
-              await Connection().checkConnection(UrlThirdParty.urlGoogle);
-          if (isConnected) {
-            _scaffoldState.currentState.showSnackBar(
-              SnackBar(
-                backgroundColor: Theme.of(context).primaryColor,
-                content: Row(
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Container(
-                      margin: EdgeInsets.only(left: 15.0),
-                      child: Text(Dictionary.loading),
-                    )
-                  ],
-                ),
-                duration: Duration(seconds: 5),
-              ),
-            );
-            await sendCodeToPhoneNumber();
+        _scaffoldState.currentState.showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            content: Row(
+              children: <Widget>[
+                CircularProgressIndicator(),
+                Container(
+                  margin: EdgeInsets.only(left: 15.0),
+                  child: Text(Dictionary.loading),
+                )
+              ],
+            ),
+            duration: Duration(seconds: 5),
+          ),
+        );
+        if (otpEnabled) {
+          try {
+            bool isConnected =
+                await Connection().checkConnection(UrlThirdParty.urlGoogle);
+            if (isConnected) {
+              await sendCodeToPhoneNumber();
+            }
+          } catch (error) {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) => DialogTextOnly(
+                      description: error.toString(),
+                      buttonText: Dictionary.ok,
+                      onOkPressed: () {
+                        Navigator.of(context).pop(); // To close the dialog
+                      },
+                    ));
           }
-        } catch (error) {
-          await showDialog(
-              context: context,
-              builder: (BuildContext context) => DialogTextOnly(
-                    description: error.toString(),
-                    buttonText: Dictionary.ok,
-                    onOkPressed: () {
-                      Navigator.of(context).pop(); // To close the dialog
-                    },
-                  ));
+        } else {
+          await Firestore.instance
+              .collection(Collections.users)
+              .document(widget.state.data['id'])
+              .updateData({
+            'phone_number': Dictionary.inaCode + _phoneNumberController.text
+          });
+          Navigator.of(context).pop();
         }
       }
     }
@@ -275,10 +297,10 @@ class _EditState extends State<Edit> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'No hp telah terverifikasi',
-                buttonText: "OK",
+                description: Dictionary.codeVerified,
+                buttonText: Dictionary.ok,
                 onOkPressed: () async {
-                    Navigator.pop(context);
+                  Navigator.pop(context);
                   Navigator.pop(context);
                   final FirebaseUser user =
                       await FirebaseAuth.instance.currentUser();
@@ -288,19 +310,15 @@ class _EditState extends State<Edit> {
                   }
                   await user.linkWithCredential(credential);
                   await Firestore.instance
-                      .collection('users')
+                      .collection(Collections.users)
                       .document(widget.state.data['id'])
                       .updateData({
                     'phone_number':
                         Dictionary.inaCode + _phoneNumberController.text
                   });
-                
                 },
               ));
-      setState(() {
-        print(
-            'Inside _sendCodeToPhoneNumber: signInWithPhoneNumber auto succeeded: $credential');
-      });
+    
     };
 
     final PhoneVerificationFailed verificationFailed =
@@ -310,16 +328,13 @@ class _EditState extends State<Edit> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'Nomor telepon salah silahkan cek kembali',
-                buttonText: "OK",
+                description: Dictionary.codeSendFailed,
+                buttonText: Dictionary.ok,
                 onOkPressed: () {
                   Navigator.of(context).pop(); // To close the dialog
                 },
               ));
-      setState(() {
-        print(
-            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-      });
+   
     };
 
     final PhoneCodeSent codeSent =
@@ -330,10 +345,10 @@ class _EditState extends State<Edit> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: "Kode terkirim ke nomor " +
+                description: Dictionary.codeSend +
                     Dictionary.inaCode +
                     _phoneNumberController.text,
-                buttonText: "OK",
+                buttonText: Dictionary.ok,
                 onOkPressed: () async {
                   Navigator.of(context).pop();
                   Navigator.push(
@@ -352,7 +367,6 @@ class _EditState extends State<Edit> {
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
       this.verificationID = verificationId;
-     
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -362,5 +376,21 @@ class _EditState extends State<Edit> {
         verificationFailed: verificationFailed,
         codeSent: codeSent,
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+  }
+
+  Future<RemoteConfig> setupRemoteConfig() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults(<String, dynamic>{
+      FirebaseConfig.otpEnabled: false,
+    });
+
+    try {
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
+      await remoteConfig.activateFetched();
+    } catch (exception) {
+ 
+    }
+
+    return remoteConfig;
   }
 }
