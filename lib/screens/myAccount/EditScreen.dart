@@ -52,7 +52,6 @@ class _EditState extends State<Edit> {
                     snapshot.data.getBool(FirebaseConfig.otpEnabled) != null
                 ? snapshot.data.getBool(FirebaseConfig.otpEnabled)
                 : false;
-                print(otpEnabled);
             return Form(
               key: _formKey,
               child: ListView(
