@@ -175,9 +175,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 ),
                 context),
             _buildText(
+//                Text(
+//                  unixTimeStampToDateTime(
+//                      data['published_at'].seconds),
+//                  style: TextStyle(fontSize: 12.0, color: Colors.grey),
+//                ),
                 Text(
-                  unixTimeStampToDateTime(
-                      data['published_at'].seconds),
+                  '',
                   style: TextStyle(fontSize: 12.0, color: Colors.grey),
                 ),
                 context),

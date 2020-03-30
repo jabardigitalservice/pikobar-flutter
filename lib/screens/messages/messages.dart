@@ -7,10 +7,11 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/MessageModel.dart';
+import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/parser.dart';
-import 'package:pikobar_flutter/utilities/sharedpreference/MessageSharedPreference.dart';
 
 class Messages extends StatefulWidget {
   @override
@@ -19,6 +20,8 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> {
   ScrollController _scrollController = ScrollController();
+  List<MessageModel> listMessage = [];
+  bool isInsertData = false;
 
   @override
   void initState() {
@@ -33,17 +36,7 @@ class _MessagesState extends State<Messages> {
         appBar: AppBar(
           title: Text(Dictionary.message),
         ),
-        body:
-            // SmartRefresher(
-            //     controller: _mainRefreshController,
-            //     enablePullDown: true,
-            //     header: WaterDropMaterialHeader(),
-            //     onRefresh: () async {
-
-            //       _mainRefreshController.refreshCompleted();
-            //     },
-            //     child:
-            StreamBuilder<QuerySnapshot>(
+        body: StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance
               .collection('broadcasts')
               .orderBy('published_at', descending: true)
@@ -55,10 +48,13 @@ class _MessagesState extends State<Messages> {
               case ConnectionState.waiting:
                 return _buildLoading();
               default:
+                if (!isInsertData) {
+                  insertIntoDatabase(snapshot);
+                }
+                isInsertData = true;
                 return _buildContent(snapshot);
             }
           },
-          // )
         ));
   }
 
@@ -127,22 +123,29 @@ class _MessagesState extends State<Messages> {
     );
   }
 
-  _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
-    Future.delayed(Duration(milliseconds: 0), () async {
-      await MessageSharedPreference.setMessageData(snapshot.data.documents);
-    });
+  Future<void> insertIntoDatabase(
+      AsyncSnapshot<QuerySnapshot> snapshot) async {
+    await MessageRepository().insertToDatabase(snapshot.data.documents);
+    listMessage.clear();
+    listMessage = await MessageRepository().getRecords();
+    setState(() {});
+  }
 
+  _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
     return ListView.builder(
       controller: _scrollController,
       padding: EdgeInsets.all(15.0),
-      itemCount: snapshot.data.documents.length,
+      itemCount: listMessage.length,
       itemBuilder: (context, index) {
-        final DocumentSnapshot document = snapshot.data.documents[index];
+//        final DocumentSnapshot document = snapshot.data.documents[index];
         return Padding(
           padding: EdgeInsets.only(bottom: 15),
           child: GestureDetector(
             child: Card(
-              color: !checkReadData(document['title']) ? Color(0xFFFFF9EE):null,
+                color: listMessage[index].readAt == null ||
+                        listMessage[index].readAt == 0
+                    ? Color(0xFFFFF9EE)
+                    : null,
                 margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
                 elevation: 0.5,
                 child: Container(
@@ -162,7 +165,7 @@ class _MessagesState extends State<Messages> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              document['title'],
+                              listMessage[index].title,
                               style: TextStyle(
                                   fontSize: 16.0,
                                   color: Color(0xff4F4F4F),
@@ -171,7 +174,7 @@ class _MessagesState extends State<Messages> {
                             Container(
                               margin: EdgeInsets.only(top: 8.0, bottom: 15.0),
                               child: Text(
-                                _parseHtmlString(document['content']),
+                                _parseHtmlString(listMessage[index].content),
                                 maxLines: 3,
                                 overflow: TextOverflow.clip,
                                 style: TextStyle(
@@ -180,7 +183,7 @@ class _MessagesState extends State<Messages> {
                             ),
                             Text(
                               unixTimeStampToDateTime(
-                                  document['published_at'].seconds),
+                                  listMessage[index].pubilshedAt),
                               style: TextStyle(
                                   fontSize: 12.0, color: Color(0xffBDBDBD)),
                             ),
@@ -191,7 +194,7 @@ class _MessagesState extends State<Messages> {
                   ),
                 )),
             onTap: () {
-              _openDetail(snapshot.data.documents[index]);
+              _openDetail(snapshot.data.documents[index], listMessage[index]);
             },
           ),
         );
@@ -199,32 +202,12 @@ class _MessagesState extends State<Messages> {
     );
   }
 
-  _openDetail(DocumentSnapshot document) async {
+  _openDetail(DocumentSnapshot document, MessageModel messageModel) async {
+    await MessageRepository().updateReadData(messageModel.title);
+    await MessageRepository().hasUnreadData();
+    listMessage = await MessageRepository().getRecords();
     await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
         arguments: document);
-  }
-
-  bool checkReadData(String title){
-    List<String> listReadDataMessage = [];
-    String checkReadMessage='';
-    Future.delayed(Duration(milliseconds: 0), () async {
-      listReadDataMessage = await MessageSharedPreference.getMessageData();
-      print('ini isinya jadi berapa? '+listReadDataMessage.length.toString());
-    });
-    print('length list bos '+listReadDataMessage.length.toString());
-    for(int i=0;i<listReadDataMessage.length;i++){
-      print('cekk isinya '+listReadDataMessage[i]);
-      if(listReadDataMessage.contains(title)){
-        checkReadMessage =  listReadDataMessage[i].split('##')[0];
-      }
-    }
-
-    print('cekkk bos '+checkReadMessage);
-
-    if(checkReadMessage == 'true'){
-      return true;
-    }else{
-      return false;
-    }
+    setState(() {});
   }
 }
