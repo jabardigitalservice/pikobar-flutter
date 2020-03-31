@@ -207,7 +207,6 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   void onTabTapped(int index) {
-    getCountMessage();
     setState(() {
       _currentIndex = index;
     });

@@ -2,8 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 List<MessageModel> listMessageFromJson(String str) =>
     List<MessageModel>.from(
         json.decode(str).map((x) => MessageModel.fromJson(x)));
