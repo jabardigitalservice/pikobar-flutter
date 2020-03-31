@@ -167,4 +167,7 @@ class Dictionary {
   static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
+  static String positifString = '*Positif adalah pasien terkonfirmasi COVID-19';
+  static String pdpString = '*PDP adalah pasien dalam pengawasan';
+  static String odpString = '*ODP adalah orang dalam pemantauan';
 }
