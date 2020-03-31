@@ -118,7 +118,7 @@ class AuthRepository {
 
       tokensDocument.get().then((snapshot) {
         if (!snapshot.exists) {
-          tokensDocument.setData({'created_at': DateTime.now()});
+          tokensDocument.setData({'token': token, 'created_at': DateTime.now()});
         }
       });
     });
