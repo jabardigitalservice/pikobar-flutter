@@ -33,11 +33,6 @@ class MessageRepository {
 
   //get data list message from local db
   Future<List<MessageModel>> getRecords() async {
-//    bool hasLocal = await hasLocalData();
-
-//    if (hasLocal == false) {
-//      await fetchRecords();
-//    }
 
     List<MessageModel> localRecords = await getLocalData();
 
@@ -93,9 +88,17 @@ class MessageRepository {
   Future<int> updateReadData(String title) async {
     Database db = await DBProvider.db.database;
     int readAt =
-        (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
+    (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
     return await db.update('Messages', {'read_at': readAt},
         where: 'title = ?', whereArgs: [title]);
+  }
+
+  //Update all read message
+  Future<int> updateAllReadData() async {
+    Database db = await DBProvider.db.database;
+    int readAt =
+    (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
+    return await db.update('Messages', {'read_at': readAt});
   }
 
   //Clear all data from db
@@ -104,20 +107,5 @@ class MessageRepository {
 
     await db.rawDelete('Delete from Messages');
   }
-
-//  Future<void> fetchRecords() async {
-//    StreamSubscription _messageSubscription;
-//   var getDatabos =  StreamBuilder<QuerySnapshot>(
-//      stream: Firestore.instance
-//          .collection('broadcasts')
-//          .orderBy('published_at', descending: true)
-//          .snapshots());
-//   i
-//
-//    _messageSubscription = getDatabos.listen(
-//         (videos) => add(VideosUpdated(videos)),
-//   );
-//
-//  }
 
 }

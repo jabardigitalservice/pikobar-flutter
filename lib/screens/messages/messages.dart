@@ -40,6 +40,30 @@ class _MessagesState extends State<Messages> {
     return Scaffold(
         appBar: AppBar(
           title: Text(Dictionary.message),
+          actions: <Widget>[
+            PopupMenuButton<int>(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 1,
+                  child: Text(Dictionary.markAsRead),
+                ),
+              ],
+              initialValue: 1,
+              onCanceled: () {},
+              onSelected: (value) async {
+                if (value == 1) {
+                  await MessageRepository().updateAllReadData();
+                  widget.indexScreenState.getCountMessage();
+                  setState(() {
+                    for (int i = 0; i < listMessage.length; i++) {
+                      listMessage[i].readAt = 1;
+                    }
+                  });
+                }
+              },
+              icon: Icon(Icons.more_vert),
+            ),
+          ],
         ),
         body: !isInsertData
             ? StreamBuilder<QuerySnapshot>(
@@ -215,8 +239,7 @@ class _MessagesState extends State<Messages> {
         : _buildLoading();
   }
 
-  _openDetail(
-      MessageModel messageModel, int index) async {
+  _openDetail(MessageModel messageModel, int index) async {
     await MessageRepository().updateReadData(messageModel.title);
     widget.indexScreenState.getCountMessage();
     await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
