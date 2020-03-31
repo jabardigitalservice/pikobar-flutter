@@ -14,8 +14,7 @@ class MessageRepository {
           backlink: record[i]['backlink'].toString(),
           content: record[i]['content'].toString(),
           title: record[i]['title'].toString(),
-//          pubilshedAt:record[i]['published_at'].seconds,
-          pubilshedAt: 0,
+          pubilshedAt:record[i]['published_at'].seconds,
           readAt: 0);
       try {
         bool dataCheck = await checkData(messageModel.title);
@@ -34,7 +33,7 @@ class MessageRepository {
 
   //get data list message from local db
   Future<List<MessageModel>> getRecords() async {
-    bool hasLocal = await hasLocalData();
+//    bool hasLocal = await hasLocalData();
 
 //    if (hasLocal == false) {
 //      await fetchRecords();
