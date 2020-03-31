@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/models/UserModel.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class Verification extends StatefulWidget {
-  final String phoneNumber, uid;
-  Verification({this.phoneNumber, this.uid});
+  final String phoneNumber, uid, verificationID;
+  Verification({this.phoneNumber, this.uid, this.verificationID});
   @override
   _VerificationState createState() => _VerificationState();
 }
@@ -32,119 +33,215 @@ class _VerificationState extends State<Verification> {
       appBar: AppBar(
         title: Text(Dictionary.verification),
       ),
-      body: ListView(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(
-                    top: 30.0, bottom: 15.0, left: 20.0, right: 20.0),
-                child: Icon(
-                  Icons.phone_android,
-//                        child: Icon(Icons.phone_android,
-                  size: 50.0,
-//                          color: UIData.mainColor,
-                  color: Colors.teal,
+      body: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: ListView(
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          padding: EdgeInsets.only(
+                              top: 30.0, bottom: 15.0, left: 20.0, right: 20.0),
+                          child: Image.asset(
+                              '${Environment.iconAssets}phone_otp.png')),
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
+                        child: Text(Dictionary.otpHasBeenSent,
+                            style: TextStyle(
+                              color: Color(0xff828282),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        child: Text(Dictionary.inaCode + widget.phoneNumber,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Color(0xff4F4F4F),
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
+                        child: Text(Dictionary.inputOTP,
+                            style: TextStyle(
+                              color: Color(0xff828282),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        height: 70,
+                        child: PinPut(
+                            textStyle: TextStyle(fontSize: 20),
+                            clearButtonIcon: Icon(Icons.backspace),
+                            inputDecoration: InputDecoration(
+                                hintText: '-',
+                                fillColor: Color(0xffF2F2F2),
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xffF2F2F2)),
+                                    borderRadius: BorderRadius.circular(8)),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xffF2F2F2)),
+                                    borderRadius: BorderRadius.circular(8)),
+                                counterText: ''),
+                            onClear: (value) {},
+                            actionButtonsEnabled: true,
+                            fieldsCount: 6,
+                            keyboardAction: TextInputAction.go,
+                            onSubmit: (String pin) {
+                              setState(() {
+                                smsCode = pin;
+                              });
+                            }),
+                      ),
+                      SizedBox(height: 20.0),
+                      Container(
+                        padding: EdgeInsets.only(
+                            top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(Dictionary.otpNotSent,
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                )),
+                            SizedBox(height: 10.0),
+                            InkWell(
+                              onTap: () {
+                                sendCodeToPhoneNumber();
+                              },
+                              child: Text(Dictionary.sendAgainOTP,
+                                  style: TextStyle(
+                                    color: Color(0xff2D9CDB),
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: RaisedButton(
+                color: Color(0xff27AE60),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                onPressed: onVerifyButtonPressed,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13),
+                  child: Text(
+                    Dictionary.verification,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-              Container(
-                child: Text("Input verification code",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                    top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
-                child: Text("Verification code has been sent via SMS :",
-                    style: TextStyle(
-                      color: Colors.black,
-                    )),
-              ),
-              Container(
-                padding: EdgeInsets.only(bottom: 30.0, left: 20.0, right: 20.0),
-                child: Text(Dictionary.inaCode + widget.phoneNumber,
-                    style: TextStyle(
-                      color: Colors.black,
-                    )),
-              ),
-              Container(
-                width: 250.0,
-                padding: EdgeInsets.only(top: 0.0, left: 20.0, right: 20.0),
-                child: Column(
-                  children: <Widget>[
-                    PinPut(
-//                            SMS : smsListener,
-//                            clearButtonIcon: Icon(Icons.clear),
-                        inputDecoration: InputDecoration(
-                            border: UnderlineInputBorder(), counterText: ''),
-                        onClear: (value) {},
-                        actionButtonsEnabled: true,
-                        fieldsCount: 6,
-                        keyboardAction: TextInputAction.go,
-//                                 onSubmit: (String pin) => _showSnackBar(pin, context),
-                        onSubmit: (String pin) {
-                          setState(() {
-                            smsCode = pin;
-                          });
-                          signInWithPhoneNumber(smsCode);
-                        }),
-                    SizedBox(height: 60.0),
-                  ],
-                ),
-              ),
-              SizedBox(height: 50.0),
-              Container(
-                padding: EdgeInsets.only(
-                    top: 5.0, bottom: 2.0, left: 20.0, right: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("Dont receive verification ?",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        )),
-                    SizedBox(width: 6.0),
-                    InkWell(
-                      onTap: () {
-                        sendCodeToPhoneNumber();
-                      },
-                      child: Text('Send again',
-                          style: TextStyle(
-                              color: Colors.black26,
-                              fontWeight: FontWeight.bold)),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Future<void> sendCodeToPhoneNumber() async {
-    final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential user) {
+  onVerifyButtonPressed() {
+    _scaffoldState.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Row(
+          children: <Widget>[
+            CircularProgressIndicator(),
+            Container(
+              margin: EdgeInsets.only(left: 15.0),
+              child: Text(Dictionary.loading),
+            )
+          ],
+        ),
+        duration: Duration(seconds: 5),
+      ),
+    );
+    signInWithPhoneNumber(smsCode).then((FirebaseUser user) async {
+      await Firestore.instance
+          .collection(Collections.users)
+          .document(widget.uid)
+          .updateData(
+              {'phone_number': Dictionary.inaCode + widget.phoneNumber});
       _scaffoldState.currentState.hideCurrentSnackBar();
 
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'Nomor telepon telah tersimpan',
-                buttonText: "OK",
+                description: Dictionary.codeVerified,
+                buttonText: Dictionary.ok,
                 onOkPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop(); // To close the dialog
                 },
               ));
-      setState(() {
-        print(
-            'Inside _sendCodeToPhoneNumber: signInWithPhoneNumber auto succeeded: $user');
-      });
+    }).catchError((e) => showDialog(
+        context: context,
+        builder: (BuildContext context) => DialogTextOnly(
+              description: e.toString().contains('is invalid')
+                  ? Dictionary.codeWrong
+                  : e.toString(),
+              buttonText: Dictionary.ok,
+              onOkPressed: () {
+                _scaffoldState.currentState.hideCurrentSnackBar();
+
+                Navigator.of(context).pop(); // To close the dialog
+              },
+            )));
+  }
+
+  Future<void> sendCodeToPhoneNumber() async {
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential credential) {
+      _scaffoldState.currentState.hideCurrentSnackBar();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogTextOnly(
+                description: Dictionary.codeVerified,
+                buttonText: Dictionary.ok,
+                onOkPressed: () async {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  final FirebaseUser user =
+                      await FirebaseAuth.instance.currentUser();
+                  List<UserInfo> providerList = user.providerData;
+                  if (providerList.length > 2) {
+                    await user.unlinkFromProvider(credential.providerId);
+                  }
+                  await user.linkWithCredential(credential);
+                  await Firestore.instance
+                      .collection('users')
+                      .document(widget.uid)
+                      .updateData({
+                    'phone_number': Dictionary.inaCode + widget.phoneNumber,
+                  });
+                },
+              ));
+      
     };
 
     final PhoneVerificationFailed verificationFailed =
@@ -154,16 +251,13 @@ class _VerificationState extends State<Verification> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: 'Nomor telepon salah silahkan cek kembali',
-                buttonText: "OK",
+                description: Dictionary.codeSendFailed,
+                buttonText: Dictionary.ok,
                 onOkPressed: () {
                   Navigator.of(context).pop(); // To close the dialog
                 },
               ));
-      setState(() {
-        print(
-            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
-      });
+      
     };
 
     final PhoneCodeSent codeSent =
@@ -174,8 +268,8 @@ class _VerificationState extends State<Verification> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogTextOnly(
-                description: "Kode terkirim ke nomor " + widget.phoneNumber,
-                buttonText: "OK",
+                description: Dictionary.codeSend + widget.phoneNumber,
+                buttonText: Dictionary.ok,
                 onOkPressed: () async {
                   Navigator.of(context).pop(); // To close the dialog
                 },
@@ -185,18 +279,6 @@ class _VerificationState extends State<Verification> {
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
       this.verificationID = verificationId;
-      _scaffoldState.currentState.hideCurrentSnackBar();
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogTextOnly(
-                description: "Waktu habis silahkan coba lagi",
-                buttonText: "OK",
-                onOkPressed: () {
-                  Navigator.of(context).pop(); // To close the dialog
-                },
-              ));
-      print("time out");
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -208,26 +290,20 @@ class _VerificationState extends State<Verification> {
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
-  Future<UserModel> signInWithPhoneNumber(String smsCode) async {
+  Future<FirebaseUser> signInWithPhoneNumber(String smsCode) async {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
-      verificationId: verificationID,
+      verificationId:
+          verificationID == null ? widget.verificationID : verificationID,
       smsCode: smsCode,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    List<UserInfo> providerList = user.providerData;
 
-    assert(user.uid == currentUser.uid);
+    if (providerList.length > 2) {
+      await user.unlinkFromProvider(credential.providerId);
+    }
+    await user.linkWithCredential(credential);
 
-    await Firestore.instance
-        .collection('users')
-        .document(widget.uid)
-        .updateData({'phone_number': Dictionary.inaCode + widget.phoneNumber});
-    return UserModel(
-        uid: currentUser.uid,
-        email: currentUser.email,
-        name: currentUser.displayName,
-        photoUrlFull: currentUser.photoUrl,
-        phoneNumber: currentUser.phoneNumber);
+    return user;
   }
 }

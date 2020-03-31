@@ -9,6 +9,7 @@ class Analytics {
   // TODO: belum di implementasikan
   static String notifications = 'Notifikasi';
   static String video = 'Video Terkini';
+  static String infoGraphics = 'Info Praktikal';
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -31,6 +32,7 @@ class Analytics {
   static String tappedNotification = 'tapped_notifikasi';
   static String tappedVideoMore = 'tapped_video_selengkapnya';
   static String tappedSpreadCheck = 'tapped_cek_sebaran';
+  static String tappedInfoGraphicsMore = 'tapped_info_praktikal_selengkapnya';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
@@ -61,4 +63,8 @@ class Analytics {
   static String permissionGrantedLocation = 'permission_granted_location';
   static String permissionDeniedLocation = 'permission_denied_location';
   static String permissionDismissLocation = 'permission_dismiss_location';
+
+  // event Info Graphics
+  static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
+  static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
 }

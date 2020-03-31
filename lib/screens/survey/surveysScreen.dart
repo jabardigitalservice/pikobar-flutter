@@ -11,7 +11,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
-import 'package:pikobar_flutter/screens/myAccount/LoginScreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -21,6 +21,7 @@ class SurveysScreen extends StatefulWidget {
 }
 
 class _SurveysScreenState extends State<SurveysScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   @override
@@ -47,9 +48,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           Navigator.of(context).pop(); // To close the dialog
                         },
                       ));
-              Scaffold.of(context).hideCurrentSnackBar();
+              _scaffoldKey.currentState.hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
-              Scaffold.of(context).showSnackBar(
+              _scaffoldKey.currentState.showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).primaryColor,
                   content: Row(
@@ -65,10 +66,11 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 ),
               );
             } else {
-              Scaffold.of(context).hideCurrentSnackBar();
+              _scaffoldKey.currentState.hideCurrentSnackBar();
             }
           },
           child: Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
               title: Text(Dictionary.survey),
             ),
@@ -79,8 +81,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
               ) {
                 if (state is AuthenticationUnauthenticated ||
                     state is AuthenticationLoading) {
-                  return LoginScreen(
+                  return OnBoardingLoginScreen(
                     authenticationBloc: _authenticationBloc,
+                    positionBottom: 20.0,
                   );
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {

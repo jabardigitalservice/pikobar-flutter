@@ -248,4 +248,10 @@ class _MessagesState extends State<Messages> {
       listMessage[index].readAt = 1;
     });
   }
+  
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 }
