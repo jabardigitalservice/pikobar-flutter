@@ -127,6 +127,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.2+1"
+  device_preview:
+    dependency: "direct main"
+    description:
+      name: device_preview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0+1"
   equatable:
     dependency: "direct main"
     description:
@@ -318,7 +325,14 @@ packages:
       name: font_awesome_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.7.0"
+    version: "8.8.1"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.1"
   geolocator:
     dependency: "direct main"
     description:
@@ -396,6 +410,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.1+1"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   location_permissions:
     dependency: transitive
     description:
@@ -673,7 +694,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.15"
+    version: "0.2.11"
   timeago:
     dependency: "direct main"
     description:

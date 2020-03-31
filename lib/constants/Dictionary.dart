@@ -159,4 +159,12 @@ class Dictionary {
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String moreDetail = ' Selengkapnya';
+
+  // check distribution virus
+  static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
+  static String checkDistributionSubTitle =
+      'Untuk mengetahui seberapa aman lokasi anda';
+  static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
+  static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
+  static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
 }
