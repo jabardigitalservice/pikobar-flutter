@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
@@ -44,6 +45,7 @@ class _IndexScreenState extends State<IndexScreen> {
 
     _initializeBottomNavigationBar();
     setStatAnnouncement();
+    registerFCMToken();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -77,6 +79,10 @@ class _IndexScreenState extends State<IndexScreen> {
 
   setStatAnnouncement() async {
     await AnnouncementSharedPreference.setAnnounceScreen(true);
+  }
+
+  registerFCMToken() async {
+    await AuthRepository().registerFCMToken();
   }
 
   Future<void> checkAppVersion() async {

@@ -33,7 +33,7 @@ class AuthRepository {
 
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
-    print(currentUser.phoneNumber);
+
     return UserModel(
         uid: currentUser.uid,
         email: currentUser.email,
@@ -43,7 +43,10 @@ class AuthRepository {
   }
 
   Future signOutGoogle() async {
-    await googleSignIn.signOut();
+    await removeFCMToken();
+    await googleSignIn.signOut().then((value) {
+      _auth.signOut();
+    });
     await deleteToken();
     await deleteLocalUserInfo();
   }
@@ -94,7 +97,7 @@ class AuthRepository {
     if (hasUserInfo == false) {
       authUserInfo = await signInWithGoogle();
       await persistUserInfo(authUserInfo);
-      registerFCMToken(authUserInfo.uid);
+      await registerFCMToken();
     } else {
       authUserInfo = await readLocalUserInfo();
     }
@@ -108,17 +111,40 @@ class AuthRepository {
     await prefs.remove('auth_user_info');
   }
 
-  registerFCMToken(String uid) {
-    _firebaseMessaging.getToken().then((token) {
+  Future<void> registerFCMToken() async {
+    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+
+    if (_user != null) {
+      _firebaseMessaging.getToken().then((token) {
+        final tokensDocument = Firestore.instance
+            .collection(Collections.users)
+            .document(_user.uid)
+            .collection(Collections.userTokens)
+            .document(token);
+
+        tokensDocument.get().then((snapshot) {
+          if (!snapshot.exists) {
+            tokensDocument.setData(
+                {'token': token, 'created_at': DateTime.now()});
+          }
+        });
+      });
+    }
+  }
+
+  Future<void> removeFCMToken() async {
+    UserModel authUserInfo = await getUserInfo();
+
+    await _firebaseMessaging.getToken().then((token) async {
       final tokensDocument = Firestore.instance
           .collection(Collections.users)
-          .document(uid)
+          .document(authUserInfo.uid)
           .collection(Collections.userTokens)
           .document(token);
 
-      tokensDocument.get().then((snapshot) {
-        if (!snapshot.exists) {
-          tokensDocument.setData({'token': token, 'created_at': DateTime.now()});
+      await tokensDocument.get().then((snapshot) async {
+        if (snapshot.exists) {
+          await tokensDocument.delete();
         }
       });
     });
