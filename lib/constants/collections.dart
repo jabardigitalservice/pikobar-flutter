@@ -8,6 +8,5 @@ class Collections {
   static String videos = 'videos';
   static String infographics = 'infographics';
   static String users = 'users';
-  static String userTokens = 'tokens';
 
 }

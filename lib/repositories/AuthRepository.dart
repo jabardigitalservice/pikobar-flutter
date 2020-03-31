@@ -110,15 +110,18 @@ class AuthRepository {
 
   registerFCMToken(String uid) {
     _firebaseMessaging.getToken().then((token) {
-      final tokensDocument = Firestore.instance
+      final document = Firestore.instance
           .collection(Collections.users)
-          .document(uid)
-          .collection(Collections.userTokens)
-          .document(token);
+          .document(uid);
 
-      tokensDocument.get().then((snapshot) {
-        if (!snapshot.exists) {
-          tokensDocument.setData({'token': token, 'created_at': DateTime.now()});
+      document.get().then((snapshot) {
+        List tokens = snapshot.data['tokens'] ?? new List();
+        final deviceToken =
+            tokens.where((elm) => elm['token'] == token).toList();
+        if (deviceToken.isEmpty) {
+          tokens.add({'token': token, 'created_at': DateTime.now()});
+          snapshot.reference
+              .updateData({'tokens': FieldValue.arrayUnion(tokens)});
         }
       });
     });
