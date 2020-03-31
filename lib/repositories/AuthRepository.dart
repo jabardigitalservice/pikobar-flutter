@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   Future<UserModel> signInWithGoogle() async {
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
@@ -34,7 +38,8 @@ class AuthRepository {
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
-        photoUrlFull: currentUser.photoUrl,phoneNumber: currentUser.phoneNumber);
+        photoUrlFull: currentUser.photoUrl,
+        phoneNumber: currentUser.phoneNumber);
   }
 
   Future signOutGoogle() async {
@@ -89,6 +94,7 @@ class AuthRepository {
     if (hasUserInfo == false) {
       authUserInfo = await signInWithGoogle();
       await persistUserInfo(authUserInfo);
+      registerFCMToken(authUserInfo.uid);
     } else {
       authUserInfo = await readLocalUserInfo();
     }
@@ -100,5 +106,21 @@ class AuthRepository {
     await Future.delayed(Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_user_info');
+  }
+
+  registerFCMToken(String uid) {
+    _firebaseMessaging.getToken().then((token) {
+      final tokensDocument = Firestore.instance
+          .collection(Collections.users)
+          .document(uid)
+          .collection(Collections.userTokens)
+          .document(token);
+
+      tokensDocument.get().then((snapshot) {
+        if (!snapshot.exists) {
+          tokensDocument.setData({'created_at': DateTime.now()});
+        }
+      });
+    });
   }
 }
