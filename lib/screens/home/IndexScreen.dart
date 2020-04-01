@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
@@ -27,10 +28,10 @@ import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
-  _IndexScreenState createState() => _IndexScreenState();
+  IndexScreenState createState() => IndexScreenState();
 }
 
-class _IndexScreenState extends State<IndexScreen> {
+class IndexScreenState extends State<IndexScreen> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   static FirebaseInAppMessaging firebaseInAppMsg = FirebaseInAppMessaging();
 
@@ -38,10 +39,12 @@ class _IndexScreenState extends State<IndexScreen> {
 
   BottomNavigationBadge badger;
   List<BottomNavigationBarItem> items;
+  int countMessage = 0;
 
   @override
   void initState() {
     initializeDateFormatting();
+    getCountMessage();
 
     _initializeBottomNavigationBar();
     setStatAnnouncement();
@@ -216,6 +219,7 @@ class _IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
+    items = badger.setBadge(items, countMessage.toString(), 1);
     return _buildMainScaffold(context);
   }
 
@@ -230,13 +234,24 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 
+  getCountMessage()  {
+    Future.delayed(Duration(milliseconds: 0), () async {
+      countMessage = await MessageRepository().hasUnreadData();
+      setState(() {
+        // ignore: unnecessary_statements
+        items = badger.setBadge(items, countMessage.toString(), 1);
+      });
+    });
+
+  }
+
   Widget _buildContent(int index) {
     switch (index) {
       case 0:
         return HomeScreen();
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
-        return Messages();
+        return Messages(indexScreenState: this);
 
       case 2:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
@@ -244,7 +259,6 @@ class _IndexScreenState extends State<IndexScreen> {
 
       case 3:
         return ProfileScreen();
-
       default:
         return HomeScreen();
     }

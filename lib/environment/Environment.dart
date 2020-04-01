@@ -10,13 +10,13 @@ class Environment {
   static String apiProd = 'https://sapawarga.jabarprov.go.id/api/v1';
   static String apiProdStorage =
       'https://sapawarga.jabarprov.go.id/api/storage'; //
-  static String databaseNameProd = 'SapawargaDB.db';
+  static String databaseNameProd = 'PikobarDB.db';
 
   // staging
   static String apiStaging = 'https://sapawarga-staging.jabarprov.go.id/api/v1';
   static String apiStagingStorage =
       'https://sapawarga-staging.jabarprov.go.id/api/storage';
-  static String databaseNameStaging = 'SapawargaDBStaging.db';
+  static String databaseNameStaging = 'PikobarDBStaging.db';
 
   // mock
   static String apiMock = 'http://52.74.74.33:3000/v1';
