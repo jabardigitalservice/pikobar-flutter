@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
@@ -41,9 +42,7 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldState,
-      appBar: AppBar(
-        title: Text(Dictionary.edit),
-      ),
+      appBar: CustomAppBar.defaultAppBar(title: Dictionary.edit),
       body: FutureBuilder<RemoteConfig>(
           future: setupRemoteConfig(),
           builder:

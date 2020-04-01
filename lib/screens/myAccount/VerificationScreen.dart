@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -30,9 +31,7 @@ class _VerificationState extends State<Verification> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldState,
-      appBar: AppBar(
-        title: Text(Dictionary.verification),
-      ),
+      appBar: CustomAppBar.defaultAppBar(title: Dictionary.verification),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: Stack(

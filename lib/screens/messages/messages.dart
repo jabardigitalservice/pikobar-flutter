@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -38,33 +39,32 @@ class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(Dictionary.message),
-          actions: <Widget>[
-            PopupMenuButton<int>(
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 1,
-                  child: Text(Dictionary.markAsRead),
-                ),
-              ],
-              initialValue: 1,
-              onCanceled: () {},
-              onSelected: (value) async {
-                if (value == 1) {
-                  await MessageRepository().updateAllReadData();
-                  widget.indexScreenState.getCountMessage();
-                  setState(() {
-                    for (int i = 0; i < listMessage.length; i++) {
-                      listMessage[i].readAt = 1;
-                    }
-                  });
-                }
-              },
-              icon: Icon(Icons.more_vert),
-            ),
-          ],
-        ),
+        appBar: CustomAppBar.defaultAppBar(
+            title: Dictionary.message,
+            actions: <Widget>[
+              PopupMenuButton<int>(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Text(Dictionary.markAsRead),
+                  ),
+                ],
+                initialValue: 1,
+                onCanceled: () {},
+                onSelected: (value) async {
+                  if (value == 1) {
+                    await MessageRepository().updateAllReadData();
+                    widget.indexScreenState.getCountMessage();
+                    setState(() {
+                      for (int i = 0; i < listMessage.length; i++) {
+                        listMessage[i].readAt = 1;
+                      }
+                    });
+                  }
+                },
+                icon: Icon(Icons.more_vert),
+              ),
+            ]),
         body: !isInsertData
             ? StreamBuilder<QuerySnapshot>(
                 stream: Firestore.instance
@@ -248,7 +248,7 @@ class _MessagesState extends State<Messages> {
       listMessage[index].readAt = 1;
     });
   }
-  
+
   @override
   void dispose() {
     _scrollController.dispose();
