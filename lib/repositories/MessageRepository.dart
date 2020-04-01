@@ -67,7 +67,7 @@ class MessageRepository {
   Future<List<MessageModel>> getLocalData() async {
     Database db = await DBProvider.db.database;
 
-    var res = await db.rawQuery('SELECT * FROM Messages ORDER BY id DESC');
+    var res = await db.rawQuery('SELECT * FROM Messages ORDER BY published_at DESC');
 
     List<MessageModel> list =
         res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
