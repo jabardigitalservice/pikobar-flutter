@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/video_list_bloc.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -32,6 +32,7 @@ class VideosList extends StatefulWidget {
 }
 
 class _VideosListState extends State<VideosList> {
+  // ignore: close_sinks
   VideoListBloc _videoListBloc;
 
   @override
@@ -46,7 +47,7 @@ class _VideosListState extends State<VideosList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Dictionary.videoUpToDate),
+        title: CustomAppBar.setTitleAppBar(Dictionary.videoUpToDate),
       ),
       body: BlocBuilder<VideoListBloc, VideoListState>(
         bloc: _videoListBloc,

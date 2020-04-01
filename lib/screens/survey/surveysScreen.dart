@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -72,7 +73,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
           child: Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text(Dictionary.survey),
+              title: CustomAppBar.setTitleAppBar(Dictionary.survey),
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (

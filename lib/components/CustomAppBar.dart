@@ -7,16 +7,19 @@ class CustomAppBar {
       {Widget leading, @required String title, List<Widget> actions}) {
     return AppBar(
       leading: leading,
-      title: Text(title,
-          style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: FontsFamily.intro),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis),
-      titleSpacing: 0.0,
+      title: setTitleAppBar(title),
       actions: actions,
     );
+  }
+
+  static Text setTitleAppBar(String title) {
+    return Text(title,
+        style: TextStyle(
+            fontSize: 17.0,
+            fontWeight: FontWeight.w600,
+            fontFamily: FontsFamily.productSans),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis);
   }
 
   static AppBar searchAppBar(
