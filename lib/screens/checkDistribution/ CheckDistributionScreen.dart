@@ -243,10 +243,10 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
           BoxShadow(
             color: Colors.grey.withOpacity(.2),
             blurRadius: 20.0, // soften the shadow
-            spreadRadius: 0.0, //extend the shadow
+            spreadRadius: 10.0, //extend the shadow
             offset: Offset(
-              1.0, // Move to right 10  horizontally
-              1.0, // Move to bottom 10 Vertically
+              1.0, // Move to right 1  horizontally
+              1.0, // Move to bottom 1 Vertically
             ),
           )
         ],
