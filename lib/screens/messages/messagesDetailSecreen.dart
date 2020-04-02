@@ -42,7 +42,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     if (_document != null) {
       _isLoaded = true;
       _title = widget.document.title;
-      _backLink = widget.document.title;
+      _backLink = widget.document.backlink;
     }
 
     super.initState();

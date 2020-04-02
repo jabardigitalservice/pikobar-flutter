@@ -219,7 +219,6 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    items = badger.setBadge(items, countMessage.toString(), 1);
     return _buildMainScaffold(context);
   }
 
@@ -234,15 +233,25 @@ class IndexScreenState extends State<IndexScreen> {
     );
   }
 
-  getCountMessage()  {
+  getCountMessage() {
     Future.delayed(Duration(milliseconds: 0), () async {
       countMessage = await MessageRepository().hasUnreadData();
       setState(() {
         // ignore: unnecessary_statements
-        items = badger.setBadge(items, countMessage.toString(), 1);
+        if (countMessage <= 0) {
+          items[1] = BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+              title: Column(
+                children: <Widget>[
+                  SizedBox(height: 4),
+                  Text(Dictionary.message),
+                ],
+              ));
+        } else {
+          items = badger.setBadge(items, countMessage.toString(), 1);
+        }
       });
     });
-
   }
 
   Widget _buildContent(int index) {
