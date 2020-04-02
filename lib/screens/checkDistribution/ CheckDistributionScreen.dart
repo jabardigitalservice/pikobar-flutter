@@ -1,25 +1,45 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/checkDistributionServices.dart';
+import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 
-class CheckDistributionScreen extends StatefulWidget {
+class CheckDistributionScreen extends StatelessWidget {
   @override
-  _CheckDistributionScreenState createState() =>
-      _CheckDistributionScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<CheckdistributionBloc>(
+      create: (context) => CheckdistributionBloc(
+          checkDistributionReposity: CheckDistributionReposity()),
+      child: CheckDistribution(),
+    );
+  }
 }
 
-class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
+class CheckDistribution extends StatefulWidget {
+  @override
+  _CheckDistributionState createState() => _CheckDistributionState();
+}
+
+class _CheckDistributionState extends State<CheckDistribution> {
+  CheckdistributionBloc _checkdistributionBloc;
+
   String _address = '-';
+
+  @override
+  void initState() {
+    _checkdistributionBloc = BlocProvider.of<CheckdistributionBloc>(context);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +142,7 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                       _address,
+                                        _address,
                                         style: TextStyle(
                                           fontFamily: FontsFamily.productSans,
                                           fontWeight: FontWeight.bold,
@@ -179,76 +199,140 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 25),
-
-                  // Box Results
-                  // CircularProgressIndicator(
-                  //     valueColor: AlwaysStoppedAnimation<Color>(ColorBase.green))
-                  buildResult(),
-                  SizedBox(height: 10),
-                  buildResult(),
-                  SizedBox(height: 10),
-                  buildResult(),
-
-                  // Box
-                  Container(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya disini',
-                          style: TextStyle(
-                            fontFamily: FontsFamily.productSans,
-                            color: Colors.grey[600],
-                            fontSize: 12.0,
-                            height: 1.3,
-                          ),
-                          textAlign: TextAlign.center,
-                        )),
-                  )
+                  // SizedBox(height: 25),
                 ],
               ),
             ),
+            BlocBuilder<CheckdistributionBloc, CheckdistributionState>(
+              bloc: _checkdistributionBloc,
+              builder: (context, state) {
+                return state is CheckDistributionLoading
+                    ? Column(
+                        children: <Widget>[
+                          CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  ColorBase.green))
+                        ],
+                      )
+                    : state is CheckDistributionLoaded
+                        ? buildContent(state)
+                        : state is CheckDistributionFailure
+                            ? ErrorContent(error: state.error)
+                            : Container();
+              },
+            )
           ],
         ));
   }
 
-  Widget buildResult() {
-    return boxContainer(
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    elevation: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Positif: 0',
-                            style: TextStyle(
-                              fontFamily: FontsFamily.productSans,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0,
-                              height: 1.2,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            Dictionary.positifString,
-                            style: TextStyle(
-                              fontFamily: FontsFamily.productSans,
-                              color: Colors.grey[600],
-                              fontSize: 12.0,
-                              height: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  Widget buildContent(CheckDistributionLoaded state) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          top: 10, left: Dimens.padding, right: Dimens.padding),
+      child: Column(
+        children: <Widget>[
+          // build Positif
+          buildResult(
+              Dictionary.positifTitle +
+                  ': ' +
+                  state.record.detected.radius.positif.toString(),
+              Dictionary.positifString,
+              'bg-positif-land.png',
+              state.record.detected.radius.positif > 0),
+          SizedBox(height: 10),
+
+          // build PDP
+          buildResult(
+              Dictionary.pdpTitle +
+                  ': ' +
+                  state.record.detected.radius.pdpProses.toString(),
+              Dictionary.pdpString,
+              'bg-pdp-land.png',
+              state.record.detected.radius.pdpProses > 0),
+          SizedBox(height: 10),
+
+          // build ODP
+          buildResult(
+              Dictionary.odpTitle +
+                  ': ' +
+                  state.record.detected.radius.odpProses.toString(),
+              Dictionary.odpString,
+              'bg-odp-land.png',
+              state.record.detected.radius.odpProses > 0),
+
+          // Box
+          Container(
+            padding: const EdgeInsets.all(24.0),
+            child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  Dictionary.checkDistributionInfo,
+                  style: TextStyle(
+                    fontFamily: FontsFamily.productSans,
+                    color: Colors.grey[600],
+                    fontSize: 12.0,
+                    height: 1.3,
                   ),
-                );
+                  textAlign: TextAlign.center,
+                )),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildResult(
+      String title, String description, String image, bool isNumberAvailable) {
+    return boxContainer(
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        elevation: 0,
+        child: Container(
+          decoration: isNumberAvailable
+              ? BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('${Environment.imageAssets}/$image'),
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                  ),
+                )
+              : BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: isNumberAvailable ? Colors.white : Colors.black,
+                    fontFamily: FontsFamily.productSans,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    height: 1.2,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontFamily: FontsFamily.productSans,
+                    color: isNumberAvailable ? Colors.white : Colors.grey[600],
+                    fontSize: 12.0,
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget boxContainer(Widget child) {
@@ -271,25 +355,34 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
     );
   }
 
-      Future<void> _handleLocation() async {
+  Future<void> _handleLocation() async {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.location);
     if (permission == PermissionStatus.granted) {
-
-      Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator()
+          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
         List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(position.latitude, position.longitude);
-        
-      if (placemarks != null && placemarks.isNotEmpty) {
-      final Placemark pos = placemarks[0];
-      final stringAddress = pos.thoroughfare + ', ' + pos.locality +', ' + pos.subAdministrativeArea;
+            .placemarkFromCoordinates(position.latitude, position.longitude);
 
-      setState(() {
-         _address = stringAddress;
-      });
-      // print(stringAddress);
-    }
+        if (placemarks != null && placemarks.isNotEmpty) {
+          final Placemark pos = placemarks[0];
+          final stringAddress = pos.thoroughfare +
+              ', ' +
+              pos.locality +
+              ', ' +
+              pos.subAdministrativeArea;
+
+          setState(() {
+            _address = stringAddress;
+          });
+
+          _checkdistributionBloc.add(LoadCheckDistribution(
+              lat: position.latitude, long: position.longitude));
+
+          // _checkdistributionBloc.add(LoadCheckDistribution(lat: '12312', long: '132'));
+          // print(stringAddress);
+        }
         // Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
 
       } else {
@@ -303,24 +396,24 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
-            image: Image.asset(
-              '${Environment.iconAssets}map_pin.png',
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            description: Dictionary.permissionLocationSpread,
-            onOkPressed: () {
-              Navigator.of(context).pop();
-              PermissionHandler().requestPermissions(
-                  [PermissionGroup.location]).then((status) {
+                image: Image.asset(
+                  '${Environment.iconAssets}map_pin.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionLocationSpread,
+                onOkPressed: () {
+                  Navigator.of(context).pop();
+                  PermissionHandler().requestPermissions(
+                      [PermissionGroup.location]).then((status) {
                     _onStatusRequested(context, status);
-              });
-            },
-            onCancelPressed: () {
-              // AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
-              Navigator.of(context).pop();
-            },
-          ));
+                  });
+                },
+                onCancelPressed: () {
+                  // AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
+                  Navigator.of(context).pop();
+                },
+              ));
     }
   }
 

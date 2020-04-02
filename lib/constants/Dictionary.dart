@@ -166,8 +166,13 @@ class Dictionary {
       'Untuk mengetahui seberapa aman lokasi anda';
   static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
+  static String positifTitle = 'Positif';
+  static String pdpTitle = 'PDP';
+  static String odpTitle = 'ODP';
   static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
   static String positifString = '*Positif adalah pasien terkonfirmasi COVID-19';
   static String pdpString = '*PDP adalah pasien dalam pengawasan';
   static String odpString = '*ODP adalah orang dalam pemantauan';
+  static String checkDistributionInfo =
+      'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya disini';
 }
