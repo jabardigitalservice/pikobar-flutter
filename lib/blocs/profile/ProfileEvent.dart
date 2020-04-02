@@ -2,31 +2,36 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class AuthenticationEvent extends Equatable {
-  AuthenticationEvent([List props = const <dynamic>[]]);
+abstract class ProfileEvent extends Equatable {
+  ProfileEvent([List props = const <dynamic>[]]);
 }
 
-class AppStarted extends AuthenticationEvent {
+class Save extends ProfileEvent {
+  final String id, phoneNumber;
+  Save({this.id, this.phoneNumber});
   @override
-  String toString() => 'AppStarted';
+  String toString() => 'Save';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [id, phoneNumber];
 }
 
-class LoggedIn extends AuthenticationEvent {
- 
+class Verify extends ProfileEvent {
+  final String id, phoneNumber;
+  Verify({this.id, this.phoneNumber});
   @override
-  String toString() => 'LoggedIn';
+  String toString() => 'Verify';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [id, phoneNumber];
 }
 
-class LoggedOut extends AuthenticationEvent {
+class ConfirmOTP extends ProfileEvent {
+   final String smsCode,verificationID,id, phoneNumber;
+  ConfirmOTP({this.smsCode,this.verificationID, this.id, this.phoneNumber});
   @override
-  String toString() => 'LoggedOut';
+  String toString() => 'ConfirmOTP';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [smsCode,verificationID,id,phoneNumber];
 }

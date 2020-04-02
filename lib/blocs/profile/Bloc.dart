@@ -1,3 +1,3 @@
-export 'AuthenticationBloc.dart';
-export 'AuthenticationEvent.dart';
-export 'AuthenticationState.dart';
+export 'ProfileBloc.dart';
+export 'ProfileEvent.dart';
+export 'ProfileState.dart';

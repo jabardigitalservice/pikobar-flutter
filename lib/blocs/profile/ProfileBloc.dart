@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 
 import './Bloc.dart';
 
-class ProfileBloc
-    extends Bloc<ProfileEvent, ProfileState> {
+class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;
 
   ProfileBloc({
@@ -21,8 +21,6 @@ class ProfileBloc
   Stream<ProfileState> mapEventToState(
     ProfileEvent event,
   ) async* {
-
-
     if (event is Save) {
       yield ProfileLoading();
       try {
@@ -33,20 +31,33 @@ class ProfileBloc
       }
     }
 
-    if(event is Verify){
-       yield ProfileLoading();
+    if (event is Verify) {
+        yield ProfileLoading();
       try {
-       var getStatus= await profileRepository.sendCodeToPhoneNumber(event.id, event.phoneNumber);
-       if (get) {
-         
-       } else {
-       }
-        yield ProfileSaved();
+        await profileRepository.sendCodeToPhoneNumber(
+            event.id, event.phoneNumber);
+        var getStatus = profileRepository.getStatus();
+        if (getStatus['status'] == 'auto_verified') {
+          yield ProfileVerified();
+        } else if (getStatus['status'] == 'verification_failed') {
+          yield ProfileVerifiedFailed();
+        } else if (getStatus['status'] == 'code_sent') {
+          yield ProfileOTPSent(verificationID: getStatus['verificationId']);
+        }
       } catch (e) {
         yield ProfileFailure(error: e.toString());
       }
     }
 
-    
+    if (event is ConfirmOTP) {
+      yield ProfileLoading();
+      try {
+        await profileRepository.signInWithPhoneNumber(
+            event.smsCode, event.verificationID, event.id, event.phoneNumber);
+        yield ProfileVerified();
+      } catch (e) {
+        yield ProfileFailure(error: e.toString());
+      }
+    }
   }
 }

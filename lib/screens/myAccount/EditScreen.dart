@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
@@ -26,6 +29,8 @@ class _EditState extends State<Edit> {
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ProfileRepository _profileRepository = ProfileRepository();
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
@@ -52,67 +57,167 @@ class _EditState extends State<Edit> {
                     snapshot.data.getBool(FirebaseConfig.otpEnabled) != null
                 ? snapshot.data.getBool(FirebaseConfig.otpEnabled)
                 : false;
-            return Form(
-              key: _formKey,
-              child: ListView(
-                padding: EdgeInsets.all(10),
-                children: <Widget>[
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Column(
-                        children: <Widget>[
-                          buildTextField(
-                              title: Dictionary.name,
-                              controller: _nameController,
-                              isEdit: false),
-                          SizedBox(
-                            height: 20,
+            return BlocProvider<ProfileBloc>(
+                create: (BuildContext context) => _profileBloc =
+                    ProfileBloc(profileRepository: _profileRepository),
+                child: BlocListener<ProfileBloc, ProfileState>(
+                  listener: (context, state) {
+                    if (state is ProfileFailure) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DialogTextOnly(
+                                description: state.error.toString(),
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // To close the dialog
+                                },
+                              ));
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    } else if (state is ProfileVerified) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DialogTextOnly(
+                                description: Dictionary.codeVerified,
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              ));
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    } else if (state is ProfileSaved) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DialogTextOnly(
+                                description: Dictionary.profileSaved,
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context)
+                                      .pop(); // To close the dialog
+                                },
+                              ));
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    } else if (state is ProfileOTPSent) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DialogTextOnly(
+                                description: Dictionary.codeSend +
+                                    Dictionary.inaCode +
+                                    _phoneNumberController.text,
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Verification(
+                                              phoneNumber:
+                                                  _phoneNumberController.text,
+                                              uid: widget.state.data['id'],
+                                              verificationID:
+                                                  state.verificationID,
+                                            )),
+                                  );
+                                },
+                              ));
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    } else if (state is ProfileVerifiedFailed) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DialogTextOnly(
+                                description: Dictionary.codeSendFailed,
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ));
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    } else if (state is ProfileLoading) {
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          content: Row(
+                            children: <Widget>[
+                              CircularProgressIndicator(),
+                              Container(
+                                margin: EdgeInsets.only(left: 15.0),
+                                child: Text(Dictionary.loading),
+                              )
+                            ],
                           ),
-                          buildTextField(
-                              title: Dictionary.email,
-                              controller: _emailController,
-                              isEdit: false),
-                          SizedBox(
-                            height: 20,
+                          duration: Duration(seconds: 5),
+                        ),
+                      );
+                    } else {
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    }
+                  },
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      padding: EdgeInsets.all(10),
+                      children: <Widget>[
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Column(
+                              children: <Widget>[
+                                buildTextField(
+                                    title: Dictionary.name,
+                                    controller: _nameController,
+                                    isEdit: false),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.email,
+                                    controller: _emailController,
+                                    isEdit: false),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildPhoneField(
+                                    title: Dictionary.phoneNumber,
+                                    controller: _phoneNumberController,
+                                    validation: Validations.phoneValidation,
+                                    isEdit: true,
+                                    hintText:
+                                        Dictionary.phoneNumberPlaceholder),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
                           ),
-                          buildPhoneField(
-                              title: Dictionary.phoneNumber,
-                              controller: _phoneNumberController,
-                              validation: Validations.phoneValidation,
-                              isEdit: true,
-                              hintText: Dictionary.phoneNumberPlaceholder),
-                          SizedBox(
-                            height: 20,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        RaisedButton(
+                          color: Color(0xff27AE60),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          onPressed: () {
+                            _onSaveProfileButtonPressed(otpEnabled);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 13),
+                            child: Text(
+                              Dictionary.save,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  RaisedButton(
-                    color: Color(0xff27AE60),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    onPressed: () {
-                      _onSaveProfileButtonPressed(otpEnabled);
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 13),
-                      child: Text(
-                        Dictionary.save,
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
+                ));
           }),
     );
   }
@@ -124,47 +229,49 @@ class _EditState extends State<Edit> {
           Dictionary.inaCode + _phoneNumberController.text) {
         Navigator.pop(context);
       } else {
-        _scaffoldState.currentState.showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            content: Row(
-              children: <Widget>[
-                CircularProgressIndicator(),
-                Container(
-                  margin: EdgeInsets.only(left: 15.0),
-                  child: Text(Dictionary.loading),
-                )
-              ],
-            ),
-            duration: Duration(seconds: 5),
-          ),
-        );
+        // _scaffoldState.currentState.showSnackBar(
+        //   SnackBar(
+        //     backgroundColor: Theme.of(context).primaryColor,
+        //     content: Row(
+        //       children: <Widget>[
+        //         CircularProgressIndicator(),
+        //         Container(
+        //           margin: EdgeInsets.only(left: 15.0),
+        //           child: Text(Dictionary.loading),
+        //         )
+        //       ],
+        //     ),
+        //     duration: Duration(seconds: 5),
+        //   ),
+        // );
         if (otpEnabled) {
-          try {
+          // try {
             bool isConnected =
                 await Connection().checkConnection(UrlThirdParty.urlGoogle);
             if (isConnected) {
-              await sendCodeToPhoneNumber();
+              // await sendCodeToPhoneNumber();
+              _profileBloc.add(Verify(id:widget.state.data['id'],phoneNumber: _phoneNumberController.text ));
             }
-          } catch (error) {
-            await showDialog(
-                context: context,
-                builder: (BuildContext context) => DialogTextOnly(
-                      description: error.toString(),
-                      buttonText: Dictionary.ok,
-                      onOkPressed: () {
-                        Navigator.of(context).pop(); // To close the dialog
-                      },
-                    ));
-          }
+          // } catch (error) {
+          //   await showDialog(
+          //       context: context,
+          //       builder: (BuildContext context) => DialogTextOnly(
+          //             description: error.toString(),
+          //             buttonText: Dictionary.ok,
+          //             onOkPressed: () {
+          //               Navigator.of(context).pop(); // To close the dialog
+          //             },
+          //           ));
+          // }
         } else {
-          await Firestore.instance
-              .collection(Collections.users)
-              .document(widget.state.data['id'])
-              .updateData({
-            'phone_number': Dictionary.inaCode + _phoneNumberController.text
-          });
-          Navigator.of(context).pop();
+          _profileBloc.add(Save(id:widget.state.data['id'],phoneNumber: _phoneNumberController.text ));
+          // await Firestore.instance
+          //     .collection(Collections.users)
+          //     .document(widget.state.data['id'])
+          //     .updateData({
+          //   'phone_number': Dictionary.inaCode + _phoneNumberController.text
+          // });
+          // Navigator.of(context).pop();
         }
       }
     }
@@ -318,7 +425,6 @@ class _EditState extends State<Edit> {
                   });
                 },
               ));
-    
     };
 
     final PhoneVerificationFailed verificationFailed =
@@ -334,7 +440,6 @@ class _EditState extends State<Edit> {
                   Navigator.of(context).pop(); // To close the dialog
                 },
               ));
-   
     };
 
     final PhoneCodeSent codeSent =
@@ -387,9 +492,7 @@ class _EditState extends State<Edit> {
     try {
       await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
-    } catch (exception) {
- 
-    }
+    } catch (exception) {}
 
     return remoteConfig;
   }

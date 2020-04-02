@@ -3,51 +3,68 @@ import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 
 @immutable
-abstract class AuthenticationState extends Equatable {
-  AuthenticationState([List props = const <dynamic>[]]);
+abstract class ProfileState extends Equatable {
+  ProfileState([List props = const <dynamic>[]]);
 }
 
-class AuthenticationUninitialized extends AuthenticationState {
+class ProfileUninitialized extends ProfileState {
   @override
-  String toString() => 'AuthenticationUninitialized';
+  String toString() => 'ProfileUninitialized';
 
   @override
   List<Object> get props => [];
 }
 
-class AuthenticationAuthenticated extends AuthenticationState {
-  final   UserModel record;
-  AuthenticationAuthenticated({this.record});
+class ProfileSaved extends ProfileState {
   @override
-  String toString() => 'AuthenticationAuthenticated';
-
-  @override
-  List<Object> get props => [record];
-}
-
-class AuthenticationUnauthenticated extends AuthenticationState {
-  @override
-  String toString() => 'AuthenticationUnauthenticated';
+  String toString() => 'ProfileSaved';
 
   @override
   List<Object> get props => [];
 }
 
-class AuthenticationLoading extends AuthenticationState {
+class ProfileVerified extends ProfileState {
   @override
-  String toString() => 'AuthenticationLoading';
+  String toString() => 'ProfileVerified';
 
   @override
   List<Object> get props => [];
 }
 
-class AuthenticationFailure extends AuthenticationState {
+class ProfileOTPSent extends ProfileState {
+  final String verificationID;
+  ProfileOTPSent({this.verificationID});
+  @override
+  String toString() => 'ProfileOTPSent';
+
+  @override
+  List<Object> get props => [verificationID];
+}
+
+class ProfileVerifiedFailed extends ProfileState {
+  @override
+  String toString() => 'ProfileVerifiedFailed';
+
+  @override
+  List<Object> get props => [];
+}
+
+
+class ProfileLoading extends ProfileState {
+  @override
+  String toString() => 'ProfileLoading';
+
+  @override
+  List<Object> get props => [];
+}
+
+class ProfileFailure extends ProfileState {
   final String error;
 
-  AuthenticationFailure({@required this.error}) : super([error]);
+  ProfileFailure({@required this.error}) : super([error]);
 
   @override
-  String toString() => 'Authentication { error: $error }';
+  String toString() => 'Profile { error: $error }';
 
   @override
   List<Object> get props => [error];
