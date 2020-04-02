@@ -110,6 +110,7 @@ class Dictionary {
   static String codeSendFailed='Nomor telepon salah silahkan cek kembali';
   static String codeVerified='No hp telah terverifikasi';
   static String codeWrong='Kode OTP anda salah, silahkan cek kembali... ';
+  static String profileSaved='Perubahan tersimpan';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
