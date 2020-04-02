@@ -757,7 +757,7 @@ class _MenuListState extends State<MenuList> {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
-      return Uri.encodeFull(url + "?uid=${_user.uid}&name=${_user.displayName}&email=${_user.email}");
+      return Uri.encodeFull(url + "?uid=${_user.uid}");
     } else {
       return url;
     }
