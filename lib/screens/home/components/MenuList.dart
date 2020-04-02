@@ -122,8 +122,7 @@ class _MenuListState extends State<MenuList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
-              Dictionary.saberHoax, UrlThirdParty.urlIGSaberHoax,
-              openBrowser: true),
+              Dictionary.saberHoax, NavigationConstrants.Browser, arguments: UrlThirdParty.urlIGSaberHoax),
           _buildButtonDisable(
               '${Environment.iconAssets}relawan.png', Dictionary.volunteer),
           _buildButtonDisable('${Environment.iconAssets}report_case.png',
@@ -278,11 +277,11 @@ class _MenuListState extends State<MenuList> {
                       _remoteConfig.getString(FirebaseConfig.jshCaption) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshCaption)
                   : Dictionary.saberHoax,
-              _remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.jshUrl) != null
+              NavigationConstrants.Browser,
+              arguments: _remoteConfig != null &&
+                  _remoteConfig.getString(FirebaseConfig.jshUrl) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
-                  : UrlThirdParty.urlIGSaberHoax,
-              openBrowser: true),
+                  : UrlThirdParty.urlIGSaberHoax),
 
           /// Menu Button Volunteer
           /// Remote Config : enabled, caption & url
@@ -391,23 +390,8 @@ class _MenuListState extends State<MenuList> {
               ),
               onPressed: () {
                 if (route != null) {
-                  if (openBrowser) {
-                    _launchUrl(route);
-                    if (label == Dictionary.saberHoax) {
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedJabarSaberHoax);
-                    }
-                  } else {
-                    if (iconPath == '${Environment.iconAssets}help.png') {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => InWebView(url: arguments)));
-
-                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}conversation_active.png') {
+                    if (route == NavigationConstrants.Browser) {
                       openChromeSafariBrowser(url: arguments);
-
-                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     } else {
                       Navigator.pushNamed(context, route, arguments: arguments);
                     }
@@ -416,6 +400,9 @@ class _MenuListState extends State<MenuList> {
                     if (label == Dictionary.phoneBookEmergency) {
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedphoneBookEmergency);
+                    } else if (label == Dictionary.saberHoax) {
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedJabarSaberHoax);
                     } else if (iconPath ==
                         '${Environment.iconAssets}pikobar.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
@@ -439,9 +426,13 @@ class _MenuListState extends State<MenuList> {
                     } else if (iconPath ==
                         '${Environment.iconAssets}report_case_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+                    } else if (iconPath == '${Environment.iconAssets}help.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}conversation_active.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     }
                   }
-                }
               },
             ),
           ),
