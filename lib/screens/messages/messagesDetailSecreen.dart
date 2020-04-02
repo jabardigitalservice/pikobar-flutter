@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -197,7 +198,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 return TextAlign.left;
               },
               onLinkTap: (url) {
-                _launchURL(url);
+                openChromeSafariBrowser(url: url);
               },
               customTextStyle: (dom.Node node, TextStyle baseStyle) {
                 if (node is dom.Element) {
