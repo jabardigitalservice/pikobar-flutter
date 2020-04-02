@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 
@@ -32,18 +31,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
 
     if (event is Verify) {
-        yield ProfileLoading();
+      yield ProfileLoading();
       try {
         await profileRepository.sendCodeToPhoneNumber(
-            event.id, event.phoneNumber);
-        var getStatus = profileRepository.getStatus();
-        if (getStatus['status'] == 'auto_verified') {
-          yield ProfileVerified();
-        } else if (getStatus['status'] == 'verification_failed') {
-          yield ProfileVerifiedFailed();
-        } else if (getStatus['status'] == 'code_sent') {
-          yield ProfileOTPSent(verificationID: getStatus['verificationId']);
-        }
+            event.id,
+            event.phoneNumber,
+            event.verificationCompleted,
+            event.verificationFailed,
+            event.codeSent);
+
+        yield ProfileWaiting();
       } catch (e) {
         yield ProfileFailure(error: e.toString());
       }
@@ -58,6 +55,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } catch (e) {
         yield ProfileFailure(error: e.toString());
       }
+    }
+
+    if (event is VerifyConfirm) {
+      yield ProfileVerified();
+    }
+
+    if (event is VerifyFailed) {
+      yield ProfileVerifiedFailed();
+    }
+
+    if (event is CodeSend) {
+      yield ProfileOTPSent(verificationID: event.verificationID);
     }
   }
 }

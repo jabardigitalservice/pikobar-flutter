@@ -31,6 +31,14 @@ class ProfileVerified extends ProfileState {
   List<Object> get props => [];
 }
 
+class ProfileWaiting extends ProfileState {
+  @override
+  String toString() => 'ProfileWaiting';
+
+  @override
+  List<Object> get props => [];
+}
+
 class ProfileOTPSent extends ProfileState {
   final String verificationID;
   ProfileOTPSent({this.verificationID});
@@ -48,7 +56,6 @@ class ProfileVerifiedFailed extends ProfileState {
   @override
   List<Object> get props => [];
 }
-
 
 class ProfileLoading extends ProfileState {
   @override

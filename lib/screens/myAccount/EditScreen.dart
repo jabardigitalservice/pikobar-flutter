@@ -31,6 +31,9 @@ class _EditState extends State<Edit> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ProfileRepository _profileRepository = ProfileRepository();
   ProfileBloc _profileBloc;
+  PhoneVerificationCompleted verificationCompleted;
+  PhoneVerificationFailed verificationFailed;
+  PhoneCodeSent codeSent;
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _EditState extends State<Edit> {
     _phoneNumberController.text = widget.state.data['phone_number'] != null
         ? widget.state.data['phone_number'].toString().substring(3)
         : null;
+
     super.initState();
   }
 
@@ -74,6 +78,7 @@ class _EditState extends State<Edit> {
                                 },
                               ));
                       Scaffold.of(context).hideCurrentSnackBar();
+                    } else if (state is ProfileWaiting) {
                     } else if (state is ProfileVerified) {
                       showDialog(
                           context: context,
@@ -81,6 +86,7 @@ class _EditState extends State<Edit> {
                                 description: Dictionary.codeVerified,
                                 buttonText: Dictionary.ok,
                                 onOkPressed: () {
+                                  Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                 },
@@ -229,49 +235,34 @@ class _EditState extends State<Edit> {
           Dictionary.inaCode + _phoneNumberController.text) {
         Navigator.pop(context);
       } else {
-        // _scaffoldState.currentState.showSnackBar(
-        //   SnackBar(
-        //     backgroundColor: Theme.of(context).primaryColor,
-        //     content: Row(
-        //       children: <Widget>[
-        //         CircularProgressIndicator(),
-        //         Container(
-        //           margin: EdgeInsets.only(left: 15.0),
-        //           child: Text(Dictionary.loading),
-        //         )
-        //       ],
-        //     ),
-        //     duration: Duration(seconds: 5),
-        //   ),
-        // );
         if (otpEnabled) {
-          // try {
-            bool isConnected =
-                await Connection().checkConnection(UrlThirdParty.urlGoogle);
-            if (isConnected) {
-              // await sendCodeToPhoneNumber();
-              _profileBloc.add(Verify(id:widget.state.data['id'],phoneNumber: _phoneNumberController.text ));
-            }
-          // } catch (error) {
-          //   await showDialog(
-          //       context: context,
-          //       builder: (BuildContext context) => DialogTextOnly(
-          //             description: error.toString(),
-          //             buttonText: Dictionary.ok,
-          //             onOkPressed: () {
-          //               Navigator.of(context).pop(); // To close the dialog
-          //             },
-          //           ));
-          // }
+          bool isConnected =
+              await Connection().checkConnection(UrlThirdParty.urlGoogle);
+          if (isConnected) {
+            verificationCompleted = (AuthCredential credential) async {
+              await _profileRepository.linkCredential(widget.state.data['id'],
+                  _phoneNumberController.text, credential);
+              _profileBloc.add(VerifyConfirm());
+            };
+            verificationFailed = (AuthException authException) {
+              _profileBloc.add(VerifyFailed());
+            };
+
+            codeSent =
+                (String verificationId, [int forceResendingToken]) async {
+              _profileBloc.add(CodeSend(verificationID: verificationId));
+            };
+            _profileBloc.add(Verify(
+                id: widget.state.data['id'],
+                phoneNumber: _phoneNumberController.text,
+                verificationCompleted: verificationCompleted,
+                verificationFailed: verificationFailed,
+                codeSent: codeSent));
+          }
         } else {
-          _profileBloc.add(Save(id:widget.state.data['id'],phoneNumber: _phoneNumberController.text ));
-          // await Firestore.instance
-          //     .collection(Collections.users)
-          //     .document(widget.state.data['id'])
-          //     .updateData({
-          //   'phone_number': Dictionary.inaCode + _phoneNumberController.text
-          // });
-          // Navigator.of(context).pop();
+          _profileBloc.add(Save(
+              id: widget.state.data['id'],
+              phoneNumber: _phoneNumberController.text));
         }
       }
     }
@@ -395,92 +386,6 @@ class _EditState extends State<Edit> {
         ],
       ),
     );
-  }
-
-  Future<void> sendCodeToPhoneNumber() async {
-    final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential credential) {
-      _scaffoldState.currentState.hideCurrentSnackBar();
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogTextOnly(
-                description: Dictionary.codeVerified,
-                buttonText: Dictionary.ok,
-                onOkPressed: () async {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  final FirebaseUser user =
-                      await FirebaseAuth.instance.currentUser();
-                  List<UserInfo> providerList = user.providerData;
-                  if (providerList.length > 2) {
-                    await user.unlinkFromProvider(credential.providerId);
-                  }
-                  await user.linkWithCredential(credential);
-                  await Firestore.instance
-                      .collection(Collections.users)
-                      .document(widget.state.data['id'])
-                      .updateData({
-                    'phone_number':
-                        Dictionary.inaCode + _phoneNumberController.text
-                  });
-                },
-              ));
-    };
-
-    final PhoneVerificationFailed verificationFailed =
-        (AuthException authException) {
-      _scaffoldState.currentState.hideCurrentSnackBar();
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogTextOnly(
-                description: Dictionary.codeSendFailed,
-                buttonText: Dictionary.ok,
-                onOkPressed: () {
-                  Navigator.of(context).pop(); // To close the dialog
-                },
-              ));
-    };
-
-    final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) async {
-      this.verificationID = verificationId;
-      _scaffoldState.currentState.hideCurrentSnackBar();
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogTextOnly(
-                description: Dictionary.codeSend +
-                    Dictionary.inaCode +
-                    _phoneNumberController.text,
-                buttonText: Dictionary.ok,
-                onOkPressed: () async {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Verification(
-                              phoneNumber: _phoneNumberController.text,
-                              uid: widget.state.data['id'],
-                              verificationID: verificationId,
-                            )),
-                  );
-                },
-              ));
-    };
-
-    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {
-      this.verificationID = verificationId;
-    };
-
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: Dictionary.inaCode + _phoneNumberController.text,
-        timeout: const Duration(seconds: 120),
-        verificationCompleted: verificationCompleted,
-        verificationFailed: verificationFailed,
-        codeSent: codeSent,
-        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
   Future<RemoteConfig> setupRemoteConfig() async {

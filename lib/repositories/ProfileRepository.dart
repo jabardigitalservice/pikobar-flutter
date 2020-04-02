@@ -4,32 +4,14 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 
 class ProfileRepository {
-    String status,verificationid;
+  String status, verificationid;
 
   Future<void> sendCodeToPhoneNumber(
-      String id, phoneNumber) async {
-    final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential credential) async {
-      print('PhoneVerificationCompleted');
-      await linkCredential(id, phoneNumber, credential);
-      status = 'auto_verified';
-    };
-
-    final PhoneVerificationFailed verificationFailed =
-        (AuthException authException) {
-      status =  'verification_failed';
-    };
-
-    final PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) async {
-      print('PhoneCodeSent');
-print(verificationId);
-      status = 'code_sent';
-      verificationid=verificationId;
-      print(status);
-     
-    };
-
+      String id,
+      phoneNumber,
+      PhoneVerificationCompleted verificationCompleted,
+      PhoneVerificationFailed verificationFailed,
+      PhoneCodeSent codeSent) async {
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {};
 
@@ -40,15 +22,7 @@ print(verificationId);
         verificationFailed: verificationFailed,
         codeSent: codeSent,
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
-     
   }
-
-Map<String,dynamic>getStatus(){
-  print('masuk get status');
-  print(status);
-  print(verificationid);
-return {'status':status,'verificationId':verificationid};
-}
 
   Future<void> linkCredential(
       String id, phoneNumber, AuthCredential credential) async {
