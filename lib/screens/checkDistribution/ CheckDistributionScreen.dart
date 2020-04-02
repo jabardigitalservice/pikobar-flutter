@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -220,65 +221,67 @@ class _CheckDistributionState extends State<CheckDistribution> {
                             ? ErrorContent(error: state.error)
                             : Container();
               },
+            ),
+
+            // Box
+            Container(
+              padding: const EdgeInsets.all(24.0),
+              child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    Dictionary.checkDistributionInfo,
+                    style: TextStyle(
+                      fontFamily: FontsFamily.productSans,
+                      color: Colors.grey[600],
+                      fontSize: 12.0,
+                      height: 1.3,
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
             )
           ],
         ));
   }
 
   Widget buildContent(CheckDistributionLoaded state) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: 10, left: Dimens.padding, right: Dimens.padding),
-      child: Column(
-        children: <Widget>[
-          // build Positif
-          buildResult(
-              Dictionary.positifTitle +
-                  ': ' +
-                  state.record.detected.radius.positif.toString(),
-              Dictionary.positifString,
-              'bg-positif-land.png',
-              state.record.detected.radius.positif > 0),
-          SizedBox(height: 10),
+    return state.record.detected == null
+        ? EmptyData(message: Dictionary.unreachableLocation)
+        : Padding(
+            padding: const EdgeInsets.only(
+                top: 10, left: Dimens.padding, right: Dimens.padding),
+            child: Column(
+              children: <Widget>[
+                // build Positif
+                buildResult(
+                    Dictionary.positifTitle +
+                        ': ' +
+                        state.record.detected.radius.positif.toString(),
+                    Dictionary.positifString,
+                    'bg-positif-land.png',
+                    state.record.detected.radius.positif > 0),
+                SizedBox(height: 10),
 
-          // build PDP
-          buildResult(
-              Dictionary.pdpTitle +
-                  ': ' +
-                  state.record.detected.radius.pdpProses.toString(),
-              Dictionary.pdpString,
-              'bg-pdp-land.png',
-              state.record.detected.radius.pdpProses > 0),
-          SizedBox(height: 10),
+                // build PDP
+                buildResult(
+                    Dictionary.pdpTitle +
+                        ': ' +
+                        state.record.detected.radius.pdpProses.toString(),
+                    Dictionary.pdpString,
+                    'bg-pdp-land.png',
+                    state.record.detected.radius.pdpProses > 0),
+                SizedBox(height: 10),
 
-          // build ODP
-          buildResult(
-              Dictionary.odpTitle +
-                  ': ' +
-                  state.record.detected.radius.odpProses.toString(),
-              Dictionary.odpString,
-              'bg-odp-land.png',
-              state.record.detected.radius.odpProses > 0),
-
-          // Box
-          Container(
-            padding: const EdgeInsets.all(24.0),
-            child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  Dictionary.checkDistributionInfo,
-                  style: TextStyle(
-                    fontFamily: FontsFamily.productSans,
-                    color: Colors.grey[600],
-                    fontSize: 12.0,
-                    height: 1.3,
-                  ),
-                  textAlign: TextAlign.center,
-                )),
-          )
-        ],
-      ),
-    );
+                // build ODP
+                buildResult(
+                    Dictionary.odpTitle +
+                        ': ' +
+                        state.record.detected.radius.odpProses.toString(),
+                    Dictionary.odpString,
+                    'bg-odp-land.png',
+                    state.record.detected.radius.odpProses > 0),
+              ],
+            ),
+          );
   }
 
   Widget buildResult(

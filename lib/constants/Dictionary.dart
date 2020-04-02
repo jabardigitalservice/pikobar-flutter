@@ -175,4 +175,5 @@ class Dictionary {
   static String odpString = '*ODP adalah orang dalam pemantauan';
   static String checkDistributionInfo =
       'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya disini';
+  static String unreachableLocation = 'Lokasi Tidak Terjangkau';
 }

@@ -17,7 +17,6 @@ class CheckDistributionReposity {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data.toString());
 
       CheckDistributionModel record = CheckDistributionModel.fromJson(data);
 
