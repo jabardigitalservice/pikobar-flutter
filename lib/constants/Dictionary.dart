@@ -158,4 +158,7 @@ class Dictionary {
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String moreDetail = ' Selengkapnya';
+
+  //message
+  static String markAsRead = "Tandai Semua Sudah Dibaca";
 }

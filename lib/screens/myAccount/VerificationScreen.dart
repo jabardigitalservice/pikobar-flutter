@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/ProfileState.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -36,9 +37,7 @@ class _VerificationState extends State<Verification> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldState,
-        appBar: AppBar(
-          title: Text(Dictionary.verification),
-        ),
+       appBar: CustomAppBar.defaultAppBar(title: Dictionary.verification),
         body: BlocProvider<ProfileBloc>(
             create: (BuildContext context) => _profileBloc =
                 ProfileBloc(profileRepository: _profileRepository),

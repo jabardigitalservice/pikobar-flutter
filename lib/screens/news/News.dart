@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -70,14 +71,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(
-            Dictionary.news,
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontFamily: FontsFamily.productSans,
-                fontSize: 17.0),
-          ),
+          title: CustomAppBar.setTitleAppBar( Dictionary.news),
           bottom: TabBar(
             indicatorColor: ColorBase.orange,
             indicatorWeight: 2.8,

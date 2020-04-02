@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
@@ -77,9 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
           child: Scaffold(
-              appBar: AppBar(
-                title: Text(Dictionary.profile),
-              ),
+              appBar: CustomAppBar.defaultAppBar(title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/screens/phonebook/ListViewPhoneBooks.dart';
@@ -42,7 +43,7 @@ class _PhonebookState extends State<Phonebook> {
     return AppBar(
         title: _isSearch
             ? _buildSearchField()
-            : Text(Dictionary.phoneBookEmergency),
+            : CustomAppBar.setTitleAppBar(Dictionary.phoneBookEmergency),
         actions: _buildActions());
   }
 
@@ -134,8 +135,6 @@ class _PhonebookState extends State<Phonebook> {
       ),
     );
   }
-
- 
 
   @override
   void dispose() {
