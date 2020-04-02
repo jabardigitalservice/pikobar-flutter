@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -13,7 +13,6 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MenuList extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -340,27 +339,31 @@ class _MenuListState extends State<MenuList> {
 
           /// Menu Button QnA / Forum
           /// Remote Config : enabled, caption & url
-          _remoteConfig != null &&
+          FutureBuilder<String>(
+            future: _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
+                ? _forumUrlAppend(_remoteConfig.getString(FirebaseConfig.qnaUrl))
+                : _forumUrlAppend(UrlThirdParty.urlQNA),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+              return _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
-              ? _buildButtonColumn(
+                  ? _buildButtonColumn(
                   '${Environment.iconAssets}conversation_active.png',
                   _remoteConfig != null &&
-                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                              null
+                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                          null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
                       : Dictionary.qna,
                   NavigationConstrants.Browser,
-                  arguments: _remoteConfig != null &&
-                          _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
-                      ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
-                      : UrlThirdParty.urlQNA)
-              : _buildButtonDisable(
+                  arguments: snapshot.data)
+                  : _buildButtonDisable(
                   '${Environment.iconAssets}conversation.png',
                   _remoteConfig != null &&
-                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                              null
+                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                          null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
-                      : Dictionary.qna),
+                      : Dictionary.qna);
+            }
+          )
         ],
       ),
     );
@@ -750,11 +753,13 @@ class _MenuListState extends State<MenuList> {
   //       });
   // }
 
-  _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+  Future<String> _forumUrlAppend(String url) async {
+    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+
+    if (_user != null) {
+      return Uri.encodeFull(url + "?uid=${_user.uid}&name=${_user.displayName}&email=${_user.email}");
     } else {
-      throw 'Could not launch $url';
+      return url;
     }
   }
 }
