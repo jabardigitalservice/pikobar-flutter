@@ -1,12 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/checkDistributionServices.dart';
 
 class CheckDistributionScreen extends StatefulWidget {
   @override
@@ -15,6 +19,8 @@ class CheckDistributionScreen extends StatefulWidget {
 }
 
 class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
+  String _address = '-';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +122,7 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
                                       ),
                                       SizedBox(height: 4),
                                       Text(
-                                        'Batununggal, Bandung Kidul, Kota Bandung',
+                                       _address,
                                         style: TextStyle(
                                           fontFamily: FontsFamily.productSans,
                                           fontWeight: FontWeight.bold,
@@ -149,7 +155,9 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
-                                    onPressed: () {}),
+                                    onPressed: () {
+                                      _handleLocation();
+                                    }),
                                 SizedBox(height: 10),
                                 RoundedButton(
                                     minWidth: MediaQuery.of(context).size.width,
@@ -171,46 +179,16 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 25),
 
                   // Box Results
                   // CircularProgressIndicator(
                   //     valueColor: AlwaysStoppedAnimation<Color>(ColorBase.green))
-                  boxContainer(
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      elevation: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Positif: 0',
-                              style: TextStyle(
-                                fontFamily: FontsFamily.productSans,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                height: 1.2,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              Dictionary.positifString,
-                              style: TextStyle(
-                                fontFamily: FontsFamily.productSans,
-                                color: Colors.grey[600],
-                                fontSize: 12.0,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  buildResult(),
+                  SizedBox(height: 10),
+                  buildResult(),
+                  SizedBox(height: 10),
+                  buildResult(),
 
                   // Box
                   Container(
@@ -235,6 +213,44 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
         ));
   }
 
+  Widget buildResult() {
+    return boxContainer(
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    elevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Positif: 0',
+                            style: TextStyle(
+                              fontFamily: FontsFamily.productSans,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              height: 1.2,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            Dictionary.positifString,
+                            style: TextStyle(
+                              fontFamily: FontsFamily.productSans,
+                              color: Colors.grey[600],
+                              fontSize: 12.0,
+                              height: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+  }
+
   Widget boxContainer(Widget child) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -253,5 +269,69 @@ class _CheckDistributionScreenState extends State<CheckDistributionScreen> {
       ),
       child: child,
     );
+  }
+
+      Future<void> _handleLocation() async {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.location);
+    if (permission == PermissionStatus.granted) {
+
+      Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      if (position != null && position.latitude != null) {
+        List<Placemark> placemarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+        
+      if (placemarks != null && placemarks.isNotEmpty) {
+      final Placemark pos = placemarks[0];
+      final stringAddress = pos.thoroughfare + ', ' + pos.locality +', ' + pos.subAdministrativeArea;
+
+      setState(() {
+         _address = stringAddress;
+      });
+      // print(stringAddress);
+    }
+        // Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
+
+      } else {
+        // Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        // Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
+      }
+
+      // AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
+
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogRequestPermission(
+            image: Image.asset(
+              '${Environment.iconAssets}map_pin.png',
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            description: Dictionary.permissionLocationSpread,
+            onOkPressed: () {
+              Navigator.of(context).pop();
+              PermissionHandler().requestPermissions(
+                  [PermissionGroup.location]).then((status) {
+                    _onStatusRequested(context, status);
+              });
+            },
+            onCancelPressed: () {
+              // AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
+              Navigator.of(context).pop();
+            },
+          ));
+    }
+  }
+
+  void _onStatusRequested(BuildContext context,
+      Map<PermissionGroup, PermissionStatus> statuses) async {
+    final statusLocation = statuses[PermissionGroup.location];
+    if (statusLocation == PermissionStatus.granted) {
+      _handleLocation();
+      // AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+    } else {
+      // AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+    }
   }
 }
