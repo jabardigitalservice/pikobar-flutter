@@ -46,6 +46,8 @@ class Dictionary {
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
   static String profile = 'Profil';
+  static String checkDistribution = 'Cek Sebaran';
+  static String checkDistributionByLocation = 'Berdasarkan Lokasi';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
@@ -68,10 +70,10 @@ class Dictionary {
       'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String statusUser = 'Status: ';
-  static String sendAgainOTP='Kirim ulang kode';
-  static String otpNotSent='Tidak menerima sms?';
-  static String inputOTP='Silahkan masukan 6-digit kode disini';
-  static String otpHasBeenSent='OTP telah dikirimkan ke nomor';
+  static String sendAgainOTP = 'Kirim ulang kode';
+  static String otpNotSent = 'Tidak menerima sms?';
+  static String inputOTP = 'Silahkan masukan 6-digit kode disini';
+  static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
 
   // Button Text
   static String yes = 'Ya';
@@ -159,6 +161,28 @@ class Dictionary {
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String moreDetail = ' Selengkapnya';
+
+  // check distribution virus
+  static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
+  static String checkDistributionSubTitle1 =
+      'Untuk mengetahui seberapa aman lokasi anda';
+  static String checkDistributionSubTitle2 =
+      'Silahkan gunakan fitur pencarian dibawah ini';
+  static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
+  static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
+  static String findLocation = 'Cek Lokasi';
+  static String positifTitle = 'Positif';
+  static String pdpTitle = 'PDP';
+  static String odpTitle = 'ODP';
+  static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
+  static String checkByLocation = 'Cari Berdasarkan Lokasi';
+  static String positifString = '*Positif adalah pasien terkonfirmasi COVID-19';
+  static String pdpString = '*PDP adalah pasien dalam pengawasan';
+  static String odpString = '*ODP adalah orang dalam pemantauan';
+  static String checkDistributionInfo =
+      'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya disini';
+  static String unreachableLocation = 'Lokasi Tidak Terjangkau';
+  static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";

@@ -1,8 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -71,64 +68,15 @@ class _SpreadSectionState extends State<SpreadSection> {
                     ],
                   ),
                   onPressed: () {
-                    _handleLocation(_data.webViewUrl);
+                    Navigator.pushNamed(
+                        context, NavigationConstrants.CheckDistribution);
+
+                    AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
                   }),
             )
           : Container();
     } else {
       return Container();
-    }
-  }
-
-  Future<void> _handleLocation(String url) async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-    if (permission == PermissionStatus.granted) {
-
-      Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
-      if (position != null && position.latitude != null) {
-        openChromeSafariBrowser(url: '$url?lat=${position.latitude}&long=${position.longitude}');
-
-      } else {
-        Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        openChromeSafariBrowser(url: '$url?lat=${position.latitude}&long=${position.longitude}');
-      }
-
-      AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
-
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
-            image: Image.asset(
-              '${Environment.iconAssets}map_pin.png',
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            description: Dictionary.permissionLocationSpread,
-            onOkPressed: () {
-              Navigator.of(context).pop();
-              PermissionHandler().requestPermissions(
-                  [PermissionGroup.location]).then((status) {
-                    _onStatusRequested(status, url);
-              });
-            },
-            onCancelPressed: () {
-              AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
-              Navigator.of(context).pop();
-            },
-          ));
-    }
-  }
-
-  void _onStatusRequested(
-      Map<PermissionGroup, PermissionStatus> statuses, String url) async {
-    final statusLocation = statuses[PermissionGroup.location];
-    if (statusLocation == PermissionStatus.granted) {
-      _handleLocation(url);
-      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
-    } else {
-      AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }
   }
 
