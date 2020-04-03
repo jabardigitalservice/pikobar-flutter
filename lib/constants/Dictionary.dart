@@ -182,4 +182,7 @@ class Dictionary {
       'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya disini';
   static String unreachableLocation = 'Lokasi Tidak Terjangkau';
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
+
+  //message
+  static String markAsRead = "Tandai Semua Sudah Dibaca";
 }

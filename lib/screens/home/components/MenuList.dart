@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -12,7 +12,7 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class MenuList extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -121,8 +121,7 @@ class _MenuListState extends State<MenuList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
-              Dictionary.saberHoax, UrlThirdParty.urlIGSaberHoax,
-              openBrowser: true),
+              Dictionary.saberHoax, NavigationConstrants.Browser, arguments: UrlThirdParty.urlIGSaberHoax),
           _buildButtonDisable(
               '${Environment.iconAssets}relawan.png', Dictionary.volunteer),
           _buildButtonDisable('${Environment.iconAssets}report_case.png',
@@ -277,11 +276,11 @@ class _MenuListState extends State<MenuList> {
                       _remoteConfig.getString(FirebaseConfig.jshCaption) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshCaption)
                   : Dictionary.saberHoax,
-              _remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.jshUrl) != null
+              NavigationConstrants.Browser,
+              arguments: _remoteConfig != null &&
+                  _remoteConfig.getString(FirebaseConfig.jshUrl) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
-                  : UrlThirdParty.urlIGSaberHoax,
-              openBrowser: true),
+                  : UrlThirdParty.urlIGSaberHoax),
 
           /// Menu Button Volunteer
           /// Remote Config : enabled, caption & url
@@ -340,27 +339,31 @@ class _MenuListState extends State<MenuList> {
 
           /// Menu Button QnA / Forum
           /// Remote Config : enabled, caption & url
-          _remoteConfig != null &&
+          FutureBuilder<String>(
+            future: _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
+                ? _forumUrlAppend(_remoteConfig.getString(FirebaseConfig.qnaUrl))
+                : _forumUrlAppend(UrlThirdParty.urlQNA),
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+              return _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
-              ? _buildButtonColumn(
+                  ? _buildButtonColumn(
                   '${Environment.iconAssets}conversation_active.png',
                   _remoteConfig != null &&
-                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                              null
+                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                          null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
                       : Dictionary.qna,
                   NavigationConstrants.Browser,
-                  arguments: _remoteConfig != null &&
-                          _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
-                      ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
-                      : UrlThirdParty.urlQNA)
-              : _buildButtonDisable(
+                  arguments: snapshot.data)
+                  : _buildButtonDisable(
                   '${Environment.iconAssets}conversation.png',
                   _remoteConfig != null &&
-                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                              null
+                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                          null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
-                      : Dictionary.qna),
+                      : Dictionary.qna);
+            }
+          )
         ],
       ),
     );
@@ -390,18 +393,8 @@ class _MenuListState extends State<MenuList> {
               ),
               onPressed: () {
                 if (route != null) {
-                  if (openBrowser) {
-                    _launchUrl(route);
-                    if (label == Dictionary.saberHoax) {
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedJabarSaberHoax);
-                    }
-                  } else {
-                    if (iconPath == '${Environment.iconAssets}help.png') {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => InWebView(url: arguments)));
-
-                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+                    if (route == NavigationConstrants.Browser) {
+                      openChromeSafariBrowser(url: arguments);
                     } else {
                       Navigator.pushNamed(context, route, arguments: arguments);
                     }
@@ -410,6 +403,9 @@ class _MenuListState extends State<MenuList> {
                     if (label == Dictionary.phoneBookEmergency) {
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedphoneBookEmergency);
+                    } else if (label == Dictionary.saberHoax) {
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedJabarSaberHoax);
                     } else if (iconPath ==
                         '${Environment.iconAssets}pikobar.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
@@ -433,12 +429,13 @@ class _MenuListState extends State<MenuList> {
                     } else if (iconPath ==
                         '${Environment.iconAssets}report_case_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+                    } else if (iconPath == '${Environment.iconAssets}help.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
                     } else if (iconPath ==
                         '${Environment.iconAssets}conversation_active.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     }
                   }
-                }
               },
             ),
           ),
@@ -756,11 +753,13 @@ class _MenuListState extends State<MenuList> {
   //       });
   // }
 
-  _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+  Future<String> _forumUrlAppend(String url) async {
+    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+
+    if (_user != null) {
+      return Uri.encodeFull(url + "?uid=${_user.uid}");
     } else {
-      throw 'Could not launch $url';
+      return url;
     }
   }
 }

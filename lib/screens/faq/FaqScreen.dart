@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -41,7 +42,7 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: _isSearch ? _buildSearchField() : Text(Dictionary.faq),
+          title: _isSearch ? _buildSearchField() : CustomAppBar.setTitleAppBar(Dictionary.faq),
           actions: _buildActions()),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
@@ -52,7 +53,7 @@ class _FaqScreenState extends State<FaqScreen> {
           if (snapshot.hasData) {
             List dataFaq;
 
-            // if search ative
+            // if search active
             if (searchQuery.isNotEmpty) {
               dataFaq = snapshot.data.documents
                   .where((test) => test['title']

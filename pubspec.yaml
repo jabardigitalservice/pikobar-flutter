@@ -13,9 +13,9 @@ description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
 # GDrive version 1.2.2+10
-# PlayStore version 1.1.2+7
+# PlayStore version 1.2.2+10
 
-version: 1.2.2+10
+version: 1.2.3+11
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -72,6 +72,7 @@ dependencies:
   pinput: ^0.1.10
   pretty_qr_code: ^1.0.1
   esys_flutter_share: ^1.0.2
+  flutter_web_browser: ^0.11.0
   device_preview: ^0.4.0+1
 
 dev_dependencies:

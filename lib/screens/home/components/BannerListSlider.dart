@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BannerListSlider extends StatefulWidget {
@@ -121,8 +122,7 @@ class BannerListSliderState extends State<BannerListSlider> {
         throw 'Could not launch $url';
       }
     } else {
-      Navigator.of(context)
-          .pushNamed(NavigationConstrants.Browser, arguments: url);
+      openChromeSafariBrowser(url: url);
     }
   }
 }

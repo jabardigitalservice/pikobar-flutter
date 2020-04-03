@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class AnnouncementScreen extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -77,10 +78,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                                       fontWeight: FontWeight.bold),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.pushNamed(
-                                          context, NavigationConstrants.Browser,
-                                          arguments:
-                                              dataAnnouncement['action_url']);
+                                      openChromeSafariBrowser(url: dataAnnouncement['action_url']);
                                     })
                               : TextSpan(text: '')
                         ]),
