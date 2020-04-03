@@ -9,6 +9,8 @@ class Environment {
   // production
   static String baseUrl = 'https://covid19-public.digitalservice.id/api/v1';
 
+  static String databaseNameProd = 'PikobarDB.db';
+
   // mock
   static String apiMock = 'http://52.74.74.33:3000/v1';
 
