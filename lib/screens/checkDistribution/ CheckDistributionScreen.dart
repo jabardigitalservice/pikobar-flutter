@@ -386,7 +386,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
         padding: EdgeInsets.only(bottom: 15.0),
         child: GooglePlaceAutoCompleteTextField(
             textEditingController: controller,
-            googleAPIKey: 'AIzaSyAqmFJDmN2C38CaGkRp_kKSCba3Mi5I1C0',
+            googleAPIKey: Environment.googleApiKey,
             inputDecoration: InputDecoration(
                 hintText: hintText,
                 enabledBorder: OutlineInputBorder(
