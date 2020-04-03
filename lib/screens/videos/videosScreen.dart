@@ -177,7 +177,7 @@ class _VideosListState extends State<VideosList> {
   }
 
   _shareApp(String title, String sourceUrl) {
-    Share.share('$title \n\nTonton video lengkapnya:\n$sourceUrl \n\n_dibagikan dari Pikobar_');
+    Share.share('$title \n\nTonton video lengkapnya:\n$sourceUrl \n\n${Dictionary.sharedFrom}');
 
     AnalyticsHelper.setLogEvent(
         Analytics.tappedVideoShare, <String, dynamic>{'title': title});

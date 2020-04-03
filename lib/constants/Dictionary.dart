@@ -55,6 +55,7 @@ class Dictionary {
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
+  static String sharedFrom = '_dibagikan dari Pikobar_';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
