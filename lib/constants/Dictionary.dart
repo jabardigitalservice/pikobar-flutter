@@ -57,6 +57,7 @@ class Dictionary {
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
+  static String sharedFrom = '_dibagikan dari Pikobar_';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -107,12 +108,12 @@ class Dictionary {
   static String errorInvalidPhone = 'Format nomor telepon tidak sesuai';
   static String errorMinimumPhone =
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
-  static String errorStatisticsNotExists =
-      'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
-  static String codeSend = 'Kode terkirim ke nomor ';
-  static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
-  static String codeVerified = 'No hp telah terverifikasi';
-  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali... ';
+  static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+  static String codeSend='Kode terkirim ke nomor ';
+  static String codeSendFailed='Nomor telepon salah silahkan cek kembali';
+  static String codeVerified='No hp telah terverifikasi';
+  static String codeWrong='Kode OTP anda salah, silahkan cek kembali... ';
+  static String profileSaved='Perubahan tersimpan';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';

@@ -1,21 +1,26 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:html/dom.dart' as dom;
+import 'package:html/parser.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MessageDetailScreen extends StatefulWidget {
   final MessageModel document;
@@ -33,6 +38,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   MessageModel _document;
   String _title = '';
   String _backLink = '';
+  String _content = '';
   bool _isLoaded = false;
 
   @override
@@ -42,7 +48,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     if (_document != null) {
       _isLoaded = true;
       _title = widget.document.title;
-      _backLink = widget.document.title;
+      _content = widget.document.content;
+      _backLink = widget.document.backlink;
     }
 
     super.initState();
@@ -51,22 +58,19 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: CustomAppBar.setTitleAppBar(Dictionary.message), actions: <Widget>[
-          _isLoaded
-              ? Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  child: IconButton(
-                    icon: Icon(Icons.share),
-                    onPressed: () {
-                      Share.share(
-                          '$_title\n${_backLink != null ? _backLink + '\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedShareNewsFromMessage,
-                          <String, dynamic>{'title': widget.document.title});
-                    },
-                  ))
-              : Container()
-        ]),
+        appBar: AppBar(
+            title: CustomAppBar.setTitleAppBar(Dictionary.message),
+            actions: <Widget>[
+              _isLoaded
+                  ? Container(
+                      margin: EdgeInsets.only(right: 10.0),
+                      child: IconButton(
+                        icon: Icon(FontAwesomeIcons.solidShareSquare,
+                            size: 17, color: Colors.white),
+                        onPressed: _shareMessage,
+                      ))
+                  : Container()
+            ]),
         body: Container(
           child: _document == null
               ? FutureBuilder<DocumentSnapshot>(
@@ -90,6 +94,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                             readAt: 100);
                         _isLoaded = true;
                         _title = snapshot.data['title'];
+                        _content = snapshot.data['content'];
                         _backLink = snapshot.data['backlink'] != null
                             ? snapshot.data['backlink']
                             : '';
@@ -225,11 +230,49 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     );
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+  _shareMessage() async {
+
+    Uint8List bytes = await _bytesImageFromHtmlString(_content);
+
+    if (bytes != null) {
+      try {
+        await fShare.Share.file(Dictionary.appName, '$_title.jpg',
+            bytes, 'image/jpg',
+            text: '$_title\n\n'
+                '${_backLink != null ? 'Baca pesan lengkapnya:\n'+_backLink.replaceAll(
+                new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
+                '${Dictionary.sharedFrom}');
+      } catch (e) {
+        Share.share(
+            '$_title\n\n'
+                '${_backLink != null ? 'Baca pesan lengkapnya:\n'+_backLink.replaceAll(
+                new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
+                '${Dictionary.sharedFrom}');
+      }
     } else {
-      throw 'Could not launch $url';
+      Share.share(
+          '$_title\n\n'
+              '${_backLink != null ? 'Baca pesan lengkapnya:\n'+_backLink.replaceAll(
+              new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
+              '${Dictionary.sharedFrom}');
+    }
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedShareNewsFromMessage,
+        <String, dynamic>{'title': widget.document.title});
+  }
+
+  _bytesImageFromHtmlString(String htmlString) async {
+    try {
+      var document = parse(htmlString);
+      String urlImage =
+          document.getElementsByTagName('img')[0].attributes['src'];
+      var request = await HttpClient().getUrl(Uri.parse(urlImage));
+      var response = await request.close();
+      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+      return bytes;
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 }

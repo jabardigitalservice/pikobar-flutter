@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
@@ -73,10 +74,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               _isLoaded ? Container(
                   margin: EdgeInsets.only(right: 10.0),
                   child: IconButton(
-                    icon: Icon(Icons.share),
+                    icon: Icon(FontAwesomeIcons.solidShareSquare, size: 17, color: Colors.white),
                     onPressed: () {
                       Share.share(
-                          '$_title\n${_backLink != null ? _backLink+'\n' : ''}\nBaca Selengkapnya di aplikasi Pikobar : ${UrlThirdParty.pathPlaystore}');
+                          '$_title\n\n${_backLink != null ? 'Baca berita lengkapnya:\n'+_backLink : ''}\n\n${Dictionary.sharedFrom}');
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedShareNews, <String, dynamic>{
                         'title': widget.documents['title']
