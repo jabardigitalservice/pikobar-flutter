@@ -14,7 +14,7 @@ class InfoGraphicsServices {
       var response = await request.close();
       Uint8List bytes = await consolidateHttpClientResponseBytes(response);
       await Share.file(Dictionary.appName, '$title.jpg', bytes, 'image/jpg',
-          text: title);
+          text: '$title\n\n${Dictionary.sharedFrom}');
 
       await AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsShare,
           <String, dynamic>{'title': title, 'image': image});

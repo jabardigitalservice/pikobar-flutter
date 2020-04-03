@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/SpreadCheckModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class SpreadSection extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -86,11 +87,11 @@ class _SpreadSectionState extends State<SpreadSection> {
 
       Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
-        Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
+        openChromeSafariBrowser(url: '$url?lat=${position.latitude}&long=${position.longitude}');
 
       } else {
         Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
+        openChromeSafariBrowser(url: '$url?lat=${position.latitude}&long=${position.longitude}');
       }
 
       AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
