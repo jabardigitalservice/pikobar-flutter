@@ -438,7 +438,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.healthStatusVisible: false,
-      FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors;
+      FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors,
     });
 
     try {
