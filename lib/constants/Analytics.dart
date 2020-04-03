@@ -10,6 +10,7 @@ class Analytics {
   static String notifications = 'Notifikasi';
   static String video = 'Video Terkini';
   static String infoGraphics = 'Info Praktikal';
+  static String checkDistribution = 'Cek Sebaran';
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -67,4 +68,8 @@ class Analytics {
   // event Info Graphics
   static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
   static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
+
+  // event check distribution
+  static String tappedCheckCurrentLocation = 'tapped_cek_lokasi_saat_ini';
+  static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
 }

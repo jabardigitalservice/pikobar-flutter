@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -14,6 +17,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/%20CheckDistributionBanner.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
   @override
@@ -37,9 +41,13 @@ class _CheckDistributionState extends State<CheckDistribution> {
 
   String _address = '-';
   bool isFindOtherLocation;
+  String latitude;
+  String longitude;
 
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.checkDistribution);
+
     _checkdistributionBloc = BlocProvider.of<CheckdistributionBloc>(context);
 
     isFindOtherLocation = false;
@@ -167,7 +175,16 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                       if (isFindOtherLocation == false) {
                                         _handleLocation();
                                       } else {
-                                        print('cek lokasi');
+                                        findLocation(latitude, longitude);
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+
+                                        // analytics
+                                        AnalyticsHelper.setLogEvent(
+                                            Analytics.tappedFindByLocation,
+                                            <String, dynamic>{
+                                              'latlong': '$latitude, $longitude'
+                                            });
                                       }
                                     }),
                                 SizedBox(height: 10),
@@ -264,16 +281,6 @@ class _CheckDistributionState extends State<CheckDistribution> {
                     state.record.detected.radius.positif > 0),
                 SizedBox(height: 10),
 
-                // build PDP
-                buildResult(
-                    Dictionary.pdpTitle +
-                        ': ' +
-                        state.record.detected.radius.pdpProses.toString(),
-                    Dictionary.pdpString,
-                    'bg-pdp-land.png',
-                    state.record.detected.radius.pdpProses > 0),
-                SizedBox(height: 10),
-
                 // build ODP
                 buildResult(
                     Dictionary.odpTitle +
@@ -282,6 +289,16 @@ class _CheckDistributionState extends State<CheckDistribution> {
                     Dictionary.odpString,
                     'bg-odp-land.png',
                     state.record.detected.radius.odpProses > 0),
+                SizedBox(height: 10),
+
+                // build PDP
+                buildResult(
+                    Dictionary.pdpTitle +
+                        ': ' +
+                        state.record.detected.radius.pdpProses.toString(),
+                    Dictionary.pdpString,
+                    'bg-pdp-land.png',
+                    state.record.detected.radius.pdpProses > 0),
               ],
             ),
           );
@@ -299,7 +316,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
           decoration: isNumberAvailable
               ? BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('${Environment.imageAssets}/$image'),
+                    image: AssetImage('${Environment.imageAssets}$image'),
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.topCenter,
                   ),
@@ -366,23 +383,35 @@ class _CheckDistributionState extends State<CheckDistribution> {
     String hintText,
   }) {
     return Container(
-      padding: EdgeInsets.only(bottom: 15.0),
-      child: TextFormField(
-        style: TextStyle(color: Colors.black),
-        controller: controller,
-        decoration: InputDecoration(
-            hintText: hintText,
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1)),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 2))),
-      ),
-    );
+        padding: EdgeInsets.only(bottom: 15.0),
+        child: GooglePlaceAutoCompleteTextField(
+            textEditingController: controller,
+            googleAPIKey: 'AIzaSyAqmFJDmN2C38CaGkRp_kKSCba3Mi5I1C0',
+            inputDecoration: InputDecoration(
+                hintText: hintText,
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 2))),
+            debounceTime: 800,
+            itmClick: (Prediction prediction) async {
+              controller.text = prediction.description;
+              controller.selection = TextSelection.fromPosition(
+                  TextPosition(offset: prediction.description.length));
+
+              List<Placemark> placemark =
+                  await Geolocator().placemarkFromAddress(controller.text);
+
+              latitude = placemark[0].position.latitude.toString();
+              longitude = placemark[0].position.longitude.toString();
+            }));
   }
 
   Future<void> _handleLocation() async {
@@ -407,21 +436,31 @@ class _CheckDistributionState extends State<CheckDistribution> {
             _address = stringAddress;
           });
 
-          _checkdistributionBloc.add(LoadCheckDistribution(
-              lat: position.latitude, long: position.longitude));
-
-          // _checkdistributionBloc.add(LoadCheckDistribution(lat: '12312', long: '132'));
-          // print(stringAddress);
+          // find location
+          findLocation(position.latitude, position.longitude);
         }
-        // Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
-
       } else {
-        // Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        // Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
+        List<Placemark> placemarks = await Geolocator()
+            .placemarkFromCoordinates(position.latitude, position.longitude);
+
+        if (placemarks != null && placemarks.isNotEmpty) {
+          final Placemark pos = placemarks[0];
+          final stringAddress = pos.thoroughfare +
+              ', ' +
+              pos.locality +
+              ', ' +
+              pos.subAdministrativeArea;
+
+          setState(() {
+            _address = stringAddress;
+          });
+
+          // find location
+          findLocation(position.latitude, position.longitude);
+        }
       }
-
-      // AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
-
+      // analytics
+      AnalyticsHelper.setLogEvent(Analytics.tappedCheckCurrentLocation);
     } else {
       showDialog(
           context: context,
@@ -440,11 +479,17 @@ class _CheckDistributionState extends State<CheckDistribution> {
                   });
                 },
                 onCancelPressed: () {
-                  // AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.permissionDismissLocation);
                   Navigator.of(context).pop();
                 },
               ));
     }
+  }
+
+  findLocation(latitude, longitude) {
+    _checkdistributionBloc
+        .add(LoadCheckDistribution(lat: latitude, long: longitude));
   }
 
   void _onStatusRequested(BuildContext context,
@@ -452,9 +497,9 @@ class _CheckDistributionState extends State<CheckDistribution> {
     final statusLocation = statuses[PermissionGroup.location];
     if (statusLocation == PermissionStatus.granted) {
       _handleLocation();
-      // AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
-      // AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+      AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }
   }
 }
