@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/%20CheckDistributionBanner.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
   @override
@@ -32,12 +33,16 @@ class CheckDistribution extends StatefulWidget {
 
 class _CheckDistributionState extends State<CheckDistribution> {
   CheckdistributionBloc _checkdistributionBloc;
+  TextEditingController _findController = TextEditingController();
 
   String _address = '-';
+  bool isFindOtherLocation;
 
   @override
   void initState() {
     _checkdistributionBloc = BlocProvider.of<CheckdistributionBloc>(context);
+
+    isFindOtherLocation = false;
 
     super.initState();
   }
@@ -45,7 +50,10 @@ class _CheckDistributionState extends State<CheckDistribution> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(Dictionary.checkDistribution)),
+        appBar: AppBar(
+            title: isFindOtherLocation == false
+                ? Text(Dictionary.checkDistribution)
+                : Text(Dictionary.checkDistributionByLocation)),
         body: ListView(
           children: <Widget>[
             Container(
@@ -54,56 +62,14 @@ class _CheckDistributionState extends State<CheckDistribution> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   // box section banner
-                  Container(
-                    height: 100.0,
-                    child: Card(
-                      color: Color(0xFFF2C94C),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.fromLTRB(10.0, 16.0, 16.0, 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    Dictionary.checkDistributionTitle,
-                                    style: TextStyle(
-                                        fontFamily: FontsFamily.productSans,
-                                        fontSize: 16.0,
-                                        height: 1.2,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                // SizedBox(height: 8),
-                                Expanded(
-                                  child: Text(
-                                    Dictionary.checkDistributionSubTitle,
-                                    style: TextStyle(
-                                      fontFamily: FontsFamily.productSans,
-                                      fontSize: 12.0,
-                                      height: 1.2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Image.asset(
-                              '${Environment.imageAssets}people_corona2.png',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  CheckDistributionBanner(
+                    title: Dictionary.checkDistributionTitle,
+                    subTitle: isFindOtherLocation == false
+                        ? Dictionary.checkDistributionSubTitle1
+                        : Dictionary.checkDistributionSubTitle2,
+                    image: isFindOtherLocation == false
+                        ? '${Environment.imageAssets}people_corona2.png'
+                        : '${Environment.imageAssets}corona-virus.png',
                   ),
 
                   boxContainer(
@@ -117,46 +83,60 @@ class _CheckDistributionState extends State<CheckDistribution> {
                       child: Column(
                         children: <Widget>[
                           // box section address
-                          Container(
-                            padding: const EdgeInsets.all(Dimens.padding),
-                            child: Row(
-                              children: <Widget>[
-                                Image.asset(
-                                  '${Environment.iconAssets}pin.png',
-                                  scale: 1.5,
-                                ),
-                                SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          isFindOtherLocation == false
+                              ? Container(
+                                  padding: const EdgeInsets.all(Dimens.padding),
+                                  child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        Dictionary.currentLocationTitle,
-                                        style: TextStyle(
-                                          fontFamily: FontsFamily.productSans,
-                                          color: Colors.grey[600],
-                                          fontSize: 12.0,
-                                          height: 1.2,
-                                        ),
+                                      Image.asset(
+                                        '${Environment.iconAssets}pin.png',
+                                        scale: 1.5,
                                       ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        _address,
-                                        style: TextStyle(
-                                          fontFamily: FontsFamily.productSans,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14.0,
-                                          height: 1.2,
+                                      SizedBox(width: 14),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              Dictionary.currentLocationTitle,
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    FontsFamily.productSans,
+                                                color: Colors.grey[600],
+                                                fontSize: 12.0,
+                                                height: 1.2,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              _address,
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    FontsFamily.productSans,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14.0,
+                                                height: 1.2,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                 )
-                              ],
-                            ),
-                          ),
+                              : Container(
+                                  alignment: Alignment.topLeft,
+                                  padding: EdgeInsets.all(Dimens.padding),
+                                  child: Text(
+                                    Dictionary.checkOtherLocation,
+                                    style: TextStyle(
+                                      fontFamily: FontsFamily.productSans,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
 
                           // Box section button
                           Container(
@@ -164,9 +144,16 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                 8.0, Dimens.padding, Dimens.padding),
                             child: Column(
                               children: <Widget>[
+                                isFindOtherLocation == false
+                                    ? Container()
+                                    : buildTextInput(
+                                        controller: _findController,
+                                        hintText: Dictionary.hintFindLocation),
                                 RoundedButton(
                                     minWidth: MediaQuery.of(context).size.width,
-                                    title: Dictionary.checkCurrentLocation,
+                                    title: isFindOtherLocation == false
+                                        ? Dictionary.checkCurrentLocation
+                                        : Dictionary.findLocation,
                                     borderRadius: BorderRadius.circular(8.0),
                                     color: ColorBase.green,
                                     textStyle: Theme.of(context)
@@ -177,12 +164,18 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
                                     onPressed: () {
-                                      _handleLocation();
+                                      if (isFindOtherLocation == false) {
+                                        _handleLocation();
+                                      } else {
+                                        print('cek lokasi');
+                                      }
                                     }),
                                 SizedBox(height: 10),
                                 RoundedButton(
                                     minWidth: MediaQuery.of(context).size.width,
-                                    title: Dictionary.checkOtherLocation,
+                                    title: isFindOtherLocation == false
+                                        ? Dictionary.checkOtherLocation
+                                        : 'Kembali',
                                     borderRadius: BorderRadius.circular(8.0),
                                     color: Colors.white,
                                     textStyle: Theme.of(context)
@@ -192,7 +185,13 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             color: Colors.grey[600],
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
-                                    onPressed: () {}),
+                                    onPressed: () {
+                                      setState(() {
+                                        isFindOtherLocation == false
+                                            ? isFindOtherLocation = true
+                                            : isFindOtherLocation = false;
+                                      });
+                                    }),
                               ],
                             ),
                           ),
@@ -208,12 +207,16 @@ class _CheckDistributionState extends State<CheckDistribution> {
               bloc: _checkdistributionBloc,
               builder: (context, state) {
                 return state is CheckDistributionLoading
-                    ? Column(
-                        children: <Widget>[
-                          CircularProgressIndicator(
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: Column(
+                          children: <Widget>[
+                            CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                  ColorBase.green))
-                        ],
+                                  ColorBase.green),
+                            )
+                          ],
+                        ),
                       )
                     : state is CheckDistributionLoaded
                         ? buildContent(state)
@@ -355,6 +358,30 @@ class _CheckDistributionState extends State<CheckDistribution> {
         ],
       ),
       child: child,
+    );
+  }
+
+  Widget buildTextInput({
+    TextEditingController controller,
+    String hintText,
+  }) {
+    return Container(
+      padding: EdgeInsets.only(bottom: 15.0),
+      child: TextFormField(
+        style: TextStyle(color: Colors.black),
+        controller: controller,
+        decoration: InputDecoration(
+            hintText: hintText,
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1)),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 2))),
+      ),
     );
   }
 
