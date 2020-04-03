@@ -34,6 +34,7 @@ class FirebaseConfig {
   static String selfDiagnoseUrl = 'selfdiagnose_url';
   static String selfDiagnoseCaption = 'selfdiagnose_caption';
   static String spreadCheckLocation = 'ceksebaran_location';
+  static String healthStatusColors = 'health_status_colors';
 
   /// Remote config parameter key
   /// Profile
