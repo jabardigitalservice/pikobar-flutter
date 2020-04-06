@@ -339,31 +339,27 @@ class _MenuListState extends State<MenuList> {
 
           /// Menu Button QnA / Forum
           /// Remote Config : enabled, caption & url
-          FutureBuilder<String>(
-            future: _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
-                ? _forumUrlAppend(_remoteConfig.getString(FirebaseConfig.qnaUrl))
-                : _forumUrlAppend(UrlThirdParty.urlQNA),
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-              return _remoteConfig != null &&
+          _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
-                  ? _buildButtonColumn(
+              ? _buildButtonColumn(
                   '${Environment.iconAssets}conversation_active.png',
                   _remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                          null
+                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                              null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
                       : Dictionary.qna,
                   NavigationConstrants.Browser,
-                  arguments: snapshot.data)
-                  : _buildButtonDisable(
+                  arguments: _remoteConfig != null &&
+                          _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
+                      ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
+                      : UrlThirdParty.urlQNA)
+              : _buildButtonDisable(
                   '${Environment.iconAssets}conversation.png',
                   _remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                          null
+                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                              null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
-                      : Dictionary.qna);
-            }
-          )
+                      : Dictionary.qna)
         ],
       ),
     );
@@ -391,51 +387,52 @@ class _MenuListState extends State<MenuList> {
               icon: Image.asset(
                 iconPath,
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (route != null) {
-                    if (route == NavigationConstrants.Browser) {
-                      openChromeSafariBrowser(url: arguments);
-                    } else {
-                      Navigator.pushNamed(context, route, arguments: arguments);
-                    }
 
-                    // record event to analytics
-                    if (label == Dictionary.phoneBookEmergency) {
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedphoneBookEmergency);
-                    } else if (label == Dictionary.saberHoax) {
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedJabarSaberHoax);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}pikobar.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}garuda_pancasila.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}world.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
-                    } else if (label == Dictionary.survey) {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}self_diagnose.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}logistics.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}relawan_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}report_case_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-                    } else if (iconPath == '${Environment.iconAssets}help.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}conversation_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
-                    }
+                  arguments = await _userDataUrlAppend(arguments);
+
+                  if (route == NavigationConstrants.Browser) {
+                    openChromeSafariBrowser(url: arguments);
+                  } else {
+                    Navigator.pushNamed(context, route, arguments: arguments);
                   }
+
+                  // record event to analytics
+                  if (label == Dictionary.phoneBookEmergency) {
+                    AnalyticsHelper.setLogEvent(
+                        Analytics.tappedphoneBookEmergency);
+                  } else if (label == Dictionary.saberHoax) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedJabarSaberHoax);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}pikobar.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}garuda_pancasila.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
+                  } else if (iconPath == '${Environment.iconAssets}world.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+                  } else if (label == Dictionary.survey) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}self_diagnose.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}logistics.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}relawan_active.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}report_case_active.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+                  } else if (iconPath == '${Environment.iconAssets}help.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}conversation_active.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+                  }
+                }
               },
             ),
           ),
@@ -753,13 +750,31 @@ class _MenuListState extends State<MenuList> {
   //       });
   // }
 
-  Future<String> _forumUrlAppend(String url) async {
+  Future<String> _userDataUrlAppend(String url) async {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
+    String urlReturn = url;
+
     if (_user != null) {
-      return Uri.encodeFull(url + "?uid=${_user.uid}");
+      List<String> coded = ["_userUID_", "_userName_", "_userEmail_"]; //ABV list
+      List<String> decoded = [_user.uid, _user.displayName, _user.email]; //corresponding list
+      Map<String, String> map = new Map.fromIterables(coded, decoded);
+
+      final result = map.entries
+          .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
+
+      urlReturn = Uri.encodeFull(result);
     } else {
-      return url;
+      List<String> coded = ["_userUID_", "_userName_", "_userEmail_"]; //ABV list
+      List<String> decoded = ['', '', '']; //corresponding list
+      Map<String, String> map = new Map.fromIterables(coded, decoded);
+
+      final result = map.entries
+          .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
+
+      urlReturn = Uri.encodeFull(result);
     }
+
+    return urlReturn;
   }
 }
