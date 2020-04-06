@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/BrowserScreen.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/%20CheckDistributionScreen.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';

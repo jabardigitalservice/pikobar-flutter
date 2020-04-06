@@ -16,7 +16,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/components/%20CheckDistributionBanner.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {

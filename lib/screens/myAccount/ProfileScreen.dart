@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -15,6 +18,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/HexColor.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -26,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
+
   @override
   void initState() {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -339,6 +344,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   FutureBuilder<RemoteConfig> _healthStatus(DocumentSnapshot data) {
+    Color cardColor = ColorBase.grey;
+    Color textColor = Colors.white;
+    String uriImage = '${Environment.iconAssets}sthetoscope.png';
+
     return FutureBuilder<RemoteConfig>(
         future: setupRemoteConfig(),
         builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
@@ -348,11 +357,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible)
               : false;
 
+          if (snapshot.data != null &&
+              snapshot.data.getString(FirebaseConfig.healthStatusColors) !=
+                  null &&
+              data['health_status'] != null) {
+            Map<String, dynamic> healthStatusColor = json.decode(
+                snapshot.data.getString(FirebaseConfig.healthStatusColors));
+
+            switch (data['health_status']) {
+              case "HEALTHY":
+                cardColor = HexColor.fromHex(healthStatusColor['healthy'] != null ? healthStatusColor['healthy'] : ColorBase.green);
+                break;
+
+              case "ODP":
+                cardColor = HexColor.fromHex(healthStatusColor['odp'] != null ? healthStatusColor['odp'] : Colors.yellow);
+                textColor = Colors.black;
+                uriImage = '${Environment.iconAssets}sthetoscope_black.png';
+                break;
+
+              case "PDP":
+                cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null ? healthStatusColor['pdp'] : Colors.orange);
+                textColor = Colors.black;
+                uriImage = '${Environment.iconAssets}sthetoscope_black.png';
+                break;
+
+              case "CONFIRMED":
+                cardColor = HexColor.fromHex(healthStatusColor['confirmed'] != null ? healthStatusColor['confirmed'] : Colors.red);
+                break;
+
+              default :
+                cardColor = Colors.grey;
+            }
+          }
+
           return visible && data['health_status_text'] != null
               ? Container(
                   decoration: BoxDecoration(
-                      color: Color(0xff27AE60),
-                      borderRadius: BorderRadius.circular(4)),
+                      color: cardColor, borderRadius: BorderRadius.circular(4)),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: Column(
@@ -361,12 +402,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: <Widget>[
                             Container(
                                 height: 12,
-                                child: Image.asset(
-                                    '${Environment.iconAssets}sthetoscope.png')),
+                                child: Image.asset(uriImage)),
                             SizedBox(width: 5),
-                            Text(Dictionary.statusUser + data['health_status_text'],
+                            Text(
+                                Dictionary.statusUser +
+                                    data['health_status_text'],
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                 )),
@@ -377,7 +419,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 unixTimeStampToDateTimeWithoutDay(
                                     data['health_status_check'].seconds),
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontSize: 10,
                                 ))
                             : Container(),
@@ -392,9 +434,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<RemoteConfig> setupRemoteConfig() async {
+
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.healthStatusVisible: false,
+      FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors,
     });
 
     try {
