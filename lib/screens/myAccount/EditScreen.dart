@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -10,10 +12,12 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
 
 class Edit extends StatefulWidget {
   final AsyncSnapshot<DocumentSnapshot> state;
@@ -27,6 +31,13 @@ class _EditState extends State<Edit> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneNumberController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _birthDayController = TextEditingController();
+  final _nationalityController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _provinceController = TextEditingController();
+
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -35,6 +46,9 @@ class _EditState extends State<Edit> {
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
+  String _format = 'yyyy-MMMM-dd';
+  String minDate = '1900-01-01';
+  DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
 
   @override
   void initState() {
@@ -195,6 +209,51 @@ class _EditState extends State<Edit> {
                                 SizedBox(
                                   height: 20,
                                 ),
+                                buildRadioButton(
+                                    title: Dictionary.gender,
+                                    label: <String>[
+                                      "Laki-Laki",
+                                      "Perempuan",
+                                    ]),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildDateField(
+                                  title: Dictionary.birthday,
+                                  placeholder: _birthDayController.text == ''
+                                      ? Dictionary.birthdayPlaceholder
+                                      :  DateFormat.yMMMMd().format(
+                                          DateTime.parse(_birthDayController
+                                              .text
+                                              .substring(0, 10))),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.addressDomicile,
+                                    controller: _addressController,
+                                    hintText: Dictionary.addressPlaceholder,
+                                    isEdit: true),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.cityDomicile,
+                                    controller: _cityController,
+                                    hintText: Dictionary.cityPlaceholder,
+                                    isEdit: true),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.provinceDomicile,
+                                    controller: _provinceController,
+                                    hintText: Dictionary.provincePlaceholder,
+                                    isEdit: true),
+                                SizedBox(
+                                  height: 20,
+                                ),
                               ],
                             ),
                           ),
@@ -224,6 +283,39 @@ class _EditState extends State<Edit> {
                   ),
                 ));
           }),
+    );
+  }
+
+  void _showDatePickerBirthday() {
+    DatePicker.showDatePicker(
+      context,
+      pickerTheme: DateTimePickerTheme(
+        showTitle: true,
+        confirm: Text('Done', style: TextStyle(color: Colors.red)),
+        cancel: Text('Cancel', style: TextStyle(color: Colors.cyan)),
+      ),
+      minDateTime: DateTime.parse(minDate),
+      maxDateTime: DateTime.now(),
+      initialDateTime: _birthDayController.text == ''
+          ? DateTime.now()
+          : DateTime.parse(_birthDayController.text),
+      dateFormat: _format,
+      locale: _locale,
+      onClose: () {
+        setState(() {
+          _birthDayController.text = _birthDayController.text;
+        });
+      },
+      onCancel: () {
+        setState(() {
+          _birthDayController.text = _birthDayController.text;
+        });
+      },
+      onConfirm: (dateTime, List<int> index) {
+        setState(() {
+          _birthDayController.text = dateTime.toString();
+        });
+      },
     );
   }
 
@@ -267,6 +359,96 @@ class _EditState extends State<Edit> {
     }
   }
 
+  Widget buildRadioButton({String title, List<String> label}) {
+    return Padding(
+      padding: EdgeInsets.only(left: 16.0, right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          RadioButtonGroup(
+            activeColor: Color(0xff27AE60),
+            orientation: GroupedButtonsOrientation.HORIZONTAL,
+            onSelected: (String selected) => setState(() {
+              _genderController.text = selected;
+            }),
+            labels: label,
+            picked: _genderController.text,
+            itemBuilder: (Radio rb, Text txt, int i) {
+              return Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Container(
+                    height: 40,
+                    width: MediaQuery.of(context).size.width / 2.8,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border:
+                            Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                    child: Row(
+                      children: <Widget>[
+                        rb,
+                        txt,
+                      ],
+                    )),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDateField({String title, placeholder}) {
+    return Container(
+      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            onTap: () {
+              _showDatePickerBirthday();
+            },
+            child: Container(
+              height: 60,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                        height: 20,
+                        child: Image.asset(
+                            '${Environment.iconAssets}calendar.png')),
+                  ),
+                  Text(
+                    placeholder,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildTextField(
       {String title,
       TextEditingController controller,
@@ -300,6 +482,10 @@ class _EditState extends State<Edit> {
               controller: controller,
               decoration: InputDecoration(
                   hintText: hintText,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide:
+                          BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
                   disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide:
