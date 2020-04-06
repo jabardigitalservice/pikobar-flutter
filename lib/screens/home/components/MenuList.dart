@@ -763,7 +763,7 @@ class _MenuListState extends State<MenuList> {
       final result = map.entries
           .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
 
-      urlReturn = Uri.encodeFull(result);
+      urlReturn = result;
     } else {
       List<String> coded = ["_userUID_", "_userName_", "_userEmail_"]; //ABV list
       List<String> decoded = ['', '', '']; //corresponding list
@@ -772,7 +772,7 @@ class _MenuListState extends State<MenuList> {
       final result = map.entries
           .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
 
-      urlReturn = Uri.encodeFull(result);
+      urlReturn = result;
     }
 
     return urlReturn;
