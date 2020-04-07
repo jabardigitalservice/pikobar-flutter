@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           future: setupRemoteConfig(),
           builder:
               (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-            return snapshot.hasData ? buildContent(snapshot.data) : Container();
+            return snapshot.hasData ? buildContent(snapshot.data) : Center(child: CircularProgressIndicator(),);
           }),
     );
   }
@@ -288,10 +288,11 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
       FirebaseConfig.spreadCheckLocation: '',
       FirebaseConfig.announcement: false,
+      FirebaseConfig.loginRequired:FirebaseConfig.loginRequiredDefaultVal
     });
 
     try {
-      await remoteConfig.fetch(expiration: Duration(seconds: 1));
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
 
       checkVersion(context, remoteConfig);
