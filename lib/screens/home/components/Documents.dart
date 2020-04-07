@@ -253,7 +253,7 @@ class _DocumentsState extends State<Documents> {
                     margin: EdgeInsets.only(top: 10, bottom: 10),
                     color: Colors.grey[200],
                     width: MediaQuery.of(context).size.width,
-                    height: 2,
+                    height: 1.5,
                   )
                 ],
               ));
