@@ -17,6 +17,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
@@ -247,17 +248,18 @@ class _CheckDistributionState extends State<CheckDistribution> {
             Container(
               padding: const EdgeInsets.all(24.0),
               child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    Dictionary.checkDistributionInfo,
-                    style: TextStyle(
-                      fontFamily: FontsFamily.productSans,
-                      color: Colors.grey[600],
-                      fontSize: 12.0,
-                      height: 1.3,
-                    ),
-                    textAlign: TextAlign.center,
-                  )),
+                alignment: Alignment.center,
+                child: Text(
+                  Dictionary.checkDistributionInfo,
+                  style: TextStyle(
+                    fontFamily: FontsFamily.productSans,
+                    color: Colors.grey[600],
+                    fontSize: 12.0,
+                    height: 1.3,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             )
           ],
         ));
@@ -268,10 +270,14 @@ class _CheckDistributionState extends State<CheckDistribution> {
         ? EmptyData(message: Dictionary.unreachableLocation)
         : Padding(
             padding: const EdgeInsets.only(
-                top: 10, left: Dimens.padding, right: Dimens.padding),
+                top: 0, left: Dimens.padding, right: Dimens.padding),
             child: Column(
               children: <Widget>[
-                // build Positif
+                // build Section Location by radius
+                boxContainer(CheckDistributionCardRadius(state: state)),
+                SizedBox(height: 20),
+
+                // build location by sub city
                 buildResult(
                     Dictionary.positifTitle +
                         ': ' +
@@ -320,6 +326,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.topCenter,
                   ),
+                  borderRadius: BorderRadius.circular(8.0),
                 )
               : BoxDecoration(
                   color: Colors.white,
@@ -383,35 +390,35 @@ class _CheckDistributionState extends State<CheckDistribution> {
     String hintText,
   }) {
     return Container(
-        padding: EdgeInsets.only(bottom: 15.0),
-        child: GooglePlaceAutoCompleteTextField(
-            textEditingController: controller,
-            googleAPIKey: Environment.googleApiKey,
-            inputDecoration: InputDecoration(
-                hintText: hintText,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1)),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 2))),
-            debounceTime: 800,
-            itmClick: (Prediction prediction) async {
-              controller.text = prediction.description;
-              controller.selection = TextSelection.fromPosition(
-                  TextPosition(offset: prediction.description.length));
+      padding: EdgeInsets.only(bottom: 15.0),
+      child: GooglePlaceAutoCompleteTextField(
+          textEditingController: controller,
+          googleAPIKey: Environment.googleApiKey,
+          inputDecoration: InputDecoration(
+            hintText: hintText,
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1)),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xffE0E0E0), width: 2)),
+          ),
+          debounceTime: 800,
+          itmClick: (Prediction prediction) async {
+            controller.text = prediction.description;
+            controller.selection = TextSelection.fromPosition(
+                TextPosition(offset: prediction.description.length));
 
-              List<Placemark> placemark =
-                  await Geolocator().placemarkFromAddress(controller.text);
+            List<Placemark> placemark =
+                await Geolocator().placemarkFromAddress(controller.text);
 
-              latitude = placemark[0].position.latitude.toString();
-              longitude = placemark[0].position.longitude.toString();
-            }));
+            latitude = placemark[0].position.latitude.toString();
+            longitude = placemark[0].position.longitude.toString();
+          }),
+    );
   }
 
   Future<void> _handleLocation() async {
