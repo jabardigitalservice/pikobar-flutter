@@ -34,6 +34,7 @@ class Analytics {
   static String tappedVideoMore = 'tapped_video_selengkapnya';
   static String tappedSpreadCheck = 'tapped_cek_sebaran';
   static String tappedInfoGraphicsMore = 'tapped_info_praktikal_selengkapnya';
+  static String tappedDocumentsMore = 'tapped_dokumen_selengkapnya';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
