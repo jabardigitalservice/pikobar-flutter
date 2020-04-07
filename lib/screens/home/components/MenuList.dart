@@ -834,19 +834,20 @@ class _MenuListState extends State<MenuList> {
 
     if (url == null) {
       return url;
-    }
-
-    if (user != null) {
-      var usrMap = {'_userUID_': user.uid, '_userName_': user.displayName, '_userEmail_':user.email};
-
-      usrMap.forEach((key, value) {
-        url = url.replaceAll(key, value);
-      });
-
-      return url;
     } else {
+      Map<String, String> usrMap = {
+        '_userUID_': '',
+        '_userName_': '',
+        '_userEmail_': ''
+      };
 
-      var usrMap = {'_userUID_': '', '_userName_': '', '_userEmail_':''};
+      if (user != null) {
+        usrMap = {
+          '_userUID_': user.uid,
+          '_userName_': user.displayName,
+          '_userEmail_': user.email
+        };
+      }
 
       usrMap.forEach((key, value) {
         url = url.replaceAll(key, value);
