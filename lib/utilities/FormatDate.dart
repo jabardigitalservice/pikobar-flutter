@@ -6,11 +6,16 @@ String unixTimeStampToDateTime(int millisecond) {
 
   return dateTimeString;
 }
+String unixTimeStampToDay(int millisecond) {
+  var format = DateFormat('EEEE', 'id');
+  var dateTimeString = format.format(DateTime.fromMillisecondsSinceEpoch(millisecond * 1000));
+
+  return dateTimeString;
+}
 
 String unixTimeStampToDateTimeWithoutDay(int millisecond) {
   var format = DateFormat('dd MMMM yyyy HH:mm', 'id');
   var dateTimeString = format.format(DateTime.fromMillisecondsSinceEpoch(millisecond * 1000));
-
   return dateTimeString;
 }
 

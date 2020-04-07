@@ -187,4 +187,8 @@ class Dictionary {
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
+
+  //document
+  static String date = "Tanggal";
+  static String titleDocument = "Judul Dokumen";
 }

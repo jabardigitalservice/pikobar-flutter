@@ -153,7 +153,7 @@ class _DocumentsState extends State<Documents> {
             children: <Widget>[
               SizedBox(width: 10),
               Text(
-                'Tanggal',
+                Dictionary.date,
                 style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14.0,
@@ -162,9 +162,9 @@ class _DocumentsState extends State<Documents> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(width: 30),
+              SizedBox(width: 40),
               Text(
-                'Judul Dokumen',
+                Dictionary.titleDocument,
                 style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14.0,
@@ -193,17 +193,20 @@ class _DocumentsState extends State<Documents> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      SizedBox(width: 10),
                       Text(
-                        unixTimeStampToDateWithoutDay(
-                            document['published_date'].seconds),
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                         unixTimeStampToDay(
+                             document['published_date'].seconds)+',\n'+unixTimeStampToDateWithoutDay(
+                             document['published_date'].seconds),
+                         style: TextStyle(
+                             color: Colors.grey,
+                             fontSize: 12.0,
+                             fontWeight: FontWeight.w600),
+                         textAlign: TextAlign.left,
+                         maxLines: 2,
+                         overflow: TextOverflow.ellipsis,
+                       ),
+
                       SizedBox(width: 30),
                       Expanded(
                         child: InkWell(
