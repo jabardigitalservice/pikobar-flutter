@@ -455,7 +455,9 @@ class _MenuListState extends State<MenuList> {
                           }
                         }
                       } else {
-                        
+
+                        arguments = await _userDataUrlAppend(arguments);
+
                         if (route == NavigationConstrants.Browser) {
                           openChromeSafariBrowser(url: arguments);
                         } else {
@@ -464,6 +466,8 @@ class _MenuListState extends State<MenuList> {
                       }
 
                   } else {
+
+                    arguments = await _userDataUrlAppend(arguments);
 
                     if (route == NavigationConstrants.Browser) {
                       openChromeSafariBrowser(url: arguments);
@@ -833,16 +837,21 @@ class _MenuListState extends State<MenuList> {
     }
 
     if (user != null) {
-      List<String> coded = ["_userUID_", "_userName_", "_userEmail_"]; //ABV list
-      List<String> decoded = [user.uid, user.displayName, user.email]; //corresponding list
+      var usrMap = {'_userUID_': user.uid, '_userName_': user.displayName, '_userEmail_':user.email};
 
-      Map<String, String> map = new Map.fromIterables(coded, decoded);
+      usrMap.forEach((key, value) {
+        url = url.replaceAll(key, value);
+      });
 
-      final result = map.entries
-          .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
-
-      return result;
+      return url;
     } else {
+
+      var usrMap = {'_userUID_': '', '_userName_': '', '_userEmail_':''};
+
+      usrMap.forEach((key, value) {
+        url = url.replaceAll(key, value);
+      });
+
       return url;
     }
 
