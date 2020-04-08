@@ -204,7 +204,7 @@ class Dictionary {
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
   static String locationRadiusTitle = 'Lokasi Dalam Radius';
   static String village = 'Kelurahan';
-  static String districts = 'kecamatan';
+  static String districts = 'Kecamatan';
   static String here = 'di sini';
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
