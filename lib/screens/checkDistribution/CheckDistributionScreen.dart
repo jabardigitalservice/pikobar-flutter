@@ -252,33 +252,48 @@ class _CheckDistributionState extends State<CheckDistribution> {
               padding: const EdgeInsets.all(24.0),
               child: Align(
                 alignment: Alignment.center,
-                child: Text.rich(
-                  TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: Dictionary.checkDistributionInfo,
-                        style: TextStyle(
-                          fontFamily: FontsFamily.productSans,
-                          color: Colors.grey[600],
-                          fontSize: 12.0,
-                          height: 1.3,
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Dictionary.informationLocation,
+                      style: TextStyle(
+                        fontFamily: FontsFamily.productSans,
+                        color: Colors.grey[600],
+                        fontSize: 12.0,
+                        height: 1.3,
                       ),
+                    ),
+                    SizedBox(height: 6),
+                    Text.rich(
                       TextSpan(
-                          text: Dictionary.here,
-                          style: TextStyle(
-                            fontFamily: FontsFamily.productSans,
-                            color: ColorBase.green,
-                            fontSize: 12.0,
-                            height: 1.3,
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: Dictionary.checkDistributionInfo,
+                            style: TextStyle(
+                              fontFamily: FontsFamily.productSans,
+                              color: Colors.grey[600],
+                              fontSize: 12.0,
+                              height: 1.3,
+                            ),
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.pushNamed(
-                                  context, NavigationConstrants.Faq);
-                            })
-                    ],
-                  ),
+                          TextSpan(
+                              text: Dictionary.here,
+                              style: TextStyle(
+                                fontFamily: FontsFamily.productSans,
+                                color: ColorBase.green,
+                                fontSize: 12.0,
+                                height: 1.3,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushNamed(
+                                      context, NavigationConstrants.Faq);
+                                })
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
             )
@@ -289,7 +304,25 @@ class _CheckDistributionState extends State<CheckDistribution> {
   Widget buildContent(CheckDistributionLoaded state) {
     print(state.record.detected.toString());
     return state.record.detected == null
-        ? EmptyData(message: Dictionary.unreachableLocation)
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ErrorContent(error: Dictionary.unreachableLocation),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 30.0),
+                child: Text(
+                  'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontFamily: FontsFamily.productSans,
+                    fontSize: 14.0,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+            ],
+          )
         : Padding(
             padding: const EdgeInsets.only(
                 top: 0, left: Dimens.padding, right: Dimens.padding),

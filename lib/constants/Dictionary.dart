@@ -186,6 +186,8 @@ class Dictionary {
   static String village = 'Kelurahan';
   static String districts = 'kecamatan';
   static String here = 'di sini';
+  static String informationLocation =
+      'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
