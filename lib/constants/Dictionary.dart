@@ -57,6 +57,7 @@ class Dictionary {
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
+  static String provinceId='32';
   static String sharedFrom = '_dibagikan dari Pikobar_';
   static String gender = 'Jenis Kelamin';
   static String birthday= 'Tanggal Lahir';
@@ -119,6 +120,10 @@ class Dictionary {
   static String errorMinimumPhone =
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
   static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+  static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
+  static String errorEmptyAddress = 'Alamat harus diisi';
+  static String pleaseCompleteAllField='Silahkan lengkapi semua data terlebih dahulu...';
+
   static String codeSend='Kode terkirim ke nomor ';
   static String codeSendFailed='Nomor telepon salah silahkan cek kembali';
   static String codeVerified='No hp telah terverifikasi';

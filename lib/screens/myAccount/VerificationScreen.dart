@@ -12,8 +12,23 @@ import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class Verification extends StatefulWidget {
-  final String phoneNumber, uid, verificationID;
-  Verification({this.phoneNumber, this.uid, this.verificationID});
+  final String phoneNumber,
+      uid,
+      verificationID,
+      gender,
+      address,
+      cityId,
+      provinceId;
+  final DateTime birthdate;
+  Verification(
+      {this.phoneNumber,
+      this.uid,
+      this.verificationID,
+      this.gender,
+      this.address,
+      this.cityId,
+      this.provinceId,
+      this.birthdate});
   @override
   _VerificationState createState() => _VerificationState();
 }
@@ -37,7 +52,7 @@ class _VerificationState extends State<Verification> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldState,
-       appBar: CustomAppBar.defaultAppBar(title: Dictionary.verification),
+        appBar: CustomAppBar.defaultAppBar(title: Dictionary.verification),
         body: BlocProvider<ProfileBloc>(
             create: (BuildContext context) => _profileBloc =
                 ProfileBloc(profileRepository: _profileRepository),
@@ -279,17 +294,30 @@ class _VerificationState extends State<Verification> {
 
   onVerifyButtonPressed() {
     _profileBloc.add(ConfirmOTP(
-        smsCode: smsCode,
-        verificationID:
-            verificationID == null ? widget.verificationID : verificationID,
-        id: widget.uid,
-        phoneNumber: widget.phoneNumber));
+      smsCode: smsCode,
+      verificationID:
+          verificationID == null ? widget.verificationID : verificationID,
+      id: widget.uid,
+      phoneNumber: widget.phoneNumber,
+      address: widget.address,
+      birthdate: widget.birthdate,
+      cityId: widget.cityId,
+      gender: widget.gender,
+      provinceId: widget.provinceId,
+    ));
   }
 
   Future<void> sendCodeToPhoneNumber() async {
     verificationCompleted = (AuthCredential credential) async {
       await _profileRepository.linkCredential(
-          widget.uid, widget.phoneNumber, credential);
+          widget.uid,
+          widget.phoneNumber,
+          widget.gender,
+          widget.address,
+          widget.cityId,
+          widget.provinceId,
+          widget.birthdate,
+          credential);
       _profileBloc.add(VerifyConfirm());
     };
     verificationFailed = (AuthException authException) {
