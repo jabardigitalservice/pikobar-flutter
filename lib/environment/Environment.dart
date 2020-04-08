@@ -14,7 +14,7 @@ class Environment {
   // mock
   static String apiMock = 'http://52.74.74.33:3000/v1';
 
-  static String googleApiKey = 'AIzaSyAxCyXB5TyKZNoxwJLvXInU2T26ti0RMjY';
+  static String googleApiKey = '%GOOGLE_API_KEY%';
   static String defaultPassword = '123456';
   static String saberHoaxPhone = '+6282118670700';
   static String csPhone = '+6281212124023';
