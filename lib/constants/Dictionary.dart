@@ -28,6 +28,7 @@ class Dictionary {
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
+  static String documents = 'Dokumen';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -209,4 +210,12 @@ class Dictionary {
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
+
+  //document
+  static String document = "Dokumen";
+  static String date = "Tanggal";
+  static String titleDocument = "Judul Dokumen";
+  static String emptyDataDocuments = 'Dokumen tidak ada';
+  static String permissionDownloadAttachment =
+      'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
 }
