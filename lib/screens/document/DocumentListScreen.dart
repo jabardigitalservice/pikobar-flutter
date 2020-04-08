@@ -176,61 +176,72 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     );
   }
 
-  _buildLoading() {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      elevation: 1.5,
-      margin: EdgeInsets.only(top: 14, left: 14, right: 14),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: <Widget>[
-          Container(
+  Widget _buildLoading() {
+    return ListView(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+          child: Skeleton(
+            height: 25.0,
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.3,
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            child: Skeleton(
-              width: MediaQuery.of(context).size.width,
-              padding: 10.0,
-            ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 14.0, right: 14.0, top: 14.0, bottom: 14.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
+        ),
+        ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 9,
+            itemBuilder: (context, index) {
+              return Container(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Skeleton(
-                        height: 20.0,
-                        width: MediaQuery.of(context).size.width / 1.4,
-                        padding: 10.0,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Skeleton(
+                            height: 20.0,
+                            width: 40,
+                            padding: 10.0,
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Skeleton(
+                                    height: 20.0,
+                                    width:
+                                    MediaQuery.of(context).size.width / 1.6,
+                                    padding: 10.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Skeleton(
+                              height: 30.0,
+                              width: 30.0,
+                              padding: 10.0,
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 8),
-                      Skeleton(
-                        height: 20.0,
-                        width: MediaQuery.of(context).size.width / 2,
-                        padding: 10.0,
-                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20, bottom: 20),
+                        child: Skeleton(
+                          height: 1.5,
+                          width: MediaQuery.of(context).size.width,
+                          padding: 10.0,
+                        ),
+                      )
                     ],
-                  ),
-                ),
-                Container(
-                  child: Skeleton(
-                    height: 30.0,
-                    width: 30,
-                    padding: 20.0,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+                  ));
+            })
+      ],
     );
   }
 
