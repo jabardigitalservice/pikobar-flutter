@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -836,13 +837,18 @@ class _MenuListState extends State<MenuList> {
       return url;
     } else {
       Map<String, String> usrMap = {
+        '_googleIDToken_': '',
         '_userUID_': '',
         '_userName_': '',
         '_userEmail_': ''
       };
 
       if (user != null) {
+        GoogleSignInAccount signIn = await GoogleSignIn().signIn();
+        GoogleSignInAuthentication signInAuthentication = await signIn.authentication;
+
         usrMap = {
+          '_googleIDToken_': signInAuthentication.idToken,
           '_userUID_': user.uid,
           '_userName_': user.displayName,
           '_userEmail_': user.email
