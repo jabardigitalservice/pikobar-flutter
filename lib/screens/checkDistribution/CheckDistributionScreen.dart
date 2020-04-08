@@ -346,7 +346,13 @@ class _CheckDistributionState extends State<CheckDistribution> {
                         children: <Widget>[
                           TabBar(
                             onTap: (index) {
-                              print(index);
+                              if (index == 0) {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedFindByVillage);
+                              } else if (index == 1) {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedFindByDistricts);
+                              }
                             },
                             labelColor: Colors.black,
                             indicatorColor: ColorBase.green,
