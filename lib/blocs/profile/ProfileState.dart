@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
+import 'package:pikobar_flutter/models/CityModel.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 
 @immutable
@@ -75,4 +77,24 @@ class ProfileFailure extends ProfileState {
 
   @override
   List<Object> get props => [error];
+}
+
+class CityLoading extends ProfileState {
+  @override
+  String toString() => 'CityLoading';
+
+  @override
+  List<Object> get props => [];
+}
+
+class CityLoaded extends ProfileState {
+  final CityModel record;
+
+  CityLoaded({@required this.record});
+
+  @override
+  List<Object> get props => [record];
+
+  @override
+  String toString() => 'CityLoaded { record: $record }';
 }

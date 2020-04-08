@@ -8,13 +8,22 @@ abstract class ProfileEvent extends Equatable {
 }
 
 class Save extends ProfileEvent {
-  final String id, phoneNumber;
-  Save({this.id, this.phoneNumber});
+  final String id, phoneNumber, gender, address, cityId, provinceId;
+  final DateTime birthdate;
+  Save(
+      {this.id,
+      this.phoneNumber,
+      this.gender,
+      this.address,
+      this.cityId,
+      this.provinceId,
+      this.birthdate});
   @override
   String toString() => 'Save';
 
   @override
-  List<Object> get props => [id, phoneNumber];
+  List<Object> get props =>
+      [id, phoneNumber, gender, address, cityId, provinceId, birthdate];
 }
 
 class Verify extends ProfileEvent {
@@ -38,13 +47,40 @@ class Verify extends ProfileEvent {
 }
 
 class ConfirmOTP extends ProfileEvent {
-  final String smsCode, verificationID, id, phoneNumber;
-  ConfirmOTP({this.smsCode, this.verificationID, this.id, this.phoneNumber});
+  final String smsCode,
+      verificationID,
+      id,
+      phoneNumber,
+      gender,
+      address,
+      cityId,
+      provinceId;
+  final DateTime birthdate;
+  ConfirmOTP(
+      {this.smsCode,
+      this.verificationID,
+      this.id,
+      this.phoneNumber,
+      this.gender,
+      this.address,
+      this.cityId,
+      this.provinceId,
+      this.birthdate});
   @override
   String toString() => 'ConfirmOTP';
 
   @override
-  List<Object> get props => [smsCode, verificationID, id, phoneNumber];
+  List<Object> get props => [
+        smsCode,
+        verificationID,
+        id,
+        phoneNumber,
+        gender,
+        address,
+        cityId,
+        provinceId,
+        birthdate
+      ];
 }
 
 class VerifyConfirm extends ProfileEvent {
@@ -71,4 +107,12 @@ class CodeSend extends ProfileEvent {
 
   @override
   List<Object> get props => [verificationID];
+}
+
+class CityLoad extends ProfileEvent {
+  @override
+  String toString() => 'CityLoad';
+
+  @override
+  List<Object> get props => [];
 }
