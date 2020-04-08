@@ -11,6 +11,7 @@ class Analytics {
   static String video = 'Video Terkini';
   static String infoGraphics = 'Info Praktikal';
   static String checkDistribution = 'Cek Sebaran';
+  static String document = 'Dokumen';
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -73,4 +74,8 @@ class Analytics {
   // event check distribution
   static String tappedCheckCurrentLocation = 'tapped_cek_lokasi_saat_ini';
   static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
+
+  //event document
+  static String tappedShareDocuments = 'tapped_share_documents';
+  static String tappedDownloadDocuments = 'tapped_download_documents';
 }

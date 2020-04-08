@@ -75,6 +75,7 @@ dependencies:
   flutter_web_browser: ^0.11.0
   device_preview: ^0.4.0+1
   google_places_flutter: ^1.0.5
+  flutter_downloader: ^1.4.2
 
 dev_dependencies:
   flutter_test:

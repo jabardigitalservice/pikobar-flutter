@@ -3,6 +3,7 @@ import 'package:pikobar_flutter/components/BrowserScreen.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionScreen.dart';
+import 'package:pikobar_flutter/screens/document/DocumentListScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';
@@ -59,6 +60,8 @@ Route generateRoutes(RouteSettings settings) {
 // screen info graphics
     case NavigationConstrants.InfoGraphics:
       return buildRoute(settings, InfoGraphicsScreen());
+      case NavigationConstrants.Document:
+      return buildRoute(settings, DocumentListScreen());
 
 // screen Check Distribution
     case NavigationConstrants.CheckDistribution:

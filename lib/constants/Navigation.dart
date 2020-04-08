@@ -37,5 +37,6 @@ class NavigationConstrants {
   static const String Edit = "/edit";
   static const String Verification = "/verifikasi";
   static const String InfoGraphics = "/Info-graphics";
+  static const String Document = "/document";
   static const String CheckDistribution = "/check-distribution";
 }

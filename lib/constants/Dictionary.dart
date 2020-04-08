@@ -189,6 +189,10 @@ class Dictionary {
   static String markAsRead = "Tandai Semua Sudah Dibaca";
 
   //document
+  static String document = "Dokumen";
   static String date = "Tanggal";
   static String titleDocument = "Judul Dokumen";
+  static String emptyDataDocuments = 'Dokumen tidak ada';
+  static String permissionDownloadAttachment =
+      'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
 }
