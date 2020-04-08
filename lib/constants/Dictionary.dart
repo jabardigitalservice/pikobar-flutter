@@ -6,8 +6,6 @@ class Dictionary {
   static String versionText = 'App Version';
   static String betaText = '(Beta)';
 
-
-
   // Menu & Title
   static String home = 'Beranda';
   static String message = 'Pesan';
@@ -29,6 +27,7 @@ class Dictionary {
   static String qna = 'Forum';
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
+  static String infoGraphics = 'Info Praktikal';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -39,23 +38,35 @@ class Dictionary {
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
-  static String positif = 'Positif';
+  static String positif = 'Positif Covid-19';
   static String recover = 'Sembuh';
   static String die = 'Meninggal';
   static String opdDesc = 'Orang Dalam Pemantauan';
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
-  static String phoneBookEmergencyInformation = 'Informasi Nomor Darurat';
+  static String profile = 'Profil';
+  static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
+  static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
+  static String callCenterCaption =
+      'Segera hubungi nomor dibawah \nini untuk call center terdekat';
+  static String edit = 'Edit Profil';
+  static String name = 'Nama';
+  static String email = 'Email';
+  static String phoneNumber = 'No. Telepon';
+  static String inaCode = '+62';
+
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
-      'Segera hubungi nomor dibawah ini untuk informasi darurat';
+      'Segera hubungi nomor dibawah \nini untuk informasi darurat';
   static String callCenterNumber = '119';
   static String callCenter = '119 Call Center';
   static String dinasKesehatan = 'Dinas Kesehatan Jawa Barat';
-  static String daftarRumahSakitRujukan = 'Daftar Rumah Sakit Rujukan';
+  static String daftarRumahSakitRujukan = 'Daftar Rumah Sakit \nRujukan';
   static String daftarRumahSakitRujukanCaption =
-      'Segera hubungi nomor dibawah ini untuk rumah sakit rujukan';
+      'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
+  static String qrCodeMenu = 'Tampilkan QR Code';
+  static String statusUser = 'Status : Sehat';
 
   // Button Text
   static String yes = 'Ya';
@@ -66,6 +77,9 @@ class Dictionary {
   static String later = 'Nanti';
   static String next = 'Lanjut';
   static String update = 'Perbaharui';
+  static String save = 'Simpan';
+  static String verification = 'Verifikasi Nomor';
+  static String acceptLogin = 'Ya, Saya Bersedia Login';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -82,6 +96,12 @@ class Dictionary {
   static String errorStatusUnActive = 'Username belum aktif';
   static String errorListComment = 'Tidak dapat menampilkan komentar';
   static String somethingWrong = 'Terjadi kesalahan';
+  static String errorMaximumPhone = 'Nomor Telepon harus kurang dari 13 nomor';
+  static String errorEmptyPhone = 'Nomor Telepon harus diisi';
+  static String errorInvalidPhone = 'Format nomor telepon tidak sesuai';
+  static String errorMinimumPhone =
+      'Nomor telepon harus terdiri 3 sampai 13 nomor';
+  static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
@@ -96,14 +116,37 @@ class Dictionary {
   // placeholder / hint text
   static String findFaq = 'Cari FAQ';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
+  static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
+
+  // Popup Permission Redaction
+  static String permissionLocationSpread =
+      'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
 
   // text
   static String fieldSurvey = 'Isi Survei';
   static String loadingData = 'Sedang mengambil data ...';
+  static String loading = 'Tunggu Sebentar...';
+  static String textLoginButton = 'Masuk Melalui Google';
+  static String textLogin = 'Anda belum login';
+  static String textLogoutButton = 'Keluar';
   static String onDevelopment = 'Dalam proses pengembangan';
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
+  static String updateProfile = 'Profil berhasil diperbaharui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
+  static String spreadRedaction =
+      'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
+
+  // OnBoarding Login
+  static String titleOnBoardingLogin =
+      'Bantu stop penyebaran COVID-19 dengan\nmelakukan login pada app PIKOBAR';
+  static String disclaimerOnBoardingLogin =
+      'Data Anda akan aman dan tidak akan pernah diakses,\nkecuali jika Anda dekat dengan kasus positif COVID-19.';
+
+  //announcement
+  static String infoTextAnnouncement =
+      'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
+  static String moreDetail = ' Selengkapnya';
 }

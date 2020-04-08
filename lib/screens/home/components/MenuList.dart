@@ -58,7 +58,9 @@ class _MenuListState extends State<MenuList> {
           _remoteConfig == null ? _defaultRowMenusTwo() : _remoteRowMenusTwo(),
           //_defaultRowMenusTwo(),
           SizedBox(height: 5.0),
-          _remoteConfig == null ? _defaultRowMenusThree() : _remoteRowMenusThree()
+          _remoteConfig == null
+              ? _defaultRowMenusThree()
+              : _remoteRowMenusThree()
           //_defaultRowMenusThree()
         ],
       ),
@@ -77,7 +79,7 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.pikobar, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaInfo),
-          _buildButtonColumn('${Environment.iconAssets}virus_shield.png',
+          _buildButtonColumn('${Environment.iconAssets}garuda_pancasila.png',
               Dictionary.nationalInfo, NavigationConstrants.Browser,
               arguments: UrlThirdParty.urlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
@@ -139,8 +141,12 @@ class _MenuListState extends State<MenuList> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// Menu Button Emergency Numbers
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
+
+          /// Menu Button Data Jabar
+          /// Remote Config : caption & url
           _buildButtonColumn(
               '${Environment.iconAssets}pikobar.png',
               _remoteConfig.getString(FirebaseConfig.pikobarCaption) != null
@@ -151,8 +157,11 @@ class _MenuListState extends State<MenuList> {
                   _remoteConfig.getString(FirebaseConfig.pikobarUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.pikobarUrl)
                       : UrlThirdParty.urlCoronaInfo),
+
+          /// Menu Button Data National
+          /// Remote Config : caption & url
           _buildButtonColumn(
-              '${Environment.iconAssets}virus_shield.png',
+              '${Environment.iconAssets}garuda_pancasila.png',
               _remoteConfig.getString(FirebaseConfig.nationalInfoCaption) !=
                       null
                   ? _remoteConfig.getString(FirebaseConfig.nationalInfoCaption)
@@ -163,6 +172,9 @@ class _MenuListState extends State<MenuList> {
                           null
                       ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
                       : UrlThirdParty.urlCoronaEscort),
+
+          /// Menu Button Data World
+          /// Remote Config : caption & url
           _buildButtonColumn(
               '${Environment.iconAssets}world.png',
               _remoteConfig.getString(FirebaseConfig.worldInfoCaption) != null
@@ -185,6 +197,8 @@ class _MenuListState extends State<MenuList> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// Menu Button Donation
+          /// Remote Config : caption & url
           _buildButtonColumn(
               '${Environment.iconAssets}help.png',
               _remoteConfig.getString(FirebaseConfig.donationCaption) != null
@@ -195,13 +209,17 @@ class _MenuListState extends State<MenuList> {
                   _remoteConfig.getString(FirebaseConfig.donationUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.donationUrl)
                       : UrlThirdParty.urlDonation),
+
+          /// Menu Button Survei
           _buildButtonColumn('${Environment.iconAssets}completed.png',
               Dictionary.survey, NavigationConstrants.Survey),
+
+          /// Menu Button Self Diagnose
+          /// Remote Config : enabled, caption & url
           _remoteConfig.getBool(FirebaseConfig.selfDiagnoseEnabled)
               ? _buildButtonColumn(
                   '${Environment.iconAssets}self_diagnose.png',
-                  _remoteConfig.getString(FirebaseConfig.selfDiagnoseCaption) !=
-                          null
+                  _remoteConfig.getString(FirebaseConfig.selfDiagnoseCaption) != null
                       ? _remoteConfig
                           .getString(FirebaseConfig.selfDiagnoseCaption)
                       : Dictionary.selfDiagnose,
@@ -217,7 +235,15 @@ class _MenuListState extends State<MenuList> {
                           null
                       ? _remoteConfig
                           .getString(FirebaseConfig.selfDiagnoseCaption)
-                      : Dictionary.selfDiagnose),
+                      : _remoteConfig.getString(
+                                  FirebaseConfig.selfDiagnoseCaption) !=
+                              null
+                          ? _remoteConfig
+                              .getString(FirebaseConfig.selfDiagnoseCaption)
+                          : Dictionary.selfDiagnose),
+
+          /// Menu Button Logistic
+          /// Remote Config : caption & url
           _buildButtonColumn(
               '${Environment.iconAssets}logistics.png',
               _remoteConfig != null &&
@@ -243,6 +269,8 @@ class _MenuListState extends State<MenuList> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// Menu Button Saber Hoax
+          /// Remote Config : caption & url
           _buildButtonColumn(
               '${Environment.iconAssets}saber_hoax.png',
               _remoteConfig != null &&
@@ -254,10 +282,13 @@ class _MenuListState extends State<MenuList> {
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
                   : UrlThirdParty.urlIGSaberHoax,
               openBrowser: true),
+
+          /// Menu Button Volunteer
+          /// Remote Config : enabled, caption & url
           _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.volunteerEnabled)
               ? _buildButtonColumn(
-                  '${Environment.iconAssets}relawan.png',
+                  '${Environment.iconAssets}relawan_active.png',
                   _remoteConfig != null &&
                           _remoteConfig
                                   .getString(FirebaseConfig.volunteerCaption) !=
@@ -272,11 +303,20 @@ class _MenuListState extends State<MenuList> {
                       ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
                       : UrlThirdParty.urlVolunteer)
               : _buildButtonDisable(
-                  '${Environment.iconAssets}relawan.png', Dictionary.volunteer),
+                  '${Environment.iconAssets}relawan.png',
+                  _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.volunteerCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.volunteerCaption)
+                      : Dictionary.volunteer),
+
+          /// Menu Button Report
+          /// Remote Config : enabled, caption & url
           _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.reportEnabled)
               ? _buildButtonColumn(
-                  '${Environment.iconAssets}report_case.png',
+                  '${Environment.iconAssets}report_case_active.png',
                   _remoteConfig != null &&
                           _remoteConfig
                                   .getString(FirebaseConfig.reportCaption) !=
@@ -289,12 +329,21 @@ class _MenuListState extends State<MenuList> {
                               null
                       ? _remoteConfig.getString(FirebaseConfig.reportUrl)
                       : UrlThirdParty.urlCaseReport)
-              : _buildButtonDisable('${Environment.iconAssets}report_case.png',
-                  Dictionary.caseReport),
+              : _buildButtonDisable(
+                  '${Environment.iconAssets}report_case.png',
+                  _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.reportCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.reportCaption)
+                      : Dictionary.caseReport),
+
+          /// Menu Button QnA / Forum
+          /// Remote Config : enabled, caption & url
           _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
               ? _buildButtonColumn(
-                  '${Environment.iconAssets}conversation.png',
+                  '${Environment.iconAssets}conversation_active.png',
                   _remoteConfig != null &&
                           _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
                               null
@@ -306,7 +355,12 @@ class _MenuListState extends State<MenuList> {
                       ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
                       : UrlThirdParty.urlQNA)
               : _buildButtonDisable(
-                  '${Environment.iconAssets}conversation.png', Dictionary.qna),
+                  '${Environment.iconAssets}conversation.png',
+                  _remoteConfig != null &&
+                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
+                      : Dictionary.qna),
         ],
       ),
     );
@@ -356,18 +410,32 @@ class _MenuListState extends State<MenuList> {
                     if (label == Dictionary.phoneBookEmergency) {
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedphoneBookEmergency);
-                    } else if (label == Dictionary.pikobar) {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}pikobar.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
-                    } else if (label == Dictionary.nationalInfo) {
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}garuda_pancasila.png') {
                       AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-                    } else if (label == Dictionary.selfDiagnose) {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
-                    } else if (label == Dictionary.logistic) {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}world.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
                     } else if (label == Dictionary.survey) {
                       AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
-                    } else if (label == Dictionary.worldInfo) {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}self_diagnose.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}logistics.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}relawan_active.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}report_case_active.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+                    } else if (iconPath ==
+                        '${Environment.iconAssets}conversation_active.png') {
+                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
                     }
                   }
                 }
@@ -378,10 +446,9 @@ class _MenuListState extends State<MenuList> {
           Text(label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 11.0,
-                color: Theme.of(context).textTheme.body1.color,
-                fontFamily: FontsFamily.productSans
-              ))
+                  fontSize: 11.0,
+                  color: Theme.of(context).textTheme.body1.color,
+                  fontFamily: FontsFamily.productSans))
         ],
       ),
     );
@@ -433,10 +500,9 @@ class _MenuListState extends State<MenuList> {
               Text(label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 11.0,
-                    color: Theme.of(context).textTheme.body1.color,
-                    fontFamily: FontsFamily.productSans
-                  ))
+                      fontSize: 11.0,
+                      color: Theme.of(context).textTheme.body1.color,
+                      fontFamily: FontsFamily.productSans))
             ],
           ),
           onTap: () {
@@ -445,14 +511,6 @@ class _MenuListState extends State<MenuList> {
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1);
-
-            if (label == Dictionary.volunteer) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
-            } else if (label == Dictionary.caseReport) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-            } else if (label == Dictionary.qna) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedQna);
-            }
           },
         ),
       ),

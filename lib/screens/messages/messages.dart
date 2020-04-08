@@ -9,7 +9,6 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:html/parser.dart';
 
 class Messages extends StatefulWidget {
@@ -197,5 +196,11 @@ class _MessagesState extends State<Messages> {
   _openDetail(DocumentSnapshot document) async {
     await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
         arguments: document);
+  }
+  
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

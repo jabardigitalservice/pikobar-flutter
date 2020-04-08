@@ -55,22 +55,36 @@ class _StatisticsState extends State<Statistics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer('${Environment.iconAssets}virus_2.png',
-                    Dictionary.positif, Dictionary.positif, '-', 3, Dictionary.people),
-                _buildContainer('${Environment.iconAssets}man.png',
-                    Dictionary.recover, Dictionary.recover, '-', 3, Dictionary.people),
-                _buildContainer('${Environment.iconAssets}tombstone.png',
-                    Dictionary.die, Dictionary.die, '-', 3, Dictionary.people),
+                _buildContainer('', Dictionary.positif, Dictionary.positif, '-',
+                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                _buildContainer('', Dictionary.recover, Dictionary.recover, '-',
+                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                _buildContainer('', Dictionary.die, Dictionary.die, '-', 3,
+                    Dictionary.people, Colors.grey[600], Colors.grey[600]),
               ],
             ),
             SizedBox(height: Dimens.padding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer('${Environment.iconAssets}doctor.png',
-                    Dictionary.underSupervision, Dictionary.pdpDesc, '-', 2, Dictionary.process),
-                _buildContainer('${Environment.iconAssets}stethoscope.png',
-                    Dictionary.inMonitoring, Dictionary.opdDesc, '-', 2, Dictionary.process),
+                _buildContainer(
+                    '',
+                    Dictionary.underSupervision,
+                    Dictionary.underSupervision,
+                    '-',
+                    2,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600]),
+                _buildContainer(
+                    '',
+                    Dictionary.inMonitoring,
+                    Dictionary.inMonitoring,
+                    '-',
+                    2,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600]),
               ],
             ),
           ],
@@ -80,6 +94,20 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Container _buildContent(DocumentSnapshot data) {
+    if (!data.exists)
+      return Container(
+        padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0.0, 1),
+              blurRadius: 4.0),
+        ]),
+        child: Center(
+          child: Text(Dictionary.errorStatisticsNotExists),
+        ),
+      );
+    
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -116,23 +144,32 @@ class _StatisticsState extends State<Statistics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}virus_2.png',
+                  '${Environment.imageAssets}bg-positif.png',
                   Dictionary.positif,
                   Dictionary.positif,
                   '${data['aktif']['jabar']}',
-                  3, Dictionary.people),
+                  3,
+                  Dictionary.people,
+                  Colors.white,
+                  Colors.white),
               _buildContainer(
-                  '${Environment.iconAssets}man.png',
+                  '${Environment.imageAssets}bg-sembuh.png',
                   Dictionary.recover,
                   Dictionary.recover,
                   '${data['sembuh']['jabar']}',
-                  3, Dictionary.people),
+                  3,
+                  Dictionary.people,
+                  Colors.white,
+                  Colors.white),
               _buildContainer(
-                  '${Environment.iconAssets}tombstone.png',
+                  '${Environment.imageAssets}bg-meninggal.png',
                   Dictionary.die,
                   Dictionary.die,
                   '${data['meninggal']['jabar']}',
-                  3, Dictionary.people),
+                  3,
+                  Dictionary.people,
+                  Colors.white,
+                  Colors.white),
             ],
           ),
           SizedBox(height: Dimens.padding),
@@ -140,17 +177,29 @@ class _StatisticsState extends State<Statistics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}doctor.png',
-                  Dictionary.underSupervision,
-                  Dictionary.pdpDesc,
-                  getDataProcess(data['pdp']['total']['jabar'], data['pdp']['selesai']['jabar']),
-                  2, Dictionary.process),
-              _buildContainer(
-                  '${Environment.iconAssets}stethoscope.png',
+                  '',
                   Dictionary.inMonitoring,
                   Dictionary.opdDesc,
-                  getDataProcess(data['odp']['total']['jabar'],data['odp']['selesai']['jabar']),
-                  2, Dictionary.process),
+                  getDataProcess(data['odp']['total']['jabar'],
+                      data['odp']['selesai']['jabar']),
+                  2,
+                  /*getDataProcessPercent(data['odp']['total']['jabar'],
+                      data['odp']['selesai']['jabar']),*/
+                  Dictionary.people,
+                  Colors.grey[600],
+                  ColorBase.green),
+              _buildContainer(
+                  '',
+                  Dictionary.underSupervision,
+                  Dictionary.pdpDesc,
+                  getDataProcess(data['pdp']['total']['jabar'],
+                      data['pdp']['selesai']['jabar']),
+                  2,
+                  /*getDataProcessPercent(data['pdp']['total']['jabar'],
+                      data['pdp']['selesai']['jabar']),*/
+                  Dictionary.people,
+                  Colors.grey[600],
+                  ColorBase.green),
             ],
           )
         ],
@@ -158,36 +207,49 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  String getDataProcess(int totalData, int dataDone){
+  String getDataProcess(int totalData, int dataDone) {
     int processData = totalData - dataDone;
     return processData.toString();
-
   }
 
-  _buildContainer(
-      String icon, String title, String description, String count, int length, String label) {
+  String getDataProcessPercent(int totalData, int dataDone) {
+    double processData =
+        100 - num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
+
+    return '(' + processData.toString() + '%)';
+  }
+
+  _buildContainer(String image, String title, String description, String count,
+      int length, String label, Color colorTextTitle, Color colorNumber) {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / length),
-        padding: EdgeInsets.only(left: 5, right: 5.0, top: 10, bottom: 10),
+        padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 2.5),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey[400]),
+            image: image != '' && image != null
+                ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
+                : null,
+            border: image == null || image == ''
+                ? Border.all(color: Colors.grey[400])
+                : null,
             borderRadius: BorderRadius.circular(8.0)),
         child: Column(
           children: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset(icon, width: 16.0, height: 16.0),
-                Container(
-                  margin: EdgeInsets.only(left: 5.0),
-                  child: Text(title,
-                      style: TextStyle(
-                          fontSize: 13.0,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 5.0),
+                    child: Text(title,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 13.0,
+                            color: colorTextTitle,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.productSans)),
+                  ),
                 ),
               ],
             ),
@@ -195,22 +257,25 @@ class _StatisticsState extends State<Statistics> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: Dimens.padding),
+                  margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                   child: Text(count,
                       style: TextStyle(
                           fontSize: 22.0,
-                          color: ColorBase.green,
+                          color: colorNumber,
                           fontWeight: FontWeight.bold,
                           fontFamily: FontsFamily.productSans)),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: Dimens.padding, left: 4.0, bottom: 2.0),
-                  child: Text(label,
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: Dimens.padding, left: 4.0, bottom: 2.0),
+                    child: Text(label,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: colorTextTitle,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.productSans)),
+                  ),
                 )
               ],
             )

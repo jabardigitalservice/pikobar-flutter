@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +12,16 @@ import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
+import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
+import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -24,6 +31,7 @@ class IndexScreen extends StatefulWidget {
 
 class _IndexScreenState extends State<IndexScreen> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  static FirebaseInAppMessaging firebaseInAppMsg = FirebaseInAppMessaging();
 
   int _currentIndex = 0;
 
@@ -34,32 +42,41 @@ class _IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
 
-    // checkAppVersion();
     _initializeBottomNavigationBar();
+    setStatAnnouncement();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         NotificationHelper().showNotification(
             message['notification']['title'], message['notification']['body'],
-            payload: 'payload', onSelectNotification: onSelectNotification);
+            payload: jsonEncode(message['data']),
+            onSelectNotification: onSelectNotification);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        _actionNotification(jsonEncode(message['data']));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
+        _actionNotification(jsonEncode(message['data']));
       },
     );
 
-    //_firebaseMessaging.getToken().then((token) => print(token));
+//    _firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
     _firebaseMessaging.requestNotificationPermissions(
         IosNotificationSettings(sound: true, badge: true, alert: true));
 
+    firebaseInAppMsg.setAutomaticDataCollectionEnabled(true);
+
     super.initState();
+  }
+
+  setStatAnnouncement() async {
+    await AnnouncementSharedPreference.setAnnounceScreen(true);
   }
 
   Future<void> checkAppVersion() async {
@@ -130,12 +147,58 @@ class _IndexScreenState extends State<IndexScreen> {
               Text(Dictionary.help),
             ],
           )),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          title: Column(
+            children: <Widget>[
+              Text(Dictionary.profile),
+            ],
+          )),
     ];
   }
 
   Future<void> onSelectNotification(String payload) async {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
+
+      _actionNotification(payload);
+    }
+  }
+
+  _actionNotification(String payload) {
+    final data = jsonDecode(payload);
+    if (data['target'] == 'news') {
+      String newsType;
+
+      switch (data['type']) {
+        case NewsType.articles:
+          newsType = Dictionary.latestNews;
+          break;
+
+        case NewsType.articlesNational:
+          newsType = Dictionary.nationalNews;
+          break;
+
+        case NewsType.articlesWorld:
+          newsType = Dictionary.worldNews;
+          break;
+
+        default:
+          newsType = Dictionary.latestNews;
+      }
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => NewsDetailScreen(
+                id: data['id'],
+                news: newsType,
+                isFromNotification: true,
+              )));
+    } else if (data['target'] == 'broadcast') {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MessageDetailScreen(
+                id: data['id'],
+                isFromNotification: true,
+              )));
     }
   }
 
@@ -172,6 +235,9 @@ class _IndexScreenState extends State<IndexScreen> {
       case 2:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen();
+
+      case 3:
+        return ProfileScreen();
 
       default:
         return HomeScreen();

@@ -30,40 +30,53 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 
    @override
    Widget build(BuildContext context) {
-     return Scaffold(
-       appBar: AppBar(
-         title: Text(Dictionary.appName),
-       ),
-       body: Column(
-         children: <Widget>[
-           Container(
-               padding: progress < 1.0 ? EdgeInsets.symmetric(vertical: 5.0) : null,
-               child: progress < 1.0
-                   ? LinearProgressIndicator(value: progress)
-                   : Container()),
-           Expanded(
-             child: Container(
-               child: InAppWebView(
-                 initialUrl: widget.url,
-                 initialHeaders: {},
-                 initialOptions: InAppWebViewWidgetOptions(
-                     inAppWebViewOptions: InAppWebViewOptions(
-                       debuggingEnabled: true,
-                     )
+     return WillPopScope(
+       onWillPop: _exitWebView,
+       child: Scaffold(
+         appBar: AppBar(
+           title: Text(Dictionary.appName),
+         ),
+         body: Column(
+           children: <Widget>[
+             Container(
+                 padding: progress < 1.0 ? EdgeInsets.symmetric(vertical: 5.0) : null,
+                 child: progress < 1.0
+                     ? LinearProgressIndicator(value: progress)
+                     : Container()),
+             Expanded(
+               child: Container(
+                 child: InAppWebView(
+                   initialUrl: widget.url,
+                   initialHeaders: {},
+                   initialOptions: InAppWebViewWidgetOptions(
+                       inAppWebViewOptions: InAppWebViewOptions(
+                         debuggingEnabled: true,
+                       )
+                   ),
+                   onWebViewCreated: (InAppWebViewController controller) {
+                     webView = controller;
+                   },
+                   onProgressChanged: (InAppWebViewController controller, int progress) {
+                     setState(() {
+                       this.progress = progress / 100;
+                     });
+                   },
                  ),
-                 onWebViewCreated: (InAppWebViewController controller) {
-                   webView = controller;
-                 },
-                 onProgressChanged: (InAppWebViewController controller, int progress) {
-                   setState(() {
-                     this.progress = progress / 100;
-                   });
-                 },
                ),
              ),
-           ),
-         ],
+           ],
+         ),
        ),
      );
+   }
+
+   Future<bool> _exitWebView() async {
+     if (await webView.canGoBack()) {
+       webView.goBack();
+       return Future.value(false);
+     } else {
+       Navigator.of(context).pop();
+       return Future.value(true);
+     }
    }
  }

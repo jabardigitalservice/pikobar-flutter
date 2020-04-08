@@ -1,4 +1,4 @@
-package com.example.pikobar_flutter;
+package id.go.jabarprov.pikobar;
 
 import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;

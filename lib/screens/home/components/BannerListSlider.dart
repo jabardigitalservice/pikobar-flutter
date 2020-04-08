@@ -3,10 +3,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -74,7 +75,7 @@ class BannerListSliderState extends State<BannerListSlider> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: CachedNetworkImage(
-                    imageUrl: document['url'],
+                    imageUrl: document['url']??'',
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -96,9 +97,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0)),
                         ),
-                        child: Image.asset(
-                            '${Environment.imageAssets}placeholder.png',
-                            fit: BoxFit.fitWidth))),
+                        child: PikobarPlaceholder())),
               ),
             ),
             onTap: () {
@@ -115,10 +114,15 @@ class BannerListSliderState extends State<BannerListSlider> {
   }
 
   _clickAction(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (url.contains('youtube')) {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
     } else {
-      throw 'Could not launch $url';
+      Navigator.of(context)
+          .pushNamed(NavigationConstrants.Browser, arguments: url);
     }
   }
 }

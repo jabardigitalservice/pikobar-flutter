@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/BrowserScreen.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/models/UserModel.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';
+import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 import 'package:pikobar_flutter/screens/survey/surveysScreen.dart';
+import 'package:pikobar_flutter/screens/videos/videosScreen.dart';
 
 Route generateRoutes(RouteSettings settings) {
   // getting arguments passed
@@ -12,11 +17,11 @@ Route generateRoutes(RouteSettings settings) {
 
   switch (settings.name) {
     case NavigationConstrants.Browser:
-     return buildRoute(
-         settings,
-         BrowserScreen(
-           url: args,
-         ));
+      return buildRoute(
+          settings,
+          BrowserScreen(
+            url: args,
+          ));
     case NavigationConstrants.News:
       return buildRoute(settings, News());
     case NavigationConstrants.Phonebook:
@@ -24,12 +29,35 @@ Route generateRoutes(RouteSettings settings) {
     case NavigationConstrants.BroadcastDetail:
       return buildRoute(
           settings,
-          MessageDetailcreen(
+          MessageDetailScreen(
             document: args,
           ));
 
     case NavigationConstrants.Survey:
       return buildRoute(settings, SurveysScreen());
+
+    case NavigationConstrants.VideoList:
+      return buildRoute(settings, VideosScreen());
+
+    case NavigationConstrants.Edit:
+      return buildRoute(
+          settings,
+          Edit(
+            state: args,
+          ));
+
+    case NavigationConstrants.Verification:
+      UserModel argumentsModel = args;
+      return buildRoute(
+          settings,
+          Verification(
+            phoneNumber: args,
+            uid: argumentsModel.uid,
+          ));
+
+// screen info graphics
+    case NavigationConstrants.InfoGraphics:
+      return buildRoute(settings, InfoGraphicsScreen());
 
     default:
       return null;
