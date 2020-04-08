@@ -9,4 +9,6 @@ class EndPointPath {
   // static String logout = baseUrl + '/user/logout';
   // static String profile = baseUrl + '/user/me';
   static String checkDistribution = Environment.baseUrl + '/check-my-location';
+  static String getCityList = Environment.baseUrl + '/wilayah';
+
 }

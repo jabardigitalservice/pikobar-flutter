@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -11,6 +14,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
@@ -142,7 +146,7 @@ class _MenuListState extends State<MenuList> {
         children: [
           /// Menu Button Emergency Numbers
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook, remoteMenuLoginKey: FirebaseConfig.emergencyNumberMenu),
 
           /// Menu Button Data Jabar
           /// Remote Config : caption & url
@@ -155,7 +159,9 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.pikobarUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.pikobarUrl)
-                      : UrlThirdParty.urlCoronaInfo),
+                      : UrlThirdParty.urlCoronaInfo,
+            remoteMenuLoginKey: FirebaseConfig.pikobarInfoMenu
+          ),
 
           /// Menu Button Data National
           /// Remote Config : caption & url
@@ -170,7 +176,9 @@ class _MenuListState extends State<MenuList> {
                   _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) !=
                           null
                       ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
-                      : UrlThirdParty.urlCoronaEscort),
+                      : UrlThirdParty.urlCoronaEscort,
+            remoteMenuLoginKey: FirebaseConfig.nationalInfoMenu
+          ),
 
           /// Menu Button Data World
           /// Remote Config : caption & url
@@ -183,7 +191,9 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.worldInfoUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.worldInfoUrl)
-                      : UrlThirdParty.urlWorldCoronaInfo),
+                      : UrlThirdParty.urlWorldCoronaInfo,
+            remoteMenuLoginKey: FirebaseConfig.worldInfoMenu
+          ),
         ],
       ),
     );
@@ -207,11 +217,15 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.donationUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.donationUrl)
-                      : UrlThirdParty.urlDonation),
+                      : UrlThirdParty.urlDonation,
+            remoteMenuLoginKey: FirebaseConfig.donationMenu
+          ),
 
           /// Menu Button Survei
           _buildButtonColumn('${Environment.iconAssets}completed.png',
-              Dictionary.survey, NavigationConstrants.Survey),
+              Dictionary.survey, NavigationConstrants.Survey,
+            remoteMenuLoginKey: FirebaseConfig.surveyMenu
+          ),
 
           /// Menu Button Self Diagnose
           /// Remote Config : enabled, caption & url
@@ -227,7 +241,9 @@ class _MenuListState extends State<MenuList> {
                               .getString(FirebaseConfig.selfDiagnoseUrl) !=
                           null
                       ? _remoteConfig.getString(FirebaseConfig.selfDiagnoseUrl)
-                      : UrlThirdParty.urlSelfDiagnose)
+                      : UrlThirdParty.urlSelfDiagnose,
+            remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}magnifying_glass.png',
                   _remoteConfig.getString(FirebaseConfig.selfDiagnoseCaption) !=
@@ -255,7 +271,9 @@ class _MenuListState extends State<MenuList> {
                       _remoteConfig.getString(FirebaseConfig.logisticUrl) !=
                           null
                   ? _remoteConfig.getString(FirebaseConfig.logisticUrl)
-                  : UrlThirdParty.urlLogisticsInfo),
+                  : UrlThirdParty.urlLogisticsInfo,
+            remoteMenuLoginKey: FirebaseConfig.logisticMenu
+          ),
         ],
       ),
     );
@@ -280,7 +298,9 @@ class _MenuListState extends State<MenuList> {
               arguments: _remoteConfig != null &&
                   _remoteConfig.getString(FirebaseConfig.jshUrl) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
-                  : UrlThirdParty.urlIGSaberHoax),
+                  : UrlThirdParty.urlIGSaberHoax,
+            remoteMenuLoginKey: FirebaseConfig.jshMenu
+          ),
 
           /// Menu Button Volunteer
           /// Remote Config : enabled, caption & url
@@ -300,7 +320,9 @@ class _MenuListState extends State<MenuList> {
                                   .getString(FirebaseConfig.volunteerUrl) !=
                               null
                       ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
-                      : UrlThirdParty.urlVolunteer)
+                      : UrlThirdParty.urlVolunteer,
+            remoteMenuLoginKey: FirebaseConfig.volunteerMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}relawan.png',
                   _remoteConfig != null &&
@@ -327,7 +349,9 @@ class _MenuListState extends State<MenuList> {
                           _remoteConfig.getString(FirebaseConfig.reportUrl) !=
                               null
                       ? _remoteConfig.getString(FirebaseConfig.reportUrl)
-                      : UrlThirdParty.urlCaseReport)
+                      : UrlThirdParty.urlCaseReport,
+              remoteMenuLoginKey: FirebaseConfig.reportMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}report_case.png',
                   _remoteConfig != null &&
@@ -339,38 +363,36 @@ class _MenuListState extends State<MenuList> {
 
           /// Menu Button QnA / Forum
           /// Remote Config : enabled, caption & url
-          FutureBuilder<String>(
-            future: _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
-                ? _forumUrlAppend(_remoteConfig.getString(FirebaseConfig.qnaUrl))
-                : _forumUrlAppend(UrlThirdParty.urlQNA),
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-              return _remoteConfig != null &&
+          _remoteConfig != null &&
                   _remoteConfig.getBool(FirebaseConfig.qnaEnabled)
-                  ? _buildButtonColumn(
+              ? _buildButtonColumn(
                   '${Environment.iconAssets}conversation_active.png',
                   _remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                          null
+                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                              null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
                       : Dictionary.qna,
                   NavigationConstrants.Browser,
-                  arguments: snapshot.data)
-                  : _buildButtonDisable(
+                  arguments: _remoteConfig != null &&
+                          _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
+                      ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
+                      : UrlThirdParty.urlQNA,
+              remoteMenuLoginKey: FirebaseConfig.qnaMenu
+          )
+              : _buildButtonDisable(
                   '${Environment.iconAssets}conversation.png',
                   _remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
-                          null
+                          _remoteConfig.getString(FirebaseConfig.qnaCaption) !=
+                              null
                       ? _remoteConfig.getString(FirebaseConfig.qnaCaption)
-                      : Dictionary.qna);
-            }
-          )
+                      : Dictionary.qna)
         ],
       ),
     );
   }
 
   _buildButtonColumn(String iconPath, String label, String route,
-      {Object arguments, bool openBrowser = false}) {
+      {Object arguments, bool openBrowser = false, String remoteMenuLoginKey}) {
     return Expanded(
       child: Column(
         children: [
@@ -391,51 +413,105 @@ class _MenuListState extends State<MenuList> {
               icon: Image.asset(
                 iconPath,
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (route != null) {
+
+
+                  if (_remoteConfig != null && _remoteConfig.getString(FirebaseConfig.loginRequired) != null) {
+
+                    Map<String, dynamic> _loginRequiredMenu = json.decode(
+                        _remoteConfig.getString(FirebaseConfig.loginRequired));
+
+                      print('$remoteMenuLoginKey = ${_loginRequiredMenu[remoteMenuLoginKey]}');
+
+                      if (_loginRequiredMenu[remoteMenuLoginKey]) {
+                        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+                        if (user != null) {
+
+                          arguments = await _userDataUrlAppend(arguments);
+
+                          if (route == NavigationConstrants.Browser) {
+                            openChromeSafariBrowser(url: arguments);
+                          } else {
+                            Navigator.pushNamed(context, route, arguments: arguments);
+                          }
+
+                        } else {
+
+                          bool isLoggedIn = await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) =>
+                                  LoginScreen(label)));
+
+                          if (isLoggedIn != null && isLoggedIn) {
+
+                            arguments = await _userDataUrlAppend(arguments);
+
+                            if (route == NavigationConstrants.Browser) {
+                              openChromeSafariBrowser(url: arguments);
+                            } else {
+                              Navigator.pushNamed(context, route, arguments: arguments);
+                            }
+
+                          }
+                        }
+                      } else {
+
+                        arguments = await _userDataUrlAppend(arguments);
+
+                        if (route == NavigationConstrants.Browser) {
+                          openChromeSafariBrowser(url: arguments);
+                        } else {
+                          Navigator.pushNamed(context, route, arguments: arguments);
+                        }
+                      }
+
+                  } else {
+
+                    arguments = await _userDataUrlAppend(arguments);
+
                     if (route == NavigationConstrants.Browser) {
                       openChromeSafariBrowser(url: arguments);
                     } else {
                       Navigator.pushNamed(context, route, arguments: arguments);
                     }
-
-                    // record event to analytics
-                    if (label == Dictionary.phoneBookEmergency) {
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedphoneBookEmergency);
-                    } else if (label == Dictionary.saberHoax) {
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedJabarSaberHoax);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}pikobar.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}garuda_pancasila.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}world.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
-                    } else if (label == Dictionary.survey) {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}self_diagnose.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}logistics.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}relawan_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}report_case_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-                    } else if (iconPath == '${Environment.iconAssets}help.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
-                    } else if (iconPath ==
-                        '${Environment.iconAssets}conversation_active.png') {
-                      AnalyticsHelper.setLogEvent(Analytics.tappedQna);
-                    }
                   }
+
+                  // record event to analytics
+                  if (label == Dictionary.phoneBookEmergency) {
+                    AnalyticsHelper.setLogEvent(
+                        Analytics.tappedphoneBookEmergency);
+                  } else if (label == Dictionary.saberHoax) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedJabarSaberHoax);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}pikobar.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}garuda_pancasila.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
+                  } else if (iconPath == '${Environment.iconAssets}world.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+                  } else if (label == Dictionary.survey) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}self_diagnose.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}logistics.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}relawan_active.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}report_case_active.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+                  } else if (iconPath == '${Environment.iconAssets}help.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+                  } else if (iconPath ==
+                      '${Environment.iconAssets}conversation_active.png') {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+                  }
+                }
               },
             ),
           ),
@@ -753,13 +829,38 @@ class _MenuListState extends State<MenuList> {
   //       });
   // }
 
-  Future<String> _forumUrlAppend(String url) async {
-    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+  Future<String> _userDataUrlAppend(String url) async {
 
-    if (_user != null) {
-      return Uri.encodeFull(url + "?uid=${_user.uid}");
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+    if (url == null) {
+      return url;
     } else {
+      Map<String, String> usrMap = {
+        '_googleIDToken_': '',
+        '_userUID_': '',
+        '_userName_': '',
+        '_userEmail_': ''
+      };
+
+      if (user != null) {
+        GoogleSignInAccount signIn = await GoogleSignIn().signIn();
+        GoogleSignInAuthentication signInAuthentication = await signIn.authentication;
+
+        usrMap = {
+          '_googleIDToken_': signInAuthentication.idToken,
+          '_userUID_': user.uid,
+          '_userName_': user.displayName,
+          '_userEmail_': user.email
+        };
+      }
+
+      usrMap.forEach((key, value) {
+        url = url.replaceAll(key, value);
+      });
+
       return url;
     }
+
   }
 }

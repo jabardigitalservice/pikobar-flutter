@@ -6,9 +6,11 @@ import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -45,6 +47,8 @@ class IndexScreenState extends State<IndexScreen> {
   void initState() {
     initializeDateFormatting();
     getCountMessage();
+    createDirectory();
+    setFlutterDownloaderInitial();
 
     _initializeBottomNavigationBar();
     setStatAnnouncement();
@@ -82,6 +86,19 @@ class IndexScreenState extends State<IndexScreen> {
 
   setStatAnnouncement() async {
     await AnnouncementSharedPreference.setAnnounceScreen(true);
+  }
+
+  setFlutterDownloaderInitial() async {
+    await FlutterDownloader.initialize();
+  }
+
+  createDirectory() async {
+    String localPath = (await getExternalStorageDirectory()).path + '/download';
+    final savedDir = Directory(localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
   }
 
   registerFCMToken() async {

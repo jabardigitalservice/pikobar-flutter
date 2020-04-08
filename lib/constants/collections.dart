@@ -7,6 +7,7 @@ class Collections {
   static String callCenters = 'call_centers';
   static String videos = 'videos';
   static String infographics = 'infographics';
+  static String documents = 'documents';
   static String users = 'users';
   static String userTokens = 'tokens';
 

@@ -28,6 +28,7 @@ class Dictionary {
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
+  static String documents = 'Dokumen';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -38,7 +39,7 @@ class Dictionary {
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
-  static String positif = 'Positif Covid-19';
+  static String positif = 'Terkonfirmasi';
   static String recover = 'Sembuh';
   static String die = 'Meninggal';
   static String opdDesc = 'Orang Dalam Pemantauan';
@@ -56,7 +57,14 @@ class Dictionary {
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
+  static String provinceId = '32';
   static String sharedFrom = '_dibagikan dari Pikobar_';
+  static String gender = 'Jenis Kelamin';
+  static String birthday = 'Tanggal Lahir';
+  static String nationality = 'Kewarganegaraan';
+  static String addressDomicile = 'Alamat Domisili';
+  static String cityDomicile = 'Kota Domisili';
+  static String provinceDomicile = 'Provinsi Domisili';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -110,6 +118,11 @@ class Dictionary {
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
   static String errorStatisticsNotExists =
       'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+  static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
+  static String errorEmptyAddress = 'Alamat harus diisi';
+  static String pleaseCompleteAllField =
+      'Silahkan lengkapi semua data terlebih dahulu...';
+
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
   static String codeVerified = 'No hp telah terverifikasi';
@@ -130,6 +143,11 @@ class Dictionary {
   static String findFaq = 'Cari FAQ';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
+  static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
+  static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
+  static String cityPlaceholder = 'Masukan Kota Domisili Anda';
+  static String provincePlaceholder = 'Masukan Provinsi Domisili Anda';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
@@ -197,4 +215,12 @@ class Dictionary {
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
+
+  //document
+  static String document = "Dokumen";
+  static String date = "Tanggal";
+  static String titleDocument = "Judul Dokumen";
+  static String emptyDataDocuments = 'Dokumen tidak ada';
+  static String permissionDownloadAttachment =
+      'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
 }
