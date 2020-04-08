@@ -47,7 +47,6 @@ class Dictionary {
   static String faq = 'FAQ';
   static String profile = 'Profil';
   static String checkDistribution = 'Cek Sebaran';
-  static String checkDistributionByLocation = 'Berdasarkan Lokasi';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
@@ -74,6 +73,7 @@ class Dictionary {
   static String otpNotSent = 'Tidak menerima sms?';
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
+  static String searchLocation = 'Cari Lokasi';
 
   // Button Text
   static String yes = 'Ya';
@@ -134,6 +134,8 @@ class Dictionary {
   // Popup Permission Redaction
   static String permissionLocationSpread =
       'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
+  static String permissionLocationMap =
+      'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -186,8 +188,12 @@ class Dictionary {
   static String village = 'Kelurahan';
   static String districts = 'kecamatan';
   static String here = 'di sini';
+  static String cantFindLocation =
+      'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
       'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.';
+  static String disclaimer = 'Disclaimer/Penyangkalan';
+  static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";

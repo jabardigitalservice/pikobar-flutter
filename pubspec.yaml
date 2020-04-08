@@ -74,7 +74,8 @@ dependencies:
   esys_flutter_share: ^1.0.2
   flutter_web_browser: ^0.11.0
   device_preview: ^0.4.0+1
-  google_places_flutter: ^1.0.5
+  google_maps_flutter: ^0.5.25+3
+  
 
 dev_dependencies:
   flutter_test:

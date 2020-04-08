@@ -8,13 +8,15 @@ class CheckDistributionCardFilter extends StatelessWidget {
   final int countPositif;
   final int countOdp;
   final int countPdp;
+  final String typeRegion;
 
   const CheckDistributionCardFilter(
       {Key key,
       @required this.region,
       @required this.countPositif,
       @required this.countOdp,
-      @required this.countPdp})
+      @required this.countPdp,
+      @required this.typeRegion})
       : super(key: key);
 
   @override
@@ -29,8 +31,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
             TextSpan(
               children: <TextSpan>[
                 TextSpan(
-                  text:
-                      'Data dibawah ini merupakan jumlah kasus aktif di kelurahan ',
+                  text: '${Dictionary.regionInfo} $typeRegion ',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontFamily: FontsFamily.productSans,
@@ -138,7 +139,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(
                               top: Dimens.padding, left: 4.0, bottom: 2.0),
-                          child: Text('Orang',
+                          child: Text(Dictionary.people,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: Colors.black,
