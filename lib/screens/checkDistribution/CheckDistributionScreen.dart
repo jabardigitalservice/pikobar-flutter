@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,9 +15,11 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
@@ -249,15 +252,33 @@ class _CheckDistributionState extends State<CheckDistribution> {
               padding: const EdgeInsets.all(24.0),
               child: Align(
                 alignment: Alignment.center,
-                child: Text(
-                  Dictionary.checkDistributionInfo,
-                  style: TextStyle(
-                    fontFamily: FontsFamily.productSans,
-                    color: Colors.grey[600],
-                    fontSize: 12.0,
-                    height: 1.3,
+                child: Text.rich(
+                  TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: Dictionary.checkDistributionInfo,
+                        style: TextStyle(
+                          fontFamily: FontsFamily.productSans,
+                          color: Colors.grey[600],
+                          fontSize: 12.0,
+                          height: 1.3,
+                        ),
+                      ),
+                      TextSpan(
+                          text: Dictionary.here,
+                          style: TextStyle(
+                            fontFamily: FontsFamily.productSans,
+                            color: ColorBase.green,
+                            fontSize: 12.0,
+                            height: 1.3,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushNamed(
+                                  context, NavigationConstrants.Faq);
+                            })
+                    ],
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             )
@@ -266,6 +287,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
   }
 
   Widget buildContent(CheckDistributionLoaded state) {
+    print(state.record.detected.toString());
     return state.record.detected == null
         ? EmptyData(message: Dictionary.unreachableLocation)
         : Padding(
@@ -277,93 +299,89 @@ class _CheckDistributionState extends State<CheckDistribution> {
                 boxContainer(CheckDistributionCardRadius(state: state)),
                 SizedBox(height: 20),
 
-                // build location by sub city
-                buildResult(
-                    Dictionary.positifTitle +
-                        ': ' +
-                        state.record.detected.radius.positif.toString(),
-                    Dictionary.positifString,
-                    'bg-positif-land.png',
-                    state.record.detected.radius.positif > 0),
-                SizedBox(height: 10),
+                boxContainer(
+                  Card(
+                    elevation: 0,
+                    margin: const EdgeInsets.only(
+                        top: Dimens.padding, left: 5, right: 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: DefaultTabController(
+                      length: 2,
+                      child: Column(
+                        children: <Widget>[
+                          TabBar(
+                            onTap: (index) {
+                              print(index);
+                            },
+                            labelColor: Colors.black,
+                            indicatorColor: ColorBase.green,
+                            indicatorWeight: 2.8,
+                            tabs: <Widget>[
+                              Tab(
+                                child: Text(
+                                  Dictionary.village,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontSize: 13.0),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  Dictionary.districts,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontSize: 13.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 10),
+                            height: MediaQuery.of(context).size.height * 0.56,
+                            child: TabBarView(
+                              children: <Widget>[
+                                // show kelurahan / desa
+                                CheckDistributionCardFilter(
+                                    region:
+                                        state.record.currentLocation.namaKel,
+                                    countPositif:
+                                        state.record.detected.desa.positif,
+                                    countOdp:
+                                        state.record.detected.desa.odpProses,
+                                    countPdp:
+                                        state.record.detected.desa.pdpProses),
 
-                // build ODP
-                buildResult(
-                    Dictionary.odpTitle +
-                        ': ' +
-                        state.record.detected.radius.odpProses.toString(),
-                    Dictionary.odpString,
-                    'bg-odp-land.png',
-                    state.record.detected.radius.odpProses > 0),
-                SizedBox(height: 10),
-
-                // build PDP
-                buildResult(
-                    Dictionary.pdpTitle +
-                        ': ' +
-                        state.record.detected.radius.pdpProses.toString(),
-                    Dictionary.pdpString,
-                    'bg-pdp-land.png',
-                    state.record.detected.radius.pdpProses > 0),
+                                // show kecamatan
+                                CheckDistributionCardFilter(
+                                    region:
+                                        state.record.currentLocation.namaKec,
+                                    countPositif:
+                                        state.record.detected.kec.positif,
+                                    countOdp:
+                                        state.record.detected.kec.odpProses,
+                                    countPdp:
+                                        state.record.detected.kec.pdpProses),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           );
   }
 
-  Widget buildResult(
-      String title, String description, String image, bool isNumberAvailable) {
-    return boxContainer(
-      Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        elevation: 0,
-        child: Container(
-          decoration: isNumberAvailable
-              ? BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('${Environment.imageAssets}$image'),
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(8.0),
-                )
-              : BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: isNumberAvailable ? Colors.white : Colors.black,
-                    fontFamily: FontsFamily.productSans,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    height: 1.2,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontFamily: FontsFamily.productSans,
-                    color: isNumberAvailable ? Colors.white : Colors.grey[600],
-                    fontSize: 12.0,
-                    height: 1.2,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget buildList(CheckDistributionLoaded state) {
+
+  // }
 
   Widget boxContainer(Widget child) {
     return Container(

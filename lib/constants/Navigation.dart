@@ -38,4 +38,5 @@ class NavigationConstrants {
   static const String Verification = "/verifikasi";
   static const String InfoGraphics = "/Info-graphics";
   static const String CheckDistribution = "/check-distribution";
+  static const String Faq = "/faq";
 }

@@ -8,7 +8,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 class CheckDistributionCardRadius extends StatelessWidget {
   final CheckDistributionLoaded state;
 
-  CheckDistributionCardRadius({Key key, this.state}) : super(key: key);
+  CheckDistributionCardRadius({Key key, @required this.state})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +75,19 @@ class CheckDistributionCardRadius extends StatelessWidget {
         padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 2.5),
         decoration: BoxDecoration(
+            color: Colors.white,
             image: total > 0
                 ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
                 : null,
-            border: total == 0 ? Border.all(color: Colors.grey[400]) : null,
+            boxShadow: total == 0
+                ? <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 0.0,
+                      offset: Offset(0.0, 0.0),
+                    ),
+                  ]
+                : null,
             borderRadius: BorderRadius.circular(8.0)),
         child: Column(
           children: <Widget>[

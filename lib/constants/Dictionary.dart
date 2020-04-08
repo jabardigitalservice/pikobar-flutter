@@ -173,18 +173,19 @@ class Dictionary {
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String findLocation = 'Cek Lokasi';
   static String positifTitle = 'Positif';
-  static String pdpTitle = 'PDP';
-  static String odpTitle = 'ODP';
   static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
   static String checkByLocation = 'Cari Berdasarkan Lokasi';
-  static String positifString = '*Positif adalah pasien terkonfirmasi COVID-19';
-  static String pdpString = '*PDP adalah pasien dalam pengawasan';
-  static String odpString = '*ODP adalah orang dalam pemantauan';
+  static String positifString = 'Total Pasien Positif COVID-19';
+  static String pdpString = 'PDP (Pasien Dalam Pengawasan)';
+  static String odpString = 'ODP (Orang Dalam Pemantauan)';
   static String checkDistributionInfo =
-      'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya di sini';
+      'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya ';
   static String unreachableLocation = 'Lokasi Tidak Terjangkau';
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
   static String locationRadiusTitle = 'Lokasi Dalam Radius';
+  static String village = 'Kelurahan';
+  static String districts = 'kecamatan';
+  static String here = 'di sini';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
