@@ -74,6 +74,8 @@ class Analytics {
   // event check distribution
   static String tappedCheckCurrentLocation = 'tapped_cek_lokasi_saat_ini';
   static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
+  static String tappedFindByVillage = 'tapped_cari_berdasarkan_kelurahan';
+  static String tappedFindByDistricts = 'tapped_cari_berdasarkan_kecamatan';
 
   //event document
   static String tappedShareDocuments = 'tapped_share_documents';

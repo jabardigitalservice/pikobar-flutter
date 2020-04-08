@@ -27,6 +27,8 @@ class _ErrorContentState extends State<ErrorContent> {
         alignment: Alignment.center,
         color: Colors.white,
       );
+    } else if (_error.contains(Dictionary.unreachableLocation)) {
+      return Center(child: _buildContent('assets/images/map-error.png'));
     } else {
       return Center(child: _buildUnknownErrorContent());
     }

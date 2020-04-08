@@ -39,4 +39,5 @@ class NavigationConstrants {
   static const String InfoGraphics = "/Info-graphics";
   static const String Document = "/document";
   static const String CheckDistribution = "/check-distribution";
+  static const String Faq = "/faq";
 }
