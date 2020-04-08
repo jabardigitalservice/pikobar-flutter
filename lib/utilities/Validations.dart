@@ -18,4 +18,12 @@ class Validations {
 
     return null;
   }
+
+  static String addressValidation(String val) {
+    if (val.length > 255) return Dictionary.errorMaximumAddress;
+
+    if (val.isEmpty) return Dictionary.errorEmptyAddress;
+
+    return null;
+}
 }

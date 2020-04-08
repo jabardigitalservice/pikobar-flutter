@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/models/CityModel.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 import './Bloc.dart';
 
@@ -20,10 +22,27 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> mapEventToState(
     ProfileEvent event,
   ) async* {
+    if (event is CityLoad) {
+      yield CityLoading();
+      try {
+        CityModel record = await profileRepository.getCityList();
+        yield CityLoaded(record: record);
+      } catch (e) {
+        yield ProfileFailure(
+            error: CustomException.onConnectionException(e.toString()));
+      }
+    }
     if (event is Save) {
       yield ProfileLoading();
       try {
-        await profileRepository.saveToCollection(event.id, event.phoneNumber);
+        await profileRepository.saveToCollection(
+            event.id,
+            event.phoneNumber,
+            event.gender,
+            event.address,
+            event.cityId,
+            event.provinceId,
+            event.birthdate);
         yield ProfileSaved();
       } catch (e) {
         yield ProfileFailure(error: e.toString());
@@ -50,7 +69,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield ProfileLoading();
       try {
         await profileRepository.signInWithPhoneNumber(
-            event.smsCode, event.verificationID, event.id, event.phoneNumber);
+            event.smsCode,
+            event.verificationID,
+            event.id,
+            event.phoneNumber,
+            event.gender,
+            event.address,
+            event.cityId,
+            event.provinceId,
+            event.birthdate);
         yield ProfileVerified();
       } catch (e) {
         yield ProfileFailure(error: e.toString());
