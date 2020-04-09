@@ -63,7 +63,7 @@ class Dictionary {
   static String birthday= 'Tanggal Lahir';
   static String nationality='Kewarganegaraan';
   static String addressDomicile='Alamat Domisili';
-  static String cityDomicile='Kota Domisili';
+  static String cityDomicile='Kabupaten/Kota Domisili';
   static String provinceDomicile='Provinsi Domisili';
   
 
@@ -122,7 +122,8 @@ class Dictionary {
   static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
   static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
   static String errorEmptyAddress = 'Alamat harus diisi';
-  static String pleaseCompleteAllField='Silahkan lengkapi semua data terlebih dahulu...';
+  static String pleaseCompleteAllField=' harus diisi';
+ 
 
   static String codeSend='Kode terkirim ke nomor ';
   static String codeSendFailed='Nomor telepon salah silahkan cek kembali';
@@ -147,7 +148,7 @@ class Dictionary {
   static String birthdayPlaceholder='Pilih Tanggal';
   static String nationalityPlaceholder='Pilih Kewarganegaraan';
   static String addressPlaceholder='Masukan Alamat Domisili Anda';
-  static String cityPlaceholder='Masukan Kota Domisili Anda';
+  static String cityPlaceholder='Masukan Kabupaten/Kota Domisili Anda';
   static String provincePlaceholder='Masukan Provinsi Domisili Anda';
   
 
