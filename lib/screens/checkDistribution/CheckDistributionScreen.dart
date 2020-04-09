@@ -269,42 +269,42 @@ class _CheckDistributionState extends State<CheckDistribution> {
                             ],
                           )),
                     ),
-                    SizedBox(height: 6),
+                    SizedBox(height: 22),
                     Padding(
                       padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text.rich(
-                          TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: Dictionary.checkDistributionInfo,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: Dictionary.checkDistributionInfo,
+                              style: TextStyle(
+                                fontFamily: FontsFamily.productSans,
+                                color: Colors.grey[600],
+                                fontSize: 14.0,
+                                height: 1.3,
+                              ),
+                            ),
+                            TextSpan(
+                                text: Dictionary.here,
                                 style: TextStyle(
                                   fontFamily: FontsFamily.productSans,
-                                  color: Colors.grey[600],
+                                  color: Colors.blue,
                                   fontSize: 14.0,
                                   height: 1.3,
+                                  decoration: TextDecoration.underline,
                                 ),
-                              ),
-                              TextSpan(
-                                  text: Dictionary.here,
-                                  style: TextStyle(
-                                    fontFamily: FontsFamily.productSans,
-                                    color: Colors.blue,
-                                    fontSize: 14.0,
-                                    height: 1.3,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.pushNamed(
-                                          context, NavigationConstrants.Faq);
-                                    })
-                            ],
-                          ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushNamed(
+                                        context, NavigationConstrants.Faq);
+                                  })
+                          ],
                         ),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 22),
                   ],
                 ),
               ),

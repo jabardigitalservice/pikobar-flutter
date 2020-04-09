@@ -60,12 +60,11 @@ class Dictionary {
   static String provinceId = '32';
   static String sharedFrom = '_dibagikan dari Pikobar_';
   static String gender = 'Jenis Kelamin';
-  static String birthday= 'Tanggal Lahir';
-  static String nationality='Kewarganegaraan';
-  static String addressDomicile='Alamat Domisili';
-  static String cityDomicile='Kabupaten/Kota Domisili';
-  static String provinceDomicile='Provinsi Domisili';
-
+  static String birthday = 'Tanggal Lahir';
+  static String nationality = 'Kewarganegaraan';
+  static String addressDomicile = 'Alamat Domisili';
+  static String cityDomicile = 'Kabupaten/Kota Domisili';
+  static String provinceDomicile = 'Provinsi Domisili';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -121,8 +120,7 @@ class Dictionary {
       'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
   static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
   static String errorEmptyAddress = 'Alamat harus diisi';
-  static String pleaseCompleteAllField=' harus diisi';
-
+  static String pleaseCompleteAllField = ' harus diisi';
 
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
@@ -144,12 +142,11 @@ class Dictionary {
   static String findFaq = 'Cari FAQ';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
-  static String birthdayPlaceholder='Pilih Tanggal';
-  static String nationalityPlaceholder='Pilih Kewarganegaraan';
-  static String addressPlaceholder='Masukan Alamat Domisili Anda';
-  static String cityPlaceholder='Masukan Kabupaten/Kota Domisili Anda';
-  static String provincePlaceholder='Masukan Provinsi Domisili Anda';
-
+  static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
+  static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
+  static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
+  static String provincePlaceholder = 'Masukan Provinsi Domisili Anda';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
@@ -211,7 +208,7 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.\n\n Data yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.';
+      'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.\n\nData yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
