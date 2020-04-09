@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class CheckDistributionBanner extends StatelessWidget {
@@ -22,14 +23,14 @@ class CheckDistributionBanner extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(10.0, 16.0, 16.0, 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(left: Dimens.padding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
                       title,
                       style: TextStyle(
                           fontFamily: FontsFamily.productSans,
@@ -37,10 +38,8 @@ class CheckDistributionBanner extends StatelessWidget {
                           height: 1.2,
                           fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  // SizedBox(height: 8),
-                  Expanded(
-                    child: Text(
+                    SizedBox(height: 8),
+                    Text(
                       subTitle,
                       style: TextStyle(
                         fontFamily: FontsFamily.productSans,
@@ -48,8 +47,8 @@ class CheckDistributionBanner extends StatelessWidget {
                         height: 1.2,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SizedBox(width: 10),

@@ -1,12 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_places_flutter/google_places_flutter.dart';
-import 'package:google_places_flutter/model/prediction.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -14,9 +14,14 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
+import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
@@ -37,7 +42,6 @@ class CheckDistribution extends StatefulWidget {
 
 class _CheckDistributionState extends State<CheckDistribution> {
   CheckdistributionBloc _checkdistributionBloc;
-  TextEditingController _findController = TextEditingController();
 
   String _address = '-';
   bool isFindOtherLocation;
@@ -58,10 +62,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: isFindOtherLocation == false
-                ? Text(Dictionary.checkDistribution)
-                : Text(Dictionary.checkDistributionByLocation)),
+        appBar: CustomAppBar.defaultAppBar(title: Dictionary.checkDistribution),
         body: ListView(
           children: <Widget>[
             Container(
@@ -71,14 +72,9 @@ class _CheckDistributionState extends State<CheckDistribution> {
                 children: <Widget>[
                   // box section banner
                   CheckDistributionBanner(
-                    title: Dictionary.checkDistributionTitle,
-                    subTitle: isFindOtherLocation == false
-                        ? Dictionary.checkDistributionSubTitle1
-                        : Dictionary.checkDistributionSubTitle2,
-                    image: isFindOtherLocation == false
-                        ? '${Environment.imageAssets}people_corona2.png'
-                        : '${Environment.imageAssets}corona-virus.png',
-                  ),
+                      title: Dictionary.checkDistributionTitle,
+                      subTitle: Dictionary.checkDistributionSubTitle1,
+                      image: '${Environment.imageAssets}people_corona2.png'),
 
                   boxContainer(
                     Card(
@@ -91,60 +87,46 @@ class _CheckDistributionState extends State<CheckDistribution> {
                       child: Column(
                         children: <Widget>[
                           // box section address
-                          isFindOtherLocation == false
-                              ? Container(
-                                  padding: const EdgeInsets.all(Dimens.padding),
-                                  child: Row(
+                          Container(
+                            padding: const EdgeInsets.all(Dimens.padding),
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(
+                                  '${Environment.iconAssets}pin.png',
+                                  scale: 1.5,
+                                ),
+                                SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      Image.asset(
-                                        '${Environment.iconAssets}pin.png',
-                                        scale: 1.5,
-                                      ),
-                                      SizedBox(width: 14),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Text(
-                                              Dictionary.currentLocationTitle,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    FontsFamily.productSans,
-                                                color: Colors.grey[600],
-                                                fontSize: 12.0,
-                                                height: 1.2,
-                                              ),
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              _address,
-                                              style: TextStyle(
-                                                fontFamily:
-                                                    FontsFamily.productSans,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.0,
-                                                height: 1.2,
-                                              ),
-                                            ),
-                                          ],
+                                      Text(
+                                        Dictionary.currentLocationTitle,
+                                        style: TextStyle(
+                                          fontFamily: FontsFamily.productSans,
+                                          color: Colors.grey[600],
+                                          fontSize: 12.0,
+                                          height: 1.2,
                                         ),
-                                      )
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        _address,
+                                        style: TextStyle(
+                                          fontFamily: FontsFamily.productSans,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14.0,
+                                          height: 1.2,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 )
-                              : Container(
-                                  alignment: Alignment.topLeft,
-                                  padding: EdgeInsets.all(Dimens.padding),
-                                  child: Text(
-                                    Dictionary.checkOtherLocation,
-                                    style: TextStyle(
-                                      fontFamily: FontsFamily.productSans,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )),
+                              ],
+                            ),
+                          ),
 
                           // Box section button
                           Container(
@@ -152,16 +134,9 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                 8.0, Dimens.padding, Dimens.padding),
                             child: Column(
                               children: <Widget>[
-                                isFindOtherLocation == false
-                                    ? Container()
-                                    : buildTextInput(
-                                        controller: _findController,
-                                        hintText: Dictionary.hintFindLocation),
                                 RoundedButton(
                                     minWidth: MediaQuery.of(context).size.width,
-                                    title: isFindOtherLocation == false
-                                        ? Dictionary.checkCurrentLocation
-                                        : Dictionary.findLocation,
+                                    title: Dictionary.checkCurrentLocation,
                                     borderRadius: BorderRadius.circular(8.0),
                                     color: ColorBase.green,
                                     textStyle: Theme.of(context)
@@ -172,27 +147,12 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
                                     onPressed: () {
-                                      if (isFindOtherLocation == false) {
-                                        _handleLocation();
-                                      } else {
-                                        findLocation(latitude, longitude);
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-
-                                        // analytics
-                                        AnalyticsHelper.setLogEvent(
-                                            Analytics.tappedFindByLocation,
-                                            <String, dynamic>{
-                                              'latlong': '$latitude, $longitude'
-                                            });
-                                      }
+                                      _handleLocation();
                                     }),
                                 SizedBox(height: 10),
                                 RoundedButton(
                                     minWidth: MediaQuery.of(context).size.width,
-                                    title: isFindOtherLocation == false
-                                        ? Dictionary.checkOtherLocation
-                                        : 'Kembali',
+                                    title: Dictionary.checkOtherLocation,
                                     borderRadius: BorderRadius.circular(8.0),
                                     color: Colors.white,
                                     textStyle: Theme.of(context)
@@ -202,12 +162,37 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             color: Colors.grey[600],
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
-                                    onPressed: () {
-                                      setState(() {
-                                        isFindOtherLocation == false
-                                            ? isFindOtherLocation = true
-                                            : isFindOtherLocation = false;
-                                      });
+                                    onPressed: () async {
+                                      LatLng result = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LocationPicker()));
+
+                                      /// set gecoder to show in location information
+                                      final String address =
+                                          await GeocoderRepository()
+                                              .getAddress(result);
+
+                                      if (address != null) {
+                                        setState(() {
+                                          _address = address;
+                                        });
+                                      }
+
+                                      /// find location
+                                      if (result != null) {
+                                        findLocation(
+                                            result.latitude, result.longitude);
+
+                                        // analytics
+                                        AnalyticsHelper.setLogEvent(
+                                            Analytics.tappedFindByLocation,
+                                            <String, dynamic>{
+                                              'latlong':
+                                                  '${result.latitude}, ${result.longitude}'
+                                            });
+                                      }
                                     }),
                               ],
                             ),
@@ -245,118 +230,208 @@ class _CheckDistributionState extends State<CheckDistribution> {
 
             // Box
             Container(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(Dimens.padding),
               child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    Dictionary.checkDistributionInfo,
-                    style: TextStyle(
-                      fontFamily: FontsFamily.productSans,
-                      color: Colors.grey[600],
-                      fontSize: 12.0,
-                      height: 1.3,
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Card(
+                      color: Color(0xFFF9EFD0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      elevation: 0.1,
+                      child: Container(
+                          padding: EdgeInsets.all(Dimens.padding),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                Dictionary.disclaimer,
+                                style: TextStyle(
+                                  fontFamily: FontsFamily.productSans,
+                                  color: Colors.grey[600],
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1.3,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                Dictionary.informationLocation,
+                                style: TextStyle(
+                                  fontFamily: FontsFamily.productSans,
+                                  color: Colors.grey[600],
+                                  fontSize: 12.0,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ],
+                          )),
                     ),
-                    textAlign: TextAlign.center,
-                  )),
+                    SizedBox(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25, right: 25),
+                      child: Center(
+                        child: Text.rich(
+                          TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: Dictionary.checkDistributionInfo,
+                                style: TextStyle(
+                                  fontFamily: FontsFamily.productSans,
+                                  color: Colors.grey[600],
+                                  fontSize: 14.0,
+                                  height: 1.3,
+                                ),
+                              ),
+                              TextSpan(
+                                  text: Dictionary.here,
+                                  style: TextStyle(
+                                    fontFamily: FontsFamily.productSans,
+                                    color: Colors.blue,
+                                    fontSize: 14.0,
+                                    height: 1.3,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.pushNamed(
+                                          context, NavigationConstrants.Faq);
+                                    })
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             )
           ],
         ));
   }
 
   Widget buildContent(CheckDistributionLoaded state) {
+    print(state.record.detected.toString());
     return state.record.detected == null
-        ? EmptyData(message: Dictionary.unreachableLocation)
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ErrorContent(error: Dictionary.unreachableLocation),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 30.0),
+                child: Text(
+                  Dictionary.cantFindLocation,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontFamily: FontsFamily.productSans,
+                    fontSize: 14.0,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+            ],
+          )
         : Padding(
             padding: const EdgeInsets.only(
-                top: 10, left: Dimens.padding, right: Dimens.padding),
+                top: 0, left: Dimens.padding, right: Dimens.padding),
             child: Column(
               children: <Widget>[
-                // build Positif
-                buildResult(
-                    Dictionary.positifTitle +
-                        ': ' +
-                        state.record.detected.radius.positif.toString(),
-                    Dictionary.positifString,
-                    'bg-positif-land.png',
-                    state.record.detected.radius.positif > 0),
-                SizedBox(height: 10),
+                // build Section Location by radius
+                boxContainer(CheckDistributionCardRadius(state: state)),
+                SizedBox(height: 20),
 
-                // build ODP
-                buildResult(
-                    Dictionary.odpTitle +
-                        ': ' +
-                        state.record.detected.radius.odpProses.toString(),
-                    Dictionary.odpString,
-                    'bg-odp-land.png',
-                    state.record.detected.radius.odpProses > 0),
-                SizedBox(height: 10),
+                boxContainer(
+                  Card(
+                    elevation: 0,
+                    margin: const EdgeInsets.only(
+                        top: Dimens.padding, left: 5, right: 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: DefaultTabController(
+                      length: 2,
+                      child: Column(
+                        children: <Widget>[
+                          TabBar(
+                            onTap: (index) {
+                              if (index == 0) {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedFindByVillage);
+                              } else if (index == 1) {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedFindByDistricts);
+                              }
+                            },
+                            labelColor: Colors.black,
+                            indicatorColor: ColorBase.green,
+                            indicatorWeight: 2.8,
+                            tabs: <Widget>[
+                              Tab(
+                                child: Text(
+                                  Dictionary.village,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontSize: 13.0),
+                                ),
+                              ),
+                              Tab(
+                                child: Text(
+                                  Dictionary.districts,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontSize: 13.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 10),
+                            height: MediaQuery.of(context).size.height * 0.56,
+                            child: TabBarView(
+                              children: <Widget>[
+                                // show kelurahan / desa
+                                CheckDistributionCardFilter(
+                                  region: state.record.currentLocation.namaKel,
+                                  countPositif:
+                                      state.record.detected.desa.positif,
+                                  countOdp:
+                                      state.record.detected.desa.odpProses,
+                                  countPdp:
+                                      state.record.detected.desa.pdpProses,
+                                  typeRegion: Dictionary.village,
+                                ),
 
-                // build PDP
-                buildResult(
-                    Dictionary.pdpTitle +
-                        ': ' +
-                        state.record.detected.radius.pdpProses.toString(),
-                    Dictionary.pdpString,
-                    'bg-pdp-land.png',
-                    state.record.detected.radius.pdpProses > 0),
+                                // show kecamatan
+                                CheckDistributionCardFilter(
+                                  region: state.record.currentLocation.namaKec,
+                                  countPositif:
+                                      state.record.detected.kec.positif,
+                                  countOdp: state.record.detected.kec.odpProses,
+                                  countPdp: state.record.detected.kec.pdpProses,
+                                  typeRegion: Dictionary.districts,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           );
   }
 
-  Widget buildResult(
-      String title, String description, String image, bool isNumberAvailable) {
-    return boxContainer(
-      Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        elevation: 0,
-        child: Container(
-          decoration: isNumberAvailable
-              ? BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('${Environment.imageAssets}$image'),
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.topCenter,
-                  ),
-                )
-              : BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: isNumberAvailable ? Colors.white : Colors.black,
-                    fontFamily: FontsFamily.productSans,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    height: 1.2,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontFamily: FontsFamily.productSans,
-                    color: isNumberAvailable ? Colors.white : Colors.grey[600],
-                    fontSize: 12.0,
-                    height: 1.2,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget buildList(CheckDistributionLoaded state) {
+
+  // }
 
   Widget boxContainer(Widget child) {
     return Container(
@@ -376,42 +451,6 @@ class _CheckDistributionState extends State<CheckDistribution> {
       ),
       child: child,
     );
-  }
-
-  Widget buildTextInput({
-    TextEditingController controller,
-    String hintText,
-  }) {
-    return Container(
-        padding: EdgeInsets.only(bottom: 15.0),
-        child: GooglePlaceAutoCompleteTextField(
-            textEditingController: controller,
-            googleAPIKey: Environment.googleApiKey,
-            inputDecoration: InputDecoration(
-                hintText: hintText,
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xffE0E0E0), width: 1)),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 2))),
-            debounceTime: 800,
-            itmClick: (Prediction prediction) async {
-              controller.text = prediction.description;
-              controller.selection = TextSelection.fromPosition(
-                  TextPosition(offset: prediction.description.length));
-
-              List<Placemark> placemark =
-                  await Geolocator().placemarkFromAddress(controller.text);
-
-              latitude = placemark[0].position.latitude.toString();
-              longitude = placemark[0].position.longitude.toString();
-            }));
   }
 
   Future<void> _handleLocation() async {
@@ -457,6 +496,12 @@ class _CheckDistributionState extends State<CheckDistribution> {
 
           // find location
           findLocation(position.latitude, position.longitude);
+
+          // analytics
+          AnalyticsHelper.setLogEvent(
+              Analytics.tappedFindByLocation, <String, dynamic>{
+            'latlong': '${position.latitude}, ${position.longitude}'
+          });
         }
       }
       // analytics
@@ -501,5 +546,11 @@ class _CheckDistributionState extends State<CheckDistribution> {
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }
+  }
+
+  @override
+  void dispose() {
+    _checkdistributionBloc.close();
+    super.dispose();
   }
 }

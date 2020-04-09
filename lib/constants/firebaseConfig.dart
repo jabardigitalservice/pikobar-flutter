@@ -37,6 +37,34 @@ class FirebaseConfig {
   static String healthStatusColors = 'health_status_colors';
 
   /// Remote config parameter key
+  /// Access requires a login
+  static String loginRequired = 'login_required';
+  static String emergencyNumberMenu = 'emergency_number_menu';
+  static String pikobarInfoMenu = 'pikobar_info_menu';
+  static String nationalInfoMenu = 'national_info_menu';
+  static String worldInfoMenu = 'world_info_menu';
+  static String donationMenu = 'donasi_menu';
+  static String surveyMenu = 'survey_menu';
+  static String selfDiagnoseMenu = 'selfdiagnose_menu';
+  static String logisticMenu = 'logistic_menu';
+  static String jshMenu = 'saber_hoax_menu';
+  static String volunteerMenu = 'volunteer_menu';
+  static String reportMenu = 'lapor_menu';
+  static String qnaMenu = 'tanyajawab_menu';
+  static String loginRequiredDefaultVal = '{"$emergencyNumberMenu":false,'
+      '"$pikobarInfoMenu":false,'
+      '"$nationalInfoMenu":false,'
+      '"$worldInfoMenu":false,'
+      '"$donationMenu":false,'
+      '"$surveyMenu":true,'
+      '"$selfDiagnoseMenu":false,'
+      '"$logisticMenu":false,'
+      '"$jshMenu":false,'
+      '"$volunteerMenu":false,'
+      '"$reportMenu":false,'
+      '"$qnaMenu":false}';
+
+  /// Remote config parameter key
   /// Profile
   static String healthStatusVisible = 'health_status_visible';
   static String otpEnabled = 'otp_enabled';

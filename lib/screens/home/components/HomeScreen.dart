@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
           future: setupRemoteConfig(),
           builder:
               (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-            return snapshot.hasData ? buildContent(snapshot.data) : Container();
+            return snapshot.hasData ? buildContent(snapshot.data) : Center(child: CircularProgressIndicator(),);
           }),
     );
   }
@@ -245,6 +246,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: ColorBase.grey,
                         ),
                       ),
+                      Container(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: Documents(),
+                      ),
+                      SizedBox(
+                        height: 24,
+                        child: Container(
+                          color: ColorBase.grey,
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -288,10 +299,11 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
       FirebaseConfig.spreadCheckLocation: '',
       FirebaseConfig.announcement: false,
+      FirebaseConfig.loginRequired:FirebaseConfig.loginRequiredDefaultVal
     });
 
     try {
-      await remoteConfig.fetch(expiration: Duration(seconds: 1));
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
 
       checkVersion(context, remoteConfig);

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -11,6 +14,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
@@ -142,7 +146,7 @@ class _MenuListState extends State<MenuList> {
         children: [
           /// Menu Button Emergency Numbers
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook, remoteMenuLoginKey: FirebaseConfig.emergencyNumberMenu),
 
           /// Menu Button Data Jabar
           /// Remote Config : caption & url
@@ -155,7 +159,9 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.pikobarUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.pikobarUrl)
-                      : UrlThirdParty.urlCoronaInfo),
+                      : UrlThirdParty.urlCoronaInfo,
+            remoteMenuLoginKey: FirebaseConfig.pikobarInfoMenu
+          ),
 
           /// Menu Button Data National
           /// Remote Config : caption & url
@@ -170,7 +176,9 @@ class _MenuListState extends State<MenuList> {
                   _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) !=
                           null
                       ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
-                      : UrlThirdParty.urlCoronaEscort),
+                      : UrlThirdParty.urlCoronaEscort,
+            remoteMenuLoginKey: FirebaseConfig.nationalInfoMenu
+          ),
 
           /// Menu Button Data World
           /// Remote Config : caption & url
@@ -183,7 +191,9 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.worldInfoUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.worldInfoUrl)
-                      : UrlThirdParty.urlWorldCoronaInfo),
+                      : UrlThirdParty.urlWorldCoronaInfo,
+            remoteMenuLoginKey: FirebaseConfig.worldInfoMenu
+          ),
         ],
       ),
     );
@@ -207,11 +217,15 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.donationUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.donationUrl)
-                      : UrlThirdParty.urlDonation),
+                      : UrlThirdParty.urlDonation,
+            remoteMenuLoginKey: FirebaseConfig.donationMenu
+          ),
 
           /// Menu Button Survei
           _buildButtonColumn('${Environment.iconAssets}completed.png',
-              Dictionary.survey, NavigationConstrants.Survey),
+              Dictionary.survey, NavigationConstrants.Survey,
+            remoteMenuLoginKey: FirebaseConfig.surveyMenu
+          ),
 
           /// Menu Button Self Diagnose
           /// Remote Config : enabled, caption & url
@@ -227,7 +241,9 @@ class _MenuListState extends State<MenuList> {
                               .getString(FirebaseConfig.selfDiagnoseUrl) !=
                           null
                       ? _remoteConfig.getString(FirebaseConfig.selfDiagnoseUrl)
-                      : UrlThirdParty.urlSelfDiagnose)
+                      : UrlThirdParty.urlSelfDiagnose,
+            remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}magnifying_glass.png',
                   _remoteConfig.getString(FirebaseConfig.selfDiagnoseCaption) !=
@@ -255,7 +271,9 @@ class _MenuListState extends State<MenuList> {
                       _remoteConfig.getString(FirebaseConfig.logisticUrl) !=
                           null
                   ? _remoteConfig.getString(FirebaseConfig.logisticUrl)
-                  : UrlThirdParty.urlLogisticsInfo),
+                  : UrlThirdParty.urlLogisticsInfo,
+            remoteMenuLoginKey: FirebaseConfig.logisticMenu
+          ),
         ],
       ),
     );
@@ -280,7 +298,9 @@ class _MenuListState extends State<MenuList> {
               arguments: _remoteConfig != null &&
                   _remoteConfig.getString(FirebaseConfig.jshUrl) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
-                  : UrlThirdParty.urlIGSaberHoax),
+                  : UrlThirdParty.urlIGSaberHoax,
+            remoteMenuLoginKey: FirebaseConfig.jshMenu
+          ),
 
           /// Menu Button Volunteer
           /// Remote Config : enabled, caption & url
@@ -300,7 +320,9 @@ class _MenuListState extends State<MenuList> {
                                   .getString(FirebaseConfig.volunteerUrl) !=
                               null
                       ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
-                      : UrlThirdParty.urlVolunteer)
+                      : UrlThirdParty.urlVolunteer,
+            remoteMenuLoginKey: FirebaseConfig.volunteerMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}relawan.png',
                   _remoteConfig != null &&
@@ -327,7 +349,9 @@ class _MenuListState extends State<MenuList> {
                           _remoteConfig.getString(FirebaseConfig.reportUrl) !=
                               null
                       ? _remoteConfig.getString(FirebaseConfig.reportUrl)
-                      : UrlThirdParty.urlCaseReport)
+                      : UrlThirdParty.urlCaseReport,
+              remoteMenuLoginKey: FirebaseConfig.reportMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}report_case.png',
                   _remoteConfig != null &&
@@ -352,7 +376,9 @@ class _MenuListState extends State<MenuList> {
                   arguments: _remoteConfig != null &&
                           _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
-                      : UrlThirdParty.urlQNA)
+                      : UrlThirdParty.urlQNA,
+              remoteMenuLoginKey: FirebaseConfig.qnaMenu
+          )
               : _buildButtonDisable(
                   '${Environment.iconAssets}conversation.png',
                   _remoteConfig != null &&
@@ -366,7 +392,7 @@ class _MenuListState extends State<MenuList> {
   }
 
   _buildButtonColumn(String iconPath, String label, String route,
-      {Object arguments, bool openBrowser = false}) {
+      {Object arguments, bool openBrowser = false, String remoteMenuLoginKey}) {
     return Expanded(
       child: Column(
         children: [
@@ -390,12 +416,65 @@ class _MenuListState extends State<MenuList> {
               onPressed: () async {
                 if (route != null) {
 
-                  arguments = await _userDataUrlAppend(arguments);
 
-                  if (route == NavigationConstrants.Browser) {
-                    openChromeSafariBrowser(url: arguments);
+                  if (_remoteConfig != null && _remoteConfig.getString(FirebaseConfig.loginRequired) != null) {
+
+                    Map<String, dynamic> _loginRequiredMenu = json.decode(
+                        _remoteConfig.getString(FirebaseConfig.loginRequired));
+
+                      print('$remoteMenuLoginKey = ${_loginRequiredMenu[remoteMenuLoginKey]}');
+
+                      if (_loginRequiredMenu[remoteMenuLoginKey]) {
+                        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+
+                        if (user != null) {
+
+                          arguments = await _userDataUrlAppend(arguments);
+
+                          if (route == NavigationConstrants.Browser) {
+                            openChromeSafariBrowser(url: arguments);
+                          } else {
+                            Navigator.pushNamed(context, route, arguments: arguments);
+                          }
+
+                        } else {
+
+                          bool isLoggedIn = await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) =>
+                                  LoginScreen(label)));
+
+                          if (isLoggedIn != null && isLoggedIn) {
+
+                            arguments = await _userDataUrlAppend(arguments);
+
+                            if (route == NavigationConstrants.Browser) {
+                              openChromeSafariBrowser(url: arguments);
+                            } else {
+                              Navigator.pushNamed(context, route, arguments: arguments);
+                            }
+
+                          }
+                        }
+                      } else {
+
+                        arguments = await _userDataUrlAppend(arguments);
+
+                        if (route == NavigationConstrants.Browser) {
+                          openChromeSafariBrowser(url: arguments);
+                        } else {
+                          Navigator.pushNamed(context, route, arguments: arguments);
+                        }
+                      }
+
                   } else {
-                    Navigator.pushNamed(context, route, arguments: arguments);
+
+                    arguments = await _userDataUrlAppend(arguments);
+
+                    if (route == NavigationConstrants.Browser) {
+                      openChromeSafariBrowser(url: arguments);
+                    } else {
+                      Navigator.pushNamed(context, route, arguments: arguments);
+                    }
                   }
 
                   // record event to analytics
@@ -751,30 +830,37 @@ class _MenuListState extends State<MenuList> {
   // }
 
   Future<String> _userDataUrlAppend(String url) async {
-    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
-    String urlReturn = url;
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
-    if (_user != null) {
-      List<String> coded = ["_userUID_", "_userName_", "_userEmail_"]; //ABV list
-      List<String> decoded = [_user.uid, _user.displayName, _user.email]; //corresponding list
-      Map<String, String> map = new Map.fromIterables(coded, decoded);
-
-      final result = map.entries
-          .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
-
-      urlReturn = result;
+    if (url == null) {
+      return url;
     } else {
-      List<String> coded = ["_userUID_", "_userName_", "_userEmail_"]; //ABV list
-      List<String> decoded = ['', '', '']; //corresponding list
-      Map<String, String> map = new Map.fromIterables(coded, decoded);
+      Map<String, String> usrMap = {
+        '_googleIDToken_': '',
+        '_userUID_': '',
+        '_userName_': '',
+        '_userEmail_': ''
+      };
 
-      final result = map.entries
-          .fold(url, (prev, e) => prev.replaceAll(e.key, e.value));
+      if (user != null) {
+        GoogleSignInAccount signIn = await GoogleSignIn().signIn();
+        GoogleSignInAuthentication signInAuthentication = await signIn.authentication;
 
-      urlReturn = result;
+        usrMap = {
+          '_googleIDToken_': signInAuthentication.idToken,
+          '_userUID_': user.uid,
+          '_userName_': user.displayName,
+          '_userEmail_': user.email
+        };
+      }
+
+      usrMap.forEach((key, value) {
+        url = url.replaceAll(key, value);
+      });
+
+      return url;
     }
 
-    return urlReturn;
   }
 }
