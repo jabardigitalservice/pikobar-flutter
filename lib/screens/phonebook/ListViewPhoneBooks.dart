@@ -112,7 +112,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   })
             ],
           ),
-        )
+        ),
+
+        widget.searchQuery != null && callCenterPhoneCount == 0 && emergencyPhoneCount == 0 ? EmptyData(message: Dictionary.emptyDataPhoneBook) : Container()
       ],
     );
   }
