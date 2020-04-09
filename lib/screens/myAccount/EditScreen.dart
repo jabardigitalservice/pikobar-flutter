@@ -48,6 +48,11 @@ class _EditState extends State<Edit> {
   String minDate = '1900-01-01';
   DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
   bool otpEnabled;
+  bool isCityFieldEmpty = false;
+  bool isBirthdayEmpty = false;
+  bool isGenderEmpty = false;
+
+
 
   @override
   void initState() {
@@ -74,25 +79,8 @@ class _EditState extends State<Edit> {
       child: Scaffold(
         key: _scaffoldState,
         appBar: CustomAppBar.defaultAppBar(
-            title: Dictionary.edit,
-            actions: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 13, horizontal: 10),
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  elevation: 0,
-                  color: Color(0xff1d7c46),
-                  onPressed: () {
-                    _onSaveProfileButtonPressed(otpEnabled);
-                  },
-                  child: Text(
-                    Dictionary.save,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ]),
+          title: Dictionary.edit,
+        ),
         body: FutureBuilder<RemoteConfig>(
             future: setupRemoteConfig(),
             builder:
@@ -248,7 +236,7 @@ class _EditState extends State<Edit> {
                                     label: <String>[
                                       "Laki - Laki",
                                       "Perempuan",
-                                    ]),
+                                    ],isEmpty: isGenderEmpty),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -260,6 +248,7 @@ class _EditState extends State<Edit> {
                                           DateTime.parse(_birthDayController
                                               .text
                                               .substring(0, 10))),
+                                              isEmpty: isBirthdayEmpty
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -286,14 +275,15 @@ class _EditState extends State<Edit> {
                                             Dictionary.cityDomicile,
                                             Dictionary.cityPlaceholder,
                                             state.record.data,
-                                            _cityController);
+                                            _cityController,
+                                            isCityFieldEmpty);
                                       } else {
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
                                             Dictionary.loading,
                                             [],
-                                            _cityController);
-                                        ;
+                                            _cityController,
+                                            false);
                                       }
                                     }),
                                 SizedBox(
@@ -306,6 +296,23 @@ class _EditState extends State<Edit> {
                         SizedBox(
                           height: 20,
                         ),
+                        RaisedButton(
+                          color: Color(0xff27AE60),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          onPressed: () {
+                            _onSaveProfileButtonPressed(otpEnabled);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 13),
+                            child: Text(
+                              Dictionary.save,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ));
@@ -342,27 +349,45 @@ class _EditState extends State<Edit> {
       onConfirm: (dateTime, List<int> index) {
         setState(() {
           _birthDayController.text = dateTime.toString();
-          print(dateTime);
         });
       },
     );
   }
 
   _onSaveProfileButtonPressed(bool otpEnabled) async {
+    if (_cityController.text == '') {
+      setState(() {
+        isCityFieldEmpty = true;
+      });
+    } else {
+      setState(() {
+        isCityFieldEmpty = false;
+      });
+    }
+      if (_genderController.text == '') {
+      setState(() {
+        isGenderEmpty = true;
+      });
+    } else {
+      setState(() {
+        isGenderEmpty = false;
+      });
+    }
+        if (_birthDayController.text == '') {
+      setState(() {
+        isBirthdayEmpty = true;
+      });
+    } else {
+      setState(() {
+        isBirthdayEmpty = false;
+      });
+    }
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
-      if (_genderController.text == '' ||
-          _birthDayController.text == '' ||
-          _cityController.text == '') {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => DialogTextOnly(
-                  description: Dictionary.pleaseCompleteAllField,
-                  buttonText: Dictionary.ok,
-                  onOkPressed: () {
-                    Navigator.of(context).pop(); // To close the dialog
-                  },
-                ));
+      if (isGenderEmpty ||
+         isBirthdayEmpty ||
+          isCityFieldEmpty) {
+      
       } else if (widget.state.data['phone_number'] ==
           Dictionary.inaCode + _phoneNumberController.text) {
         _profileBloc.add(Save(
@@ -420,15 +445,23 @@ class _EditState extends State<Edit> {
     }
   }
 
-  Widget buildRadioButton({String title, List<String> label}) {
+  Widget buildRadioButton({String title, List<String> label,bool isEmpty}) {
     return Padding(
       padding: EdgeInsets.only(left: 16.0, right: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          Row(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+              ),
+              Text(
+                '*',
+                style: TextStyle(fontSize: 15.0, color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(
             height: 10,
@@ -462,20 +495,39 @@ class _EditState extends State<Edit> {
               );
             },
           ),
+           isEmpty
+              ?
+          SizedBox(
+            height: 10,
+          ):Container(),
+          isEmpty
+              ? Text(
+                  title + Dictionary.pleaseCompleteAllField,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                )
+              : Container()
         ],
       ),
     );
   }
 
-  Widget buildDateField({String title, placeholder}) {
+  Widget buildDateField({String title, placeholder,bool isEmpty}) {
     return Container(
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          Row(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+              ),
+              Text(
+                '*',
+                style: TextStyle(fontSize: 15.0, color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(
             height: 10,
@@ -507,6 +559,17 @@ class _EditState extends State<Edit> {
               ),
             ),
           ),
+           isEmpty
+              ?
+          SizedBox(
+            height: 10,
+          ):Container(),
+          isEmpty
+              ? Text(
+                  title +  Dictionary.pleaseCompleteAllField,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                )
+              : Container()
         ],
       ),
     );
@@ -526,9 +589,17 @@ class _EditState extends State<Edit> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          Row(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+              ),
+              Text(
+                '*',
+                style: TextStyle(fontSize: 15.0, color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(
             height: 10,
@@ -570,16 +641,24 @@ class _EditState extends State<Edit> {
   }
 
   Widget buildDropdownField(String title, String hintText, List items,
-      TextEditingController controller,
+      TextEditingController controller, bool isEmpty,
       [validation]) {
     return Container(
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          Row(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+              ),
+              Text(
+                '*',
+                style: TextStyle(fontSize: 15.0, color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(
             height: 10,
@@ -595,9 +674,8 @@ class _EditState extends State<Edit> {
               child: custom.DropdownButton<dynamic>(
                 underline: SizedBox(),
                 isExpanded: true,
-                hint: Text(hintText),
+                hint: Text(hintText,style: TextStyle(fontSize: 13),),
                 items: items.map((item) {
-                  print(item);
                   return custom.DropdownMenuItem(
                     child: Text(item.namaWilayah),
                     value: item.kodeKemendagri.toString(),
@@ -611,7 +689,18 @@ class _EditState extends State<Edit> {
                 value: controller.text == '' ? null : controller.text,
               ),
             ),
-          )
+          ),
+          isEmpty
+              ?
+          SizedBox(
+            height: 10,
+          ):Container(),
+          isEmpty
+              ? Text(
+                  title +  Dictionary.pleaseCompleteAllField,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                )
+              : Container()
         ],
       ),
     );
@@ -630,9 +719,17 @@ class _EditState extends State<Edit> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+          Row(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+              ),
+              Text(
+                '*',
+                style: TextStyle(fontSize: 15.0, color: Colors.red),
+              ),
+            ],
           ),
           SizedBox(
             height: 10,
