@@ -163,7 +163,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                   MaterialPageRoute(
                     builder: (_) => HeroImagePreview(
                       Dictionary.heroImageTag,
-                      imageUrl: data['images'][0],
+                      galleryItems: data['images'],
                     ),
                   ));
 
@@ -185,7 +185,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           MaterialPageRoute(
                             builder: (_) => HeroImagePreview(
                               Dictionary.heroImageTag,
-                              imageUrl: data['images'][0],
+                              galleryItems: data['images'],
                             ),
                           ));
 
@@ -227,7 +227,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         size: 17, color: Color(0xFF27AE60)),
                     onPressed: () {
                       InfoGraphicsServices()
-                          .shareInfoGraphics(data['title'], data['images'][0]);
+                          .shareInfoGraphics(data['title'], data['images']);
                     },
                   ),
                 )

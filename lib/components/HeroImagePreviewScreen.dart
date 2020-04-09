@@ -46,14 +46,14 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
                 return PhotoViewGalleryPageOptions(
                   minScale: 0.3,
                   imageProvider:
-                      NetworkImage(widget.galleryItems.images[index].url),
+                      NetworkImage(widget.galleryItems[index]),
                   heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
                   onTapUp: (context, tapDetail, controller) {
                     Navigator.of(context).pop();
                   },
                 );
               },
-              itemCount: widget.galleryItems.images.length,
+              itemCount: widget.galleryItems.length,
               backgroundDecoration: BoxDecoration(color: Colors.white),
               pageController: widget.pageController,
               onPageChanged: onPageChanged,

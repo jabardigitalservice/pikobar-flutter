@@ -181,7 +181,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         MaterialPageRoute(
                           builder: (_) => HeroImagePreview(
                             Dictionary.heroImageTag,
-                            imageUrl: document['images'][0],
+                            galleryItems: document['images'],
                           ),
                         ));
 
@@ -198,7 +198,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           MaterialPageRoute(
                             builder: (_) => HeroImagePreview(
                               Dictionary.heroImageTag,
-                              imageUrl: document['images'][0],
+                              galleryItems: document['images'],
                             ),
                           ));
 
@@ -243,7 +243,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         size: 17, color: Color(0xFF27AE60)),
                     onPressed: () {
                       InfoGraphicsServices().shareInfoGraphics(
-                          document['title'], document['images'][0]);
+                          document['title'], document['images']);
                     },
                   ),
                 )
