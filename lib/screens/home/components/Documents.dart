@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:share/share.dart';
@@ -55,8 +56,7 @@ class _DocumentsState extends State<Documents> {
                       fontSize: 14.0),
                 ),
                 onTap: () {
-                  Navigator.pushNamed(
-                      context, NavigationConstrants.Document);
+                  Navigator.pushNamed(context, NavigationConstrants.Document);
 
                   AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
                 },
@@ -78,7 +78,6 @@ class _DocumentsState extends State<Documents> {
             } else {
               return _buildLoading();
             }
-
           },
         )
       ],
@@ -103,52 +102,51 @@ class _DocumentsState extends State<Documents> {
             itemBuilder: (context, index) {
               return Container(
                   child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Skeleton(
-                            height: 20.0,
-                            width: 40,
-                            padding: 10.0,
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Skeleton(
-                                    height: 20.0,
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.6,
-                                    padding: 10.0,
-                                  ),
-                                ],
+                      Skeleton(
+                        height: 20.0,
+                        width: 40,
+                        padding: 10.0,
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Skeleton(
+                                height: 20.0,
+                                width: MediaQuery.of(context).size.width / 1.6,
+                                padding: 10.0,
                               ),
-                            ),
+                            ],
                           ),
-                          Container(
-                            child: Skeleton(
-                              height: 30.0,
-                              width: 30.0,
-                              padding: 10.0,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 20, bottom: 20),
                         child: Skeleton(
-                          height: 1.5,
-                          width: MediaQuery.of(context).size.width,
+                          height: 30.0,
+                          width: 30.0,
                           padding: 10.0,
                         ),
-                      )
+                      ),
                     ],
-                  ));
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20, bottom: 20),
+                    child: Skeleton(
+                      height: 1.5,
+                      width: MediaQuery.of(context).size.width,
+                      padding: 10.0,
+                    ),
+                  )
+                ],
+              ));
             })
       ],
     );
@@ -213,64 +211,61 @@ class _DocumentsState extends State<Documents> {
 
                 return Container(
                     child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(width: 10),
-                            Text(
-                              unixTimeStampToDateDocs(
-                                  document['published_at'].seconds),
+                        SizedBox(width: 10),
+                        Text(
+                          unixTimeStampToDateDocs(
+                              document['published_at'].seconds),
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(width: 30),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              _downloadAttachment(
+                                  document['title'], document['document_url']);
+                            },
+                            child: Text(
+                              document['title'],
                               style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12.0,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: 14.0,
                                   fontWeight: FontWeight.w600),
                               textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(width: 30),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  _downloadAttachment(
-                                      document['title'], document['document_url']);
-                                },
-                                child: Text(
-                                  document['title'],
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w600),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: IconButton(
-                                icon: Icon(FontAwesomeIcons.solidShareSquare,
-                                    size: 17, color: Color(0xFF27AE60)),
-                                onPressed: () {
-                                  Share.share(document['document_url'] +
-                                      '\n\n${Dictionary.sharedFrom}');
-                                  AnalyticsHelper.setLogEvent(
-                                      Analytics.tappedShareDocuments,
-                                      <String, dynamic>{'title': document['title']});
-                                },
-                              ),
-                            )
-                          ],
+                          ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          color: Colors.grey[200],
-                          width: MediaQuery.of(context).size.width,
-                          height: 1.5,
+                          child: IconButton(
+                            icon: Icon(FontAwesomeIcons.solidShareSquare,
+                                size: 17, color: Color(0xFF27AE60)),
+                            onPressed: () {
+                              DocumentServices().shareDocument(
+                                  document['title'], document['document_url']);
+                            },
+                          ),
                         )
                       ],
-                    ));
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10, bottom: 10),
+                      color: Colors.grey[200],
+                      width: MediaQuery.of(context).size.width,
+                      height: 1.5,
+                    )
+                  ],
+                ));
               })
         ],
       ),

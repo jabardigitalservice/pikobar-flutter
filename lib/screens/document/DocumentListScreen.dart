@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pedantic/pedantic.dart';
@@ -153,11 +154,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                           icon: Icon(FontAwesomeIcons.solidShareSquare,
                               size: 17, color: Color(0xFF27AE60)),
                           onPressed: () {
-                            Share.share(document['document_url'] +
-                                '\n\n${Dictionary.sharedFrom}');
-                            AnalyticsHelper.setLogEvent(
-                                Analytics.tappedShareDocuments,
-                                <String, dynamic>{'title': document['title']});
+                            DocumentServices().shareDocument(
+                                document['title'], document['document_url']);
                           },
                         ),
                       )
