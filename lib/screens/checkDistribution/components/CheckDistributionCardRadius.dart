@@ -35,7 +35,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
             ),
             SizedBox(height: 5),
             Text(
-              'Update Terakhir 6 April 2020',
+              Dictionary.update24hourTitle,
               style: TextStyle(
                 color: Colors.grey[600],
                 fontFamily: FontsFamily.productSans,
@@ -49,7 +49,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
               children: <Widget>[
                 buildCard(context,
                     image: '${Environment.imageAssets}bg-positif.png',
-                    title: Dictionary.positifTitle,
+                    title: Dictionary.confirmed,
                     total: state.record.detected.radius.positif),
                 buildCard(context,
                     image: '${Environment.imageAssets}bg-meninggal.png',

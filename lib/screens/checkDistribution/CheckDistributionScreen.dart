@@ -272,7 +272,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                     SizedBox(height: 6),
                     Padding(
                       padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: Center(
+                      child: Align(
+                        alignment: Alignment.center,
                         child: Text.rich(
                           TextSpan(
                             children: <TextSpan>[
@@ -392,7 +393,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                           ),
                           Container(
                             padding: EdgeInsets.only(top: 10),
-                            height: MediaQuery.of(context).size.height * 0.56,
+                            height: MediaQuery.of(context).size.height * 0.70,
                             child: TabBarView(
                               children: <Widget>[
                                 // show kelurahan / desa
