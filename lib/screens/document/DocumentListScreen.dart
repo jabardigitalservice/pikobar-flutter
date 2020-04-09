@@ -270,6 +270,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       await FlutterDownloader.enqueue(
         url: url,
         savedDir: dir,
+        fileName: name,
         showNotification:
             true, // show download progress in status bar (for Android)
         openFileFromNotification:
