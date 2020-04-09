@@ -114,7 +114,7 @@ class Desa {
 }
 
 class Radius {
-  int kmRadius;
+  double kmRadius;
   int odpProses;
   int pdpProses;
   int positif;
