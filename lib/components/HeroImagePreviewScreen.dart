@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:pikobar_flutter/components/DotsIndicator.dart';
 // import 'package:sapawarga/models/RWActivityModel.dart';
 
 class HeroImagePreview extends StatefulWidget {
@@ -20,7 +21,13 @@ class HeroImagePreview extends StatefulWidget {
 }
 
 class _HeroImagePreviewState extends State<HeroImagePreview> {
+
   int currentIndex;
+
+  static const _kDuration = const Duration(milliseconds: 300);
+
+  static const _kCurve = Curves.ease;
+
   @override
   initState() {
     if (widget.initialIndex != null) {
@@ -40,25 +47,7 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
   Widget build(BuildContext context) {
     return Container(
       child: widget.imageUrl == null
-          ? PhotoViewGallery.builder(
-              scrollPhysics: const BouncingScrollPhysics(),
-              builder: (BuildContext context, int index) {
-                return PhotoViewGalleryPageOptions(
-                  minScale: 0.3,
-                  imageProvider:
-                      NetworkImage(widget.galleryItems[index]),
-                  heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
-                  onTapUp: (context, tapDetail, controller) {
-                    Navigator.of(context).pop();
-                  },
-                );
-              },
-              itemCount: widget.galleryItems.length,
-              backgroundDecoration: BoxDecoration(color: Colors.white),
-              pageController: widget.pageController,
-              onPageChanged: onPageChanged,
-              scrollDirection: Axis.horizontal,
-            )
+          ? _buildPhotoViewGallery()
           : PhotoView(
               imageProvider: NetworkImage(widget.imageUrl),
               minScale: 0.3,
@@ -68,6 +57,55 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
                 Navigator.of(context).pop();
               },
             ),
+    );
+  }
+
+  Widget _buildPhotoViewGallery() {
+    return Stack(
+      children: <Widget>[
+        PhotoViewGallery.builder(
+          scrollPhysics: const BouncingScrollPhysics(),
+          builder: (BuildContext context, int index) {
+            return PhotoViewGalleryPageOptions(
+              minScale: 0.3,
+              imageProvider:
+              NetworkImage(widget.galleryItems[index]),
+              heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
+              onTapUp: (context, tapDetail, controller) {
+                Navigator.of(context).pop();
+              },
+            );
+          },
+          itemCount: widget.galleryItems.length,
+          backgroundDecoration: BoxDecoration(color: Colors.white),
+          pageController: widget.pageController,
+          onPageChanged: onPageChanged,
+          scrollDirection: Axis.horizontal,
+        ),
+
+        widget.galleryItems.length > 1 ? Positioned(
+          bottom: 0.0,
+          left: 0.0,
+          right: 0.0,
+          child: new Container(
+            color: Colors.grey[800].withOpacity(0.5),
+            padding: const EdgeInsets.all(10.0),
+            child: new Center(
+              child: DotsIndicator(
+                controller: widget.pageController,
+                itemCount: widget.galleryItems.length,
+                onPageSelected: (int page) {
+                  widget.pageController.animateToPage(
+                    page,
+                    duration: _kDuration,
+                    curve: _kCurve,
+                  );
+                },
+              ),
+            ),
+          ),
+        ) : Container(),
+      ]
     );
   }
 
