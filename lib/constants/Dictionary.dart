@@ -28,6 +28,7 @@ class Dictionary {
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
+  static String documents = 'Dokumen';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -38,7 +39,7 @@ class Dictionary {
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
-  static String positif = 'Positif Covid-19';
+  static String positif = 'Terkonfirmasi';
   static String recover = 'Sembuh';
   static String die = 'Meninggal';
   static String opdDesc = 'Orang Dalam Pemantauan';
@@ -46,6 +47,7 @@ class Dictionary {
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
   static String profile = 'Profil';
+  static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
@@ -55,6 +57,14 @@ class Dictionary {
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
+  static String provinceId = '32';
+  static String sharedFrom = '_dibagikan dari Pikobar_';
+  static String gender = 'Jenis Kelamin';
+  static String birthday = 'Tanggal Lahir';
+  static String nationality = 'Kewarganegaraan';
+  static String addressDomicile = 'Alamat Domisili';
+  static String cityDomicile = 'Kabupaten/Kota Domisili';
+  static String provinceDomicile = 'Provinsi Domisili';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -66,7 +76,12 @@ class Dictionary {
   static String daftarRumahSakitRujukanCaption =
       'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
-  static String statusUser = 'Status : Sehat';
+  static String statusUser = 'Status: ';
+  static String sendAgainOTP = 'Kirim ulang kode';
+  static String otpNotSent = 'Tidak menerima sms?';
+  static String inputOTP = 'Silahkan masukan 6-digit kode disini';
+  static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
+  static String searchLocation = 'Cari Lokasi';
 
   // Button Text
   static String yes = 'Ya';
@@ -101,7 +116,17 @@ class Dictionary {
   static String errorInvalidPhone = 'Format nomor telepon tidak sesuai';
   static String errorMinimumPhone =
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
-  static String errorStatisticsNotExists = 'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+  static String errorStatisticsNotExists =
+      'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
+  static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
+  static String errorEmptyAddress = 'Alamat harus diisi';
+  static String pleaseCompleteAllField = ' harus diisi';
+
+  static String codeSend = 'Kode terkirim ke nomor ';
+  static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
+  static String codeVerified = 'No hp telah terverifikasi';
+  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali... ';
+  static String profileSaved = 'Perubahan tersimpan';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
@@ -117,10 +142,17 @@ class Dictionary {
   static String findFaq = 'Cari FAQ';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
+  static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
+  static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
+  static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
+  static String provincePlaceholder = 'Masukan Provinsi Domisili Anda';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
       'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
+  static String permissionLocationMap =
+      'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -149,4 +181,46 @@ class Dictionary {
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String moreDetail = ' Selengkapnya';
+
+  // check distribution virus
+  static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
+  static String checkDistributionSubTitle1 =
+      'Untuk mengetahui seberapa aman lokasi anda';
+  static String checkDistributionSubTitle2 =
+      'Silahkan gunakan fitur pencarian dibawah ini';
+  static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
+  static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
+  static String findLocation = 'Cek Lokasi';
+  static String confirmed = 'Terkonfirmasi';
+  static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
+  static String checkByLocation = 'Cari Berdasarkan Lokasi';
+  static String positifString = 'Total Pasien Terkonfirmasi COVID-19';
+  static String pdpString = 'PDP (Pasien Dalam Pengawasan)';
+  static String odpString = 'ODP (Orang Dalam Pemantauan)';
+  static String checkDistributionInfo =
+      'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya ';
+  static String unreachableLocation = 'Lokasi Tidak Terjangkau';
+  static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
+  static String locationRadiusTitle = 'Lokasi Dalam Radius';
+  static String village = 'Kelurahan';
+  static String districts = 'Kecamatan';
+  static String here = 'di sini';
+  static String cantFindLocation =
+      'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
+  static String informationLocation =
+      'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.\n\nData yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.';
+  static String disclaimer = 'Disclaimer/Penyangkalan';
+  static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
+  static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
+
+  //message
+  static String markAsRead = "Tandai Semua Sudah Dibaca";
+
+  //document
+  static String document = "Dokumen";
+  static String date = "Tanggal";
+  static String titleDocument = "Judul Dokumen";
+  static String emptyDataDocuments = 'Dokumen tidak ada';
+  static String permissionDownloadAttachment =
+      'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
 }

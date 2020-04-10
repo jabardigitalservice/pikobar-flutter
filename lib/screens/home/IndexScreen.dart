@@ -6,14 +6,18 @@ import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
@@ -26,10 +30,10 @@ import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
-  _IndexScreenState createState() => _IndexScreenState();
+  IndexScreenState createState() => IndexScreenState();
 }
 
-class _IndexScreenState extends State<IndexScreen> {
+class IndexScreenState extends State<IndexScreen> {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   static FirebaseInAppMessaging firebaseInAppMsg = FirebaseInAppMessaging();
 
@@ -37,13 +41,18 @@ class _IndexScreenState extends State<IndexScreen> {
 
   BottomNavigationBadge badger;
   List<BottomNavigationBarItem> items;
+  int countMessage = 0;
 
   @override
   void initState() {
     initializeDateFormatting();
+    getCountMessage();
+    createDirectory();
+    setFlutterDownloaderInitial();
 
     _initializeBottomNavigationBar();
     setStatAnnouncement();
+    registerFCMToken();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -77,6 +86,23 @@ class _IndexScreenState extends State<IndexScreen> {
 
   setStatAnnouncement() async {
     await AnnouncementSharedPreference.setAnnounceScreen(true);
+  }
+
+  setFlutterDownloaderInitial() async {
+    await FlutterDownloader.initialize();
+  }
+
+  createDirectory() async {
+    String localPath = (await getExternalStorageDirectory()).path + '/download';
+    final savedDir = Directory(localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+  }
+
+  registerFCMToken() async {
+    await AuthRepository().registerFCMToken();
   }
 
   Future<void> checkAppVersion() async {
@@ -224,13 +250,34 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 
+  getCountMessage() {
+    Future.delayed(Duration(milliseconds: 0), () async {
+      countMessage = await MessageRepository().hasUnreadData();
+      setState(() {
+        // ignore: unnecessary_statements
+        if (countMessage <= 0) {
+          items[1] = BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+              title: Column(
+                children: <Widget>[
+                  SizedBox(height: 4),
+                  Text(Dictionary.message),
+                ],
+              ));
+        } else {
+          items = badger.setBadge(items, countMessage.toString(), 1);
+        }
+      });
+    });
+  }
+
   Widget _buildContent(int index) {
     switch (index) {
       case 0:
         return HomeScreen();
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
-        return Messages();
+        return Messages(indexScreenState: this);
 
       case 2:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
@@ -238,7 +285,6 @@ class _IndexScreenState extends State<IndexScreen> {
 
       case 3:
         return ProfileScreen();
-
       default:
         return HomeScreen();
     }

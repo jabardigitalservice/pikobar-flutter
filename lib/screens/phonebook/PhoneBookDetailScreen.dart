@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -42,7 +43,7 @@ class _PhoneBookDetailState extends State<PhoneBookDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(Dictionary.nomorDarurat)),
+        appBar: CustomAppBar.defaultAppBar(title: Dictionary.nomorDarurat),
         body: ListView(children: [
           coverImageSection(context, widget.document),
           mainSection(context, widget.document),

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -13,6 +14,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SurveysScreen extends StatefulWidget {
@@ -72,7 +74,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
           child: Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text(Dictionary.survey),
+              title: CustomAppBar.setTitleAppBar(Dictionary.survey),
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (
@@ -192,9 +194,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           textColor: Colors.white,
                           child: Text(Dictionary.fieldSurvey),
                           onPressed: () {
-                            Navigator.of(context).pushNamed(
-                                NavigationConstrants.Browser,
-                                arguments: document['url']);
+                            openChromeSafariBrowser(url: document['url']);
                           },
                         ),
                       )

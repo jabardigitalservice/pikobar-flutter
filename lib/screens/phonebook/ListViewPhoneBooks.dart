@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class ListViewPhoneBooks extends StatefulWidget {
   String searchQuery;
 
@@ -111,7 +112,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   })
             ],
           ),
-        )
+        ),
+
+        widget.searchQuery != null && callCenterPhoneCount == 0 && emergencyPhoneCount == 0 ? EmptyData(message: Dictionary.emptyDataPhoneBook) : Container()
       ],
     );
   }

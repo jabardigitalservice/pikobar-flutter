@@ -3,8 +3,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -13,6 +15,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
+import 'package:share/share.dart';
 
 class VideoList extends StatefulWidget {
   @override
@@ -219,14 +222,34 @@ class _VideoListState extends State<VideoList> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.all(15.0),
-                          child: Text(
-                            document['title'],
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  height: 40.0,
+                                  margin: EdgeInsets.only(right: 5.0),
+                                  child: Text(
+                                    document['title'],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                              height: 40.0,
+                                child: GestureDetector(
+                                  child: Icon(FontAwesomeIcons.solidShareSquare,
+                                      size: 17, color: ColorBase.green),
+                                  onTap: () {
+                                    _shareVideo(document['title'], document['url']);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       ],
@@ -237,5 +260,12 @@ class _VideoListState extends State<VideoList> {
         ),
       ],
     );
+  }
+
+  _shareVideo(String title, String url){
+    Share.share('$title \n\nTonton video lengkapnya:\n$url \n\n${Dictionary.sharedFrom}');
+
+    AnalyticsHelper.setLogEvent(
+        Analytics.tappedVideoShare, <String, dynamic>{'title': title});
   }
 }

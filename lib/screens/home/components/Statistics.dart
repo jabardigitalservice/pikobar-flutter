@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -14,6 +15,8 @@ class Statistics extends StatefulWidget {
 }
 
 class _StatisticsState extends State<Statistics> {
+  final formatter = new NumberFormat("#,###");
+
   @override
   Widget build(BuildContext context) {
     return new StreamBuilder(
@@ -221,6 +224,15 @@ class _StatisticsState extends State<Statistics> {
 
   _buildContainer(String image, String title, String description, String count,
       int length, String label, Color colorTextTitle, Color colorNumber) {
+
+    if (count != null && count.isNotEmpty && count != '-') {
+      try {
+        count = formatter.format(int.parse(count)).replaceAll(',', '.');
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / length),

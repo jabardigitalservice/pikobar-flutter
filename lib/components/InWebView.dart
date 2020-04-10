@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -22,7 +23,7 @@ class _InWebViewState extends State<InWebView> {
       onWillPop: () => _exitWebView(context),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Dictionary.appName),
+          title: CustomAppBar.setTitleAppBar(Dictionary.appName),
         ),
         body: Stack(
           children: <Widget>[
