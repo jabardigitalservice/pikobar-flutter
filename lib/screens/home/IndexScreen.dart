@@ -23,6 +23,7 @@ import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
+import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
@@ -213,18 +214,32 @@ class IndexScreenState extends State<IndexScreen> {
           newsType = Dictionary.latestNews;
       }
 
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => NewsDetailScreen(
-                id: data['id'],
-                news: newsType,
-                isFromNotification: true,
-              )));
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                NewsDetailScreen(
+                  id: data['id'],
+                  news: newsType,
+                  isFromNotification: true,
+                )));
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                News(news: newsType)));
+      }
     } else if (data['target'] == 'broadcast') {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => MessageDetailScreen(
-                id: data['id'],
-                isFromNotification: true,
-              )));
+      if (data['id'] != null && data['id'] != 'null')  {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                MessageDetailScreen(
+                  id: data['id'],
+                  isFromNotification: true,
+                )));
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                Messages(indexScreenState: this)));
+      }
     }
   }
 
