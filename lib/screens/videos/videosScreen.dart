@@ -2,10 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/video_list_bloc.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/VideoRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -32,6 +35,7 @@ class VideosList extends StatefulWidget {
 }
 
 class _VideosListState extends State<VideosList> {
+  // ignore: close_sinks
   VideoListBloc _videoListBloc;
 
   @override
@@ -46,7 +50,7 @@ class _VideosListState extends State<VideosList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Dictionary.videoUpToDate),
+        title: CustomAppBar.setTitleAppBar(Dictionary.videoUpToDate),
       ),
       body: BlocBuilder<VideoListBloc, VideoListState>(
         bloc: _videoListBloc,
@@ -140,7 +144,7 @@ class _VideosListState extends State<VideosList> {
                   },
                 ),
                 Container(
-                    padding: EdgeInsets.all(17),
+                    margin: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 30.0),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -153,18 +157,19 @@ class _VideosListState extends State<VideosList> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Container(
-                          child: IconButton(
-                            icon: Icon(Icons.share),
-                            onPressed: () {
-                              _shareApp(state.videos[index].title,
-                                  state.videos[index].url);
-                            },
+                        GestureDetector(
+                          child: Container(
+                            height: 40.0,
+                            padding: EdgeInsets.only(left: 20.0, right: 10.0),
+                            child: Icon(FontAwesomeIcons.solidShareSquare, size: 17, color: ColorBase.green),
                           ),
+                          onTap: () {
+                            _shareApp(state.videos[index].title,
+                                state.videos[index].url);
+                          },
                         )
                       ],
                     )),
-                SizedBox(height: 10),
               ],
             );
           }),
@@ -172,8 +177,7 @@ class _VideosListState extends State<VideosList> {
   }
 
   _shareApp(String title, String sourceUrl) {
-    Share.share(
-        '$title\nBaca Selengkapnya: $sourceUrl\n\ndibagikan dari Pikobar');
+    Share.share('$title \n\nTonton video lengkapnya:\n$sourceUrl \n\n${Dictionary.sharedFrom}');
 
     AnalyticsHelper.setLogEvent(
         Analytics.tappedVideoShare, <String, dynamic>{'title': title});

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -28,9 +29,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(Dictionary.infoGraphics),
-      ),
+      appBar: CustomAppBar.defaultAppBar(title: Dictionary.infoGraphics),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
             .collection(Collections.infographics)
@@ -164,7 +163,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                   MaterialPageRoute(
                     builder: (_) => HeroImagePreview(
                       Dictionary.heroImageTag,
-                      imageUrl: data['images'][0],
+                      galleryItems: data['images'],
                     ),
                   ));
 
@@ -186,7 +185,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           MaterialPageRoute(
                             builder: (_) => HeroImagePreview(
                               Dictionary.heroImageTag,
-                              imageUrl: data['images'][0],
+                              galleryItems: data['images'],
                             ),
                           ));
 
@@ -228,7 +227,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         size: 17, color: Color(0xFF27AE60)),
                     onPressed: () {
                       InfoGraphicsServices()
-                          .shareInfoGraphics(data['title'], data['images'][0]);
+                          .shareInfoGraphics(data['title'], data['images']);
                     },
                   ),
                 )

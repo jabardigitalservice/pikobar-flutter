@@ -22,4 +22,6 @@ class ColorBase {
 
   static final yellow = Color(0xfffdcc3b);
   static final orange = Color(0xffe8b638);
+
+  static final healthStatusColors = '{"healthy": "009d57","odp": "fff45a","pdp": "ffc831","confirmed": "ff0000"}';
 }

@@ -1,5 +1,6 @@
  import 'package:flutter/material.dart';
  import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 
  class BrowserScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
        onWillPop: _exitWebView,
        child: Scaffold(
          appBar: AppBar(
-           title: Text(Dictionary.appName),
+           title: CustomAppBar.setTitleAppBar(Dictionary.appName),
          ),
          body: Column(
            children: <Widget>[

@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -14,6 +18,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/HexColor.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -25,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
+
   @override
   void initState() {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -77,9 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
           child: Scaffold(
-              appBar: AppBar(
-                title: Text(Dictionary.profile),
-              ),
+              appBar: CustomAppBar.defaultAppBar(title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,
@@ -109,7 +113,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             default:
-                              return _buildContent(snapshot,_profileLoaded);
+                              return snapshot.data.exists
+                                  ? _buildContent(snapshot, _profileLoaded)
+                                  : Center(
+                                      child: CircularProgressIndicator(),
+                                    );
                           }
                         });
                   } else {
@@ -120,7 +128,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ));
   }
 
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,AuthenticationAuthenticated _profileLoaded) {
+  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
+      AuthenticationAuthenticated _profileLoaded) {
     return Center(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -145,7 +154,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 width: 20,
               ),
-
               Container(
                 height: 98,
                 child: Column(
@@ -155,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: 30.0,
                       child: Text(
-                       _profileLoaded.record.name,
+                        _profileLoaded.record.name,
                         style: TextStyle(
                             color: Color(0xff4F4F4F),
                             fontSize: 18,
@@ -170,8 +178,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fontSize: 14,
                           )),
                     ),
-
-                    state.data != null ? _healthStatus(state.data) : SizedBox(height: 38.0),
+                    state.data != null
+                        ? _healthStatus(state.data)
+                        : SizedBox(height: 38.0),
                   ],
                 ),
               )
@@ -238,11 +247,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: EdgeInsets.all(15.0),
               child: Column(
                 children: <Widget>[
-                  InkWell(onTap: () {
-                            Navigator.pushNamed(
-                                context, NavigationConstrants.Edit,
-                                arguments: state);
-                          },
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, NavigationConstrants.Edit,
+                          arguments: state);
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -335,59 +344,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   FutureBuilder<RemoteConfig> _healthStatus(DocumentSnapshot data) {
+    Color cardColor = ColorBase.grey;
+    Color textColor = Colors.white;
+    String uriImage = '${Environment.iconAssets}sthetoscope.png';
+
     return FutureBuilder<RemoteConfig>(
-                      future: setupRemoteConfig(),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+        future: setupRemoteConfig(),
+        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+          bool visible = snapshot.data != null &&
+                  snapshot.data.getBool(FirebaseConfig.healthStatusVisible) !=
+                      null
+              ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible)
+              : false;
 
-                        bool visible = snapshot.data != null && snapshot.data.getBool(FirebaseConfig.healthStatusVisible) != null ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible) : false;
+          if (snapshot.data != null &&
+              snapshot.data.getString(FirebaseConfig.healthStatusColors) !=
+                  null &&
+              data['health_status'] != null) {
+            Map<String, dynamic> healthStatusColor = json.decode(
+                snapshot.data.getString(FirebaseConfig.healthStatusColors));
 
-                        return visible && data['health_status_text'] != null ? Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xff27AE60),
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        height: 12,
-                                        child: Image.asset(
-                                            '${Environment.iconAssets}sthetoscope.png')),
-                                    SizedBox(width: 5),
-                                    Text('Status: ' + data['health_status_text'],
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                        )),
-                                  ],
-                                ),
-                                data['health_status_check'] != null ? Text(unixTimeStampToDateTimeWithoutDay(data['health_status_check'].seconds),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    )) : Container(),
-                              ],
-                            ),
-                          ),
-                        ) : SizedBox(height: 38.0,);
-                      });
+            switch (data['health_status']) {
+              case "HEALTHY":
+                cardColor = HexColor.fromHex(healthStatusColor['healthy'] != null ? healthStatusColor['healthy'] : ColorBase.green);
+                break;
+
+              case "ODP":
+                cardColor = HexColor.fromHex(healthStatusColor['odp'] != null ? healthStatusColor['odp'] : Colors.yellow);
+                textColor = Colors.black;
+                uriImage = '${Environment.iconAssets}sthetoscope_black.png';
+                break;
+
+              case "PDP":
+                cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null ? healthStatusColor['pdp'] : Colors.orange);
+                textColor = Colors.black;
+                uriImage = '${Environment.iconAssets}sthetoscope_black.png';
+                break;
+
+              case "CONFIRMED":
+                cardColor = HexColor.fromHex(healthStatusColor['confirmed'] != null ? healthStatusColor['confirmed'] : Colors.red);
+                break;
+
+              default :
+                cardColor = Colors.grey;
+            }
+          }
+
+          return visible && data['health_status_text'] != null
+              ? Container(
+                  decoration: BoxDecoration(
+                      color: cardColor, borderRadius: BorderRadius.circular(4)),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(
+                                height: 12,
+                                child: Image.asset(uriImage)),
+                            SizedBox(width: 5),
+                            Text(
+                                Dictionary.statusUser +
+                                    data['health_status_text'],
+                                style: TextStyle(
+                                  color: textColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                )),
+                          ],
+                        ),
+                        data['health_status_check'] != null
+                            ? Text(
+                                unixTimeStampToDateTimeWithoutDay(
+                                    data['health_status_check'].seconds),
+                                style: TextStyle(
+                                  color: textColor,
+                                  fontSize: 10,
+                                ))
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  height: 38.0,
+                );
+        });
   }
 
   Future<RemoteConfig> setupRemoteConfig() async {
+
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.healthStatusVisible: false,
+      FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors,
     });
 
     try {
       await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
-
     } catch (exception) {
       print('Unable to fetch remote config. Cached or default values will be '
           'used');

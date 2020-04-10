@@ -10,6 +10,8 @@ class Analytics {
   static String notifications = 'Notifikasi';
   static String video = 'Video Terkini';
   static String infoGraphics = 'Info Praktikal';
+  static String checkDistribution = 'Cek Sebaran';
+  static String document = 'Dokumen';
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -33,6 +35,7 @@ class Analytics {
   static String tappedVideoMore = 'tapped_video_selengkapnya';
   static String tappedSpreadCheck = 'tapped_cek_sebaran';
   static String tappedInfoGraphicsMore = 'tapped_info_praktikal_selengkapnya';
+  static String tappedDocumentsMore = 'tapped_dokumen_selengkapnya';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
@@ -67,4 +70,14 @@ class Analytics {
   // event Info Graphics
   static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
   static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
+
+  // event check distribution
+  static String tappedCheckCurrentLocation = 'tapped_cek_lokasi_saat_ini';
+  static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
+  static String tappedFindByVillage = 'tapped_cari_berdasarkan_kelurahan';
+  static String tappedFindByDistricts = 'tapped_cari_berdasarkan_kecamatan';
+
+  //event document
+  static String tappedShareDocuments = 'tapped_share_documents';
+  static String tappedDownloadDocuments = 'tapped_download_documents';
 }
