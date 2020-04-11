@@ -90,7 +90,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                         _document = MessageModel(
                             backlink: snapshot.data['backlink'],
                             title: snapshot.data['title'],
-                            pubilshedAt: snapshot.data['published_at'],
+                            content: snapshot.data['content'],
+                            pubilshedAt: snapshot.data['published_at'].seconds,
                             readAt: 100);
                         _isLoaded = true;
                         _title = snapshot.data['title'];
