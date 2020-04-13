@@ -6,8 +6,10 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Statistics extends StatefulWidget {
   @override
@@ -234,65 +236,70 @@ class _StatisticsState extends State<Statistics> {
     }
 
     return Expanded(
-      child: Container(
-        width: (MediaQuery.of(context).size.width / length),
-        padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-        margin: EdgeInsets.symmetric(horizontal: 2.5),
-        decoration: BoxDecoration(
-            image: image != '' && image != null
-                ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
-                : null,
-            border: image == null || image == ''
-                ? Border.all(color: Colors.grey[400])
-                : null,
-            borderRadius: BorderRadius.circular(8.0)),
-        child: Column(
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5.0),
-                    child: Text(title,
-                        overflow: TextOverflow.ellipsis,
+      child: InkWell(
+        child: Container(
+          width: (MediaQuery.of(context).size.width / length),
+          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          margin: EdgeInsets.symmetric(horizontal: 2.5),
+          decoration: BoxDecoration(
+              image: image != '' && image != null
+                  ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
+                  : null,
+              border: image == null || image == ''
+                  ? Border.all(color: Colors.grey[400])
+                  : null,
+              borderRadius: BorderRadius.circular(8.0)),
+          child: Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5.0),
+                      child: Text(title,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              color: colorTextTitle,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.productSans)),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    child: Text(count,
                         style: TextStyle(
-                            fontSize: 13.0,
-                            color: colorTextTitle,
+                            fontSize: 22.0,
+                            color: colorNumber,
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.productSans)),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-                  child: Text(count,
-                      style: TextStyle(
-                          fontSize: 22.0,
-                          color: colorNumber,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: Dimens.padding, left: 4.0, bottom: 2.0),
-                    child: Text(label,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: colorTextTitle,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
-                  ),
-                )
-              ],
-            )
-          ],
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: Dimens.padding, left: 4.0, bottom: 2.0),
+                      child: Text(label,
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: colorTextTitle,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.productSans)),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
+        onTap: () {
+          openChromeSafariBrowser(url: UrlThirdParty.urlCoronaInfo);
+        },
       ),
     );
   }

@@ -422,8 +422,6 @@ class _MenuListState extends State<MenuList> {
                     Map<String, dynamic> _loginRequiredMenu = json.decode(
                         _remoteConfig.getString(FirebaseConfig.loginRequired));
 
-                      print('$remoteMenuLoginKey = ${_loginRequiredMenu[remoteMenuLoginKey]}');
-
                       if (_loginRequiredMenu[remoteMenuLoginKey]) {
                         FirebaseUser user = await FirebaseAuth.instance.currentUser();
 
