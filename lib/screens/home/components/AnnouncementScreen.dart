@@ -38,7 +38,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     if (widget.remoteConfig != null) {
       dataAnnouncement = json
           .decode(widget.remoteConfig.getString(FirebaseConfig.announcement));
-      print('coba cekkk  bos '+dataAnnouncement.toString());
     }
 
     return widget.remoteConfig != null &&
