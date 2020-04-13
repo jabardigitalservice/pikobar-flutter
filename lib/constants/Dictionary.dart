@@ -180,6 +180,8 @@ class Dictionary {
   //announcement
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
+  static String titleInfoTextAnnouncement =
+      'Info';
   static String moreDetail = ' Selengkapnya';
 
   // check distribution virus
