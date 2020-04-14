@@ -50,7 +50,7 @@ Pikobar menggunakan [Firebase](https://firebase.google.com/) sebagai _backend_.
 
 1. Ubah nama _file_ JSON yang tadi diunduh menjadi `serviceAccount.json`.
 2. Pindahkan _file_ `serviceAccount.json` ke dalam `<folder project pikobar>/migration`.
-3. Buka _file_ `config.js` dan ubah nilai `databaseURL` sesuaikan dengan nilai `databaseURL` yang ada di `Service accounts` pada halaman `Project settings` console firebase (lihat pada gambar [Firebase Service Account](#firebase-service-account)).
+3. Buka _file_ [`config.js`](https://github.com/jabardigitalservice/pikobar-flutter/blob/setup-environment/migration/config.js) dan ubah nilai `databaseURL` sesuaikan dengan nilai `databaseURL` yang ada di `Service accounts` pada halaman `Project settings` console firebase (lihat pada gambar [Firebase Service Account](#firebase-service-account)).
 4. Buka teminal, arahkan ke `<folder project pikobar>/migration`.
 5. Jalankan perintah berikut
 ```bash 
