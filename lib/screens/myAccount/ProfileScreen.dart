@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: 30.0,
                       child: Text(
-                        _profileLoaded.record.name,
+                        state.data['name'],
                         style: TextStyle(
                             color: Color(0xff4F4F4F),
                             fontSize: 18,

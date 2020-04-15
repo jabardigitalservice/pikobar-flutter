@@ -54,6 +54,7 @@ class Dictionary {
       'Segera hubungi nomor dibawah \nini untuk call center terdekat';
   static String edit = 'Edit Profil';
   static String name = 'Nama';
+  static String nik = 'NIK';
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
@@ -121,6 +122,14 @@ class Dictionary {
   static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
   static String errorEmptyAddress = 'Alamat harus diisi';
   static String pleaseCompleteAllField = ' harus diisi';
+  static String errorEmptyName = 'Nama harus diisi';
+  static String errorMinimumName =
+      'Nama harus terdiri dari 4 karakter atau lebih';
+  static String errorMaximumName = 'Nama harus kurang dari 255 karakter';
+  static String errorInvalidName = 'Format nama tidak sesuai';
+  static String errorEmptyNIK = 'NIK harus diisi';
+  static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
+  static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
 
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
@@ -147,6 +156,8 @@ class Dictionary {
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
   static String provincePlaceholder = 'Masukan Provinsi Domisili Anda';
+  static String placeHolderName = 'Masukkan Nama Anda';
+  static String placeHolderNIK = 'Masukkan NIK Anda';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
@@ -180,8 +191,7 @@ class Dictionary {
   //announcement
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
-  static String titleInfoTextAnnouncement =
-      'Info';
+  static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
 
   // check distribution virus
