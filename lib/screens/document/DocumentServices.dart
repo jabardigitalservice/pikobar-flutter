@@ -16,7 +16,7 @@ class DocumentServices {
       await Share.file(Dictionary.appName, '$title.pdf', bytes, 'text/pdf',
           text: '${Dictionary.sharedFrom}');
       AnalyticsHelper.setLogEvent(
-          Analytics.tappedShareDocuments, <String, dynamic>{'title': title.substring(0, 100)});
+          Analytics.tappedShareDocuments, <String, dynamic>{'title': title.length < 100 ? title : title.substring(0, 100)});
     } catch (e) {
       print('error: $e');
     }

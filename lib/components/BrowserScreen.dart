@@ -76,7 +76,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
        webView.goBack();
        return Future.value(false);
      } else {
-       Navigator.of(context).pop();
        return Future.value(true);
      }
    }

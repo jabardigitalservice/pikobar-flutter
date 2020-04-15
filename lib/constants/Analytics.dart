@@ -80,4 +80,5 @@ class Analytics {
   //event document
   static String tappedShareDocuments = 'tapped_share_documents';
   static String tappedDownloadDocuments = 'tapped_download_documents';
+  static String openDocument = 'open_document';
 }
