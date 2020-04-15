@@ -95,16 +95,18 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   createDirectory() async {
-    String localPath = (await getExternalStorageDirectory()).path + '/download';
-    final publicDownloadDir = Directory(Environment.downloadStorage);
-    final savedDir = Directory(localPath);
-    bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
-    bool hasExistedSavedDir = await savedDir.exists();
-    if (!hasExistedPublicDownloadDir) {
-      publicDownloadDir.create();
-    }
-    if (!hasExistedSavedDir) {
-      savedDir.create();
+    if (Platform.isAndroid) {
+      String localPath = (await getExternalStorageDirectory()).path + '/download';
+      final publicDownloadDir = Directory(Environment.downloadStorage);
+      final savedDir = Directory(localPath);
+      bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
+      bool hasExistedSavedDir = await savedDir.exists();
+      if (!hasExistedPublicDownloadDir) {
+        publicDownloadDir.create();
+      }
+      if (!hasExistedSavedDir) {
+        savedDir.create();
+      }
     }
   }
 
