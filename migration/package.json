@@ -1,0 +1,24 @@
+{
+  "name": "pikobar-flutter",
+  "version": "1.0.0",
+  "description": "Pusat Informasi & Koordinasi COVID-19 Jawa Barat",
+  "main": "firestore-import.js",
+  "scripts": {
+    "migrate": "node ./firestore-import.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jabardigitalservice/pikobar-flutter.git"
+  },
+  "author": "@jabardigitalservice",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jabardigitalservice/pikobar-flutter/issues"
+  },
+  "homepage": "https://github.com/jabardigitalservice/pikobar-flutter#readme",
+  "dependencies": {
+    "firebase-admin": "^8.10.0",
+    "node-firestore-import-export": "^0.14.1"
+  },
+  "devDependencies": {}
+}
