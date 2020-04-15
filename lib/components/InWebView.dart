@@ -5,8 +5,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class InWebView extends StatefulWidget {
   final String url;
+  final String title;
 
-  InWebView({this.url});
+  InWebView({@required this.url, this.title});
 
   @override
   _InWebViewState createState() => _InWebViewState();
@@ -15,7 +16,7 @@ class InWebView extends StatefulWidget {
 class _InWebViewState extends State<InWebView> {
 
   WebViewController controllerGlobal;
-  bool showLoading = false;
+  bool showLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class _InWebViewState extends State<InWebView> {
       onWillPop: () => _exitWebView(context),
       child: Scaffold(
         appBar: AppBar(
-          title: CustomAppBar.setTitleAppBar(Dictionary.appName),
+          title: CustomAppBar.setTitleAppBar(widget.title != null && widget.title.isNotEmpty ? widget.title : Dictionary.appName),
         ),
         body: Stack(
           children: <Widget>[
@@ -32,11 +33,6 @@ class _InWebViewState extends State<InWebView> {
               javascriptMode: JavascriptMode.unrestricted,
               onWebViewCreated: (WebViewController webViewController) {
                 controllerGlobal = webViewController;
-              },
-              onPageStarted: (url) {
-                setState(() {
-                  showLoading = true;
-                });
               },
               onPageFinished: (url) {
                 setState(() {
@@ -53,11 +49,12 @@ class _InWebViewState extends State<InWebView> {
     );
   }
 
-  _exitWebView(BuildContext context) async {
+  Future<bool> _exitWebView(BuildContext context) async {
     if (await controllerGlobal.canGoBack()) {
       controllerGlobal.goBack();
+      return Future.value(false);
     } else {
-      Navigator.of(context).pop();
+      return Future.value(true);
     }
   }
 }

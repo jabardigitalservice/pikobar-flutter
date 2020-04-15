@@ -7,21 +7,21 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:share/share.dart';
 
 class Documents extends StatefulWidget {
   @override
@@ -233,11 +233,14 @@ class _DocumentsState extends State<Documents> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(width: 30),
-                        Platform.isAndroid ? Expanded(
+                        Expanded(
                           child: InkWell(
                             onTap: () {
-                              _downloadAttachment(
-                                  document['title'], document['document_url']);
+                              Platform.isAndroid
+                                  ? _downloadAttachment(document['title'],
+                                      document['document_url'])
+                                  : _viewPdf(document['title'],
+                                      document['document_url']);
                             },
                             child: Text(
                               document['title'],
@@ -248,14 +251,6 @@ class _DocumentsState extends State<Documents> {
                                   fontWeight: FontWeight.w600),
                               textAlign: TextAlign.left,
                             ),
-                          ),
-                        ) : Expanded(
-                          child: Text(
-                            document['title'],
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.left,
                           ),
                         ),
                         Container(
@@ -284,6 +279,15 @@ class _DocumentsState extends State<Documents> {
     );
   }
 
+  void _viewPdf(String title, String url) async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title)));
+
+    await AnalyticsHelper.setLogEvent(Analytics.openDocument, <String, dynamic>{
+      'name_document': title.length < 100 ? title : title.substring(0, 100),
+    });
+  }
+
   void _downloadAttachment(String name, String url) async {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
@@ -307,13 +311,11 @@ class _DocumentsState extends State<Documents> {
                 },
               )));
     } else {
-
       Fluttertoast.showToast(
           msg: Dictionary.downloadingFile,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
 
       name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
 
@@ -322,11 +324,10 @@ class _DocumentsState extends State<Documents> {
           url: url,
           savedDir: Environment.downloadStorage,
           fileName: name,
-          showNotification:
-          true,
+          showNotification: true,
           // show download progress in status bar (for Android)
           openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
+              true, // click on notification to open downloaded file (for Android)
         );
       } catch (e) {
         String dir = (await getExternalStorageDirectory()).path + '/download';
@@ -334,17 +335,16 @@ class _DocumentsState extends State<Documents> {
           url: url,
           savedDir: dir,
           fileName: name,
-          showNotification:
-          true,
+          showNotification: true,
           // show download progress in status bar (for Android)
           openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
+              true, // click on notification to open downloaded file (for Android)
         );
       }
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{
-        'name_document': name.substring(0, 100),
+        'name_document': name.length < 100 ? name : name.substring(0, 100),
       });
     }
   }
