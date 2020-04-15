@@ -106,41 +106,6 @@ class IndexScreenState extends State<IndexScreen> {
     await AuthRepository().registerFCMToken();
   }
 
-  Future<void> checkAppVersion() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-
-    String appVersion;
-    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      appVersion = packageInfo.version;
-    });
-
-    if (Platform.isAndroid) {
-      await remoteConfig.fetch();
-      await remoteConfig.activateFetched();
-
-      bool forceUpdateRequired =
-          remoteConfig.getString(FirebaseConfig.forceUpdateRequired) == 'false'
-              ? false
-              : true;
-      String storeUrl = remoteConfig.getString(FirebaseConfig.storeUrl);
-      String currentVersion =
-          remoteConfig.getString(FirebaseConfig.currentVersion);
-
-      if (forceUpdateRequired && appVersion != currentVersion) {
-        showDialog(
-            context: context,
-            builder: (context) => WillPopScope(
-                onWillPop: () {
-                  return;
-                },
-                child: DialogUpdateApp(
-                  linkUpdate: storeUrl,
-                )),
-            barrierDismissible: false);
-      }
-    }
-  }
-
   _initializeBottomNavigationBar() {
     badger = BottomNavigationBadge(
         backgroundColor: Colors.red,
