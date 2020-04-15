@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'dart:convert';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/phonebook/CallCenterDetailScreen.dart';
 import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
@@ -113,8 +116,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             ],
           ),
         ),
-
-        widget.searchQuery != null && callCenterPhoneCount == 0 && emergencyPhoneCount == 0 ? EmptyData(message: Dictionary.emptyDataPhoneBook) : Container()
+        widget.searchQuery != null &&
+                callCenterPhoneCount == 0 &&
+                emergencyPhoneCount == 0
+            ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+            : Container()
       ],
     );
   }
@@ -239,6 +245,58 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
+  List<Widget> getListEmergencyCall(var snapshot) {
+    List<Widget> list = List();
+
+    ListTile _cardTile(var document) {
+      return ListTile(
+        leading: Container(height: 25, child: Image.network(document['image'])),
+        title: Text(
+          document['title'],
+          style:
+              TextStyle(color: Color(0xff4F4F4F), fontWeight: FontWeight.bold),
+        ),
+        onTap: () {
+          if (document['action'] == 'call') {
+            _launchURL(document['phone_number'], 'number');
+
+            AnalyticsHelper.setLogEvent(
+                Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
+              'title': document['title'],
+              'telp': document['phone_number']
+            });
+          } else if (document['action'] == 'whatsapp') {
+            _launchURL(document['phone_number'], 'whatsapp');
+
+            AnalyticsHelper.setLogEvent(
+                Analytics.tappedphoneBookEmergencyWa, <String, dynamic>{
+              'title': document['title'],
+              'wa': document['phone_number']
+            });
+          }
+        },
+      );
+    }
+
+    Widget _card(var document) {
+      return Card(
+          elevation: 2,
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: _cardTile(document),
+          ));
+    }
+
+    for (int i = 0; i < snapshot.length; i++) {
+      Column column = Column(
+        children: <Widget>[_card(snapshot[i])],
+      );
+
+      list.add(column);
+    }
+    return list;
+  }
+
   Widget _buildLoading() {
     return Column(
       children: <Widget>[
@@ -300,64 +358,22 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             'NomorDarurat',
             _categoryExpansionStateMap["NomorDarurat"]),
         _categoryExpansionStateMap["NomorDarurat"]
-            ? Column(
-                children: <Widget>[
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ListTile(
-                          leading: Container(
-                              height: 25,
-                              child: Image.asset(
-                                  '${Environment.iconAssets}office.png')),
-                          title: Text(Dictionary.callCenter,
-                              style: TextStyle(
-                                  color: Color(0xff4F4F4F),
-                                  fontWeight: FontWeight.bold)),
-                          onTap: () {
-                            _launchURL(Dictionary.callCenterNumber, 'number');
+            ? FutureBuilder<RemoteConfig>(
+                future: setupRemoteConfig(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<RemoteConfig> snapshot) {
+                  var getEmergencyCall;
+                  if (snapshot.data != null) {
+                    getEmergencyCall = json.decode(
+                        snapshot.data.getString(FirebaseConfig.emergencyCall));
+                  }
 
-                            AnalyticsHelper.setLogEvent(
-                                Analytics.tappedphoneBookEmergencyTelp,
-                                <String, dynamic>{
-                                  'title': Dictionary.callCenter,
-                                  'telp': Dictionary.callCenterNumber
-                                });
-                          }),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ListTile(
-                          leading: Container(
-                              height: 25,
-                              child: Image.asset(
-                                  '${Environment.iconAssets}whatsapp.png')),
-                          title: Text(Dictionary.dinasKesehatan,
-                              style: TextStyle(
-                                  color: Color(0xff4F4F4F),
-                                  fontWeight: FontWeight.bold)),
-                          onTap: () {
-                            _launchURL(
-                                Dictionary.waNumberDinasKesehatan, 'whatsapp');
-
-                            AnalyticsHelper.setLogEvent(
-                                Analytics.tappedphoneBookEmergencyWa,
-                                <String, dynamic>{
-                                  'title': Dictionary.dinasKesehatan,
-                                  'wa': Dictionary.waNumberDinasKesehatan
-                                });
-                          }),
-                    ),
-                  ),
-                ],
-              )
+                  return snapshot.data != null
+                      ? Column(
+                          children: getListEmergencyCall(getEmergencyCall),
+                        )
+                      : Container();
+                })
             : Container(),
         SizedBox(
           height: 20,
@@ -389,7 +405,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                           height: 60,
                           child: Image.asset(
                               '${Environment.iconAssets}$iconPath')),
-                              SizedBox(width: 20,),
+                      SizedBox(
+                        width: 20,
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,7 +422,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                       ),
                     ],
                   ),
-                  
                   Icon(
                     isExpand
                         ? Icons.keyboard_arrow_up
@@ -460,5 +477,20 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<RemoteConfig> setupRemoteConfig() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig
+        .setDefaults(<String, dynamic>{FirebaseConfig.emergencyCall: []});
+
+    try {
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
+      await remoteConfig.activateFetched();
+    } catch (exception) {
+      print('Unable to fetch remote config. Cached or default values will be '
+          'used');
+    }
+    return remoteConfig;
   }
 }

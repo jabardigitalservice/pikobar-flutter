@@ -35,6 +35,8 @@ class FirebaseConfig {
   static String selfDiagnoseCaption = 'selfdiagnose_caption';
   static String spreadCheckLocation = 'ceksebaran_location';
   static String healthStatusColors = 'health_status_colors';
+  static String emergencyCall = 'emergency_call';
+
 
   /// Remote config parameter key
   /// Access requires a login
