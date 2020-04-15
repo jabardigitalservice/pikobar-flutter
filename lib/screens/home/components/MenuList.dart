@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -29,6 +30,20 @@ class MenuList extends StatefulWidget {
 
 class _MenuListState extends State<MenuList> {
   RemoteConfig get _remoteConfig => widget.remoteConfig;
+
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignInAccount _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setState(() {
+        _currentUser = account;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -842,22 +857,35 @@ class _MenuListState extends State<MenuList> {
       };
 
       if (user != null) {
-        GoogleSignInAccount signIn = await GoogleSignIn().signIn();
-        GoogleSignInAuthentication signInAuthentication = await signIn.authentication;
+        if (_currentUser != null) {
 
-        usrMap = {
-          '_googleIDToken_': signInAuthentication.idToken,
-          '_userUID_': user.uid,
-          '_userName_': user.displayName,
-          '_userEmail_': user.email
-        };
+        GoogleSignInAuthentication signInAuthentication = await _currentUser.authentication;
+
+          usrMap = {
+            '_googleIDToken_': signInAuthentication.idToken,
+            '_userUID_': user.uid,
+            '_userName_': user.displayName,
+            '_userEmail_': user.email
+          };
+        } else {
+          await _googleSignIn.signInSilently().then((value) async {
+          GoogleSignInAuthentication signInAuthentication = await value.authentication;
+
+              usrMap = {
+              '_googleIDToken_': signInAuthentication.idToken,
+              '_userUID_': user.uid,
+              '_userName_': user.displayName,
+              '_userEmail_': user.email
+              };
+          });
+        }
       }
 
       usrMap.forEach((key, value) {
         url = url.replaceAll(key, value);
       });
 
-      return url;
+      return Platform.isAndroid ? url : Uri.encodeFull(url);
     }
 
   }
