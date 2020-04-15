@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -12,6 +15,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -133,7 +137,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(width: 30),
-                        Expanded(
+                        Platform.isAndroid ? Expanded(
                           child: InkWell(
                             onTap: () {
                               _downloadAttachment(
@@ -148,6 +152,14 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                   fontWeight: FontWeight.w600),
                               textAlign: TextAlign.left,
                             ),
+                          ),
+                        ) : Expanded(
+                          child: Text(
+                            document['title'],
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.left,
                           ),
                         ),
                         Container(
@@ -267,20 +279,43 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 },
               )));
     } else {
-      String dir = (await getExternalStorageDirectory()).path + '/download';
-      await FlutterDownloader.enqueue(
-        url: url,
-        savedDir: dir,
-        fileName: name,
-        showNotification: true,
-        // show download progress in status bar (for Android)
-        openFileFromNotification:
-            true, // click on notification to open downloaded file (for Android)
+      Fluttertoast.showToast(
+          msg: Dictionary.downloadingFile,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          fontSize: 16.0
       );
+
+      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+
+      try {
+        await FlutterDownloader.enqueue(
+          url: url,
+          savedDir: Environment.downloadStorage,
+          fileName: name,
+          showNotification:
+          true,
+          // show download progress in status bar (for Android)
+          openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
+        );
+      } catch (e) {
+        String dir = (await getExternalStorageDirectory()).path + '/download';
+        await FlutterDownloader.enqueue(
+          url: url,
+          savedDir: dir,
+          fileName: name,
+          showNotification:
+          true,
+          // show download progress in status bar (for Android)
+          openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
+        );
+      }
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{
-        'name_document': name,
+        'name_document': name.substring(0, 100),
       });
     }
   }
