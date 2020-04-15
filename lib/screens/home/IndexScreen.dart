@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
@@ -95,9 +96,14 @@ class IndexScreenState extends State<IndexScreen> {
 
   createDirectory() async {
     String localPath = (await getExternalStorageDirectory()).path + '/download';
+    final publicDownloadDir = Directory(Environment.downloadStorage);
     final savedDir = Directory(localPath);
-    bool hasExisted = await savedDir.exists();
-    if (!hasExisted) {
+    bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
+    bool hasExistedSavedDir = await savedDir.exists();
+    if (!hasExistedPublicDownloadDir) {
+      publicDownloadDir.create();
+    }
+    if (!hasExistedSavedDir) {
       savedDir.create();
     }
   }

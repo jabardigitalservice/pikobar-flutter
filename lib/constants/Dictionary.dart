@@ -122,6 +122,9 @@ class Dictionary {
   static String errorEmptyAddress = 'Alamat harus diisi';
   static String pleaseCompleteAllField = ' harus diisi';
 
+  // Toast Messages
+  static String downloadingFile = 'Mengunduh file';
+
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
   static String codeVerified = 'No hp telah terverifikasi';
