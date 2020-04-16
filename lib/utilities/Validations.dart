@@ -26,9 +26,9 @@ class Validations {
   }
 
   static String nikValidation(String val) {
-    if (val.length > 19) return Dictionary.errorMaximumNIK;
+    if (val.length > 16) return Dictionary.errorMaximumNIK;
 
-    if (val.length < 19) return Dictionary.errorMinimumNIK;
+    if (val.length < 16) return Dictionary.errorMinimumNIK;
 
     if (val.isEmpty) return Dictionary.errorEmptyNIK;
 

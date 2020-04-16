@@ -36,7 +36,8 @@ class _EditState extends State<Edit> {
   final _birthDayController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
-  var _nikController = new MaskedTextController(mask: '0000-0000-0000-0000');
+
+  var _nikController = new MaskedTextController(mask: '0000000000000000');
 
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
@@ -161,7 +162,7 @@ class _EditState extends State<Edit> {
                                                 provinceId:
                                                     Dictionary.provinceId,
                                                 name: _nameController.text,
-                                                nik: _nikController.text.replaceAll('-', ''),
+                                                nik: _nikController.text,
                                                 birthdate: DateTime.parse(
                                                     _birthDayController.text),
                                               )),
@@ -410,7 +411,7 @@ class _EditState extends State<Edit> {
             cityId: _cityController.text,
             provinceId: Dictionary.provinceId,
             name: _nameController.text,
-            nik: _nikController.text.replaceAll('-', ''),
+            nik: _nikController.text,
             birthdate: DateTime.parse(_birthDayController.text)));
       } else {
         if (otpEnabled) {
@@ -426,7 +427,7 @@ class _EditState extends State<Edit> {
                 _cityController.text,
                 Dictionary.provinceId,
                 _nameController.text,
-                _nikController.text.replaceAll('-', ''),
+                _nikController.text,
                 DateTime.parse(_birthDayController.text),
                 credential,
               );
@@ -452,7 +453,7 @@ class _EditState extends State<Edit> {
               id: widget.state.data['id'],
               phoneNumber: _phoneNumberController.text,
               name: _nameController.text,
-              nik: _nikController.text.replaceAll('-', ''),
+              nik: _nikController.text,
               gender: _genderController.text,
               address: _addressController.text,
               cityId: _cityController.text,
