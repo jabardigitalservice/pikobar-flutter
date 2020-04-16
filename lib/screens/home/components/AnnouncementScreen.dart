@@ -63,6 +63,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                       fontWeight: FontWeight.bold,
                       fontFamily: FontsFamily.productSans),
                 ),
+                SizedBox(height: 3),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
@@ -70,34 +71,31 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                     Expanded(
                       child: Container(
                           child: RichText(
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text: dataAnnouncement['content'] != null
-                                    ? dataAnnouncement['content']
-                                    : Dictionary.infoTextAnnouncement,
-                                style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.grey[600],
-                                    fontFamily: FontsFamily.productSans),
-                              ),
-                              dataAnnouncement['action_url']
-                                      .toString()
-                                      .isNotEmpty
-                                  ? TextSpan(
-                                      text: Dictionary.moreDetail,
-                                      style: TextStyle(
-                                          color: ColorBase.green,
-                                          fontFamily: FontsFamily.productSans,
-                                          fontWeight: FontWeight.bold),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          openChromeSafariBrowser(
-                                              url: dataAnnouncement[
-                                                  'action_url']);
-                                        })
-                                  : TextSpan(text: '')
-                            ]),
-                          )),
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: dataAnnouncement['content'] != null
+                                ? dataAnnouncement['content']
+                                : Dictionary.infoTextAnnouncement,
+                            style: TextStyle(
+                                fontSize: 13.0,
+                                color: Colors.grey[600],
+                                fontFamily: FontsFamily.productSans),
+                          ),
+                          dataAnnouncement['action_url'].toString().isNotEmpty
+                              ? TextSpan(
+                                  text: Dictionary.moreDetail,
+                                  style: TextStyle(
+                                      color: ColorBase.green,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontWeight: FontWeight.bold),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      openChromeSafariBrowser(
+                                          url: dataAnnouncement['action_url']);
+                                    })
+                              : TextSpan(text: '')
+                        ]),
+                      )),
                     ),
                     /*GestureDetector(
                   child: Icon(
