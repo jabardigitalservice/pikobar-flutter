@@ -15,8 +15,10 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class MenuList extends StatefulWidget {
@@ -33,17 +35,6 @@ class _MenuListState extends State<MenuList> {
 
   GoogleSignIn _googleSignIn = GoogleSignIn();
   GoogleSignInAccount _currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      setState(() {
-        _currentUser = account;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +422,6 @@ class _MenuListState extends State<MenuList> {
               onPressed: () async {
                 if (route != null) {
 
-
                   if (_remoteConfig != null && _remoteConfig.getString(FirebaseConfig.loginRequired) != null) {
 
                     Map<String, dynamic> _loginRequiredMenu = json.decode(
@@ -439,26 +429,19 @@ class _MenuListState extends State<MenuList> {
 
                       if (_loginRequiredMenu[remoteMenuLoginKey]) {
                         FirebaseUser user = await FirebaseAuth.instance.currentUser();
+                        bool hasToken = await AuthRepository().hasToken();
 
-                        if (user != null) {
-
-                          arguments = await _userDataUrlAppend(arguments);
-
-                          if (route == NavigationConstrants.Browser) {
-                            openChromeSafariBrowser(url: arguments);
-                          } else {
-                            Navigator.pushNamed(context, route, arguments: arguments);
-                          }
-
-                        } else {
+                        if (user == null && !hasToken) {
 
                           bool isLoggedIn = await Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) =>
-                                  LoginScreen(label)));
+                                  LoginScreen(title: label)));
 
                           if (isLoggedIn != null && isLoggedIn) {
 
-                            arguments = await _userDataUrlAppend(arguments);
+                            _currentUser = await _googleSignIn.signInSilently();
+
+                            arguments = await userDataUrlAppend(_currentUser, arguments);
 
                             if (route == NavigationConstrants.Browser) {
                               openChromeSafariBrowser(url: arguments);
@@ -467,10 +450,24 @@ class _MenuListState extends State<MenuList> {
                             }
 
                           }
+
+                        } else {
+
+                          _currentUser = await _googleSignIn.signInSilently();
+
+                          arguments = await userDataUrlAppend(_currentUser, arguments);
+
+                          if (route == NavigationConstrants.Browser) {
+                            openChromeSafariBrowser(url: arguments);
+                          } else {
+                            Navigator.pushNamed(context, route, arguments: arguments);
+                          }
+
                         }
+
                       } else {
 
-                        arguments = await _userDataUrlAppend(arguments);
+                        arguments = await userDataUrlAppend(_currentUser, arguments);
 
                         if (route == NavigationConstrants.Browser) {
                           openChromeSafariBrowser(url: arguments);
@@ -481,7 +478,7 @@ class _MenuListState extends State<MenuList> {
 
                   } else {
 
-                    arguments = await _userDataUrlAppend(arguments);
+                    arguments = await userDataUrlAppend(_currentUser, arguments);
 
                     if (route == NavigationConstrants.Browser) {
                       openChromeSafariBrowser(url: arguments);
@@ -841,52 +838,4 @@ class _MenuListState extends State<MenuList> {
   //         );
   //       });
   // }
-
-  Future<String> _userDataUrlAppend(String url) async {
-
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
-    if (url == null) {
-      return url;
-    } else {
-      Map<String, String> usrMap = {
-        '_googleIDToken_': '',
-        '_userUID_': '',
-        '_userName_': '',
-        '_userEmail_': ''
-      };
-
-      if (user != null) {
-        if (_currentUser != null) {
-
-        GoogleSignInAuthentication signInAuthentication = await _currentUser.authentication;
-
-          usrMap = {
-            '_googleIDToken_': signInAuthentication.idToken,
-            '_userUID_': user.uid,
-            '_userName_': user.displayName,
-            '_userEmail_': user.email
-          };
-        } else {
-          await _googleSignIn.signInSilently().then((value) async {
-          GoogleSignInAuthentication signInAuthentication = await value.authentication;
-
-              usrMap = {
-              '_googleIDToken_': signInAuthentication.idToken,
-              '_userUID_': user.uid,
-              '_userName_': user.displayName,
-              '_userEmail_': user.email
-              };
-          });
-        }
-      }
-
-      usrMap.forEach((key, value) {
-        url = url.replaceAll(key, value);
-      });
-
-      return Platform.isAndroid ? url : Uri.encodeFull(url);
-    }
-
-  }
 }

@@ -47,6 +47,7 @@ class Dictionary {
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
   static String profile = 'Profil';
+  static String login = 'Login';
   static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
