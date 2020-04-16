@@ -78,6 +78,7 @@ dependencies:
   grouped_buttons: ^1.0.4
   flutter_cupertino_date_picker: ^1.0.12
   google_maps_flutter: ^0.5.25+3
+  flutter_masked_text: ^0.8.0
   
 
 dev_dependencies:

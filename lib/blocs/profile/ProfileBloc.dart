@@ -42,6 +42,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.address,
             event.cityId,
             event.provinceId,
+            event.name,
+            event.nik,
             event.birthdate);
         yield ProfileSaved();
       } catch (e) {
@@ -77,6 +79,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.address,
             event.cityId,
             event.provinceId,
+            event.name,
+            event.nik,
             event.birthdate);
         yield ProfileVerified();
       } catch (e) {

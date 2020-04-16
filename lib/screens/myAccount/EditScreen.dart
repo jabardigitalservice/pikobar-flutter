@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Edit extends StatefulWidget {
   final AsyncSnapshot<DocumentSnapshot> state;
@@ -36,6 +37,8 @@ class _EditState extends State<Edit> {
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
 
+  var _nikController = new MaskedTextController(mask: '0000000000000000');
+
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -52,8 +55,6 @@ class _EditState extends State<Edit> {
   bool isBirthdayEmpty = false;
   bool isGenderEmpty = false;
 
-
-
   @override
   void initState() {
     _nameController.text = widget.state.data['name'];
@@ -69,6 +70,7 @@ class _EditState extends State<Edit> {
             .toString();
     _genderController.text = widget.state.data['gender'];
     _cityController.text = widget.state.data['city_id'];
+    _nikController.text = widget.state.data['nik'];
     super.initState();
   }
 
@@ -159,6 +161,8 @@ class _EditState extends State<Edit> {
                                                 cityId: _cityController.text,
                                                 provinceId:
                                                     Dictionary.provinceId,
+                                                name: _nameController.text,
+                                                nik: _nikController.text,
                                                 birthdate: DateTime.parse(
                                                     _birthDayController.text),
                                               )),
@@ -209,8 +213,10 @@ class _EditState extends State<Edit> {
                               children: <Widget>[
                                 buildTextField(
                                     title: Dictionary.name,
+                                    hintText: Dictionary.placeHolderName,
                                     controller: _nameController,
-                                    isEdit: false),
+                                    validation: Validations.nameValidation,
+                                    isEdit: true),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -218,6 +224,16 @@ class _EditState extends State<Edit> {
                                     title: Dictionary.email,
                                     controller: _emailController,
                                     isEdit: false),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.nik,
+                                    controller: _nikController,
+                                    textInputType: TextInputType.number,
+                                    validation: Validations.nikValidation,
+                                    hintText: Dictionary.placeHolderNIK,
+                                    isEdit: true),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -236,20 +252,20 @@ class _EditState extends State<Edit> {
                                     label: <String>[
                                       "Laki - Laki",
                                       "Perempuan",
-                                    ],isEmpty: isGenderEmpty),
+                                    ],
+                                    isEmpty: isGenderEmpty),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 buildDateField(
-                                  title: Dictionary.birthday,
-                                  placeholder: _birthDayController.text == ''
-                                      ? Dictionary.birthdayPlaceholder
-                                      : DateFormat.yMMMMd().format(
-                                          DateTime.parse(_birthDayController
-                                              .text
-                                              .substring(0, 10))),
-                                              isEmpty: isBirthdayEmpty
-                                ),
+                                    title: Dictionary.birthday,
+                                    placeholder: _birthDayController.text == ''
+                                        ? Dictionary.birthdayPlaceholder
+                                        : DateFormat.yMMMMd().format(
+                                            DateTime.parse(_birthDayController
+                                                .text
+                                                .substring(0, 10))),
+                                    isEmpty: isBirthdayEmpty),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -364,7 +380,7 @@ class _EditState extends State<Edit> {
         isCityFieldEmpty = false;
       });
     }
-      if (_genderController.text == '') {
+    if (_genderController.text == '') {
       setState(() {
         isGenderEmpty = true;
       });
@@ -373,7 +389,7 @@ class _EditState extends State<Edit> {
         isGenderEmpty = false;
       });
     }
-        if (_birthDayController.text == '') {
+    if (_birthDayController.text == '') {
       setState(() {
         isBirthdayEmpty = true;
       });
@@ -384,10 +400,7 @@ class _EditState extends State<Edit> {
     }
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
-      if (isGenderEmpty ||
-         isBirthdayEmpty ||
-          isCityFieldEmpty) {
-      
+      if (isGenderEmpty || isBirthdayEmpty || isCityFieldEmpty) {
       } else if (widget.state.data['phone_number'] ==
           Dictionary.inaCode + _phoneNumberController.text) {
         _profileBloc.add(Save(
@@ -397,6 +410,8 @@ class _EditState extends State<Edit> {
             address: _addressController.text,
             cityId: _cityController.text,
             provinceId: Dictionary.provinceId,
+            name: _nameController.text,
+            nik: _nikController.text,
             birthdate: DateTime.parse(_birthDayController.text)));
       } else {
         if (otpEnabled) {
@@ -411,6 +426,8 @@ class _EditState extends State<Edit> {
                 _addressController.text,
                 _cityController.text,
                 Dictionary.provinceId,
+                _nameController.text,
+                _nikController.text,
                 DateTime.parse(_birthDayController.text),
                 credential,
               );
@@ -435,6 +452,8 @@ class _EditState extends State<Edit> {
           _profileBloc.add(Save(
               id: widget.state.data['id'],
               phoneNumber: _phoneNumberController.text,
+              name: _nameController.text,
+              nik: _nikController.text,
               gender: _genderController.text,
               address: _addressController.text,
               cityId: _cityController.text,
@@ -445,7 +464,7 @@ class _EditState extends State<Edit> {
     }
   }
 
-  Widget buildRadioButton({String title, List<String> label,bool isEmpty}) {
+  Widget buildRadioButton({String title, List<String> label, bool isEmpty}) {
     return Padding(
       padding: EdgeInsets.only(left: 16.0, right: 16),
       child: Column(
@@ -495,11 +514,11 @@ class _EditState extends State<Edit> {
               );
             },
           ),
-           isEmpty
-              ?
-          SizedBox(
-            height: 10,
-          ):Container(),
+          isEmpty
+              ? SizedBox(
+                  height: 10,
+                )
+              : Container(),
           isEmpty
               ? Text(
                   title + Dictionary.pleaseCompleteAllField,
@@ -511,7 +530,7 @@ class _EditState extends State<Edit> {
     );
   }
 
-  Widget buildDateField({String title, placeholder,bool isEmpty}) {
+  Widget buildDateField({String title, placeholder, bool isEmpty}) {
     return Container(
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
@@ -559,14 +578,14 @@ class _EditState extends State<Edit> {
               ),
             ),
           ),
-           isEmpty
-              ?
-          SizedBox(
-            height: 10,
-          ):Container(),
+          isEmpty
+              ? SizedBox(
+                  height: 10,
+                )
+              : Container(),
           isEmpty
               ? Text(
-                  title +  Dictionary.pleaseCompleteAllField,
+                  title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 )
               : Container()
@@ -604,36 +623,33 @@ class _EditState extends State<Edit> {
           SizedBox(
             height: 10,
           ),
-          Container(
-            height: title == Dictionary.addressDomicile ? null : 50,
-            child: TextFormField(
-              maxLines: maxLines != null ? maxLines : 1,
-              style: isEdit
-                  ? TextStyle(
-                      color: Colors.black,
-                    )
-                  : TextStyle(color: Color(0xffBDBDBD)),
-              enabled: isEdit,
-              validator: validation,
-              textCapitalization: TextCapitalization.words,
-              controller: controller,
-              decoration: InputDecoration(
-                  hintText: hintText,
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-                  disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Color(0xffE0E0E0), width: 1.5))),
-              keyboardType:
-                  textInputType != null ? textInputType : TextInputType.text,
-            ),
+          TextFormField(
+            maxLines: maxLines != null ? maxLines : 1,
+            style: isEdit
+                ? TextStyle(
+                    color: Colors.black,
+                  )
+                : TextStyle(color: Color(0xffBDBDBD)),
+            enabled: isEdit,
+            validator: validation,
+            textCapitalization: TextCapitalization.words,
+            controller: controller,
+            decoration: InputDecoration(
+                hintText: hintText,
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5))),
+            keyboardType:
+                textInputType != null ? textInputType : TextInputType.text,
           )
         ],
       ),
@@ -674,7 +690,10 @@ class _EditState extends State<Edit> {
               child: custom.DropdownButton<dynamic>(
                 underline: SizedBox(),
                 isExpanded: true,
-                hint: Text(hintText,style: TextStyle(fontSize: 13),),
+                hint: Text(
+                  hintText,
+                  style: TextStyle(fontSize: 13),
+                ),
                 items: items.map((item) {
                   return custom.DropdownMenuItem(
                     child: Text(item.namaWilayah),
@@ -691,13 +710,13 @@ class _EditState extends State<Edit> {
             ),
           ),
           isEmpty
-              ?
-          SizedBox(
-            height: 10,
-          ):Container(),
+              ? SizedBox(
+                  height: 10,
+                )
+              : Container(),
           isEmpty
               ? Text(
-                  title +  Dictionary.pleaseCompleteAllField,
+                  title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 )
               : Container()

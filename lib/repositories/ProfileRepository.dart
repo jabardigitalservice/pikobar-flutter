@@ -30,27 +30,38 @@ class ProfileRepository {
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
-  Future<void> linkCredential(String id, phoneNumber, gender, address, cityId,
-      provinceId, DateTime birthdate, AuthCredential credential) async {
+  Future<void> linkCredential(
+      String id,
+      phoneNumber,
+      gender,
+      address,
+      cityId,
+      provinceId,
+      name,
+      nik,
+      DateTime birthdate,
+      AuthCredential credential) async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     List<UserInfo> providerList = user.providerData;
     if (providerList.length > 2) {
       await user.unlinkFromProvider(credential.providerId);
     }
     await user.linkWithCredential(credential);
-    await saveToCollection(
-        id, phoneNumber, gender, address, cityId, provinceId, birthdate);
+    await saveToCollection(id, phoneNumber, gender, address, cityId, provinceId,
+        name, nik, birthdate);
   }
 
   Future<void> saveToCollection(String id, phoneNumber, gender, address, cityId,
-      provinceId, DateTime birthdate) async {
+      provinceId, name, nik, DateTime birthdate) async {
     Firestore.instance.collection(Collections.users).document(id).updateData({
       'phone_number': Dictionary.inaCode + phoneNumber,
       'gender': gender,
       'birthdate': birthdate,
       'address': address,
       'city_id': cityId,
-      'province_id': provinceId
+      'province_id': provinceId,
+      'name': name,
+      'nik': nik
     });
   }
 
@@ -63,13 +74,15 @@ class ProfileRepository {
       address,
       cityId,
       provinceId,
+      name,
+      nik,
       DateTime birthdate) async {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
       verificationId: verificationID,
       smsCode: smsCode,
     );
     await linkCredential(id, phoneNumber, gender, address, cityId, provinceId,
-        birthdate, credential);
+        name, nik, birthdate, credential);
   }
 
   Future<CityModel> getCityList() async {

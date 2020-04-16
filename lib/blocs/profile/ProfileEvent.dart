@@ -8,7 +8,7 @@ abstract class ProfileEvent extends Equatable {
 }
 
 class Save extends ProfileEvent {
-  final String id, phoneNumber, gender, address, cityId, provinceId;
+  final String id, phoneNumber, gender, address, cityId, provinceId, name, nik;
   final DateTime birthdate;
   Save(
       {this.id,
@@ -17,13 +17,24 @@ class Save extends ProfileEvent {
       this.address,
       this.cityId,
       this.provinceId,
+      this.name,
+      this.nik,
       this.birthdate});
   @override
   String toString() => 'Save';
 
   @override
-  List<Object> get props =>
-      [id, phoneNumber, gender, address, cityId, provinceId, birthdate];
+  List<Object> get props => [
+        id,
+        phoneNumber,
+        gender,
+        address,
+        cityId,
+        provinceId,
+        name,
+        nik,
+        birthdate
+      ];
 }
 
 class Verify extends ProfileEvent {
@@ -54,7 +65,7 @@ class ConfirmOTP extends ProfileEvent {
       gender,
       address,
       cityId,
-      provinceId;
+      provinceId,name,nik;
   final DateTime birthdate;
   ConfirmOTP(
       {this.smsCode,
@@ -64,7 +75,7 @@ class ConfirmOTP extends ProfileEvent {
       this.gender,
       this.address,
       this.cityId,
-      this.provinceId,
+      this.provinceId,this.name,this.nik,
       this.birthdate});
   @override
   String toString() => 'ConfirmOTP';
@@ -78,7 +89,7 @@ class ConfirmOTP extends ProfileEvent {
         gender,
         address,
         cityId,
-        provinceId,
+        provinceId,name,nik,
         birthdate
       ];
 }

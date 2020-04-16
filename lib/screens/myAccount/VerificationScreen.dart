@@ -18,7 +18,9 @@ class Verification extends StatefulWidget {
       gender,
       address,
       cityId,
-      provinceId;
+      provinceId,
+      name,
+      nik;
   final DateTime birthdate;
   Verification(
       {this.phoneNumber,
@@ -28,6 +30,8 @@ class Verification extends StatefulWidget {
       this.address,
       this.cityId,
       this.provinceId,
+      this.name,
+      this.nik,
       this.birthdate});
   @override
   _VerificationState createState() => _VerificationState();
@@ -316,6 +320,8 @@ class _VerificationState extends State<Verification> {
           widget.address,
           widget.cityId,
           widget.provinceId,
+          widget.name,
+          widget.nik,
           widget.birthdate,
           credential);
       _profileBloc.add(VerifyConfirm());
