@@ -9,6 +9,7 @@ class Collections {
   static String infographics = 'infographics';
   static String documents = 'documents';
   static String users = 'users';
+  static String areas = 'areas';
   static String userTokens = 'tokens';
 
 }
