@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
@@ -93,8 +94,7 @@ class _EditState extends State<Edit> {
                   : false;
               return BlocProvider<ProfileBloc>(
                   create: (BuildContext context) => _profileBloc =
-                      ProfileBloc(profileRepository: _profileRepository)
-                        ..add(CityLoad()),
+                      ProfileBloc(profileRepository: _profileRepository),
                   child: BlocListener<ProfileBloc, ProfileState>(
                     listener: (context, state) {
                       if (state is ProfileFailure) {
@@ -279,27 +279,35 @@ class _EditState extends State<Edit> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                BlocBuilder(
-                                    bloc: _profileBloc,
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: Firestore.instance
+                                        .collection(Collections.areas)
+                                        .orderBy('name')
+                                        .snapshots(),
                                     builder: (BuildContext context,
-                                        ProfileState state) {
-                                      if (state is CityLoaded) {
-                                        state.record.data.sort((a, b) => a
-                                            .namaWilayah
-                                            .compareTo(b.namaWilayah));
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      if (snapshot.hasError)
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
-                                            Dictionary.cityPlaceholder,
-                                            state.record.data,
-                                            _cityController,
-                                            isCityFieldEmpty);
-                                      } else {
-                                        return buildDropdownField(
-                                            Dictionary.cityDomicile,
-                                            Dictionary.loading,
+                                            snapshot.error,
                                             [],
                                             _cityController,
                                             false);
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.waiting:
+                                          return buildDropdownField(
+                                              Dictionary.cityDomicile,
+                                              Dictionary.loading,
+                                              [],
+                                              _cityController,
+                                              false);
+                                        default:
+                                          return buildDropdownField(
+                                              Dictionary.cityDomicile,
+                                              Dictionary.cityPlaceholder,
+                                              snapshot.data.documents.toList(),
+                                              _cityController,
+                                              isCityFieldEmpty);
                                       }
                                     }),
                                 SizedBox(
@@ -696,8 +704,8 @@ class _EditState extends State<Edit> {
                 ),
                 items: items.map((item) {
                   return custom.DropdownMenuItem(
-                    child: Text(item.namaWilayah),
-                    value: item.kodeKemendagri.toString(),
+                    child: Text(item['name']),
+                    value: item['code'].toString(),
                   );
                 }).toList(),
                 onChanged: (value) {
