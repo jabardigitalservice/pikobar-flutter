@@ -4,18 +4,14 @@ import 'dart:io';
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
@@ -54,7 +50,7 @@ class IndexScreenState extends State<IndexScreen> {
 
     _initializeBottomNavigationBar();
     setStatAnnouncement();
-    registerFCMToken();
+    initializeToken();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -110,8 +106,9 @@ class IndexScreenState extends State<IndexScreen> {
     }
   }
 
-  registerFCMToken() async {
+  initializeToken() async {
     await AuthRepository().registerFCMToken();
+    await AuthRepository().updateIdToken();
   }
 
   _initializeBottomNavigationBar() {
@@ -224,10 +221,6 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildMainScaffold(context);
-  }
-
-  _buildMainScaffold(BuildContext context) {
     return Scaffold(
       body: _buildContent(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(

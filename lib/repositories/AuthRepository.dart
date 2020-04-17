@@ -35,6 +35,7 @@ class AuthRepository {
     assert(user.uid == currentUser.uid);
 
     return UserModel(
+        googleIdToken: googleSignInAuthentication.idToken,
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
@@ -103,6 +104,32 @@ class AuthRepository {
     }
 
     return authUserInfo;
+  }
+
+  Future<void> updateIdToken() async {
+    if (await _auth.currentUser() != null && await hasToken()) {
+      UserModel currentUser = await getUserInfo();
+      if (currentUser.googleIdToken == null) {
+        GoogleSignInAuthentication signInAuthentication;
+
+        if (googleSignIn.currentUser != null) {
+          signInAuthentication = await googleSignIn.currentUser.authentication;
+        } else {
+          GoogleSignInAccount signInAccount = await googleSignIn.signInSilently();
+          signInAuthentication = await signInAccount.authentication;
+        }
+
+        UserModel user = UserModel(
+            googleIdToken: signInAuthentication.idToken,
+            uid: currentUser.uid,
+            email: currentUser.email,
+            name: currentUser.name,
+            photoUrlFull: currentUser.photoUrlFull,
+            phoneNumber: currentUser.phoneNumber);
+
+        await persistUserInfo(user);
+      }
+    }
   }
 
   Future<void> deleteLocalUserInfo() async {
