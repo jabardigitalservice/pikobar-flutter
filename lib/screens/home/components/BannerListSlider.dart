@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
-import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
@@ -126,26 +124,22 @@ class BannerListSliderState extends State<BannerListSlider> {
 
   _clickAction({@required String url, bool isLoginRequired}) async {
     if (isLoginRequired != null && isLoginRequired) {
-      FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
       bool hasToken = await AuthRepository().hasToken();
 
-      if (firebaseUser == null || !hasToken) {
-            bool isLoggedIn = await Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) =>
-                  LoginScreen()));
+      if (!hasToken) {
+        bool isLoggedIn = await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LoginScreen()));
 
-            if (isLoggedIn != null && isLoggedIn) {
-              _signInAccount = await _googleSignIn.signInSilently();
-              url = await userDataUrlAppend(_signInAccount, url);
-              await _launchUrl(url);
-            }
+        if (isLoggedIn != null && isLoggedIn) {
+          url = await userDataUrlAppend(url);
+          await _launchUrl(url);
+        }
       } else {
-        _signInAccount = await _googleSignIn.signInSilently();
-        url = await userDataUrlAppend(_signInAccount, url);
+        url = await userDataUrlAppend(url);
         await _launchUrl(url);
       }
     } else {
-      url = await userDataUrlAppend(_signInAccount, url);
+      url = await userDataUrlAppend(url);
       await _launchUrl(url);
     }
   }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pikobar_flutter/models/UserModel.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 
 class StringUtils {
   static String capitalizeWord(String str) {
@@ -31,9 +31,7 @@ class StringUtils {
   }
 }
 
-Future<String> userDataUrlAppend(GoogleSignInAccount signInAccount, String url) async {
-
-  FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+Future<String> userDataUrlAppend(String url) async {
 
   if (url == null) {
     return url;
@@ -45,16 +43,14 @@ Future<String> userDataUrlAppend(GoogleSignInAccount signInAccount, String url) 
       '_userEmail_': ''
     };
 
-    if (firebaseUser != null && signInAccount != null) {
+    UserModel user = await AuthRepository().getUserInfo();
 
-      GoogleSignInAuthentication signInAuthentication =
-          await signInAccount.authentication;
-
+    if (user != null) {
       usrMap = {
-        '_googleIDToken_': signInAuthentication.idToken,
-        '_userUID_': firebaseUser.uid,
-        '_userName_': firebaseUser.displayName,
-        '_userEmail_': firebaseUser.email
+        '_googleIDToken_': '${user.googleIdToken}',
+        '_userUID_': '${user.uid}',
+        '_userName_': '${user.name}',
+        '_userEmail_': '${user.email}'
       };
     }
 
