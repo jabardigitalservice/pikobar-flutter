@@ -14,18 +14,26 @@ class MessageRepository {
           backlink: record[i]['backlink'].toString(),
           content: record[i]['content'].toString(),
           title: record[i]['title'].toString(),
-          pubilshedAt:record[i]['published_at'].seconds,
+          pubilshedAt: record[i]['published_at'].seconds,
           readAt: 0);
       try {
         bool dataCheck = await checkData(messageModel.title);
-        if(!dataCheck){
-        await db.insert(
-          'Messages',
-          messageModel.toJson(),
-          conflictAlgorithm: ConflictAlgorithm.ignore,
-        );
+        if (!dataCheck) {
+          await db.insert(
+            'Messages',
+            messageModel.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.ignore,
+          );
         }
       } catch (e) {
+        var listMessage = await MessageRepository().getRecords();
+        if (!listMessage.contains(messageModel)) {
+          await db.insert(
+            'Messages',
+            messageModel.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.ignore,
+          );
+        }
         print(e.toString());
       }
     }
@@ -33,7 +41,6 @@ class MessageRepository {
 
   //get data list message from local db
   Future<List<MessageModel>> getRecords() async {
-
     List<MessageModel> localRecords = await getLocalData();
 
     return localRecords;
@@ -54,10 +61,7 @@ class MessageRepository {
     var res = await db.query("Messages",
         columns: ["title"], where: 'title = ?', whereArgs: [title]);
 
-    List<MessageModel> list =
-        res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
-
-    if (list.isNotEmpty) {
+    if (res.isNotEmpty) {
       return true;
     } else {
       return false;
@@ -67,10 +71,11 @@ class MessageRepository {
   Future<List<MessageModel>> getLocalData() async {
     Database db = await DBProvider.db.database;
 
-    var res = await db.rawQuery('SELECT * FROM Messages ORDER BY published_at DESC');
+    var res =
+    await db.rawQuery('SELECT * FROM Messages ORDER BY published_at DESC');
 
     List<MessageModel> list =
-        res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
+    res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
 
     return list;
   }
@@ -107,5 +112,4 @@ class MessageRepository {
 
     await db.rawDelete('Delete from Messages');
   }
-
 }
