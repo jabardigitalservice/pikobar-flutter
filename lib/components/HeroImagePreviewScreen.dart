@@ -50,7 +50,8 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
           ? _buildPhotoViewGallery()
           : PhotoView(
               imageProvider: NetworkImage(widget.imageUrl),
-              minScale: 0.3,
+              maxScale: PhotoViewComputedScale.covered * 2.0,
+              minScale: PhotoViewComputedScale.contained * 0.8,
               backgroundDecoration: BoxDecoration(color: Colors.white),
               heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
               onTapUp: (context, tapDetail, controller) {
