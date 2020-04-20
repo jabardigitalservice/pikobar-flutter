@@ -66,7 +66,6 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
-//            minScale: 0.3,
             maxScale: PhotoViewComputedScale.covered * 2.0,
             minScale: PhotoViewComputedScale.contained * 0.8,
             imageProvider: NetworkImage(widget.galleryItems[index]),
