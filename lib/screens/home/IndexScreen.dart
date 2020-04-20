@@ -55,18 +55,27 @@ class IndexScreenState extends State<IndexScreen> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        NotificationHelper().showNotification(
-            message['notification']['title'], message['notification']['body'],
-            payload: jsonEncode(message['data']),
-            onSelectNotification: onSelectNotification);
+        if (message['notification'] != null) {
+          NotificationHelper().showNotification(
+              message['notification']['title'], message['notification']['body'],
+              payload: jsonEncode(
+                  Platform.isAndroid ? message['data'] : message),
+              onSelectNotification: onSelectNotification);
+        } else {
+          NotificationHelper().showNotification(
+              message['aps']['alert']['title'], message['aps']['alert']['body'],
+              payload: jsonEncode(
+                  Platform.isAndroid ? message['data'] : message),
+              onSelectNotification: onSelectNotification);
+        }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        _actionNotification(jsonEncode(message['data']));
+        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        _actionNotification(jsonEncode(message['data']));
+        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
     );
 
@@ -92,7 +101,8 @@ class IndexScreenState extends State<IndexScreen> {
 
   createDirectory() async {
     if (Platform.isAndroid) {
-      String localPath = (await getExternalStorageDirectory()).path + '/download';
+      String localPath =
+          (await getExternalStorageDirectory()).path + '/download';
       final publicDownloadDir = Directory(Environment.downloadStorage);
       final savedDir = Directory(localPath);
       bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
@@ -186,29 +196,25 @@ class IndexScreenState extends State<IndexScreen> {
 
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                NewsDetailScreen(
+            builder: (context) => NewsDetailScreen(
                   id: data['id'],
                   news: newsType,
                   isFromNotification: true,
                 )));
       } else {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                News(news: newsType)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => News(news: newsType)));
       }
     } else if (data['target'] == 'broadcast') {
-      if (data['id'] != null && data['id'] != 'null')  {
+      if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                MessageDetailScreen(
+            builder: (context) => MessageDetailScreen(
                   id: data['id'],
                   isFromNotification: true,
                 )));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                Messages(indexScreenState: this)));
+            builder: (context) => Messages(indexScreenState: this)));
       }
     }
   }
