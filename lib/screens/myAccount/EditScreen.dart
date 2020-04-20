@@ -4,16 +4,20 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
@@ -55,6 +59,7 @@ class _EditState extends State<Edit> {
   bool isCityFieldEmpty = false;
   bool isBirthdayEmpty = false;
   bool isGenderEmpty = false;
+  LatLng latLng;
 
   @override
   void initState() {
@@ -72,6 +77,11 @@ class _EditState extends State<Edit> {
     _genderController.text = widget.state.data['gender'];
     _cityController.text = widget.state.data['city_id'];
     _nikController.text = widget.state.data['nik'];
+    latLng = widget.state.data['location'] == null
+        ? null
+        : new LatLng(widget.state.data['location'].latitude,
+            widget.state.data['location'].longitude);
+    print(latLng);
     super.initState();
   }
 
@@ -163,6 +173,7 @@ class _EditState extends State<Edit> {
                                                     Dictionary.provinceId,
                                                 name: _nameController.text,
                                                 nik: _nikController.text,
+                                                latLng: latLng,
                                                 birthdate: DateTime.parse(
                                                     _birthDayController.text),
                                               )),
@@ -231,7 +242,6 @@ class _EditState extends State<Edit> {
                                     title: Dictionary.nik,
                                     controller: _nikController,
                                     textInputType: TextInputType.number,
-                                    validation: Validations.nikValidation,
                                     hintText: Dictionary.placeHolderNIK,
                                     isEdit: true),
                                 SizedBox(
@@ -266,6 +276,81 @@ class _EditState extends State<Edit> {
                                                 .text
                                                 .substring(0, 10))),
                                     isEmpty: isBirthdayEmpty),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  padding:
+                                      EdgeInsets.only(left: 16.0, right: 16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Set lokasi tempat tinggal anda',
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Color(0xff828282)),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      ButtonTheme(
+                                        minWidth:
+                                            MediaQuery.of(context).size.width,
+                                        height: 45.0,
+                                        child: OutlineButton(
+                                          child: Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: <Widget>[
+                                              Image.asset(
+                                                '${Environment.iconAssets}location.png',
+                                                width: 24.0,
+                                                height: 24.0,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 10.0),
+                                                child: Text(
+                                                  Dictionary.setLocation,
+                                                  style: TextStyle(
+                                                      color: Colors.grey[800]),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffE0E0E0),
+                                              width: 1.5),
+                                          onPressed: () async {
+                                            latLng = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LocationPicker()));
+                                            final String address =
+                                                await GeocoderRepository()
+                                                    .getAddress(latLng);
+                                            if (address != null) {
+                                              setState(() {
+                                                _addressController.text =
+                                                    address;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -420,6 +505,7 @@ class _EditState extends State<Edit> {
             provinceId: Dictionary.provinceId,
             name: _nameController.text,
             nik: _nikController.text,
+            latLng: latLng,
             birthdate: DateTime.parse(_birthDayController.text)));
       } else {
         if (otpEnabled) {
@@ -428,17 +514,17 @@ class _EditState extends State<Edit> {
           if (isConnected) {
             verificationCompleted = (AuthCredential credential) async {
               await _profileRepository.linkCredential(
-                widget.state.data['id'],
-                _phoneNumberController.text,
-                _genderController.text,
-                _addressController.text,
-                _cityController.text,
-                Dictionary.provinceId,
-                _nameController.text,
-                _nikController.text,
-                DateTime.parse(_birthDayController.text),
-                credential,
-              );
+                  widget.state.data['id'],
+                  _phoneNumberController.text,
+                  _genderController.text,
+                  _addressController.text,
+                  _cityController.text,
+                  Dictionary.provinceId,
+                  _nameController.text,
+                  _nikController.text,
+                  DateTime.parse(_birthDayController.text),
+                  credential,
+                  latLng);
               _profileBloc.add(VerifyConfirm());
             };
             verificationFailed = (AuthException authException) {
@@ -466,6 +552,7 @@ class _EditState extends State<Edit> {
               address: _addressController.text,
               cityId: _cityController.text,
               provinceId: Dictionary.provinceId,
+              latLng: latLng,
               birthdate: DateTime.parse(_birthDayController.text)));
         }
       }
@@ -623,7 +710,7 @@ class _EditState extends State<Edit> {
                 style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
               ),
               Text(
-                '*',
+                title == Dictionary.nik ? '' : '*',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],

@@ -97,6 +97,7 @@ class Dictionary {
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
+  static String setLocation='Set Lokasi...';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
