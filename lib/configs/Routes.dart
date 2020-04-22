@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionScreen.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/document/DocumentListScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';
@@ -48,6 +49,7 @@ Route generateRoutes(RouteSettings settings) {
           Edit(
             state: args,
           ));
+
 
     case NavigationConstrants.Verification:
       UserModel argumentsModel = args;

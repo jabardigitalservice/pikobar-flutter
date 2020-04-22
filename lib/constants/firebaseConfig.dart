@@ -36,6 +36,7 @@ class FirebaseConfig {
   static String spreadCheckLocation = 'ceksebaran_location';
   static String healthStatusColors = 'health_status_colors';
   static String emergencyCall = 'emergency_call';
+  static String rapidTestInfo='rapid_test_info';
 
 
   /// Remote config parameter key

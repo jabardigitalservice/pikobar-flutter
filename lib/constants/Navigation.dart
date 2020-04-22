@@ -40,4 +40,6 @@ class NavigationConstrants {
   static const String Document = "/document";
   static const String CheckDistribution = "/check-distribution";
   static const String Faq = "/faq";
+  static const String RapidTest = "/rapid-test";
+
 }

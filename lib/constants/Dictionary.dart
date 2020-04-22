@@ -84,6 +84,9 @@ class Dictionary {
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
+  static String rapidTestTitle='Jumlah RDT (Rapid Diagnostic Test)';
+  static String rapidTestAppBar='Jumlah RDT';
+
 
   // Button Text
   static String yes = 'Ya';
@@ -198,6 +201,7 @@ class Dictionary {
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
+  static String lastUpdate='Update terakhir pada';
 
   // check distribution virus
   static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
@@ -229,6 +233,12 @@ class Dictionary {
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
+  static String reaktif = 'Reaktif';
+  static String nonReaktif = 'Non-Reaktif';
+  static String invalid = 'Invalid';
+
+
+
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
