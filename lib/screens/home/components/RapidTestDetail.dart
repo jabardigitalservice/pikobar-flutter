@@ -199,7 +199,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
               Container(
                   height: 60,
                   child: Image.asset(
-                      '${Environment.iconAssets}/rapidTestIcon.png')),
+                      '${Environment.iconAssets}rapidTestIcon.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

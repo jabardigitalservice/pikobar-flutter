@@ -259,7 +259,7 @@ class _StatisticsState extends State<Statistics> {
             Container(
                 height: 60,
                 child:
-                    Image.asset('${Environment.iconAssets}/rapidTestIcon.png')),
+                    Image.asset('${Environment.iconAssets}rapidTestIcon.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -327,7 +327,7 @@ class _StatisticsState extends State<Statistics> {
               Container(
                   height: 60,
                   child: Image.asset(
-                      '${Environment.iconAssets}/rapidTestIcon.png')),
+                      '${Environment.iconAssets}rapidTestIcon.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
