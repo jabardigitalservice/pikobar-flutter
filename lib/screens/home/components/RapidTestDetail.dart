@@ -155,9 +155,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                                         openChromeSafariBrowser(url: url);
                                       }
                                     } else {
-                                      var url = await userDataUrlAppend(
-                                          dataAnnouncement['action_url']);
-                                      openChromeSafariBrowser(url: url);
+                                      openChromeSafariBrowser(url: dataAnnouncement['action_url']);
                                     }
                                   }
                                 })
