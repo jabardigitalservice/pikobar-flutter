@@ -13,6 +13,8 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/RapidTestRepository.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
@@ -46,7 +48,7 @@ class _StatisticsState extends State<Statistics> {
         children: <Widget>[
           new StreamBuilder(
               stream: Firestore.instance
-                  .collection('statistics')
+                  .collection(Collections.statistics)
                   .document('jabar-dan-nasional')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -64,41 +66,24 @@ class _StatisticsState extends State<Statistics> {
           SizedBox(
             height: 20,
           ),
-          BlocProvider<RapidTestBloc>(
-            create: (BuildContext context) => _rapidTestBloc =
-                RapidTestBloc(rapidTestReposity: _rapidTestRepository)
-                  ..add(RapidTestLoad()),
-            child: BlocListener<RapidTestBloc, RapidTestState>(
-                listener: (context, state) {
-              if (state is RapidTestFailure) {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => DialogTextOnly(
-                          description: state.error.toString(),
-                          buttonText: "OK",
-                          onOkPressed: () {
-                            Navigator.of(context).pop(); // To close the dialog
-                          },
-                        ));
-                Scaffold.of(context).hideCurrentSnackBar();
-              } else {
-                Scaffold.of(context).hideCurrentSnackBar();
-              }
-            }, child: BlocBuilder<RapidTestBloc, RapidTestState>(
-              builder: (
-                BuildContext context,
-                RapidTestState state,
-              ) {
-                return state is RapidTestLoading
-                    ? buildLoadingRapidTest()
-                    : state is RapidTestLoaded
-                        ? buildContentRapidTest(state)
-                        : state is RapidTestFailure
-                            ? ErrorContent(error: state.error)
-                            : Container();
-              },
-            )),
-          )
+          widget.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)?
+          StreamBuilder(
+              stream: Firestore.instance
+                  .collection(Collections.statistics)
+                  .document('rdt')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Container();
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return buildLoadingRapidTest();
+                } else {
+                  var userDocument = snapshot.data;
+                  return buildContentRapidTest(userDocument);
+                }
+              }):Container()
         ],
       ),
     );
@@ -317,9 +302,9 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(RapidTestLoaded state) {
+  Widget buildContentRapidTest(DocumentSnapshot document) {
     String count = formatter
-        .format(int.parse(state.record.data.content.rdt.total.toString()))
+        .format(document.data['total'])
         .replaceAll(',', '.');
     return InkWell(
       onTap: () {
@@ -327,7 +312,7 @@ class _StatisticsState extends State<Statistics> {
           context,
           MaterialPageRoute(
               builder: (context) => RapidTestDetail(
-                    widget.remoteConfig,state
+                    widget.remoteConfig,document
                   )),
         );
       },

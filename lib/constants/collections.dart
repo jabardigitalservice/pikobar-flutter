@@ -11,5 +11,6 @@ class Collections {
   static String users = 'users';
   static String areas = 'areas';
   static String userTokens = 'tokens';
+  static String statistics='statistics';
 
 }

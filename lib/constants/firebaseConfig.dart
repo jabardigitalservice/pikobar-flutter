@@ -37,6 +37,8 @@ class FirebaseConfig {
   static String healthStatusColors = 'health_status_colors';
   static String emergencyCall = 'emergency_call';
   static String rapidTestInfo='rapid_test_info';
+  static String rapidTestEnable='rapid_test_enable';
+
 
 
   /// Remote config parameter key
