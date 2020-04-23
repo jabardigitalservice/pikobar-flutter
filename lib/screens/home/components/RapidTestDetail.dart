@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +13,17 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class RapidTestDetail extends StatefulWidget {
   final RemoteConfig remoteConfig;
-  final RapidTestLoaded state;
+  final DocumentSnapshot document;
 
-  RapidTestDetail(this.remoteConfig, this.state);
+  RapidTestDetail(this.remoteConfig, this.document);
   @override
   _RapidTestDetailState createState() => _RapidTestDetailState();
 }
@@ -54,16 +59,17 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           SizedBox(
             height: 20,
           ),
-          widget.state.record.data.metadata.lastUpdate==null?Container():
-          Center(
-            child: Text(
-              '${Dictionary.lastUpdate} ${widget.state.record.data.metadata.lastUpdate}',
-              style: TextStyle(
-                  color: Color(0xff828282),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
-            ),
-          )
+          widget.document.data['last_update'] == null
+              ? Container()
+              : Center(
+                  child: Text(
+                    '${Dictionary.lastUpdate} ${unixTimeStampToDateTimeWithoutDay(widget.document.data['last_update'].seconds)}',
+                    style: TextStyle(
+                        color: Color(0xff828282),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                )
         ],
       ),
     );
@@ -116,9 +122,40 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                                   fontFamily: FontsFamily.productSans,
                                   fontWeight: FontWeight.bold),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  openChromeSafariBrowser(
-                                      url: dataAnnouncement['action_url']);
+                                ..onTap = () async {
+                                  if (widget.remoteConfig != null &&
+                                      widget.remoteConfig.getString(
+                                              FirebaseConfig.loginRequired) !=
+                                          null) {
+                                    Map<String, dynamic> _loginRequiredMenu =
+                                        json.decode(widget.remoteConfig
+                                            .getString(
+                                                FirebaseConfig.loginRequired));
+
+                                    if (_loginRequiredMenu['rdt_menu']) {
+                                      bool hasToken =
+                                          await AuthRepository().hasToken();
+                                      if (!hasToken) {
+                                        bool isLoggedIn = await Navigator.of(
+                                                context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen(
+                                                        title: Dictionary
+                                                            .rapidTestAppBar)));
+
+                                        if (isLoggedIn != null && isLoggedIn) {
+                                          var url = await userDataUrlAppend(
+                                              dataAnnouncement['action_url']);
+                                          openChromeSafariBrowser(url: url);
+                                        }
+                                      } else {
+                                        var url = await userDataUrlAppend(
+                                            dataAnnouncement['action_url']);
+                                        openChromeSafariBrowser(url: url);
+                                      }
+                                    }
+                                  }
                                 })
                           : TextSpan(text: '')
                     ]),
@@ -145,8 +182,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
 
   Widget buildRDT() {
     String count = formatter
-        .format(
-            int.parse(widget.state.record.data.content.rdt.total.toString()))
+        .format(int.parse(widget.document.data['total'].toString()))
         .replaceAll(',', '.');
     return Padding(
       padding: EdgeInsets.all(5.0),
@@ -205,21 +241,21 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
             '',
             Dictionary.reaktif,
-            widget.state.record.data.content.rdt.positif.toString(),
+            widget.document.data['positif'].toString(),
             2,
             Colors.grey[600],
             ColorBase.green),
         buildContainer(
             '',
             Dictionary.nonReaktif,
-            widget.state.record.data.content.rdt.negatif.toString(),
+            widget.document.data['negatif'].toString(),
             2,
             Colors.grey[600],
             ColorBase.green),
         buildContainer(
             '',
             Dictionary.invalid,
-            widget.state.record.data.content.rdt.invalid.toString(),
+            widget.document.data['invalid'].toString(),
             2,
             Colors.grey[600],
             ColorBase.green)
@@ -238,8 +274,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         print(e.toString());
       }
     }
-    var percent =
-        (int.parse(count) / widget.state.record.data.content.rdt.total) * 100;
+    var percent = (int.parse(count) / widget.document.data['total']) * 100;
 
     return Expanded(
       child: Container(

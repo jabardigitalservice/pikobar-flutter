@@ -301,6 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.announcement: false,
       FirebaseConfig.loginRequired:FirebaseConfig.loginRequiredDefaultVal,
       FirebaseConfig.rapidTestInfo: false,
+      FirebaseConfig.rapidTestEnable: false,
     });
 
     try {
