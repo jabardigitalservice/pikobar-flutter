@@ -43,15 +43,17 @@ Future<String> userDataUrlAppend(String url) async {
       '_userEmail_': ''
     };
 
-    UserModel user = await AuthRepository().getUserInfo();
-
-    if (user != null) {
-      usrMap = {
-        '_googleIDToken_': '${user.googleIdToken}',
-        '_userUID_': '${user.uid}',
-        '_userName_': '${user.name}',
-        '_userEmail_': '${user.email}'
-      };
+    bool hasLocalUserInfo = await AuthRepository().hasLocalUserInfo();
+    if (hasLocalUserInfo) {
+      UserModel user = await AuthRepository().readLocalUserInfo();
+      if (user != null) {
+        usrMap = {
+          '_googleIDToken_': '${user.googleIdToken}',
+          '_userUID_': '${user.uid}',
+          '_userName_': '${user.name}',
+          '_userEmail_': '${user.email}'
+        };
+      }
     }
 
     usrMap.forEach((key, value) {
