@@ -47,6 +47,7 @@ class Dictionary {
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
   static String profile = 'Profil';
+  static String login = 'Login';
   static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
@@ -54,6 +55,7 @@ class Dictionary {
       'Segera hubungi nomor dibawah \nini untuk call center terdekat';
   static String edit = 'Edit Profil';
   static String name = 'Nama';
+  static String nik = 'NIK';
   static String email = 'Email';
   static String phoneNumber = 'No. Telepon';
   static String inaCode = '+62';
@@ -82,6 +84,9 @@ class Dictionary {
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
+  static String rapidTestTitle='Jumlah RDT (Rapid Diagnostic Test)';
+  static String rapidTestAppBar='Jumlah RDT';
+
 
   // Button Text
   static String yes = 'Ya';
@@ -95,6 +100,7 @@ class Dictionary {
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
+  static String setLocation='Set Lokasi...';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -121,6 +127,17 @@ class Dictionary {
   static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
   static String errorEmptyAddress = 'Alamat harus diisi';
   static String pleaseCompleteAllField = ' harus diisi';
+  static String errorEmptyName = 'Nama harus diisi';
+  static String errorMinimumName =
+      'Nama harus terdiri dari 4 karakter atau lebih';
+  static String errorMaximumName = 'Nama harus kurang dari 255 karakter';
+  static String errorInvalidName = 'Format nama tidak sesuai';
+  static String errorEmptyNIK = 'NIK harus diisi';
+  static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
+  static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
+
+  // Toast Messages
+  static String downloadingFile = 'Mengunduh file';
 
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
@@ -147,6 +164,8 @@ class Dictionary {
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
   static String provincePlaceholder = 'Masukan Provinsi Domisili Anda';
+  static String placeHolderName = 'Masukkan Nama Anda';
+  static String placeHolderNIK = 'Masukkan NIK Anda';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
@@ -180,7 +199,9 @@ class Dictionary {
   //announcement
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
+  static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
+  static String lastUpdate='Update terakhir pada';
 
   // check distribution virus
   static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
@@ -212,6 +233,12 @@ class Dictionary {
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
+  static String reaktif = 'Reaktif';
+  static String nonReaktif = 'Non-Reaktif';
+  static String invalid = 'Invalid';
+
+
+
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -8,8 +9,9 @@ abstract class ProfileEvent extends Equatable {
 }
 
 class Save extends ProfileEvent {
-  final String id, phoneNumber, gender, address, cityId, provinceId;
+  final String id, phoneNumber, gender, address, cityId, provinceId, name, nik;
   final DateTime birthdate;
+  final LatLng latLng;
   Save(
       {this.id,
       this.phoneNumber,
@@ -17,13 +19,26 @@ class Save extends ProfileEvent {
       this.address,
       this.cityId,
       this.provinceId,
-      this.birthdate});
+      this.name,
+      this.nik,
+      this.birthdate,
+      this.latLng});
   @override
   String toString() => 'Save';
 
   @override
-  List<Object> get props =>
-      [id, phoneNumber, gender, address, cityId, provinceId, birthdate];
+  List<Object> get props => [
+        id,
+        phoneNumber,
+        gender,
+        address,
+        cityId,
+        provinceId,
+        name,
+        nik,
+        birthdate,
+        latLng
+      ];
 }
 
 class Verify extends ProfileEvent {
@@ -54,8 +69,11 @@ class ConfirmOTP extends ProfileEvent {
       gender,
       address,
       cityId,
-      provinceId;
+      provinceId,
+      name,
+      nik;
   final DateTime birthdate;
+  final LatLng latLng;
   ConfirmOTP(
       {this.smsCode,
       this.verificationID,
@@ -65,7 +83,10 @@ class ConfirmOTP extends ProfileEvent {
       this.address,
       this.cityId,
       this.provinceId,
-      this.birthdate});
+      this.name,
+      this.nik,
+      this.birthdate,
+      this.latLng});
   @override
   String toString() => 'ConfirmOTP';
 
@@ -79,7 +100,10 @@ class ConfirmOTP extends ProfileEvent {
         address,
         cityId,
         provinceId,
-        birthdate
+        name,
+        nik,
+        birthdate,
+        latLng
       ];
 }
 

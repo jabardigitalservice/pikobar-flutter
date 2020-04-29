@@ -42,7 +42,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.address,
             event.cityId,
             event.provinceId,
-            event.birthdate);
+            event.name,
+            event.nik,
+            event.birthdate,
+            event.latLng);
         yield ProfileSaved();
       } catch (e) {
         yield ProfileFailure(error: e.toString());
@@ -77,7 +80,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.address,
             event.cityId,
             event.provinceId,
-            event.birthdate);
+            event.name,
+            event.nik,
+            event.birthdate,
+            event.latLng);
         yield ProfileVerified();
       } catch (e) {
         yield ProfileFailure(error: e.toString());

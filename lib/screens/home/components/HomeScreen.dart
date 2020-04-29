@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: ColorBase.grey,
                     margin: EdgeInsets.only(top: 10.0),
                     padding: EdgeInsets.only(bottom: 10.0),
-                    child: Statistics()),
+                    child: Statistics(remoteConfig)),
 
                 /// Menus & Spread Sections
                 Column(
@@ -299,7 +299,9 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
       FirebaseConfig.spreadCheckLocation: '',
       FirebaseConfig.announcement: false,
-      FirebaseConfig.loginRequired:FirebaseConfig.loginRequiredDefaultVal
+      FirebaseConfig.loginRequired:FirebaseConfig.loginRequiredDefaultVal,
+      FirebaseConfig.rapidTestInfo: false,
+      FirebaseConfig.rapidTestEnable: false,
     });
 
     try {

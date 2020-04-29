@@ -4,20 +4,26 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Edit extends StatefulWidget {
   final AsyncSnapshot<DocumentSnapshot> state;
@@ -36,6 +42,8 @@ class _EditState extends State<Edit> {
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
 
+  var _nikController = new MaskedTextController(mask: '0000000000000000');
+
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -51,8 +59,7 @@ class _EditState extends State<Edit> {
   bool isCityFieldEmpty = false;
   bool isBirthdayEmpty = false;
   bool isGenderEmpty = false;
-
-
+  LatLng latLng;
 
   @override
   void initState() {
@@ -69,6 +76,12 @@ class _EditState extends State<Edit> {
             .toString();
     _genderController.text = widget.state.data['gender'];
     _cityController.text = widget.state.data['city_id'];
+    _nikController.text = widget.state.data['nik'];
+    latLng = widget.state.data['location'] == null
+        ? null
+        : new LatLng(widget.state.data['location'].latitude,
+            widget.state.data['location'].longitude);
+    print(latLng);
     super.initState();
   }
 
@@ -91,8 +104,7 @@ class _EditState extends State<Edit> {
                   : false;
               return BlocProvider<ProfileBloc>(
                   create: (BuildContext context) => _profileBloc =
-                      ProfileBloc(profileRepository: _profileRepository)
-                        ..add(CityLoad()),
+                      ProfileBloc(profileRepository: _profileRepository),
                   child: BlocListener<ProfileBloc, ProfileState>(
                     listener: (context, state) {
                       if (state is ProfileFailure) {
@@ -159,6 +171,9 @@ class _EditState extends State<Edit> {
                                                 cityId: _cityController.text,
                                                 provinceId:
                                                     Dictionary.provinceId,
+                                                name: _nameController.text,
+                                                nik: _nikController.text,
+                                                latLng: latLng,
                                                 birthdate: DateTime.parse(
                                                     _birthDayController.text),
                                               )),
@@ -209,8 +224,10 @@ class _EditState extends State<Edit> {
                               children: <Widget>[
                                 buildTextField(
                                     title: Dictionary.name,
+                                    hintText: Dictionary.placeHolderName,
                                     controller: _nameController,
-                                    isEdit: false),
+                                    validation: Validations.nameValidation,
+                                    isEdit: true),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -218,6 +235,15 @@ class _EditState extends State<Edit> {
                                     title: Dictionary.email,
                                     controller: _emailController,
                                     isEdit: false),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.nik,
+                                    controller: _nikController,
+                                    textInputType: TextInputType.number,
+                                    hintText: Dictionary.placeHolderNIK,
+                                    isEdit: true),
                                 SizedBox(
                                   height: 20,
                                 ),
@@ -236,19 +262,94 @@ class _EditState extends State<Edit> {
                                     label: <String>[
                                       "Laki - Laki",
                                       "Perempuan",
-                                    ],isEmpty: isGenderEmpty),
+                                    ],
+                                    isEmpty: isGenderEmpty),
                                 SizedBox(
                                   height: 20,
                                 ),
                                 buildDateField(
-                                  title: Dictionary.birthday,
-                                  placeholder: _birthDayController.text == ''
-                                      ? Dictionary.birthdayPlaceholder
-                                      : DateFormat.yMMMMd().format(
-                                          DateTime.parse(_birthDayController
-                                              .text
-                                              .substring(0, 10))),
-                                              isEmpty: isBirthdayEmpty
+                                    title: Dictionary.birthday,
+                                    placeholder: _birthDayController.text == ''
+                                        ? Dictionary.birthdayPlaceholder
+                                        : DateFormat.yMMMMd().format(
+                                            DateTime.parse(_birthDayController
+                                                .text
+                                                .substring(0, 10))),
+                                    isEmpty: isBirthdayEmpty),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  padding:
+                                      EdgeInsets.only(left: 16.0, right: 16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Set lokasi tempat tinggal anda',
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                color: Color(0xff828282)),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      ButtonTheme(
+                                        minWidth:
+                                            MediaQuery.of(context).size.width,
+                                        height: 45.0,
+                                        child: OutlineButton(
+                                          child: Wrap(
+                                            crossAxisAlignment:
+                                                WrapCrossAlignment.center,
+                                            children: <Widget>[
+                                              Image.asset(
+                                                '${Environment.iconAssets}location.png',
+                                                width: 24.0,
+                                                height: 24.0,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 10.0),
+                                                child: Text(
+                                                  Dictionary.setLocation,
+                                                  style: TextStyle(
+                                                      color: Colors.grey[800]),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0)),
+                                          borderSide: BorderSide(
+                                              color: Color(0xffE0E0E0),
+                                              width: 1.5),
+                                          onPressed: () async {
+                                            latLng = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LocationPicker()));
+                                            final String address =
+                                                await GeocoderRepository()
+                                                    .getAddress(latLng);
+                                            if (address != null) {
+                                              setState(() {
+                                                _addressController.text =
+                                                    address;
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 20,
@@ -263,27 +364,35 @@ class _EditState extends State<Edit> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                BlocBuilder(
-                                    bloc: _profileBloc,
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: Firestore.instance
+                                        .collection(Collections.areas)
+                                        .orderBy('name')
+                                        .snapshots(),
                                     builder: (BuildContext context,
-                                        ProfileState state) {
-                                      if (state is CityLoaded) {
-                                        state.record.data.sort((a, b) => a
-                                            .namaWilayah
-                                            .compareTo(b.namaWilayah));
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      if (snapshot.hasError)
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
-                                            Dictionary.cityPlaceholder,
-                                            state.record.data,
-                                            _cityController,
-                                            isCityFieldEmpty);
-                                      } else {
-                                        return buildDropdownField(
-                                            Dictionary.cityDomicile,
-                                            Dictionary.loading,
+                                            snapshot.error,
                                             [],
                                             _cityController,
                                             false);
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.waiting:
+                                          return buildDropdownField(
+                                              Dictionary.cityDomicile,
+                                              Dictionary.loading,
+                                              [],
+                                              _cityController,
+                                              false);
+                                        default:
+                                          return buildDropdownField(
+                                              Dictionary.cityDomicile,
+                                              Dictionary.cityPlaceholder,
+                                              snapshot.data.documents.toList(),
+                                              _cityController,
+                                              isCityFieldEmpty);
                                       }
                                     }),
                                 SizedBox(
@@ -364,7 +473,7 @@ class _EditState extends State<Edit> {
         isCityFieldEmpty = false;
       });
     }
-      if (_genderController.text == '') {
+    if (_genderController.text == '') {
       setState(() {
         isGenderEmpty = true;
       });
@@ -373,7 +482,7 @@ class _EditState extends State<Edit> {
         isGenderEmpty = false;
       });
     }
-        if (_birthDayController.text == '') {
+    if (_birthDayController.text == '') {
       setState(() {
         isBirthdayEmpty = true;
       });
@@ -384,10 +493,7 @@ class _EditState extends State<Edit> {
     }
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
-      if (isGenderEmpty ||
-         isBirthdayEmpty ||
-          isCityFieldEmpty) {
-      
+      if (isGenderEmpty || isBirthdayEmpty || isCityFieldEmpty) {
       } else if (widget.state.data['phone_number'] ==
           Dictionary.inaCode + _phoneNumberController.text) {
         _profileBloc.add(Save(
@@ -397,6 +503,9 @@ class _EditState extends State<Edit> {
             address: _addressController.text,
             cityId: _cityController.text,
             provinceId: Dictionary.provinceId,
+            name: _nameController.text,
+            nik: _nikController.text,
+            latLng: latLng,
             birthdate: DateTime.parse(_birthDayController.text)));
       } else {
         if (otpEnabled) {
@@ -405,15 +514,17 @@ class _EditState extends State<Edit> {
           if (isConnected) {
             verificationCompleted = (AuthCredential credential) async {
               await _profileRepository.linkCredential(
-                widget.state.data['id'],
-                _phoneNumberController.text,
-                _genderController.text,
-                _addressController.text,
-                _cityController.text,
-                Dictionary.provinceId,
-                DateTime.parse(_birthDayController.text),
-                credential,
-              );
+                  widget.state.data['id'],
+                  _phoneNumberController.text,
+                  _genderController.text,
+                  _addressController.text,
+                  _cityController.text,
+                  Dictionary.provinceId,
+                  _nameController.text,
+                  _nikController.text,
+                  DateTime.parse(_birthDayController.text),
+                  credential,
+                  latLng);
               _profileBloc.add(VerifyConfirm());
             };
             verificationFailed = (AuthException authException) {
@@ -435,17 +546,20 @@ class _EditState extends State<Edit> {
           _profileBloc.add(Save(
               id: widget.state.data['id'],
               phoneNumber: _phoneNumberController.text,
+              name: _nameController.text,
+              nik: _nikController.text,
               gender: _genderController.text,
               address: _addressController.text,
               cityId: _cityController.text,
               provinceId: Dictionary.provinceId,
+              latLng: latLng,
               birthdate: DateTime.parse(_birthDayController.text)));
         }
       }
     }
   }
 
-  Widget buildRadioButton({String title, List<String> label,bool isEmpty}) {
+  Widget buildRadioButton({String title, List<String> label, bool isEmpty}) {
     return Padding(
       padding: EdgeInsets.only(left: 16.0, right: 16),
       child: Column(
@@ -495,11 +609,11 @@ class _EditState extends State<Edit> {
               );
             },
           ),
-           isEmpty
-              ?
-          SizedBox(
-            height: 10,
-          ):Container(),
+          isEmpty
+              ? SizedBox(
+                  height: 10,
+                )
+              : Container(),
           isEmpty
               ? Text(
                   title + Dictionary.pleaseCompleteAllField,
@@ -511,7 +625,7 @@ class _EditState extends State<Edit> {
     );
   }
 
-  Widget buildDateField({String title, placeholder,bool isEmpty}) {
+  Widget buildDateField({String title, placeholder, bool isEmpty}) {
     return Container(
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
@@ -559,14 +673,14 @@ class _EditState extends State<Edit> {
               ),
             ),
           ),
-           isEmpty
-              ?
-          SizedBox(
-            height: 10,
-          ):Container(),
+          isEmpty
+              ? SizedBox(
+                  height: 10,
+                )
+              : Container(),
           isEmpty
               ? Text(
-                  title +  Dictionary.pleaseCompleteAllField,
+                  title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 )
               : Container()
@@ -596,7 +710,7 @@ class _EditState extends State<Edit> {
                 style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
               ),
               Text(
-                '*',
+                title == Dictionary.nik ? '' : '*',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -604,36 +718,33 @@ class _EditState extends State<Edit> {
           SizedBox(
             height: 10,
           ),
-          Container(
-            height: title == Dictionary.addressDomicile ? null : 50,
-            child: TextFormField(
-              maxLines: maxLines != null ? maxLines : 1,
-              style: isEdit
-                  ? TextStyle(
-                      color: Colors.black,
-                    )
-                  : TextStyle(color: Color(0xffBDBDBD)),
-              enabled: isEdit,
-              validator: validation,
-              textCapitalization: TextCapitalization.words,
-              controller: controller,
-              decoration: InputDecoration(
-                  hintText: hintText,
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-                  disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          BorderSide(color: Color(0xffE0E0E0), width: 1.5))),
-              keyboardType:
-                  textInputType != null ? textInputType : TextInputType.text,
-            ),
+          TextFormField(
+            maxLines: maxLines != null ? maxLines : 1,
+            style: isEdit
+                ? TextStyle(
+                    color: Colors.black,
+                  )
+                : TextStyle(color: Color(0xffBDBDBD)),
+            enabled: isEdit,
+            validator: validation,
+            textCapitalization: TextCapitalization.words,
+            controller: controller,
+            decoration: InputDecoration(
+                hintText: hintText,
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Color(0xffE0E0E0), width: 1.5))),
+            keyboardType:
+                textInputType != null ? textInputType : TextInputType.text,
           )
         ],
       ),
@@ -674,11 +785,14 @@ class _EditState extends State<Edit> {
               child: custom.DropdownButton<dynamic>(
                 underline: SizedBox(),
                 isExpanded: true,
-                hint: Text(hintText,style: TextStyle(fontSize: 13),),
+                hint: Text(
+                  hintText,
+                  style: TextStyle(fontSize: 13),
+                ),
                 items: items.map((item) {
                   return custom.DropdownMenuItem(
-                    child: Text(item.namaWilayah),
-                    value: item.kodeKemendagri.toString(),
+                    child: Text(item['name']),
+                    value: item['code'].toString(),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -691,13 +805,13 @@ class _EditState extends State<Edit> {
             ),
           ),
           isEmpty
-              ?
-          SizedBox(
-            height: 10,
-          ):Container(),
+              ? SizedBox(
+                  height: 10,
+                )
+              : Container(),
           isEmpty
               ? Text(
-                  title +  Dictionary.pleaseCompleteAllField,
+                  title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 )
               : Container()

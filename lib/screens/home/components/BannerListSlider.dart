@@ -3,12 +3,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,6 +21,9 @@ class BannerListSlider extends StatefulWidget {
 }
 
 class BannerListSliderState extends State<BannerListSlider> {
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignInAccount _signInAccount;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -76,7 +82,7 @@ class BannerListSliderState extends State<BannerListSlider> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: CachedNetworkImage(
-                    imageUrl: document['url']??'',
+                    imageUrl: document['url'] ?? '',
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
@@ -103,7 +109,9 @@ class BannerListSliderState extends State<BannerListSlider> {
             ),
             onTap: () {
               if (document['action_url'] != null) {
-                _clickAction(document['action_url']);
+                _clickAction(
+                    url: document['action_url'],
+                    isLoginRequired: document['login']);
                 AnalyticsHelper.setLogEvent(Analytics.tappedBanner,
                     <String, dynamic>{'url': document['action_url']});
               }
@@ -114,7 +122,29 @@ class BannerListSliderState extends State<BannerListSlider> {
     );
   }
 
-  _clickAction(String url) async {
+  _clickAction({@required String url, bool isLoginRequired}) async {
+    if (isLoginRequired != null && isLoginRequired) {
+      bool hasToken = await AuthRepository().hasToken();
+
+      if (!hasToken) {
+        bool isLoggedIn = await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+
+        if (isLoggedIn != null && isLoggedIn) {
+          url = await userDataUrlAppend(url);
+          await _launchUrl(url);
+        }
+      } else {
+        url = await userDataUrlAppend(url);
+        await _launchUrl(url);
+      }
+    } else {
+      url = await userDataUrlAppend(url);
+      await _launchUrl(url);
+    }
+  }
+
+  _launchUrl(String url) async {
     if (url.contains('youtube')) {
       if (await canLaunch(url)) {
         await launch(url);
