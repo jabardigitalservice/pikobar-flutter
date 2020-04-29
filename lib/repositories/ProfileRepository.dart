@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/EndPointPath.dart';
 import 'package:pikobar_flutter/constants/ErrorException.dart';
@@ -30,27 +31,42 @@ class ProfileRepository {
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 
-  Future<void> linkCredential(String id, phoneNumber, gender, address, cityId,
-      provinceId, DateTime birthdate, AuthCredential credential) async {
+  Future<void> linkCredential(
+      String id,
+      phoneNumber,
+      gender,
+      address,
+      cityId,
+      provinceId,
+      name,
+      nik,
+      DateTime birthdate,
+      AuthCredential credential,
+      LatLng latLng) async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     List<UserInfo> providerList = user.providerData;
     if (providerList.length > 2) {
       await user.unlinkFromProvider(credential.providerId);
     }
     await user.linkWithCredential(credential);
-    await saveToCollection(
-        id, phoneNumber, gender, address, cityId, provinceId, birthdate);
+    await saveToCollection(id, phoneNumber, gender, address, cityId, provinceId,
+        name, nik, birthdate, latLng);
   }
 
   Future<void> saveToCollection(String id, phoneNumber, gender, address, cityId,
-      provinceId, DateTime birthdate) async {
+      provinceId, name, nik, DateTime birthdate, LatLng latLng) async {
+    print(latLng);
     Firestore.instance.collection(Collections.users).document(id).updateData({
       'phone_number': Dictionary.inaCode + phoneNumber,
       'gender': gender,
       'birthdate': birthdate,
       'address': address,
       'city_id': cityId,
-      'province_id': provinceId
+      'province_id': provinceId,
+      'name': name,
+      'nik': nik,
+      'location':
+          latLng == null ? null : GeoPoint(latLng.latitude, latLng.longitude)
     });
   }
 
@@ -63,13 +79,16 @@ class ProfileRepository {
       address,
       cityId,
       provinceId,
-      DateTime birthdate) async {
+      name,
+      nik,
+      DateTime birthdate,
+      LatLng latLng) async {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
       verificationId: verificationID,
       smsCode: smsCode,
     );
     await linkCredential(id, phoneNumber, gender, address, cityId, provinceId,
-        birthdate, credential);
+        name, nik, birthdate, credential, latLng);
   }
 
   Future<CityModel> getCityList() async {

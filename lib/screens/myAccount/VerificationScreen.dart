@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/ProfileState.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -18,8 +19,11 @@ class Verification extends StatefulWidget {
       gender,
       address,
       cityId,
-      provinceId;
+      provinceId,
+      name,
+      nik;
   final DateTime birthdate;
+  final LatLng latLng;
   Verification(
       {this.phoneNumber,
       this.uid,
@@ -28,7 +32,10 @@ class Verification extends StatefulWidget {
       this.address,
       this.cityId,
       this.provinceId,
-      this.birthdate});
+      this.name,
+      this.nik,
+      this.birthdate,
+      this.latLng});
   @override
   _VerificationState createState() => _VerificationState();
 }
@@ -294,17 +301,19 @@ class _VerificationState extends State<Verification> {
 
   onVerifyButtonPressed() {
     _profileBloc.add(ConfirmOTP(
-      smsCode: smsCode,
-      verificationID:
-          verificationID == null ? widget.verificationID : verificationID,
-      id: widget.uid,
-      phoneNumber: widget.phoneNumber,
-      address: widget.address,
-      birthdate: widget.birthdate,
-      cityId: widget.cityId,
-      gender: widget.gender,
-      provinceId: widget.provinceId,
-    ));
+        smsCode: smsCode,
+        verificationID:
+            verificationID == null ? widget.verificationID : verificationID,
+        id: widget.uid,
+        phoneNumber: widget.phoneNumber,
+        address: widget.address,
+        birthdate: widget.birthdate,
+        cityId: widget.cityId,
+        gender: widget.gender,
+        provinceId: widget.provinceId,
+        latLng: widget.latLng,
+        name: widget.name,
+        nik: widget.nik));
   }
 
   Future<void> sendCodeToPhoneNumber() async {
@@ -316,8 +325,11 @@ class _VerificationState extends State<Verification> {
           widget.address,
           widget.cityId,
           widget.provinceId,
+          widget.name,
+          widget.nik,
           widget.birthdate,
-          credential);
+          credential,
+          widget.latLng);
       _profileBloc.add(VerifyConfirm());
     };
     verificationFailed = (AuthException authException) {

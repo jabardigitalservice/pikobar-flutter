@@ -27,13 +27,23 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   ScrollController _scrollController = ScrollController();
   List<MessageModel> listMessage = [];
-  bool isInsertData = false;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.message);
+    getDataFromServer();
 
     super.initState();
+  }
+
+  void getDataFromServer() {
+    Firestore.instance
+        .collection('broadcasts')
+        .orderBy('published_at', descending: true)
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      insertIntoDatabase(snapshot);
+    }).catchError((error) {});
   }
 
   @override
@@ -65,29 +75,7 @@ class _MessagesState extends State<Messages> {
                 icon: Icon(Icons.more_vert),
               ),
             ]),
-        body: !isInsertData
-            ? StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance
-                    .collection('broadcasts')
-                    .orderBy('published_at', descending: true)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError)
-                    return ErrorContent(error: snapshot.error);
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return _buildLoading();
-                    default:
-                      if (!isInsertData) {
-                        insertIntoDatabase(snapshot);
-                      }
-                      isInsertData = true;
-                      return _buildContent();
-                  }
-                },
-              )
-            : _buildContent());
+        body: _buildContent());
   }
 
   String _parseHtmlString(String htmlString) {
@@ -155,8 +143,8 @@ class _MessagesState extends State<Messages> {
     );
   }
 
-  Future<void> insertIntoDatabase(AsyncSnapshot<QuerySnapshot> snapshot) async {
-    await MessageRepository().insertToDatabase(snapshot.data.documents);
+  Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
+    await MessageRepository().insertToDatabase(snapshot.documents);
     widget.indexScreenState.getCountMessage();
     listMessage.clear();
     listMessage = await MessageRepository().getRecords();
@@ -166,76 +154,76 @@ class _MessagesState extends State<Messages> {
   _buildContent() {
     return listMessage.isNotEmpty
         ? ListView.builder(
-            controller: _scrollController,
-            padding: EdgeInsets.all(15.0),
-            itemCount: listMessage.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: GestureDetector(
-                  child: Card(
-                      color: listMessage[index].readAt == null ||
-                              listMessage[index].readAt == 0
-                          ? Color(0xFFFFF9EE)
-                          : null,
-                      margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
-                      elevation: 0.5,
-                      child: Container(
-                        margin: EdgeInsets.all(15.0),
-                        child: Row(
+      controller: _scrollController,
+      padding: EdgeInsets.all(15.0),
+      itemCount: listMessage.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: 15),
+          child: GestureDetector(
+            child: Card(
+                color: listMessage[index].readAt == null ||
+                    listMessage[index].readAt == 0
+                    ? Color(0xFFFFF9EE)
+                    : null,
+                margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
+                elevation: 0.5,
+                child: Container(
+                  margin: EdgeInsets.all(15.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(right: 10.0, top: 5.0),
+                          child: Image.asset(
+                            '${Environment.iconAssets}broadcast.png',
+                            width: 24.0,
+                            height: 24.0,
+                          )),
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
+                            Text(
+                              listMessage[index].title,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Color(0xff4F4F4F),
+                                  fontWeight: FontWeight.bold),
+                            ),
                             Container(
-                                margin: EdgeInsets.only(right: 10.0, top: 5.0),
-                                child: Image.asset(
-                                  '${Environment.iconAssets}broadcast.png',
-                                  width: 24.0,
-                                  height: 24.0,
-                                )),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    listMessage[index].title,
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        color: Color(0xff4F4F4F),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Container(
-                                    margin:
-                                        EdgeInsets.only(top: 8.0, bottom: 15.0),
-                                    child: Text(
-                                      _parseHtmlString(
-                                          listMessage[index].content),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          color: Color(0xff828282)),
-                                    ),
-                                  ),
-                                  Text(
-                                    unixTimeStampToDateTime(
-                                        listMessage[index].pubilshedAt),
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        color: Color(0xffBDBDBD)),
-                                  ),
-                                ],
+                              margin:
+                              EdgeInsets.only(top: 8.0, bottom: 15.0),
+                              child: Text(
+                                _parseHtmlString(
+                                    listMessage[index].content),
+                                maxLines: 3,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: Color(0xff828282)),
                               ),
+                            ),
+                            Text(
+                              unixTimeStampToDateTime(
+                                  listMessage[index].pubilshedAt),
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Color(0xffBDBDBD)),
                             ),
                           ],
                         ),
-                      )),
-                  onTap: () {
-                    _openDetail(listMessage[index], index);
-                  },
-                ),
-              );
+                      ),
+                    ],
+                  ),
+                )),
+            onTap: () {
+              _openDetail(listMessage[index], index);
             },
-          )
+          ),
+        );
+      },
+    )
         : _buildLoading();
   }
 

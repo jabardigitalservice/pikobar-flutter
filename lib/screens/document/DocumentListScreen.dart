@@ -1,22 +1,26 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pedantic/pedantic.dart';
-import 'package:share/share.dart';
 
 class DocumentListScreen extends StatefulWidget {
   @override
@@ -136,8 +140,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              _downloadAttachment(
-                                  document['title'], document['document_url']);
+                              Platform.isAndroid
+                                  ? _downloadAttachment(document['title'],
+                                      document['document_url'])
+                                  : _viewPdf(document['title'],
+                                      document['document_url']);
                             },
                             child: Text(
                               document['title'],
@@ -244,6 +251,15 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     );
   }
 
+  void _viewPdf(String title, String url) async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title)));
+
+    await AnalyticsHelper.setLogEvent(Analytics.openDocument, <String, dynamic>{
+      'name_document': title.length < 100 ? title : title.substring(0, 100),
+    });
+  }
+
   void _downloadAttachment(String name, String url) async {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
@@ -267,20 +283,40 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 },
               )));
     } else {
-      String dir = (await getExternalStorageDirectory()).path + '/download';
-      await FlutterDownloader.enqueue(
-        url: url,
-        savedDir: dir,
-        fileName: name,
-        showNotification: true,
-        // show download progress in status bar (for Android)
-        openFileFromNotification:
-            true, // click on notification to open downloaded file (for Android)
-      );
+      Fluttertoast.showToast(
+          msg: Dictionary.downloadingFile,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          fontSize: 16.0);
+
+      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+
+      try {
+        await FlutterDownloader.enqueue(
+          url: url,
+          savedDir: Environment.downloadStorage,
+          fileName: name,
+          showNotification: true,
+          // show download progress in status bar (for Android)
+          openFileFromNotification:
+              true, // click on notification to open downloaded file (for Android)
+        );
+      } catch (e) {
+        String dir = (await getExternalStorageDirectory()).path + '/download';
+        await FlutterDownloader.enqueue(
+          url: url,
+          savedDir: dir,
+          fileName: name,
+          showNotification: true,
+          // show download progress in status bar (for Android)
+          openFileFromNotification:
+              true, // click on notification to open downloaded file (for Android)
+        );
+      }
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{
-        'name_document': name,
+        'name_document': name.length < 100 ? name : name.substring(0, 100),
       });
     }
   }

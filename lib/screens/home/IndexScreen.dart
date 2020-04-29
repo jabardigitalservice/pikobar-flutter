@@ -4,18 +4,15 @@ import 'dart:io';
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
@@ -23,6 +20,7 @@ import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
+import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
@@ -52,23 +50,32 @@ class IndexScreenState extends State<IndexScreen> {
 
     _initializeBottomNavigationBar();
     setStatAnnouncement();
-    registerFCMToken();
+    initializeToken();
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        NotificationHelper().showNotification(
-            message['notification']['title'], message['notification']['body'],
-            payload: jsonEncode(message['data']),
-            onSelectNotification: onSelectNotification);
+        if (message['notification'] != null) {
+          NotificationHelper().showNotification(
+              message['notification']['title'], message['notification']['body'],
+              payload: jsonEncode(
+                  Platform.isAndroid ? message['data'] : message),
+              onSelectNotification: onSelectNotification);
+        } else {
+          NotificationHelper().showNotification(
+              message['aps']['alert']['title'], message['aps']['alert']['body'],
+              payload: jsonEncode(
+                  Platform.isAndroid ? message['data'] : message),
+              onSelectNotification: onSelectNotification);
+        }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        _actionNotification(jsonEncode(message['data']));
+        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        _actionNotification(jsonEncode(message['data']));
+        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
     );
 
@@ -93,51 +100,25 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   createDirectory() async {
-    String localPath = (await getExternalStorageDirectory()).path + '/download';
-    final savedDir = Directory(localPath);
-    bool hasExisted = await savedDir.exists();
-    if (!hasExisted) {
-      savedDir.create();
-    }
-  }
-
-  registerFCMToken() async {
-    await AuthRepository().registerFCMToken();
-  }
-
-  Future<void> checkAppVersion() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-
-    String appVersion;
-    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      appVersion = packageInfo.version;
-    });
-
     if (Platform.isAndroid) {
-      await remoteConfig.fetch();
-      await remoteConfig.activateFetched();
-
-      bool forceUpdateRequired =
-          remoteConfig.getString(FirebaseConfig.forceUpdateRequired) == 'false'
-              ? false
-              : true;
-      String storeUrl = remoteConfig.getString(FirebaseConfig.storeUrl);
-      String currentVersion =
-          remoteConfig.getString(FirebaseConfig.currentVersion);
-
-      if (forceUpdateRequired && appVersion != currentVersion) {
-        showDialog(
-            context: context,
-            builder: (context) => WillPopScope(
-                onWillPop: () {
-                  return;
-                },
-                child: DialogUpdateApp(
-                  linkUpdate: storeUrl,
-                )),
-            barrierDismissible: false);
+      String localPath =
+          (await getExternalStorageDirectory()).path + '/download';
+      final publicDownloadDir = Directory(Environment.downloadStorage);
+      final savedDir = Directory(localPath);
+      bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
+      bool hasExistedSavedDir = await savedDir.exists();
+      if (!hasExistedPublicDownloadDir) {
+        publicDownloadDir.create();
+      }
+      if (!hasExistedSavedDir) {
+        savedDir.create();
       }
     }
+  }
+
+  initializeToken() async {
+    await AuthRepository().registerFCMToken();
+    await AuthRepository().updateIdToken();
   }
 
   _initializeBottomNavigationBar() {
@@ -213,18 +194,28 @@ class IndexScreenState extends State<IndexScreen> {
           newsType = Dictionary.latestNews;
       }
 
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => NewsDetailScreen(
-                id: data['id'],
-                news: newsType,
-                isFromNotification: true,
-              )));
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NewsDetailScreen(
+                  id: data['id'],
+                  news: newsType,
+                  isFromNotification: true,
+                )));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => News(news: newsType)));
+      }
     } else if (data['target'] == 'broadcast') {
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => MessageDetailScreen(
-                id: data['id'],
-                isFromNotification: true,
-              )));
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MessageDetailScreen(
+                  id: data['id'],
+                  isFromNotification: true,
+                )));
+      } else {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Messages(indexScreenState: this)));
+      }
     }
   }
 
@@ -236,10 +227,6 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildMainScaffold(context);
-  }
-
-  _buildMainScaffold(BuildContext context) {
     return Scaffold(
       body: _buildContent(_currentIndex),
       bottomNavigationBar: BottomNavigationBar(

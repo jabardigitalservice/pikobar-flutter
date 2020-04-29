@@ -10,7 +10,7 @@ import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 class LoginScreen extends StatefulWidget {
   final String title;
 
-  LoginScreen(this.title);
+  LoginScreen({this.title});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: CustomAppBar.setTitleAppBar(widget.title),
+              title: CustomAppBar.setTitleAppBar(widget.title != null ? widget.title : Dictionary.login),
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (

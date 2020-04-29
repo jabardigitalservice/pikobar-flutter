@@ -1,4 +1,5 @@
 class UserModel {
+  String googleIdToken;
   String uid;
   String name;
   String photoUrlFull;
@@ -8,6 +9,7 @@ class UserModel {
 
 
   UserModel({
+    this.googleIdToken,
     this.uid,
     this.name,
     this.photoUrlFull,
@@ -16,6 +18,7 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+    googleIdToken: json["googleIdToken"],
     uid: json["aud"],
     name: json["name"],
     photoUrlFull: json["picture"] ,
@@ -24,6 +27,7 @@ class UserModel {
   );
 
   Map<String, dynamic> toJson() => {
+    "googleIdToken": googleIdToken,
     "aud": uid,
     "name": name,
     "picture":  photoUrlFull,
