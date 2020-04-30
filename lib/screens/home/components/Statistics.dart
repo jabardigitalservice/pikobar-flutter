@@ -259,7 +259,7 @@ class _StatisticsState extends State<Statistics> {
             Container(
                 height: 60,
                 child:
-                    Image.asset('${Environment.iconAssets}rapidTestIcon.png')),
+                    Image.asset('${Environment.imageAssets}rapid_test.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -327,7 +327,7 @@ class _StatisticsState extends State<Statistics> {
               Container(
                   height: 60,
                   child: Image.asset(
-                      '${Environment.iconAssets}rapidTestIcon.png')),
+                      '${Environment.imageAssets}rapid_test.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -402,49 +402,25 @@ class _StatisticsState extends State<Statistics> {
                   : null,
               borderRadius: BorderRadius.circular(8.0)),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 5.0),
-                      child: Text(title,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 13.0,
-                              color: colorTextTitle,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.productSans)),
-                    ),
-                  ),
-                ],
+              Container(
+                margin: EdgeInsets.only(left: 5.0),
+                child: Text(title,
+                    style: TextStyle(
+                        fontSize: 13.0,
+                        color: colorTextTitle,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.productSans)),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-                    child: Text(count,
-                        style: TextStyle(
-                            fontSize: 22.0,
-                            color: colorNumber,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          top: Dimens.padding, left: 4.0, bottom: 2.0),
-                      child: Text(label,
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: colorTextTitle,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.productSans)),
-                    ),
-                  )
-                ],
+              Container(
+                margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                child: Text(count,
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        color: colorNumber,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.productSans)),
               )
             ],
           ),
