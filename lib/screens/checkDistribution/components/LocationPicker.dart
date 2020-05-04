@@ -157,10 +157,7 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   void _checkPermission() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-
-    if (permission == PermissionStatus.granted) {
+    if (await Permission.location.status.isGranted) {
       final GoogleMapController controller = await _controller.future;
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -184,17 +181,14 @@ class _LocationPickerState extends State<LocationPicker> {
                 description: Dictionary.permissionLocationMap,
                 onOkPressed: () {
                   Navigator.of(context).pop();
-                  PermissionHandler().requestPermissions(
-                      [PermissionGroup.location]).then(_onStatusRequested);
+                  Permission.location.request().then(_onStatusRequested);
                 },
               ));
     }
   }
 
-  void _onStatusRequested(
-      Map<PermissionGroup, PermissionStatus> statusPermission) async {
-    final status = statusPermission[PermissionGroup.location];
-    if (status == PermissionStatus.granted) {
+  void _onStatusRequested(PermissionStatus statusPermission) async {
+    if (statusPermission.isGranted) {
       final GoogleMapController controller = await _controller.future;
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);

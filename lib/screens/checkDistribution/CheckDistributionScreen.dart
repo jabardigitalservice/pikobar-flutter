@@ -455,9 +455,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
   }
 
   Future<void> _handleLocation() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-    if (permission == PermissionStatus.granted) {
+    if (await Permission.location.status.isGranted) {
       Position position = await Geolocator()
           .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
@@ -519,8 +517,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                 description: Dictionary.permissionLocationSpread,
                 onOkPressed: () {
                   Navigator.of(context).pop();
-                  PermissionHandler().requestPermissions(
-                      [PermissionGroup.location]).then((status) {
+                  Permission.location.request().then((status) {
                     _onStatusRequested(context, status);
                   });
                 },
@@ -539,9 +536,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
   }
 
   void _onStatusRequested(BuildContext context,
-      Map<PermissionGroup, PermissionStatus> statuses) async {
-    final statusLocation = statuses[PermissionGroup.location];
-    if (statusLocation == PermissionStatus.granted) {
+      PermissionStatus statuses) async {
+    if (statuses.isGranted) {
       _handleLocation();
       AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {

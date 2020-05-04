@@ -12,8 +12,8 @@ description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-# GDrive version 1.3.2+11
-# PlayStore version 1.3.2+11
+# GDrive version 1.4.1+13
+# PlayStore version 1.4.1+13
 
 version: 1.4.1+13
 
@@ -47,7 +47,7 @@ dependencies:
   flutter_bloc: ^3.2.0
   meta: ^1.1.8
   equatable: ^1.1.1
-  permission_handler: ^4.4.0+hotfix.1
+  permission_handler: ^5.0.0+hotfix.5
   cached_network_image: ^2.0.0
   carousel_slider: ^1.4.1
   intl: ^0.16.1
