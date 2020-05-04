@@ -116,7 +116,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       ),
                       dataAnnouncement['action_url'].toString().isNotEmpty
                           ? TextSpan(
-                              text: Dictionary.moreDetail,
+                              text: Dictionary.moreDetailRapidTest,
                               style: TextStyle(
                                   color: ColorBase.green,
                                   fontFamily: FontsFamily.productSans,
