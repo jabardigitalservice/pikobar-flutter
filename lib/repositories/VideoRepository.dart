@@ -6,7 +6,7 @@ class VideoRepository {
   final videoCollection = Firestore.instance.collection(Collections.videos);
 
   Stream<List<VideoModel>> getVideo() {
-    return videoCollection.orderBy('sequence').snapshots().map(
+    return videoCollection.orderBy('published_at', descending: true).snapshots().map(
         (QuerySnapshot snapshot) => snapshot.documents
             .map((doc) => VideoModel.fromFirestore(doc))
             .toList());

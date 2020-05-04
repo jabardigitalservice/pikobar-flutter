@@ -28,7 +28,7 @@ class _VideoListState extends State<VideoList> {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection('videos')
-          .orderBy('sequence')
+          .orderBy('published_at', descending: true)
           .limit(5)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
