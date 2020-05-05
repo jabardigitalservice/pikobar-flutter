@@ -261,10 +261,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   }
 
   void _downloadAttachment(String name, String url) async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.storage);
-
-    if (permission != PermissionStatus.granted) {
+    if (await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
@@ -276,8 +273,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 description: Dictionary.permissionDownloadAttachment,
                 onOkPressed: () {
                   Navigator.of(context).pop();
-                  PermissionHandler().requestPermissions(
-                      [PermissionGroup.storage]).then((val) {
+                  Permission.storage.request().then((val) {
                     _onStatusRequested(val, name, url);
                   });
                 },
@@ -321,10 +317,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     }
   }
 
-  void _onStatusRequested(Map<PermissionGroup, PermissionStatus> statuses,
+  void _onStatusRequested(PermissionStatus statuses,
       String name, String url) {
-    final status = statuses[PermissionGroup.storage];
-    if (status == PermissionStatus.granted) {
+    if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
   }

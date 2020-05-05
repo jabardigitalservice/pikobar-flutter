@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/geocoder/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class LocationPicker extends StatefulWidget {
   @override
@@ -33,7 +36,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   @override
   void initState() {
-    _checkPermission();
+    _initializeLocation();
     markers["new"] = Marker(
       markerId: MarkerId("Bandung"),
       position: _currentPosition,
@@ -156,11 +159,7 @@ class _LocationPickerState extends State<LocationPicker> {
     _geocoderBloc.add(GeocoderGetLocation(coordinate: _currentPosition));
   }
 
-  void _checkPermission() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-
-    if (permission == PermissionStatus.granted) {
+  void _initializeLocation() async {
       final GoogleMapController controller = await _controller.future;
       Position position = await Geolocator()
           .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -172,43 +171,6 @@ class _LocationPickerState extends State<LocationPicker> {
           CameraPosition(target: currentLocation, zoom: 15.5),
         ),
       );
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
-                image: Image.asset(
-                  '${Environment.iconAssets}map_pin.png',
-                  fit: BoxFit.contain,
-                  color: Colors.white,
-                ),
-                description: Dictionary.permissionLocationMap,
-                onOkPressed: () {
-                  Navigator.of(context).pop();
-                  PermissionHandler().requestPermissions(
-                      [PermissionGroup.location]).then(_onStatusRequested);
-                },
-              ));
-    }
-  }
-
-  void _onStatusRequested(
-      Map<PermissionGroup, PermissionStatus> statusPermission) async {
-    final status = statusPermission[PermissionGroup.location];
-    if (status == PermissionStatus.granted) {
-      final GoogleMapController controller = await _controller.future;
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-      LatLng currentLocation = LatLng(position.latitude, position.longitude);
-
-      await controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: currentLocation, zoom: 15.5),
-        ),
-      );
-
-      _geocoderBloc.add(GeocoderGetLocation(coordinate: currentLocation));
-    }
   }
 
   @override

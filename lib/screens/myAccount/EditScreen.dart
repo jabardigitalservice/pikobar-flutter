@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -6,10 +9,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
-import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -19,6 +24,7 @@ import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
@@ -331,20 +337,7 @@ class _EditState extends State<Edit> {
                                               color: Color(0xffE0E0E0),
                                               width: 1.5),
                                           onPressed: () async {
-                                            latLng = await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LocationPicker()));
-                                            final String address =
-                                                await GeocoderRepository()
-                                                    .getAddress(latLng);
-                                            if (address != null) {
-                                              setState(() {
-                                                _addressController.text =
-                                                    address;
-                                              });
-                                            }
+                                            await _handleLocation();
                                           },
                                         ),
                                       ),
@@ -910,5 +903,83 @@ class _EditState extends State<Edit> {
     } catch (exception) {}
 
     return remoteConfig;
+  }
+
+  Future<void> _handleLocation() async {
+
+    var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+
+    if (await permissionService.status.isGranted) {
+      await _openLocationPicker();
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogRequestPermission(
+            image: Image.asset(
+              '${Environment.iconAssets}map_pin.png',
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            description: Dictionary.permissionLocationSpread,
+            onOkPressed: () async {
+              Navigator.of(context).pop();
+              if (await permissionService.status.isDenied) {
+                await AppSettings.openLocationSettings();
+              } else {
+                permissionService.request().then((status) {
+                  _onStatusRequested(context, status);
+                });
+              }
+            },
+            onCancelPressed: () {
+              AnalyticsHelper.setLogEvent(
+                  Analytics.permissionDismissLocation);
+              Navigator.of(context).pop();
+            },
+          ));
+    }
+  }
+
+  Future<void> _openLocationPicker() async {
+    latLng = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                LocationPicker()));
+    final String address =
+    await GeocoderRepository()
+        .getAddress(latLng);
+    if (address != null) {
+      setState(() {
+        _addressController.text =
+            address;
+      });
+    }
+  }
+
+  void _onStatusRequested(BuildContext context,
+      PermissionStatus statuses) async {
+    if (statuses.isGranted) {
+      _openLocationPicker();
+      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+    } else {
+      AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _genderController.dispose();
+    _birthDayController.dispose();
+    _addressController.dispose();
+    _cityController.dispose();
+    _nikController.dispose();
+
+    _profileBloc.close();
+
+    super.dispose();
   }
 }
