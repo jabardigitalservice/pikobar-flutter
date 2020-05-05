@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,7 +150,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
                                     onPressed: () {
-                                      _handleLocation();
+                                      _handleLocation(isOther: false);
                                     }),
                                 SizedBox(height: 10),
                                 RoundedButton(
@@ -162,37 +165,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             color: Colors.grey[600],
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
-                                    onPressed: () async {
-                                      LatLng result = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LocationPicker()));
-
-                                      /// set gecoder to show in location information
-                                      final String address =
-                                          await GeocoderRepository()
-                                              .getAddress(result);
-
-                                      if (address != null) {
-                                        setState(() {
-                                          _address = address;
-                                        });
-                                      }
-
-                                      /// find location
-                                      if (result != null) {
-                                        findLocation(
-                                            result.latitude, result.longitude);
-
-                                        // analytics
-                                        AnalyticsHelper.setLogEvent(
-                                            Analytics.tappedFindByLocation,
-                                            <String, dynamic>{
-                                              'latlong':
-                                                  '${result.latitude}, ${result.longitude}'
-                                            });
-                                      }
+                                    onPressed: () {
+                                      _handleLocation(isOther: true);
                                     }),
                               ],
                             ),
@@ -454,8 +428,79 @@ class _CheckDistributionState extends State<CheckDistribution> {
     );
   }
 
-  Future<void> _handleLocation() async {
-    if (await Permission.location.status.isGranted) {
+  Future<void> _handleLocation({bool isOther = false}) async {
+
+    var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+
+    if (await permissionService.status.isGranted) {
+      await _actionFindLocation(isOther);
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogRequestPermission(
+                image: Image.asset(
+                  '${Environment.iconAssets}map_pin.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionLocationSpread,
+                onOkPressed: () async {
+                  Navigator.of(context).pop();
+                  if (await permissionService.status.isDenied) {
+                    await AppSettings.openLocationSettings();
+                  } else {
+                    permissionService.request().then((status) {
+                      _onStatusRequested(context, status, isOther: isOther);
+                    });
+                  }
+                },
+                onCancelPressed: () {
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.permissionDismissLocation);
+                  Navigator.of(context).pop();
+                },
+              ));
+    }
+  }
+
+  _checkDistribution(latitude, longitude) {
+    _checkdistributionBloc
+        .add(LoadCheckDistribution(lat: latitude, long: longitude));
+  }
+
+  _actionFindLocation(bool isOther) async {
+    if (isOther) {
+      LatLng result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  LocationPicker()));
+
+      /// set gecoder to show in location information
+      final String address =
+      await GeocoderRepository()
+          .getAddress(result);
+
+      if (address != null) {
+        setState(() {
+          _address = address;
+        });
+      }
+
+      /// find location
+      if (result != null) {
+        _checkDistribution(
+            result.latitude, result.longitude);
+
+        // analytics
+        AnalyticsHelper.setLogEvent(
+            Analytics.tappedFindByLocation,
+            <String, dynamic>{
+              'latlong':
+              '${result.latitude}, ${result.longitude}'
+            });
+      }
+    } else {
       Position position = await Geolocator()
           .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
@@ -475,7 +520,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
           });
 
           // find location
-          findLocation(position.latitude, position.longitude);
+          _checkDistribution(position.latitude, position.longitude);
         }
       } else {
         List<Placemark> placemarks = await Geolocator()
@@ -494,7 +539,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
           });
 
           // find location
-          findLocation(position.latitude, position.longitude);
+          _checkDistribution(position.latitude, position.longitude);
 
           // analytics
           AnalyticsHelper.setLogEvent(
@@ -505,40 +550,13 @@ class _CheckDistributionState extends State<CheckDistribution> {
       }
       // analytics
       AnalyticsHelper.setLogEvent(Analytics.tappedCheckCurrentLocation);
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
-                image: Image.asset(
-                  '${Environment.iconAssets}map_pin.png',
-                  fit: BoxFit.contain,
-                  color: Colors.white,
-                ),
-                description: Dictionary.permissionLocationSpread,
-                onOkPressed: () {
-                  Navigator.of(context).pop();
-                  Permission.location.request().then((status) {
-                    _onStatusRequested(context, status);
-                  });
-                },
-                onCancelPressed: () {
-                  AnalyticsHelper.setLogEvent(
-                      Analytics.permissionDismissLocation);
-                  Navigator.of(context).pop();
-                },
-              ));
     }
   }
 
-  findLocation(latitude, longitude) {
-    _checkdistributionBloc
-        .add(LoadCheckDistribution(lat: latitude, long: longitude));
-  }
-
   void _onStatusRequested(BuildContext context,
-      PermissionStatus statuses) async {
+      PermissionStatus statuses, {bool isOther}) async {
     if (statuses.isGranted) {
-      _handleLocation();
+      _actionFindLocation(isOther);
       AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);

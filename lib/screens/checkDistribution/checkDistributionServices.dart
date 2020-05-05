@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,7 +9,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 
 class CheckDistributions {
     Future<void> handleLocation(BuildContext context) async {
-    if (await Permission.location.status.isGranted) {
+      var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+    if (await permissionService.status.isGranted) {
 
       Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
@@ -40,7 +43,7 @@ class CheckDistributions {
             description: Dictionary.permissionLocationSpread,
             onOkPressed: () {
               Navigator.of(context).pop();
-              Permission.location.request().then((status) {
+              permissionService.request().then((status) {
                     _onStatusRequested(context, status);
               });
             },
