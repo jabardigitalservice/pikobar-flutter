@@ -80,6 +80,12 @@ class AuthRepository {
     return prefs.getString('uid') == null ? false : true;
   }
 
+  Future<String> getToken() async {
+    /// read from keystore/keychain
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('uid');
+  }
+
   Future<bool> hasLocalUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('auth_user_info') == null ? false : true;

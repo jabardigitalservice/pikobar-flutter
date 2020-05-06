@@ -31,6 +31,10 @@ class CheckdistributionBloc
       try {
         CheckDistributionModel record =
             await _checkDistributionReposity.fetchRecord(event.lat, event.long);
+        if (event.isOther == false) {
+          await _checkDistributionReposity.saveToCollection(
+              event.id, event.lat, event.long);
+        }
         yield CheckDistributionLoaded(record: record);
       } catch (e) {
         yield CheckDistributionFailure(
