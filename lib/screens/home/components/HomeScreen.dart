@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -8,6 +9,8 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/MessageRepository.dart';
+import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
@@ -22,18 +25,38 @@ import 'package:pikobar_flutter/utilities/checkVersion.dart';
 import 'BannerListSlider.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen();
+  final IndexScreenState indexScreenState;
+
+  HomeScreen({this.indexScreenState});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isLoading = true;
+
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
-
+    getDataFromServer();
     super.initState();
+  }
+
+  void getDataFromServer() {
+    Firestore.instance
+        .collection('broadcasts')
+        .orderBy('published_at', descending: true)
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      insertIntoDatabase(snapshot);
+    }).catchError((error) {});
+  }
+
+  Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
+    await MessageRepository().insertToDatabase(snapshot.documents);
+    widget.indexScreenState.getCountMessage();
+    isLoading = false;
   }
 
   @override
@@ -95,7 +118,11 @@ class _HomeScreenState extends State<HomeScreen> {
           future: setupRemoteConfig(),
           builder:
               (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-            return snapshot.hasData ? buildContent(snapshot.data) : Center(child: CircularProgressIndicator(),);
+            return snapshot.hasData && !isLoading
+                ? buildContent(snapshot.data)
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
           }),
     );
   }
@@ -299,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
       FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
       FirebaseConfig.spreadCheckLocation: '',
       FirebaseConfig.announcement: false,
-      FirebaseConfig.loginRequired:FirebaseConfig.loginRequiredDefaultVal,
+      FirebaseConfig.loginRequired: FirebaseConfig.loginRequiredDefaultVal,
       FirebaseConfig.rapidTestInfo: false,
       FirebaseConfig.rapidTestEnable: false,
     });
