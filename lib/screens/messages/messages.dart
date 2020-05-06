@@ -206,7 +206,7 @@ class _MessagesState extends State<Messages> {
                             ),
                             Text(
                               unixTimeStampToDateTime(
-                                  listMessage[index].pubilshedAt),
+                                  listMessage[index].publishedAt),
                               style: TextStyle(
                                   fontSize: 12.0,
                                   color: Color(0xffBDBDBD)),

@@ -29,10 +29,20 @@ class StringUtils {
       return str;
     }
   }
+
+  static bool containsWords(String inputString, List<String> items) {
+    bool found = false;
+    for (String item in items) {
+      if (inputString.contains(item)) {
+        found = true;
+        break;
+      }
+    }
+    return found;
+  }
 }
 
 Future<String> userDataUrlAppend(String url) async {
-
   if (url == null) {
     return url;
   } else {
