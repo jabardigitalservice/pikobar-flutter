@@ -148,7 +148,6 @@ class _MessagesState extends State<Messages> {
     widget.indexScreenState.getCountMessage();
     listMessage.clear();
     listMessage = await MessageRepository().getRecords();
-//    setState(() {});
   }
 
   _buildContent() {
