@@ -45,11 +45,7 @@ Future<bool> checkVersion(RemoteConfig remoteConfig) async {
   String currentVersion =
   remoteConfig.getString(FirebaseConfig.currentVersion);
 
-  if (extractNumber(appVersion) < extractNumber(currentVersion)) {
-    return true;
-  } else {
-    return false;
-  }
+  return (extractNumber(appVersion) < extractNumber(currentVersion));
 }
 
 int extractNumber(String version) {
