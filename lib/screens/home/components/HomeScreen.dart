@@ -388,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      await remoteConfig.fetch(expiration: Duration(minutes: 0));
+      await remoteConfig.fetch(expiration: Duration(minutes: 5));
       await remoteConfig.activateFetched();
 
       checkForceUpdate(context, remoteConfig);
