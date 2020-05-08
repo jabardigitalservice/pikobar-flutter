@@ -96,7 +96,7 @@ class Dictionary {
   static String ok = 'Ok';
   static String later = 'Nanti';
   static String next = 'Lanjut';
-  static String update = 'Perbaharui';
+  static String update = 'Perbarui';
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
@@ -184,9 +184,9 @@ class Dictionary {
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
-  static String updateProfile = 'Profil berhasil diperbaharui';
+  static String updateProfile = 'Profil berhasil diperbarui';
   static String updateAppAvailable =
-      'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
+      'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
 

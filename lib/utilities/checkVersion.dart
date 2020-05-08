@@ -6,7 +6,7 @@ import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/components/DialogUpdateApp.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 
-checkVersion(BuildContext context, RemoteConfig remoteConfig) async {
+checkForceUpdate(BuildContext context, RemoteConfig remoteConfig) async {
   String appVersion;
   await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
     appVersion = packageInfo.version;
@@ -33,6 +33,22 @@ checkVersion(BuildContext context, RemoteConfig remoteConfig) async {
               )),
           barrierDismissible: false);
     }
+  }
+}
+
+Future<bool> checkVersion(RemoteConfig remoteConfig) async {
+  String appVersion;
+  await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    appVersion = packageInfo.version;
+  });
+
+  String currentVersion =
+  remoteConfig.getString(FirebaseConfig.currentVersion);
+
+  if (extractNumber(appVersion) < extractNumber(currentVersion)) {
+    return true;
+  } else {
+    return false;
   }
 }
 
