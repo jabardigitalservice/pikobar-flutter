@@ -11,13 +11,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:share/share.dart';
@@ -49,7 +54,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       _isLoaded = true;
       _title = widget.document.title;
       _content = widget.document.content;
-      _backLink = widget.document.backlink;
+      _backLink = widget.document.backLink;
     }
 
     super.initState();
@@ -88,10 +93,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                     } else {
                       if (snapshot.data.data != null) {
                         _document = MessageModel(
-                            backlink: snapshot.data['backlink'],
+                            backLink: snapshot.data['backlink'],
                             title: snapshot.data['title'],
                             content: snapshot.data['content'],
-                            pubilshedAt: snapshot.data['published_at'].seconds,
+                            publishedAt: snapshot.data['published_at'].seconds,
                             readAt: 100);
                         _isLoaded = true;
                         _title = snapshot.data['title'];
@@ -187,7 +192,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             context),
         _buildText(
             Text(
-              unixTimeStampToDateTime(data.pubilshedAt),
+              unixTimeStampToDateTime(data.publishedAt),
               style: TextStyle(fontSize: 12.0, color: Colors.grey),
             ),
             context),
@@ -204,7 +209,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 return TextAlign.left;
               },
               onLinkTap: (url) {
-                openChromeSafariBrowser(url: url);
+                _launchUrl(url);
               },
               customTextStyle: (dom.Node node, TextStyle baseStyle) {
                 if (node is dom.Element) {
@@ -219,6 +224,16 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         SizedBox(
           height: Dimens.sbHeight,
         ),
+
+       data.actionTitle != null && data.actionUrl != null ?
+       RoundedButton(title: data.actionTitle,
+           color: ColorBase.green,
+           textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+           onPressed: (){
+             _launchUrl(data.actionUrl);
+           }) :
+           Container()
+
       ],
     );
   }
@@ -274,6 +289,30 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  _launchUrl(String url) async {
+    List<String> items = ['_googleIDToken_', '_userUID_', '_userName_', '_userEmail_'];
+    if (StringUtils.containsWords(url, items)) {
+      bool hasToken = await AuthRepository().hasToken();
+      if (!hasToken) {
+        bool isLoggedIn = await Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (context) =>
+                    LoginScreen()));
+
+        if (isLoggedIn != null && isLoggedIn) {
+          url = await userDataUrlAppend(url);
+
+          openChromeSafariBrowser(url: url);
+        }
+      } else {
+        url = await userDataUrlAppend(url);
+        openChromeSafariBrowser(url: url);
+      }
+    } else {
+      openChromeSafariBrowser(url: url);
     }
   }
 }

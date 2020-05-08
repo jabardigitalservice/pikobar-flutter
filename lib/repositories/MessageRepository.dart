@@ -11,10 +11,12 @@ class MessageRepository {
 
     for (int i = 0; i < record.length; i++) {
       MessageModel messageModel = MessageModel(
-          backlink: record[i]['backlink'].toString(),
+          backLink: record[i]['backlink'].toString(),
           content: record[i]['content'].toString(),
           title: record[i]['title'].toString(),
-          pubilshedAt: record[i]['published_at'].seconds,
+          actionTitle: record[i]['action_title'],
+          actionUrl: record[i]['action_url'],
+          publishedAt: record[i]['published_at'].seconds,
           readAt: 0);
       try {
         bool dataCheck = await checkData(messageModel.title);
