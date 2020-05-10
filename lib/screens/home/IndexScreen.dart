@@ -24,7 +24,9 @@ import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -172,7 +174,7 @@ class IndexScreenState extends State<IndexScreen> {
     }
   }
 
-  _actionNotification(String payload) {
+  _actionNotification(String payload) async {
     final data = jsonDecode(payload);
     if (data['target'] == 'news') {
       String newsType;
@@ -215,6 +217,10 @@ class IndexScreenState extends State<IndexScreen> {
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
+      }
+    } else if (data['target'] == 'url') {
+      if (data['url'] != null && data['url'] != 'null') {
+        await launchUrl(context: context, url: data['url']);
       }
     }
   }
