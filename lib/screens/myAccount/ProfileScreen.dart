@@ -17,8 +17,10 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/HexColor.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -238,7 +240,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 10,
+          ),
+          _buildGroupMenu(state.data),
+          SizedBox(
+            height: 10,
           ),
           Card(
             shape:
@@ -366,26 +372,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             switch (data['health_status']) {
               case "HEALTHY":
-                cardColor = HexColor.fromHex(healthStatusColor['healthy'] != null ? healthStatusColor['healthy'] : ColorBase.green);
+                cardColor = HexColor.fromHex(
+                    healthStatusColor['healthy'] != null
+                        ? healthStatusColor['healthy']
+                        : ColorBase.green);
                 break;
 
               case "ODP":
-                cardColor = HexColor.fromHex(healthStatusColor['odp'] != null ? healthStatusColor['odp'] : Colors.yellow);
+                cardColor = HexColor.fromHex(healthStatusColor['odp'] != null
+                    ? healthStatusColor['odp']
+                    : Colors.yellow);
                 textColor = Colors.black;
                 uriImage = '${Environment.iconAssets}sthetoscope_black.png';
                 break;
 
               case "PDP":
-                cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null ? healthStatusColor['pdp'] : Colors.orange);
+                cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null
+                    ? healthStatusColor['pdp']
+                    : Colors.orange);
                 textColor = Colors.black;
                 uriImage = '${Environment.iconAssets}sthetoscope_black.png';
                 break;
 
               case "CONFIRMED":
-                cardColor = HexColor.fromHex(healthStatusColor['confirmed'] != null ? healthStatusColor['confirmed'] : Colors.red);
+                cardColor = HexColor.fromHex(
+                    healthStatusColor['confirmed'] != null
+                        ? healthStatusColor['confirmed']
+                        : Colors.red);
                 break;
 
-              default :
+              default:
                 cardColor = Colors.grey;
             }
           }
@@ -400,9 +416,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Container(
-                                height: 12,
-                                child: Image.asset(uriImage)),
+                            Container(height: 12, child: Image.asset(uriImage)),
                             SizedBox(width: 5),
                             Text(
                                 Dictionary.statusUser +
@@ -433,12 +447,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 
-  Future<RemoteConfig> setupRemoteConfig() async {
+  FutureBuilder<RemoteConfig> _buildGroupMenu(DocumentSnapshot data) {
+    return FutureBuilder<RemoteConfig>(
+        future: setupRemoteConfig(),
+        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+          var groupMenu;
+          if (snapshot.data != null) {
+            groupMenu = json.decode(
+                snapshot.data.getString(FirebaseConfig.groupMenuProfile));
+          }
 
+          return snapshot.data != null
+              ? Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Column(children: getGroupMenu(groupMenu, data))))
+              : Container();
+        });
+  }
+
+  List<Widget> getGroupMenu(List<dynamic> groupMenu, DocumentSnapshot data) {
+    List<Widget> list = List();
+    String role;
+    if (data['role'] == null) {
+      role = 'public';
+    } else {
+      role = data['role'];
+    }
+    groupMenu.removeWhere((element) => element['role']!=role);
+    for (int i = 0; i < groupMenu.length; i++) {
+      Column column = Column(
+        children: <Widget>[
+           Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        var url = await userDataUrlAppend(groupMenu[i]['url']);
+                        openChromeSafariBrowser(url: url);
+                        print(url);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Container(
+                                  height: 20,
+                                  child: Image.network(groupMenu[i]['icon'])),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                groupMenu[i]['caption'],
+                                style: TextStyle(color: Color(0xff4F4F4F)),
+                              ),
+                            ],
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xff828282),
+                            size: 15,
+                          )
+                        ],
+                      ),
+                    ),
+                    i==groupMenu.length-1
+                        ? Container()
+                        : Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Divider(),
+                              SizedBox(
+                                height: 5,
+                              ),
+                            ],
+                          )
+                  ],
+                )
+              
+        ],
+      );
+
+      list.add(column);
+    }
+    return list;
+  }
+
+  Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.healthStatusVisible: false,
       FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors,
+      FirebaseConfig.groupMenuProfile: false
     });
 
     try {
