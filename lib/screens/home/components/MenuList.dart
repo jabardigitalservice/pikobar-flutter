@@ -395,7 +395,7 @@ class _MenuListState extends State<MenuList> {
             Container(
               width: 70.0,
               height: 70.0,
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(18.0),
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
                   blurRadius: 6.0,
