@@ -142,12 +142,7 @@ class IndexScreenState extends State<IndexScreen> {
           )),
       BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
-          title: Column(
-            children: <Widget>[
-              SizedBox(height: 4),
-              Text(Dictionary.message),
-            ],
-          )),
+          title: Text(Dictionary.message),),
       BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
           title: Column(
@@ -157,9 +152,10 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(FontAwesomeIcons.userAlt, size: 16),
           title: Column(
             children: <Widget>[
+              SizedBox(height: 4),
               Text(Dictionary.profile),
             ],
           )),

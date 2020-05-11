@@ -46,14 +46,14 @@ class Dictionary {
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
-  static String profile = 'Profil';
+  static String profile = 'Akun Saya';
   static String login = 'Login';
   static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
       'Segera hubungi nomor dibawah \nini untuk call center terdekat';
-  static String edit = 'Edit Profil';
+  static String edit = 'Edit Akun';
   static String name = 'Nama';
   static String nik = 'NIK';
   static String email = 'Email';
@@ -184,7 +184,7 @@ class Dictionary {
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
-  static String updateProfile = 'Profil berhasil diperbarui';
+  static String updateProfile = 'Akun berhasil diperbarui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =
