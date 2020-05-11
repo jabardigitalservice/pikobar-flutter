@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
@@ -23,8 +21,6 @@ import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/checkVersion.dart';
-import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 import 'BannerListSlider.dart';
 
@@ -39,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   RemoteConfigBloc _remoteConfigBloc;
+  BannersBloc _bannersBloc;
   bool isLoading = true;
 
   @override
@@ -73,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
           RemoteConfigBloc()
             ..add(RemoteConfigLoad()),
         ),
+        BlocProvider<BannersBloc>(create: (context) => _bannersBloc = BannersBloc()..add(BannersLoad()))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -282,6 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _remoteConfigBloc.close();
+    _bannersBloc.close();
     super.dispose();
   }
 }

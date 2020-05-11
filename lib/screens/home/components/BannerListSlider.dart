@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/banners/BannersBloc.dart';
+import 'package:pikobar_flutter/blocs/banners/BannersState.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/models/BannerModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -21,24 +23,13 @@ class BannerListSlider extends StatefulWidget {
 }
 
 class BannerListSliderState extends State<BannerListSlider> {
-  GoogleSignIn _googleSignIn = GoogleSignIn();
-  GoogleSignInAccount _signInAccount;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection('banners')
-          .orderBy('sequence')
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return _buildLoading();
-          default:
-            return _buildSlider(snapshot);
-        }
+
+    return BlocBuilder<BannersBloc, BannersState>(
+      builder: (context, state) {
+       return state is BannersLoading ? _buildLoading() : state is BannersLoaded ? _buildSlider(state) : Container();
       },
     );
   }
@@ -65,15 +56,15 @@ class BannerListSliderState extends State<BannerListSlider> {
     );
   }
 
-  _buildSlider(AsyncSnapshot<QuerySnapshot> snapshot) {
+  _buildSlider(BannersLoaded state) {
     return CarouselSlider(
       initialPage: 0,
-      enableInfiniteScroll: snapshot.data.documents.length > 1 ? true : false,
+      enableInfiniteScroll: state.records.length > 1 ? true : false,
       aspectRatio: 21 / 9,
-      viewportFraction: snapshot.data.documents.length > 1 ? 0.8 : 0.95,
-      autoPlay: snapshot.data.documents.length > 1 ? true : false,
+      viewportFraction: state.records.length > 1 ? 0.8 : 0.95,
+      autoPlay: state.records.length > 1 ? true : false,
       autoPlayInterval: Duration(seconds: 5),
-      items: snapshot.data.documents.map((DocumentSnapshot document) {
+      items: state.records.map((BannerModel data) {
         return Builder(builder: (BuildContext context) {
           return GestureDetector(
             child: Container(
@@ -82,18 +73,18 @@ class BannerListSliderState extends State<BannerListSlider> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: CachedNetworkImage(
-                    imageUrl: document['url'] ?? '',
+                    imageUrl: data.url ?? '',
                     imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5.0),
-                                topRight: Radius.circular(5.0)),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5.0),
+                            topRight: Radius.circular(5.0)),
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
                         ),
+                      ),
+                    ),
                     placeholder: (context, url) => Center(
                         heightFactor: 10.2,
                         child: CupertinoActivityIndicator()),
@@ -108,12 +99,12 @@ class BannerListSliderState extends State<BannerListSlider> {
               ),
             ),
             onTap: () {
-              if (document['action_url'] != null) {
+              if (data.actionUrl != null) {
                 _clickAction(
-                    url: document['action_url'],
-                    isLoginRequired: document['login']);
+                    url: data.actionUrl,
+                    isLoginRequired: data.login);
                 AnalyticsHelper.setLogEvent(Analytics.tappedBanner,
-                    <String, dynamic>{'url': document['action_url']});
+                    <String, dynamic>{'url': data.actionUrl});
               }
             },
           );
