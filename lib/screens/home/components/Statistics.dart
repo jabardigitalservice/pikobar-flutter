@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/rapidTest/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -22,20 +23,26 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Statistics extends StatefulWidget {
-  final RemoteConfig remoteConfig;
 
-  Statistics(this.remoteConfig);
   @override
   _StatisticsState createState() => _StatisticsState();
 }
 
 class _StatisticsState extends State<Statistics> {
   final formatter = new NumberFormat("#,###");
-  final RapidTestReposity _rapidTestRepository = RapidTestReposity();
-  RapidTestBloc _rapidTestBloc;
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      builder: (context, state) {
+        return state is RemoteConfigLoaded
+            ? _buildStatistics(state.remoteConfig)
+            : Container();
+      },
+    );
+  }
+
+  _buildStatistics(RemoteConfig remoteConfig) {
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -66,7 +73,7 @@ class _StatisticsState extends State<Statistics> {
           SizedBox(
             height: 20,
           ),
-          widget.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)?
+          remoteConfig.getBool(FirebaseConfig.rapidTestEnable)?
           StreamBuilder(
               stream: Firestore.instance
                   .collection(Collections.statistics)
@@ -81,7 +88,7 @@ class _StatisticsState extends State<Statistics> {
                   return buildLoadingRapidTest();
                 } else {
                   var userDocument = snapshot.data;
-                  return buildContentRapidTest(userDocument);
+                  return buildContentRapidTest(userDocument, remoteConfig);
                 }
               }):Container()
         ],
@@ -302,7 +309,7 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(DocumentSnapshot document) {
+  Widget buildContentRapidTest(DocumentSnapshot document, RemoteConfig remoteConfig) {
     String count = formatter
         .format(document.data['total'])
         .replaceAll(',', '.');
@@ -312,7 +319,7 @@ class _StatisticsState extends State<Statistics> {
           context,
           MaterialPageRoute(
               builder: (context) => RapidTestDetail(
-                    widget.remoteConfig,document
+                    remoteConfig,document
                   )),
         );
       },
