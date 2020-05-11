@@ -486,7 +486,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () async {
                         var url = await userDataUrlAppend(groupMenu[i]['url']);
                         openChromeSafariBrowser(url: url);
-                        print(url);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
