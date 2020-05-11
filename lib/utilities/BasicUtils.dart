@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class StringUtils {
   static String capitalizeWord(String str) {
@@ -71,5 +74,29 @@ Future<String> userDataUrlAppend(String url) async {
     });
 
     return Platform.isAndroid ? url : Uri.encodeFull(url);
+  }
+}
+
+Future<void> launchUrl({BuildContext context, String url}) async {
+  List<String> items = ['_googleIDToken_', '_userUID_', '_userName_', '_userEmail_'];
+  if (StringUtils.containsWords(url, items)) {
+    bool hasToken = await AuthRepository().hasToken();
+    if (!hasToken) {
+      bool isLoggedIn = await Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) =>
+                  LoginScreen()));
+
+      if (isLoggedIn != null && isLoggedIn) {
+        url = await userDataUrlAppend(url);
+
+        openChromeSafariBrowser(url: url);
+      }
+    } else {
+      url = await userDataUrlAppend(url);
+      openChromeSafariBrowser(url: url);
+    }
+  } else {
+    openChromeSafariBrowser(url: url);
   }
 }
