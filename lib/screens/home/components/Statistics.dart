@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -27,16 +29,6 @@ class _StatisticsState extends State<Statistics> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-      builder: (context, state) {
-        return state is RemoteConfigLoaded
-            ? _buildStatistics(state.remoteConfig)
-            : Container();
-      },
-    );
-  }
-
-  _buildStatistics(RemoteConfig remoteConfig) {
     return Container(
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -47,41 +39,35 @@ class _StatisticsState extends State<Statistics> {
       ]),
       child: Column(
         children: <Widget>[
-          new StreamBuilder(
-              stream: Firestore.instance
-                  .collection(Collections.statistics)
-                  .document('jabar-dan-nasional')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Container();
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildLoading();
-                } else {
-                  var userDocument = snapshot.data;
-                  return _buildContent(userDocument);
-                }
-              }),
+          _buildStatistics(),
           SizedBox(
             height: 20,
           ),
-          remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
-              ? StreamBuilder(
-                  stream: Firestore.instance
-                      .collection(Collections.statistics)
-                      .document('rdt')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
+          _buildRapidTest()
+        ],
+      ),
+    );
+  }
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return buildLoadingRapidTest();
-                    } else {
-                      return StreamBuilder(
+  _buildStatistics() {
+    return BlocBuilder<StatisticsBloc, StatisticsState>(
+      builder: (context, state) {
+        return state is StatisticsLoaded
+            ? _buildContent(state.snapshot)
+            : _buildLoading();
+      },
+    );
+  }
+
+  _buildRapidTest() {
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      builder: (context, remoteState) {
+        return remoteState is RemoteConfigLoaded
+            ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
+                ? BlocBuilder<RapidTestBloc, RapidTestState>(
+                    builder: (context, state) {
+                      return state is RapidTestLoaded
+                          ? StreamBuilder(
                           stream: Firestore.instance
                               .collection(Collections.statistics)
                               .document('pcr')
@@ -95,15 +81,16 @@ class _StatisticsState extends State<Statistics> {
                                 ConnectionState.waiting) {
                               return buildLoadingRapidTest();
                             } else {
-                              return buildContentRapidTest(remoteConfig,
-                                  snapshot.data, snapshotPCR.data);
+                              return buildContentRapidTest(remoteState.remoteConfig,
+                                  state.snapshot, snapshotPCR.data);
                             }
-                          });
-                    }
-                  })
-              : Container()
-        ],
-      ),
+                          })
+                          : buildLoadingRapidTest();
+                    },
+                  )
+                : Container()
+            : buildLoadingRapidTest();
+      },
     );
   }
 
@@ -241,8 +228,6 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
                   2,
-                  /*getDataProcessPercent(data['odp']['total']['jabar'],
-                      data['odp']['selesai']['jabar']),*/
                   Dictionary.people,
                   Colors.grey[600],
                   ColorBase.green),
@@ -253,8 +238,6 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
                   2,
-                  /*getDataProcessPercent(data['pdp']['total']['jabar'],
-                      data['pdp']['selesai']['jabar']),*/
                   Dictionary.people,
                   Colors.grey[600],
                   ColorBase.green),

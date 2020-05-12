@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -36,6 +38,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   RemoteConfigBloc _remoteConfigBloc;
   BannersBloc _bannersBloc;
+  StatisticsBloc _statisticsBloc;
+  RapidTestBloc _rapidTestBloc;
   bool isLoading = true;
 
   @override
@@ -66,11 +70,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<RemoteConfigBloc>(
-          create: (BuildContext context) => _remoteConfigBloc =
-          RemoteConfigBloc()
-            ..add(RemoteConfigLoad()),
-        ),
-        BlocProvider<BannersBloc>(create: (context) => _bannersBloc = BannersBloc()..add(BannersLoad()))
+            create: (BuildContext context) => _remoteConfigBloc =
+                RemoteConfigBloc()..add(RemoteConfigLoad())),
+        BlocProvider<BannersBloc>(
+            create: (context) =>
+                _bannersBloc = BannersBloc()..add(BannersLoad())),
+        BlocProvider<StatisticsBloc>(
+            create: (context) =>
+                _statisticsBloc = StatisticsBloc()..add(StatisticsLoad())),
+        BlocProvider<RapidTestBloc>(
+            create: (context) =>
+            _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad()))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -271,8 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         ]),
-
-       AlertUpdate()
+        AlertUpdate()
       ],
     );
   }
@@ -281,6 +290,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _remoteConfigBloc.close();
     _bannersBloc.close();
+    _statisticsBloc.close();
+    _rapidTestBloc.close();
     super.dispose();
   }
 }

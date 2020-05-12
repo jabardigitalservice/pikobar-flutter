@@ -29,7 +29,7 @@ class BannerListSliderState extends State<BannerListSlider> {
 
     return BlocBuilder<BannersBloc, BannersState>(
       builder: (context, state) {
-       return state is BannersLoading ? _buildLoading() : state is BannersLoaded ? _buildSlider(state) : Container();
+       return state is BannersLoading ? _buildLoading() : state is BannersLoaded ? _buildSlider(state) : _buildLoading();
       },
     );
   }
