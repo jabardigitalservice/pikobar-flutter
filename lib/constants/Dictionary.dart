@@ -70,6 +70,8 @@ class Dictionary {
   static String cityDomicile = 'Kabupaten/Kota Domisili';
   static String provinceDomicile = 'Provinsi Domisili';
   static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
+  static String testSummaryTitleAppbar = 'Total Pemeriksaan';
+
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =

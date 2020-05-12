@@ -40,7 +40,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     }
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(
-        title: Dictionary.rapidTestAppBar,
+        title: Dictionary.testSummaryTitleAppbar,
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
