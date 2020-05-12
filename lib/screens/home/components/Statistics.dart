@@ -3,27 +3,21 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:pikobar_flutter/blocs/rapidTest/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
-import 'package:pikobar_flutter/components/DialogTextOnly.dart';
-import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/repositories/RapidTestRepository.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Statistics extends StatefulWidget {
-
   @override
   _StatisticsState createState() => _StatisticsState();
 }
@@ -73,24 +67,41 @@ class _StatisticsState extends State<Statistics> {
           SizedBox(
             height: 20,
           ),
-          remoteConfig.getBool(FirebaseConfig.rapidTestEnable)?
-          StreamBuilder(
-              stream: Firestore.instance
-                  .collection(Collections.statistics)
-                  .document('rdt')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Container();
-                }
+          remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
+              ? StreamBuilder(
+                  stream: Firestore.instance
+                      .collection(Collections.statistics)
+                      .document('rdt')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Container();
+                    }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return buildLoadingRapidTest();
-                } else {
-                  var userDocument = snapshot.data;
-                  return buildContentRapidTest(userDocument, remoteConfig);
-                }
-              }):Container()
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return buildLoadingRapidTest();
+                    } else {
+                      return StreamBuilder(
+                          stream: Firestore.instance
+                              .collection(Collections.statistics)
+                              .document('pcr')
+                              .snapshots(),
+                          builder: (context, snapshotPCR) {
+                            if (snapshotPCR.hasError) {
+                              return Container();
+                            }
+
+                            if (snapshotPCR.connectionState ==
+                                ConnectionState.waiting) {
+                              return buildLoadingRapidTest();
+                            } else {
+                              return buildContentRapidTest(remoteConfig,
+                                  snapshot.data, snapshotPCR.data);
+                            }
+                          });
+                    }
+                  })
+              : Container()
         ],
       ),
     );
@@ -265,8 +276,7 @@ class _StatisticsState extends State<Statistics> {
           children: <Widget>[
             Container(
                 height: 60,
-                child:
-                    Image.asset('${Environment.imageAssets}rapid_test.png')),
+                child: Image.asset('${Environment.imageAssets}rapid_test.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -309,18 +319,18 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(DocumentSnapshot document, RemoteConfig remoteConfig) {
+  Widget buildContentRapidTest(RemoteConfig remoteConfig, DocumentSnapshot document, DocumentSnapshot documentPCR) {
     String count = formatter
-        .format(document.data['total'])
+        .format(document.data['total'] + documentPCR.data['total'])
         .replaceAll(',', '.');
+
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RapidTestDetail(
-                    remoteConfig,document
-                  )),
+              builder: (context) =>
+                  RapidTestDetail(remoteConfig, document, documentPCR)),
         );
       },
       child: Card(
@@ -333,15 +343,15 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               Container(
                   height: 60,
-                  child: Image.asset(
-                      '${Environment.imageAssets}rapid_test.png')),
+                  child:
+                      Image.asset('${Environment.imageAssets}rapid_test.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(left: 5.0),
-                    child: Text(Dictionary.rapidTestTitle,
+                    child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,

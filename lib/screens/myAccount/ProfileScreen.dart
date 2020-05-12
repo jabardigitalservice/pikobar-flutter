@@ -476,59 +476,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       role = data['role'];
     }
-    groupMenu.removeWhere((element) => element['role']!=role);
+    if (role == 'public') {
+      groupMenu.removeWhere((element) => element['role'] != role);
+    } else {  
+      groupMenu.removeWhere(
+          (element) => element['role'] != role && element['role'] != 'public');
+    }
     for (int i = 0; i < groupMenu.length; i++) {
       Column column = Column(
         children: <Widget>[
-           Column(
+          Column(
+            children: <Widget>[
+              InkWell(
+                onTap: () async {
+                  var url = await userDataUrlAppend(groupMenu[i]['url']);
+                  openChromeSafariBrowser(url: url);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    InkWell(
-                      onTap: () async {
-                        var url = await userDataUrlAppend(groupMenu[i]['url']);
-                        openChromeSafariBrowser(url: url);
-                        print(url);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                  height: 20,
-                                  child: Image.network(groupMenu[i]['icon'])),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                groupMenu[i]['caption'],
-                                style: TextStyle(color: Color(0xff4F4F4F)),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Color(0xff828282),
-                            size: 15,
-                          )
-                        ],
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                            height: 20,
+                            child: Image.network(groupMenu[i]['icon'])),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          groupMenu[i]['caption'],
+                          style: TextStyle(color: Color(0xff4F4F4F)),
+                        ),
+                      ],
                     ),
-                    i==groupMenu.length-1
-                        ? Container()
-                        : Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Divider(),
-                              SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          )
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xff828282),
+                      size: 15,
+                    )
                   ],
-                )
-              
+                ),
+              ),
+              i == groupMenu.length - 1
+                  ? Container()
+                  : Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    )
+            ],
+          )
         ],
       );
 

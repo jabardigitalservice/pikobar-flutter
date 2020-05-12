@@ -398,128 +398,126 @@ class _MenuListState extends State<MenuList> {
   _buildButtonColumn(String iconPath, String label, String route,
       {Object arguments, bool openBrowser = false, String remoteMenuLoginKey}) {
     return Expanded(
-      child: Column(
-        children: [
-          Container(
-            width: 70.0,
-            height: 70.0,
-            padding: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                blurRadius: 6.0,
-                color: Colors.black.withOpacity(.2),
-                offset: Offset(2.0, 4.0),
-              ),
-            ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
-            child: IconButton(
-              color: Theme.of(context).textTheme.body1.color,
-              iconSize: 32.0,
-              icon: Image.asset(
-                iconPath,
-              ),
-              onPressed: () async {
-                if (route != null) {
-                  if (_remoteConfig != null &&
-                      _remoteConfig.getString(FirebaseConfig.loginRequired) !=
-                          null) {
-                    Map<String, dynamic> _loginRequiredMenu = json.decode(
-                        _remoteConfig.getString(FirebaseConfig.loginRequired));
+      child: GestureDetector(
+        child: Column(
+          children: [
+            Container(
+              width: 70.0,
+              height: 70.0,
+              padding: EdgeInsets.all(18.0),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  blurRadius: 6.0,
+                  color: Colors.black.withOpacity(.2),
+                  offset: Offset(2.0, 4.0),
+                ),
+              ], borderRadius: BorderRadius.circular(8.0), color: Colors.white),
+              child: Image.asset(
+                  iconPath,
+                ),
+            ),
+            SizedBox(height: 12.0),
+            Text(label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 11.0,
+                    color: Theme.of(context).textTheme.body1.color,
+                    fontFamily: FontsFamily.productSans))
+          ],
+        ),
+        onTap: () async {
+          if (route != null) {
+            if (_remoteConfig != null &&
+                _remoteConfig.getString(FirebaseConfig.loginRequired) !=
+                    null) {
+              Map<String, dynamic> _loginRequiredMenu = json.decode(
+                  _remoteConfig.getString(FirebaseConfig.loginRequired));
 
-                    if (_loginRequiredMenu[remoteMenuLoginKey]) {
-                      bool hasToken = await AuthRepository().hasToken();
+              if (_loginRequiredMenu[remoteMenuLoginKey]) {
+                bool hasToken = await AuthRepository().hasToken();
 
-                      if (!hasToken) {
-                        bool isLoggedIn = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    LoginScreen(title: label)));
+                if (!hasToken) {
+                  bool isLoggedIn = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              LoginScreen(title: label)));
 
-                        if (isLoggedIn != null && isLoggedIn) {
-                          arguments = await userDataUrlAppend(arguments);
-
-                          if (route == NavigationConstrants.Browser) {
-                            openChromeSafariBrowser(url: arguments);
-                          } else {
-                            Navigator.pushNamed(context, route,
-                                arguments: arguments);
-                          }
-                        }
-                      } else {
-                        arguments = await userDataUrlAppend(arguments);
-
-                        if (route == NavigationConstrants.Browser) {
-                          openChromeSafariBrowser(url: arguments);
-                        } else {
-                          Navigator.pushNamed(context, route,
-                              arguments: arguments);
-                        }
-                      }
-                    } else {
-                      arguments = await userDataUrlAppend(arguments);
-
-                      if (route == NavigationConstrants.Browser) {
-                        openChromeSafariBrowser(url: arguments);
-                      } else {
-                        Navigator.pushNamed(context, route,
-                            arguments: arguments);
-                      }
-                    }
-                  } else {
+                  if (isLoggedIn != null && isLoggedIn) {
                     arguments = await userDataUrlAppend(arguments);
 
                     if (route == NavigationConstrants.Browser) {
                       openChromeSafariBrowser(url: arguments);
                     } else {
-                      Navigator.pushNamed(context, route, arguments: arguments);
+                      Navigator.pushNamed(context, route,
+                          arguments: arguments);
                     }
                   }
+                } else {
+                  arguments = await userDataUrlAppend(arguments);
 
-                  // record event to analytics
-                  if (label == Dictionary.phoneBookEmergency) {
-                    AnalyticsHelper.setLogEvent(
-                        Analytics.tappedphoneBookEmergency);
-                  } else if (label == Dictionary.saberHoax) {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedJabarSaberHoax);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}pikobar.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}garuda_pancasila.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
-                  } else if (iconPath == '${Environment.iconAssets}world.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
-                  } else if (label == Dictionary.survey) {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}self_diagnose.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}logistics.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}relawan_active.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}report_case_active.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-                  } else if (iconPath == '${Environment.iconAssets}help.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
-                  } else if (iconPath ==
-                      '${Environment.iconAssets}conversation_active.png') {
-                    AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+                  if (route == NavigationConstrants.Browser) {
+                    openChromeSafariBrowser(url: arguments);
+                  } else {
+                    Navigator.pushNamed(context, route,
+                        arguments: arguments);
                   }
                 }
-              },
-            ),
-          ),
-          SizedBox(height: 12.0),
-          Text(label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 11.0,
-                  color: Theme.of(context).textTheme.body1.color,
-                  fontFamily: FontsFamily.productSans))
-        ],
+              } else {
+                arguments = await userDataUrlAppend(arguments);
+
+                if (route == NavigationConstrants.Browser) {
+                  openChromeSafariBrowser(url: arguments);
+                } else {
+                  Navigator.pushNamed(context, route,
+                      arguments: arguments);
+                }
+              }
+            } else {
+              arguments = await userDataUrlAppend(arguments);
+
+              if (route == NavigationConstrants.Browser) {
+                openChromeSafariBrowser(url: arguments);
+              } else {
+                Navigator.pushNamed(context, route, arguments: arguments);
+              }
+            }
+
+            // record event to analytics
+            if (label == Dictionary.phoneBookEmergency) {
+              AnalyticsHelper.setLogEvent(
+                  Analytics.tappedphoneBookEmergency);
+            } else if (label == Dictionary.saberHoax) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedJabarSaberHoax);
+            } else if (iconPath ==
+                '${Environment.iconAssets}pikobar.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+            } else if (iconPath ==
+                '${Environment.iconAssets}garuda_pancasila.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
+            } else if (iconPath == '${Environment.iconAssets}world.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+            } else if (label == Dictionary.survey) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
+            } else if (iconPath ==
+                '${Environment.iconAssets}self_diagnose.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+            } else if (iconPath ==
+                '${Environment.iconAssets}logistics.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+            } else if (iconPath ==
+                '${Environment.iconAssets}relawan_active.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
+            } else if (iconPath ==
+                '${Environment.iconAssets}report_case_active.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+            } else if (iconPath == '${Environment.iconAssets}help.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+            } else if (iconPath ==
+                '${Environment.iconAssets}conversation_active.png') {
+              AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+            }
+          }
+        },
       ),
     );
   }
