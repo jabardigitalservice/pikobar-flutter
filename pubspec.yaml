@@ -15,7 +15,7 @@ description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
 # GDrive version 1.4.1+13
 # PlayStore version 1.4.1+13
 
-version: 1.4.2+14
+version: 1.4.5+14
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

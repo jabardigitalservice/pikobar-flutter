@@ -10,7 +10,7 @@ class DBProvider {
 
   static final _dbName = Environment.databaseNameProd;
 
-  static final _dbVersion = 2;
+  static final _dbVersion = 3;
 
   static final DBProvider db = DBProvider._();
 
@@ -30,31 +30,35 @@ class DBProvider {
         onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
+  static final String _createTablePopupInformation = "CREATE TABLE PopupInformation ("
+      "id INTEGER PRIMARY KEY,"
+      "last_shown TEXT"
+      ")";
+
+  static final String _createTableMessages = "CREATE TABLE Messages ("
+      "id TEXT PRIMARY KEY,"
+      "backlink TEXT,"
+      "content TEXT,"
+      "title TEXT,"
+      "action_title TEXT,"
+      "action_url TEXT,"
+      "read_at INTEGER,"
+      "published_at INTEGER"
+      ")";
+
+
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute("CREATE TABLE PopupInformation ("
-        "id INTEGER PRIMARY KEY,"
-        "last_shown TEXT"
-        ")");
-    await db.execute("CREATE TABLE Messages ("
-        "id INTEGER PRIMARY KEY,"
-        "backlink TEXT,"
-        "content TEXT,"
-        "title TEXT,"
-        "action_title TEXT,"
-        "action_url TEXT,"
-        "read_at INTEGER,"
-        "published_at INTEGER"
-        ")");
+    await db.execute(_createTablePopupInformation);
+    await db.execute(_createTableMessages);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    print(oldVersion);
-    if (oldVersion < 2) {
+    if (oldVersion < 3) {
       try {
-        await db.execute("ALTER TABLE Messages ADD COLUMN action_title TEXT");
-        await db.execute("ALTER TABLE Messages ADD COLUMN action_url TEXT");
+        await db.execute("DROP TABLE IF EXISTS Messages");
+        await db.execute(_createTableMessages);
       } catch (e){
-        print("Altering error : ${e.toString()}");
+        print("Update v3 error : ${e.toString()}");
       }
     }
   }

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
-import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -227,10 +226,9 @@ class _MessagesState extends State<Messages> {
   }
 
   _openDetail(MessageModel messageModel, int index) async {
-    await MessageRepository().updateReadData(messageModel.title);
     widget.indexScreenState.getCountMessage();
     await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
-        arguments: messageModel);
+        arguments: messageModel.id);
     setState(() {
       listMessage[index].readAt = 1;
     });

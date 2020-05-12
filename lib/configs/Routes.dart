@@ -34,7 +34,7 @@ Route generateRoutes(RouteSettings settings) {
       return buildRoute(
           settings,
           MessageDetailScreen(
-            document: args,
+            id: args,
           ));
 
     case NavigationConstrants.Survey:
