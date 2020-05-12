@@ -22,6 +22,8 @@ import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
+import 'DocumentViewScreen.dart';
+
 class DocumentListScreen extends StatefulWidget {
   @override
   _DocumentListScreenState createState() => _DocumentListScreenState();
@@ -140,11 +142,20 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              Platform.isAndroid
-                                  ? _downloadAttachment(document['title'],
-                                      document['document_url'])
-                                  : _viewPdf(document['title'],
-                                      document['document_url']);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DocumentViewScreen(
+                                    url: document['document_url'],
+                                  ),
+                                ),
+                              );
+
+//                              Platform.isAndroid
+//                                  ? _downloadAttachment(document['title'],
+//                                      document['document_url'])
+//                                  : _viewPdf(document['title'],
+//                                      document['document_url']);
                             },
                             child: Text(
                               document['title'],
@@ -317,8 +328,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     }
   }
 
-  void _onStatusRequested(PermissionStatus statuses,
-      String name, String url) {
+  void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
