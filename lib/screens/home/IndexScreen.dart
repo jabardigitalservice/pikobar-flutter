@@ -207,8 +207,7 @@ class IndexScreenState extends State<IndexScreen> {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => MessageDetailScreen(
-                  id: data['id'],
-                  isFromNotification: true,
+                  id: data['id']
                 )));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
