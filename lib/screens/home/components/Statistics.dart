@@ -66,24 +66,41 @@ class _StatisticsState extends State<Statistics> {
           SizedBox(
             height: 20,
           ),
-          widget.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)?
-          StreamBuilder(
-              stream: Firestore.instance
-                  .collection(Collections.statistics)
-                  .document('rdt')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Container();
-                }
+          widget.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
+              ? StreamBuilder(
+                  stream: Firestore.instance
+                      .collection(Collections.statistics)
+                      .document('rdt')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Container();
+                    }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return buildLoadingRapidTest();
-                } else {
-                  var userDocument = snapshot.data;
-                  return buildContentRapidTest(userDocument);
-                }
-              }):Container()
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return buildLoadingRapidTest();
+                    } else {
+                      return StreamBuilder(
+                          stream: Firestore.instance
+                              .collection(Collections.statistics)
+                              .document('pcr')
+                              .snapshots(),
+                          builder: (context, snapshotPCR) {
+                            if (snapshotPCR.hasError) {
+                              return Container();
+                            }
+
+                            if (snapshotPCR.connectionState ==
+                                ConnectionState.waiting) {
+                              return buildLoadingRapidTest();
+                            } else {
+                              return buildContentRapidTest(
+                                  snapshot.data, snapshotPCR.data);
+                            }
+                          });
+                    }
+                  })
+              : Container()
         ],
       ),
     );
@@ -258,8 +275,7 @@ class _StatisticsState extends State<Statistics> {
           children: <Widget>[
             Container(
                 height: 60,
-                child:
-                    Image.asset('${Environment.imageAssets}rapid_test.png')),
+                child: Image.asset('${Environment.imageAssets}rapid_test.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -302,18 +318,16 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(DocumentSnapshot document) {
-    String count = formatter
-        .format(document.data['total'])
-        .replaceAll(',', '.');
+  Widget buildContentRapidTest(DocumentSnapshot document, documentPCR) {
+    String count =
+        formatter.format(document.data['total']+documentPCR.data['total']).replaceAll(',', '.');
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => RapidTestDetail(
-                    widget.remoteConfig,document
-                  )),
+              builder: (context) =>
+                  RapidTestDetail(widget.remoteConfig, document,documentPCR)),
         );
       },
       child: Card(
@@ -326,15 +340,15 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               Container(
                   height: 60,
-                  child: Image.asset(
-                      '${Environment.imageAssets}rapid_test.png')),
+                  child:
+                      Image.asset('${Environment.imageAssets}rapid_test.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(left: 5.0),
-                    child: Text(Dictionary.rapidTestTitle,
+                    child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,

@@ -40,6 +40,8 @@ class Dictionary {
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
   static String positif = 'Terkonfirmasi';
+  static String positifText = 'Positif';
+  static String negatifText = 'Negatif';
   static String recover = 'Sembuh';
   static String die = 'Meninggal';
   static String opdDesc = 'Orang Dalam Pemantauan';
@@ -67,6 +69,7 @@ class Dictionary {
   static String addressDomicile = 'Alamat Domisili';
   static String cityDomicile = 'Kabupaten/Kota Domisili';
   static String provinceDomicile = 'Provinsi Domisili';
+  static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -84,9 +87,10 @@ class Dictionary {
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
-  static String rapidTestTitle='Jumlah RDT (Rapid Diagnostic Test)';
-  static String rapidTestAppBar='Jumlah RDT';
+  static String rapidTestTitle = 'Jumlah RDT yang telah dilakukan';
+  static String pcrTitle = 'Jumlah PCR yang telah dilakukan';
 
+  static String rapidTestAppBar = 'Jumlah RDT';
 
   // Button Text
   static String yes = 'Ya';
@@ -100,7 +104,7 @@ class Dictionary {
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
-  static String setLocation='Set Lokasi...';
+  static String setLocation = 'Set Lokasi...';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -202,7 +206,7 @@ class Dictionary {
   static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
   static String moreDetailRapidTest = ' Daftar RDT';
-  static String lastUpdate='Update terakhir pada';
+  static String lastUpdate = 'Update terakhir pada';
 
   // check distribution virus
   static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
@@ -237,9 +241,6 @@ class Dictionary {
   static String reaktif = 'Reaktif';
   static String nonReaktif = 'Non-Reaktif';
   static String invalid = 'Invalid';
-
-
-
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
