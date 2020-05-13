@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   BannersBloc _bannersBloc;
   StatisticsBloc _statisticsBloc;
   RapidTestBloc _rapidTestBloc;
+  PcrTestBloc _pcrTestBloc;
   bool isLoading = true;
 
   @override
@@ -80,7 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 _statisticsBloc = StatisticsBloc()..add(StatisticsLoad())),
         BlocProvider<RapidTestBloc>(
             create: (context) =>
-            _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad()))
+            _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad())),
+        BlocProvider<PcrTestBloc>(
+            create: (context) =>
+            _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad()))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -292,6 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannersBloc.close();
     _statisticsBloc.close();
     _rapidTestBloc.close();
+    _pcrTestBloc.close();
     super.dispose();
   }
 }

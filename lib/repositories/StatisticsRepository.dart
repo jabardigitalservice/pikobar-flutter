@@ -13,4 +13,9 @@ class StatisticsRepository {
     return firestore.collection(Collections.statistics)
         .document('rdt').snapshots();
   }
+
+  Stream<DocumentSnapshot> getPCRTest() {
+    return firestore.collection(Collections.statistics)
+        .document('pcr').snapshots();
+  }
 }
