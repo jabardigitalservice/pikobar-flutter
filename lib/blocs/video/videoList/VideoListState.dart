@@ -25,7 +25,4 @@ class VideosLoaded extends VideoListState {
 
   @override
   List<Object> get props => [videos];
-
-  @override
-  String toString() => 'VideosLoaded { todos: $videos }';
 }

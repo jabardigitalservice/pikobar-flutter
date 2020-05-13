@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
+import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
@@ -47,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   PcrTestBloc _pcrTestBloc;
   NewsListBloc _newsListBloc;
   VideoListBloc _videoListBloc;
+  InfoGraphicsListBloc _infoGraphicsListBloc;
   bool isLoading = true;
 
   @override
@@ -96,7 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
             _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar))),
         BlocProvider<VideoListBloc>(
             create: (context) =>
-            _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5)))
+            _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
+        BlocProvider<InfoGraphicsListBloc>(
+            create: (context) =>
+            _infoGraphicsListBloc = InfoGraphicsListBloc()..add(InfoGraphicsListLoad(limit: 3)))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -314,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _rapidTestBloc.close();
     _pcrTestBloc.close();
     _newsListBloc.close();
+    _videoListBloc.close();
     super.dispose();
   }
 }
