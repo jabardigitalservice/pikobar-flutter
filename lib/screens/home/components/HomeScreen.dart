@@ -7,6 +7,7 @@ import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -45,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   RapidTestBloc _rapidTestBloc;
   PcrTestBloc _pcrTestBloc;
   NewsListBloc _newsListBloc;
+  VideoListBloc _videoListBloc;
   bool isLoading = true;
 
   @override
@@ -91,7 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
             _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
             create: (context) =>
-            _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar)))
+            _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar))),
+        BlocProvider<VideoListBloc>(
+            create: (context) =>
+            _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5)))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,

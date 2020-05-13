@@ -1,10 +1,10 @@
-part of 'video_list_bloc.dart';
+
+
+import 'package:equatable/equatable.dart';
+import 'package:pikobar_flutter/models/VideoModel.dart';
 
 abstract class VideoListState extends Equatable {
-  const VideoListState();
-
-  @override
-  List<Object> get props => [];
+  const VideoListState([List props = const <dynamic>[]]);
 }
 
 class VideoListInitial extends VideoListState {
@@ -12,7 +12,11 @@ class VideoListInitial extends VideoListState {
   List<Object> get props => [];
 }
 
-class VideosLoading extends VideoListState {}
+class VideosLoading extends VideoListState {
+  @override
+  // TODO: implement props
+  List<Object> get props => [];
+}
 
 class VideosLoaded extends VideoListState {
   final List<VideoModel> videos;
@@ -24,18 +28,4 @@ class VideosLoaded extends VideoListState {
 
   @override
   String toString() => 'VideosLoaded { todos: $videos }';
-}
-
-class VideosFailure extends VideoListState {
-  final String error;
-
-  VideosFailure({this.error});
-
-  @override
-  String toString() {
-    return 'State VideosFailure{error: $error}';
-  }
-
-  @override
-  List<Object> get props => [error];
 }
