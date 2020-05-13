@@ -22,6 +22,8 @@ import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
+import 'DocumentViewScreen.dart';
+
 class DocumentListScreen extends StatefulWidget {
   @override
   _DocumentListScreenState createState() => _DocumentListScreenState();
@@ -261,7 +263,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   }
 
   void _downloadAttachment(String name, String url) async {
-    if (await Permission.storage.status.isGranted) {
+    if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
@@ -279,36 +281,46 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 },
               )));
     } else {
-      Fluttertoast.showToast(
-          msg: Dictionary.downloadingFile,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0);
+//      Fluttertoast.showToast(
+//          msg: Dictionary.downloadingFile,
+//          toastLength: Toast.LENGTH_LONG,
+//          gravity: ToastGravity.BOTTOM,
+//          fontSize: 16.0);
 
-      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+//      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+//
+//      try {
+//        await FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: Environment.downloadStorage,
+//          fileName: name,
+//          showNotification: true,
+//          // show download progress in status bar (for Android)
+//          openFileFromNotification:
+//              true, // click on notification to open downloaded file (for Android)
+//        );
+//      } catch (e) {
+//        String dir = (await getExternalStorageDirectory()).path + '/download';
+//        await FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: dir,
+//          fileName: name,
+//          showNotification: true,
+//          // show download progress in status bar (for Android)
+//          openFileFromNotification:
+//              true, // click on notification to open downloaded file (for Android)
+//        );
+//      }
 
-      try {
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: Environment.downloadStorage,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      } catch (e) {
-        String dir = (await getExternalStorageDirectory()).path + '/download';
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: dir,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DocumentViewScreen(
+            url: url,
+            nameFile: name,
+          ),
+        ),
+      );
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{
@@ -317,8 +329,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     }
   }
 
-  void _onStatusRequested(PermissionStatus statuses,
-      String name, String url) {
+  void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }

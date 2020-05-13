@@ -80,6 +80,7 @@ dependencies:
   google_maps_flutter: ^0.5.25+3
   flutter_masked_text: ^0.8.0
   app_settings: ^4.0.0
+  flutter_pdfview: ^1.0.1
   
 
 dev_dependencies:

@@ -251,6 +251,7 @@ class Dictionary {
   static String document = "Dokumen";
   static String date = "Tanggal";
   static String titleDocument = "Judul Dokumen";
+  static String documentPreview = "Preview Dokumen";
   static String emptyDataDocuments = 'Dokumen tidak ada';
   static String permissionDownloadAttachment =
       'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
