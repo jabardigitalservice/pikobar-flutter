@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pikobar_flutter/blocs/video/videoList/video_list_bloc.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -21,9 +21,7 @@ class VideosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
-      create: (context) => VideoListBloc(
-        videoRepository: VideoRepository(),
-      )..add(LoadVideos()),
+      create: (context) => VideoListBloc()..add(LoadVideos()),
       child: VideosList(),
     );
   }

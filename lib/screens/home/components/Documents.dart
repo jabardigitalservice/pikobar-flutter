@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
@@ -69,20 +71,9 @@ class _DocumentsState extends State<Documents> {
             ],
           ),
         ),
-        StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-              .collection(Collections.documents)
-              .orderBy('published_at', descending: true)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data.documents.isNotEmpty
-                  ? _buildContent(snapshot)
-                  : EmptyData(message: Dictionary.emptyDataDocuments);
-            } else {
-              return _buildLoading();
-            }
+        BlocBuilder<DocumentsBloc, DocumentsState>(
+          builder: (context, state) {
+            return state is DocumentsLoaded ? _buildContent(state.documents) : _buildLoading();
           },
         )
       ],
@@ -157,9 +148,9 @@ class _DocumentsState extends State<Documents> {
     );
   }
 
-  Widget _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget _buildContent(List<DocumentSnapshot> documents) {
     dataDocuments.clear();
-    snapshot.data.documents.forEach((record) {
+    documents.forEach((record) {
       if (record['published'] && dataDocuments.length < 3) {
         dataDocuments.add(record);
       }

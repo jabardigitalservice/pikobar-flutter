@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -59,19 +61,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ],
           ),
         ),
-        StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-              .collection(Collections.infographics)
-              .orderBy('published_date', descending: true)
-              .limit(3)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return _buildContent(snapshot);
-            } else {
-              return _buildLoading();
-            }
+        BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+          builder: (context, state) {
+            return state is InfoGraphicsListLoaded ? _buildContent(state.infoGraphicsList) : _buildLoading();
           },
         )
       ],
@@ -137,14 +129,14 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         });
   }
 
-  Widget _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget _buildContent(List<DocumentSnapshot> listData) {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: snapshot.data.documents.length,
+        itemCount: listData.length,
         itemBuilder: (context, index) {
-          final DocumentSnapshot document = snapshot.data.documents[index];
+          final DocumentSnapshot document = listData[index];
 
           return Container(
             padding: const EdgeInsets.only(bottom: 20.0),
@@ -159,7 +151,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: CachedNetworkImage(
-                        imageUrl: document['images'][0],
+                        imageUrl: document['images'][0]??'',
                         alignment: Alignment.topCenter,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Center(

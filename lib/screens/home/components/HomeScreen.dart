@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
+import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
+import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -45,6 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
   RapidTestBloc _rapidTestBloc;
   PcrTestBloc _pcrTestBloc;
   NewsListBloc _newsListBloc;
+  VideoListBloc _videoListBloc;
+  InfoGraphicsListBloc _infoGraphicsListBloc;
+  DocumentsBloc _documentsBloc;
   bool isLoading = true;
 
   @override
@@ -91,7 +97,16 @@ class _HomeScreenState extends State<HomeScreen> {
             _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
             create: (context) =>
-            _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar)))
+            _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar))),
+        BlocProvider<VideoListBloc>(
+            create: (context) =>
+            _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
+        BlocProvider<InfoGraphicsListBloc>(
+            create: (context) =>
+            _infoGraphicsListBloc = InfoGraphicsListBloc()..add(InfoGraphicsListLoad(limit: 3))),
+        BlocProvider<DocumentsBloc>(
+            create: (context) =>
+            _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -189,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 16.0),
                   ),
                 ),
+
                 Container(
                   child: DefaultTabController(
                     length: 3,
@@ -262,6 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+
                 Container(
                   padding: EdgeInsets.only(top: 16.0),
                   child: VideoList(),
@@ -309,6 +326,9 @@ class _HomeScreenState extends State<HomeScreen> {
     _rapidTestBloc.close();
     _pcrTestBloc.close();
     _newsListBloc.close();
+    _videoListBloc.close();
+    _infoGraphicsListBloc.close();
+    _documentsBloc.close();
     super.dispose();
   }
 }
