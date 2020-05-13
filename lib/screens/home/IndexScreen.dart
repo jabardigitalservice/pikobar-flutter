@@ -197,11 +197,10 @@ class IndexScreenState extends State<IndexScreen> {
             builder: (context) => NewsDetailScreen(
                   id: data['id'],
                   news: newsType,
-                  isFromNotification: true,
                 )));
       } else {
         Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => News(news: newsType)));
+            MaterialPageRoute(builder: (context) => NewsListScreen(news: newsType)));
       }
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {

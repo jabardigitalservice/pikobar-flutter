@@ -2,12 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -26,36 +30,16 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: widget.news == Dictionary.latestNews
-          ? Firestore.instance
-              .collection('articles')
-              .orderBy('published_at', descending: true)
-              .snapshots()
-          : widget.news == Dictionary.nationalNews
-              ? Firestore.instance
-                  .collection('articles_national')
-                  .orderBy('published_at', descending: true)
-                  .snapshots()
-              : Firestore.instance
-                  .collection('articles_world')
-                  .orderBy('published_at', descending: true)
-                  .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return _buildLoading();
-          default:
-            return widget.maxLength != null
-                ? _buildContent(snapshot)
-                : _buildContentList(snapshot);
-        }
+    return BlocBuilder<NewsListBloc, NewsListState>(
+      builder: (context, state) {
+        return state is NewsListLoaded ? widget.maxLength != null
+            ? _buildContent(state.newsList)
+            : _buildContentList(state.newsList) : _buildLoading();
       },
     );
   }
 
-  _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
+  _buildContent(List<NewsModel> list) {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Card(
@@ -68,13 +52,12 @@ class _NewsScreenState extends State<NewsScreen> {
             ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data.documents.length > 3
+                itemCount: list.length > 3
                     ? 3
-                    : snapshot.data.documents.length,
+                    : list.length,
                 padding: const EdgeInsets.only(bottom: 10.0),
                 itemBuilder: (BuildContext context, int index) {
-                  var document = snapshot.data.documents[index];
-                  return designNewsHome(document);
+                  return designNewsHome(list[index]);
                 },
                 separatorBuilder: (BuildContext context, int dex) => Divider()),
             Container(
@@ -92,7 +75,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => News(news: widget.news),
+                        builder: (context) => NewsListScreen(news: widget.news),
                       ),
                     );
 
@@ -105,7 +88,7 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-  Widget designNewsHome(DocumentSnapshot document) {
+  Widget designNewsHome(NewsModel data) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
@@ -116,12 +99,12 @@ class _NewsScreenState extends State<NewsScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    NewsDetailScreen(documents: document, news: widget.news),
+                    NewsDetailScreen(id: data.id, news: widget.news),
               ),
             );
 
             AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
-                <String, dynamic>{'title': document['title']});
+                <String, dynamic>{'title': data.title});
           },
           child: Container(
             padding: EdgeInsets.all(5),
@@ -134,7 +117,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: CachedNetworkImage(
-                      imageUrl: document['image'],
+                      imageUrl: data.image,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Center(
                           heightFactor: 4.2,
@@ -156,7 +139,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        document['title'],
+                        data.title,
                         style: TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.left,
@@ -171,13 +154,13 @@ class _NewsScreenState extends State<NewsScreen> {
                               Row(
                                 children: <Widget>[
                                   Image.network(
-                                    document['news_channel_icon'],
+                                    data.newsChannelIcon,
                                     width: 25.0,
                                     height: 25.0,
                                   ),
                                   SizedBox(width: 3.0),
                                   Text(
-                                    document['news_channel'],
+                                    data.newsChannel,
                                     style: TextStyle(
                                         fontSize: 12.0, color: Colors.grey),
                                   ),
@@ -185,7 +168,7 @@ class _NewsScreenState extends State<NewsScreen> {
                               ),
                               Text(
                                 unixTimeStampToDate(
-                                    document['published_at'].seconds),
+                                    data.publishedAt),
                                 style: TextStyle(
                                     fontSize: 12.0, color: Colors.grey),
                               ),
@@ -200,7 +183,7 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-  Widget designListNews(DocumentSnapshot document) {
+  Widget designListNews(NewsModel data) {
     return Card(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -218,7 +201,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: CachedNetworkImage(
-                      imageUrl: document['image'],
+                      imageUrl: data.image,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Center(
                           heightFactor: 4.2,
@@ -240,7 +223,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        document['title'],
+                        data.title,
                         style: TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.left,
@@ -255,13 +238,13 @@ class _NewsScreenState extends State<NewsScreen> {
                               Row(
                                 children: <Widget>[
                                   Image.network(
-                                    document['news_channel_icon'],
+                                    data.newsChannelIcon,
                                     width: 25.0,
                                     height: 25.0,
                                   ),
                                   SizedBox(width: 3.0),
                                   Text(
-                                    document['news_channel'],
+                                    data.newsChannel,
                                     style: TextStyle(
                                         fontSize: 12.0, color: Colors.grey),
                                   ),
@@ -269,7 +252,7 @@ class _NewsScreenState extends State<NewsScreen> {
                               ),
                               Text(
                                 unixTimeStampToDate(
-                                    document['published_at'].seconds),
+                                    data.publishedAt),
                                 style: TextStyle(
                                     fontSize: 12.0, color: Colors.grey),
                               ),
@@ -286,24 +269,23 @@ class _NewsScreenState extends State<NewsScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    NewsDetailScreen(documents: document, news: widget.news),
+                    NewsDetailScreen(id: data.id, news: widget.news),
               ),
             );
             AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
-                <String, dynamic>{'title': document['title']});
+                <String, dynamic>{'title': data.title});
           },
         ),
       ),
     );
   }
 
-  _buildContentList(AsyncSnapshot<QuerySnapshot> snapshot) {
+  _buildContentList(List<NewsModel> list) {
     return ListView.builder(
-      itemCount: snapshot.data.documents.length,
+      itemCount: list.length,
       padding: const EdgeInsets.only(bottom: 10.0),
       itemBuilder: (BuildContext context, int index) {
-        var document = snapshot.data.documents[index];
-        return designListNews(document);
+        return designListNews(list[index]);
       },
     );
   }
