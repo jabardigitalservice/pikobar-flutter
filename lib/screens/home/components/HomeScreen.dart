@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
+import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
@@ -11,6 +12,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
@@ -42,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   StatisticsBloc _statisticsBloc;
   RapidTestBloc _rapidTestBloc;
   PcrTestBloc _pcrTestBloc;
+  NewsListBloc _newsListBloc;
   bool isLoading = true;
 
   @override
@@ -85,7 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
             _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad())),
         BlocProvider<PcrTestBloc>(
             create: (context) =>
-            _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad()))
+            _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
+        BlocProvider<NewsListBloc>(
+            create: (context) =>
+            _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar)))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -191,12 +197,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         TabBar(
                           onTap: (index) {
                             if (index == 0) {
+                              _newsListBloc.add(NewsListLoad(Collections.newsJabar));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsJabar);
                             } else if (index == 1) {
+                              _newsListBloc.add(NewsListLoad(Collections.newsNational));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsNational);
                             } else if (index == 2) {
+                              _newsListBloc.add(NewsListLoad(Collections.newsWorld));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsWorld);
                             }
@@ -238,6 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.only(top: 10),
                           height: 400,
                           child: TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
                             children: <Widget>[
                               NewsScreen(
                                   news: Dictionary.latestNews, maxLength: 3),
@@ -298,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _statisticsBloc.close();
     _rapidTestBloc.close();
     _pcrTestBloc.close();
+    _newsListBloc.close();
     super.dispose();
   }
 }

@@ -12,6 +12,9 @@ class Collections {
   static String users = 'users';
   static String areas = 'areas';
   static String userTokens = 'tokens';
-  static String statistics='statistics';
+  static String statistics = 'statistics';
+  static String newsJabar = 'articles';
+  static String newsNational = 'articles_national';
+  static String newsWorld = 'articles_world';
 
 }
