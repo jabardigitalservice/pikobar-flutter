@@ -3,36 +3,29 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:pikobar_flutter/blocs/rapidTest/Bloc.dart';
-import 'package:pikobar_flutter/components/DialogTextOnly.dart';
-import 'package:pikobar_flutter/components/ErrorContent.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/repositories/RapidTestRepository.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Statistics extends StatefulWidget {
-  final RemoteConfig remoteConfig;
-
-  Statistics(this.remoteConfig);
   @override
   _StatisticsState createState() => _StatisticsState();
 }
 
 class _StatisticsState extends State<Statistics> {
   final formatter = new NumberFormat("#,###");
-  final RapidTestReposity _rapidTestRepository = RapidTestReposity();
-  RapidTestBloc _rapidTestBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -46,41 +39,35 @@ class _StatisticsState extends State<Statistics> {
       ]),
       child: Column(
         children: <Widget>[
-          new StreamBuilder(
-              stream: Firestore.instance
-                  .collection(Collections.statistics)
-                  .document('jabar-dan-nasional')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Container();
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildLoading();
-                } else {
-                  var userDocument = snapshot.data;
-                  return _buildContent(userDocument);
-                }
-              }),
+          _buildStatistics(),
           SizedBox(
             height: 20,
           ),
-          widget.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
-              ? StreamBuilder(
-                  stream: Firestore.instance
-                      .collection(Collections.statistics)
-                      .document('rdt')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
+          _buildRapidTest()
+        ],
+      ),
+    );
+  }
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return buildLoadingRapidTest();
-                    } else {
-                      return StreamBuilder(
+  _buildStatistics() {
+    return BlocBuilder<StatisticsBloc, StatisticsState>(
+      builder: (context, state) {
+        return state is StatisticsLoaded
+            ? _buildContent(state.snapshot)
+            : _buildLoading();
+      },
+    );
+  }
+
+  _buildRapidTest() {
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      builder: (context, remoteState) {
+        return remoteState is RemoteConfigLoaded
+            ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
+                ? BlocBuilder<RapidTestBloc, RapidTestState>(
+                    builder: (context, state) {
+                      return state is RapidTestLoaded
+                          ? StreamBuilder(
                           stream: Firestore.instance
                               .collection(Collections.statistics)
                               .document('pcr')
@@ -94,15 +81,16 @@ class _StatisticsState extends State<Statistics> {
                                 ConnectionState.waiting) {
                               return buildLoadingRapidTest();
                             } else {
-                              return buildContentRapidTest(
-                                  snapshot.data, snapshotPCR.data);
+                              return buildContentRapidTest(remoteState.remoteConfig,
+                                  state.snapshot, snapshotPCR.data);
                             }
-                          });
-                    }
-                  })
-              : Container()
-        ],
-      ),
+                          })
+                          : buildLoadingRapidTest();
+                    },
+                  )
+                : Container()
+            : buildLoadingRapidTest();
+      },
     );
   }
 
@@ -240,8 +228,6 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
                   2,
-                  /*getDataProcessPercent(data['odp']['total']['jabar'],
-                      data['odp']['selesai']['jabar']),*/
                   Dictionary.people,
                   Colors.grey[600],
                   ColorBase.green),
@@ -252,8 +238,6 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
                   2,
-                  /*getDataProcessPercent(data['pdp']['total']['jabar'],
-                      data['pdp']['selesai']['jabar']),*/
                   Dictionary.people,
                   Colors.grey[600],
                   ColorBase.green),
@@ -318,16 +302,18 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(DocumentSnapshot document, documentPCR) {
-    String count =
-        formatter.format(document.data['total']+documentPCR.data['total']).replaceAll(',', '.');
+  Widget buildContentRapidTest(RemoteConfig remoteConfig, DocumentSnapshot document, DocumentSnapshot documentPCR) {
+    String count = formatter
+        .format(document.data['total'] + documentPCR.data['total'])
+        .replaceAll(',', '.');
+
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  RapidTestDetail(widget.remoteConfig, document,documentPCR)),
+                  RapidTestDetail(remoteConfig, document, documentPCR)),
         );
       },
       child: Card(

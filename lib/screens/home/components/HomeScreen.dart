@@ -1,16 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
@@ -20,8 +23,6 @@ import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/checkVersion.dart';
-import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 import 'BannerListSlider.dart';
 
@@ -35,6 +36,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  RemoteConfigBloc _remoteConfigBloc;
+  BannersBloc _bannersBloc;
+  StatisticsBloc _statisticsBloc;
+  RapidTestBloc _rapidTestBloc;
   bool isLoading = true;
 
   @override
@@ -62,73 +67,67 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorBase.grey,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: ColorBase.green,
-        title: Row(
-          children: <Widget>[
-            Image.asset('${Environment.logoAssets}logo.png',
-                width: 40.0, height: 40.0),
-            Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      Dictionary.appName,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.intro,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        Dictionary.subTitle,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<RemoteConfigBloc>(
+            create: (BuildContext context) => _remoteConfigBloc =
+                RemoteConfigBloc()..add(RemoteConfigLoad())),
+        BlocProvider<BannersBloc>(
+            create: (context) =>
+                _bannersBloc = BannersBloc()..add(BannersLoad())),
+        BlocProvider<StatisticsBloc>(
+            create: (context) =>
+                _statisticsBloc = StatisticsBloc()..add(StatisticsLoad())),
+        BlocProvider<RapidTestBloc>(
+            create: (context) =>
+            _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad()))
+      ],
+      child: Scaffold(
+        backgroundColor: ColorBase.grey,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: ColorBase.green,
+          title: Row(
+            children: <Widget>[
+              Image.asset('${Environment.logoAssets}logo.png',
+                  width: 40.0, height: 40.0),
+              Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        Dictionary.appName,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 8,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           fontFamily: FontsFamily.intro,
                         ),
                       ),
-                    )
-                  ],
-                ))
-          ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          Dictionary.subTitle,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.intro,
+                          ),
+                        ),
+                      )
+                    ],
+                  ))
+            ],
+          ),
         ),
-        actions: <Widget>[
-          // IconButton(
-          //   icon: Icon(Icons.notifications, size: 20.0, color: Colors.white),
-          //   onPressed: () {
-          //     Scaffold.of(context).showSnackBar(SnackBar(
-          //       content: Text(Dictionary.onDevelopment),
-          //       duration: Duration(seconds: 1),
-          //     ));
-
-          //     AnalyticsHelper.setLogEvent(Analytics.tappedNotification);
-          //   },
-          // )
-        ],
+        body: buildContent(),
       ),
-      body: FutureBuilder<RemoteConfig>(
-          future: setupRemoteConfig(),
-          builder:
-              (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-            return snapshot.hasData && !isLoading
-                ? buildContent(snapshot.data)
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
-          }),
     );
   }
 
-  Widget buildContent(RemoteConfig remoteConfig) {
+  Widget buildContent() {
     return Stack(
       children: <Widget>[
         Container(
@@ -142,23 +141,23 @@ class _HomeScreenState extends State<HomeScreen> {
               child: BannerListSlider()),
 
           /// Statistics Announcement
-          AnnouncementScreen(remoteConfig),
+          AnnouncementScreen(),
 
           /// Statistics Section
           Container(
               color: ColorBase.grey,
               margin: EdgeInsets.only(top: 10.0),
               padding: EdgeInsets.only(bottom: 10.0),
-              child: Statistics(remoteConfig)),
+              child: Statistics()),
 
           /// Menus & Spread Sections
           Column(
             children: <Widget>[
               /// Menus Section
-              MenuList(remoteConfig),
+              MenuList(),
 
               /// Spread Section
-              SpreadSection(remoteConfig),
+              SpreadSection(),
             ],
           ),
 
@@ -282,132 +281,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         ]),
-
-       FutureBuilder<bool>(
-         future: checkVersion(remoteConfig),
-         builder: (context, status) {
-           if (status.hasData && status.data) {
-             return Positioned(
-               left: 0.0,
-               right: 0.0,
-               bottom: 0.0,
-               child: Container(
-                 padding: EdgeInsets.symmetric(
-                     vertical: 10.0, horizontal: 20.0),
-                 decoration: BoxDecoration(
-                   gradient: LinearGradient(
-                       colors: [Colors.green[700], ColorBase.green],
-                       begin: FractionalOffset(0.0, 0.0),
-                       end: FractionalOffset(0.0, 0.5),
-                       stops: [0.0, 1.0]),
-                   boxShadow: [
-                     BoxShadow(
-                       color: Colors.green.withOpacity(0.5),
-                       spreadRadius: 5,
-                       blurRadius: 7,
-                       offset: Offset(0, 3), // changes position of shadow
-                     ),
-                   ],
-                 ),
-                 child: Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: <Widget>[
-                     Expanded(
-                       child: Text(Dictionary.updateAppAvailable,
-                           style: TextStyle(color: Colors.white,
-                             fontFamily: FontsFamily.sourceSansPro,)),
-                     ),
-
-                     GestureDetector(
-                       child: Container(
-                         padding: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 6.0),
-                         decoration: BoxDecoration(
-                           color: ColorBase.yellow,
-                           border: Border.all(
-                               color: Colors.grey[300], width: 1.0),
-                           borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                         ),
-                         child: Text(Dictionary.update, style: TextStyle(
-                             color: Colors.white,
-                             fontFamily: FontsFamily.sourceSansPro,
-                             fontWeight: FontWeight.bold),),
-                       ),
-                       onTap: () {
-                         launchExternal(remoteConfig.getString(
-                             FirebaseConfig.storeUrl));
-                       },
-                     )
-                   ],
-                 ),
-               ),
-             );
-           } else {
-             return Container();
-           }
-         },
-       )
+        AlertUpdate()
       ],
     );
   }
 
-  Future<RemoteConfig> setupRemoteConfig() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
-      FirebaseConfig.jshCaption: Dictionary.saberHoax,
-      FirebaseConfig.jshUrl: UrlThirdParty.urlIGSaberHoax,
-      FirebaseConfig.pikobarCaption: Dictionary.pikobar,
-      FirebaseConfig.pikobarUrl: UrlThirdParty.urlCoronaInfo,
-      FirebaseConfig.worldInfoCaption: Dictionary.worldInfo,
-      FirebaseConfig.worldInfoUrl: UrlThirdParty.urlWorldCoronaInfo,
-      FirebaseConfig.nationalInfoCaption: Dictionary.nationalInfo,
-      FirebaseConfig.nationalInfoUrl: UrlThirdParty.urlCoronaEscort,
-      FirebaseConfig.donationCaption: Dictionary.donation,
-      FirebaseConfig.donationUrl: UrlThirdParty.urlDonation,
-      FirebaseConfig.logisticCaption: Dictionary.logistic,
-      FirebaseConfig.logisticUrl: UrlThirdParty.urlLogisticsInfo,
-      FirebaseConfig.reportEnabled: false,
-      FirebaseConfig.reportCaption: Dictionary.caseReport,
-      FirebaseConfig.reportUrl: UrlThirdParty.urlCaseReport,
-      FirebaseConfig.qnaEnabled: false,
-      FirebaseConfig.qnaCaption: Dictionary.qna,
-      FirebaseConfig.qnaUrl: UrlThirdParty.urlQNA,
-      FirebaseConfig.selfTracingEnabled: false,
-      FirebaseConfig.selfTracingCaption: Dictionary.selfTracing,
-      FirebaseConfig.selfTracingUrl: UrlThirdParty.urlSelfTracing,
-      FirebaseConfig.volunteerEnabled: false,
-      FirebaseConfig.volunteerCaption: Dictionary.volunteer,
-      FirebaseConfig.volunteerUrl: UrlThirdParty.urlVolunteer,
-      FirebaseConfig.selfDiagnoseEnabled: false,
-      FirebaseConfig.selfDiagnoseCaption: Dictionary.selfDiagnose,
-      FirebaseConfig.selfDiagnoseUrl: UrlThirdParty.urlSelfDiagnose,
-      FirebaseConfig.spreadCheckLocation: '',
-      FirebaseConfig.announcement: false,
-      FirebaseConfig.loginRequired: FirebaseConfig.loginRequiredDefaultVal,
-      FirebaseConfig.rapidTestInfo: false,
-      FirebaseConfig.rapidTestEnable: false,
-    });
-
-    try {
-      await remoteConfig.fetch(expiration: Duration(minutes: 5));
-      await remoteConfig.activateFetched();
-
-      checkForceUpdate(context, remoteConfig);
-    } catch (exception) {
-      print('Unable to fetch remote config. Cached or default values will be '
-          'used');
-    }
-
-    return remoteConfig;
-  }
-
-  @override
-  void deactivate() {
-//     _notificationBadgeBloc.add(CheckNotificationBadge());
-    super.deactivate();
-  }
-
   @override
   void dispose() {
+    _remoteConfigBloc.close();
+    _bannersBloc.close();
+    _statisticsBloc.close();
+    _rapidTestBloc.close();
     super.dispose();
   }
 }

@@ -26,7 +26,6 @@ class StringUtils {
   static String replaceSpaceToUnderscore(String str) {
     try {
       return str.replaceAll(' ', '_');
-      ;
     } catch (e) {
       print(e.toString());
       return str;

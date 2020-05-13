@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -20,22 +22,29 @@ import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class MenuList extends StatefulWidget {
-  final RemoteConfig remoteConfig;
-
-  MenuList(this.remoteConfig);
-
+  
   @override
   _MenuListState createState() => _MenuListState();
 }
 
 class _MenuListState extends State<MenuList> {
-  RemoteConfig get _remoteConfig => widget.remoteConfig;
-
-  GoogleSignIn _googleSignIn = GoogleSignIn();
-  GoogleSignInAccount _currentUser;
+  RemoteConfig _remoteConfig;
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      builder: (context, state) {
+        return state is RemoteConfigLoaded
+            ? _buildContent(state.remoteConfig)
+            : Container();
+      },
+    );
+  }
+  
+  _buildContent(RemoteConfig remoteConfig) {
+
+    _remoteConfig = remoteConfig;
+
     return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),

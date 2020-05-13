@@ -1,6 +1,7 @@
 /// fireStore Collections
 
 class Collections {
+  static String banners = 'banners';
   static String surveys = 'surveys';
   static String faq = 'faqs';
   static String emergencyNumbers = 'emergency_numbers';
