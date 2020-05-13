@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -12,7 +13,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
@@ -65,26 +65,18 @@ class _StatisticsState extends State<Statistics> {
         return remoteState is RemoteConfigLoaded
             ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
                 ? BlocBuilder<RapidTestBloc, RapidTestState>(
-                    builder: (context, state) {
-                      return state is RapidTestLoaded
-                          ? StreamBuilder(
-                          stream: Firestore.instance
-                              .collection(Collections.statistics)
-                              .document('pcr')
-                              .snapshots(),
-                          builder: (context, snapshotPCR) {
-                            if (snapshotPCR.hasError) {
-                              return Container();
-                            }
-
-                            if (snapshotPCR.connectionState ==
-                                ConnectionState.waiting) {
-                              return buildLoadingRapidTest();
-                            } else {
-                              return buildContentRapidTest(remoteState.remoteConfig,
-                                  state.snapshot, snapshotPCR.data);
-                            }
-                          })
+                    builder: (context, rapidState) {
+                      return rapidState is RapidTestLoaded
+                          ? BlocBuilder<PcrTestBloc, PcrTestState>(
+                              builder: (context, pcrState) {
+                                return pcrState is PcrTestLoaded
+                                    ? buildContentRapidTest(
+                                        remoteState.remoteConfig,
+                                        rapidState.snapshot,
+                                        pcrState.snapshot)
+                                    : buildLoadingRapidTest();
+                              },
+                            )
                           : buildLoadingRapidTest();
                     },
                   )
@@ -267,7 +259,7 @@ class _StatisticsState extends State<Statistics> {
                 Skeleton(
                   child: Container(
                     margin: EdgeInsets.only(left: 5.0),
-                    child: Text(Dictionary.rapidTestTitle,
+                    child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
@@ -302,7 +294,8 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(RemoteConfig remoteConfig, DocumentSnapshot document, DocumentSnapshot documentPCR) {
+  Widget buildContentRapidTest(RemoteConfig remoteConfig,
+      DocumentSnapshot document, DocumentSnapshot documentPCR) {
     String count = formatter
         .format(document.data['total'] + documentPCR.data['total'])
         .replaceAll(',', '.');
