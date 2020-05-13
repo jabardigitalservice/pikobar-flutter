@@ -26,6 +26,7 @@ class Statistics extends StatefulWidget {
 
 class _StatisticsState extends State<Statistics> {
   final formatter = new NumberFormat("#,###");
+  String urlStatistic = "";
 
   @override
   Widget build(BuildContext context) {
@@ -66,25 +67,29 @@ class _StatisticsState extends State<Statistics> {
             ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
                 ? BlocBuilder<RapidTestBloc, RapidTestState>(
                     builder: (context, state) {
+                      urlStatistic = remoteState.remoteConfig
+                          .getString(FirebaseConfig.pikobarUrl);
                       return state is RapidTestLoaded
                           ? StreamBuilder(
-                          stream: Firestore.instance
-                              .collection(Collections.statistics)
-                              .document('pcr')
-                              .snapshots(),
-                          builder: (context, snapshotPCR) {
-                            if (snapshotPCR.hasError) {
-                              return Container();
-                            }
+                              stream: Firestore.instance
+                                  .collection(Collections.statistics)
+                                  .document('pcr')
+                                  .snapshots(),
+                              builder: (context, snapshotPCR) {
+                                if (snapshotPCR.hasError) {
+                                  return Container();
+                                }
 
-                            if (snapshotPCR.connectionState ==
-                                ConnectionState.waiting) {
-                              return buildLoadingRapidTest();
-                            } else {
-                              return buildContentRapidTest(remoteState.remoteConfig,
-                                  state.snapshot, snapshotPCR.data);
-                            }
-                          })
+                                if (snapshotPCR.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return buildLoadingRapidTest();
+                                } else {
+                                  return buildContentRapidTest(
+                                      remoteState.remoteConfig,
+                                      state.snapshot,
+                                      snapshotPCR.data);
+                                }
+                              })
                           : buildLoadingRapidTest();
                     },
                   )
@@ -302,7 +307,8 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(RemoteConfig remoteConfig, DocumentSnapshot document, DocumentSnapshot documentPCR) {
+  Widget buildContentRapidTest(RemoteConfig remoteConfig,
+      DocumentSnapshot document, DocumentSnapshot documentPCR) {
     String count = formatter
         .format(document.data['total'] + documentPCR.data['total'])
         .replaceAll(',', '.');
@@ -426,7 +432,10 @@ class _StatisticsState extends State<Statistics> {
           ),
         ),
         onTap: () {
-          openChromeSafariBrowser(url: UrlThirdParty.urlCoronaInfo);
+          openChromeSafariBrowser(
+              url: urlStatistic.isNotEmpty
+                  ? urlStatistic
+                  : UrlThirdParty.urlCoronaInfoData);
         },
       ),
     );
