@@ -142,20 +142,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                         Expanded(
                           child: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DocumentViewScreen(
-                                    url: document['document_url'],
-                                  ),
-                                ),
-                              );
-
-//                              Platform.isAndroid
-//                                  ? _downloadAttachment(document['title'],
-//                                      document['document_url'])
-//                                  : _viewPdf(document['title'],
-//                                      document['document_url']);
+                              Platform.isAndroid
+                                  ? _downloadAttachment(document['title'],
+                                      document['document_url'])
+                                  : _viewPdf(document['title'],
+                                      document['document_url']);
                             },
                             child: Text(
                               document['title'],
@@ -272,7 +263,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   }
 
   void _downloadAttachment(String name, String url) async {
-    if (await Permission.storage.status.isGranted) {
+    if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
@@ -290,36 +281,46 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 },
               )));
     } else {
-      Fluttertoast.showToast(
-          msg: Dictionary.downloadingFile,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0);
+//      Fluttertoast.showToast(
+//          msg: Dictionary.downloadingFile,
+//          toastLength: Toast.LENGTH_LONG,
+//          gravity: ToastGravity.BOTTOM,
+//          fontSize: 16.0);
 
-      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+//      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+//
+//      try {
+//        await FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: Environment.downloadStorage,
+//          fileName: name,
+//          showNotification: true,
+//          // show download progress in status bar (for Android)
+//          openFileFromNotification:
+//              true, // click on notification to open downloaded file (for Android)
+//        );
+//      } catch (e) {
+//        String dir = (await getExternalStorageDirectory()).path + '/download';
+//        await FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: dir,
+//          fileName: name,
+//          showNotification: true,
+//          // show download progress in status bar (for Android)
+//          openFileFromNotification:
+//              true, // click on notification to open downloaded file (for Android)
+//        );
+//      }
 
-      try {
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: Environment.downloadStorage,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      } catch (e) {
-        String dir = (await getExternalStorageDirectory()).path + '/download';
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: dir,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DocumentViewScreen(
+            url: url,
+            nameFile: name,
+          ),
+        ),
+      );
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{
