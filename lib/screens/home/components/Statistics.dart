@@ -67,7 +67,7 @@ class _StatisticsState extends State<Statistics> {
             ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
                 ? BlocBuilder<RapidTestBloc, RapidTestState>(
                     builder: (context, rapidState) {
-                       urlStatistic = remoteState.remoteConfig
+                      urlStatistic = remoteState.remoteConfig
                           .getString(FirebaseConfig.pikobarUrl);
                       return rapidState is RapidTestLoaded
                           ? BlocBuilder<PcrTestBloc, PcrTestState>(
@@ -403,6 +403,7 @@ class _StatisticsState extends State<Statistics> {
               Container(
                 margin: EdgeInsets.only(left: 5.0),
                 child: Text(title,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 13.0,
                         color: colorTextTitle,
