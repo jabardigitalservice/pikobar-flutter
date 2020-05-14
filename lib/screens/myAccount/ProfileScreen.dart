@@ -461,7 +461,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else {
               role = data['role'];
             }
+            print(groupMenu);
             groupMenu.removeWhere((element) => !element['role'].contains(role));
+            groupMenu.removeWhere((element) => element['enabled'] == false);
             groupMenuLength = groupMenu.length;
           }
 
@@ -482,55 +484,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
     for (int i = 0; i < groupMenu.length; i++) {
       Column column = Column(
         children: <Widget>[
-          groupMenu[i]['enabled']
-              ? Column(
+          Column(
+            children: <Widget>[
+              InkWell(
+                onTap: () async {
+                  var url = await userDataUrlAppend(groupMenu[i]['url']);
+                  openChromeSafariBrowser(url: url);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    InkWell(
-                      onTap: () async {
-                        var url = await userDataUrlAppend(groupMenu[i]['url']);
-                        openChromeSafariBrowser(url: url);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                  height: 20,
-                                  child: Image.network(groupMenu[i]['icon'])),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                groupMenu[i]['caption'],
-                                style: TextStyle(color: Color(0xff4F4F4F)),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Color(0xff828282),
-                            size: 15,
-                          )
-                        ],
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                            height: 20,
+                            child: Image.network(groupMenu[i]['icon'])),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          groupMenu[i]['caption'],
+                          style: TextStyle(color: Color(0xff4F4F4F)),
+                        ),
+                      ],
                     ),
-                    i == groupMenu.length - 1
-                        ? Container()
-                        : Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Divider(),
-                              SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          )
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xff828282),
+                      size: 15,
+                    )
                   ],
-                )
-              : Container()
+                ),
+              ),
+              i == groupMenu.length - 1
+                  ? Container()
+                  : Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
+                    )
+            ],
+          )
         ],
       );
 
