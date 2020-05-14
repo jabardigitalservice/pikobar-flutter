@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
+import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
@@ -23,6 +24,7 @@ import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
+import 'package:pikobar_flutter/screens/home/components/ImportantInfoScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -49,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   RapidTestBloc _rapidTestBloc;
   PcrTestBloc _pcrTestBloc;
   NewsListBloc _newsListBloc;
+  ImportantInfoListBloc _importantInfoListBloc;
   VideoListBloc _videoListBloc;
   InfoGraphicsListBloc _infoGraphicsListBloc;
   DocumentsBloc _documentsBloc;
@@ -99,6 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider<NewsListBloc>(
             create: (context) => _newsListBloc = NewsListBloc()
               ..add(NewsListLoad(Collections.newsJabar))),
+        BlocProvider<ImportantInfoListBloc>(
+            create: (context) => _importantInfoListBloc = ImportantInfoListBloc()
+              ..add(ImportantInfoListLoad(Collections.importantInfor))),
         BlocProvider<VideoListBloc>(
             create: (context) =>
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
@@ -314,6 +320,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: ColorBase.grey,
                   ),
                 ),
+                Container(
+                  child: ImportantInfoScreen(maxLength: 3),
+                ),
               ],
             ),
           )
@@ -331,6 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _rapidTestBloc.close();
     _pcrTestBloc.close();
     _newsListBloc.close();
+    _importantInfoListBloc.close();
     _videoListBloc.close();
     _infoGraphicsListBloc.close();
     _documentsBloc.close();

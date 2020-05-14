@@ -29,6 +29,7 @@ class Dictionary {
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
   static String documents = 'Dokumen';
+  static String importantInfo = 'Info Penting';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -243,6 +244,7 @@ class Dictionary {
   static String reaktif = 'Reaktif';
   static String nonReaktif = 'Non-Reaktif';
   static String invalid = 'Invalid';
+  static String downloadAttachment = 'Unduh Lampiran';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
