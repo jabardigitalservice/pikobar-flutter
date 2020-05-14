@@ -78,8 +78,8 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
                   filePath: remotePDFpath,
                   enableSwipe: true,
                   swipeHorizontal: true,
-                  autoSpacing: true,
-                  pageFling: true,
+                  autoSpacing: false,
+                  pageFling: false,
                   defaultPage: currentPage,
                   fitPolicy: FitPolicy.BOTH,
                   onRender: (_pages) {
