@@ -40,6 +40,7 @@ class RemoteConfigRepository {
       FirebaseConfig.loginRequired: FirebaseConfig.loginRequiredDefaultVal,
       FirebaseConfig.rapidTestInfo: false,
       FirebaseConfig.rapidTestEnable: false,
+      FirebaseConfig.groupHomeBanner:false
     });
 
     try {

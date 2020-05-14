@@ -22,6 +22,7 @@ import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
+import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -91,22 +92,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 _statisticsBloc = StatisticsBloc()..add(StatisticsLoad())),
         BlocProvider<RapidTestBloc>(
             create: (context) =>
-            _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad())),
+                _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad())),
         BlocProvider<PcrTestBloc>(
             create: (context) =>
-            _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
+                _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
-            create: (context) =>
-            _newsListBloc = NewsListBloc()..add(NewsListLoad(Collections.newsJabar))),
+            create: (context) => _newsListBloc = NewsListBloc()
+              ..add(NewsListLoad(Collections.newsJabar))),
         BlocProvider<VideoListBloc>(
             create: (context) =>
-            _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
+                _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
         BlocProvider<InfoGraphicsListBloc>(
-            create: (context) =>
-            _infoGraphicsListBloc = InfoGraphicsListBloc()..add(InfoGraphicsListLoad(limit: 3))),
+            create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
+              ..add(InfoGraphicsListLoad(limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
-            _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
+                _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
       ],
       child: Scaffold(
         backgroundColor: ColorBase.grey,
@@ -181,6 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               /// Menus Section
               MenuList(),
+              
+              // Group Home Banner Section
+              GroupHomeBanner(),
 
               /// Spread Section
               SpreadSection(),
@@ -204,7 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 16.0),
                   ),
                 ),
-
                 Container(
                   child: DefaultTabController(
                     length: 3,
@@ -213,15 +216,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         TabBar(
                           onTap: (index) {
                             if (index == 0) {
-                              _newsListBloc.add(NewsListLoad(Collections.newsJabar));
+                              _newsListBloc
+                                  .add(NewsListLoad(Collections.newsJabar));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsJabar);
                             } else if (index == 1) {
-                              _newsListBloc.add(NewsListLoad(Collections.newsNational));
+                              _newsListBloc
+                                  .add(NewsListLoad(Collections.newsNational));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsNational);
                             } else if (index == 2) {
-                              _newsListBloc.add(NewsListLoad(Collections.newsWorld));
+                              _newsListBloc
+                                  .add(NewsListLoad(Collections.newsWorld));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsWorld);
                             }
@@ -278,7 +284,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-
                 Container(
                   padding: EdgeInsets.only(top: 16.0),
                   child: VideoList(),
