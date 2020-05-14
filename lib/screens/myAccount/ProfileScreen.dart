@@ -461,7 +461,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else {
               role = data['role'];
             }
-            print(groupMenu);
             groupMenu.removeWhere((element) => !element['role'].contains(role));
             groupMenu.removeWhere((element) => element['enabled'] == false);
             groupMenuLength = groupMenu.length;
