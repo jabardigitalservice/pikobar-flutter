@@ -16,5 +16,6 @@ class Collections {
   static String newsJabar = 'articles';
   static String newsNational = 'articles_national';
   static String newsWorld = 'articles_world';
+  static String userDevices = 'devices_info';
 
 }
