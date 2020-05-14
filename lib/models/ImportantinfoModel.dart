@@ -8,6 +8,7 @@ class ImportantinfoModel {
   String actionUrl;
   String actionTitle;
   String attachmentUrl;
+  String attachmentName;
   bool published;
   int publishedAt;
 
@@ -19,6 +20,7 @@ class ImportantinfoModel {
     this.actionUrl,
     this.actionTitle,
     this.attachmentUrl,
+    this.attachmentName,
     this.published,
     this.publishedAt,
   });
@@ -34,6 +36,7 @@ class ImportantinfoModel {
       actionUrl: json["action_url"] ?? '',
       actionTitle: json["action_title"] ?? '',
       attachmentUrl: json["attachment_url"] ?? '',
+      attachmentName: json["attachment_name"] ?? '',
       published: json["published"] ?? false,
       publishedAt:
           json["published_at"] != null ? json["published_at"].seconds : null,

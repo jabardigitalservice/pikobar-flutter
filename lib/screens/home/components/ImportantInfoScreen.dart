@@ -39,57 +39,59 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
                       null &&
                   snapshot.data
                       .getBool(FirebaseConfig.importantinfoStatusVisible)
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    widget.maxLength != null
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16.0, right: 16.0, bottom: 10.0, top: 16),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  Dictionary.importantInfo,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: FontsFamily.productSans,
-                                      fontSize: 16.0),
-                                ),
-                                InkWell(
-                                  child: Text(
-                                    Dictionary.more,
-                                    style: TextStyle(
-                                        color: Color(0xFF828282),
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: FontsFamily.productSans,
-                                        fontSize: 14.0),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pushNamed(context,
-                                        NavigationConstrants.ImportantInfoList);
+              ? SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                widget.maxLength != null
+                    ? Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16.0, right: 16.0, bottom: 10.0, top: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        Dictionary.importantInfo,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.productSans,
+                            fontSize: 16.0),
+                      ),
+                      InkWell(
+                        child: Text(
+                          Dictionary.more,
+                          style: TextStyle(
+                              color: Color(0xFF828282),
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.productSans,
+                              fontSize: 14.0),
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context,
+                              NavigationConstrants.ImportantInfoList);
 
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.tappedImportantInfoMore);
-                                  },
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(),
-                    BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
-                      builder: (context, state) {
-                        return state is ImpoftantInfoListLoaded
-                            ? widget.maxLength != null
-                                ? _buildContent(state.imporntantinfoList)
-                                : _buildContentList(state.imporntantinfoList)
-                            : _buildLoading();
-                      },
-                    )
-                  ],
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedImportantInfoMore);
+                        },
+                      ),
+                    ],
+                  ),
                 )
+                    : Container(),
+                BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
+                  builder: (context, state) {
+                    return state is ImpoftantInfoListLoaded
+                        ? widget.maxLength != null
+                        ? _buildContent(state.imporntantinfoList)
+                        : _buildContentList(state.imporntantinfoList)
+                        : _buildLoading();
+                  },
+                )
+              ],
+            ),
+          )
               : Container();
         });
   }
@@ -203,37 +205,37 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
                 SizedBox(
                   width: 10,
                 ),
-               Expanded(
-                 child:  Column(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: <Widget>[
-                     Text(
-                       data.title,
-                       style: TextStyle(
-                           fontSize: 16.0, fontWeight: FontWeight.w600),
-                       textAlign: TextAlign.left,
-                       maxLines: 2,
-                       overflow: TextOverflow.ellipsis,
-                     ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        data.title,
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
 //                     SizedBox(
 //                       height: 25,
 //                     ),
-                     Container(
-                         padding: EdgeInsets.only(top: 5.0),
-                         child: Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: <Widget>[
-                             Text(
-                               unixTimeStampToDate(data.publishedAt),
-                               style:
-                               TextStyle(fontSize: 12.0, color: Colors.grey),
-                             ),
-                           ],
-                         )),
-                   ],
-                 ),
-               ),
+                      Container(
+                          padding: EdgeInsets.only(top: 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                unixTimeStampToDate(data.publishedAt),
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.grey),
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -253,16 +255,14 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
   }
 
   _buildContentList(List<ImportantinfoModel> list) {
-    return SingleChildScrollView(
-      child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: list.length,
-        padding: const EdgeInsets.only(bottom: 10.0),
-        itemBuilder: (BuildContext context, int index) {
-          return designListImportantInfo(list[index]);
-        },
-      ),
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: list.length,
+      padding: const EdgeInsets.only(bottom: 10.0),
+      itemBuilder: (BuildContext context, int index) {
+        return designListImportantInfo(list[index]);
+      },
     );
   }
 
@@ -273,11 +273,11 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
       child: ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: 3,
+          itemCount: widget.maxLength != null ? 3 : 10,
           itemBuilder: (context, index) {
             return Skeleton(
                 child: Container(
-                    height: 65.0,
+                    height: 75.0,
                     margin: EdgeInsets.only(top: 10.0),
                     padding: EdgeInsets.fromLTRB(10.0, 10.0, 75.0, 10.0),
                     alignment: Alignment.centerLeft,

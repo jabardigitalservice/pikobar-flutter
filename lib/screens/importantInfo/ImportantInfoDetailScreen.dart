@@ -306,7 +306,7 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                           children: <Widget>[
                             Container(
                               width: MediaQuery.of(context).size.width - 180,
-                              child: Text('test lampiran',
+                              child: Text(data.attachmentName,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                   style: TextStyle(
@@ -330,9 +330,10 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                                         color: Colors.white)),
                                 onPressed: () {
                                   Platform.isAndroid
-                                      ? _downloadAttachment(
-                                          'judull', data.attachmentUrl)
-                                      : _viewPdf('judull', data.attachmentUrl);
+                                      ? _downloadAttachment(data.attachmentName,
+                                          data.attachmentUrl)
+                                      : _viewPdf(data.attachmentName,
+                                          data.attachmentUrl);
                                 },
                               ),
                             )
