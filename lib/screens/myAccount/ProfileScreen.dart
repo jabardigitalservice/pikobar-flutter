@@ -32,7 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
-
   @override
   void initState() {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -452,36 +451,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         future: setupRemoteConfig(),
         builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
           var groupMenu;
+          String role;
+          int groupMenuLength = 0;
           if (snapshot.data != null) {
             groupMenu = json.decode(
                 snapshot.data.getString(FirebaseConfig.groupMenuProfile));
+            if (data['role'] == null || data['role'] == '') {
+              role = 'public';
+            } else {
+              role = data['role'];
+            }
+            groupMenu.removeWhere((element) => !element['role'].contains(role));
+            groupMenuLength = groupMenu.length;
           }
 
-          return snapshot.data != null
+          return snapshot.data != null && groupMenuLength != 0
               ? Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   child: Padding(
                       padding: EdgeInsets.all(15.0),
-                      child: Column(children: getGroupMenu(groupMenu, data))))
+                      child: Column(children: getGroupMenu(groupMenu))))
               : Container();
         });
   }
 
-  List<Widget> getGroupMenu(List<dynamic> groupMenu, DocumentSnapshot data) {
+  List<Widget> getGroupMenu(List<dynamic> groupMenu) {
     List<Widget> list = List();
-    String role;
-    if (data['role'] == null) {
-      role = 'public';
-    } else {
-      role = data['role'];
-    }
-    if (role == 'public') {
-      groupMenu.removeWhere((element) => element['role'] != role);
-    } else {  
-      groupMenu.removeWhere(
-          (element) => element['role'] != role && element['role'] != 'public');
-    }
+
     for (int i = 0; i < groupMenu.length; i++) {
       Column column = Column(
         children: <Widget>[
