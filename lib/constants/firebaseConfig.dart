@@ -39,6 +39,8 @@ class FirebaseConfig {
   static String rapidTestInfo='rapid_test_info';
   static String rapidTestEnable='rapid_test_enable';
   static String groupMenuProfile='group_menu_profile';
+  static String groupHomeBanner='group_home_bigbanner';
+
 
 
 
