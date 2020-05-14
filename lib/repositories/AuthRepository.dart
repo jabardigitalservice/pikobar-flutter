@@ -149,11 +149,12 @@ class AuthRepository {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
+      final userDocument = Firestore.instance
+          .collection(Collections.users)
+          .document(_user.uid);
+
       _firebaseMessaging.getToken().then((token) {
-        final tokensDocument = Firestore.instance
-            .collection(Collections.users)
-            .document(_user.uid)
-            .collection(Collections.userTokens)
+        final tokensDocument =  userDocument.collection(Collections.userTokens)
             .document(token);
 
         tokensDocument.get().then((snapshot) {
@@ -165,6 +166,13 @@ class AuthRepository {
       });
 
       FirebaseAnalytics().setUserId(_user.uid);
+
+      userDocument.get().then((snapshot) {
+        if (snapshot.exists && snapshot.data['city_id'] != null) {
+          FirebaseAnalytics().setUserProperty(name: 'city_id', value: snapshot.data['city_id']);
+        }
+      });
+
     }
   }
 

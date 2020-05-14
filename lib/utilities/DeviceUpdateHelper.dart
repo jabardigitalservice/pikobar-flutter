@@ -22,8 +22,9 @@ Future<void> initializePlatformState() async {
         deviceData = _readAndroidBuildData(_deviceInfo, _packageInfo);
         _sendDataToFirestore(_user, '${_deviceInfo.model ?? (_deviceInfo.manufacturer + _deviceInfo.product) ?? _deviceInfo.androidId}', deviceData);
       } else if (Platform.isIOS) {
-        deviceData = _readIosDeviceInfo(
-            await deviceInfoPlugin.iosInfo, await PackageInfo.fromPlatform());
+        IosDeviceInfo _deviceInfo = await deviceInfoPlugin.iosInfo;
+        deviceData = _readIosDeviceInfo(_deviceInfo, await PackageInfo.fromPlatform());
+        _sendDataToFirestore(_user, '${_deviceInfo.model + ' ' + _deviceInfo.identifierForVendor.split('-')[0]}', deviceData);
       }
     } on PlatformException {
       deviceData = <String, dynamic>{
@@ -64,11 +65,6 @@ Map<String, dynamic> _readIosDeviceInfo(
     'localizedModel': data.localizedModel,
     'identifierForVendor': data.identifierForVendor,
     'isPhysicalDevice': data.isPhysicalDevice,
-    'utsname.sysname:': data.utsname.sysname,
-    'utsname.nodename:': data.utsname.nodename,
-    'utsname.release:': data.utsname.release,
-    'utsname.version:': data.utsname.version,
-    'utsname.machine:': data.utsname.machine,
     'created_at': DateTime.now()
   };
 }
