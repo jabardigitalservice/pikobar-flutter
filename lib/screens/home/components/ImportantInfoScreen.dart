@@ -184,7 +184,7 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
               children: <Widget>[
                 Container(
                   width: 70,
-                  height: 80,
+                  height: 75,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: CachedNetworkImage(
@@ -218,9 +218,9 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-//                     SizedBox(
-//                       height: 25,
-//                     ),
+                     SizedBox(
+                       height: 2,
+                     ),
                       Container(
                           padding: EdgeInsets.only(top: 5.0),
                           child: Row(
