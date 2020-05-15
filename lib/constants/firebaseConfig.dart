@@ -40,6 +40,7 @@ class FirebaseConfig {
   static String rapidTestEnable='rapid_test_enable';
   static String groupMenuProfile='group_menu_profile';
   static String groupHomeBanner='group_home_bigbanner';
+  static String importantinfoStatusVisible = 'important_info_status_visible';
 
 
 

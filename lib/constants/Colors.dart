@@ -10,6 +10,7 @@ class ColorBase {
   static final announcementBackgroundColor = Color(0xFFF9EFD0);
 
   static final gradientBlue = [Color(0xFF00AADE), Color(0xFF0669B1)];
+  static final gradientGreen = [Color(0xFF0ad178), Color(0xFF009D57)];
   static final gradientBlueToPurple = [Color(0xFF005C97), Color(0xFF363795)];
   static final gradientBlueOpacity = [
     Color(0xFF00AADE),
