@@ -194,6 +194,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
               /// Spread Section
               SpreadSection(),
+
+
+              /// Important Info
+              Container(
+                color: ColorBase.grey,
+                child: ImportantInfoScreen(maxLength: 3),
+              ),
+
             ],
           ),
 
@@ -313,15 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: EdgeInsets.only(top: 16.0),
                   child: Documents(),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  child: ImportantInfoScreen(maxLength: 3),
                 ),
               ],
             ),
