@@ -149,7 +149,9 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
           ),
         );
         AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfoDetail,
-            <String, dynamic>{'title': data.title});
+            <String, dynamic>{
+          'id': data.id,
+          'title': data.title.length < 100 ? data.title : data.title.substring(0, 100)});
       },
     );
   }
@@ -231,7 +233,9 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
               ),
             );
             AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfoDetail,
-                <String, dynamic>{'title': data.title});
+                <String, dynamic>{
+                  'id': data.id,
+                  'title': data.title.length < 100 ? data.title : data.title.substring(0, 100)});
           },
         ),
       ),
