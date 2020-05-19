@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -30,14 +31,14 @@ class ImportantInfoScreen extends StatefulWidget {
 class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<RemoteConfig>(
-        future: setupRemoteConfig(),
-        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-          return snapshot.data != null &&
-                  snapshot.data
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+        builder: (context, state) {
+          return  state is RemoteConfigLoaded ?
+          state.remoteConfig != null &&
+              state.remoteConfig
                           .getBool(FirebaseConfig.importantinfoStatusVisible) !=
                       null &&
-                  snapshot.data
+              state.remoteConfig
                       .getBool(FirebaseConfig.importantinfoStatusVisible)
               ? SingleChildScrollView(
             child: Column(
@@ -92,7 +93,7 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
               ],
             ),
           )
-              : Container();
+              : Container() : Container();
         });
   }
 
@@ -151,23 +152,6 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
             <String, dynamic>{'title': data.title});
       },
     );
-  }
-
-  Future<RemoteConfig> setupRemoteConfig() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
-      FirebaseConfig.importantinfoStatusVisible: false,
-    });
-
-    try {
-      await remoteConfig.fetch(expiration: Duration(minutes: 5));
-      await remoteConfig.activateFetched();
-    } catch (exception) {
-      print('Unable to fetch remote config. Cached or default values will be '
-          'used');
-    }
-
-    return remoteConfig;
   }
 
   Widget designListImportantInfo(ImportantinfoModel data) {
