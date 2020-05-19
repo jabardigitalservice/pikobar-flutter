@@ -281,7 +281,10 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                       }),
                   SizedBox(height: 10.0),
 
-                  data.actionTitle != null && data.actionUrl != null
+                  data.actionTitle != null &&
+                          data.actionTitle.isNotEmpty &&
+                          data.actionUrl != null &&
+                          data.actionUrl.isNotEmpty
                       ? RoundedButton(
                           title: data.actionTitle,
                           color: ColorBase.green,
