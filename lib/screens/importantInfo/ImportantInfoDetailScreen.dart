@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -12,8 +13,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:path_provider/path_provider.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantDetail/Bloc.dart';
+import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
@@ -24,18 +27,14 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:pedantic/pedantic.dart';
 
 class ImportantInfoDetailScreen extends StatefulWidget {
   final String id;
@@ -75,26 +74,20 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
       BuildContext context, importantInfoDetailState state) {
     return Scaffold(
         appBar: AppBar(
-          title: CustomAppBar.setTitleAppBar(Dictionary.importantInfo),
-//            actions: <Widget>[
-//              state is ImportantInfoDetailLoaded
-//                  ? Container(
-//                      margin: EdgeInsets.only(right: 10.0),
-//                      child: IconButton(
-//                        icon: Icon(FontAwesomeIcons.solidShareSquare,
-//                            size: 17, color: Colors.white),
-//                        onPressed: () {
-//                          Share.share(
-//                              '${state.record.title}\n\n${state.record.actionUrl != null ? 'Baca lengkapnya:\n' + state.record.actionUrl : ''}\n\n${Dictionary.sharedFrom}');
-//                          AnalyticsHelper.setLogEvent(
-//                              Analytics.tappedImportantInfoDetailShare,
-//                              <String, dynamic>{'title': state.record.title});
-//                        },
-//                      ))
-//                  :
-//              Container()
-//            ]
-        ),
+            title: CustomAppBar.setTitleAppBar(Dictionary.importantInfo),
+            actions: <Widget>[
+              state is ImportantInfoDetailLoaded
+                  ? Container(
+                      margin: EdgeInsets.only(right: 10.0),
+                      child: IconButton(
+                        icon: Icon(FontAwesomeIcons.solidShareSquare,
+                            size: 17, color: Colors.white),
+                        onPressed: () {
+                          _shareMessage(state.record);
+                        },
+                      ))
+                  : Container()
+            ]),
         body: state is ImportantInfoDetailLoading
             ? _buildLoading(context)
             : state is ImportantInfoDetailLoaded
@@ -244,31 +237,6 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),
-//                  Row(
-//                    children: <Widget>[
-//                      Image.network(
-//                        data.newsChannelIcon,
-//                        width: 25.0,
-//                        height: 25.0,
-//                      ),
-//                      Container(
-//                        margin: EdgeInsets.only(left: 5.0),
-//                        child: Column(
-//                            crossAxisAlignment: CrossAxisAlignment.start,
-//                            children: <Widget>[
-//                              Text(
-//                                data.newsChannel,
-//                                style: TextStyle(fontSize: 12.0),
-//                              ),
-//                              Text(
-//                                  unixTimeStampToDateTime(
-//                                      data.publishedAt),
-//                                  style: TextStyle(fontSize: 12.0))
-//                            ]),
-//                      )
-//                    ],
-//                  ),
-                  SizedBox(height: 10.0),
                   Html(
                       data: data.content,
                       defaultTextStyle:
@@ -280,7 +248,6 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                         _launchURL(url);
                       }),
                   SizedBox(height: 10.0),
-
                   data.actionTitle != null &&
                           data.actionTitle.isNotEmpty &&
                           data.actionUrl != null &&
@@ -294,7 +261,6 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                             _launchURL(data.actionUrl);
                           })
                       : Container(),
-
                   data.attachmentUrl.isNotEmpty
                       ? Container(
                           width: MediaQuery.of(context).size.width,
@@ -303,7 +269,6 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                           margin: EdgeInsets.only(top: 25.0, bottom: 16.0),
                         )
                       : Container(),
-
                   data.attachmentUrl.isNotEmpty
                       ? Row(
                           children: <Widget>[
@@ -450,5 +415,46 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
+  }
+
+  void _shareMessage(ImportantinfoModel data) async {
+    String content = await stringFromHtmlString(data.content);
+    if (data.image != null) {
+      try {
+        blockCircleLoading(context: context, dismissible: true);
+
+        var request = await HttpClient().getUrl(Uri.parse(data.image));
+        var response = await request.close();
+        Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+
+        Navigator.of(context).pop();
+
+        await fShare.Share.file(
+            Dictionary.appName, '${data.id}.jpg', bytes, 'image/jpg',
+            text: '${data.title}\n\n'
+                '$content\n\n'
+                '${data.actionUrl != null ? data.actionTitle + ':\n' + data.actionUrl.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
+                '${Dictionary.sharedFrom}');
+      } catch (e) {
+        Share.share('${data.title}\n\n'
+            '$content\n\n'
+            '${data.actionUrl != null ? data.actionTitle + ':\n' + data.actionUrl.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
+            '${Dictionary.sharedFrom}');
+      }
+    } else {
+      Share.share('${data.title}\n\n'
+          '$content\n\n'
+          '${data.actionUrl != null ? data.actionTitle + ':\n' + data.actionUrl.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
+          '${Dictionary.sharedFrom}');
+    }
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfoDetailShare,
+        <String, dynamic>{'title': data.title.length < 100 ? data.title : data.title.substring(0, 100)});
+  }
+
+  @override
+  void dispose() {
+    _importantInfoDetailBloc.close();
+    super.dispose();
   }
 }
