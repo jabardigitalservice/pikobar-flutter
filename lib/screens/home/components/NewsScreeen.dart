@@ -314,7 +314,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
                             child: Skeleton(
-                                width: MediaQuery.of(context).size.width / 3.8),
+                                width: MediaQuery.of(context).size.width / 4),
                           ),
                           Container(
                             padding: const EdgeInsets.all(5.0),
