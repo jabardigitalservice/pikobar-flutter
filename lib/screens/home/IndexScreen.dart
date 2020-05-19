@@ -48,12 +48,12 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   void initState() {
+    initializeFirebaseMessaging();
     initializeDateFormatting();
     initializePlatformState();
     initializeFlutterDownloader();
     initializeBottomNavigationBar();
     initializeToken();
-    initializeFirebaseMessaging();
     getCountMessage();
 
     super.initState();

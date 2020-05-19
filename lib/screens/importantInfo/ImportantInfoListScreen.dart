@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -12,9 +13,15 @@ class ImportantInfoListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ImportantInfoListBloc>(
-        create: (context) => ImportantInfoListBloc(),
-    child: ImportantInfo());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<RemoteConfigBloc>(
+            create: (context) => RemoteConfigBloc()..add(RemoteConfigLoad())),
+        BlocProvider<ImportantInfoListBloc>(
+        create: (context) => ImportantInfoListBloc())
+      ],
+      child: ImportantInfo(),
+    );
   }
 }
 
