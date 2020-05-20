@@ -295,7 +295,7 @@ class _NewsScreenState extends State<NewsScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Card(
-          margin: EdgeInsets.only(left: 10.0, right: 5.0, bottom: 10.0),
+          margin: EdgeInsets.only(bottom: 10.0),
           elevation: 3.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -318,7 +318,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           ),
                           Container(
                             padding: const EdgeInsets.all(5.0),
-                            width: MediaQuery.of(context).size.width - 140,
+                            width: MediaQuery.of(context).size.width - 120,
                             child: Column(
                               children: <Widget>[
                                 Container(
@@ -369,6 +369,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   separatorBuilder: (BuildContext context, int dex) => Divider()),
               widget.maxLength != null
                   ? Container(
+                margin: EdgeInsets.only(bottom: 10),
                 padding: EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5.0),
