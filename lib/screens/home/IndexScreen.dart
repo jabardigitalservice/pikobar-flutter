@@ -19,6 +19,8 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
+import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoDetailScreen.dart';
+import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoListScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
@@ -66,24 +68,26 @@ class IndexScreenState extends State<IndexScreen> {
         if (message['notification'] != null) {
           NotificationHelper().showNotification(
               message['notification']['title'], message['notification']['body'],
-              payload: jsonEncode(
-                  Platform.isAndroid ? message['data'] : message),
+              payload:
+                  jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         } else {
           NotificationHelper().showNotification(
               message['aps']['alert']['title'], message['aps']['alert']['body'],
-              payload: jsonEncode(
-                  Platform.isAndroid ? message['data'] : message),
+              payload:
+                  jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
+        _actionNotification(
+            jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
+        _actionNotification(
+            jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
     );
 
@@ -138,8 +142,9 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
-          title: Text(Dictionary.message),),
+        icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+        title: Text(Dictionary.message),
+      ),
       BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
           title: Column(
@@ -196,18 +201,24 @@ class IndexScreenState extends State<IndexScreen> {
                   news: newsType,
                 )));
       } else {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => NewsListScreen(news: newsType)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NewsListScreen(news: newsType)));
       }
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(
-                  id: data['id']
-                )));
+            builder: (context) => MessageDetailScreen(id: data['id'])));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
+      }
+    } else if (data['target'] == 'important_info') {
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ImportantInfoDetailScreen(id: data['id'])));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ImportantInfoListScreen()));
       }
     } else if (data['target'] == 'url') {
       if (data['url'] != null && data['url'] != 'null') {
