@@ -291,85 +291,96 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildLoading() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        margin: EdgeInsets.only(left: 10.0, right: 5.0, bottom: 10.0),
-        elevation: 3.0,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(10.0),
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Skeleton(
-                    height: 20.0,
-                    width: MediaQuery.of(context).size.width / 4,
-                    padding: 10.0,
-                  ),
-                  Skeleton(
-                    height: 20.0,
-                    width: MediaQuery.of(context).size.width / 4,
-                    padding: 10.0,
-                  ),
-                ],
-              ),
-            ), //
-            ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: 3,
-                padding: const EdgeInsets.all(10.0),
-                itemBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 90.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.all(5.0),
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                  child: Skeleton(
-                                height: 20.0,
-                                width: MediaQuery.of(context).size.width,
-                              )),
-                              Container(
-                                margin: EdgeInsets.only(top: 5.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Skeleton(
-                                      height: 35.0,
-                                      width: 35.0,
-                                    ),
-                                    Skeleton(
-                                      height: 25.0,
-                                      width: 100.0,
-                                      margin: 10.0,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Card(
+          margin: EdgeInsets.only(bottom: 10.0),
+          elevation: 3.0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: widget.maxLength != null ? widget.maxLength : 6,
+                  padding: const EdgeInsets.all(10.0),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: 80.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Skeleton(
+                                width: MediaQuery.of(context).size.width / 4),
                           ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Skeleton(
-                              height: 300.0,
-                              width: MediaQuery.of(context).size.width / 3),
-                        )
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int dex) => Divider()),
-          ],
+                          Container(
+                            padding: const EdgeInsets.all(5.0),
+                            width: MediaQuery.of(context).size.width - 135,
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                    child: Skeleton(
+                                      height: 15.0,
+                                      width: MediaQuery.of(context).size.width,
+                                    )),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                    child: Skeleton(
+                                      height: 15.0,
+                                      width: MediaQuery.of(context).size.width,
+                                    )),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Skeleton(
+                                            height: 20.0,
+                                            width: 20.0,
+                                          ),
+                                          Skeleton(
+                                            height: 15.0,
+                                            width: 55.0,
+                                            margin: 10.0,
+                                          ),
+                                        ],
+                                      ),
+                                      Skeleton(
+                                        height: 15.0,
+                                        width: 55.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int dex) => Divider()),
+              widget.maxLength != null
+                  ? Container(
+                margin: EdgeInsets.only(bottom: 10),
+                padding: EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: Skeleton(
+                      height: 55.0,
+                      width: MediaQuery.of(context).size.width),
+                ),
+              )
+                  : Container()
+            ],
+          ),
         ),
       ),
     );
