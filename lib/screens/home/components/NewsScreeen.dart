@@ -318,7 +318,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           ),
                           Container(
                             padding: const EdgeInsets.all(5.0),
-                            width: MediaQuery.of(context).size.width - 120,
+                            width: MediaQuery.of(context).size.width - 135,
                             child: Column(
                               children: <Widget>[
                                 Container(
