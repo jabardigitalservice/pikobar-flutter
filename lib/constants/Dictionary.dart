@@ -208,7 +208,7 @@ class Dictionary {
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
-  static String moreDetailRapidTest = ' Daftar RDT';
+  static String moreDetailRapidTest = ' Daftar Test Masif';
   static String lastUpdate = 'Update terakhir pada';
 
   // check distribution virus
