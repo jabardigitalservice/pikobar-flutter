@@ -107,97 +107,79 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                   fontFamily: FontsFamily.productSans),
             ),
             SizedBox(height: 15),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                      child: RichText(
-                    text: TextSpan(children: [
-                      TextSpan(
-                        text: dataAnnouncement['content'] != null
-                            ? dataAnnouncement['content']
-                            : Dictionary.infoTextAnnouncement,
-                        style: TextStyle(
-                            fontSize: 13.0,
-                            color: Colors.grey[600],
-                            fontFamily: FontsFamily.productSans),
-                      ),
-                      dataAnnouncement['action_url'].toString().isNotEmpty
-                          ? TextSpan(
-                              text: Dictionary.moreDetailRapidTest,
-                              style: TextStyle(
-                                  color: ColorBase.green,
-                                  fontFamily: FontsFamily.productSans,
-                                  fontWeight: FontWeight.bold),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  if (widget.remoteConfig != null &&
-                                      widget.remoteConfig.getString(
-                                              FirebaseConfig.loginRequired) !=
-                                          null) {
-                                    Map<String, dynamic> _loginRequiredMenu =
-                                        json.decode(widget.remoteConfig
-                                            .getString(
-                                                FirebaseConfig.loginRequired));
-
-                                    if (_loginRequiredMenu['rdt_menu']) {
-                                      bool hasToken =
-                                          await AuthRepository().hasToken();
-                                      if (!hasToken) {
-                                        bool isLoggedIn = await Navigator.of(
-                                                context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginScreen(
-                                                        title: Dictionary
-                                                            .rapidTestAppBar)));
-
-                                        if (isLoggedIn != null && isLoggedIn) {
-                                          var url = await userDataUrlAppend(
-                                              dataAnnouncement['action_url']);
-                                          openChromeSafariBrowser(url: url);
-                                        }
-                                      } else {
-                                        var url = await userDataUrlAppend(
-                                            dataAnnouncement['action_url']);
-                                        openChromeSafariBrowser(url: url);
-                                      }
-                                    } else {
-                                      openChromeSafariBrowser(
-                                          url: dataAnnouncement['action_url']);
-                                    }
-                                  }
-                                })
-                          : TextSpan(text: ''),
-                    ]),
-                  )),
-                ),
-                /*GestureDetector(
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.grey[600],
-                    size: 18,
-                  ),
-                  onTap: () async {
-                    setState(() {
-                      isCloseAnnouncement = false;
-                    });
-                    await AnnouncementSharedPreference.setAnnounceScreen(false);
-                  },
-                )*/
-              ],
-            ),
-            SizedBox(height: 15),
-            Text(
-              dataAnnouncement['content_pcr'] != null
-                  ? dataAnnouncement['content_pcr']
+            RichText(
+              text: TextSpan(children: [
+            TextSpan(
+              text: dataAnnouncement['content'] != null
+                  ? dataAnnouncement['content']
                   : Dictionary.infoTextAnnouncement,
               style: TextStyle(
                   fontSize: 13.0,
                   color: Colors.grey[600],
                   fontFamily: FontsFamily.productSans),
+            ),
+              ]),
+            ),
+            SizedBox(height: 15),
+            RichText(
+              text: TextSpan(children: [
+                TextSpan(
+                  text: dataAnnouncement['content_pcr'] != null
+                      ? dataAnnouncement['content_pcr']
+                      : Dictionary.infoTextAnnouncement,
+                  style: TextStyle(
+                      fontSize: 13.0,
+                      color: Colors.grey[600],
+                      fontFamily: FontsFamily.productSans),
+                ),
+                dataAnnouncement['action_url'].toString().isNotEmpty
+                    ? TextSpan(
+                    text: Dictionary.moreDetailRapidTest,
+                    style: TextStyle(
+                        color: ColorBase.green,
+                        fontFamily: FontsFamily.productSans,
+                        fontWeight: FontWeight.bold),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        if (widget.remoteConfig != null &&
+                            widget.remoteConfig.getString(
+                                FirebaseConfig.loginRequired) !=
+                                null) {
+                          Map<String, dynamic> _loginRequiredMenu =
+                          json.decode(widget.remoteConfig
+                              .getString(
+                              FirebaseConfig.loginRequired));
+
+                          if (_loginRequiredMenu['rdt_menu']) {
+                            bool hasToken =
+                            await AuthRepository().hasToken();
+                            if (!hasToken) {
+                              bool isLoggedIn = await Navigator.of(
+                                  context)
+                                  .push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      LoginScreen(
+                                          title: Dictionary
+                                              .rapidTestAppBar)));
+
+                              if (isLoggedIn != null && isLoggedIn) {
+                                var url = await userDataUrlAppend(
+                                    dataAnnouncement['action_url']);
+                                openChromeSafariBrowser(url: url);
+                              }
+                            } else {
+                              var url = await userDataUrlAppend(
+                                  dataAnnouncement['action_url']);
+                              openChromeSafariBrowser(url: url);
+                            }
+                          } else {
+                            openChromeSafariBrowser(
+                                url: dataAnnouncement['action_url']);
+                          }
+                        }
+                      })
+                    : TextSpan(text: ''),
+              ]),
             ),
           ],
         ));
