@@ -116,43 +116,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
       ],
       child: Scaffold(
-        backgroundColor: ColorBase.grey,
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: ColorBase.green,
-          title: Row(
-            children: <Widget>[
-              Image.asset('${Environment.logoAssets}logo.png',
-                  width: 40.0, height: 40.0),
-              Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        Dictionary.appName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.intro,
-                        ),
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(40.0),
+          child: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.white,
+            title: Row(
+              children: <Widget>[
+                Image.asset('${Environment.logoAssets}logo.png',
+                    width: 24.0, height: 24.0),
+                Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      Dictionary.appName,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.intro,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          Dictionary.subTitle,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.intro,
-                          ),
-                        ),
-                      )
-                    ],
-                  ))
-            ],
+                    ))
+              ],
+            ),
           ),
         ),
         body: buildContent(),
@@ -165,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: <Widget>[
         Container(
           height: MediaQuery.of(context).size.height * 0.15,
-          color: ColorBase.green,
+          color: Colors.white,
         ),
         ListView(children: [
           /// Banners Section

@@ -63,7 +63,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: ColorBase.green));
+        SystemUiOverlayStyle(statusBarColor: Colors.white));
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -74,7 +74,7 @@ class _AppState extends State<App> {
       title: '${Dictionary.appName}',
       theme: ThemeData(
           primaryColor: ColorBase.green,
-          primaryColorBrightness: Brightness.dark,
+          primaryColorBrightness: Brightness.light,
           fontFamily: FontsFamily.sourceSansPro),
       debugShowCheckedModeBanner: false,
       home: IndexScreen(),
