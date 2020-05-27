@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/blocs/banners/BannersState.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/models/BannerModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
@@ -23,6 +24,8 @@ class BannerListSlider extends StatefulWidget {
 }
 
 class BannerListSliderState extends State<BannerListSlider> {
+
+  int _current = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,59 +60,95 @@ class BannerListSliderState extends State<BannerListSlider> {
   }
 
   _buildSlider(BannersLoaded state) {
-    return CarouselSlider(
-      initialPage: 0,
-      enableInfiniteScroll: state.records.length > 1 ? true : false,
-      aspectRatio: 21 / 9,
-      viewportFraction: state.records.length > 1 ? 0.8 : 0.95,
-      autoPlay: state.records.length > 1 ? true : false,
-      autoPlayInterval: Duration(seconds: 5),
-      items: state.records.map((BannerModel data) {
-        return Builder(builder: (BuildContext context) {
-          return GestureDetector(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(shape: BoxShape.circle),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: CachedNetworkImage(
-                    imageUrl: data.url ?? '',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(5.0),
-                            topRight: Radius.circular(5.0)),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.fill,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        CarouselSlider(
+          initialPage: 0,
+          enableInfiniteScroll: state.records.length > 1 ? true : false,
+          aspectRatio: 21 / 9,
+          viewportFraction: 0.95,
+          autoPlay: state.records.length > 1 ? true : false,
+          autoPlayInterval: Duration(seconds: 5),
+          items: state.records.map((BannerModel data) {
+            return Builder(builder: (BuildContext context) {
+              return GestureDetector(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: CachedNetworkImage(
+                        imageUrl: data.url ?? '',
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5.0),
+                                topRight: Radius.circular(5.0)),
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    placeholder: (context, url) => Center(
-                        heightFactor: 10.2,
-                        child: CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              topRight: Radius.circular(5.0)),
-                        ),
-                        child: PikobarPlaceholder())),
-              ),
-            ),
-            onTap: () {
-              if (data.actionUrl != null) {
-                _clickAction(
-                    url: data.actionUrl,
-                    isLoginRequired: data.login);
-                AnalyticsHelper.setLogEvent(Analytics.tappedBanner,
-                    <String, dynamic>{'url': data.actionUrl});
-              }
-            },
-          );
-        });
-      }).toList(),
+                        placeholder: (context, url) => Center(
+                            heightFactor: 10.2,
+                            child: CupertinoActivityIndicator()),
+                        errorWidget: (context, url, error) => Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5.0),
+                                  topRight: Radius.circular(5.0)),
+                            ),
+                            child: PikobarPlaceholder())),
+                  ),
+                ),
+                onTap: () {
+                  if (data.actionUrl != null) {
+                    _clickAction(
+                        url: data.actionUrl,
+                        isLoginRequired: data.login);
+                    AnalyticsHelper.setLogEvent(Analytics.tappedBanner,
+                        <String, dynamic>{'url': data.actionUrl});
+                  }
+                },
+              );
+            });
+          }).toList(),
+          onPageChanged: (index) {
+            setState(() {
+              _current = index;
+            });
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
+          child: Row(
+            children: state.records.map((BannerModel data) {
+              int index = state.records.indexOf(data);
+              return _current == index ? Container(
+                width: 24.0,
+                height: 8.0,
+                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: ColorBase.green
+                )
+              ) : Container(
+                  width: 8.0,
+                  height: 8.0,
+                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 
