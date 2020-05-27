@@ -92,7 +92,6 @@ class _StatisticsState extends State<Statistics> {
   _buildLoading() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(16.0),
       child: Skeleton(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,15 +105,33 @@ class _StatisticsState extends State<Statistics> {
                   fontSize: 16.0),
             ),
             SizedBox(height: Dimens.padding),
+            SizedBox(height: 15),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer('', Dictionary.positif, Dictionary.positif, '-',
-                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
-                _buildContainer('', Dictionary.recover, Dictionary.recover, '-',
-                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                _buildContainer(
+                    '',
+                    Dictionary.positif,
+                    Dictionary.positif,
+                    '-',
+                    3,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600],
+                    ''),
+                _buildContainer(
+                    '',
+                    Dictionary.recover,
+                    Dictionary.recover,
+                    '-',
+                    3,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600],
+                    ''),
                 _buildContainer('', Dictionary.die, Dictionary.die, '-', 3,
-                    Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                    Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
             ),
             SizedBox(height: Dimens.padding),
@@ -129,7 +146,8 @@ class _StatisticsState extends State<Statistics> {
                     2,
                     Dictionary.people,
                     Colors.grey[600],
-                    Colors.grey[600]),
+                    Colors.grey[600],
+                    ''),
                 _buildContainer(
                     '',
                     Dictionary.inMonitoring,
@@ -138,7 +156,8 @@ class _StatisticsState extends State<Statistics> {
                     2,
                     Dictionary.people,
                     Colors.grey[600],
-                    Colors.grey[600]),
+                    Colors.grey[600],
+                    ''),
               ],
             ),
           ],
@@ -170,46 +189,65 @@ class _StatisticsState extends State<Statistics> {
                     fontFamily: FontsFamily.productSans,
                     fontSize: 16.0),
               ),
-              Text(
-                unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
-                style: TextStyle(
-                    color: Colors.grey[650],
-                    fontFamily: FontsFamily.productSans,
-                    fontSize: 12.0),
+              InkWell(onTap: (){
+                openChromeSafariBrowser(
+              url: urlStatistic.isNotEmpty
+                  ? urlStatistic
+                  : UrlThirdParty.urlCoronaInfoData);
+              },
+                child: Text(
+                  Dictionary.moreDetail,
+                  style: TextStyle(
+                      color: Color(0xff27AE60),
+                      fontFamily: FontsFamily.productSans,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.0),
+                ),
               ),
             ],
+          ),
+          SizedBox(height: 5),
+          Text(
+            unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
+            style: TextStyle(
+                color: Color(0xff828282),
+                fontFamily: FontsFamily.productSans,
+                fontSize: 12.0),
           ),
           SizedBox(height: Dimens.padding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.imageAssets}bg-positif.png',
+                  '${Environment.iconAssets}virusRed.png',
                   Dictionary.positif,
                   Dictionary.positif,
                   '${data['aktif']['jabar']}',
                   3,
                   Dictionary.people,
-                  Colors.white,
-                  Colors.white),
+                  Color(0xff828282),
+                  Color(0xffEB5757),
+                  ''),
               _buildContainer(
-                  '${Environment.imageAssets}bg-sembuh.png',
+                  '${Environment.iconAssets}virusGreen.png',
                   Dictionary.recover,
                   Dictionary.recover,
                   '${data['sembuh']['jabar']}',
                   3,
                   Dictionary.people,
-                  Colors.white,
-                  Colors.white),
+                  Color(0xff828282),
+                  Color(0xff27AE60),
+                  ''),
               _buildContainer(
-                  '${Environment.imageAssets}bg-meninggal.png',
+                  '${Environment.iconAssets}virusYellow.png',
                   Dictionary.die,
                   Dictionary.die,
                   '${data['meninggal']['jabar']}',
                   3,
                   Dictionary.people,
-                  Colors.white,
-                  Colors.white),
+                  Color(0xff828282),
+                  Color(0xffFFCC29),
+                  ''),
             ],
           ),
           SizedBox(height: Dimens.padding),
@@ -218,24 +256,26 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               _buildContainer(
                   '',
-                  Dictionary.inMonitoring,
+                  Dictionary.odp,
                   Dictionary.opdDesc,
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
                   2,
                   Dictionary.people,
-                  Colors.grey[600],
-                  ColorBase.green),
+                  Color(0xff828282),
+                  Color(0xffF2994A),
+                  data['odp']['total']['jabar'].toString()),
               _buildContainer(
                   '',
-                  Dictionary.underSupervision,
+                  Dictionary.pdp,
                   Dictionary.pdpDesc,
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
                   2,
                   Dictionary.people,
-                  Colors.grey[600],
-                  ColorBase.green),
+                  Color(0xff828282),
+                  Color(0xffF2994A),
+                  data['pdp']['total']['jabar'].toString()),
             ],
           )
         ],
@@ -373,11 +413,26 @@ class _StatisticsState extends State<Statistics> {
     return '(' + processData.toString() + '%)';
   }
 
-  _buildContainer(String image, String title, String description, String count,
-      int length, String label, Color colorTextTitle, Color colorNumber) {
+  _buildContainer(
+      String image,
+      String title,
+      String description,
+      String count,
+      int length,
+      String label,
+      Color colorTextTitle,
+      Color colorNumber,
+      String total) {
     if (count != null && count.isNotEmpty && count != '-') {
       try {
         count = formatter.format(int.parse(count)).replaceAll(',', '.');
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    if (total != null && total.isNotEmpty && total != '-') {
+      try {
+        total = formatter.format(int.parse(total)).replaceAll(',', '.');
       } catch (e) {
         print(e.toString());
       }
@@ -388,45 +443,56 @@ class _StatisticsState extends State<Statistics> {
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
           padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 2.5),
+          margin: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-              image: image != '' && image != null
-                  ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
-                  : null,
-              border: image == null || image == ''
-                  ? Border.all(color: Colors.grey[400])
-                  : null,
+              color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              image == ""
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10, left: 5.0),
+                      child: Text(title,
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              color: colorTextTitle,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.productSans)),
+                    )
+                  : Container(height: 15, child: Image.asset(image)),
               Container(
-                margin: EdgeInsets.only(left: 5.0),
-                child: Text(title,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 13.0,
-                        color: colorTextTitle,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                margin: EdgeInsets.only(top: 10, left: 5.0),
                 child: Text(count,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 22.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.productSans)),
-              )
+              ),
+              total == ''
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10, left: 5.0),
+                      child: Text(title,
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              color: colorTextTitle,
+                              fontFamily: FontsFamily.productSans)),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(top: 10, left: 5.0),
+                      child: Text(Dictionary.textSum + total,
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              color: colorTextTitle,
+                              fontFamily: FontsFamily.productSans)),
+                    )
             ],
           ),
         ),
         onTap: () {
-          openChromeSafariBrowser(
-              url: urlStatistic.isNotEmpty
-                  ? urlStatistic
-                  : UrlThirdParty.urlCoronaInfoData);
+          
         },
       ),
     );

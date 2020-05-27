@@ -72,6 +72,7 @@ class Dictionary {
   static String provinceDomicile = 'Provinsi Domisili';
   static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
   static String testSummaryTitleAppbar = 'Total Pemeriksaan';
+  static String textSum='Dari Total ';
 
 
   static String waNumberDinasKesehatan = '+628112093306';
@@ -255,6 +256,6 @@ class Dictionary {
   static String titleDocument = "Judul Dokumen";
   static String documentPreview = "Preview Dokumen";
   static String emptyDataDocuments = 'Dokumen tidak ada';
-  static String permissionDownloadAttachment =
-      'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
+  static String permissionDownloadAttachment = 'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
+  
 }
