@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
@@ -93,7 +94,7 @@ class _VideoListState extends State<VideoList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 5.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,7 +111,7 @@ class _VideoListState extends State<VideoList> {
                 child: Text(
                   Dictionary.more,
                   style: TextStyle(
-                      color: Color(0xFF828282),
+                      color: Color(0xFF27AE60),
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.productSans,
                       fontSize: 14.0),
@@ -124,6 +125,17 @@ class _VideoListState extends State<VideoList> {
             ],
           ),
         ),
+         Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0,bottom: 15),
+          child: Text(
+            Dictionary.videoUpToDateDesc,
+            style: TextStyle(
+                color: Color(0xff828282),
+                fontSize: 12.0,),
+            textAlign: TextAlign.left,
+          ),
+        ),
+
         Container(
           height: 280.0,
           child: ListView.builder(
@@ -132,19 +144,11 @@ class _VideoListState extends State<VideoList> {
               itemCount: data.length,
               itemBuilder: (context, index) {
                 return Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      blurRadius: 20.0,
-                      color: Colors.black.withOpacity(.2),
-                      offset: Offset(4.0, 4.0),
-                      spreadRadius: -20,
-                    ),
-                  ], borderRadius: BorderRadius.circular(12.0)),
-                  margin: EdgeInsets.only(right: 8.0),
+                 
+                  margin: EdgeInsets.only(right: 15.0),
                   width: MediaQuery.of(context).size.width * 0.8,
                   // decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: Card(
-                    margin: EdgeInsets.symmetric(vertical: 15.0),
+                  child: Container(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,9 +167,7 @@ class _VideoListState extends State<VideoList> {
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(6.0),
-                                          topRight: Radius.circular(6.0)),
+                                      borderRadius: BorderRadius.circular(8),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.fill,
@@ -212,9 +214,19 @@ class _VideoListState extends State<VideoList> {
                                 <String, dynamic>{'title': data[index].title});
                           },
                         ),
+                        Padding(
+                          padding:  EdgeInsets.only(top:10),
+                          child: Text(unixTimeStampToDateWithoutDay(
+                                data[index].publishedAt),
+                            style: TextStyle(
+                                color: Color(0xffBDBDBD),
+                                fontFamily: FontsFamily.productSans,
+                                fontSize: 10.0),
+                          ),
+                        ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.all(15.0),
+                          margin: EdgeInsets.only(top: 10),
                           child: Row(
                             children: <Widget>[
                               Expanded(

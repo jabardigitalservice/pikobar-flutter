@@ -32,6 +32,7 @@ class Dictionary {
   static String importantInfo = 'Info Penting';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
+  static String videoUpToDateDesc = 'Cari informasi melalui video dibawah ini';
   static String hintSearch = 'Ketikkan kata kunci ...';
   static String address = 'Alamat';
   static String emptyDataPhoneBook = 'Nomor darurat tidak ada';

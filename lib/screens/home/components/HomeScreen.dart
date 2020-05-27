@@ -103,8 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
             create: (context) => _newsListBloc = NewsListBloc()
               ..add(NewsListLoad(Collections.newsJabar))),
         BlocProvider<ImportantInfoListBloc>(
-            create: (context) => _importantInfoListBloc = ImportantInfoListBloc()
-              ..add(ImportantInfoListLoad(Collections.importantInfor))),
+            create: (context) =>
+                _importantInfoListBloc = ImportantInfoListBloc()
+                  ..add(ImportantInfoListLoad(Collections.importantInfor))),
         BlocProvider<VideoListBloc>(
             create: (context) =>
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
@@ -174,20 +175,18 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               /// Menus Section
               MenuList(),
-              
+
               // Group Home Banner Section
               GroupHomeBanner(),
 
               /// Spread Section
               SpreadSection(),
 
-
               /// Important Info
               Container(
                 color: ColorBase.grey,
                 child: ImportantInfoScreen(maxLength: 3),
               ),
-
             ],
           ),
 
@@ -282,6 +281,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     ),
+                  ),
+                ),
+                SizedBox(
+                  height: 24,
+                  child: Container(
+                    color: ColorBase.grey,
                   ),
                 ),
                 Container(

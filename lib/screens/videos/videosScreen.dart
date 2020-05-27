@@ -9,9 +9,11 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/VideoRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
@@ -108,7 +110,7 @@ class _VideosListState extends State<VideosList> {
           itemCount: state.videos.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return Column(
+            return Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 GestureDetector(
                   child: Container(
@@ -141,8 +143,21 @@ class _VideosListState extends State<VideosList> {
                         <String, dynamic>{'title': state.videos[index].title});
                   },
                 ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                        Dimens.padding, 10.0, Dimens.padding, 0),
+                  child: Text(
+                    unixTimeStampToDateWithoutDay(
+                        state.videos[index].publishedAt),
+                    style: TextStyle(
+                        color: Color(0xff828282),
+                        fontFamily: FontsFamily.productSans,fontWeight: FontWeight.bold,
+                        fontSize: 12.0),
+                  ),
+                ),
                 Container(
-                    margin: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 30.0),
+                    margin: EdgeInsets.fromLTRB(
+                        Dimens.padding, 10.0, Dimens.padding, 30.0),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -159,7 +174,8 @@ class _VideosListState extends State<VideosList> {
                           child: Container(
                             height: 40.0,
                             padding: EdgeInsets.only(left: 20.0, right: 10.0),
-                            child: Icon(FontAwesomeIcons.share, size: 17, color: ColorBase.green),
+                            child: Icon(FontAwesomeIcons.share,
+                                size: 17, color: ColorBase.green),
                           ),
                           onTap: () {
                             _shareApp(state.videos[index].title,
@@ -175,7 +191,8 @@ class _VideosListState extends State<VideosList> {
   }
 
   _shareApp(String title, String sourceUrl) {
-    Share.share('$title \n\nTonton video lengkapnya:\n$sourceUrl \n\n${Dictionary.sharedFrom}');
+    Share.share(
+        '$title \n\nTonton video lengkapnya:\n$sourceUrl \n\n${Dictionary.sharedFrom}');
 
     AnalyticsHelper.setLogEvent(
         Analytics.tappedVideoShare, <String, dynamic>{'title': title});
