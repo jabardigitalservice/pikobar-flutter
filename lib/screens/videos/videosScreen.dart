@@ -159,7 +159,7 @@ class _VideosListState extends State<VideosList> {
                           child: Container(
                             height: 40.0,
                             padding: EdgeInsets.only(left: 20.0, right: 10.0),
-                            child: Icon(FontAwesomeIcons.solidShareSquare, size: 17, color: ColorBase.green),
+                            child: Icon(FontAwesomeIcons.share, size: 17, color: ColorBase.green),
                           ),
                           onTap: () {
                             _shareApp(state.videos[index].title,

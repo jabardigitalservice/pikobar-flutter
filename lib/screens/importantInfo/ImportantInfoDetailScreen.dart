@@ -80,7 +80,7 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                   ? Container(
                       margin: EdgeInsets.only(right: 10.0),
                       child: IconButton(
-                        icon: Icon(FontAwesomeIcons.solidShareSquare,
+                        icon: Icon(FontAwesomeIcons.share,
                             size: 17, color: Colors.white),
                         onPressed: () {
                           _shareMessage(state.record);

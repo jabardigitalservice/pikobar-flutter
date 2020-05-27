@@ -75,7 +75,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               state is NewsDetailLoaded ? Container(
                   margin: EdgeInsets.only(right: 10.0),
                   child: IconButton(
-                    icon: Icon(FontAwesomeIcons.solidShareSquare, size: 17, color: Colors.white),
+                    icon: Icon(FontAwesomeIcons.share, size: 17, color: Colors.white),
                     onPressed: () {
                       Share.share(
                           '${state.record.title}\n\n${state.record.backlink != null ? 'Baca berita lengkapnya:\n'+state.record.backlink : ''}\n\n${Dictionary.sharedFrom}');
