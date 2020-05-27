@@ -32,12 +32,7 @@ class _StatisticsState extends State<Statistics> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            offset: Offset(0.0, 1),
-            blurRadius: 4.0),
-      ]),
+     color: Colors.white,
       child: Column(
         children: <Widget>[
           _buildStatistics(),
