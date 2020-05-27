@@ -231,7 +231,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 ),
                 Container(
                   child: IconButton(
-                    icon: Icon(FontAwesomeIcons.solidShareSquare,
+                    icon: Icon(FontAwesomeIcons.share,
                         size: 17, color: Color(0xFF27AE60)),
                     onPressed: () {
                       InfoGraphicsServices().shareInfoGraphics(

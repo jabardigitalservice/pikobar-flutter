@@ -79,7 +79,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             decoration: BoxDecoration(
                 color: Colors.grey[200],
                 border: Border.all(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(4.0)),
+                borderRadius: BorderRadius.circular(8.0)),
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Row(
@@ -161,7 +161,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                         ),
                         Container(
                           child: IconButton(
-                            icon: Icon(FontAwesomeIcons.solidShareSquare,
+                            icon: Icon(FontAwesomeIcons.share,
                                 size: 17, color: Color(0xFF27AE60)),
                             onPressed: () {
                               DocumentServices().shareDocument(

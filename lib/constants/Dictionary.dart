@@ -256,6 +256,7 @@ class Dictionary {
   static String titleDocument = "Judul Dokumen";
   static String documentPreview = "Preview Dokumen";
   static String emptyDataDocuments = 'Dokumen tidak ada';
-  static String permissionDownloadAttachment = 'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
-  
+  static String permissionDownloadAttachment =
+      'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
+  static String descDocument = 'Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat';
 }
