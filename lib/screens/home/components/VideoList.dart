@@ -235,7 +235,7 @@ class _VideoListState extends State<VideoList> {
                               Container(
                                 height: 40.0,
                                 child: GestureDetector(
-                                  child: Icon(FontAwesomeIcons.solidShareSquare,
+                                  child: Icon(FontAwesomeIcons.share,
                                       size: 17, color: ColorBase.green),
                                   onTap: () {
                                     _shareVideo(

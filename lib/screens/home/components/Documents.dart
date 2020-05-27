@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
@@ -57,7 +58,7 @@ class _DocumentsState extends State<Documents> {
                 child: Text(
                   Dictionary.more,
                   style: TextStyle(
-                      color: Color(0xFF828282),
+                      color: ColorBase.green,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.productSans,
                       fontSize: 14.0),
@@ -71,6 +72,19 @@ class _DocumentsState extends State<Documents> {
             ],
           ),
         ),
+
+        Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Text(
+            Dictionary.descDocument,
+            style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w600),
+            textAlign: TextAlign.left,
+          ),
+        ),
+
         BlocBuilder<DocumentsBloc, DocumentsState>(
           builder: (context, state) {
             return state is DocumentsLoaded ? _buildContent(state.documents) : _buildLoading();
@@ -165,7 +179,7 @@ class _DocumentsState extends State<Documents> {
             decoration: BoxDecoration(
                 color: Colors.grey[200],
                 border: Border.all(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(4.0)),
+                borderRadius: BorderRadius.circular(8.0)),
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Row(
@@ -247,7 +261,7 @@ class _DocumentsState extends State<Documents> {
                         ),
                         Container(
                           child: IconButton(
-                            icon: Icon(FontAwesomeIcons.solidShareSquare,
+                            icon: Icon(FontAwesomeIcons.share,
                                 size: 17, color: Color(0xFF27AE60)),
                             onPressed: () {
                               DocumentServices().shareDocument(
