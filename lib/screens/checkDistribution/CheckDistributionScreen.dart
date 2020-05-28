@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +19,14 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
@@ -146,8 +151,28 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
-                                    onPressed: () {
-                                      _handleLocation();
+                                    onPressed: () async {
+                                      bool hasToken =
+                                          await AuthRepository().hasToken();
+                                      if (!hasToken) {
+                                        bool isLoggedIn = await Navigator.of(
+                                                context)
+                                            .push(MaterialPageRoute(
+                                                builder: (context) => LoginScreen(
+                                                    title: Dictionary
+                                                        .checkDistribution)));
+
+                                        if (isLoggedIn != null && isLoggedIn) {
+                                          String id =
+                                              await AuthRepository().getToken();
+                                          _handleLocation(
+                                              isOther: false, id: id);
+                                        }
+                                      } else {
+                                        String id =
+                                            await AuthRepository().getToken();
+                                        _handleLocation(isOther: false, id: id);
+                                      }
                                     }),
                                 SizedBox(height: 10),
                                 RoundedButton(
@@ -162,37 +187,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                             color: Colors.grey[600],
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14),
-                                    onPressed: () async {
-                                      LatLng result = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LocationPicker()));
-
-                                      /// set gecoder to show in location information
-                                      final String address =
-                                          await GeocoderRepository()
-                                              .getAddress(result);
-
-                                      if (address != null) {
-                                        setState(() {
-                                          _address = address;
-                                        });
-                                      }
-
-                                      /// find location
-                                      if (result != null) {
-                                        findLocation(
-                                            result.latitude, result.longitude);
-
-                                        // analytics
-                                        AnalyticsHelper.setLogEvent(
-                                            Analytics.tappedFindByLocation,
-                                            <String, dynamic>{
-                                              'latlong':
-                                                  '${result.latitude}, ${result.longitude}'
-                                            });
-                                      }
+                                    onPressed: () {
+                                      _handleLocation(isOther: true);
                                     }),
                               ],
                             ),
@@ -454,10 +450,72 @@ class _CheckDistributionState extends State<CheckDistribution> {
     );
   }
 
-  Future<void> _handleLocation() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-    if (permission == PermissionStatus.granted) {
+  Future<void> _handleLocation({bool isOther = false, String id}) async {
+    var permissionService =
+        Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+
+    if (await permissionService.status.isGranted) {
+      await _actionFindLocation(isOther, id);
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogRequestPermission(
+                image: Image.asset(
+                  '${Environment.iconAssets}map_pin.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionLocationSpread,
+                onOkPressed: () async {
+                  Navigator.of(context).pop();
+                  if (await permissionService.status.isDenied) {
+                    await AppSettings.openLocationSettings();
+                  } else {
+                    permissionService.request().then((status) {
+                      _onStatusRequested(context, status,
+                          isOther: isOther, id: id);
+                    });
+                  }
+                },
+                onCancelPressed: () {
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.permissionDismissLocation);
+                  Navigator.of(context).pop();
+                },
+              ));
+    }
+  }
+
+  _checkDistribution(latitude, longitude, bool isOther, {String id}) {
+    _checkdistributionBloc.add(LoadCheckDistribution(
+        lat: latitude, long: longitude, id: id, isOther: isOther));
+  }
+
+  _actionFindLocation(bool isOther, String id) async {
+    if (isOther) {
+      LatLng result = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LocationPicker()));
+
+      /// set gecoder to show in location information
+      final String address = await GeocoderRepository().getAddress(result);
+
+      if (address != null) {
+        setState(() {
+          _address = address;
+        });
+      }
+
+      /// find location
+      if (result != null) {
+        _checkDistribution(result.latitude, result.longitude, isOther);
+
+        // analytics
+        AnalyticsHelper.setLogEvent(
+            Analytics.tappedFindByLocation, <String, dynamic>{
+          'latlong': '${result.latitude}, ${result.longitude}'
+        });
+      }
+    } else {
       Position position = await Geolocator()
           .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
@@ -477,7 +535,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
           });
 
           // find location
-          findLocation(position.latitude, position.longitude);
+          _checkDistribution(position.latitude, position.longitude, isOther,
+              id: id);
         }
       } else {
         List<Placemark> placemarks = await Geolocator()
@@ -496,7 +555,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
           });
 
           // find location
-          findLocation(position.latitude, position.longitude);
+          _checkDistribution(position.latitude, position.longitude, isOther,
+              id: id);
 
           // analytics
           AnalyticsHelper.setLogEvent(
@@ -507,42 +567,13 @@ class _CheckDistributionState extends State<CheckDistribution> {
       }
       // analytics
       AnalyticsHelper.setLogEvent(Analytics.tappedCheckCurrentLocation);
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
-                image: Image.asset(
-                  '${Environment.iconAssets}map_pin.png',
-                  fit: BoxFit.contain,
-                  color: Colors.white,
-                ),
-                description: Dictionary.permissionLocationSpread,
-                onOkPressed: () {
-                  Navigator.of(context).pop();
-                  PermissionHandler().requestPermissions(
-                      [PermissionGroup.location]).then((status) {
-                    _onStatusRequested(context, status);
-                  });
-                },
-                onCancelPressed: () {
-                  AnalyticsHelper.setLogEvent(
-                      Analytics.permissionDismissLocation);
-                  Navigator.of(context).pop();
-                },
-              ));
     }
   }
 
-  findLocation(latitude, longitude) {
-    _checkdistributionBloc
-        .add(LoadCheckDistribution(lat: latitude, long: longitude));
-  }
-
-  void _onStatusRequested(BuildContext context,
-      Map<PermissionGroup, PermissionStatus> statuses) async {
-    final statusLocation = statuses[PermissionGroup.location];
-    if (statusLocation == PermissionStatus.granted) {
-      _handleLocation();
+  void _onStatusRequested(BuildContext context, PermissionStatus statuses,
+      {bool isOther, String id}) async {
+    if (statuses.isGranted) {
+      _actionFindLocation(isOther, id);
       AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);

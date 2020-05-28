@@ -55,11 +55,11 @@ android {
             minifyEnabled true
 
             // Enables resource shrinking, which is performed by the
-            // Android Gradle plugin.
+            // Android Gradle plugin.1
             shrinkResources true
 
 
-            // TODO: Add your own signing config for the release build.
+            // TODO: Add your own signing config for the release build.flut
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }

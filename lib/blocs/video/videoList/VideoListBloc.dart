@@ -3,19 +3,13 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/repositories/VideoRepository.dart';
 
-part 'video_list_event.dart';
-part 'video_list_state.dart';
-
 class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
-  final VideoRepository _videoRepository;
+  final VideoRepository _videoRepository = VideoRepository();
   StreamSubscription _videosSubscription;
-
-  VideoListBloc({@required VideoRepository videoRepository})
-      : assert(videoRepository != null),
-        _videoRepository = videoRepository;
 
   @override
   VideoListState get initialState => VideoListInitial();
@@ -25,16 +19,16 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
     VideoListEvent event,
   ) async* {
     if (event is LoadVideos) {
-      yield* _mapLoadVideosToState();
+      yield* _mapLoadVideosToState(limit: event.limit);
     } else if (event is VideosUpdated) {
       yield* _mapVideosUpdateToState(event);
     }
   }
 
-  Stream<VideoListState> _mapLoadVideosToState() async* {
+  Stream<VideoListState> _mapLoadVideosToState({int limit}) async* {
     yield VideosLoading();
     _videosSubscription?.cancel();
-    _videosSubscription = _videoRepository.getVideo().listen(
+    _videosSubscription = _videoRepository.getVideo(limit: limit).listen(
           (videos) => add(VideosUpdated(videos)),
         );
   }

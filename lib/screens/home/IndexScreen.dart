@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:device_info/device_info.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -17,6 +19,8 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
+import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoDetailScreen.dart';
+import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoListScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
@@ -24,7 +28,10 @@ import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -43,39 +50,44 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   void initState() {
+    initializeFirebaseMessaging();
     initializeDateFormatting();
-    getCountMessage();
-    createDirectory();
-    setFlutterDownloaderInitial();
-
-    _initializeBottomNavigationBar();
-    setStatAnnouncement();
+    initializePlatformState();
+    initializeFlutterDownloader();
+    initializeBottomNavigationBar();
     initializeToken();
+    getCountMessage();
 
+    super.initState();
+  }
+
+  initializeFirebaseMessaging() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         if (message['notification'] != null) {
           NotificationHelper().showNotification(
               message['notification']['title'], message['notification']['body'],
-              payload: jsonEncode(
-                  Platform.isAndroid ? message['data'] : message),
+              payload:
+                  jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         } else {
           NotificationHelper().showNotification(
               message['aps']['alert']['title'], message['aps']['alert']['body'],
-              payload: jsonEncode(
-                  Platform.isAndroid ? message['data'] : message),
+              payload:
+                  jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         }
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
+        _actionNotification(
+            jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        _actionNotification(jsonEncode(Platform.isAndroid ? message['data'] : message));
+        _actionNotification(
+            jsonEncode(Platform.isAndroid ? message['data'] : message));
       },
     );
 
@@ -87,19 +99,10 @@ class IndexScreenState extends State<IndexScreen> {
         IosNotificationSettings(sound: true, badge: true, alert: true));
 
     firebaseInAppMsg.setAutomaticDataCollectionEnabled(true);
-
-    super.initState();
   }
 
-  setStatAnnouncement() async {
-    await AnnouncementSharedPreference.setAnnounceScreen(true);
-  }
-
-  setFlutterDownloaderInitial() async {
+  initializeFlutterDownloader() async {
     await FlutterDownloader.initialize();
-  }
-
-  createDirectory() async {
     if (Platform.isAndroid) {
       String localPath =
           (await getExternalStorageDirectory()).path + '/download';
@@ -121,7 +124,7 @@ class IndexScreenState extends State<IndexScreen> {
     await AuthRepository().updateIdToken();
   }
 
-  _initializeBottomNavigationBar() {
+  initializeBottomNavigationBar() {
     badger = BottomNavigationBadge(
         backgroundColor: Colors.red,
         badgeShape: BottomNavigationBadgeShape.circle,
@@ -139,13 +142,9 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
-          title: Column(
-            children: <Widget>[
-              SizedBox(height: 4),
-              Text(Dictionary.message),
-            ],
-          )),
+        icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+        title: Text(Dictionary.message),
+      ),
       BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
           title: Column(
@@ -155,9 +154,10 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(FontAwesomeIcons.userAlt, size: 16),
           title: Column(
             children: <Widget>[
+              SizedBox(height: 4),
               Text(Dictionary.profile),
             ],
           )),
@@ -172,7 +172,7 @@ class IndexScreenState extends State<IndexScreen> {
     }
   }
 
-  _actionNotification(String payload) {
+  _actionNotification(String payload) async {
     final data = jsonDecode(payload);
     if (data['target'] == 'news') {
       String newsType;
@@ -199,22 +199,30 @@ class IndexScreenState extends State<IndexScreen> {
             builder: (context) => NewsDetailScreen(
                   id: data['id'],
                   news: newsType,
-                  isFromNotification: true,
                 )));
       } else {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => News(news: newsType)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NewsListScreen(news: newsType)));
       }
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(
-                  id: data['id'],
-                  isFromNotification: true,
-                )));
+            builder: (context) => MessageDetailScreen(id: data['id'])));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
+      }
+    } else if (data['target'] == 'important_info') {
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ImportantInfoDetailScreen(id: data['id'])));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ImportantInfoListScreen()));
+      }
+    } else if (data['target'] == 'url') {
+      if (data['url'] != null && data['url'] != 'null') {
+        await launchUrl(context: context, url: data['url']);
       }
     }
   }
@@ -261,7 +269,7 @@ class IndexScreenState extends State<IndexScreen> {
   Widget _buildContent(int index) {
     switch (index) {
       case 0:
-        return HomeScreen();
+        return HomeScreen(indexScreenState: this);
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
         return Messages(indexScreenState: this);

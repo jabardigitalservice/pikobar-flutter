@@ -3,46 +3,43 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
-import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class AnnouncementScreen extends StatefulWidget {
-  final RemoteConfig remoteConfig;
-
-  AnnouncementScreen(this.remoteConfig);
 
   @override
   _AnnouncementScreenState createState() => _AnnouncementScreenState();
 }
 
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
-  bool isCloseAnnouncement;
   Map<String, dynamic> dataAnnouncement;
 
   @override
-  void initState() {
-    Future.delayed(Duration(milliseconds: 0), () async {
-      isCloseAnnouncement =
-          await AnnouncementSharedPreference.getAnnounceScreen();
-      setState(() {});
-    });
-    super.initState();
+  Widget build(BuildContext context) {
+
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      builder: (context, state) {
+        return state is RemoteConfigLoaded
+            ? _buildContent(state.remoteConfig)
+            : Container();
+      },
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (widget.remoteConfig != null) {
+  _buildContent(RemoteConfig remoteConfig) {
+    if (remoteConfig != null) {
       dataAnnouncement = json
-          .decode(widget.remoteConfig.getString(FirebaseConfig.announcement));
+          .decode(remoteConfig.getString(FirebaseConfig.announcement));
     }
 
-    return widget.remoteConfig != null &&
-            dataAnnouncement['enabled'] == true &&
-            isCloseAnnouncement == true
+    return remoteConfig != null &&
+            dataAnnouncement['enabled'] == true
         ? Container(
             width: (MediaQuery.of(context).size.width),
             padding: EdgeInsets.all(10.0),
@@ -97,19 +94,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                         ]),
                       )),
                     ),
-                    /*GestureDetector(
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.grey[600],
-                    size: 18,
-                  ),
-                  onTap: () async {
-                    setState(() {
-                      isCloseAnnouncement = false;
-                    });
-                    await AnnouncementSharedPreference.setAnnounceScreen(false);
-                  },
-                )*/
                   ],
                 ),
               ],

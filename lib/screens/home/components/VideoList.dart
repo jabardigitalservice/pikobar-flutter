@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -12,6 +14,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
@@ -25,20 +28,12 @@ class VideoList extends StatefulWidget {
 class _VideoListState extends State<VideoList> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection('videos')
-          .orderBy('sequence')
-          .limit(5)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasData) {
-          return _buildContent(snapshot);
-        } else {
-          return _buildLoading();
-        }
-      },
-    );
+    return BlocBuilder<VideoListBloc, VideoListState>(
+        builder: (context, state) {
+      return state is VideosLoaded
+          ? _buildContent(state.videos)
+          : _buildLoading();
+    });
   }
 
   Widget _buildLoading() {
@@ -93,7 +88,7 @@ class _VideoListState extends State<VideoList> {
     );
   }
 
-  Widget _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget _buildContent(List<VideoModel> data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -134,10 +129,8 @@ class _VideoListState extends State<VideoList> {
           child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
               scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data.documents.length,
+              itemCount: data.length,
               itemBuilder: (context, index) {
-                final DocumentSnapshot document =
-                    snapshot.data.documents[index];
                 return Container(
                   decoration: BoxDecoration(boxShadow: [
                     BoxShadow(
@@ -165,7 +158,7 @@ class _VideoListState extends State<VideoList> {
                               children: <Widget>[
                                 CachedNetworkImage(
                                   imageUrl: getYtThumbnail(
-                                      youtubeUrl: document['url'],
+                                      youtubeUrl: data[index].url,
                                       error: false),
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
@@ -185,7 +178,7 @@ class _VideoListState extends State<VideoList> {
                                   errorWidget: (context, url, error) =>
                                       CachedNetworkImage(
                                     imageUrl: getYtThumbnail(
-                                        youtubeUrl: document['url'],
+                                        youtubeUrl: data[index].url,
                                         error: true),
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
@@ -213,10 +206,10 @@ class _VideoListState extends State<VideoList> {
                             ),
                           ),
                           onTap: () {
-                            launchExternal(document['url']);
+                            launchExternal(data[index].url);
 
                             AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
-                                <String, dynamic>{'title': document['title']});
+                                <String, dynamic>{'title': data[index].title});
                           },
                         ),
                         Container(
@@ -229,7 +222,7 @@ class _VideoListState extends State<VideoList> {
                                   height: 40.0,
                                   margin: EdgeInsets.only(right: 5.0),
                                   child: Text(
-                                    document['title'],
+                                    data[index].title,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -240,12 +233,13 @@ class _VideoListState extends State<VideoList> {
                                 ),
                               ),
                               Container(
-                              height: 40.0,
+                                height: 40.0,
                                 child: GestureDetector(
                                   child: Icon(FontAwesomeIcons.solidShareSquare,
                                       size: 17, color: ColorBase.green),
                                   onTap: () {
-                                    _shareVideo(document['title'], document['url']);
+                                    _shareVideo(
+                                        data[index].title, data[index].url);
                                   },
                                 ),
                               ),
@@ -262,8 +256,9 @@ class _VideoListState extends State<VideoList> {
     );
   }
 
-  _shareVideo(String title, String url){
-    Share.share('$title \n\nTonton video lengkapnya:\n$url \n\n${Dictionary.sharedFrom}');
+  _shareVideo(String title, String url) {
+    Share.share(
+        '$title \n\nTonton video lengkapnya:\n$url \n\n${Dictionary.sharedFrom}');
 
     AnalyticsHelper.setLogEvent(
         Analytics.tappedVideoShare, <String, dynamic>{'title': title});

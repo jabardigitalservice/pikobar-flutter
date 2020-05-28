@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -80,6 +81,12 @@ class AuthRepository {
     return prefs.getString('uid') == null ? false : true;
   }
 
+  Future<String> getToken() async {
+    /// read from keystore/keychain
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('uid');
+  }
+
   Future<bool> hasLocalUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('auth_user_info') == null ? false : true;
@@ -142,11 +149,12 @@ class AuthRepository {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
+      final userDocument = Firestore.instance
+          .collection(Collections.users)
+          .document(_user.uid);
+
       _firebaseMessaging.getToken().then((token) {
-        final tokensDocument = Firestore.instance
-            .collection(Collections.users)
-            .document(_user.uid)
-            .collection(Collections.userTokens)
+        final tokensDocument =  userDocument.collection(Collections.userTokens)
             .document(token);
 
         tokensDocument.get().then((snapshot) {
@@ -156,6 +164,15 @@ class AuthRepository {
           }
         });
       });
+
+      FirebaseAnalytics().setUserId(_user.uid);
+
+      userDocument.get().then((snapshot) {
+        if (snapshot.exists && snapshot.data['city_id'] != null) {
+          FirebaseAnalytics().setUserProperty(name: 'city_id', value: snapshot.data['city_id']);
+        }
+      });
+
     }
   }
 
