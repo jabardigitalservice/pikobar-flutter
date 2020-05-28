@@ -31,6 +31,7 @@ import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 import 'BannerListSlider.dart';
@@ -56,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   InfoGraphicsListBloc _infoGraphicsListBloc;
   DocumentsBloc _documentsBloc;
   bool isLoading = true;
+  String typeNews = Dictionary.latestNews;
 
   @override
   void initState() {
@@ -196,17 +198,61 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.all(Dimens.padding),
+                  padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: Dimens.padding),
                   alignment: Alignment.topLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        Dictionary.newsUpdate,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.productSans,
+                            fontSize: 16.0),
+                      ),
+
+                      InkWell(
+                        child: Text(
+                          Dictionary.more,
+                          style: TextStyle(
+                              color: ColorBase.green,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.productSans,
+                              fontSize: 12.0),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewsListScreen(news: typeNews),
+                            ),
+                          );
+
+                          AnalyticsHelper.setLogEvent(Analytics.tappedMore);
+//                          Navigator.pushNamed(
+//                              context, NavigationConstrants.InfoGraphics);
+//
+//                          AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsMore);
+                        },
+                      ),
+                    ],
+                  )
+                ),
+
+                Container(
+                  padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: 5),
+                  alignment: Alignment.centerLeft,
                   child: Text(
-                    Dictionary.newsUpdate,
+                    Dictionary.descNews,
                     style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.productSans,
-                        fontSize: 16.0),
+                        color: Colors.grey,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.left,
                   ),
                 ),
+
                 Container(
                   child: DefaultTabController(
                     length: 3,
@@ -215,16 +261,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         TabBar(
                           onTap: (index) {
                             if (index == 0) {
+                              typeNews = Dictionary.latestNews;
                               _newsListBloc
                                   .add(NewsListLoad(Collections.newsJabar));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsJabar);
                             } else if (index == 1) {
+                              typeNews = Dictionary.nationalNews;
                               _newsListBloc
                                   .add(NewsListLoad(Collections.newsNational));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsNational);
                             } else if (index == 2) {
+                              typeNews = Dictionary.worldNews;
                               _newsListBloc
                                   .add(NewsListLoad(Collections.newsWorld));
                               AnalyticsHelper.setLogEvent(
@@ -266,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Container(
                           padding: EdgeInsets.only(top: 10),
-                          height: 400,
+                          height: 320,
                           child: TabBarView(
                             physics: NeverScrollableScrollPhysics(),
                             children: <Widget>[

@@ -42,9 +42,8 @@ class _NewsScreenState extends State<NewsScreen> {
   _buildContent(List<NewsModel> list) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      child: Card(
+      child: Container(
         margin: EdgeInsets.only(bottom: 10.0),
-        elevation: 3.0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,28 +59,28 @@ class _NewsScreenState extends State<NewsScreen> {
                   return designNewsHome(list[index]);
                 },
                 separatorBuilder: (BuildContext context, int dex) => Divider()),
-            Container(
-              margin: EdgeInsets.only(bottom: 20, top: 5),
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: RoundedButton(
-                  height: 60,
-                  minWidth: MediaQuery.of(context).size.width,
-                  title: Dictionary.more,
-                  borderRadius: BorderRadius.circular(5.0),
-                  color: ColorBase.green,
-                  textStyle: Theme.of(context).textTheme.subhead.copyWith(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NewsListScreen(news: widget.news),
-                      ),
-                    );
-
-                    AnalyticsHelper.setLogEvent(Analytics.tappedMore);
-                  }),
-            ),
+//            Container(
+//              margin: EdgeInsets.only(bottom: 20, top: 5),
+//              padding: EdgeInsets.only(left: 10, right: 10),
+//              child: RoundedButton(
+//                  height: 60,
+//                  minWidth: MediaQuery.of(context).size.width,
+//                  title: Dictionary.more,
+//                  borderRadius: BorderRadius.circular(5.0),
+//                  color: ColorBase.green,
+//                  textStyle: Theme.of(context).textTheme.subhead.copyWith(
+//                      color: Colors.white, fontWeight: FontWeight.bold),
+//                  onPressed: () {
+//                    Navigator.push(
+//                      context,
+//                      MaterialPageRoute(
+//                        builder: (context) => NewsListScreen(news: widget.news),
+//                      ),
+//                    );
+//
+//                    AnalyticsHelper.setLogEvent(Analytics.tappedMore);
+//                  }),
+//            ),
           ],
         ),
       ),
@@ -294,9 +293,8 @@ class _NewsScreenState extends State<NewsScreen> {
     return SingleChildScrollView(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        child: Card(
+        child: Container(
           margin: EdgeInsets.only(bottom: 10.0),
-          elevation: 3.0,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -367,18 +365,18 @@ class _NewsScreenState extends State<NewsScreen> {
                     );
                   },
                   separatorBuilder: (BuildContext context, int dex) => Divider()),
-              widget.maxLength != null
-                  ? Container(
-                margin: EdgeInsets.only(bottom: 10),
-                padding: EdgeInsets.all(10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Skeleton(
-                      height: 55.0,
-                      width: MediaQuery.of(context).size.width),
-                ),
-              )
-                  : Container()
+//              widget.maxLength != null
+//                  ? Container(
+//                margin: EdgeInsets.only(bottom: 10),
+//                padding: EdgeInsets.all(10),
+//                child: ClipRRect(
+//                  borderRadius: BorderRadius.circular(5.0),
+//                  child: Skeleton(
+//                      height: 55.0,
+//                      width: MediaQuery.of(context).size.width),
+//                ),
+//              )
+//                  : Container()
             ],
           ),
         ),

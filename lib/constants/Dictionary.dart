@@ -262,4 +262,6 @@ class Dictionary {
   static String descDocument = 'Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat';
 
   static String descInfoGraphic = 'Info yang memuat infograpis terkait COVID-19';
+
+  static String descNews = 'Anti-hoax dengan berita terpercaya';
 }
