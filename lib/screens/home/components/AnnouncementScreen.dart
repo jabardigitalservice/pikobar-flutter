@@ -85,7 +85,11 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
                                       color: ColorBase.green,
                                       fontFamily: FontsFamily.productSans,
                                       fontWeight: FontWeight.bold),
-                                  )
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      openChromeSafariBrowser(
+                                          url: dataAnnouncement['action_url']);
+                                    })
                               : TextSpan(text: '')
                         ]),
                       )),
