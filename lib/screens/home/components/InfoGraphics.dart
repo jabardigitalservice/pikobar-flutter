@@ -29,7 +29,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
           child: Row(
@@ -51,7 +50,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.productSans,
-                      fontSize: 14.0),
+                      fontSize: 12.0),
                 ),
                 onTap: () {
                   Navigator.pushNamed(
@@ -63,7 +62,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ],
           ),
         ),
-
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Text(
@@ -75,7 +73,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             textAlign: TextAlign.left,
           ),
         ),
-
         BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
           builder: (context, state) {
             return state is InfoGraphicsListLoaded
@@ -88,74 +85,84 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   }
 
   Widget _buildLoading() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 70,
-                  height: 70,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Skeleton(
-                      width: MediaQuery.of(context).size.width / 1.4,
-                      padding: 10.0,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Skeleton(
-                          height: 20.0,
-                          width: MediaQuery.of(context).size.width / 1.8,
-                          padding: 10.0,
-                        ),
-                        SizedBox(height: 8),
-                        Skeleton(
-                          height: 20.0,
-                          width: MediaQuery.of(context).size.width / 2,
-                          padding: 10.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Skeleton(
-                    height: 30.0,
-                    width: 30.0,
-                    padding: 10.0,
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  Widget _buildContent(List<DocumentSnapshot> listData) {
     return Container(
-      height: 268,
+      height: 260,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           padding: const EdgeInsets.only(
               left: 11.0, right: 16.0, top: 16.0, bottom: 16.0),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-//          physics: NeverScrollableScrollPhysics(),
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Container(
+                width: 150,
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 140,
+                      width: 150,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Skeleton(
+                          width: MediaQuery.of(context).size.width / 1.4,
+                          padding: 10.0,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height:10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Skeleton(
+                                  height: 20.0,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.8,
+                                  padding: 10.0,
+                                ),
+                                SizedBox(height: 8),
+                                Skeleton(
+                                  height: 20.0,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  padding: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Container(
+                          alignment: Alignment.topCenter,
+                          child: Skeleton(
+                            height: 20.0,
+                            width: 20.0,
+                            padding: 10.0,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ));
+          }),
+    );
+  }
+
+  Widget _buildContent(List<DocumentSnapshot> listData) {
+    return Container(
+      height: 260,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          padding: const EdgeInsets.only(
+              left: 11.0, right: 16.0, top: 16.0, bottom: 16.0),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
           itemCount: listData.length,
           itemBuilder: (context, index) {
             final DocumentSnapshot document = listData[index];
@@ -166,7 +173,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 children: <Widget>[
                   InkWell(
                     child: Container(
-                      height: 150,
+                      height: 140,
                       width: 150,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
@@ -224,7 +231,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             child: Column(
                               children: <Widget>[
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
                                       unixTimeStampToDateWithoutDay(
@@ -237,15 +245,16 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-
                                     Container(
                                       height: 30,
                                       child: IconButton(
                                         icon: Icon(FontAwesomeIcons.share,
                                             size: 17, color: Color(0xFF27AE60)),
                                         onPressed: () {
-                                          InfoGraphicsServices().shareInfoGraphics(
-                                              document['title'], document['images']);
+                                          InfoGraphicsServices()
+                                              .shareInfoGraphics(
+                                                  document['title'],
+                                                  document['images']);
                                         },
                                       ),
                                     )
