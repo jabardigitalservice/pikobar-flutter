@@ -16,6 +16,8 @@ class FirebaseConfig {
   static String nationalInfoUrl = 'national_info_url';
   static String donationCaption = 'donasi_caption';
   static String donationUrl = 'donasi_url';
+  static String bansosCaption = 'bansos_caption';
+  static String bansosUrl = 'bansos_url';
   static String logisticCaption = 'logistic_caption';
   static String logisticUrl = 'logistic_url';
   static String reportEnabled = 'lapor_enabled';
@@ -60,6 +62,8 @@ class FirebaseConfig {
   static String volunteerMenu = 'volunteer_menu';
   static String reportMenu = 'lapor_menu';
   static String qnaMenu = 'tanyajawab_menu';
+  static String spreadCheckMenu = 'spread_check';
+  static String bansosMenu = 'bansos';
   static String loginRequiredDefaultVal = '{"$emergencyNumberMenu":false,'
       '"$pikobarInfoMenu":false,'
       '"$nationalInfoMenu":false,'
@@ -71,7 +75,9 @@ class FirebaseConfig {
       '"$jshMenu":false,'
       '"$volunteerMenu":false,'
       '"$reportMenu":false,'
-      '"$qnaMenu":false}';
+      '"$qnaMenu":false,'
+      '"$spreadCheckMenu":false,'
+      '"$bansosMenu":false}';
 
   /// Remote config parameter key
   /// Profile

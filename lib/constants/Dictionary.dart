@@ -24,7 +24,8 @@ class Dictionary {
   static String caseReport = 'Lapor Kasus';
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Bantu Kita';
-  static String qna = 'Forum';
+  static String bansos = 'Bantuan Sosial';
+  static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
@@ -198,6 +199,7 @@ class Dictionary {
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
+  static String subTitleMenus = 'Saatnya berbagi informasi dan lawan COVID-19';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =

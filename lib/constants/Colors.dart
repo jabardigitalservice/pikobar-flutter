@@ -8,6 +8,7 @@ class ColorBase {
   static final bubbleChatBlue = Color(0xFFD5E9F4);
   static final darkRed = Color(0xFFD23C3C);
   static final announcementBackgroundColor = Color(0xFFF9EFD0);
+  static final menuBorderColor = Color(0xFFE0E0E0);
 
   static final gradientBlue = [Color(0xFF00AADE), Color(0xFF0669B1)];
   static final gradientGreen = [Color(0xFF0ad178), Color(0xFF009D57)];
