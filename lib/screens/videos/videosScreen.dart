@@ -147,11 +147,11 @@ class _VideosListState extends State<VideosList> {
                   padding: EdgeInsets.fromLTRB(
                         Dimens.padding, 10.0, Dimens.padding, 0),
                   child: Text(
-                    unixTimeStampToDateWithoutDay(
+                    unixTimeStampToDateTime(
                         state.videos[index].publishedAt),
                     style: TextStyle(
                         color: Color(0xff828282),
-                        fontFamily: FontsFamily.productSans,fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.lato,fontWeight: FontWeight.bold,
                         fontSize: 12.0),
                   ),
                 ),

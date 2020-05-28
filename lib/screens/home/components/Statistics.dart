@@ -96,7 +96,7 @@ class _StatisticsState extends State<Statistics> {
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
-                  fontFamily: FontsFamily.productSans,
+                  fontFamily: FontsFamily.lato,
                   fontSize: 16.0),
             ),
             SizedBox(height: Dimens.padding),
@@ -181,7 +181,7 @@ class _StatisticsState extends State<Statistics> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.productSans,
+                    fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
               InkWell(onTap: (){
@@ -194,7 +194,7 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.moreDetail,
                   style: TextStyle(
                       color: Color(0xff27AE60),
-                      fontFamily: FontsFamily.productSans,
+                      fontFamily: FontsFamily.lato,
                       fontWeight: FontWeight.bold,
                       fontSize: 12.0),
                 ),
@@ -206,7 +206,7 @@ class _StatisticsState extends State<Statistics> {
             unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
             style: TextStyle(
                 color: Color(0xff828282),
-                fontFamily: FontsFamily.productSans,
+                fontFamily: FontsFamily.lato,
                 fontSize: 12.0),
           ),
           SizedBox(height: Dimens.padding),
@@ -279,8 +279,8 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Widget buildLoadingRapidTest() {
-    return Card(
-      color: Color(0xff27AE60),
+    return Card(elevation: 0,
+      color: Color(0xffFAFAFA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: EdgeInsets.all(20.0),
@@ -289,7 +289,7 @@ class _StatisticsState extends State<Statistics> {
           children: <Widget>[
             Container(
                 height: 60,
-                child: Image.asset('${Environment.imageAssets}rapid_test.png')),
+                child: Image.asset('${Environment.imageAssets}bloodTest.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -301,9 +301,9 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.lato)),
                   ),
                 ),
                 Skeleton(
@@ -312,9 +312,9 @@ class _StatisticsState extends State<Statistics> {
                     child: Text('0',
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.roboto)),
                   ),
                 )
               ],
@@ -347,8 +347,8 @@ class _StatisticsState extends State<Statistics> {
                   RapidTestDetail(remoteConfig, document, documentPCR)),
         );
       },
-      child: Card(
-        color: Color(0xff27AE60),
+      child: Card(elevation: 0,
+        color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -358,7 +358,7 @@ class _StatisticsState extends State<Statistics> {
               Container(
                   height: 60,
                   child:
-                      Image.asset('${Environment.imageAssets}rapid_test.png')),
+                      Image.asset('${Environment.imageAssets}bloodTest.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -369,25 +369,25 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.lato)),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.roboto)),
                   )
                 ],
               ),
               Icon(
                 Icons.arrow_forward_ios,
                 size: 20,
-                color: Colors.white,
+                color: Color(0xff27AE60),
               )
             ],
           ),
@@ -438,7 +438,7 @@ class _StatisticsState extends State<Statistics> {
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
           padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 10),
+          margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
               color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
@@ -453,7 +453,7 @@ class _StatisticsState extends State<Statistics> {
                               fontSize: 13.0,
                               color: colorTextTitle,
                               fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.productSans)),
+                              fontFamily: FontsFamily.lato)),
                     )
                   : Container(height: 15, child: Image.asset(image)),
               Container(
@@ -464,24 +464,24 @@ class _StatisticsState extends State<Statistics> {
                         fontSize: 22.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
+                        fontFamily: FontsFamily.roboto)),
               ),
               total == ''
                   ? Container(
                       margin: EdgeInsets.only(top: 10, left: 5.0),
                       child: Text(title,
                           style: TextStyle(
-                              fontSize: 13.0,
+                              fontSize: 12.0,
                               color: colorTextTitle,
-                              fontFamily: FontsFamily.productSans)),
+                              fontFamily: FontsFamily.lato)),
                     )
                   : Container(
                       margin: EdgeInsets.only(top: 10, left: 5.0),
                       child: Text(Dictionary.textSum + total,
                           style: TextStyle(
-                              fontSize: 13.0,
+                              fontSize: 12.0,
                               color: colorTextTitle,
-                              fontFamily: FontsFamily.productSans)),
+                              fontFamily: FontsFamily.lato)),
                     )
             ],
           ),

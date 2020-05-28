@@ -144,5 +144,13 @@ flutter:
     - family: intro
       fonts:
         - asset: assets/fonts/intro/Intro.otf
+
+    - family: roboto
+      fonts:
+        - asset: assets/fonts/roboto/Roboto-Regular.ttf
+
+    - family: lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
