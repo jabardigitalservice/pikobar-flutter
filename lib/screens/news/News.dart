@@ -40,7 +40,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         Dictionary.latestNews,
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.w600,
             fontFamily: FontsFamily.productSans,
             fontSize: 13.0),
@@ -51,7 +51,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       Dictionary.nationalNews,
       textAlign: TextAlign.center,
       style: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontWeight: FontWeight.w600,
           fontFamily: FontsFamily.productSans,
           fontSize: 13.0),
@@ -61,7 +61,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       Dictionary.worldNews,
       textAlign: TextAlign.center,
       style: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontWeight: FontWeight.w600,
           fontFamily: FontsFamily.productSans,
           fontSize: 13.0),
@@ -94,8 +94,8 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: CustomAppBar.setTitleAppBar( Dictionary.news),
+        appBar: CustomAppBar.defaultAppBar(
+          title: Dictionary.news,
           bottom: TabBar(
             indicatorColor: ColorBase.orange,
             indicatorWeight: 2.8,

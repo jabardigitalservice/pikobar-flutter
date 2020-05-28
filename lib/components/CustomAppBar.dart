@@ -4,11 +4,13 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class CustomAppBar {
   static AppBar defaultAppBar(
-      {Widget leading, @required String title, List<Widget> actions}) {
+      {Widget leading, @required String title, List<Widget> actions, PreferredSizeWidget bottom}) {
     return AppBar(
+      backgroundColor: Colors.white,
       leading: leading,
       title: setTitleAppBar(title),
       actions: actions,
+      bottom: bottom,
     );
   }
 
@@ -25,6 +27,7 @@ class CustomAppBar {
   static AppBar searchAppBar(
       BuildContext context, TextEditingController textController) {
     return AppBar(
+      backgroundColor: Colors.white,
       title: Container(
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(5.0)),

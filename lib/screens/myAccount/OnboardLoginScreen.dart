@@ -12,106 +12,112 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+
 import 'TermsConditions.dart';
 
 class OnBoardingLoginScreen extends StatefulWidget {
   final AuthenticationBloc authenticationBloc;
   final double positionBottom;
-  final RemoteConfig remoteConfig;
 
-  OnBoardingLoginScreen(
-      {this.authenticationBloc, this.positionBottom, this.remoteConfig});
+  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom});
 
   @override
   _OnBoardingLoginScreenState createState() => _OnBoardingLoginScreenState();
 }
 
 class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
+  RemoteConfigBloc _remoteConfigBloc;
+
   bool isAgree = false;
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          left: 0.0,
-          right: 0.0,
-          top: 0.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                  margin: EdgeInsets.fromLTRB(60.0, 60.0, 60.0, 0.0),
-                  child: Image.asset(
-                    '${Environment.imageAssets}onboarding_login.png',
-                    width: 242.0,
-                  )),
-              Container(
-                margin: EdgeInsets.fromLTRB(
-                    Dimens.padding, 40.0, Dimens.padding, 0.0),
-                child: Text(
-                  Dictionary.titleOnBoardingLogin,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.productSans,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0),
+    return BlocProvider<RemoteConfigBloc>(
+      create: (BuildContext context) =>
+          _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            top: 0.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.fromLTRB(60.0, 60.0, 60.0, 0.0),
+                    child: Image.asset(
+                      '${Environment.imageAssets}onboarding_login.png',
+                      width: 242.0,
+                    )),
+                Container(
+                  margin: EdgeInsets.fromLTRB(
+                      Dimens.padding, 40.0, Dimens.padding, 0.0),
+                  child: Text(
+                    Dictionary.titleOnBoardingLogin,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.productSans,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            bottom: widget.positionBottom ?? 0.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                  builder: (context, state) {
+                    return state is RemoteConfigLoaded
+                        ? _buildTermsConditions(state.remoteConfig)
+                        : Container();
+                  },
                 ),
-              )
-            ],
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 40.0,
+                  margin: EdgeInsets.fromLTRB(
+                      Dimens.padding, Dimens.padding, Dimens.padding, 25.0),
+                  child: RaisedButton(
+                      splashColor: Colors.lightGreenAccent,
+                      padding: EdgeInsets.all(0.0),
+                      color: isAgree ? ColorBase.green : Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                        Dictionary.acceptLogin,
+                        style: TextStyle(
+                            fontFamily: FontsFamily.productSans,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12.0,
+                            color: Colors.white),
+                      ),
+                      onPressed: () {
+                        if (isAgree) {
+                          widget.authenticationBloc.add(LoggedIn());
+                        } else {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              content: Text(Dictionary.aggrementIsFalse),
+                              duration: Duration(seconds: 5),
+                            ),
+                          );
+                        }
+                      }),
+                )
+              ],
+            ),
           ),
-        ),
-        Positioned(
-          left: 0.0,
-          right: 0.0,
-          bottom: widget.positionBottom ?? 0.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                builder: (context, state) {
-                  return state is RemoteConfigLoaded
-                      ? _buildTermsConditions(state.remoteConfig)
-                      : Container();
-                },
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 40.0,
-                margin: EdgeInsets.fromLTRB(
-                    Dimens.padding, Dimens.padding, Dimens.padding, 25.0),
-                child: RaisedButton(
-                    splashColor: Colors.lightGreenAccent,
-                    padding: EdgeInsets.all(0.0),
-                    color: isAgree ? ColorBase.green : Colors.grey,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      Dictionary.acceptLogin,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.productSans,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                          color: Colors.white),
-                    ),
-                    onPressed: () {
-                      if (isAgree) {
-                        widget.authenticationBloc.add(LoggedIn());
-                      } else {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            content: Text(Dictionary.aggrementIsFalse),
-                            duration: Duration(seconds: 5),
-                          ),
-                        );
-                      }
-                    }),
-              )
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -168,5 +174,11 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
     } else {
       return Container();
     }
+  }
+
+  @override
+  void dispose() {
+    _remoteConfigBloc.close();
+    super.dispose();
   }
 }

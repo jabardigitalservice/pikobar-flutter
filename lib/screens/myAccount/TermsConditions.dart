@@ -21,8 +21,8 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: CustomAppBar.setTitleAppBar(Dictionary.termsConditions),
+        appBar: CustomAppBar.defaultAppBar(
+          title: Dictionary.termsConditions,
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,

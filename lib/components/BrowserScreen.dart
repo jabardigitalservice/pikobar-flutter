@@ -34,8 +34,8 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
      return WillPopScope(
        onWillPop: _exitWebView,
        child: Scaffold(
-         appBar: AppBar(
-           title: CustomAppBar.setTitleAppBar(Dictionary.appName),
+         appBar: CustomAppBar.defaultAppBar(
+           title: Dictionary.appName,
          ),
          body: Column(
            children: <Widget>[

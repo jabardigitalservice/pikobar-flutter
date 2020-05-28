@@ -73,8 +73,8 @@ class _SurveysScreenState extends State<SurveysScreen> {
           },
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: AppBar(
-              title: CustomAppBar.setTitleAppBar(Dictionary.survey),
+            appBar: CustomAppBar.defaultAppBar(
+              title: Dictionary.survey,
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (
