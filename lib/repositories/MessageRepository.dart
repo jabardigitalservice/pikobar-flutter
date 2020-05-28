@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/configs/DBProvider.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
@@ -11,13 +12,16 @@ class MessageRepository {
 
     for (int i = 0; i < record.length; i++) {
       MessageModel messageModel = MessageModel(
-          backlink: record[i]['backlink'].toString(),
+          id: record[i].documentID,
+          backLink: record[i]['backlink'].toString(),
           content: record[i]['content'].toString(),
           title: record[i]['title'].toString(),
-          pubilshedAt: record[i]['published_at'].seconds,
+          actionTitle: record[i]['action_title'],
+          actionUrl: record[i]['action_url'],
+          publishedAt: record[i]['published_at'].seconds,
           readAt: 0);
       try {
-        bool dataCheck = await checkData(messageModel.title);
+        bool dataCheck = await checkData(messageModel.id);
         if (!dataCheck) {
           await db.insert(
             'Messages',
@@ -39,6 +43,11 @@ class MessageRepository {
     }
   }
 
+  //get detail message from firestore
+  Future<DocumentSnapshot> getDetail(String id) {
+    return Firestore.instance.collection('broadcasts').document(id).get();
+  }
+
   //get data list message from local db
   Future<List<MessageModel>> getRecords() async {
     List<MessageModel> localRecords = await getLocalData();
@@ -55,11 +64,11 @@ class MessageRepository {
     return count > 0;
   }
 
-  Future<bool> checkData(String title) async {
+  Future<bool> checkData(String id) async {
     Database db = await DBProvider.db.database;
 
     var res = await db.query("Messages",
-        columns: ["title"], where: 'title = ?', whereArgs: [title]);
+        columns: ["id"], where: 'id = ?', whereArgs: [id]);
 
     if (res.isNotEmpty) {
       return true;
@@ -72,10 +81,10 @@ class MessageRepository {
     Database db = await DBProvider.db.database;
 
     var res =
-    await db.rawQuery('SELECT * FROM Messages ORDER BY published_at DESC');
+        await db.rawQuery('SELECT * FROM Messages ORDER BY published_at DESC');
 
     List<MessageModel> list =
-    res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
+        res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
 
     return list;
   }
@@ -90,19 +99,30 @@ class MessageRepository {
   }
 
   //Update read message
-  Future<int> updateReadData(String title) async {
+  Future<int> updateData(MessageModel data) async {
     Database db = await DBProvider.db.database;
     int readAt =
-    (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
-    return await db.update('Messages', {'read_at': readAt},
-        where: 'title = ?', whereArgs: [title]);
+        (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
+    return await db.update(
+        'Messages',
+        {
+          'backlink': data.backLink,
+          'content': data.content,
+          'title': data.title,
+          'action_title': data.actionTitle,
+          'action_url': data.actionUrl,
+          'read_at': readAt,
+          'published_at':data.publishedAt
+        },
+        where: 'id = ?',
+        whereArgs: [data.id]);
   }
 
   //Update all read message
   Future<int> updateAllReadData() async {
     Database db = await DBProvider.db.database;
     int readAt =
-    (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
+        (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
     return await db.update('Messages', {'read_at': readAt});
   }
 

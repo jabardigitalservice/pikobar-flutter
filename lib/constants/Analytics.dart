@@ -36,6 +36,7 @@ class Analytics {
   static String tappedSpreadCheck = 'tapped_cek_sebaran';
   static String tappedInfoGraphicsMore = 'tapped_info_praktikal_selengkapnya';
   static String tappedDocumentsMore = 'tapped_dokumen_selengkapnya';
+  static String tappedImportantInfoMore = 'tapped_info_penting_selengkapnya';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
@@ -81,4 +82,10 @@ class Analytics {
   static String tappedShareDocuments = 'tapped_share_documents';
   static String tappedDownloadDocuments = 'tapped_download_documents';
   static String openDocument = 'open_document';
+
+  //important
+  static String tappedImportantInfoDetail = 'tapped_important_info_detail';
+  static String tappedImportantInfoDetailShare = 'tapped_important_info_detail_share';
+  static String tappedDownloadImportantInfo = 'tapped_download_important_info';
+  static String openFileImportantInfo = 'open_file_important_info';
 }

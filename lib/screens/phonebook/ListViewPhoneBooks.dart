@@ -266,7 +266,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               'telp': document['phone_number']
             });
           } else if (document['action'] == 'whatsapp') {
-            _launchURL(document['phone_number'], 'whatsapp');
+            _launchURL(document['phone_number'], 'whatsapp',message: document['message']);
 
             AnalyticsHelper.setLogEvent(
                 Analytics.tappedphoneBookEmergencyWa, <String, dynamic>{
@@ -464,12 +464,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         <String, dynamic>{'title': document['nama_kotkab']});
   }
 
-  _launchURL(String launchUrl, tipeURL) async {
+  _launchURL(String launchUrl, tipeURL,{String message}) async {
     String url;
     if (tipeURL == 'number') {
       url = 'tel:$launchUrl';
     } else {
-      url = 'whatsapp://send?phone=$launchUrl';
+      url = 'whatsapp://send?phone=$launchUrl&text=$message';
     }
 
     if (await canLaunch(url)) {

@@ -29,6 +29,7 @@ class Dictionary {
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
   static String documents = 'Dokumen';
+  static String importantInfo = 'Info Penting';
   static String otherMenus = 'Menu lainnya';
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -40,20 +41,22 @@ class Dictionary {
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
   static String positif = 'Terkonfirmasi';
+  static String positifText = 'Positif';
+  static String negatifText = 'Negatif';
   static String recover = 'Sembuh';
   static String die = 'Meninggal';
   static String opdDesc = 'Orang Dalam Pemantauan';
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'FAQ';
-  static String profile = 'Profil';
+  static String profile = 'Akun Saya';
   static String login = 'Login';
   static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
       'Segera hubungi nomor dibawah \nini untuk call center terdekat';
-  static String edit = 'Edit Profil';
+  static String edit = 'Edit Akun';
   static String name = 'Nama';
   static String nik = 'NIK';
   static String email = 'Email';
@@ -67,6 +70,9 @@ class Dictionary {
   static String addressDomicile = 'Alamat Domisili';
   static String cityDomicile = 'Kabupaten/Kota Domisili';
   static String provinceDomicile = 'Provinsi Domisili';
+  static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
+  static String testSummaryTitleAppbar = 'Total Pemeriksaan';
+
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -84,9 +90,10 @@ class Dictionary {
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
-  static String rapidTestTitle='Jumlah RDT (Rapid Diagnostic Test)';
-  static String rapidTestAppBar='Jumlah RDT';
+  static String rapidTestTitle = 'Jumlah RDT yang telah dilakukan';
+  static String pcrTitle = 'Jumlah PCR yang telah dilakukan';
 
+  static String rapidTestAppBar = 'Jumlah RDT';
 
   // Button Text
   static String yes = 'Ya';
@@ -96,11 +103,11 @@ class Dictionary {
   static String ok = 'Ok';
   static String later = 'Nanti';
   static String next = 'Lanjut';
-  static String update = 'Perbaharui';
+  static String update = 'Perbarui';
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
-  static String setLocation='Set Lokasi...';
+  static String setLocation = 'Set Lokasi...';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -184,9 +191,9 @@ class Dictionary {
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
-  static String updateProfile = 'Profil berhasil diperbaharui';
+  static String updateProfile = 'Akun berhasil diperbarui';
   static String updateAppAvailable =
-      'Versi terbaru telah tersedia,\nsegera perbaharui aplikasi anda.';
+      'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
 
@@ -201,7 +208,8 @@ class Dictionary {
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
-  static String lastUpdate='Update terakhir pada';
+  static String moreDetailRapidTest = ' Daftar Test Masif';
+  static String lastUpdate = 'Update terakhir pada';
 
   // check distribution virus
   static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
@@ -236,9 +244,7 @@ class Dictionary {
   static String reaktif = 'Reaktif';
   static String nonReaktif = 'Non-Reaktif';
   static String invalid = 'Invalid';
-
-
-
+  static String downloadAttachment = 'Unduh Lampiran';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
@@ -247,6 +253,7 @@ class Dictionary {
   static String document = "Dokumen";
   static String date = "Tanggal";
   static String titleDocument = "Judul Dokumen";
+  static String documentPreview = "Preview Dokumen";
   static String emptyDataDocuments = 'Dokumen tidak ada';
   static String permissionDownloadAttachment =
       'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';

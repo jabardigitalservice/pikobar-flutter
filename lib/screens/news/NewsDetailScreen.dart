@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -15,6 +17,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -23,30 +26,22 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetailScreen extends StatefulWidget {
   final String id;
-  final DocumentSnapshot documents;
   final String news;
-  final bool isFromNotification;
 
-  NewsDetailScreen({this.id, this.documents, this.news, this.isFromNotification = false});
+  NewsDetailScreen({this.id, this.news});
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
 }
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
-
-  DocumentSnapshot _document;
+  NewsDetailBloc _newsDetailBloc;
   String _newsType;
-  String _title = '';
-  String _backLink = '';
-  bool _isLoaded = false;
 
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.news);
-
-    _document = widget.documents;
 
     if (widget.news == Dictionary.worldNews) {
       _newsType = NewsType.articlesWorld;
@@ -56,66 +51,42 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       _newsType = NewsType.articles;
     }
 
-    if (_document != null) {
-      _isLoaded = true;
-      _title = widget.documents['title'];
-      _backLink = widget.documents['backlink'];
-    }
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider<NewsDetailBloc>(
+      create: (context) => _newsDetailBloc = NewsDetailBloc()..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
+      child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
+        bloc: _newsDetailBloc,
+        builder: (context, state) {
+          return _buildScaffold(context, state);
+        },
+      ),
+    );
+  }
+
+  Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
         appBar: AppBar(
             title: CustomAppBar.setTitleAppBar(Dictionary.news),
             actions: <Widget>[
-              _isLoaded ? Container(
+              state is NewsDetailLoaded ? Container(
                   margin: EdgeInsets.only(right: 10.0),
                   child: IconButton(
                     icon: Icon(FontAwesomeIcons.solidShareSquare, size: 17, color: Colors.white),
                     onPressed: () {
                       Share.share(
-                          '$_title\n\n${_backLink != null ? 'Baca berita lengkapnya:\n'+_backLink : ''}\n\n${Dictionary.sharedFrom}');
+                          '${state.record.title}\n\n${state.record.backlink != null ? 'Baca berita lengkapnya:\n'+state.record.backlink : ''}\n\n${Dictionary.sharedFrom}');
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedShareNews, <String, dynamic>{
-                        'title': widget.documents['title']
+                        'title': state.record.title
                       });
                     },
                   )) : Container()
             ]),
-        body: Container(
-          child: _document == null ? FutureBuilder<DocumentSnapshot>(
-              future: Firestore.instance
-                  .collection(_newsType)
-                  .document(widget.id)
-                  .get(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError)
-                  return new Text('Error: ${snapshot.error}');
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return _buildLoading(context);
-                } else {
-                  if (snapshot.data.data != null) {
-                    _document = snapshot.data;
-                    _isLoaded = true;
-                    _title = snapshot.data['title'];
-                    _backLink = snapshot.data['backlink'] != null ? snapshot.data['backlink'] : '';
-
-                    if (widget.isFromNotification) {
-                      SchedulerBinding.instance.addPostFrameCallback((_) =>
-                          setState(() {}));
-                    }
-                    return _buildContent(context, _document);
-                  } else {
-                    return _buildLoading(context);
-                  }
-                }
-              }) : _buildContent(context, _document),
-        ));
+        body: state is NewsDetailLoading ? _buildLoading(context) : state is NewsDetailLoaded ? _buildContent(context, state.record) : Container());
   }
 
   _buildLoading(BuildContext context) {
@@ -213,7 +184,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     return Column( crossAxisAlignment: CrossAxisAlignment.start,children: widgets);
   }
 
-  _buildContent(BuildContext context, DocumentSnapshot data) {
+  _buildContent(BuildContext context, NewsModel data) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
@@ -228,7 +199,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   width: MediaQuery.of(context).size.width,
                   color: Colors.grey,
                   child: CachedNetworkImage(
-                    imageUrl: data['image'],
+                    imageUrl: data.image,
                     placeholder: (context, url) => Center(
                         heightFactor: 10.2, child: CupertinoActivityIndicator()),
                     errorWidget: (context, url, error) => Container(
@@ -245,7 +216,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     MaterialPageRoute(
                         builder: (_) => HeroImagePreview(
                               Dictionary.heroImageTag,
-                              imageUrl: data['image'],
+                              imageUrl: data.image,
                             )));
               },
             ),
@@ -256,7 +227,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    data['title'],
+                    data.title,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
@@ -266,7 +237,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   Row(
                     children: <Widget>[
                       Image.network(
-                        data['news_channel_icon'],
+                        data.newsChannelIcon,
                         width: 25.0,
                         height: 25.0,
                       ),
@@ -276,12 +247,12 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                data['news_channel'],
+                                data.newsChannel,
                                 style: TextStyle(fontSize: 12.0),
                               ),
                               Text(
                                   unixTimeStampToDateTime(
-                                      data['published_at'].seconds),
+                                      data.publishedAt),
                                   style: TextStyle(fontSize: 12.0))
                             ]),
                       )
@@ -289,7 +260,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   ),
                   SizedBox(height: 10.0),
                   Html(
-                      data: data['content'],
+                      data: data.content,
                       defaultTextStyle:
                           TextStyle(color: Colors.black, fontSize: 15.0),
                       customTextAlign: (dom.Node node) {
@@ -324,7 +295,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => News(news: widget.news)));
+                                builder: (context) => NewsListScreen(news: widget.news)));
                       },
                     ),
                   ),
