@@ -48,7 +48,7 @@ class _VideoListState extends State<VideoList> {
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
-                fontFamily: FontsFamily.productSans,
+                fontFamily: FontsFamily.lato,
                 fontSize: 16.0),
           ),
         ),
@@ -104,7 +104,7 @@ class _VideoListState extends State<VideoList> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.productSans,
+                    fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
               InkWell(
@@ -113,7 +113,7 @@ class _VideoListState extends State<VideoList> {
                   style: TextStyle(
                       color: Color(0xFF27AE60),
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.productSans,
+                      fontFamily: FontsFamily.lato,
                       fontSize: 14.0),
                 ),
                 onTap: () {
@@ -216,11 +216,11 @@ class _VideoListState extends State<VideoList> {
                         ),
                         Padding(
                           padding:  EdgeInsets.only(top:10),
-                          child: Text(unixTimeStampToDateWithoutDay(
+                          child: Text(unixTimeStampToDateTime(
                                 data[index].publishedAt),
                             style: TextStyle(
                                 color: Color(0xffBDBDBD),
-                                fontFamily: FontsFamily.productSans,
+                                fontFamily: FontsFamily.lato,
                                 fontSize: 10.0),
                           ),
                         ),
