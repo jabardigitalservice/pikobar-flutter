@@ -61,7 +61,7 @@ class _DocumentsState extends State<Documents> {
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.productSans,
-                      fontSize: 14.0),
+                      fontSize: 12.0),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.Document);
