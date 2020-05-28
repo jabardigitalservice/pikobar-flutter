@@ -110,6 +110,7 @@ class Dictionary {
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
   static String setLocation = 'Set Lokasi...';
+  static String termsConditions=' Terms & Conditions';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -144,6 +145,7 @@ class Dictionary {
   static String errorEmptyNIK = 'NIK harus diisi';
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
   static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
+  static String aggrementIsFalse='Silahkan setujui Terms & Conditions untuk login';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';

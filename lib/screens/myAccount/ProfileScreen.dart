@@ -2,16 +2,20 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -21,6 +25,7 @@ import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/HexColor.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
+import 'TermsConditions.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -32,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
+  RemoteConfigBloc _remoteConfigBloc;
   @override
   void initState() {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -46,10 +52,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthenticationBloc>(
-        create: (BuildContext context) => _authenticationBloc =
-            AuthenticationBloc(authRepository: _authRepository)
-              ..add(AppStarted()),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<RemoteConfigBloc>(
+              create: (BuildContext context) => _remoteConfigBloc =
+                  RemoteConfigBloc()..add(RemoteConfigLoad())),
+          BlocProvider<AuthenticationBloc>(
+              create: (BuildContext context) => _authenticationBloc =
+                  AuthenticationBloc(authRepository: _authRepository)
+                    ..add(AppStarted())),
+        ],
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
@@ -321,6 +333,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(
             height: 15,
           ),
+          BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+            builder: (context, state) {
+              return state is RemoteConfigLoaded
+                  ? _buildTermsConditions(state.remoteConfig)
+                  : Container();
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 3),
             child: RaisedButton(
@@ -346,6 +368,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     ));
+  }
+
+  _buildTermsConditions(RemoteConfig remoteConfig) {
+    var termsConditions;
+    if (remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
+      termsConditions =
+          json.decode(remoteConfig.getString(FirebaseConfig.termsConditions));
+      return Container(
+        margin: EdgeInsets.fromLTRB(Dimens.padding, 0.0, Dimens.padding, 0.0),
+        child: RichText(
+          text: TextSpan(
+              text: termsConditions['agreement'],
+              style: TextStyle(
+                  fontFamily: FontsFamily.productSans,
+                  color: Color(0xff828282),
+                  fontSize: 11.0),
+              children: <TextSpan>[
+                TextSpan(
+                    text: Dictionary.termsConditions,
+                    style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TermsConditionsPage(termsConditions)),
+                        );
+                      })
+              ]),
+        ),
+      );
+    } else {
+      return Container();
+    }
   }
 
   FutureBuilder<RemoteConfig> _healthStatus(DocumentSnapshot data) {
@@ -543,7 +603,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.healthStatusVisible: false,
       FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors,
-      FirebaseConfig.groupMenuProfile: false
+      FirebaseConfig.groupMenuProfile: false,
     });
 
     try {

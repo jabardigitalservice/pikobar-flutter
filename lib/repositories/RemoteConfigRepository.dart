@@ -41,7 +41,8 @@ class RemoteConfigRepository {
       FirebaseConfig.rapidTestInfo: false,
       FirebaseConfig.rapidTestEnable: false,
       FirebaseConfig.groupHomeBanner:false,
-      FirebaseConfig.importantinfoStatusVisible: false
+      FirebaseConfig.importantinfoStatusVisible: false,
+      FirebaseConfig.termsConditions:false
     });
 
     try {
