@@ -1,3 +1,4 @@
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -193,6 +194,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           /// News & Videos Sections
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
           Container(
             color: Colors.white,
             child: Column(
@@ -230,10 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
 
                           AnalyticsHelper.setLogEvent(Analytics.tappedMore);
-//                          Navigator.pushNamed(
-//                              context, NavigationConstrants.InfoGraphics);
-//
-//                          AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsMore);
                         },
                       ),
                     ],
@@ -280,17 +283,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Analytics.tappedNewsWorld);
                             }
                           },
-                          labelColor: Colors.black,
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.grey,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          indicator: BubbleTabIndicator(
+                            indicatorHeight: 35.0,
+                            indicatorColor: ColorBase.green,
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                          ),
                           indicatorColor: ColorBase.green,
                           indicatorWeight: 2.8,
                           tabs: <Widget>[
                             Tab(
-                              child: Text(
-                                Dictionary.latestNews,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: FontsFamily.productSans,
-                                    fontSize: 13.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey[400]),
+                                    borderRadius: BorderRadius.circular(8.0)),
+                                child: Text(
+                                  Dictionary.latestNews,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontSize: 13.0),
+                                ),
                               ),
                             ),
                             Tab(
