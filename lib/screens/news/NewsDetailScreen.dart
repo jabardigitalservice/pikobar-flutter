@@ -69,13 +69,13 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
-        appBar: AppBar(
-            title: CustomAppBar.setTitleAppBar(Dictionary.news),
+        appBar: CustomAppBar.defaultAppBar(
+            title: Dictionary.news,
             actions: <Widget>[
               state is NewsDetailLoaded ? Container(
                   margin: EdgeInsets.only(right: 10.0),
                   child: IconButton(
-                    icon: Icon(FontAwesomeIcons.share, size: 17, color: Colors.white),
+                    icon: Icon(FontAwesomeIcons.share, size: 17),
                     onPressed: () {
                       Share.share(
                           '${state.record.title}\n\n${state.record.backlink != null ? 'Baca berita lengkapnya:\n'+state.record.backlink : ''}\n\n${Dictionary.sharedFrom}');

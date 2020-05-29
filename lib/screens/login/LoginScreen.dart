@@ -66,8 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: AppBar(
-              title: CustomAppBar.setTitleAppBar(widget.title != null ? widget.title : Dictionary.login),
+            appBar: CustomAppBar.defaultAppBar(
+              title: widget.title != null ? widget.title : Dictionary.login,
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (

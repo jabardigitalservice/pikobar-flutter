@@ -73,15 +73,15 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
   Scaffold _buildScaffold(
       BuildContext context, importantInfoDetailState state) {
     return Scaffold(
-        appBar: AppBar(
-            title: CustomAppBar.setTitleAppBar(Dictionary.importantInfo),
+        appBar: CustomAppBar.defaultAppBar(
+            title: Dictionary.importantInfo,
             actions: <Widget>[
               state is ImportantInfoDetailLoaded
                   ? Container(
                       margin: EdgeInsets.only(right: 10.0),
                       child: IconButton(
                         icon: Icon(FontAwesomeIcons.share,
-                            size: 17, color: Colors.white),
+                            size: 17),
                         onPressed: () {
                           _shareMessage(state.record);
                         },
