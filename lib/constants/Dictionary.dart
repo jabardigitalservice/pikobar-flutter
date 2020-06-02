@@ -87,6 +87,9 @@ class Dictionary {
   static String daftarRumahSakitRujukanCaption =
       'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
+  static String qrCode = 'QR Code';
+  static String activitie = 'Aktifitas';
+  static String accountManage= 'Kelola Akun';
   static String statusUser = 'Status: ';
   static String sendAgainOTP = 'Kirim ulang kode';
   static String otpNotSent = 'Tidak menerima sms?';
