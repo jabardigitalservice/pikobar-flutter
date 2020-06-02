@@ -179,7 +179,7 @@ class _StatisticsState extends State<Statistics> {
               Text(
                 Dictionary.statistics,
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Color(0xff333333),
                     fontWeight: FontWeight.w600,
                     fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
@@ -205,7 +205,7 @@ class _StatisticsState extends State<Statistics> {
           Text(
             unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
             style: TextStyle(
-                color: Color(0xff828282),
+                color: Color(0xff333333),
                 fontFamily: FontsFamily.lato,
                 fontSize: 12.0),
           ),
