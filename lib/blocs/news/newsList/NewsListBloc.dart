@@ -25,9 +25,15 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   Stream<NewsListState> _mapLoadVideosToState(String collection) async* {
     yield NewsListLoading();
     _subscription?.cancel();
-    _subscription = _repository.getNewsList(newsCollection: collection).listen(
-          (news) => add(NewsListUpdate(news)),
-    );
+    _subscription = collection == Collections.importantInfor
+        ? _repository
+            .getInfoImportantList(improtantInfoCollection: collection)
+            .listen(
+              (news) => add(NewsListUpdate(news)),
+            )
+        : _repository
+            .getNewsList(newsCollection: collection)
+            .listen((news) => add(NewsListUpdate(news)));
   }
 
   Stream<NewsListState> _mapVideosUpdateToState(NewsListUpdate event) async* {

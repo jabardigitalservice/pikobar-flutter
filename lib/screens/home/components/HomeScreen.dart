@@ -205,46 +205,48 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: Dimens.padding),
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        Dictionary.newsUpdate,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.productSans,
-                            fontSize: 16.0),
-                      ),
-
-                      InkWell(
-                        child: Text(
-                          Dictionary.more,
+                    padding: EdgeInsets.only(
+                        left: Dimens.padding,
+                        right: Dimens.padding,
+                        top: Dimens.padding),
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          Dictionary.newsUpdate,
                           style: TextStyle(
-                              color: ColorBase.green,
+                              color: Colors.black,
                               fontWeight: FontWeight.w600,
                               fontFamily: FontsFamily.productSans,
-                              fontSize: 12.0),
+                              fontSize: 16.0),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NewsListScreen(news: typeNews),
-                            ),
-                          );
+                        InkWell(
+                          child: Text(
+                            Dictionary.more,
+                            style: TextStyle(
+                                color: ColorBase.green,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: FontsFamily.productSans,
+                                fontSize: 12.0),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NewsListScreen(news: typeNews),
+                              ),
+                            );
 
-                          AnalyticsHelper.setLogEvent(Analytics.tappedMore);
-                        },
-                      ),
-                    ],
-                  )
-                ),
-
+                            AnalyticsHelper.setLogEvent(Analytics.tappedMore);
+                          },
+                        ),
+                      ],
+                    )),
                 Container(
-                  padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: 5),
+                  padding: EdgeInsets.only(
+                      left: Dimens.padding, right: Dimens.padding, top: 5),
                   alignment: Alignment.centerLeft,
                   child: Text(
                     Dictionary.descNews,
@@ -255,27 +257,33 @@ class _HomeScreenState extends State<HomeScreen> {
                     textAlign: TextAlign.left,
                   ),
                 ),
-
                 Container(
                   child: DefaultTabController(
-                    length: 3,
+                    length: 4,
                     child: Column(
                       children: <Widget>[
                         TabBar(
+                          isScrollable: true,
                           onTap: (index) {
                             if (index == 0) {
+                              typeNews = Dictionary.importantInfo;
+                              _newsListBloc.add(
+                                  NewsListLoad(Collections.importantInfor));
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedImportantInfo);
+                            } else if (index == 1) {
                               typeNews = Dictionary.latestNews;
                               _newsListBloc
                                   .add(NewsListLoad(Collections.newsJabar));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsJabar);
-                            } else if (index == 1) {
+                            } else if (index == 2) {
                               typeNews = Dictionary.nationalNews;
                               _newsListBloc
                                   .add(NewsListLoad(Collections.newsNational));
                               AnalyticsHelper.setLogEvent(
                                   Analytics.tappedNewsNational);
-                            } else if (index == 2) {
+                            } else if (index == 3) {
                               typeNews = Dictionary.worldNews;
                               _newsListBloc
                                   .add(NewsListLoad(Collections.newsWorld));
@@ -296,35 +304,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           tabs: <Widget>[
                             Tab(
                               child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey[400]),
-                                    borderRadius: BorderRadius.circular(8.0)),
                                 child: Text(
-                                  Dictionary.latestNews,
+                                  Dictionary.importantInfo,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontFamily: FontsFamily.productSans,
-                                      fontSize: 13.0),
+                                      fontSize: 12.0),
+                                ),
+                              ),
+                            ),
+                            Tab(
+                              child: Container(
+                                child: Text(
+                                  Dictionary.titleLatestNews,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.productSans,
+                                      fontSize: 12.0),
                                 ),
                               ),
                             ),
                             Tab(
                               child: Text(
-                                Dictionary.nationalNews,
+                                Dictionary.titleNationalNews,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontFamily: FontsFamily.productSans,
-                                    fontSize: 13.0),
+                                    fontSize: 12.0),
                               ),
                             ),
                             Tab(
                                 child: Text(
-                              Dictionary.worldNews,
+                              Dictionary.titleWorldNews,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontFamily: FontsFamily.productSans,
-                                  fontSize: 13.0),
+                                  fontSize: 12.0),
                             )),
                           ],
                         ),
@@ -334,6 +350,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: TabBarView(
                             physics: NeverScrollableScrollPhysics(),
                             children: <Widget>[
+                              NewsScreen(
+                                  news: Dictionary.importantInfo, maxLength: 3),
                               NewsScreen(
                                   news: Dictionary.latestNews, maxLength: 3),
                               NewsScreen(

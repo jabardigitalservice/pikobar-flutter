@@ -158,6 +158,9 @@ class Dictionary {
   static String latestNews = 'Berita Jabar';
   static String worldNews = 'Berita Dunia';
   static String nationalNews = 'Berita Nasional';
+  static String titleLatestNews = 'Jabar';
+  static String titleWorldNews = 'Internasional';
+  static String titleNationalNews = 'Nasional';
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
   static String more = 'Selengkapnya';
@@ -264,4 +267,6 @@ class Dictionary {
   static String descInfoGraphic = 'Info yang memuat infograpis terkait COVID-19';
 
   static String descNews = 'Anti-hoax dengan berita terpercaya';
+
+  static String labelImportantInfo = "PENTING";
 }
