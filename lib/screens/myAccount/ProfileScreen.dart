@@ -266,21 +266,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        SizedBox(
-          height: 15,
-          child: Container(
-            color: ColorBase.grey,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 20, top: 10),
-          child: Text(Dictionary.activitie,
-              style: TextStyle(
-                  color: Color(0xff333333),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  fontFamily: FontsFamily.lato)),
-        ),
         _buildGroupMenu(state.data),
         SizedBox(
           height: 15,
@@ -575,13 +560,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           return snapshot.data != null && groupMenuLength != 0
-              ? Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Column(children: getGroupMenu(groupMenu))))
+              ? Column(crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 15,
+                      child: Container(
+                        color: ColorBase.grey,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, top: 10),
+                      child: Text(Dictionary.activitie,
+                          style: TextStyle(
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              fontFamily: FontsFamily.lato)),
+                    ),
+                    Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Column(children: getGroupMenu(groupMenu))))
+                  ],
+                )
               : Container();
         });
   }
