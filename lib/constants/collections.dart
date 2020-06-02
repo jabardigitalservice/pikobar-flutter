@@ -9,9 +9,10 @@ class Collections {
   static String videos = 'videos';
   static String infographics = 'infographics';
   static String documents = 'documents';
-  static String users = 'users';
   static String areas = 'areas';
+  static String users = 'users';
   static String userTokens = 'tokens';
+  static String userLocations = 'locations';
   static String statistics = 'statistics';
   static String importantInfor = 'articles_important';
   static String newsJabar = 'articles';

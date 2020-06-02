@@ -30,6 +30,7 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
+import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
@@ -57,6 +58,7 @@ class IndexScreenState extends State<IndexScreen> {
     initializeBottomNavigationBar();
     initializeToken();
     getCountMessage();
+    updateCurrentLocation();
 
     super.initState();
   }
@@ -245,6 +247,25 @@ class IndexScreenState extends State<IndexScreen> {
     );
   }
 
+  Widget _buildContent(int index) {
+    switch (index) {
+      case 0:
+        return HomeScreen(indexScreenState: this);
+      case 1:
+        AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
+        return Messages(indexScreenState: this);
+
+      case 2:
+        AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
+        return FaqScreen();
+
+      case 3:
+        return ProfileScreen();
+      default:
+        return HomeScreen();
+    }
+  }
+
   getCountMessage() {
     Future.delayed(Duration(milliseconds: 0), () async {
       countMessage = await MessageRepository().hasUnreadData();
@@ -266,23 +287,8 @@ class IndexScreenState extends State<IndexScreen> {
     });
   }
 
-  Widget _buildContent(int index) {
-    switch (index) {
-      case 0:
-        return HomeScreen(indexScreenState: this);
-      case 1:
-        AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
-        return Messages(indexScreenState: this);
-
-      case 2:
-        AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
-        return FaqScreen();
-
-      case 3:
-        return ProfileScreen();
-      default:
-        return HomeScreen();
-    }
+  updateCurrentLocation() async {
+    await LocationService.sendCurrentLocation(context);
   }
 
   @override
