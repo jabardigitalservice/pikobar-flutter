@@ -187,6 +187,8 @@ class Dictionary {
       'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
   static String permissionLocationMap =
       'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
+  static String permissionLocationGeneral =
+      'Beberapa fitur PIKOBAR seperti informasi sebaran kasus COVID-19 di sekitar Anda dan Map, memerlukan izin untuk mengetahui lokasi Anda saat ini';
 
   // text
   static String fieldSurvey = 'Isi Survei';
