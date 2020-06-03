@@ -225,7 +225,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     Container(
                       width: 70,
                       height: 80,
-                      child: widget.news == Dictionary.importantInfo
+                      child: widget.news == Dictionary.importantInfo || data.published
                           ? Stack(
                         children: <Widget>[
                           Container(
