@@ -70,7 +70,7 @@ class Dictionary {
   static String birthday = 'Tanggal Lahir';
   static String nationality = 'Kewarganegaraan';
   static String addressDomicile = 'Alamat Domisili';
-  static String cityDomicile = 'Kabupaten/Kota Domisili';
+  static String cityDomicile = 'Kota/Kab. Domisili';
   static String provinceDomicile = 'Provinsi Domisili';
   static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
   static String testSummaryTitleAppbar = 'Total Pemeriksaan';
@@ -100,6 +100,7 @@ class Dictionary {
   static String pcrTitle = 'Jumlah PCR yang telah dilakukan';
 
   static String rapidTestAppBar = 'Jumlah RDT';
+  static String locationAddress='Lokasi Tempat Tinggal';
 
   // Button Text
   static String yes = 'Ya';
@@ -113,7 +114,7 @@ class Dictionary {
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
-  static String setLocation = 'Set Lokasi...';
+  static String setLocation = 'Pilih Lokasi';
   static String termsConditions=' Terms & Conditions';
 
 // Error messages
