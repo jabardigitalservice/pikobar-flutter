@@ -14,7 +14,6 @@ import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -22,9 +21,9 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/HexColor.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
+
 import 'TermsConditions.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -38,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
   RemoteConfigBloc _remoteConfigBloc;
+
   @override
   void initState() {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -192,15 +192,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Color(0xff333333),
                               fontSize: 14,
                               fontFamily: FontsFamily.lato)),
-                    ),
-                    // state.data != null
-                    //     ? _healthStatus(state.data)
-                    //     : Container(),
+                    )
                   ],
                 ),
               )
             ],
           ),
+        ),
+        BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+          bloc: _remoteConfigBloc,
+          builder: (context, remoteState) {
+            return remoteState is RemoteConfigLoaded
+                ? _buildHealthStatus(remoteState.remoteConfig, state.data)
+                : Container();
+          },
         ),
         SizedBox(
           height: 15,
@@ -441,102 +446,116 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  FutureBuilder<RemoteConfig> _healthStatus(DocumentSnapshot data) {
+  _buildHealthStatus(RemoteConfig remoteConfig, DocumentSnapshot data) {
     Color cardColor = ColorBase.grey;
     Color textColor = Colors.white;
-    String uriImage = '${Environment.iconAssets}sthetoscope.png';
+    String uriImage = '${Environment.iconAssets}user_health.png';
 
-    return FutureBuilder<RemoteConfig>(
-        future: setupRemoteConfig(),
-        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-          bool visible = snapshot.data != null &&
-                  snapshot.data.getBool(FirebaseConfig.healthStatusVisible) !=
-                      null
-              ? snapshot.data.getBool(FirebaseConfig.healthStatusVisible)
-              : false;
+    bool visible = remoteConfig != null &&
+            remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
+        ? remoteConfig.getBool(FirebaseConfig.healthStatusVisible)
+        : false;
 
-          if (snapshot.data != null &&
-              snapshot.data.getString(FirebaseConfig.healthStatusColors) !=
-                  null &&
-              data['health_status'] != null) {
-            Map<String, dynamic> healthStatusColor = json.decode(
-                snapshot.data.getString(FirebaseConfig.healthStatusColors));
+    if (remoteConfig != null &&
+        remoteConfig.getString(FirebaseConfig.healthStatusColors) != null &&
+        data['health_status'] != null) {
+      Map<String, dynamic> healthStatusColor = json
+          .decode(remoteConfig.getString(FirebaseConfig.healthStatusColors));
 
-            switch (data['health_status']) {
-              case "HEALTHY":
-                cardColor = HexColor.fromHex(
-                    healthStatusColor['healthy'] != null
-                        ? healthStatusColor['healthy']
-                        : ColorBase.green);
-                break;
+      switch (data['health_status']) {
+        case "HEALTHY":
+          cardColor = HexColor.fromHex(healthStatusColor['healthy'] != null
+              ? healthStatusColor['healthy']
+              : ColorBase.green);
+          break;
 
-              case "ODP":
-                cardColor = HexColor.fromHex(healthStatusColor['odp'] != null
-                    ? healthStatusColor['odp']
-                    : Colors.yellow);
-                textColor = Colors.black;
-                uriImage = '${Environment.iconAssets}sthetoscope_black.png';
-                break;
+        case "ODP":
+          cardColor = HexColor.fromHex(healthStatusColor['odp'] != null
+              ? healthStatusColor['odp']
+              : Colors.yellow);
+          textColor = Colors.black;
+          uriImage = '${Environment.iconAssets}user_health_black.png';
+          break;
 
-              case "PDP":
-                cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null
-                    ? healthStatusColor['pdp']
-                    : Colors.orange);
-                textColor = Colors.black;
-                uriImage = '${Environment.iconAssets}sthetoscope_black.png';
-                break;
+        case "PDP":
+          cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null
+              ? healthStatusColor['pdp']
+              : Colors.orange);
+          textColor = Colors.black;
+          uriImage = '${Environment.iconAssets}user_health_black.png';
+          break;
 
-              case "CONFIRMED":
-                cardColor = HexColor.fromHex(
-                    healthStatusColor['confirmed'] != null
-                        ? healthStatusColor['confirmed']
-                        : Colors.red);
-                break;
+        case "CONFIRMED":
+          cardColor = HexColor.fromHex(healthStatusColor['confirmed'] != null
+              ? healthStatusColor['confirmed']
+              : Colors.red);
+          break;
 
-              default:
-                cardColor = Colors.grey;
-            }
-          }
+        default:
+          cardColor = Colors.grey;
+      }
+    }
 
-          return visible && data['health_status_text'] != null
-              ? Container(
-                  decoration: BoxDecoration(
-                      color: cardColor, borderRadius: BorderRadius.circular(4)),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: Column(
+    return visible && data['health_status_text'] != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 15,
+                child: Container(
+                  color: ColorBase.grey,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, top: 10),
+                child: Text(Dictionary.healthStatus,
+                    style: TextStyle(
+                        color: Color(0xff333333),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        fontFamily: FontsFamily.lato)),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                decoration: BoxDecoration(
+                    color: cardColor, borderRadius: BorderRadius.circular(5)),
+                child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Row(
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Container(height: 12, child: Image.asset(uriImage)),
-                            SizedBox(width: 5),
-                            Text(
-                                Dictionary.statusUser +
-                                    data['health_status_text'],
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                )),
-                          ],
+                        Container(
+                          height: 32,
+                          margin: EdgeInsets.only(right: 16.0),
+                          child: Image.asset(uriImage),
                         ),
-                        data['health_status_check'] != null
-                            ? Text(
-                                unixTimeStampToDateTimeWithoutDay(
-                                    data['health_status_check'].seconds),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                Dictionary.yourHealthStatus,
                                 style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 10,
-                                ))
-                            : Container(),
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 12,
+                                    color: textColor),
+                              ),
+                              SizedBox(height: 5,),
+                              Text(data['health_status_text'],
+                                style: TextStyle(
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor),
+                              )
+                            ],
+                          ),
+                        )
                       ],
-                    ),
-                  ),
-                )
-              : SizedBox(
-                  height: 38.0,
-                );
-        });
+                    )),
+              ),
+            ],
+          )
+        : Container();
   }
 
   FutureBuilder<RemoteConfig> _buildGroupMenu(DocumentSnapshot data) {
@@ -560,7 +579,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           return snapshot.data != null && groupMenuLength != 0
-              ? Column(crossAxisAlignment: CrossAxisAlignment.start,
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
                       height: 15,
@@ -679,6 +699,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     _authenticationBloc.close();
+    _remoteConfigBloc.close();
     super.dispose();
   }
 }

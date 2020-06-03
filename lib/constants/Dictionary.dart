@@ -90,7 +90,7 @@ class Dictionary {
   static String qrCode = 'QR Code';
   static String activitie = 'Aktifitas';
   static String accountManage= 'Kelola Akun';
-  static String statusUser = 'Status: ';
+  static String healthStatus = 'Status Kesehatan';
   static String sendAgainOTP = 'Kirim ulang kode';
   static String otpNotSent = 'Tidak menerima sms?';
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
@@ -98,6 +98,7 @@ class Dictionary {
   static String searchLocation = 'Cari Lokasi';
   static String rapidTestTitle = 'Jumlah RDT yang telah dilakukan';
   static String pcrTitle = 'Jumlah PCR yang telah dilakukan';
+  static String yourHealthStatus = 'Status Kesehatan Anda :';
 
   static String rapidTestAppBar = 'Jumlah RDT';
 
