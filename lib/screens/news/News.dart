@@ -2,6 +2,7 @@ import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -12,6 +13,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
+// ignore: must_be_immutable
 class NewsListScreen extends StatelessWidget {
   String news;
 
@@ -33,7 +35,8 @@ class News extends StatefulWidget {
   _NewsState createState() => _NewsState();
 }
 
-class _NewsState extends State<News> with SingleTickerProviderStateMixin {
+class _NewsState extends State<News>
+    with SingleTickerProviderStateMixin {
   List<Tab> myTabs = [];
   TabController tabController;
   NewsListBloc _newsListBloc;
@@ -100,8 +103,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     ));
   }
 
-  updateListTab() {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,74 +111,78 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         ),
         body: Container(
             child: DefaultTabController(
-          length: 5,
-          child: Column(
-            children: <Widget>[
-              TabBar(
-                labelPadding: EdgeInsets.all(6),
-                isScrollable: true,
-                indicator: BubbleTabIndicator(
-                  indicatorHeight: 37.0,
-                  indicatorColor: ColorBase.green,
-                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                ),
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
-                indicatorColor: ColorBase.orange,
-                indicatorWeight: 2.8,
-                tabs: myTabs,
-                controller: tabController,
-                onTap: (index) {
-                  myTabs.clear();
-                  setListTab(Colors.grey);
-                  if (index == 0) {
-                    widget.news = Dictionary.allNews;
-                    myTabs[index] = addTab(
-                        Dictionary.allNews, widget.news, ColorBase.green);
-                    AnalyticsHelper.setLogEvent(Analytics.tappedAllNews);
-                  } else if (index == 1) {
-                    widget.news = Dictionary.importantInfo;
-                    myTabs[index] = addTab(
-                        Dictionary.importantInfo, widget.news, ColorBase.green);
-                    AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfo);
-                  } else if (index == 2) {
-                    widget.news = Dictionary.latestNews;
-                    myTabs[index] = addTab(Dictionary.titleLatestNews,
-                        widget.news, ColorBase.green);
-                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
-                  } else if (index == 3) {
-                    widget.news = Dictionary.nationalNews;
-                    myTabs[index] = addTab(Dictionary.titleNationalNews,
-                        widget.news, ColorBase.green);
-                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsNational);
-                  } else if (index == 4) {
-                    widget.news = Dictionary.worldNews;
-                    myTabs[index] = addTab(Dictionary.titleWorldNews,
-                        widget.news, ColorBase.green);
-                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
-                  }
-                  setState(() {});
-                },
-              ),
-              SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 144,
-                  child: TabBarView(
+              length: 5,
+              child: Column(
+                children: <Widget>[
+                  TabBar(
+                    labelPadding: EdgeInsets.all(6),
+                    isScrollable: true,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 37.0,
+                      indicatorColor: ColorBase.green,
+                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                    ),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: ColorBase.orange,
+                    indicatorWeight: 2.8,
+                    tabs: myTabs,
                     controller: tabController,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[
-                      NewsScreen(news: NewsType.allArticles),
-                      NewsScreen(news: Dictionary.importantInfo),
-                      NewsScreen(news: Dictionary.latestNews),
-                      NewsScreen(news: Dictionary.nationalNews),
-                      NewsScreen(news: Dictionary.worldNews),
-                    ],
+                    onTap: (index) {
+                      myTabs.clear();
+                      setListTab(Colors.grey);
+                      if (index == 0) {
+                        widget.news = Dictionary.allNews;
+                        myTabs[index] = addTab(
+                            Dictionary.allNews, widget.news, ColorBase.green);
+                        AnalyticsHelper.setLogEvent(Analytics.tappedAllNews);
+                      } else if (index == 1) {
+                        widget.news = Dictionary.importantInfo;
+                        myTabs[index] = addTab(Dictionary.importantInfo,
+                            widget.news, ColorBase.green);
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedImportantInfo);
+                      } else if (index == 2) {
+                        widget.news = Dictionary.latestNews;
+                        myTabs[index] = addTab(Dictionary.titleLatestNews,
+                            widget.news, ColorBase.green);
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedNewsJabar);
+                      } else if (index == 3) {
+                        widget.news = Dictionary.nationalNews;
+                        myTabs[index] = addTab(Dictionary.titleNationalNews,
+                            widget.news, ColorBase.green);
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedNewsNational);
+                      } else if (index == 4) {
+                        widget.news = Dictionary.worldNews;
+                        myTabs[index] = addTab(Dictionary.titleWorldNews,
+                            widget.news, ColorBase.green);
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedNewsWorld);
+                      }
+                      setState(() {});
+                    },
                   ),
-                ),
-              )
-            ],
-          ),
-        )));
+                  SingleChildScrollView(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height - 144,
+                      child: TabBarView(
+                        controller: tabController,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: <Widget>[
+                          NewsScreen(news: NewsType.allArticles),
+                          NewsScreen(news: Dictionary.importantInfo),
+                          NewsScreen(news: Dictionary.latestNews),
+                          NewsScreen(news: Dictionary.nationalNews),
+                          NewsScreen(news: Dictionary.worldNews),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )));
   }
 
   void _handleTabSelection() {

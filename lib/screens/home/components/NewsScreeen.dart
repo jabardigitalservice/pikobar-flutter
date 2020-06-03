@@ -84,7 +84,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 <String, dynamic>{'title': data.title});
           },
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.only(top: 5, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[

@@ -15,7 +15,6 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -28,11 +27,10 @@ import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/ImportantInfoScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
-import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
+import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
-import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 import 'BannerListSlider.dart';
@@ -200,246 +198,37 @@ class _HomeScreenState extends State<HomeScreen> {
               color: ColorBase.grey,
             ),
           ),
-          Container(
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.only(
-                        left: Dimens.padding,
-                        right: Dimens.padding,
-                        top: Dimens.padding),
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          Dictionary.newsUpdate,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.productSans,
-                              fontSize: 16.0),
-                        ),
-                        InkWell(
-                          child: Text(
-                            Dictionary.more,
-                            style: TextStyle(
-                                color: ColorBase.green,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: FontsFamily.productSans,
-                                fontSize: 12.0),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    NewsListScreen(news: typeNews),
-                              ),
-                            );
-
-                            AnalyticsHelper.setLogEvent(Analytics.tappedMore);
-                          },
-                        ),
-                      ],
-                    )),
-                Container(
-                  padding: EdgeInsets.only(
-                      left: Dimens.padding, right: Dimens.padding, top: 5),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    Dictionary.descNews,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Container(
-                  child: DefaultTabController(
-                    length: 4,
-                    child: Column(
-                      children: <Widget>[
-                        TabBar(
-                          isScrollable: true,
-                          onTap: (index) {
-                            setState(() {});
-                            if (index == 0) {
-                              typeNews = Dictionary.importantInfo;
-                              _newsListBloc.add(
-                                  NewsListLoad(Collections.importantInfor));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedImportantInfo);
-                            } else if (index == 1) {
-                              typeNews = Dictionary.latestNews;
-                              _newsListBloc
-                                  .add(NewsListLoad(Collections.newsJabar));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedNewsJabar);
-                            } else if (index == 2) {
-                              typeNews = Dictionary.nationalNews;
-                              _newsListBloc
-                                  .add(NewsListLoad(Collections.newsNational));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedNewsNational);
-                            } else if (index == 3) {
-                              typeNews = Dictionary.worldNews;
-                              _newsListBloc
-                                  .add(NewsListLoad(Collections.newsWorld));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedNewsWorld);
-                            }
-                          },
-                          labelColor: Colors.white,
-                          unselectedLabelColor: Colors.grey,
-                          indicator: BubbleTabIndicator(
-                            indicatorHeight: 37.0,
-                            indicatorColor: ColorBase.green,
-                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                          ),
-                          indicatorColor: ColorBase.green,
-                          indicatorWeight: 0.1,
-                          labelPadding: EdgeInsets.all(10),
-                          unselectedLabelStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.productSans,
-                              fontSize: 12.0),
-                          tabs: <Widget>[
-                            Tab(
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(
-                                        color:
-                                            typeNews == Dictionary.importantInfo
-                                                ? ColorBase.green
-                                                : Colors.grey,
-                                        width: 1)),
-                                child: Text(
-                                  Dictionary.importantInfo,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: FontsFamily.productSans,
-                                      fontSize: 12.0),
-                                ),
-                              ),
-                            ),
-                            Tab(
-                              child: Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(
-                                        color: typeNews == Dictionary.latestNews
-                                            ? ColorBase.green
-                                            : Colors.grey,
-                                        width: 1)),
-                                child: Text(
-                                  Dictionary.titleLatestNews,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: FontsFamily.productSans,
-                                      fontSize: 12.0),
-                                ),
-                              ),
-                            ),
-                            Tab(
-                                child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                      color: typeNews == Dictionary.nationalNews
-                                          ? ColorBase.green
-                                          : Colors.grey,
-                                      width: 1)),
-                              child: Text(
-                                Dictionary.titleNationalNews,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: FontsFamily.productSans,
-                                    fontSize: 12.0),
-                              ),
-                            )),
-                            Tab(
-                                child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  border: Border.all(
-                                      color: typeNews == Dictionary.worldNews
-                                          ? ColorBase.green
-                                          : Colors.grey,
-                                      width: 1)),
-                              child: Text(
-                                Dictionary.titleWorldNews,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: FontsFamily.productSans,
-                                    fontSize: 12.0),
-                              ),
-                            )),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 10),
-                          height: 320,
-                          child: TabBarView(
-                            physics: NeverScrollableScrollPhysics(),
-                            children: <Widget>[
-                              NewsScreen(
-                                  news: Dictionary.importantInfo, maxLength: 3),
-                              NewsScreen(
-                                  news: Dictionary.latestNews, maxLength: 3),
-                              NewsScreen(
-                                  news: Dictionary.nationalNews, maxLength: 3),
-                              NewsScreen(
-                                  news: Dictionary.worldNews, maxLength: 3),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: VideoList(),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: InfoGraphics(),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Documents(),
-                ),
-              ],
+          TabNewsScreen(newsListBloc: _newsListBloc),
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
             ),
-          )
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16.0),
+            child: VideoList(),
+          ),
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16.0),
+            child: InfoGraphics(),
+          ),
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16.0),
+            child: Documents(),
+          ),
         ]),
         AlertUpdate()
       ],
