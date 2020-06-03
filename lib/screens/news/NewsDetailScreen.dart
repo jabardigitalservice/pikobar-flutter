@@ -43,8 +43,9 @@ import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
 class NewsDetailScreen extends StatefulWidget {
   final String id;
   final String news;
+  final NewsModel model;
 
-  NewsDetailScreen({this.id, this.news});
+  NewsDetailScreen({this.id, this.news, this.model});
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
@@ -94,7 +95,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             ? _buildLoading(context)
             : state is NewsDetailLoaded
                 ? _buildContent(context, state.record)
-                : Container());
+                : state is NewsDetailFailure
+                    ? _buildContent(context, widget.model)
+                    : Container());
   }
 
   _buildLoading(BuildContext context) {
@@ -299,67 +302,66 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-
                   SizedBox(height: 10.0),
                   data.actionTitle != null &&
-                      data.actionTitle.isNotEmpty &&
-                      data.actionUrl != null &&
-                      data.actionUrl.isNotEmpty
+                          data.actionTitle.isNotEmpty &&
+                          data.actionUrl != null &&
+                          data.actionUrl.isNotEmpty
                       ? RoundedButton(
-                      title: data.actionTitle,
-                      color: ColorBase.green,
-                      textStyle: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                      onPressed: () {
-                        _launchURL(data.actionUrl);
-                      })
+                          title: data.actionTitle,
+                          color: ColorBase.green,
+                          textStyle: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                          onPressed: () {
+                            _launchURL(data.actionUrl);
+                          })
                       : Container(),
                   data.attachmentUrl.isNotEmpty
                       ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 1.0,
-                    color: Colors.grey,
-                    margin: EdgeInsets.only(top: 25.0, bottom: 16.0),
-                  )
+                          width: MediaQuery.of(context).size.width,
+                          height: 1.0,
+                          color: Colors.grey,
+                          margin: EdgeInsets.only(top: 25.0, bottom: 16.0),
+                        )
                       : Container(),
                   data.attachmentUrl.isNotEmpty
                       ? Row(
-                    children: <Widget>[
-                      Container(
-                        width: MediaQuery.of(context).size.width - 180,
-                        child: Text(data.attachmentName,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                fontFamily: FontsFamily.productSans,
-                                color: Colors.grey[800])),
-                      ),
-                      ButtonTheme(
-                        minWidth: 129.0,
-                        height: 34.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: RaisedButton(
-                          color: ColorBase.green,
-                          highlightElevation: 5,
-                          child: Text(Dictionary.downloadAttachment,
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontFamily: FontsFamily.productSans,
-                                  color: Colors.white)),
-                          onPressed: () {
-                            Platform.isAndroid
-                                ? _downloadAttachment(
-                                data.attachmentName, data.attachmentUrl)
-                                : _viewPdf(
-                                data.attachmentName, data.attachmentUrl);
-                          },
-                        ),
-                      )
-                    ],
-                  )
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width - 180,
+                              child: Text(data.attachmentName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontFamily: FontsFamily.productSans,
+                                      color: Colors.grey[800])),
+                            ),
+                            ButtonTheme(
+                              minWidth: 129.0,
+                              height: 34.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: RaisedButton(
+                                color: ColorBase.green,
+                                highlightElevation: 5,
+                                child: Text(Dictionary.downloadAttachment,
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontFamily: FontsFamily.productSans,
+                                        color: Colors.white)),
+                                onPressed: () {
+                                  Platform.isAndroid
+                                      ? _downloadAttachment(data.attachmentName,
+                                          data.attachmentUrl)
+                                      : _viewPdf(data.attachmentName,
+                                          data.attachmentUrl);
+                                },
+                              ),
+                            )
+                          ],
+                        )
                       : Container(),
 
                   SizedBox(height: 25.0),

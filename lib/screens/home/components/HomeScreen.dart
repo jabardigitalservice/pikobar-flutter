@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   InfoGraphicsListBloc _infoGraphicsListBloc;
   DocumentsBloc _documentsBloc;
   bool isLoading = true;
-  String typeNews = Dictionary.latestNews;
+  String typeNews = Dictionary.importantInfo;
 
   @override
   void initState() {
@@ -265,6 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         TabBar(
                           isScrollable: true,
                           onTap: (index) {
+                            setState(() {});
                             if (index == 0) {
                               typeNews = Dictionary.importantInfo;
                               _newsListBloc.add(
@@ -293,17 +294,31 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           labelColor: Colors.white,
                           unselectedLabelColor: Colors.grey,
-                          indicatorSize: TabBarIndicatorSize.tab,
                           indicator: BubbleTabIndicator(
-                            indicatorHeight: 35.0,
+                            indicatorHeight: 37.0,
                             indicatorColor: ColorBase.green,
                             tabBarIndicatorSize: TabBarIndicatorSize.tab,
                           ),
                           indicatorColor: ColorBase.green,
-                          indicatorWeight: 2.8,
+                          indicatorWeight: 0.1,
+                          labelPadding: EdgeInsets.all(10),
+                          unselectedLabelStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.productSans,
+                              fontSize: 12.0),
                           tabs: <Widget>[
                             Tab(
                               child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        color:
+                                            typeNews == Dictionary.importantInfo
+                                                ? ColorBase.green
+                                                : Colors.grey,
+                                        width: 1)),
                                 child: Text(
                                   Dictionary.importantInfo,
                                   style: TextStyle(
@@ -315,6 +330,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Tab(
                               child: Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        color: typeNews == Dictionary.latestNews
+                                            ? ColorBase.green
+                                            : Colors.grey,
+                                        width: 1)),
                                 child: Text(
                                   Dictionary.titleLatestNews,
                                   style: TextStyle(
@@ -325,6 +348,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Tab(
+                                child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                      color: typeNews == Dictionary.nationalNews
+                                          ? ColorBase.green
+                                          : Colors.grey,
+                                      width: 1)),
                               child: Text(
                                 Dictionary.titleNationalNews,
                                 textAlign: TextAlign.center,
@@ -333,14 +365,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontFamily: FontsFamily.productSans,
                                     fontSize: 12.0),
                               ),
-                            ),
+                            )),
                             Tab(
-                                child: Text(
-                              Dictionary.titleWorldNews,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: FontsFamily.productSans,
-                                  fontSize: 12.0),
+                                child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  border: Border.all(
+                                      color: typeNews == Dictionary.worldNews
+                                          ? ColorBase.green
+                                          : Colors.grey,
+                                      width: 1)),
+                              child: Text(
+                                Dictionary.titleWorldNews,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: FontsFamily.productSans,
+                                    fontSize: 12.0),
+                              ),
                             )),
                           ],
                         ),

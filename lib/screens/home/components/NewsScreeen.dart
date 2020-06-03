@@ -76,7 +76,7 @@ class _NewsScreenState extends State<NewsScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    NewsDetailScreen(id: data.id, news: widget.news),
+                    NewsDetailScreen(id: data.id, news: widget.news, model: data),
               ),
             );
 
@@ -346,7 +346,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        NewsDetailScreen(id: data.id, news: widget.news),
+                        NewsDetailScreen(id: data.id, news: widget.news, model: data),
                   ),
                 );
                 AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,

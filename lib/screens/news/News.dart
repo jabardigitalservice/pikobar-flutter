@@ -7,6 +7,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -36,6 +37,16 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
     new Tab(
       child: Text(
+        Dictionary.allNews,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontFamily: FontsFamily.productSans,
+            fontSize: 13.0),
+      ),
+    ),
+    Tab(
+      child: Text(
         Dictionary.importantInfo,
         textAlign: TextAlign.center,
         style: TextStyle(
@@ -56,23 +67,22 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     ),
     new Tab(
         child: Text(
-          Dictionary.titleNationalNews,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        )),
+      Dictionary.titleNationalNews,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontFamily: FontsFamily.productSans,
+          fontSize: 13.0),
+    )),
     new Tab(
         child: Text(
-          Dictionary.titleWorldNews,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        )),
+      Dictionary.titleWorldNews,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontFamily: FontsFamily.productSans,
+          fontSize: 13.0),
+    )),
   ];
   TabController tabController;
   NewsListBloc _newsListBloc;
@@ -86,17 +96,20 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
     tabController = new TabController(vsync: this, length: myTabs.length);
     tabController.addListener(_handleTabSelection);
-    if (widget.news == Dictionary.importantInfo) {
+    if (widget.news == NewsType.allArticles) {
       tabController.animateTo(0);
+      _newsListBloc.add(NewsListLoad(NewsType.allArticles));
+    } else if (widget.news == Dictionary.importantInfo) {
+      tabController.animateTo(1);
       _newsListBloc.add(NewsListLoad(Collections.importantInfor));
     } else if (widget.news == Dictionary.latestNews) {
-      tabController.animateTo(1);
+      tabController.animateTo(2);
       _newsListBloc.add(NewsListLoad(Collections.newsJabar));
     } else if (widget.news == Dictionary.nationalNews) {
-      tabController.animateTo(2);
+      tabController.animateTo(3);
       _newsListBloc.add(NewsListLoad(Collections.newsNational));
     } else {
-      tabController.animateTo(3);
+      tabController.animateTo(4);
       _newsListBloc.add(NewsListLoad(Collections.newsWorld));
     }
   }
@@ -109,74 +122,73 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         ),
         body: Container(
             child: DefaultTabController(
-                length: 4,
-                child: Column(
-                  children: <Widget>[
-                    TabBar(
-                      isScrollable: true,
-                      indicator: BubbleTabIndicator(
-                        indicatorHeight: 35.0,
-                        indicatorColor: ColorBase.green,
-                        tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                      ),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.grey,
-                      indicatorColor: ColorBase.orange,
-                      indicatorWeight: 2.8,
-                      tabs: myTabs,
-                      controller: tabController,
-                      onTap: (index) {
-                        if (index == 0) {
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedImportantInfo);
-                        }
-                        if (index == 1) {
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedNewsJabar);
-                        } else if (index == 2) {
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedNewsNational);
-                        } else if (index == 3) {
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedNewsWorld);
-                        }
-                      },
-                    ),
-
-                   SingleChildScrollView(
-                     child: Container(
-                       height: MediaQuery.of(context).size.height-129,
-                       child:  TabBarView(
-                         controller: tabController,
-                         physics: NeverScrollableScrollPhysics(),
-                         children: <Widget>[
-                           NewsScreen(news: Dictionary.importantInfo),
-                           NewsScreen(news: Dictionary.latestNews),
-                           NewsScreen(news: Dictionary.nationalNews),
-                           NewsScreen(news: Dictionary.worldNews),
-                         ],
-                       ),
-                     ),
-                   )
-                  ],
+          length: 5,
+          child: Column(
+            children: <Widget>[
+              TabBar(
+                isScrollable: true,
+                indicator: BubbleTabIndicator(
+                  indicatorHeight: 35.0,
+                  indicatorColor: ColorBase.green,
+                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
                 ),
-            )
-        ));
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: ColorBase.orange,
+                indicatorWeight: 2.8,
+                tabs: myTabs,
+                controller: tabController,
+                onTap: (index) {
+                  if (index == 0) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedAllNews);
+                  } else if (index == 1) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfo);
+                  } else if (index == 2) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
+                  } else if (index == 3) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsNational);
+                  } else if (index == 4) {
+                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
+                  }
+                },
+              ),
+              SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height - 129,
+                  child: TabBarView(
+                    controller: tabController,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: <Widget>[
+                      NewsScreen(news: NewsType.allArticles),
+                      NewsScreen(news: Dictionary.importantInfo),
+                      NewsScreen(news: Dictionary.latestNews),
+                      NewsScreen(news: Dictionary.nationalNews),
+                      NewsScreen(news: Dictionary.worldNews),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        )));
   }
 
   void _handleTabSelection() {
     if (tabController.indexIsChanging) {
       switch (tabController.index) {
         case 0:
-          _newsListBloc.add(NewsListLoad(Collections.importantInfor));
+          _newsListBloc.add(NewsListLoad(NewsType.allArticles));
           break;
         case 1:
-          _newsListBloc.add(NewsListLoad(Collections.newsJabar));
+          _newsListBloc.add(NewsListLoad(Collections.importantInfor));
           break;
         case 2:
-          _newsListBloc.add(NewsListLoad(Collections.newsNational));
+          _newsListBloc.add(NewsListLoad(Collections.newsJabar));
           break;
         case 3:
+          _newsListBloc.add(NewsListLoad(Collections.newsNational));
+          break;
+        case 4:
           _newsListBloc.add(NewsListLoad(Collections.newsWorld));
           break;
       }

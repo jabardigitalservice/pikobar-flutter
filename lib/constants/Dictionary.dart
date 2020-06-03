@@ -166,6 +166,7 @@ class Dictionary {
   static String more = 'Selengkapnya';
   static String heroImageTag = 'preview';
   static String otherNews = 'Berita Lainnya';
+  static String allNews = 'Semua Berita';
 
   // placeholder / hint text
   static String findFaq = 'Cari FAQ';
