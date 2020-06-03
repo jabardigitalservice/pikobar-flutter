@@ -35,71 +35,12 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   List<Tab> myTabs = [];
-
-//    List<Tab> myTabs = <Tab>[
-//    new Tab(
-//      child: Container(
-//        child: Text(
-//          Dictionary.allNews,
-//          textAlign: TextAlign.center,
-//          style: TextStyle(
-//              fontWeight: FontWeight.w600,
-//              fontFamily: FontsFamily.productSans,
-//              fontSize: 13.0),
-//        ),
-//      ),
-//    ),
-//    Tab(
-//        child: Container(
-//      child: Text(
-//        Dictionary.importantInfo,
-//        textAlign: TextAlign.center,
-//        style: TextStyle(
-//            fontWeight: FontWeight.w600,
-//            fontFamily: FontsFamily.productSans,
-//            fontSize: 13.0),
-//      ),
-//    )),
-//    new Tab(
-//        child: Container(
-//      child: Text(
-//        Dictionary.titleLatestNews,
-//        textAlign: TextAlign.center,
-//        style: TextStyle(
-//            fontWeight: FontWeight.w600,
-//            fontFamily: FontsFamily.productSans,
-//            fontSize: 13.0),
-//      ),
-//    )),
-//    new Tab(
-//        child: Container(
-//      child: Text(
-//        Dictionary.titleNationalNews,
-//        textAlign: TextAlign.center,
-//        style: TextStyle(
-//            fontWeight: FontWeight.w600,
-//            fontFamily: FontsFamily.productSans,
-//            fontSize: 13.0),
-//      ),
-//    )),
-//    new Tab(
-//        child: Container(
-//      child: Text(
-//        Dictionary.titleWorldNews,
-//        textAlign: TextAlign.center,
-//        style: TextStyle(
-//            fontWeight: FontWeight.w600,
-//            fontFamily: FontsFamily.productSans,
-//            fontSize: 13.0),
-//      ),
-//    )),
-//  ];
   TabController tabController;
   NewsListBloc _newsListBloc;
 
   @override
   void initState() {
-    getTab();
+    setListTab(null);
 
     AnalyticsHelper.setCurrentScreen(Analytics.news);
 
@@ -126,112 +67,40 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     }
   }
 
-  getTab() {
-    myTabs.add(Tab(
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-                color: widget.news == Dictionary.allNews
-                    ? ColorBase.green
-                    : Colors.grey,
-                width: 1)),
-        child: Text(
-          Dictionary.allNews,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        ),
+  setListTab(Color color) {
+    myTabs.add(addTab(Dictionary.allNews, Dictionary.allNews, color));
+    myTabs
+        .add(addTab(Dictionary.importantInfo, Dictionary.importantInfo, color));
+    myTabs
+        .add(addTab(Dictionary.titleLatestNews, Dictionary.latestNews, color));
+    myTabs.add(
+        addTab(Dictionary.titleNationalNews, Dictionary.nationalNews, color));
+    myTabs.add(addTab(Dictionary.titleWorldNews, Dictionary.worldNews, color));
+  }
+
+  Tab addTab(String titleTab, String typeNews, Color color) {
+    return Tab(
+        child: Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+              color: color != null
+                  ? color
+                  : widget.news == typeNews ? ColorBase.green : Colors.grey,
+              width: 1)),
+      child: Text(
+        titleTab,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontFamily: FontsFamily.productSans,
+            fontSize: 13.0),
       ),
     ));
-    myTabs.add(
-      Tab(
-          child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-                color: widget.news == Dictionary.importantInfo
-                    ? ColorBase.green
-                    : Colors.grey,
-                width: 1)),
-        child: Text(
-          Dictionary.importantInfo,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        ),
-      )),
-    );
-    myTabs.add(
-      Tab(
-          child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-                color: widget.news == Dictionary.latestNews
-                    ? ColorBase.green
-                    : Colors.grey,
-                width: 1)),
-        child: Text(
-          Dictionary.titleLatestNews,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        ),
-      )),
-    );
-    myTabs.add(
-      Tab(
-          child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-                color: widget.news == Dictionary.nationalNews
-                    ? ColorBase.green
-                    : Colors.grey,
-                width: 1)),
-        child: Text(
-          Dictionary.titleNationalNews,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        ),
-      )),
-    );
-    myTabs.add(
-      Tab(
-          child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-                color: widget.news == Dictionary.worldNews
-                    ? ColorBase.green
-                    : Colors.grey,
-                width: 1)),
-        child: Text(
-          Dictionary.titleWorldNews,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.productSans,
-              fontSize: 13.0),
-        ),
-      )),
-    );
   }
+
+  updateListTab() {}
 
   @override
   Widget build(BuildContext context) {
@@ -259,20 +128,32 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
                 tabs: myTabs,
                 controller: tabController,
                 onTap: (index) {
+                  myTabs.clear();
+                  setListTab(Colors.grey);
                   if (index == 0) {
                     widget.news = Dictionary.allNews;
+                    myTabs[index] = addTab(
+                        Dictionary.allNews, widget.news, ColorBase.green);
                     AnalyticsHelper.setLogEvent(Analytics.tappedAllNews);
                   } else if (index == 1) {
                     widget.news = Dictionary.importantInfo;
+                    myTabs[index] = addTab(
+                        Dictionary.importantInfo, widget.news, ColorBase.green);
                     AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfo);
                   } else if (index == 2) {
                     widget.news = Dictionary.latestNews;
+                    myTabs[index] = addTab(Dictionary.titleLatestNews,
+                        widget.news, ColorBase.green);
                     AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
                   } else if (index == 3) {
                     widget.news = Dictionary.nationalNews;
+                    myTabs[index] = addTab(Dictionary.titleNationalNews,
+                        widget.news, ColorBase.green);
                     AnalyticsHelper.setLogEvent(Analytics.tappedNewsNational);
                   } else if (index == 4) {
                     widget.news = Dictionary.worldNews;
+                    myTabs[index] = addTab(Dictionary.titleWorldNews,
+                        widget.news, ColorBase.green);
                     AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
                   }
                   setState(() {});
