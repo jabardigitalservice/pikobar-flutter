@@ -193,9 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fontSize: 14,
                               fontFamily: FontsFamily.lato)),
                     ),
-                    // state.data != null
-                    //     ? _healthStatus(state.data)
-                    //     : Container(),
+                   
                   ],
                 ),
               )
@@ -208,6 +206,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: ColorBase.grey,
           ),
         ),
+         state.data != null
+                        ? _healthStatus(state.data)
+                        : Container(),
         Padding(
           padding: EdgeInsets.only(left: 20, top: 10),
           child: Text(Dictionary.qrCode,
@@ -533,9 +534,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 )
-              : SizedBox(
-                  height: 38.0,
-                );
+              : Container();
         });
   }
 
@@ -560,7 +559,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           return snapshot.data != null && groupMenuLength != 0
-              ? Column(crossAxisAlignment: CrossAxisAlignment.start,
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
                       height: 15,
