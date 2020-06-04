@@ -28,9 +28,15 @@ class TabNewsScreen extends StatefulWidget {
 
 class _TabNewsScreenState extends State<TabNewsScreen> {
   String typeNews = Dictionary.importantInfo;
+  bool checkInitTypeNews = true;
 
   buildContent(RemoteConfigLoaded state) {
-    StatShowImportantInfo.getStatImportantTab(state);
+    if (checkInitTypeNews) {
+      if (!StatShowImportantInfo.getStatImportantTab(state)) {
+        typeNews = Dictionary.latestNews;
+        checkInitTypeNews = false;
+      }
+    }
     return Container(
       color: Colors.white,
       child: Column(
@@ -68,7 +74,6 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           builder: (context) => NewsListScreen(news: typeNews),
                         ),
                       );
-
                       AnalyticsHelper.setLogEvent(Analytics.tappedMore);
                     },
                   ),
@@ -90,7 +95,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
           Container(
             margin: EdgeInsets.only(left: 5),
             child: DefaultTabController(
-              length:StatShowImportantInfo.getStatImportantTab(state) ? 4 : 3,
+              length: StatShowImportantInfo.getStatImportantTab(state) ? 4 : 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -165,7 +170,6 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                             ),
                           ),
                         ),
-
                       Tab(
                         child: Container(
                           padding: EdgeInsets.all(8),

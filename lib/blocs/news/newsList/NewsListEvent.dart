@@ -17,11 +17,9 @@ class NewsListLoad extends NewsListEvent {
 
   @override
   List<Object> get props => [newsCollection];
-
 }
 
 class NewsListUpdate extends NewsListEvent {
-
   final List<NewsModel> newsList;
 
   NewsListUpdate(this.newsList);
