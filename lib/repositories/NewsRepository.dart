@@ -46,33 +46,34 @@ class NewsRepository {
   }
 
   Stream<List<Iterable<NewsModel>>> getAllNewsList(bool statImportantInfo) {
-    print('cekkk mana bos '+statImportantInfo.toString());
-    var one = firestore
+    print('cekkk mana bos ' + statImportantInfo.toString());
+    var importantCollection = firestore
         .collection(Collections.importantInfor)
         .orderBy('published_at', descending: true)
         .snapshots();
-    var two = firestore
+    var newsJabarCollection = firestore
         .collection(Collections.newsJabar)
         .orderBy('published_at', descending: true)
         .snapshots();
-    var three = LazyStream(() async => await firestore
+    var newsNationalCollection = firestore
         .collection(Collections.newsNational)
         .orderBy('published_at', descending: true)
-        .snapshots());
-    var four = LazyStream(() async => await firestore
+        .snapshots();
+    var newsWorldCollection = firestore
         .collection(Collections.newsWorld)
         .orderBy('published_at', descending: true)
-        .snapshots());
+        .snapshots();
 
-    var allData = StreamZip([ if(statImportantInfo)one, two, three, four])
-        .asBroadcastStream();
+    var allData = StreamZip([
+      if (statImportantInfo) importantCollection,
+      newsJabarCollection,
+      newsNationalCollection,
+      newsWorldCollection
+    ]).asBroadcastStream();
 
     return allData.map((snapshot) => snapshot
-        .map((docList) => docList.documents.map((doc) => NewsModel.fromFirestore(doc)))
+        .map((docList) =>
+            docList.documents.map((doc) => NewsModel.fromFirestore(doc)))
         .toList());
-
-//    return allData.map((snapshot) => snapshot
-//        .map((doc) => NewsModel.fromFirestore(doc.documents[0]))
-//        .toList());
   }
 }

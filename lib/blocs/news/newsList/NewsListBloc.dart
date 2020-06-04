@@ -11,7 +11,6 @@ import 'Bloc.dart';
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
   StreamSubscription _subscription;
-  List<NewsModel> dataListAllNews = [];
 
   @override
   NewsListState get initialState => InitialNewsListState();
@@ -40,6 +39,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
             )
         : collection == NewsType.allArticles
             ? _repository.getAllNewsList(statImportantInfo).listen((event) {
+                List<NewsModel> dataListAllNews = [];
                 event.forEach((iterable) {
                   dataListAllNews.addAll(iterable.toList());
                 });
