@@ -92,9 +92,8 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
             child: Text(
               Dictionary.descNews,
               style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w600),
+                  color: Colors.black,
+                  fontSize: 12.0,),
               textAlign: TextAlign.left,
             ),
           ),
