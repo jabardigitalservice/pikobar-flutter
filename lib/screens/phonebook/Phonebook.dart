@@ -32,7 +32,7 @@ class _PhonebookState extends State<Phonebook> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: ListViewPhoneBooks(
           searchQuery: searchQuery,
