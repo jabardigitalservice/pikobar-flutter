@@ -11,6 +11,7 @@ import 'Bloc.dart';
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
   StreamSubscription _subscription;
+  List<NewsModel> dataListAllNews = [];
 
   @override
   NewsListState get initialState => InitialNewsListState();
@@ -20,8 +21,8 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     NewsListEvent event,
   ) async* {
     if (event is NewsListLoad) {
-      print('cekkk sini kepanggill? ');
-      yield* _mapLoadVideosToState(event.newsCollection, statImportantInfo: event.statImportantInfo);
+      yield* _mapLoadVideosToState(event.newsCollection,
+          statImportantInfo: event.statImportantInfo);
     } else if (event is NewsListUpdate) {
       yield* _mapVideosUpdateToState(event);
     }
@@ -38,9 +39,12 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
               (news) => add(NewsListUpdate(news)),
             )
         : collection == NewsType.allArticles
-            ? _repository.getAllNewsList(statImportantInfo).listen(
-                  (news) => add(NewsListUpdate(news)),
-                )
+            ? _repository.getAllNewsList(statImportantInfo).listen((event) {
+                event.forEach((iterable) {
+                  dataListAllNews.addAll(iterable.toList());
+                });
+                add(NewsListUpdate(dataListAllNews));
+              })
             : _repository
                 .getNewsList(newsCollection: collection)
                 .listen((news) => add(NewsListUpdate(news)));

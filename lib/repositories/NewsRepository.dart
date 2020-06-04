@@ -45,7 +45,7 @@ class NewsRepository {
     return NewsModel.fromFirestore(doc);
   }
 
-  Stream<List<NewsModel>> getAllNewsList(bool statImportantInfo) {
+  Stream<List<Iterable<NewsModel>>> getAllNewsList(bool statImportantInfo) {
     print('cekkk mana bos '+statImportantInfo.toString());
     var one = firestore
         .collection(Collections.importantInfor)
@@ -68,7 +68,11 @@ class NewsRepository {
         .asBroadcastStream();
 
     return allData.map((snapshot) => snapshot
-        .map((doc) => NewsModel.fromFirestore(doc.documents[0]))
+        .map((docList) => docList.documents.map((doc) => NewsModel.fromFirestore(doc)))
         .toList());
+
+//    return allData.map((snapshot) => snapshot
+//        .map((doc) => NewsModel.fromFirestore(doc.documents[0]))
+//        .toList());
   }
 }
