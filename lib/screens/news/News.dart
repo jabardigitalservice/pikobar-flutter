@@ -247,44 +247,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           break;
       }
     }
-//    if (statImportantInfo) {
-//      if (tabController.indexIsChanging) {
-//        switch (tabController.index) {
-//          case 0:
-//            _newsListBloc.add(NewsListLoad(NewsType.allArticles));
-//            break;
-//          case 1:
-//            _newsListBloc.add(NewsListLoad(Collections.importantInfor));
-//            break;
-//          case 2:
-//            _newsListBloc.add(NewsListLoad(Collections.newsJabar));
-//            break;
-//          case 3:
-//            _newsListBloc.add(NewsListLoad(Collections.newsNational));
-//            break;
-//          case 4:
-//            _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-//            break;
-//        }
-//      }
-//    } else {
-//      if (tabController.indexIsChanging) {
-//        switch (tabController.index) {
-//          case 0:
-//            _newsListBloc.add(NewsListLoad(NewsType.allArticles));
-//            break;
-//          case 1:
-//            _newsListBloc.add(NewsListLoad(Collections.newsJabar));
-//            break;
-//          case 2:
-//            _newsListBloc.add(NewsListLoad(Collections.newsNational));
-//            break;
-//          case 3:
-//            _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-//            break;
-//        }
-//      }
-//    }
   }
 
   @override
