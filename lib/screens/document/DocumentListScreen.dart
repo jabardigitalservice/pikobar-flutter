@@ -88,9 +88,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 Text(
                   Dictionary.date,
                   style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
+                      color: Colors.black,
+                      fontSize: 14.0),
                   textAlign: TextAlign.left,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -99,9 +98,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 Text(
                   Dictionary.titleDocument,
                   style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
+                      color: Colors.black,
+                      fontSize: 14.0),
                   textAlign: TextAlign.left,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -131,9 +129,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                           unixTimeStampToDateDocs(
                               document['published_at'].seconds),
                           style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w600),
+                              color: Colors.black,
+                              fontSize: 14.0),
                           textAlign: TextAlign.left,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -151,10 +148,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             child: Text(
                               document['title'],
                               style: TextStyle(
-                                  color: Colors.blue,
+                                  color: Colors.lightBlueAccent[700],
                                   decoration: TextDecoration.underline,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600),
+                                  fontSize: 14.0),
                               textAlign: TextAlign.left,
                             ),
                           ),

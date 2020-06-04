@@ -49,8 +49,8 @@ class _VideosListState extends State<VideosList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: CustomAppBar.setTitleAppBar(Dictionary.videoUpToDate),
+      appBar: CustomAppBar.defaultAppBar(
+        title: Dictionary.videoUpToDate,
       ),
       body: BlocBuilder<VideoListBloc, VideoListState>(
         bloc: _videoListBloc,

@@ -67,9 +67,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
           child: Text(
             Dictionary.descInfoGraphic,
             style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w600),
+                color: Colors.black,
+                fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
         ),

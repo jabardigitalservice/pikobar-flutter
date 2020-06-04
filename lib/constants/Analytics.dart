@@ -29,6 +29,7 @@ class Analytics {
   static String tappedQna = 'tapped_menu_qna';
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
+  static String tappedOthers = 'tapped_menu_lainnya';
   static String tappedBanner = 'tapped_banner';
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';

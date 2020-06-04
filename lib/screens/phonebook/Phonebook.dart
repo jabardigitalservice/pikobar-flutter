@@ -41,6 +41,7 @@ class _PhonebookState extends State<Phonebook> {
 
   AppBar _buildAppBar() {
     return AppBar(
+      backgroundColor: Colors.white,
         title: _isSearch
             ? _buildSearchField()
             : CustomAppBar.setTitleAppBar(Dictionary.phoneBookEmergency),
@@ -118,7 +119,7 @@ class _PhonebookState extends State<Phonebook> {
       margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
       height: 40.0,
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.grey[100],
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20.0)),
       child: TextField(

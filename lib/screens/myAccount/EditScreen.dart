@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -95,7 +96,7 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Scaffold(
+      child: Scaffold(backgroundColor: Colors.white,
         key: _scaffoldState,
         appBar: CustomAppBar.defaultAppBar(
           title: Dictionary.edit,
@@ -221,178 +222,172 @@ class _EditState extends State<Edit> {
                     child: ListView(
                       padding: EdgeInsets.all(10),
                       children: <Widget>[
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Column(
-                              children: <Widget>[
-                                buildTextField(
-                                    title: Dictionary.name,
-                                    hintText: Dictionary.placeHolderName,
-                                    controller: _nameController,
-                                    validation: Validations.nameValidation,
-                                    isEdit: true),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buildTextField(
-                                    title: Dictionary.email,
-                                    controller: _emailController,
-                                    isEdit: false),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buildTextField(
-                                    title: Dictionary.nik,
-                                    controller: _nikController,
-                                    textInputType: TextInputType.number,
-                                    hintText: Dictionary.placeHolderNIK,
-                                    isEdit: true),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buildPhoneField(
-                                    title: Dictionary.phoneNumber,
-                                    controller: _phoneNumberController,
-                                    validation: Validations.phoneValidation,
-                                    isEdit: true,
-                                    hintText:
-                                        Dictionary.phoneNumberPlaceholder),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buildRadioButton(
-                                    title: Dictionary.gender,
-                                    label: <String>[
-                                      "Laki - Laki",
-                                      "Perempuan",
-                                    ],
-                                    isEmpty: isGenderEmpty),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buildDateField(
-                                    title: Dictionary.birthday,
-                                    placeholder: _birthDayController.text == ''
-                                        ? Dictionary.birthdayPlaceholder
-                                        : DateFormat.yMMMMd().format(
-                                            DateTime.parse(_birthDayController
-                                                .text
-                                                .substring(0, 10))),
-                                    isEmpty: isBirthdayEmpty),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  padding:
-                                      EdgeInsets.only(left: 16.0, right: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Set lokasi tempat tinggal anda',
-                                            style: TextStyle(
-                                                fontSize: 15.0,
-                                                color: Color(0xff828282)),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      ButtonTheme(
-                                        minWidth:
-                                            MediaQuery.of(context).size.width,
-                                        height: 45.0,
-                                        child: OutlineButton(
-                                          child: Wrap(
-                                            crossAxisAlignment:
-                                                WrapCrossAlignment.center,
-                                            children: <Widget>[
-                                              Image.asset(
-                                                '${Environment.iconAssets}location.png',
-                                                width: 24.0,
-                                                height: 24.0,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 10.0),
-                                                child: Text(
-                                                  Dictionary.setLocation,
-                                                  style: TextStyle(
-                                                      color: Colors.grey[800]),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0)),
-                                          borderSide: BorderSide(
-                                              color: Color(0xffE0E0E0),
-                                              width: 1.5),
-                                          onPressed: () async {
-                                            await _handleLocation();
-                                          },
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Column(
+                            children: <Widget>[
+                              buildTextField(
+                                  title: Dictionary.name,
+                                  hintText: Dictionary.placeHolderName,
+                                  controller: _nameController,
+                                  validation: Validations.nameValidation,
+                                  isEdit: true),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              buildTextField(
+                                  title: Dictionary.email,
+                                  controller: _emailController,
+                                  isEdit: false),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              buildTextField(
+                                  title: Dictionary.nik,
+                                  controller: _nikController,
+                                  textInputType: TextInputType.number,
+                                  hintText: Dictionary.placeHolderNIK,
+                                  isEdit: true),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              buildPhoneField(
+                                  title: Dictionary.phoneNumber,
+                                  controller: _phoneNumberController,
+                                  validation: Validations.phoneValidation,
+                                  isEdit: true,
+                                  hintText: Dictionary.phoneNumberPlaceholder),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              buildRadioButton(
+                                  title: Dictionary.gender,
+                                  label: <String>[
+                                    "Laki - Laki",
+                                    "Perempuan",
+                                  ],
+                                  isEmpty: isGenderEmpty),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              buildDateField(
+                                  title: Dictionary.birthday,
+                                  placeholder: _birthDayController.text == ''
+                                      ? Dictionary.birthdayPlaceholder
+                                      : DateFormat.yMMMMd().format(
+                                          DateTime.parse(_birthDayController
+                                              .text
+                                              .substring(0, 10))),
+                                  isEmpty: isBirthdayEmpty),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                padding:
+                                    EdgeInsets.only(left: 16.0, right: 16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          Dictionary.locationAddress,
+                                          style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: Color(0xff333333),
+                                              fontFamily: FontsFamily.lato,
+                                              fontWeight: FontWeight.bold),
                                         ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    ButtonTheme(
+                                      minWidth:
+                                          MediaQuery.of(context).size.width,
+                                      height: 45.0,
+                                      child: OutlineButton(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Image.asset(
+                                              '${Environment.iconAssets}pin_location.png',
+                                              width: 15.0,
+                                              height: 15.0,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10.0),
+                                              child: Text(
+                                                Dictionary.setLocation,
+                                                style: TextStyle(
+                                                    color: Colors.grey[800]),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                        borderSide: BorderSide(
+                                            color: Color(0xffE0E0E0),
+                                            width: 1.5),
+                                        onPressed: () async {
+                                          await _handleLocation();
+                                        },
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buildTextField(
-                                    title: Dictionary.addressDomicile,
-                                    controller: _addressController,
-                                    maxLines: 2,
-                                    hintText: Dictionary.addressPlaceholder,
-                                    validation: Validations.addressValidation,
-                                    isEdit: true),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                StreamBuilder<QuerySnapshot>(
-                                    stream: Firestore.instance
-                                        .collection(Collections.areas)
-                                        .orderBy('name')
-                                        .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      if (snapshot.hasError)
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              buildTextField(
+                                  title: Dictionary.addressDomicile,
+                                  controller: _addressController,
+                                  maxLines: 2,
+                                  hintText: Dictionary.addressPlaceholder,
+                                  validation: Validations.addressValidation,
+                                  isEdit: true),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              StreamBuilder<QuerySnapshot>(
+                                  stream: Firestore.instance
+                                      .collection(Collections.areas)
+                                      .orderBy('name')
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (snapshot.hasError)
+                                      return buildDropdownField(
+                                          Dictionary.cityDomicile,
+                                          snapshot.error,
+                                          [],
+                                          _cityController,
+                                          false);
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.waiting:
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
-                                            snapshot.error,
+                                            Dictionary.loading,
                                             [],
                                             _cityController,
                                             false);
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.waiting:
-                                          return buildDropdownField(
-                                              Dictionary.cityDomicile,
-                                              Dictionary.loading,
-                                              [],
-                                              _cityController,
-                                              false);
-                                        default:
-                                          return buildDropdownField(
-                                              Dictionary.cityDomicile,
-                                              Dictionary.cityPlaceholder,
-                                              snapshot.data.documents.toList(),
-                                              _cityController,
-                                              isCityFieldEmpty);
-                                      }
-                                    }),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
+                                      default:
+                                        return buildDropdownField(
+                                            Dictionary.cityDomicile,
+                                            Dictionary.cityPlaceholder,
+                                            snapshot.data.documents.toList(),
+                                            _cityController,
+                                            isCityFieldEmpty);
+                                    }
+                                  }),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -562,10 +557,14 @@ class _EditState extends State<Edit> {
             children: <Widget>[
               Text(
                 title,
-                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Color(0xff333333),
+                    fontFamily: FontsFamily.lato,
+                    fontWeight: FontWeight.bold),
               ),
               Text(
-                '*',
+                ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -628,10 +627,14 @@ class _EditState extends State<Edit> {
             children: <Widget>[
               Text(
                 title,
-                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Color(0xff333333),
+                    fontFamily: FontsFamily.lato,
+                    fontWeight: FontWeight.bold),
               ),
               Text(
-                '*',
+                ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -700,10 +703,14 @@ class _EditState extends State<Edit> {
             children: <Widget>[
               Text(
                 title,
-                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Color(0xff333333),
+                    fontFamily: FontsFamily.lato,
+                    fontWeight: FontWeight.bold),
               ),
               Text(
-                title == Dictionary.nik ? '' : '*',
+                title == Dictionary.nik ? '' : ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -756,10 +763,14 @@ class _EditState extends State<Edit> {
             children: <Widget>[
               Text(
                 title,
-                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Color(0xff333333),
+                    fontFamily: FontsFamily.lato,
+                    fontWeight: FontWeight.bold),
               ),
               Text(
-                '*',
+                ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -830,10 +841,14 @@ class _EditState extends State<Edit> {
             children: <Widget>[
               Text(
                 title,
-                style: TextStyle(fontSize: 15.0, color: Color(0xff828282)),
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Color(0xff333333),
+                    fontFamily: FontsFamily.lato,
+                    fontWeight: FontWeight.bold),
               ),
               Text(
-                '*',
+                ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -906,8 +921,8 @@ class _EditState extends State<Edit> {
   }
 
   Future<void> _handleLocation() async {
-
-    var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+    var permissionService =
+        Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
     if (await permissionService.status.isGranted) {
       await _openLocationPicker();
@@ -915,50 +930,44 @@ class _EditState extends State<Edit> {
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
-            image: Image.asset(
-              '${Environment.iconAssets}map_pin.png',
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            description: Dictionary.permissionLocationSpread,
-            onOkPressed: () async {
-              Navigator.of(context).pop();
-              if (await permissionService.status.isDenied) {
-                await AppSettings.openLocationSettings();
-              } else {
-                permissionService.request().then((status) {
-                  _onStatusRequested(context, status);
-                });
-              }
-            },
-            onCancelPressed: () {
-              AnalyticsHelper.setLogEvent(
-                  Analytics.permissionDismissLocation);
-              Navigator.of(context).pop();
-            },
-          ));
+                image: Image.asset(
+                  '${Environment.iconAssets}map_pin.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionLocationSpread,
+                onOkPressed: () async {
+                  Navigator.of(context).pop();
+                  if (await permissionService.status.isDenied) {
+                    await AppSettings.openLocationSettings();
+                  } else {
+                    permissionService.request().then((status) {
+                      _onStatusRequested(context, status);
+                    });
+                  }
+                },
+                onCancelPressed: () {
+                  AnalyticsHelper.setLogEvent(
+                      Analytics.permissionDismissLocation);
+                  Navigator.of(context).pop();
+                },
+              ));
     }
   }
 
   Future<void> _openLocationPicker() async {
     latLng = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                LocationPicker()));
-    final String address =
-    await GeocoderRepository()
-        .getAddress(latLng);
+        context, MaterialPageRoute(builder: (context) => LocationPicker()));
+    final String address = await GeocoderRepository().getAddress(latLng);
     if (address != null) {
       setState(() {
-        _addressController.text =
-            address;
+        _addressController.text = address;
       });
     }
   }
 
-  void _onStatusRequested(BuildContext context,
-      PermissionStatus statuses) async {
+  void _onStatusRequested(
+      BuildContext context, PermissionStatus statuses) async {
     if (statuses.isGranted) {
       _openLocationPicker();
       AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);

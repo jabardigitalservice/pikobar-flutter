@@ -42,6 +42,7 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
           title: _isSearch ? _buildSearchField() : CustomAppBar.setTitleAppBar(Dictionary.faq),
           actions: _buildActions()),
       body: StreamBuilder<QuerySnapshot>(
@@ -92,7 +93,7 @@ class _FaqScreenState extends State<FaqScreen> {
       margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
       height: 40.0,
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.grey[100],
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20.0)),
       child: TextField(

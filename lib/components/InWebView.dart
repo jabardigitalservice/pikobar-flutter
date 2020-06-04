@@ -23,8 +23,8 @@ class _InWebViewState extends State<InWebView> {
     return WillPopScope(
       onWillPop: () => _exitWebView(context),
       child: Scaffold(
-        appBar: AppBar(
-          title: CustomAppBar.setTitleAppBar(widget.title != null && widget.title.isNotEmpty ? widget.title : Dictionary.appName),
+        appBar: CustomAppBar.defaultAppBar(
+          title: widget.title != null && widget.title.isNotEmpty ? widget.title : Dictionary.appName,
         ),
         body: Stack(
           children: <Widget>[

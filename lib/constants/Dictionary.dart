@@ -24,7 +24,8 @@ class Dictionary {
   static String caseReport = 'Lapor Kasus';
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Bantu Kita';
-  static String qna = 'Forum';
+  static String bansos = 'Bantuan Sosial';
+  static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';
   static String infoGraphics = 'Info Praktikal';
@@ -69,7 +70,7 @@ class Dictionary {
   static String birthday = 'Tanggal Lahir';
   static String nationality = 'Kewarganegaraan';
   static String addressDomicile = 'Alamat Domisili';
-  static String cityDomicile = 'Kabupaten/Kota Domisili';
+  static String cityDomicile = 'Kota/Kab. Domisili';
   static String provinceDomicile = 'Provinsi Domisili';
   static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
   static String testSummaryTitleAppbar = 'Total Pemeriksaan';
@@ -86,7 +87,10 @@ class Dictionary {
   static String daftarRumahSakitRujukanCaption =
       'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
-  static String statusUser = 'Status: ';
+  static String qrCode = 'QR Code';
+  static String activitie = 'Aktifitas';
+  static String accountManage= 'Kelola Akun';
+  static String healthStatus = 'Status Kesehatan';
   static String sendAgainOTP = 'Kirim ulang kode';
   static String otpNotSent = 'Tidak menerima sms?';
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
@@ -94,8 +98,10 @@ class Dictionary {
   static String searchLocation = 'Cari Lokasi';
   static String rapidTestTitle = 'Jumlah RDT yang telah dilakukan';
   static String pcrTitle = 'Jumlah PCR yang telah dilakukan';
+  static String yourHealthStatus = 'Status Kesehatan Anda :';
 
   static String rapidTestAppBar = 'Jumlah RDT';
+  static String locationAddress='Lokasi Tempat Tinggal';
 
   // Button Text
   static String yes = 'Ya';
@@ -109,7 +115,8 @@ class Dictionary {
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
-  static String setLocation = 'Set Lokasi...';
+  static String setLocation = 'Pilih Lokasi';
+  static String termsConditions=' Terms & Conditions';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -144,6 +151,7 @@ class Dictionary {
   static String errorEmptyNIK = 'NIK harus diisi';
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
   static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
+  static String aggrementIsFalse='Silahkan setujui Terms & Conditions untuk login';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
@@ -185,6 +193,8 @@ class Dictionary {
       'Untuk mengetahui sebaran kasus COVID-19 di sekitar Anda, izinkan PIKOBAR untuk mengetahui lokasi Anda saat ini';
   static String permissionLocationMap =
       'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
+  static String permissionLocationGeneral =
+      'Beberapa fitur PIKOBAR seperti informasi sebaran kasus COVID-19 di sekitar Anda dan Map, memerlukan izin untuk mengetahui lokasi Anda saat ini';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -202,6 +212,7 @@ class Dictionary {
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
+  static String subTitleMenus = 'Saatnya berbagi informasi dan lawan COVID-19';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =

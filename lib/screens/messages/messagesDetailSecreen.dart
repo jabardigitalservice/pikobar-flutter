@@ -47,15 +47,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       child: BlocBuilder<MessageDetailBloc, MessageDetailState>(
           builder: (context, state) {
         return Scaffold(
-            appBar: AppBar(
-                title: CustomAppBar.setTitleAppBar(Dictionary.message),
+            appBar: CustomAppBar.defaultAppBar(
+                title: Dictionary.message,
                 actions: <Widget>[
                   state is MessageDetailLoaded
                       ? Container(
                           margin: EdgeInsets.only(right: 10.0),
                           child: IconButton(
                             icon: Icon(FontAwesomeIcons.share,
-                                size: 17, color: Colors.white),
+                                size: 17),
                             onPressed: () {
                               _shareMessage(state.data);
                             },

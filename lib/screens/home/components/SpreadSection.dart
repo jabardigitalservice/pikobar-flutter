@@ -42,7 +42,7 @@ class _SpreadSectionState extends State<SpreadSection> {
               height: 98.0,
               padding: EdgeInsets.fromLTRB(
                   Dimens.padding, 0.0, Dimens.padding, Dimens.padding),
-              color: ColorBase.grey,
+              color: Colors.white,
               child: RaisedButton(
                   splashColor: Colors.green,
                   padding: EdgeInsets.all(0.0),

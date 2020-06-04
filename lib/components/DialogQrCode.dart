@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr/qr.dart';
@@ -42,27 +43,49 @@ class _DialogQrCodeState extends State<DialogQrCode> {
       child: Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min, // To make the card compact
           children: <Widget>[
             Text(
               'QR Code',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: FontsFamily.lato),
             ),
-            SizedBox(height: 25),
-            PrettyQr(
-              image: AssetImage('${Environment.iconAssets}pikobar.png'),
-              typeNumber: 3,
-              size: 200,
-              data: widget.idUser,
-              errorCorrectLevel: QrErrorCorrectLevel.M,
-              roundEdges: true,
-            ),
-            SizedBox(height: 25),
+            SizedBox(height: 10),
             Text(
-              'Pindai QR Code diatas untuk melakukan validasi',
-              style: TextStyle(fontSize: 15.0, color: Color(0xFF828282)),
+              'Pindai QR Code di bawah untuk melakukan validasi',
+              style: TextStyle(
+                  fontSize: 12.0,
+                  color: Color(0xff333333),
+                  fontFamily: FontsFamily.lato),
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 25),
+            Center(
+              child: PrettyQr(
+                image: AssetImage('${Environment.iconAssets}pikobar.png'),
+                typeNumber: 3,
+                size: 200,
+                data: widget.idUser,
+                errorCorrectLevel: QrErrorCorrectLevel.M,
+                roundEdges: true,
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Color(0xff333333),
+                  size: 30,
+                ),
+              ),
+            )
           ],
         ),
       ),
