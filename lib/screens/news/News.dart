@@ -125,6 +125,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: CustomAppBar.setTitleAppBar(Dictionary.news),
         ),
         body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(

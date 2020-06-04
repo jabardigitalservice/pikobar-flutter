@@ -184,10 +184,10 @@ class _HomeScreenState extends State<HomeScreen> {
               SpreadSection(),
 
               /// Important Info
-              Container(
-                color: ColorBase.grey,
-                child: ImportantInfoScreen(maxLength: 3),
-              ),
+//              Container(
+//                color: ColorBase.grey,
+//                child: ImportantInfoScreen(maxLength: 3),
+//              ),
             ],
           ),
 
