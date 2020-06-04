@@ -21,32 +21,32 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   ) async* {
     if (event is NewsListLoad) {
       print('cekkk sini kepanggill? ');
-      yield* _mapLoadVideosToState(event.newsCollection);
+      yield* _mapLoadVideosToState(event.newsCollection, statImportantInfo: event.statImportantInfo);
     } else if (event is NewsListUpdate) {
       yield* _mapVideosUpdateToState(event);
     }
   }
 
-  Stream<NewsListState> _mapLoadVideosToState(String collection) async* {
+  Stream<NewsListState> _mapLoadVideosToState(String collection,
+      {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
     _subscription?.cancel();
     _subscription = collection == Collections.importantInfor
         ? _repository
-        .getInfoImportantList(improtantInfoCollection: collection)
-        .listen(
-          (news) => add(NewsListUpdate(news)),
-    )
+            .getInfoImportantList(improtantInfoCollection: collection)
+            .listen(
+              (news) => add(NewsListUpdate(news)),
+            )
         : collection == NewsType.allArticles
-        ? _repository.getAllNewsList().listen(
-          (news) => add(NewsListUpdate(news)),
-    )
-        : _repository
-        .getNewsList(newsCollection: collection)
-        .listen((news) => add(NewsListUpdate(news)));
+            ? _repository.getAllNewsList(statImportantInfo).listen(
+                  (news) => add(NewsListUpdate(news)),
+                )
+            : _repository
+                .getNewsList(newsCollection: collection)
+                .listen((news) => add(NewsListUpdate(news)));
   }
 
   Stream<NewsListState> _mapVideosUpdateToState(NewsListUpdate event) async* {
-
     yield NewsListLoaded(event.newsList);
   }
 

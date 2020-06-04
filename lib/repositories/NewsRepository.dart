@@ -45,7 +45,8 @@ class NewsRepository {
     return NewsModel.fromFirestore(doc);
   }
 
-  Stream<List<NewsModel>> getAllNewsList() {
+  Stream<List<NewsModel>> getAllNewsList(bool statImportantInfo) {
+    print('cekkk mana bos '+statImportantInfo.toString());
     var one = firestore
         .collection(Collections.importantInfor)
         .orderBy('published_at', descending: true)
@@ -62,9 +63,12 @@ class NewsRepository {
         .collection(Collections.newsWorld)
         .orderBy('published_at', descending: true)
         .snapshots());
-    var allData = StreamZip([one, two, three, four]).asBroadcastStream();
 
-    return allData.map((snapshot) =>
-        snapshot.map((doc) => NewsModel.fromFirestore(doc.documents[0])).toList());
+    var allData = StreamZip([ if(statImportantInfo)one, two, three, four])
+        .asBroadcastStream();
+
+    return allData.map((snapshot) => snapshot
+        .map((doc) => NewsModel.fromFirestore(doc.documents[0]))
+        .toList());
   }
 }

@@ -76,7 +76,8 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     tabController.addListener(_handleTabSelection);
     if (widget.news == NewsType.allArticles) {
       tabController.animateTo(0);
-      _newsListBloc.add(NewsListLoad(NewsType.allArticles));
+      _newsListBloc.add(NewsListLoad(NewsType.allArticles,
+          statImportantInfo: statImportantInfo));
     }
     if (statImportantInfo) {
       if (widget.news == Dictionary.importantInfo) {
@@ -136,7 +137,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   buildContent(RemoteConfigLoaded state) {
     statImportantInfo = StatShowImportantInfo.getStatImportantTab(state);
-    if(checkStatImportantInfo){
+    if (checkStatImportantInfo) {
       setListTab(null, statImportantInfo);
       setControllerTab(statImportantInfo);
       checkStatImportantInfo = false;
@@ -231,7 +232,8 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     if (tabController.indexIsChanging) {
       switch (tabController.index) {
         case 0:
-          _newsListBloc.add(NewsListLoad(NewsType.allArticles));
+          _newsListBloc.add(NewsListLoad(NewsType.allArticles,
+              statImportantInfo: statImportantInfo));
           break;
         case 1:
           _newsListBloc.add(NewsListLoad(Collections.importantInfor));

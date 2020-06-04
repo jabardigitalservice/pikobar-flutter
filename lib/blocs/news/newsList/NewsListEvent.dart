@@ -7,8 +7,9 @@ abstract class NewsListEvent extends Equatable {
 
 class NewsListLoad extends NewsListEvent {
   final String newsCollection;
+  final bool statImportantInfo;
 
-  NewsListLoad(this.newsCollection);
+  NewsListLoad(this.newsCollection, {this.statImportantInfo});
 
   @override
   String toString() {
