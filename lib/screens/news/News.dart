@@ -48,14 +48,13 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   TabController tabController;
   NewsListBloc _newsListBloc;
   bool statImportantInfo = true;
+  bool checkStatImportantInfo = true;
 
   @override
   void initState() {
     _newsListBloc = BlocProvider.of<NewsListBloc>(context);
     AnalyticsHelper.setCurrentScreen(Analytics.news);
     super.initState();
-    setListTab(null, statImportantInfo);
-    setControllerTab(statImportantInfo);
   }
 
   setListTab(Color color, bool statImportantInfo) {
@@ -70,21 +69,17 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     myTabs.add(
         addTab(Dictionary.titleNationalNews, Dictionary.nationalNews, color));
     myTabs.add(addTab(Dictionary.titleWorldNews, Dictionary.worldNews, color));
-
-
   }
 
-  setControllerTab(bool statImportantInfo){
+  setControllerTab(bool statImportantInfo) {
     tabController = new TabController(vsync: this, length: myTabs.length);
     tabController.addListener(_handleTabSelection);
-    print('cekkk tupe berita ' + widget.news);
     if (widget.news == NewsType.allArticles) {
       tabController.animateTo(0);
       _newsListBloc.add(NewsListLoad(NewsType.allArticles));
     }
     if (statImportantInfo) {
       if (widget.news == Dictionary.importantInfo) {
-        print("masuk sini semua euy?");
         tabController.animateTo(1);
         _newsListBloc.add(NewsListLoad(Collections.importantInfor));
       }
@@ -100,7 +95,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     if (widget.news == Dictionary.worldNews) {
       tabController.animateTo(statImportantInfo ? 4 : 3);
       _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-      print("kemariiii");
     }
   }
 
@@ -141,12 +135,15 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   }
 
   buildContent(RemoteConfigLoaded state) {
-    print("kepanggi berapa kali?");
     statImportantInfo = StatShowImportantInfo.getStatImportantTab(state);
-//    setListTab(null, StatShowImportantInfo.getStatImportantTab(state));
+    if(checkStatImportantInfo){
+      setListTab(null, statImportantInfo);
+      setControllerTab(statImportantInfo);
+      checkStatImportantInfo = false;
+    }
     return Container(
         child: DefaultTabController(
-      length: 5,
+      length: statImportantInfo ? 5 : 4,
       child: Column(
         children: <Widget>[
           TabBar(
@@ -164,7 +161,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
             tabs: myTabs,
             controller: tabController,
             onTap: (index) {
-              print("masuk sini plisss");
               setListTab(Colors.grey,
                   StatShowImportantInfo.getStatImportantTab(state));
               if (index == 0) {
@@ -206,7 +202,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
                     Dictionary.titleWorldNews, widget.news, ColorBase.green);
                 AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
               }
-              print("ini kepanggil? coyy");
               setState(() {});
             },
           ),
@@ -218,7 +213,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
                 physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   NewsScreen(news: NewsType.allArticles),
-                  if (StatShowImportantInfo.getStatImportantTab(state))
+                  if (statImportantInfo)
                     NewsScreen(news: Dictionary.importantInfo),
                   NewsScreen(news: Dictionary.latestNews),
                   NewsScreen(news: Dictionary.nationalNews),
@@ -233,7 +228,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   }
 
   _handleTabSelection() {
-    print("kepanggil terusss");
     if (tabController.indexIsChanging) {
       switch (tabController.index) {
         case 0:
