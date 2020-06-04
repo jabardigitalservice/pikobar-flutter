@@ -47,17 +47,19 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   List<Tab> myTabs = [];
   TabController tabController;
   NewsListBloc _newsListBloc;
+  bool statImportantInfo = true;
 
   @override
   void initState() {
-    AnalyticsHelper.setCurrentScreen(Analytics.news);
-
-    super.initState();
     _newsListBloc = BlocProvider.of<NewsListBloc>(context);
-//    setListTab(null, false);
+    AnalyticsHelper.setCurrentScreen(Analytics.news);
+    super.initState();
+    setListTab(null, statImportantInfo);
+    setControllerTab(statImportantInfo);
   }
 
   setListTab(Color color, bool statImportantInfo) {
+    myTabs.clear();
     myTabs.add(addTab(Dictionary.allNews, Dictionary.allNews, color));
     if (statImportantInfo) {
       myTabs.add(
@@ -69,14 +71,20 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         addTab(Dictionary.titleNationalNews, Dictionary.nationalNews, color));
     myTabs.add(addTab(Dictionary.titleWorldNews, Dictionary.worldNews, color));
 
+
+  }
+
+  setControllerTab(bool statImportantInfo){
     tabController = new TabController(vsync: this, length: myTabs.length);
-    tabController.addListener(_handleTabSelection(statImportantInfo));
+    tabController.addListener(_handleTabSelection);
+    print('cekkk tupe berita ' + widget.news);
     if (widget.news == NewsType.allArticles) {
       tabController.animateTo(0);
       _newsListBloc.add(NewsListLoad(NewsType.allArticles));
     }
     if (statImportantInfo) {
       if (widget.news == Dictionary.importantInfo) {
+        print("masuk sini semua euy?");
         tabController.animateTo(1);
         _newsListBloc.add(NewsListLoad(Collections.importantInfor));
       }
@@ -89,9 +97,10 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       tabController.animateTo(statImportantInfo ? 3 : 2);
       _newsListBloc.add(NewsListLoad(Collections.newsNational));
     }
-    if (widget.news == Dictionary.titleWorldNews) {
+    if (widget.news == Dictionary.worldNews) {
       tabController.animateTo(statImportantInfo ? 4 : 3);
       _newsListBloc.add(NewsListLoad(Collections.newsWorld));
+      print("kemariiii");
     }
   }
 
@@ -132,7 +141,9 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   }
 
   buildContent(RemoteConfigLoaded state) {
-    setListTab(null, StatShowImportantInfo.getStatImportantTab(state));
+    print("kepanggi berapa kali?");
+    statImportantInfo = StatShowImportantInfo.getStatImportantTab(state);
+//    setListTab(null, StatShowImportantInfo.getStatImportantTab(state));
     return Container(
         child: DefaultTabController(
       length: 5,
@@ -153,10 +164,9 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
             tabs: myTabs,
             controller: tabController,
             onTap: (index) {
-              myTabs.clear();
+              print("masuk sini plisss");
               setListTab(Colors.grey,
                   StatShowImportantInfo.getStatImportantTab(state));
-
               if (index == 0) {
                 widget.news = Dictionary.allNews;
                 myTabs[index] =
@@ -196,6 +206,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
                     Dictionary.titleWorldNews, widget.news, ColorBase.green);
                 AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
               }
+              print("ini kepanggil? coyy");
               setState(() {});
             },
           ),
@@ -221,45 +232,65 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     ));
   }
 
-  _handleTabSelection(bool statImportantInfo) {
-    if (statImportantInfo) {
-      if (tabController.indexIsChanging) {
-        switch (tabController.index) {
-          case 0:
-            _newsListBloc.add(NewsListLoad(NewsType.allArticles));
-            break;
-          case 1:
-            _newsListBloc.add(NewsListLoad(Collections.importantInfor));
-            break;
-          case 2:
-            _newsListBloc.add(NewsListLoad(Collections.newsJabar));
-            break;
-          case 3:
-            _newsListBloc.add(NewsListLoad(Collections.newsNational));
-            break;
-          case 4:
-            _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-            break;
-        }
-      }
-    } else {
-      if (tabController.indexIsChanging) {
-        switch (tabController.index) {
-          case 0:
-            _newsListBloc.add(NewsListLoad(NewsType.allArticles));
-            break;
-          case 1:
-            _newsListBloc.add(NewsListLoad(Collections.newsJabar));
-            break;
-          case 2:
-            _newsListBloc.add(NewsListLoad(Collections.newsNational));
-            break;
-          case 3:
-            _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-            break;
-        }
+  _handleTabSelection() {
+    print("kepanggil terusss");
+    if (tabController.indexIsChanging) {
+      switch (tabController.index) {
+        case 0:
+          _newsListBloc.add(NewsListLoad(NewsType.allArticles));
+          break;
+        case 1:
+          _newsListBloc.add(NewsListLoad(Collections.importantInfor));
+          break;
+        case 2:
+          _newsListBloc.add(NewsListLoad(Collections.newsJabar));
+          break;
+        case 3:
+          _newsListBloc.add(NewsListLoad(Collections.newsNational));
+          break;
+        case 4:
+          _newsListBloc.add(NewsListLoad(Collections.newsWorld));
+          break;
       }
     }
+//    if (statImportantInfo) {
+//      if (tabController.indexIsChanging) {
+//        switch (tabController.index) {
+//          case 0:
+//            _newsListBloc.add(NewsListLoad(NewsType.allArticles));
+//            break;
+//          case 1:
+//            _newsListBloc.add(NewsListLoad(Collections.importantInfor));
+//            break;
+//          case 2:
+//            _newsListBloc.add(NewsListLoad(Collections.newsJabar));
+//            break;
+//          case 3:
+//            _newsListBloc.add(NewsListLoad(Collections.newsNational));
+//            break;
+//          case 4:
+//            _newsListBloc.add(NewsListLoad(Collections.newsWorld));
+//            break;
+//        }
+//      }
+//    } else {
+//      if (tabController.indexIsChanging) {
+//        switch (tabController.index) {
+//          case 0:
+//            _newsListBloc.add(NewsListLoad(NewsType.allArticles));
+//            break;
+//          case 1:
+//            _newsListBloc.add(NewsListLoad(Collections.newsJabar));
+//            break;
+//          case 2:
+//            _newsListBloc.add(NewsListLoad(Collections.newsNational));
+//            break;
+//          case 3:
+//            _newsListBloc.add(NewsListLoad(Collections.newsWorld));
+//            break;
+//        }
+//      }
+//    }
   }
 
   @override

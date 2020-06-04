@@ -19,9 +19,6 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 // ignore: must_be_immutable
 class TabNewsScreen extends StatefulWidget {
 
-
-//  TabNewsScreen({this.newsListBloc});
-
   @override
   _TabNewsScreenState createState() => _TabNewsScreenState();
 }
