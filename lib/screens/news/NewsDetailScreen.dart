@@ -89,6 +89,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: CustomAppBar.setTitleAppBar(Dictionary.news),
         ),
         body: state is NewsDetailLoading
