@@ -43,6 +43,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 event.forEach((iterable) {
                   dataListAllNews.addAll(iterable.toList());
                 });
+                dataListAllNews.sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
                 add(NewsListUpdate(dataListAllNews));
               })
             : _repository
