@@ -35,7 +35,6 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
   buildContent(RemoteConfigLoaded state) {
     if (checkInitTypeNews) {
       if (!StatShowImportantInfo.getStatImportantTab(state)) {
-        print("masuk sini bos?");
         typeNews = Dictionary.latestNews;
         newsListBloc
             .add(NewsListLoad(Collections.newsJabar));
@@ -126,7 +125,6 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                       if (StatShowImportantInfo.getStatImportantTab(state)
                           ? index == 1
                           : index == 0) {
-                        print('ke panggil bos?');
                         typeNews = Dictionary.latestNews;
                         newsListBloc
                             .add(NewsListLoad(Collections.newsJabar));

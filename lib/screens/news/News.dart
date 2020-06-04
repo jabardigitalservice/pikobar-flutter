@@ -90,7 +90,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       _newsListBloc.add(NewsListLoad(Collections.newsNational));
     }
     if (widget.news == Dictionary.titleWorldNews) {
-      print("masuk sini ga berita dunia? ");
       tabController.animateTo(statImportantInfo ? 4 : 3);
       _newsListBloc.add(NewsListLoad(Collections.newsWorld));
     }
