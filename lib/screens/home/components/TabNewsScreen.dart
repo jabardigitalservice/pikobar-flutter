@@ -18,9 +18,9 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 
 // ignore: must_be_immutable
 class TabNewsScreen extends StatefulWidget {
-  NewsListBloc newsListBloc;
 
-  TabNewsScreen({this.newsListBloc});
+
+//  TabNewsScreen({this.newsListBloc});
 
   @override
   _TabNewsScreenState createState() => _TabNewsScreenState();
@@ -28,12 +28,22 @@ class TabNewsScreen extends StatefulWidget {
 
 class _TabNewsScreenState extends State<TabNewsScreen> {
   String typeNews = Dictionary.importantInfo;
+  NewsListBloc newsListBloc;
   bool checkInitTypeNews = true;
+
 
   buildContent(RemoteConfigLoaded state) {
     if (checkInitTypeNews) {
       if (!StatShowImportantInfo.getStatImportantTab(state)) {
+        print("masuk sini bos?");
         typeNews = Dictionary.latestNews;
+        newsListBloc
+            .add(NewsListLoad(Collections.newsJabar));
+
+        checkInitTypeNews = false;
+      }else{
+        newsListBloc
+            .add(NewsListLoad(Collections.importantInfor));
         checkInitTypeNews = false;
       }
     }
@@ -106,7 +116,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                       if (StatShowImportantInfo.getStatImportantTab(state)) {
                         if (index == 0) {
                           typeNews = Dictionary.importantInfo;
-                          widget.newsListBloc
+                          newsListBloc
                               .add(NewsListLoad(Collections.importantInfor));
                           AnalyticsHelper.setLogEvent(
                               Analytics.tappedImportantInfo);
@@ -116,8 +126,9 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                       if (StatShowImportantInfo.getStatImportantTab(state)
                           ? index == 1
                           : index == 0) {
+                        print('ke panggil bos?');
                         typeNews = Dictionary.latestNews;
-                        widget.newsListBloc
+                        newsListBloc
                             .add(NewsListLoad(Collections.newsJabar));
                         AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
                       }
@@ -125,7 +136,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           ? index == 2
                           : index == 1) {
                         typeNews = Dictionary.nationalNews;
-                        widget.newsListBloc
+                        newsListBloc
                             .add(NewsListLoad(Collections.newsNational));
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedNewsNational);
@@ -134,7 +145,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           ? index == 3
                           : index == 2) {
                         typeNews = Dictionary.worldNews;
-                        widget.newsListBloc
+                        newsListBloc
                             .add(NewsListLoad(Collections.newsWorld));
                         AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
                       }
@@ -250,6 +261,13 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    newsListBloc = BlocProvider.of<NewsListBloc>(context);
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

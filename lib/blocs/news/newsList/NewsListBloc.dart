@@ -20,6 +20,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     NewsListEvent event,
   ) async* {
     if (event is NewsListLoad) {
+      print('cekkk sini kepanggill? ');
       yield* _mapLoadVideosToState(event.newsCollection);
     } else if (event is NewsListUpdate) {
       yield* _mapVideosUpdateToState(event);

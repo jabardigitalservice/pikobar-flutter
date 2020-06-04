@@ -198,7 +198,8 @@ class _HomeScreenState extends State<HomeScreen> {
               color: ColorBase.grey,
             ),
           ),
-          TabNewsScreen(newsListBloc: _newsListBloc),
+          TabNewsScreen(),
+
           SizedBox(
             height: 24,
             child: Container(
