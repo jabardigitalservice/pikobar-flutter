@@ -1,3 +1,4 @@
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,6 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -27,9 +27,9 @@ import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/ImportantInfoScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
-import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
+import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   InfoGraphicsListBloc _infoGraphicsListBloc;
   DocumentsBloc _documentsBloc;
   bool isLoading = true;
+  String typeNews = Dictionary.importantInfo;
 
   @override
   void initState() {
@@ -191,131 +192,44 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           /// News & Videos Sections
-          Container(
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(Dimens.padding),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    Dictionary.newsUpdate,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.productSans,
-                        fontSize: 16.0),
-                  ),
-                ),
-                Container(
-                  child: DefaultTabController(
-                    length: 3,
-                    child: Column(
-                      children: <Widget>[
-                        TabBar(
-                          onTap: (index) {
-                            if (index == 0) {
-                              _newsListBloc
-                                  .add(NewsListLoad(Collections.newsJabar));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedNewsJabar);
-                            } else if (index == 1) {
-                              _newsListBloc
-                                  .add(NewsListLoad(Collections.newsNational));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedNewsNational);
-                            } else if (index == 2) {
-                              _newsListBloc
-                                  .add(NewsListLoad(Collections.newsWorld));
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedNewsWorld);
-                            }
-                          },
-                          labelColor: Colors.black,
-                          indicatorColor: ColorBase.green,
-                          indicatorWeight: 2.8,
-                          tabs: <Widget>[
-                            Tab(
-                              child: Text(
-                                Dictionary.latestNews,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: FontsFamily.productSans,
-                                    fontSize: 13.0),
-                              ),
-                            ),
-                            Tab(
-                              child: Text(
-                                Dictionary.nationalNews,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: FontsFamily.productSans,
-                                    fontSize: 13.0),
-                              ),
-                            ),
-                            Tab(
-                                child: Text(
-                              Dictionary.worldNews,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: FontsFamily.productSans,
-                                  fontSize: 13.0),
-                            )),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 10),
-                          height: 400,
-                          child: TabBarView(
-                            physics: NeverScrollableScrollPhysics(),
-                            children: <Widget>[
-                              NewsScreen(
-                                  news: Dictionary.latestNews, maxLength: 3),
-                              NewsScreen(
-                                  news: Dictionary.nationalNews, maxLength: 3),
-                              NewsScreen(
-                                  news: Dictionary.worldNews, maxLength: 3),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: VideoList(),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: InfoGraphics(),
-                ),
-                SizedBox(
-                  height: 24,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Documents(),
-                ),
-              ],
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
             ),
-          )
+          ),
+          TabNewsScreen(),
+
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16.0),
+            child: VideoList(),
+          ),
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16.0),
+            child: InfoGraphics(),
+          ),
+          SizedBox(
+            height: 24,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16.0),
+            child: Documents(),
+          ),
         ]),
         AlertUpdate()
       ],

@@ -217,10 +217,14 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ImportantInfoDetailScreen(id: data['id'])));
+            builder: (context) => NewsDetailScreen(
+                  id: data['id'],
+                  news: Dictionary.importantInfo,
+                )));
       } else {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ImportantInfoListScreen()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                NewsListScreen(news: Dictionary.importantInfo)));
       }
     } else if (data['target'] == 'url') {
       if (data['url'] != null && data['url'] != 'null') {
