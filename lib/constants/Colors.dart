@@ -3,7 +3,7 @@ import 'dart:ui' show Color;
 class ColorBase {
   static final blue = Color(0xFF00AADE);
   static final green = Color(0xFF009D57);
-  static final grey = Color(0xFFFAFAFA);
+  static final grey = Color(0xFFF5F5F5);
   static final pink = Color(0xFFD71149);
   static final bubbleChatBlue = Color(0xFFD5E9F4);
   static final darkRed = Color(0xFFD23C3C);
