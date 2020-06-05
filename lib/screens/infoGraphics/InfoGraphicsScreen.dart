@@ -67,13 +67,14 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       elevation: 1.5,
-      margin: EdgeInsets.only(top: 14, left: 14, right: 14),
+      margin: EdgeInsets.only(right: 14, top: 10, bottom: 0),
       clipBehavior: Clip.antiAlias,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.3,
+            height: MediaQuery.of(context).size.height * 0.20,
             decoration: BoxDecoration(shape: BoxShape.circle),
             child: Skeleton(
               width: MediaQuery.of(context).size.width,
@@ -85,8 +86,10 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 left: 14.0, right: 14.0, top: 14.0, bottom: 14.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
+
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -104,11 +107,11 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     ],
                   ),
                 ),
+                SizedBox(width: 10,),
                 Container(
                   child: Skeleton(
-                    height: 30.0,
-                    width: 30,
-                    padding: 20.0,
+                    height: 20.0,
+                    width: 20,
                   ),
                 )
               ],
