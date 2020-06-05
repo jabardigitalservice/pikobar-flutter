@@ -65,7 +65,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         ChipsChoice<int>.single(
           padding: EdgeInsets.symmetric(vertical: 5),
           value: tag,
-          onChanged: (val) => setState(() => tag = val),
+          onChanged: (val) => setState(() {
+            tag = val;
+            print(tag);
+            _detailEmergencyPhoneExpansionStateMap.clear();
+          }),
           options: ChipsChoiceOption.listFrom<int, String>(
             source: options,
             value: (i, v) => i,
@@ -113,7 +117,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                                 snapshot),
                                           );
                                   } else {
-                                    return Center(child: _buildLoading());
+                                    return Column(
+                                      children: _buildLoading(),
+                                    );
                                   }
                                 }),
                           ],
@@ -139,7 +145,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                                 getListCallCenter(snapshot),
                                           );
                                   } else {
-                                    return Center(child: _buildLoading());
+                                    return Column(
+                                      children: _buildLoading(),
+                                    );
                                   }
                                 })
                           ],
@@ -174,12 +182,17 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   SizedBox(
                     width: 20,
                   ),
-                  Text(document['name'],
-                      style: TextStyle(
-                          color: Color(0xff333333),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12)),
+                  document['name'] == null
+                      ? Skeleton(
+                          height: 5,
+                          width: MediaQuery.of(context).size.width / 4,
+                        )
+                      : Text(document['name'],
+                          style: TextStyle(
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12)),
                 ],
               ),
               IconButton(
@@ -188,7 +201,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                       ? Icons.keyboard_arrow_down
                       : Icons.arrow_forward_ios,
                   color: Color(0xff828282),
-                  size: 15,
+                  size: _detailEmergencyPhoneExpansionStateMap[document['name']]
+                      ? 25
+                      : 15,
                 ),
                 onPressed: () {
                   callback(document['name'],
@@ -198,71 +213,75 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               )
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 35, right: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                document['address'] != null
-                    ? Padding(
-                        padding: EdgeInsets.only(bottom: 15),
-                        child: Text(document['address'],
-                            style: TextStyle(
-                                color: Color(0xff828282),
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 12)),
-                      )
-                    : Container(),
-                document['address'] != null
-                    ? SizedBox(
-                        height: 5,
-                        child: Container(
-                          color: ColorBase.grey,
-                        ),
-                      )
-                    : Container(),
-                document['phones'] != null && document['phones'].isNotEmpty
-                    ? Column(
-                        children: _buildListDetailPhone(document),
-                      )
-                    : Container(),
-                document['web'] != null && document['web'].isNotEmpty
-                    ? SizedBox(
-                        height: 5,
-                        child: Container(
-                          color: ColorBase.grey,
-                        ),
-                      )
-                    : Container(),
-                document['web'] != null && document['web'].isNotEmpty
-                    ? ListTile(
-                        contentPadding: EdgeInsets.all(0),
-                        trailing: Container(
-                            height: 15,
-                            child: Image.asset(
-                                '${Environment.iconAssets}web_underline.png')),
-                        title: Text(
-                          document['web'],
-                          style: TextStyle(
-                              color: Color(0xff2D9CDB),
-                              fontFamily: FontsFamily.lato,
-                              decoration: TextDecoration.underline,
-                              fontSize: 12),
-                        ),
-                        onTap: () {
-                          _launchURL(document['web'], 'web');
+          _detailEmergencyPhoneExpansionStateMap[document['name']]
+              ? Padding(
+                  padding: EdgeInsets.only(left: 35, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      document['address'] != null
+                          ? Padding(
+                              padding: EdgeInsets.only(bottom: 15),
+                              child: Text(document['address'],
+                                  style: TextStyle(
+                                      color: Color(0xff828282),
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 12)),
+                            )
+                          : Container(),
+                      document['address'] != null
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['phones'] != null &&
+                              document['phones'].isNotEmpty
+                          ? Column(
+                              children:
+                                  _buildListDetailPhone(document, 'phones'),
+                            )
+                          : Container(),
+                      document['web'] != null && document['web'].isNotEmpty
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['web'] != null && document['web'].isNotEmpty
+                          ? ListTile(
+                              contentPadding: EdgeInsets.all(0),
+                              trailing: Container(
+                                  height: 15,
+                                  child: Image.asset(
+                                      '${Environment.iconAssets}web_underline.png')),
+                              title: Text(
+                                document['web'],
+                                style: TextStyle(
+                                    color: Color(0xff2D9CDB),
+                                    fontFamily: FontsFamily.lato,
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 12),
+                              ),
+                              onTap: () {
+                                _launchURL(document['web'], 'web');
 
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedphoneBookEmergencyWeb,
-                              <String, dynamic>{
-                                'title': document['name'],
-                                'web': document['web']
-                              });
-                        })
-                    : Container()
-              ],
-            ),
-          )
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedphoneBookEmergencyWeb,
+                                    <String, dynamic>{
+                                      'title': document['name'],
+                                      'web': document['web']
+                                    });
+                              })
+                          : Container()
+                    ],
+                  ),
+                )
+              : Container()
         ],
       );
     }
@@ -287,11 +306,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
     emergencyPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
-      if (_detailEmergencyPhoneExpansionStateMap.isEmpty) {
+      if (!_detailEmergencyPhoneExpansionStateMap
+          .containsKey(dataNomorDarurat[i]['name'])) {
         _detailEmergencyPhoneExpansionStateMap
             .addAll({dataNomorDarurat[i]['name']: false});
       }
-            print(_detailEmergencyPhoneExpansionStateMap);
 
       Column column = Column(
         children: <Widget>[
@@ -318,10 +337,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  List<Widget> _buildListDetailPhone(DocumentSnapshot document) {
+  List<Widget> _buildListDetailPhone(DocumentSnapshot document, String name) {
     List<Widget> list = List();
 
-    for (int i = 0; i < document['phones'].length; i++) {
+    for (int i = 0; i < document[name].length; i++) {
       Column column = Column(
         children: <Widget>[
           ListTile(
@@ -331,7 +350,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   child: Image.asset(
                       '${Environment.iconAssets}phone_underline.png')),
               title: Text(
-                document['phones'][i],
+                document[name][i],
                 style: TextStyle(
                     color: Color(0xff2D9CDB),
                     fontFamily: FontsFamily.lato,
@@ -339,15 +358,15 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                     fontSize: 12),
               ),
               onTap: () {
-                _launchURL(document['phones'][i], 'number');
+                _launchURL(document[name][i], 'number');
 
                 AnalyticsHelper.setLogEvent(
                     Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
                   'title': document['name'],
-                  'telp': document['phones'][i]
+                  'telp': document[name][i]
                 });
               }),
-          i == document['phones'].length - 1
+          i == document[name].length - 1
               ? Container()
               : SizedBox(
                   height: 5,
@@ -365,41 +384,108 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
   List<Widget> getListCallCenter(AsyncSnapshot<QuerySnapshot> snapshot) {
     List<Widget> list = List();
-    InkWell _cardTile(DocumentSnapshot document) {
-      return InkWell(
-        onTap: () => _onTapCallCenter(context, document),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Container(
-                    height: 15,
-                    child: Image.asset('${Environment.iconAssets}phone.png')),
-                SizedBox(
-                  width: 20,
+    Column _cardTile(DocumentSnapshot document) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                      height: 15,
+                      child: Image.asset('${Environment.iconAssets}phone.png')),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  document['nama_kotkab'] == null
+                      ? Skeleton(
+                          height: 5,
+                          width: MediaQuery.of(context).size.width / 4,
+                        )
+                      : Text(document['nama_kotkab'],
+                          style: TextStyle(
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12)),
+                ],
+              ),
+              IconButton(
+                icon: Icon(
+                  _detailEmergencyPhoneExpansionStateMap[
+                          document['nama_kotkab']]
+                      ? Icons.keyboard_arrow_down
+                      : Icons.arrow_forward_ios,
+                  color: Color(0xff828282),
+                  size: _detailEmergencyPhoneExpansionStateMap[
+                          document['nama_kotkab']]
+                      ? 25
+                      : 15,
                 ),
-                Text(document['nama_kotkab'],
-                    style: TextStyle(
-                        color: Color(0xff333333),
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12)),
-              ],
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Color(0xff828282),
-              size: 15,
-            )
-          ],
-        ),
+                onPressed: () {
+                  callback(
+                      document['nama_kotkab'],
+                      _detailEmergencyPhoneExpansionStateMap[
+                          document['nama_kotkab']]);
+                  print(document);
+                  print(_detailEmergencyPhoneExpansionStateMap);
+                },
+              )
+            ],
+          ),
+          _detailEmergencyPhoneExpansionStateMap[document['nama_kotkab']]
+              ? Padding(
+                  padding: EdgeInsets.only(left: 35, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      document['call_center'] != null &&
+                              document['call_center'].isNotEmpty
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['call_center'] != null &&
+                              document['call_center'].isNotEmpty
+                          ? Column(
+                              children: _buildListDetailPhone(
+                                  document, 'call_center'),
+                            )
+                          : Container(),
+                      document['hotline'] != null &&
+                              document['hotline'].isNotEmpty
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['hotline'] != null &&
+                              document['hotline'].isNotEmpty
+                          ? Column(
+                              children:
+                                  _buildListDetailPhone(document, 'hotline'),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                )
+              : Container()
+        ],
       );
     }
 
     Widget _card(DocumentSnapshot document) {
       return Card(
-          elevation: 0, margin: EdgeInsets.all(25), child: _cardTile(document));
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+          child: _cardTile(document));
     }
 
     List dataNomorDarurat;
@@ -415,6 +501,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
     callCenterPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < callCenterPhoneCount; i++) {
+      if (!_detailEmergencyPhoneExpansionStateMap
+          .containsKey(dataNomorDarurat[i]['nama_kotkab'])) {
+        _detailEmergencyPhoneExpansionStateMap
+            .addAll({dataNomorDarurat[i]['nama_kotkab']: false});
+      }
       Column column = Column(
         children: <Widget>[
           widget.searchQuery != null
@@ -499,54 +590,59 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  Widget _buildLoading() {
-    return Column(
-      children: <Widget>[
-        Skeleton(
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: Padding(
-              padding: EdgeInsets.all(17.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Skeleton(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width / 4,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 90,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  List<Widget> _buildLoading() {
+    List<Widget> list = List();
+    for (var i = 0; i < 8; i++) {
+      Column column = Column(children: <Widget>[
+        Card(
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 22, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Skeleton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Skeleton(
-                          width: MediaQuery.of(context).size.width / 3,
-                          height: 10,
+                        Container(
+                            height: 15,
+                            child: Image.asset(
+                                '${Environment.iconAssets}phone.png')),
+                        SizedBox(
+                          width: 20,
                         ),
                         Skeleton(
-                          width: MediaQuery.of(context).size.width / 3,
-                          height: 10,
-                        ),
+                          height: 5,
+                          width: MediaQuery.of(context).size.width / 4,
+                        )
                       ],
                     ),
-                  ),
-                ],
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xff828282),
+                      size: 15,
+                    )
+                  ],
+                ),
               ),
-            ),
+              SizedBox(
+                height: 10,
+              )
+            ],
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 15,
+          child: Container(
+            color: ColorBase.grey,
+          ),
         )
-      ],
-    );
+      ]);
+      list.add(column);
+    }
+    return list;
   }
 
   Widget _buildDaruratNumber(BuildContext context) {

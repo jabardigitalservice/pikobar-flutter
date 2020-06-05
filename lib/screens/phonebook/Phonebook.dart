@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/phonebook/ListViewPhoneBooks.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
@@ -41,11 +42,12 @@ class _PhonebookState extends State<Phonebook> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,
-        title: _isSearch
-            ? _buildSearchField()
-            : CustomAppBar.setTitleAppBar(Dictionary.phoneBookEmergency),
-        actions: _buildActions());
+      backgroundColor: Colors.white,bottom:  PreferredSize(
+            preferredSize:  Size.fromHeight(60.0),
+            child: _buildSearchField(),
+          ),
+        
+        title:  CustomAppBar.setTitleAppBar(Dictionary.phoneBookEmergency));
   }
 
   List<Widget> _buildActions() {
@@ -116,19 +118,19 @@ class _PhonebookState extends State<Phonebook> {
 
   Widget _buildSearchField() {
     return Container(
-      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      margin: EdgeInsets.only(left: 20.0, right: 20.0,bottom: 20),
       height: 40.0,
       decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Color(0xffFAFAFA),
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(20.0)),
+          borderRadius: BorderRadius.circular(8.0)),
       child: TextField(
         controller: _searchController,
-        autofocus: true,
-        decoration: InputDecoration(
+        autofocus: false,
+        decoration: InputDecoration(prefixIcon: Icon(Icons.search,color: Color(0xff828282),),
             hintText: Dictionary.findEmergencyPhone,
             border: InputBorder.none,
-            hintStyle: TextStyle(color: Colors.black54),
+            hintStyle: TextStyle(color: Color(0xff828282),fontFamily: FontsFamily.lato),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
         style: TextStyle(color: Colors.black, fontSize: 16.0),
