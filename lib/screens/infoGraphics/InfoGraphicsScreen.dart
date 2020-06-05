@@ -40,10 +40,14 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             final List data = snapshot.data.documents;
             final int dataCount = data.length;
 
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio:
+                      (MediaQuery.of(context).size.height * 0.0010)),
               shrinkWrap: true,
               itemCount: dataCount,
-              padding: EdgeInsets.only(bottom: 30.0, top: 10.0),
+              padding: EdgeInsets.only(bottom: 20.0, top: 10.0, left: 14.0),
               itemBuilder: (_, int index) {
                 return _cardContent(data[index]);
               },
@@ -116,27 +120,20 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   }
 
   Widget _cardContent(DocumentSnapshot data) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      elevation: 1.5,
-      margin: EdgeInsets.only(top: 14, left: 14, right: 14),
-      clipBehavior: Clip.antiAlias,
+    return Container(
+      margin: EdgeInsets.only(right: 14, top: 10, bottom: 0),
       child: Column(
         children: <Widget>[
           InkWell(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.20,
               decoration: BoxDecoration(shape: BoxShape.circle),
               child: CachedNetworkImage(
                 imageUrl: data['images'][0] ?? '',
                 imageBuilder: (context, imageProvider) => Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        topRight: Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     image: DecorationImage(
                       alignment: Alignment.topCenter,
                       image: imageProvider,
@@ -173,7 +170,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                left: 14.0, right: 0, top: 14.0, bottom: 14.0),
+                left: 8.0, right: 9.0, top: 14.0, bottom: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -196,6 +193,37 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                unixTimeStampToDateWithoutDay(
+                                    data['published_date'].seconds),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Container(
+                                height: 25,
+                                child: IconButton(
+                                  padding: EdgeInsets.all(0),
+                                  alignment: Alignment.topRight,
+                                  icon: Icon(FontAwesomeIcons.share,
+                                      size: 17, color: Color(0xFF27AE60)),
+                                  onPressed: () {
+                                    InfoGraphicsServices()
+                                        .shareInfoGraphics(
+                                        data['title'],
+                                        data['images']);
+                                  },
+                                ),
+                              )
+                            ]),
                         Text(
                           data['title'],
                           style: TextStyle(
@@ -205,32 +233,10 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          unixTimeStampToDateWithoutDay(
-                              data['published_date'].seconds),
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.left,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        )
                       ],
                     ),
                   ),
                 ),
-                Container(
-                  child: IconButton(
-                    icon: Icon(FontAwesomeIcons.share,
-                        size: 17, color: Color(0xFF27AE60)),
-                    onPressed: () {
-                      InfoGraphicsServices()
-                          .shareInfoGraphics(data['title'], data['images']);
-                    },
-                  ),
-                )
               ],
             ),
           ),
