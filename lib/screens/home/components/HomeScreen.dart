@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
               color: ColorBase.grey,
               margin: EdgeInsets.only(top: 10.0),
-              padding: EdgeInsets.only(bottom: 10.0),
+              padding: EdgeInsets.only(bottom: 24.0),
               child: Statistics()),
 
           /// Menus & Spread Sections
