@@ -209,7 +209,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           ),
           SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height - 144,
+              height: MediaQuery.of(context).size.height - 145,
               child: TabBarView(
                 controller: tabController,
                 physics: NeverScrollableScrollPhysics(),

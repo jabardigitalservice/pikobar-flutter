@@ -55,7 +55,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                           margin: EdgeInsets.only(right: 10.0),
                           child: IconButton(
                             icon: Icon(FontAwesomeIcons.share,
-                                size: 17),
+                                size: 17, color: ColorBase.green,),
                             onPressed: () {
                               _shareMessage(state.data);
                             },
@@ -136,6 +136,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             Text(
               data.title,
               style: TextStyle(
+                fontFamily: FontsFamily.lato,
                   fontSize: 16.0,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
