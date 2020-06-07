@@ -112,10 +112,16 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                         ? EmptyData(
                                             message:
                                                 Dictionary.emptyDataPhoneBook)
-                                        : Column(
-                                            children: getListRumahSakitRujukan(
-                                                snapshot),
-                                          );
+                                        : snapshot.data.documents[0]['name'] !=
+                                                null
+                                            ? Column(
+                                                children:
+                                                    getListRumahSakitRujukan(
+                                                        snapshot),
+                                              )
+                                            : Column(
+                                                children: _buildLoading(),
+                                              );
                                   } else {
                                     return Column(
                                       children: _buildLoading(),
@@ -140,10 +146,16 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                         ? EmptyData(
                                             message:
                                                 Dictionary.emptyDataPhoneBook)
-                                        : Column(
-                                            children:
-                                                getListCallCenter(snapshot),
-                                          );
+                                        : snapshot.data.documents[0]
+                                                    ['nama_kotkab'] !=
+                                                null
+                                            ? Column(
+                                                children:
+                                                    getListCallCenter(snapshot),
+                                              )
+                                            : Column(
+                                                children: _buildLoading(),
+                                              );
                                   } else {
                                     return Column(
                                       children: _buildLoading(),
