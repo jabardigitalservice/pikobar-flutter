@@ -28,7 +28,7 @@ Route generateRoutes(RouteSettings settings) {
             url: args,
           ));
     case NavigationConstrants.News:
-      return buildRoute(settings, NewsListScreen());
+      return buildRoute(settings, News());
       case NavigationConstrants.ImportantInfoList:
       return buildRoute(settings, ImportantInfoListScreen());
     case NavigationConstrants.Phonebook:

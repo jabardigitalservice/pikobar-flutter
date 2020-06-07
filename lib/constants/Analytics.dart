@@ -43,6 +43,7 @@ class Analytics {
   static String tappedNewsDetail = 'tapped_berita_detail';
   static String tappedNewsJabar = 'tapped_berita_jabar';
   static String tappedNewsNational = 'tapped_berita_nasional';
+  static String tappedAllNews = 'tapped_semua_berita';
   static String tappedNewsWorld = 'tapped_berita_dunia';
   static String tappedMore = 'tapped_berita_selengkapnya';
   static String tappedShareNews = 'tapped_share_news';
@@ -85,6 +86,7 @@ class Analytics {
   static String openDocument = 'open_document';
 
   //important
+  static String tappedImportantInfo= 'tapped_important_info';
   static String tappedImportantInfoDetail = 'tapped_important_info_detail';
   static String tappedImportantInfoDetailShare = 'tapped_important_info_detail_share';
   static String tappedDownloadImportantInfo = 'tapped_download_important_info';
