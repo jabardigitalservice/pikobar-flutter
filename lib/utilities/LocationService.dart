@@ -160,7 +160,7 @@ class LocationService {
             longitude: position.longitude,
             timestamp: currentMillis);
 
-        await LocationsRepository().sendLocationToServer(data);
+        await LocationsRepository().saveLocationToFirestore(data);
 
         await LocationSharedPreference.setLastLocationRecordingTime(
             currentMillis);
