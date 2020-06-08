@@ -74,7 +74,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   setControllerTab(bool statImportantInfo) {
     tabController = new TabController(vsync: this, length: myTabs.length);
     tabController.addListener(_handleTabSelection);
-    if (widget.news == NewsType.allArticles) {
+    if (widget.news == Dictionary.allNews) {
       tabController.animateTo(0);
       _newsListBloc.add(NewsListLoad(NewsType.allArticles,
           statImportantInfo: statImportantInfo));

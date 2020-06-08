@@ -87,6 +87,7 @@ class _NewsScreenState extends State<NewsScreen> {
             padding: EdgeInsets.only(top: 5, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 widget.news == Dictionary.importantInfo
                     ? Stack(
@@ -188,14 +189,14 @@ class _NewsScreenState extends State<NewsScreen> {
                                   Text(
                                     data.newsChannel,
                                     style: TextStyle(
-                                        fontSize: 12.0, color: Colors.grey),
+                                        fontSize: 10.0, color: Colors.grey),
                                   ),
                                 ],
                               ),
                               Text(
-                                unixTimeStampToDate(data.publishedAt),
+                                unixTimeStampToDateTime(data.publishedAt),
                                 style: TextStyle(
-                                    fontSize: 12.0, color: Colors.grey),
+                                    fontSize: 10.0, color: Colors.grey),
                               ),
                             ],
                           )),
@@ -220,6 +221,7 @@ class _NewsScreenState extends State<NewsScreen> {
               child: Container(
                 padding: EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
@@ -323,14 +325,14 @@ class _NewsScreenState extends State<NewsScreen> {
                                       Text(
                                         data.newsChannel,
                                         style: TextStyle(
-                                            fontSize: 12.0, color: Colors.grey),
+                                            fontSize: 10.0, color: Colors.grey),
                                       ),
                                     ],
                                   ),
                                   Text(
-                                    unixTimeStampToDate(data.publishedAt),
+                                    unixTimeStampToDateTime(data.publishedAt),
                                     style: TextStyle(
-                                        fontSize: 12.0, color: Colors.grey),
+                                        fontSize: 10.0, color: Colors.grey),
                                   ),
                                 ],
                               )),

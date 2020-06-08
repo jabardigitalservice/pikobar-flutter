@@ -114,7 +114,7 @@ class _VideoListState extends State<VideoList> {
                       color: Color(0xFF27AE60),
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 14.0),
+                      fontSize: 12.0),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.VideoList);
@@ -219,7 +219,7 @@ class _VideoListState extends State<VideoList> {
                           child: Text(unixTimeStampToDateTime(
                                 data[index].publishedAt),
                             style: TextStyle(
-                                color: Color(0xffBDBDBD),
+                                color: Colors.grey,
                                 fontFamily: FontsFamily.lato,
                                 fontSize: 10.0),
                           ),

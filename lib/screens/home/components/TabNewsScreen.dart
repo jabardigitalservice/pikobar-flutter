@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -61,7 +62,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.productSans,
+                        fontFamily: FontsFamily.lato,
                         fontSize: 16.0),
                   ),
                   InkWell(
@@ -70,14 +71,14 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                       style: TextStyle(
                           color: ColorBase.green,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.productSans,
+                          fontFamily: FontsFamily.lato,
                           fontSize: 12.0),
                     ),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NewsListScreen(news: typeNews),
+                          builder: (context) => NewsListScreen(news: Dictionary.allNews),
                         ),
                       );
                       AnalyticsHelper.setLogEvent(Analytics.tappedMore);
@@ -93,6 +94,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
               Dictionary.descNews,
               style: TextStyle(
                   color: Colors.black,
+                fontFamily: FontsFamily.lato,
                   fontSize: 12.0,),
               textAlign: TextAlign.left,
             ),
@@ -170,7 +172,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                               Dictionary.importantInfo,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontFamily: FontsFamily.productSans,
+                                  fontFamily: FontsFamily.lato,
                                   fontSize: 12.0),
                             ),
                           ),
@@ -189,7 +191,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                             Dictionary.titleLatestNews,
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontFamily: FontsFamily.productSans,
+                                fontFamily: FontsFamily.lato,
                                 fontSize: 12.0),
                           ),
                         ),
@@ -209,7 +211,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.productSans,
+                              fontFamily: FontsFamily.lato,
                               fontSize: 12.0),
                         ),
                       )),
@@ -227,7 +229,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           Dictionary.titleWorldNews,
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.productSans,
+                              fontFamily: FontsFamily.lato,
                               fontSize: 12.0),
                         ),
                       )),

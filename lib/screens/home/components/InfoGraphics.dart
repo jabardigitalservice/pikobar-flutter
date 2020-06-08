@@ -40,7 +40,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.productSans,
+                    fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
               InkWell(
@@ -49,7 +49,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                   style: TextStyle(
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.productSans,
+                      fontFamily: FontsFamily.lato,
                       fontSize: 12.0),
                 ),
                 onTap: () {
@@ -68,6 +68,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             Dictionary.descInfoGraphic,
             style: TextStyle(
                 color: Colors.black,
+                fontFamily: FontsFamily.lato,
                 fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
@@ -227,6 +228,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 <String, dynamic>{'title': document['title']});
                           },
                           child: Container(
+                            padding: EdgeInsets.only(top: 10),
                             child: Column(
                               children: <Widget>[
                                 Row(
@@ -234,35 +236,38 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      unixTimeStampToDateWithoutDay(
+                                      unixTimeStampToDateTime(
                                           document['published_date'].seconds),
                                       style: TextStyle(
                                           color: Colors.grey,
-                                          fontSize: 12.0,
+                                          fontFamily: FontsFamily.lato,
+                                          fontSize: 10.0,
                                           fontWeight: FontWeight.w600),
                                       textAlign: TextAlign.left,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    Container(
-                                      height: 30,
-                                      child: IconButton(
-                                        icon: Icon(FontAwesomeIcons.share,
-                                            size: 17, color: Color(0xFF27AE60)),
-                                        onPressed: () {
-                                          InfoGraphicsServices()
-                                              .shareInfoGraphics(
-                                                  document['title'],
-                                                  document['images']);
-                                        },
-                                      ),
-                                    )
+//                                    Container(
+//                                      height: 30,
+//                                      child: IconButton(
+//                                        icon: Icon(FontAwesomeIcons.share,
+//                                            size: 17, color: Color(0xFF27AE60)),
+//                                        onPressed: () {
+//                                          InfoGraphicsServices()
+//                                              .shareInfoGraphics(
+//                                                  document['title'],
+//                                                  document['images']);
+//                                        },
+//                                      ),
+//                                    )
                                   ],
                                 ),
+                                SizedBox(height: 5,),
                                 Text(
                                   document['title'],
                                   style: TextStyle(
                                       fontSize: 14.0,
+                                      fontFamily: FontsFamily.lato,
                                       fontWeight: FontWeight.w600),
                                   textAlign: TextAlign.left,
                                   maxLines: 2,
