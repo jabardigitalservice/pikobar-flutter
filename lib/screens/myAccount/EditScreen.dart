@@ -96,7 +96,8 @@ class _EditState extends State<Edit> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Scaffold(backgroundColor: Colors.white,
+      child: Scaffold(
+        backgroundColor: Colors.white,
         key: _scaffoldState,
         appBar: CustomAppBar.defaultAppBar(
           title: Dictionary.edit,
@@ -574,6 +575,7 @@ class _EditState extends State<Edit> {
           ),
           RadioButtonGroup(
             activeColor: Color(0xff27AE60),
+            labelStyle: TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
             orientation: GroupedButtonsOrientation.HORIZONTAL,
             onSelected: (String selected) => setState(() {
               _genderController.text = selected.contains('Laki') ? 'M' : 'F';
@@ -607,9 +609,12 @@ class _EditState extends State<Edit> {
                 )
               : Container(),
           isEmpty
-              ? Text(
-                  title + Dictionary.pleaseCompleteAllField,
-                  style: TextStyle(color: Colors.red, fontSize: 12),
+              ? Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    title + Dictionary.pleaseCompleteAllField,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
                 )
               : Container()
         ],
@@ -651,7 +656,9 @@ class _EditState extends State<Edit> {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                  border: Border.all(
+                      color: isEmpty ? Colors.red : Color(0xffE0E0E0),
+                      width: 1.5)),
               child: Row(
                 children: <Widget>[
                   Padding(
@@ -663,7 +670,8 @@ class _EditState extends State<Edit> {
                   ),
                   Text(
                     placeholder,
-                    style: TextStyle(fontSize: 15),
+                    style:
+                        TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
                   ),
                 ],
               ),
@@ -675,9 +683,12 @@ class _EditState extends State<Edit> {
                 )
               : Container(),
           isEmpty
-              ? Text(
-                  title + Dictionary.pleaseCompleteAllField,
-                  style: TextStyle(color: Colors.red, fontSize: 12),
+              ? Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    title + Dictionary.pleaseCompleteAllField,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
                 )
               : Container()
         ],
@@ -723,14 +734,25 @@ class _EditState extends State<Edit> {
             style: isEdit
                 ? TextStyle(
                     color: Colors.black,
-                  )
-                : TextStyle(color: Color(0xffBDBDBD)),
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12)
+                : TextStyle(
+                    color: Color(0xffBDBDBD),
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12),
             enabled: isEdit,
             validator: validation,
             textCapitalization: TextCapitalization.words,
             controller: controller,
             decoration: InputDecoration(
                 hintText: hintText,
+                hintStyle: TextStyle(
+                    color: Color(0xff828282),
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12),errorBorder:  OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: Colors.red, width: 1.5)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide:
@@ -783,7 +805,9 @@ class _EditState extends State<Edit> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                border: Border.all(
+                    color: isEmpty ? Colors.red : Color(0xffE0E0E0),
+                    width:  1.5)),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: custom.DropdownButton<dynamic>(
@@ -791,11 +815,18 @@ class _EditState extends State<Edit> {
                 isExpanded: true,
                 hint: Text(
                   hintText,
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(
+                      color: Color(0xff828282),
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12),
                 ),
                 items: items.map((item) {
                   return custom.DropdownMenuItem(
-                    child: Text(item['name']),
+                    child: Text(
+                      item['name'],
+                      style:
+                          TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+                    ),
                     value: item['code'].toString(),
                   );
                 }).toList(),
@@ -814,9 +845,12 @@ class _EditState extends State<Edit> {
                 )
               : Container(),
           isEmpty
-              ? Text(
-                  title + Dictionary.pleaseCompleteAllField,
-                  style: TextStyle(color: Colors.red, fontSize: 12),
+              ? Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    title + Dictionary.pleaseCompleteAllField,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
                 )
               : Container()
         ],
@@ -860,7 +894,7 @@ class _EditState extends State<Edit> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                height: 60,
+                height: 55,
                 width: MediaQuery.of(context).size.width / 7,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -868,7 +902,10 @@ class _EditState extends State<Edit> {
                 child: Center(
                     child: Text(
                   Dictionary.inaCode,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: FontsFamily.lato,
+                      color: Color(0xff828282)),
                 )),
               ),
               SizedBox(
@@ -877,13 +914,27 @@ class _EditState extends State<Edit> {
               Expanded(
                 child: TextFormField(
                   style: isEdit
-                      ? TextStyle(color: Colors.black)
-                      : TextStyle(color: Color(0xffBDBDBD)),
+                      ? TextStyle(
+                          color: Colors.black,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 12)
+                      : TextStyle(
+                          color: Color(0xffBDBDBD),
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 12),
                   enabled: isEdit,
                   validator: validation,
                   controller: controller,
                   decoration: InputDecoration(
                       hintText: hintText,
+                      hintStyle: TextStyle(
+                          color: Color(0xff828282),
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 12),
+                      errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide:
+                              BorderSide(color: Colors.red, width: 1.5)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
