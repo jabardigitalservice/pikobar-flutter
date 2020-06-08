@@ -90,7 +90,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -108,7 +107,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     ],
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Container(
                   child: Skeleton(
                     height: 20.0,
@@ -229,7 +230,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
 //                                ),
 //                              )
                             ]),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           data['title'],
                           style: TextStyle(

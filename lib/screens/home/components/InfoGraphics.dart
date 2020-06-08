@@ -111,7 +111,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         ),
                       ),
                     ),
-                    SizedBox(height:10),
+                    SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -137,7 +137,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Container(
                           alignment: Alignment.topCenter,
                           child: Skeleton(
@@ -262,7 +264,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 //                                    )
                                   ],
                                 ),
-                                SizedBox(height: 5,),
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Text(
                                   document['title'],
                                   style: TextStyle(
