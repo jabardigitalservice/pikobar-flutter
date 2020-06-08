@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -201,36 +202,39 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                unixTimeStampToDateWithoutDay(
+                                unixTimeStampToDateTime(
                                     data['published_date'].seconds),
                                 style: TextStyle(
                                     color: Colors.grey,
-                                    fontSize: 12.0,
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 10.0,
                                     fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.left,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              Container(
-                                height: 25,
-                                child: IconButton(
-                                  padding: EdgeInsets.all(0),
-                                  alignment: Alignment.topRight,
-                                  icon: Icon(FontAwesomeIcons.share,
-                                      size: 17, color: Color(0xFF27AE60)),
-                                  onPressed: () {
-                                    InfoGraphicsServices()
-                                        .shareInfoGraphics(
-                                        data['title'],
-                                        data['images']);
-                                  },
-                                ),
-                              )
+//                              Container(
+//                                height: 25,
+//                                child: IconButton(
+//                                  padding: EdgeInsets.all(0),
+//                                  alignment: Alignment.topRight,
+//                                  icon: Icon(FontAwesomeIcons.share,
+//                                      size: 17, color: Color(0xFF27AE60)),
+//                                  onPressed: () {
+//                                    InfoGraphicsServices()
+//                                        .shareInfoGraphics(
+//                                        data['title'],
+//                                        data['images']);
+//                                  },
+//                                ),
+//                              )
                             ]),
+                        SizedBox(height: 10,),
                         Text(
                           data['title'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.lato,
                           ),
                           textAlign: TextAlign.left,
                           maxLines: 2,
