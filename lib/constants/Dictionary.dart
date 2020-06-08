@@ -89,7 +89,7 @@ class Dictionary {
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String qrCode = 'QR Code';
   static String activitie = 'Aktifitas';
-  static String accountManage= 'Kelola Akun';
+  static String accountManage= 'Akun';
   static String healthStatus = 'Status Kesehatan';
   static String sendAgainOTP = 'Kirim ulang kode';
   static String otpNotSent = 'Tidak menerima sms?';

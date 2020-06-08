@@ -270,7 +270,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        _buildGroupMenu(state.data),
         SizedBox(
           height: 15,
           child: Container(
@@ -293,6 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: EdgeInsets.all(15.0),
             child: Column(
               children: <Widget>[
+                _buildGroupMenu(state.data),
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, NavigationConstrants.Edit,
@@ -330,7 +330,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                Divider(),
+                Divider(
+                          color: Color(0xffE0E0E0),
+                          thickness: 1,
+                        ),
                 SizedBox(
                   height: 5,
                 ),
@@ -496,63 +499,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return visible && data['health_status_text'] != null
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 15,
-                child: Container(
-                  color: ColorBase.grey,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, top: 10),
-                child: Text(Dictionary.healthStatus,
-                    style: TextStyle(
-                        color: Color(0xff333333),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        fontFamily: FontsFamily.lato)),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                decoration: BoxDecoration(
-                    color: cardColor, borderRadius: BorderRadius.circular(5)),
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          height: 32,
-                          margin: EdgeInsets.only(right: 16.0),
-                          child: Image.asset(uriImage),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                Dictionary.yourHealthStatus,
-                                style: TextStyle(
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 12,
-                                    color: textColor),
-                              ),
-                              SizedBox(height: 5,),
-                              Text(data['health_status_text'],
-                                style: TextStyle(
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: textColor),
-                              )
-                            ],
+        ? Container(
+            margin: EdgeInsets.only(left: 20, right: 20, bottom: 15),
+            decoration: BoxDecoration(
+                color: cardColor, borderRadius: BorderRadius.circular(8)),
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: 32,
+                      margin: EdgeInsets.only(right: 16.0),
+                      child: Image.asset(uriImage),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            Dictionary.yourHealthStatus,
+                            style: TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                fontSize: 12,
+                                color: textColor),
                           ),
-                        )
-                      ],
-                    )),
-              ),
-            ],
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            data['health_status_text'],
+                            style: TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: textColor),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )),
           )
         : Container();
   }
@@ -580,30 +566,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return snapshot.data != null && groupMenuLength != 0
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                      child: Container(
-                        color: ColorBase.grey,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, top: 10),
-                      child: Text(Dictionary.activitie,
-                          style: TextStyle(
-                              color: Color(0xff333333),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              fontFamily: FontsFamily.lato)),
-                    ),
-                    Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        child: Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Column(children: getGroupMenu(groupMenu))))
-                  ],
+                  children: <Widget>[Column(children: getGroupMenu(groupMenu))],
                 )
               : Container();
         });
@@ -650,9 +613,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-              i == groupMenu.length - 1
-                  ? Container()
-                  : Column(
+              Column(
                       children: <Widget>[
                         SizedBox(
                           height: 5,
