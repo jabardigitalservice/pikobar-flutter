@@ -51,7 +51,7 @@ class _DocumentsState extends State<Documents> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.productSans,
+                    fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
               InkWell(
@@ -60,7 +60,7 @@ class _DocumentsState extends State<Documents> {
                   style: TextStyle(
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.productSans,
+                      fontFamily: FontsFamily.lato,
                       fontSize: 12.0),
                 ),
                 onTap: () {
@@ -79,6 +79,7 @@ class _DocumentsState extends State<Documents> {
             Dictionary.descDocument,
             style: TextStyle(
                 color: Colors.black,
+                fontFamily: FontsFamily.lato,
                 fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
@@ -189,6 +190,7 @@ class _DocumentsState extends State<Documents> {
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 14.0,
+                      fontFamily: FontsFamily.lato,
                       fontWeight: FontWeight.w600),
                   textAlign: TextAlign.left,
                   maxLines: 2,
@@ -199,6 +201,7 @@ class _DocumentsState extends State<Documents> {
                   Dictionary.titleDocument,
                   style: TextStyle(
                       color: Colors.black,
+                      fontFamily: FontsFamily.lato,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w600),
                   textAlign: TextAlign.left,
@@ -231,7 +234,8 @@ class _DocumentsState extends State<Documents> {
                               document['published_at'].seconds),
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14.0),
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 13.0),
                           textAlign: TextAlign.left,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -248,10 +252,10 @@ class _DocumentsState extends State<Documents> {
                             },
                             child: Text(
                               document['title'],
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: FontsFamily.lato,
                                   color: Colors.lightBlueAccent[700],
                                   decoration: TextDecoration.underline,
-                                  fontSize: 14.0),
+                                  fontSize: 13.0),
                               textAlign: TextAlign.left,
                             ),
                           ),
