@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/Location.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LocationModel.dart';
 import 'package:pikobar_flutter/repositories/LocationsRepository.dart';
@@ -23,7 +25,7 @@ class LocationService {
     if (await permissionService.status.isGranted) {
       await _actionSendLocation();
     } else {
-      showDialog(
+      /*showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
                 image: Image.asset(
@@ -47,7 +49,90 @@ class LocationService {
                       Analytics.permissionDismissLocation);
                   Navigator.of(context).pop();
                 },
-              ));
+              ));*/
+
+      showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(8.0),
+              topRight: Radius.circular(8.0),
+            ),
+          ),
+          isDismissible: false,
+          builder: (context) {
+            return Container(
+              margin: EdgeInsets.all(Dimens.padding),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.asset(
+                    '${Environment.imageAssets}permission_location.png',
+                    fit: BoxFit.fitWidth,
+                  ),
+                  SizedBox(height: Dimens.padding),
+                  Text(Dictionary.permissionLocationGeneral,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(Dictionary.permissionLocationAgreement,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 12.0,
+                        color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 24.0),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: RoundedButton(
+                              title: Dictionary.later,
+                              textStyle: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorBase.green),
+                              color: Colors.white,
+                              borderSide: BorderSide(color: ColorBase.green),
+                              elevation: 0.0,
+                              onPressed: () {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.permissionDismissLocation);
+                                Navigator.of(context).pop();
+                              })),
+                      SizedBox(width: Dimens.padding),
+                      Expanded(
+                          child: RoundedButton(
+                              title: Dictionary.agree,
+                              textStyle: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                              color: ColorBase.green,
+                              elevation: 0.0,
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                if (await permissionService.status.isPermanentlyDenied) {
+                                  Platform.isAndroid ? await AppSettings.openAppSettings() : await AppSettings.openLocationSettings();
+                                } else {
+                                  permissionService.request().then((status) {
+                                    _onStatusRequested(context, status);
+                                  });
+                                }
+                              }))
+                    ],
+                  )
+                ],
+              ),
+            );
+          });
     }
   }
 
@@ -70,11 +155,10 @@ class LocationService {
         int currentMillis = DateTime.now().millisecondsSinceEpoch;
 
         LocationModel data = LocationModel(
-          id: currentMillis.toString(),
-          latitude: position.latitude,
-          longitude: position.longitude,
-          timestamp: currentMillis
-        );
+            id: currentMillis.toString(),
+            latitude: position.latitude,
+            longitude: position.longitude,
+            timestamp: currentMillis);
 
         await LocationsRepository().sendLocationToServer(data);
 

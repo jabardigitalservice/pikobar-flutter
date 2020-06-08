@@ -117,6 +117,7 @@ class Dictionary {
   static String acceptLogin = 'Ya, Saya Bersedia Login';
   static String setLocation = 'Pilih Lokasi';
   static String termsConditions=' Terms & Conditions';
+  static String agree= 'Setuju';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -194,7 +195,8 @@ class Dictionary {
   static String permissionLocationMap =
       'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
   static String permissionLocationGeneral =
-      'Beberapa fitur PIKOBAR seperti informasi sebaran kasus COVID-19 di sekitar Anda dan Map, memerlukan izin untuk mengetahui lokasi Anda saat ini';
+      'Dengan membagikan lokasi, Anda akan turut membantu kami dalam menanggulangi kasus COVID-19 di Jawa Barat.';
+  static String permissionLocationAgreement = 'Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
 
   // text
   static String fieldSurvey = 'Isi Survei';
