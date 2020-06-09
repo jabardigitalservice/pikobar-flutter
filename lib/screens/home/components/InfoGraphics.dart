@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -197,14 +198,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => HeroImagePreview(
-                              Dictionary.heroImageTag,
-                              galleryItems: document['images'],
-                            ),
-                          ));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DetailInfoGraphicScreen(
+                              dataInfoGraphic: document)));
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsDetail,
@@ -216,14 +212,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => HeroImagePreview(
-                                    Dictionary.heroImageTag,
-                                    galleryItems: document['images'],
-                                  ),
-                                ));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => DetailInfoGraphicScreen(
+                                    dataInfoGraphic: document)));
 
                             AnalyticsHelper.setLogEvent(
                                 Analytics.tappedInfoGraphicsDetail,
