@@ -314,47 +314,47 @@ class _DocumentsState extends State<Documents> {
                 },
               )));
     } else {
-      Fluttertoast.showToast(
-          msg: Dictionary.downloadingFile,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0);
+//      Fluttertoast.showToast(
+//          msg: Dictionary.downloadingFile,
+//          toastLength: Toast.LENGTH_LONG,
+//          gravity: ToastGravity.BOTTOM,
+//          fontSize: 16.0);
+//
+//      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+//
+//      try {
+//        await FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: Environment.downloadStorage,
+//          fileName: name,
+//          showNotification: true,
+//          // show download progress in status bar (for Android)
+//          openFileFromNotification:
+//              true, // click on notification to open downloaded file (for Android)
+//        );
+//      } catch (e) {
+//        String dir = (await getExternalStorageDirectory()).path + '/download';
+//        await FlutterDownloader.enqueue(
+//          url: url,
+//          savedDir: dir,
+//          fileName: name,
+//          showNotification: true,
+//          // show download progress in status bar (for Android)
+//          openFileFromNotification:
+//              true, // click on notification to open downloaded file (for Android)
+//        );
+//      }
 
-      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
 
-      try {
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: Environment.downloadStorage,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      } catch (e) {
-        String dir = (await getExternalStorageDirectory()).path + '/download';
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: dir,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      }
-
-
-//      Navigator.push(
-//        context,
-//        MaterialPageRoute(
-//          builder: (context) => DocumentViewScreen(
-//            url: url,
-//            nameFile: name,
-//          ),
-//        ),
-//      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DocumentViewScreen(
+            url: url,
+            nameFile: name,
+          ),
+        ),
+      );
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{
