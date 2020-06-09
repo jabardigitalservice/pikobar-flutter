@@ -114,7 +114,7 @@ class LocationService {
     int oldTime = await LocationSharedPreference.getLastLocationRecordingTime();
 
     if (oldTime == null) {
-      oldTime = DateTime.now().millisecondsSinceEpoch;
+      oldTime = DateTime.now().add(Duration(minutes: -6)).millisecondsSinceEpoch;
       await LocationSharedPreference.setLastLocationRecordingTime(oldTime);
     }
 
