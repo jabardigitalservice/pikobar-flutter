@@ -137,7 +137,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               data.title,
               style: TextStyle(
                 fontFamily: FontsFamily.lato,
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
@@ -145,7 +145,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         _buildText(
             Text(
               unixTimeStampToDateTime(data.publishedAt),
-              style: TextStyle(fontSize: 12.0, color: Colors.grey),
+              style: TextStyle(fontSize: 15.0, color: Colors.grey),
             ),
             context),
         Container(
@@ -155,7 +155,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               data: data.content,
               defaultTextStyle: TextStyle(
                   color: Colors.grey[800],
-                  fontSize: 14.0,
+                  fontSize: 15.0,
                   fontFamily: FontsFamily.productSans),
               customTextAlign: (dom.Node node) {
                 return TextAlign.left;
