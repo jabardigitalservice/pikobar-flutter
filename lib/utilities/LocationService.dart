@@ -23,34 +23,8 @@ class LocationService {
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
     if (await permissionService.status.isGranted) {
-      await _actionSendLocation();
+      await actionSendLocation();
     } else {
-      /*showDialog(
-          context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
-                image: Image.asset(
-                  '${Environment.iconAssets}map_pin.png',
-                  fit: BoxFit.contain,
-                  color: Colors.white,
-                ),
-                description: Dictionary.permissionLocationGeneral,
-                onOkPressed: () async {
-                  Navigator.of(context).pop();
-                  if (await permissionService.status.isDenied) {
-                    await AppSettings.openLocationSettings();
-                  } else {
-                    permissionService.request().then((status) {
-                      _onStatusRequested(context, status);
-                    });
-                  }
-                },
-                onCancelPressed: () {
-                  AnalyticsHelper.setLogEvent(
-                      Analytics.permissionDismissLocation);
-                  Navigator.of(context).pop();
-                },
-              ));*/
-
       showModalBottomSheet(
           context: context,
           backgroundColor: Colors.white,
@@ -136,11 +110,11 @@ class LocationService {
     }
   }
 
-  static Future<void> _actionSendLocation() async {
+  static Future<void> actionSendLocation() async {
     int oldTime = await LocationSharedPreference.getLastLocationRecordingTime();
 
     if (oldTime == null) {
-      oldTime = DateTime.now().millisecondsSinceEpoch;
+      oldTime = DateTime.now().add(Duration(minutes: -6)).millisecondsSinceEpoch;
       await LocationSharedPreference.setLastLocationRecordingTime(oldTime);
     }
 
@@ -162,8 +136,9 @@ class LocationService {
 
         await LocationsRepository().saveLocationToFirestore(data);
 
-        await LocationSharedPreference.setLastLocationRecordingTime(
-            currentMillis);
+        // This call after all process done (Moved to LocationsRepository)
+        /*await LocationSharedPreference.setLastLocationRecordingTime(
+            currentMillis);*/
       }
     }
   }
@@ -171,7 +146,7 @@ class LocationService {
   static Future<void> _onStatusRequested(
       BuildContext context, PermissionStatus statuses) async {
     if (statuses.isGranted) {
-      await _actionSendLocation();
+      await actionSendLocation();
       AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);

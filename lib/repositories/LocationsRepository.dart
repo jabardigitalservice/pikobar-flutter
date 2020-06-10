@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/Location.dart';
 import 'package:pikobar_flutter/constants/HttpHeaders.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -32,7 +33,10 @@ class LocationsRepository {
           }
         });
 
-      sendLocationToGeocreate(_user.uid, data.latitude, data.longitude);
+      await sendLocationToGeocreate(_user.uid, data.latitude, data.longitude);
+
+      await LocationSharedPreference.setLastLocationRecordingTime(
+          data.timestamp);
     }
   }
 
