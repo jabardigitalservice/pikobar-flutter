@@ -322,7 +322,7 @@ class _EditState extends State<Edit> {
                                               child: Text(
                                                 Dictionary.setLocation,
                                                 style: TextStyle(
-                                                    color: Colors.grey[800]),
+                                                    color: Color(0xff828282),fontSize: 12,fontFamily: FontsFamily.lato),
                                               ),
                                             ),
                                           ],
@@ -671,7 +671,7 @@ class _EditState extends State<Edit> {
                   Text(
                     placeholder,
                     style:
-                        TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
+                        TextStyle(fontSize: 12, fontFamily: FontsFamily.lato,color:placeholder==Dictionary.birthdayPlaceholder? Color(0xff828282):Colors.black),
                   ),
                 ],
               ),

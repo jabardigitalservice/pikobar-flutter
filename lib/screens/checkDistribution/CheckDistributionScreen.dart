@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -22,6 +23,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
@@ -68,367 +70,299 @@ class _CheckDistributionState extends State<CheckDistribution> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar.defaultAppBar(title: Dictionary.checkDistribution),
-        body: ListView(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(Dimens.padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  // box section banner
-                  CheckDistributionBanner(
-                      title: Dictionary.checkDistributionTitle,
-                      subTitle: Dictionary.checkDistributionSubTitle1,
-                      image: '${Environment.imageAssets}people_corona2.png'),
-
-                  boxContainer(
-                    Card(
-                      elevation: 0,
-                      margin: const EdgeInsets.only(
-                          top: Dimens.padding, left: 5, right: 5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          // box section address
-                          Container(
-                            padding: const EdgeInsets.all(Dimens.padding),
-                            child: Row(
-                              children: <Widget>[
-                                Image.asset(
-                                  '${Environment.iconAssets}pin.png',
-                                  scale: 1.5,
-                                ),
-                                SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        Dictionary.currentLocationTitle,
-                                        style: TextStyle(
-                                          fontFamily: FontsFamily.productSans,
-                                          color: Colors.grey[600],
-                                          fontSize: 12.0,
-                                          height: 1.2,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        _address,
-                                        style: TextStyle(
-                                          fontFamily: FontsFamily.productSans,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14.0,
-                                          height: 1.2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-
-                          // Box section button
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(Dimens.padding,
-                                8.0, Dimens.padding, Dimens.padding),
-                            child: Column(
-                              children: <Widget>[
-                                RoundedButton(
-                                    minWidth: MediaQuery.of(context).size.width,
-                                    title: Dictionary.checkCurrentLocation,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: ColorBase.green,
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .subhead
-                                        .copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14),
-                                    onPressed: () async {
-                                      bool hasToken =
-                                          await AuthRepository().hasToken();
-                                      if (!hasToken) {
-                                        bool isLoggedIn = await Navigator.of(
-                                                context)
-                                            .push(MaterialPageRoute(
-                                                builder: (context) => LoginScreen(
-                                                    title: Dictionary
-                                                        .checkDistribution)));
-
-                                        if (isLoggedIn != null && isLoggedIn) {
-                                          String id =
-                                              await AuthRepository().getToken();
-                                          _handleLocation(
-                                              isOther: false, id: id);
-                                        }
-                                      } else {
-                                        String id =
-                                            await AuthRepository().getToken();
-                                        _handleLocation(isOther: false, id: id);
-                                      }
-                                    }),
-                                SizedBox(height: 10),
-                                RoundedButton(
-                                    minWidth: MediaQuery.of(context).size.width,
-                                    title: Dictionary.checkOtherLocation,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    color: Colors.white,
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .subhead
-                                        .copyWith(
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14),
-                                    onPressed: () {
-                                      _handleLocation(isOther: true);
-                                    }),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // SizedBox(height: 25),
-                ],
-              ),
-            ),
-            BlocBuilder<CheckdistributionBloc, CheckdistributionState>(
-              bloc: _checkdistributionBloc,
-              builder: (context, state) {
-                return state is CheckDistributionLoading
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 15.0),
-                        child: Column(
-                          children: <Widget>[
-                            CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  ColorBase.green),
-                            )
-                          ],
+        backgroundColor: Colors.white,
+        body: BlocListener<CheckdistributionBloc, CheckdistributionState>(
+          listener: (context, state) {
+            if (state is CheckDistributionFailure) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => DialogTextOnly(
+                        description: state.error.toString(),
+                        buttonText: "OK",
+                        onOkPressed: () {
+                          Navigator.of(context).pop(); // To close the dialog
+                        },
+                      ));
+              Scaffold.of(context).hideCurrentSnackBar();
+            } else if (state is CheckDistributionLoaded) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CheckDistributionDetail(state, _address)),
+              );
+            } else {
+              Scaffold.of(context).hideCurrentSnackBar();
+            }
+          },
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                left: 0.0,
+                right: 0.0,
+                top: 0.0,
+                child: Container(
+                  padding: EdgeInsets.all(Dimens.padding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: Image.asset(
+                          '${Environment.imageAssets}background_cekSebaran.png',
+                          fit: BoxFit.fitWidth,
                         ),
-                      )
-                    : state is CheckDistributionLoaded
-                        ? buildContent(state)
-                        : state is CheckDistributionFailure
-                            ? ErrorContent(error: state.error)
-                            : Container();
-              },
-            ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(
+                            Dimens.padding, 0.0, Dimens.padding, 0.0),
+                        child: Text(
+                          Dictionary.checkLocationSpread,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(
+                            Dimens.padding, 10.0, Dimens.padding, 0.0),
+                        child: Text(
+                          Dictionary.checkLocationSpreadDesc,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12.0),
+                        ),
+                      ),
 
-            // Box
-            Container(
-              padding: const EdgeInsets.all(Dimens.padding),
-              child: Align(
-                alignment: Alignment.center,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Card(
-                      color: Color(0xFFF9EFD0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      elevation: 0.1,
-                      child: Container(
-                          padding: EdgeInsets.all(Dimens.padding),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      // SizedBox(height: 25),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Box
+              Positioned(
+                left: 0.0,
+                right: 0.0,
+                bottom: 0.0,
+                child: Container(
+                  padding: const EdgeInsets.all(Dimens.padding),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        boxContainer(
+                          Column(
                             children: <Widget>[
-                              Text(
-                                Dictionary.disclaimer,
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.productSans,
-                                  color: Colors.grey[600],
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.3,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                Dictionary.informationLocation,
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.productSans,
-                                  color: Colors.grey[600],
-                                  fontSize: 12.0,
-                                  height: 1.3,
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(
+                                    Dimens.padding,
+                                    8.0,
+                                    Dimens.padding,
+                                    Dimens.padding),
+                                child: BlocBuilder<CheckdistributionBloc,
+                                    CheckdistributionState>(
+                                  bloc: _checkdistributionBloc,
+                                  builder: (context, state) {
+                                    return Column(
+                                      children: <Widget>[
+                                        ButtonTheme(
+                                          minWidth:
+                                              MediaQuery.of(context).size.width,
+                                          height: 45,
+                                          child: RaisedButton(
+                                              color: state
+                                                      is CheckDistributionLoading
+                                                  ? Color(0xff828282)
+                                                  : ColorBase.green,
+                                              shape: RoundedRectangleBorder(
+                                                side: BorderSide.none,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  state is CheckDistributionLoading
+                                                      ? Container(
+                                                          height: 20,
+                                                          width: 20,
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            strokeWidth: 1.5,
+                                                            valueColor:
+                                                                AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                    Color(
+                                                                        0xff27AE60)),
+                                                          ),
+                                                        )
+                                                      : Container(),
+                                                  state is CheckDistributionLoading
+                                                      ? SizedBox(
+                                                          width: 10,
+                                                        )
+                                                      : Container(),
+                                                  Text(
+                                                      Dictionary
+                                                          .checkCurrentLocation,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subhead
+                                                          .copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 14)),
+                                                ],
+                                              ),
+                                              onPressed: () async {
+                                                bool hasToken =
+                                                    await AuthRepository()
+                                                        .hasToken();
+                                                if (!hasToken) {
+                                                  bool isLoggedIn = await Navigator
+                                                          .of(context)
+                                                      .push(MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              LoginScreen(
+                                                                  title: Dictionary
+                                                                      .checkDistribution)));
+
+                                                  if (isLoggedIn != null &&
+                                                      isLoggedIn) {
+                                                    String id =
+                                                        await AuthRepository()
+                                                            .getToken();
+                                                    _handleLocation(
+                                                        isOther: false, id: id);
+                                                  }
+                                                } else {
+                                                  String id =
+                                                      await AuthRepository()
+                                                          .getToken();
+                                                  _handleLocation(
+                                                      isOther: false, id: id);
+                                                }
+                                              }),
+                                        ),
+                                        SizedBox(height: 10),
+                                        OutlineButton(
+                                            borderSide: BorderSide(
+                                                color: Color(0xffEB5757)),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              _handleLocation(isOther: true);
+                                            },
+                                            child: Padding(
+                                              padding: EdgeInsets.all(15),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  state is CheckDistributionLoadingIsOther
+                                                      ? Container(
+                                                          height: 20,
+                                                          width: 20,
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            strokeWidth: 1.5,
+                                                            valueColor:
+                                                                AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                    Color(
+                                                                        0xff27AE60)),
+                                                          ),
+                                                        )
+                                                      : Container(),
+                                                  state is CheckDistributionLoadingIsOther
+                                                      ? SizedBox(
+                                                          width: 10,
+                                                        )
+                                                      : Container(),
+                                                  Container(
+                                                      child: Text(
+                                                    Dictionary
+                                                        .checkOtherLocation,
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xffEB5757),fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            FontsFamily.lato),
+                                                  )),
+                                                ],
+                                              ),
+                                            )),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ),
                             ],
-                          )),
-                    ),
-                    SizedBox(height: 22),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, right: 25),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        softWrap: true,
-                        text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: Dictionary.checkDistributionInfo,
-                              style: TextStyle(
-                                fontFamily: FontsFamily.productSans,
-                                color: Colors.grey[600],
-                                fontSize: 14.0,
-                                height: 1.3,
-                              ),
-                            ),
-                            TextSpan(
-                                text: Dictionary.here,
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.productSans,
-                                  color: Colors.blue,
-                                  fontSize: 14.0,
-                                  height: 1.3,
-                                  decoration: TextDecoration.underline,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pushNamed(
-                                        context, NavigationConstrants.Faq);
-                                  })
-                          ],
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, right: 25),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: Dictionary.checkDistributionInfo,
+                                  style: TextStyle(
+                                    fontFamily: FontsFamily.lato,
+                                    color: Colors.grey[600],
+                                    fontSize: 12.0,
+                                    height: 1.3,
+                                  ),
+                                ),
+                                TextSpan(
+                                    text: Dictionary.here,
+                                    style: TextStyle(
+                                      fontFamily: FontsFamily.lato,
+                                      color: Colors.blue,
+                                      fontSize: 12.0,
+                                      height: 1.3,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.pushNamed(
+                                            context, NavigationConstrants.Faq);
+                                      })
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 22),
+                      ],
                     ),
-                    SizedBox(height: 22),
-                  ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ));
   }
-
-  Widget buildContent(CheckDistributionLoaded state) {
-    print(state.record.detected.toString());
-    return state.record.detected == null
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              ErrorContent(error: Dictionary.unreachableLocation),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 12.0, 20.0, 30.0),
-                child: Text(
-                  Dictionary.cantFindLocation,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontFamily: FontsFamily.productSans,
-                    fontSize: 14.0,
-                    height: 1.2,
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Padding(
-            padding: const EdgeInsets.only(
-                top: 0, left: Dimens.padding, right: Dimens.padding),
-            child: Column(
-              children: <Widget>[
-                // build Section Location by radius
-                boxContainer(CheckDistributionCardRadius(state: state)),
-                SizedBox(height: 20),
-
-                boxContainer(
-                  Card(
-                    elevation: 0,
-                    margin: const EdgeInsets.only(
-                        top: Dimens.padding, left: 5, right: 5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: DefaultTabController(
-                      length: 2,
-                      child: Column(
-                        children: <Widget>[
-                          TabBar(
-                            onTap: (index) {
-                              if (index == 0) {
-                                AnalyticsHelper.setLogEvent(
-                                    Analytics.tappedFindByVillage);
-                              } else if (index == 1) {
-                                AnalyticsHelper.setLogEvent(
-                                    Analytics.tappedFindByDistricts);
-                              }
-                            },
-                            labelColor: Colors.black,
-                            indicatorColor: ColorBase.green,
-                            indicatorWeight: 2.8,
-                            tabs: <Widget>[
-                              Tab(
-                                child: Text(
-                                  Dictionary.village,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: FontsFamily.productSans,
-                                      fontSize: 13.0),
-                                ),
-                              ),
-                              Tab(
-                                child: Text(
-                                  Dictionary.districts,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: FontsFamily.productSans,
-                                      fontSize: 13.0),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(top: 10),
-                            height: MediaQuery.of(context).size.height * 0.70,
-                            child: TabBarView(
-                              children: <Widget>[
-                                // show kelurahan / desa
-                                CheckDistributionCardFilter(
-                                  region: state.record.currentLocation.namaKel,
-                                  countPositif:
-                                      state.record.detected.desa.positif,
-                                  countOdp:
-                                      state.record.detected.desa.odpProses,
-                                  countPdp:
-                                      state.record.detected.desa.pdpProses,
-                                  typeRegion: Dictionary.village,
-                                ),
-
-                                // show kecamatan
-                                CheckDistributionCardFilter(
-                                  region: state.record.currentLocation.namaKec,
-                                  countPositif:
-                                      state.record.detected.kec.positif,
-                                  countOdp: state.record.detected.kec.odpProses,
-                                  countPdp: state.record.detected.kec.pdpProses,
-                                  typeRegion: Dictionary.districts,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-  }
-
-  // Widget buildList(CheckDistributionLoaded state) {
-
-  // }
 
   Widget boxContainer(Widget child) {
     return Container(

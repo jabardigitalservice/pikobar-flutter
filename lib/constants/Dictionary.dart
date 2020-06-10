@@ -74,8 +74,10 @@ class Dictionary {
   static String provinceDomicile = 'Provinsi Domisili';
   static String testSummaryTitle = 'Total Pemeriksaan COVID-19';
   static String testSummaryTitleAppbar = 'Total Pemeriksaan';
-  static String textSum='Dari Total ';
-
+  static String textSum = 'Dari Total ';
+  static String checkLocationSpread = 'Cek Sebaran Lokasi Anda';
+  static String checkLocationSpreadDesc =
+      'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol ‘Cek Lokasi Saat Ini';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -89,7 +91,7 @@ class Dictionary {
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String qrCode = 'QR Code';
   static String activitie = 'Aktifitas';
-  static String accountManage= 'Akun';
+  static String accountManage = 'Akun';
   static String healthStatus = 'Status Kesehatan';
   static String sendAgainOTP = 'Kirim ulang kode';
   static String otpNotSent = 'Tidak menerima sms?';
@@ -101,7 +103,7 @@ class Dictionary {
   static String yourHealthStatus = 'Status Kesehatan Anda :';
 
   static String rapidTestAppBar = 'Jumlah RDT';
-  static String locationAddress='Lokasi Tempat Tinggal';
+  static String locationAddress = 'Lokasi Tempat Tinggal';
 
   // Button Text
   static String yes = 'Ya';
@@ -116,8 +118,10 @@ class Dictionary {
   static String verification = 'Verifikasi Nomor';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
   static String setLocation = 'Pilih Lokasi';
-  static String termsConditions=' Terms & Conditions';
-  static String agree= 'Setuju';
+  static String termsConditions = ' Terms & Conditions';
+  static String agree = 'Setuju';
+  static String back = 'Kembali';
+
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -152,7 +156,8 @@ class Dictionary {
   static String errorEmptyNIK = 'NIK harus diisi';
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
   static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
-  static String aggrementIsFalse='Silahkan setujui Terms & Conditions untuk login';
+  static String aggrementIsFalse =
+      'Silahkan setujui Terms & Conditions untuk login';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
@@ -196,7 +201,8 @@ class Dictionary {
       'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
   static String permissionLocationGeneral =
       'Dengan membagikan lokasi, Anda akan turut membantu kami dalam menanggulangi kasus COVID-19 di Jawa Barat.';
-  static String permissionLocationAgreement = 'Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
+  static String permissionLocationAgreement =
+      'Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -241,7 +247,7 @@ class Dictionary {
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String findLocation = 'Cek Lokasi';
   static String confirmed = 'Terkonfirmasi';
-  static String checkOtherLocation = 'Cari Berdasarkan Lokasi Lain';
+  static String checkOtherLocation = 'Cek Berdasarkan Lokasi Lain';
   static String checkByLocation = 'Cari Berdasarkan Lokasi';
   static String positifString = 'Total Pasien Terkonfirmasi COVID-19';
   static String pdpString = 'PDP (Pasien Dalam Pengawasan)';
@@ -251,6 +257,9 @@ class Dictionary {
   static String unreachableLocation = 'Lokasi Tidak Terjangkau';
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
   static String locationRadiusTitle = 'Lokasi Dalam Radius';
+  static String locationKecamatanTitle = 'Lokasi Dalam Kelurahan & Kecamatan';
+  static String locationKecamatanDesc =
+      'Data di bawah ini merupakan jumlah kasus aktif';
   static String village = 'Kelurahan';
   static String districts = 'Kecamatan';
   static String here = 'di sini';
@@ -278,9 +287,11 @@ class Dictionary {
   static String emptyDataDocuments = 'Dokumen tidak ada';
   static String permissionDownloadAttachment =
       'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
-  static String descDocument = 'Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat';
+  static String descDocument =
+      'Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat';
 
-  static String descInfoGraphic = 'Info yang memuat infograpis terkait COVID-19';
+  static String descInfoGraphic =
+      'Info yang memuat infograpis terkait COVID-19';
 
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 

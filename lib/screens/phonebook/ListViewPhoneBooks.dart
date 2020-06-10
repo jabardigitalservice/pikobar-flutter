@@ -80,7 +80,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
           itemConfig: const ChipsChoiceItemConfig(
             showCheckmark: false, selectedColor: Color(0xff27AE60),
             labelStyle: TextStyle(
-              fontSize: 10,
+              fontSize: 11.5,
               color: Color(0xff828282),
               fontFamily: 'lato',
             ),
