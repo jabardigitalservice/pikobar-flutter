@@ -2,16 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
-import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
@@ -43,9 +41,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
 
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio:
-                      0.7),
+                  crossAxisCount: 2, childAspectRatio: 0.6),
               shrinkWrap: true,
               itemCount: dataCount,
               padding: EdgeInsets.only(bottom: 20.0, top: 10.0, left: 14.0),
@@ -160,14 +156,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => HeroImagePreview(
-                      Dictionary.heroImageTag,
-                      galleryItems: data['images'],
-                    ),
-                  ));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailInfoGraphicScreen(
+                      dataInfoGraphic: data)));
 
               AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
                   <String, dynamic>{'title': data['title']});
@@ -182,14 +173,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => HeroImagePreview(
-                              Dictionary.heroImageTag,
-                              galleryItems: data['images'],
-                            ),
-                          ));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DetailInfoGraphicScreen(
+                              dataInfoGraphic: data)));
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsDetail,

@@ -73,6 +73,8 @@ class Analytics {
   // event Info Graphics
   static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
   static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
+  static String openImage = 'open_image';
+  static String tappedDownloadImage = 'tapped_download_image';
 
   // event check distribution
   static String tappedCheckCurrentLocation = 'tapped_cek_lokasi_saat_ini';

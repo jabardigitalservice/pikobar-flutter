@@ -264,6 +264,7 @@ class Dictionary {
   static String nonReaktif = 'Non-Reaktif';
   static String invalid = 'Invalid';
   static String downloadAttachment = 'Unduh Lampiran';
+  static String downloadImage = 'Unduh Gambar';
 
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
