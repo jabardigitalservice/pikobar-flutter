@@ -45,7 +45,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio:
-                      0.6),
+                      0.7),
               shrinkWrap: true,
               itemCount: dataCount,
               padding: EdgeInsets.only(bottom: 20.0, top: 10.0, left: 14.0),
