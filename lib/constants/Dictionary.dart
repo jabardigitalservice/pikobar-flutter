@@ -50,7 +50,7 @@ class Dictionary {
   static String opdDesc = 'Orang Dalam Pemantauan';
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
-  static String faq = 'FAQ';
+  static String faq = 'Frequently Asked Question (FAQ)';
   static String profile = 'Akun Saya';
   static String login = 'Login';
   static String checkDistribution = 'Cek Sebaran';
@@ -178,7 +178,7 @@ class Dictionary {
   static String allNews = 'Semua Berita';
 
   // placeholder / hint text
-  static String findFaq = 'Cari FAQ';
+  static String findFaq = 'Cari Pertanyaan';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
   static String birthdayPlaceholder = 'Pilih Tanggal';
