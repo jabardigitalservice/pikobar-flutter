@@ -27,7 +27,11 @@ class CheckdistributionBloc
     CheckdistributionEvent event,
   ) async* {
     if (event is LoadCheckDistribution) {
-      yield CheckDistributionLoading();
+      if (event.isOther) {
+        yield CheckDistributionLoadingIsOther();
+      } else {
+        yield CheckDistributionLoading();
+      }
       try {
         CheckDistributionModel record =
             await _checkDistributionReposity.fetchRecord(event.lat, event.long);

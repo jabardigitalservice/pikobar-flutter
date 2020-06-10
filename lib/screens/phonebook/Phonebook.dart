@@ -130,7 +130,7 @@ class _PhonebookState extends State<Phonebook> {
         decoration: InputDecoration(prefixIcon: Icon(Icons.search,color: Color(0xff828282),),
             hintText: Dictionary.findEmergencyPhone,
             border: InputBorder.none,
-            hintStyle: TextStyle(color: Color(0xff828282),fontFamily: FontsFamily.lato),
+            hintStyle: TextStyle(color: Color(0xff828282),fontFamily: FontsFamily.lato,fontSize: 12,height: 2.2),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
         style: TextStyle(color: Colors.black, fontSize: 16.0),

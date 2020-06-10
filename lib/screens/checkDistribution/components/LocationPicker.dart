@@ -98,13 +98,18 @@ class _LocationPickerState extends State<LocationPicker> {
                               : state is GeocoderLoaded
                                   ? _buildLocation(state)
                                   : state is GeocoderFailure
-                                      ? Container(child: Text(state.error))
+                                      ? Container(
+                                          child: Text(
+                                          state.error,
+                                        ))
                                       : Container(),
                           Container(
                             width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.only(bottom: 20.0, top: 10.0),
                             child: RaisedButton(
-                              child: Text('Set Lokasi'),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Text('Pilih Lokasi'),
                               color: ColorBase.green,
                               textColor: Colors.white,
                               onPressed: state is GeocoderLoading
@@ -131,12 +136,23 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   _buildLocation(GeocoderLoaded state) {
-    return Text(
-      state.address,
-      style: TextStyle(
-          // fontSize: 14.0,
-          fontWeight: FontWeight.w600,
-          fontFamily: FontsFamily.productSans),
+    return Row(
+      children: <Widget>[
+        Image.asset(
+          '${Environment.iconAssets}pin_location_black.png',
+          scale: 2,
+        ),
+        SizedBox(width: 14),
+        Container(width: MediaQuery.of(context).size.width/1.2,
+          child: Text(
+            state.address,
+            style: TextStyle(
+                fontSize: 12,fontWeight: FontWeight.bold,
+                fontFamily: FontsFamily.lato,
+                color: Color(0xff000000)),
+          ),
+        ),
+      ],
     );
   }
 
@@ -160,17 +176,17 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   void _initializeLocation() async {
-      final GoogleMapController controller = await _controller.future;
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    final GoogleMapController controller = await _controller.future;
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-      LatLng currentLocation = LatLng(position.latitude, position.longitude);
+    LatLng currentLocation = LatLng(position.latitude, position.longitude);
 
-      await controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: currentLocation, zoom: 15.5),
-        ),
-      );
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: currentLocation, zoom: 15.5),
+      ),
+    );
   }
 
   @override

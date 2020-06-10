@@ -27,7 +27,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
             style: TextStyle(
               fontFamily: FontsFamily.lato,
               fontWeight: FontWeight.bold,
-              fontSize: 16.0,
+              fontSize: 14.0,
               height: 1.2,
             ),
           ),
@@ -35,9 +35,9 @@ class CheckDistributionCardRadius extends StatelessWidget {
           Text(
             Dictionary.update24hourTitle,
             style: TextStyle(
-              color: Colors.grey[600],
+              color: Colors.black,
               fontFamily: FontsFamily.lato,
-              fontSize: 14.0,
+              fontSize: 10.0,
               height: 1.2,
             ),
           ),

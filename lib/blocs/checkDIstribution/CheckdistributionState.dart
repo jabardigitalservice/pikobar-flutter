@@ -13,6 +13,8 @@ class CheckdistributionInitial extends CheckdistributionState {
 }
 
 class CheckDistributionLoading extends CheckdistributionState {}
+class CheckDistributionLoadingIsOther extends CheckdistributionState {}
+
 
 class CheckDistributionLoaded extends CheckdistributionState {
   final CheckDistributionModel record;

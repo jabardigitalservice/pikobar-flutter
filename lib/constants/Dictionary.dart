@@ -120,6 +120,8 @@ class Dictionary {
   static String setLocation = 'Pilih Lokasi';
   static String termsConditions = ' Terms & Conditions';
   static String agree = 'Setuju';
+  static String back = 'Kembali';
+
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
