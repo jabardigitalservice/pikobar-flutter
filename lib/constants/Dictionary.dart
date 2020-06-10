@@ -215,6 +215,7 @@ class Dictionary {
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
   static String subTitleMenus = 'Saatnya berbagi informasi dan lawan COVID-19';
+  static String surveyInfo = 'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
