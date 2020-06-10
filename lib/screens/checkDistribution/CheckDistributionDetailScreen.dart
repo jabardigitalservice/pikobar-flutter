@@ -126,6 +126,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                         height: 1.2,
                       ),
                     ),
+                    SizedBox(height: 10),
 
                     DefaultTabController(
                       length: 2,
@@ -209,7 +210,6 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                             ],
                           ),
                           Container(
-                            padding: EdgeInsets.only(top: 10),
                             height: MediaQuery.of(context).size.height * 0.19,
                             child: TabBarView(
                               physics: NeverScrollableScrollPhysics(),
