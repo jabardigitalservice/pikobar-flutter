@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
@@ -41,10 +42,27 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-          title: _isSearch ? _buildSearchField() : CustomAppBar.setTitleAppBar(Dictionary.faq),
-          actions: _buildActions()),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+            backgroundColor: Colors.white,
+            flexibleSpace: Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(left: 13, right: 13, top: 15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _isSearch
+                      ? _buildSearchField()
+                      : CustomAppBar.setTitleAppBar(Dictionary.faq),
+                  _buildSearchField()
+                ],
+              ),
+            )
+//           actions: _buildActions()
+            ),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
             .collection(Collections.faq)
@@ -95,17 +113,22 @@ class _FaqScreenState extends State<FaqScreen> {
       decoration: BoxDecoration(
           color: Colors.grey[100],
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(20.0)),
+          borderRadius: BorderRadius.circular(10.0)),
       child: TextField(
         controller: _searchController,
-        autofocus: true,
+        autofocus: false,
         decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.grey,
+            ),
             hintText: Dictionary.findFaq,
             border: InputBorder.none,
-            hintStyle: TextStyle(color: Colors.black54),
+            hintStyle:
+                TextStyle(color: Colors.black54, fontFamily: FontsFamily.lato),
             contentPadding:
-                EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
-        style: TextStyle(color: Colors.black, fontSize: 16.0),
+                EdgeInsets.symmetric(horizontal: 15.0, vertical: 14.0)),
+        style: TextStyle(color: Colors.black, fontSize: 14.0),
         onChanged: (query) => updateSearchQuery,
       ),
     );
@@ -180,79 +203,96 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget _buildLoading() {
     return ListView.builder(
       itemCount: 5,
-      itemBuilder: (context, index) => Card(
-        margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-        child: ListTile(
-          title: Skeleton(
-            width: MediaQuery.of(context).size.width - 140,
-            height: 20.0,
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Skeleton(
-              width: MediaQuery.of(context).size.width - 190,
-              height: 20.0,
-            ),
-          ),
-          trailing: Skeleton(
-            width: 20.0,
-            height: 20.0,
-          ),
-        ),
-      ),
+      itemBuilder: (context, index) => Container(
+          margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: Skeleton(
+                  width: MediaQuery.of(context).size.width - 140,
+                  height: 20.0,
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Skeleton(
+                    width: MediaQuery.of(context).size.width - 190,
+                    height: 20.0,
+                  ),
+                ),
+                trailing: Skeleton(
+                  width: 20.0,
+                  height: 20.0,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16),
+                color: Colors.grey[300],
+                height: 1,
+              )
+            ],
+          )),
     );
   }
 
   Widget _cardContent(dataHelp) {
-    return ExpandableNotifier(
-      child: ScrollOnExpand(
-        scrollOnExpand: false,
-        scrollOnCollapse: true,
-        child: Card(
-          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-          clipBehavior: Clip.antiAlias,
+    return Column(
+      children: <Widget>[
+        ExpandableNotifier(
           child: ScrollOnExpand(
-            scrollOnExpand: true,
-            scrollOnCollapse: false,
-            child: ExpandablePanel(
-              tapHeaderToExpand: true,
-              tapBodyToCollapse: true,
-              headerAlignment: ExpandablePanelHeaderAlignment.center,
-              header: Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  dataHelp['title'],
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              expanded: Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Html(
-                  data: dataHelp['content'].replaceAll('\n', '</br>'),
-                  defaultTextStyle:
-                      TextStyle(color: Colors.black, fontSize: 14.0),
-                  onLinkTap: (url) {
-                    launchExternal(url);
-                  },
-                  customTextAlign: (dom.Node node) {
-                    return TextAlign.left;
-                  },
-                ),
-              ),
-              builder: (_, collapsed, expanded) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                  child: Expandable(
-                    collapsed: collapsed,
-                    expanded: expanded,
-                    crossFadePoint: 0,
+            scrollOnExpand: false,
+            scrollOnCollapse: true,
+            child: Container(
+              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: ScrollOnExpand(
+                scrollOnExpand: true,
+                scrollOnCollapse: false,
+                child: ExpandablePanel(
+                  tapHeaderToExpand: true,
+                  tapBodyToCollapse: true,
+                  headerAlignment: ExpandablePanelHeaderAlignment.center,
+                  header: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      dataHelp['title'],
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                );
-              },
+                  expanded: Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Html(
+                      data: dataHelp['content'].replaceAll('\n', '</br>'),
+                      defaultTextStyle:
+                          TextStyle(color: Colors.black, fontSize: 14.0),
+                      onLinkTap: (url) {
+                        launchExternal(url);
+                      },
+                      customTextAlign: (dom.Node node) {
+                        return TextAlign.left;
+                      },
+                    ),
+                  ),
+                  builder: (_, collapsed, expanded) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                      child: Expandable(
+                        collapsed: collapsed,
+                        expanded: expanded,
+                        crossFadePoint: 0,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        Container(
+          margin: EdgeInsets.only(left: 16, right: 16),
+          color: Colors.grey[300],
+          height: 1,
+        )
+      ],
     );
   }
 
