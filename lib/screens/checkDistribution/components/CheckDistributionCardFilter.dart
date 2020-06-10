@@ -23,7 +23,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(Dimens.padding),
+      padding: EdgeInsets.symmetric(vertical:Dimens.padding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -75,7 +75,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
       child: Container(
         width: (MediaQuery.of(context).size.width / 3),
         padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
-        margin: EdgeInsets.symmetric(horizontal: 2.5),
+        margin: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
             color: Color(0xffFAFAFA), borderRadius: BorderRadius.circular(8.0)),
         child: Column(

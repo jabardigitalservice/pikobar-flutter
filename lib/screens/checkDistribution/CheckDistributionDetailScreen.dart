@@ -210,7 +210,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           ),
                           Container(
                             padding: EdgeInsets.only(top: 10),
-                            height: MediaQuery.of(context).size.height * 0.20,
+                            height: MediaQuery.of(context).size.height * 0.19,
                             child: TabBarView(
                               physics: NeverScrollableScrollPhysics(),
                               children: <Widget>[
