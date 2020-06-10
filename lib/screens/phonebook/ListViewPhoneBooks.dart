@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chips_choice/chips_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -781,7 +783,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     } else if (tipeURL == 'web') {
       url = launchUrl;
     } else {
-      url = 'whatsapp://send?phone=$launchUrl&text=$message';
+      url = Uri.encodeFull('whatsapp://send?phone=${launchUrl.replaceAll('+', '')}&text=$message');
     }
 
     if (await canLaunch(url)) {

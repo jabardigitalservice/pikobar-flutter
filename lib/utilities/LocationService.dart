@@ -111,34 +111,40 @@ class LocationService {
   }
 
   static Future<void> actionSendLocation() async {
-    int oldTime = await LocationSharedPreference.getLastLocationRecordingTime();
+    var permissionService =
+    Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
-    if (oldTime == null) {
-      oldTime = DateTime.now().add(Duration(minutes: -6)).millisecondsSinceEpoch;
-      await LocationSharedPreference.setLastLocationRecordingTime(oldTime);
-    }
+    if (await permissionService.isGranted) {
 
-    int minutes = DateTime.now()
-        .difference(DateTime.fromMillisecondsSinceEpoch(oldTime))
-        .inMinutes;
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      int oldTime = await LocationSharedPreference.getLastLocationRecordingTime();
 
-    if (position != null && position.latitude != null) {
-      if (minutes >= 5) {
-        int currentMillis = DateTime.now().millisecondsSinceEpoch;
+      if (oldTime == null) {
+        oldTime = DateTime.now().add(Duration(minutes: -6)).millisecondsSinceEpoch;
+        await LocationSharedPreference.setLastLocationRecordingTime(oldTime);
+      }
 
-        LocationModel data = LocationModel(
-            id: currentMillis.toString(),
-            latitude: position.latitude,
-            longitude: position.longitude,
-            timestamp: currentMillis);
+      int minutes = DateTime.now()
+          .difference(DateTime.fromMillisecondsSinceEpoch(oldTime))
+          .inMinutes;
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-        await LocationsRepository().saveLocationToFirestore(data);
+      if (position != null && position.latitude != null) {
+        if (minutes >= 5) {
+          int currentMillis = DateTime.now().millisecondsSinceEpoch;
 
-        // This call after all process done (Moved to LocationsRepository)
-        /*await LocationSharedPreference.setLastLocationRecordingTime(
+          LocationModel data = LocationModel(
+              id: currentMillis.toString(),
+              latitude: position.latitude,
+              longitude: position.longitude,
+              timestamp: currentMillis);
+
+          await LocationsRepository().saveLocationToFirestore(data);
+
+          // This call after all process done (Moved to LocationsRepository)
+          /*await LocationSharedPreference.setLastLocationRecordingTime(
             currentMillis);*/
+        }
       }
     }
   }
