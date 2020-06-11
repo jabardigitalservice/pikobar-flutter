@@ -240,6 +240,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
+                        fontFamily: FontsFamily.lato,
                         fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10.0),
@@ -260,11 +261,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                 children: <Widget>[
                                   Text(
                                     data.newsChannel,
-                                    style: TextStyle(fontSize: 12.0),
+                                    style: TextStyle(fontSize: 12.0, fontFamily: FontsFamily.lato),
                                   ),
                                   Text(
                                       unixTimeStampToDateTime(data.publishedAt),
-                                      style: TextStyle(fontSize: 12.0))
+                                      style: TextStyle(fontSize: 12.0, fontFamily: FontsFamily.lato))
                                 ]),
                           )
                         ],
@@ -335,7 +336,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                   maxLines: 2,
                                   style: TextStyle(
                                       fontSize: 14.0,
-                                      fontFamily: FontsFamily.productSans,
+                                      fontFamily: FontsFamily.lato,
                                       color: Colors.grey[800])),
                             ),
                             ButtonTheme(
@@ -350,7 +351,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                 child: Text(Dictionary.downloadAttachment,
                                     style: TextStyle(
                                         fontSize: 14.0,
-                                        fontFamily: FontsFamily.productSans,
+                                        fontFamily: FontsFamily.lato,
                                         color: Colors.white)),
                                 onPressed: () {
                                   Platform.isAndroid
@@ -374,7 +375,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       child: Text(Dictionary.otherNews,
                           style: TextStyle(
                               fontSize: 16.0,
-                              fontFamily: FontsFamily.sourceSansPro,
+                              fontFamily: FontsFamily.lato,
                               color: Colors.grey[700])),
                       padding: EdgeInsets.all(15.0),
                       shape: RoundedRectangleBorder(
