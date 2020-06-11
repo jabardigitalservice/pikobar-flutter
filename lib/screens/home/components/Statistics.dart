@@ -8,7 +8,6 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -32,7 +31,7 @@ class _StatisticsState extends State<Statistics> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.0),
-     color: Colors.white,
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           _buildStatistics(),
@@ -101,31 +100,40 @@ class _StatisticsState extends State<Statistics> {
             ),
             SizedBox(height: Dimens.padding),
             SizedBox(height: 15),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 _buildContainer(
                     '',
-                    Dictionary.positif,
-                    Dictionary.positif,
+                    Dictionary.caseTotal,
+                    Dictionary.caseTotal,
                     '-',
-                    3,
+                    4,
                     Dictionary.people,
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
                 _buildContainer(
                     '',
-                    Dictionary.recover,
-                    Dictionary.recover,
+                    Dictionary.positif,
+                    Dictionary.positif,
                     '-',
-                    3,
+                    4,
                     Dictionary.people,
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
-                _buildContainer('', Dictionary.die, Dictionary.die, '-', 3,
+                _buildContainer(
+                    '',
+                    Dictionary.positif,
+                    Dictionary.positif,
+                    '-',
+                    4,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600],
+                    ''),
+                _buildContainer('', Dictionary.die, Dictionary.die, '-', 4,
                     Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
             ),
@@ -184,12 +192,13 @@ class _StatisticsState extends State<Statistics> {
                     fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
-              InkWell(onTap: (){
-                openChromeSafariBrowser(
-              url: urlStatistic.isNotEmpty
-                  ? urlStatistic
-                  : UrlThirdParty.urlCoronaInfoData);
-              },
+              InkWell(
+                onTap: () {
+                  openChromeSafariBrowser(
+                      url: urlStatistic.isNotEmpty
+                          ? urlStatistic
+                          : UrlThirdParty.urlCoronaInfoData);
+                },
                 child: Text(
                   Dictionary.moreDetail,
                   style: TextStyle(
@@ -201,7 +210,7 @@ class _StatisticsState extends State<Statistics> {
               ),
             ],
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           Text(
             unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
             style: TextStyle(
@@ -214,13 +223,24 @@ class _StatisticsState extends State<Statistics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
+                  '${Environment.iconAssets}virusPurple.png',
+                  Dictionary.caseTotal,
+                  Dictionary.caseTotal,
+                  '${data['aktif']['jabar']}',
+                  4,
+                  Dictionary.people,
+                  Color(0xff333333),
+                  Color(0xff2C347C),
+                  ''),
+              _buildContainer(
                   '${Environment.iconAssets}virusRed.png',
                   Dictionary.positif,
                   Dictionary.positif,
-                  '${data['aktif']['jabar']}',
-                  3,
+                  getDataActivePositive(data['aktif']['jabar'],
+                      data['sembuh']['jabar'], data['meninggal']['jabar']),
+                  4,
                   Dictionary.people,
-                  Color(0xff828282),
+                  Color(0xff333333),
                   Color(0xffEB5757),
                   ''),
               _buildContainer(
@@ -228,9 +248,9 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.recover,
                   Dictionary.recover,
                   '${data['sembuh']['jabar']}',
-                  3,
+                  4,
                   Dictionary.people,
-                  Color(0xff828282),
+                  Color(0xff333333),
                   Color(0xff27AE60),
                   ''),
               _buildContainer(
@@ -238,10 +258,10 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.die,
                   Dictionary.die,
                   '${data['meninggal']['jabar']}',
-                  3,
+                  4,
                   Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xffFFCC29),
+                  Color(0xff333333),
+                  Color(0xffF2994A),
                   ''),
             ],
           ),
@@ -258,7 +278,7 @@ class _StatisticsState extends State<Statistics> {
                   2,
                   Dictionary.people,
                   Color(0xff828282),
-                  Color(0xffF2994A),
+                  Color(0xff2F80ED),
                   data['odp']['total']['jabar'].toString()),
               _buildContainer(
                   '',
@@ -269,7 +289,7 @@ class _StatisticsState extends State<Statistics> {
                   2,
                   Dictionary.people,
                   Color(0xff828282),
-                  Color(0xffF2994A),
+                  Color(0xffF2C94C),
                   data['pdp']['total']['jabar'].toString()),
             ],
           )
@@ -279,7 +299,8 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Widget buildLoadingRapidTest() {
-    return Card(elevation: 0,
+    return Card(
+      elevation: 0,
       color: Color(0xffFAFAFA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -347,7 +368,8 @@ class _StatisticsState extends State<Statistics> {
                   RapidTestDetail(remoteConfig, document, documentPCR)),
         );
       },
-      child: Card(elevation: 0,
+      child: Card(
+        elevation: 0,
         color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
@@ -399,6 +421,11 @@ class _StatisticsState extends State<Statistics> {
   String getDataProcess(int totalData, int dataDone) {
     int processData = totalData - dataDone;
     return processData.toString();
+  }
+
+  String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
+    int dataActivePositive = totalData - dataDone - dataRecover;
+    return dataActivePositive.toString();
   }
 
   String getDataProcessPercent(int totalData, int dataDone) {
@@ -461,7 +488,7 @@ class _StatisticsState extends State<Statistics> {
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 22.0,
+                        fontSize: 20.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
@@ -471,7 +498,7 @@ class _StatisticsState extends State<Statistics> {
                       margin: EdgeInsets.only(top: 10, left: 5.0),
                       child: Text(title,
                           style: TextStyle(
-                              fontSize: 12.0,
+                              fontSize: 9.0,
                               color: colorTextTitle,
                               fontFamily: FontsFamily.lato)),
                     )
@@ -480,15 +507,13 @@ class _StatisticsState extends State<Statistics> {
                       child: Text(Dictionary.textSum + total,
                           style: TextStyle(
                               fontSize: 12.0,
-                              color: colorTextTitle,
+                              color: Color(0xff333333),
                               fontFamily: FontsFamily.lato)),
                     )
             ],
           ),
         ),
-        onTap: () {
-          
-        },
+        onTap: () {},
       ),
     );
   }
