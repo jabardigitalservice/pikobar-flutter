@@ -115,7 +115,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         textAlign: TextAlign.center,
         style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontFamily: FontsFamily.productSans,
+            fontFamily: FontsFamily.lato,
             fontSize: 13.0),
       ),
     ));
