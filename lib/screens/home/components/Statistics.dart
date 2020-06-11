@@ -358,7 +358,7 @@ class _StatisticsState extends State<Statistics> {
               Container(
                   height: 60,
                   child:
-                      Image.asset('${Environment.imageAssets}bloodTest.png')),
+                      Image.asset('${Environment.imageAssets}bloodTest@4x.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

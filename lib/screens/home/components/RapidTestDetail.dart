@@ -158,7 +158,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
-        buildHeader(Dictionary.rapidTestTitle, 'bloodTest.png',
+        buildHeader(Dictionary.rapidTestTitle, 'bloodTest@4x.png',
             widget.document.data['total'], Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
@@ -180,7 +180,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
-        buildHeader(Dictionary.pcrTitle, 'bloodTestBlue.png',
+        buildHeader(Dictionary.pcrTitle, 'bloodTestBlue@4x.png',
             widget.documentPCR.data['total'], Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
