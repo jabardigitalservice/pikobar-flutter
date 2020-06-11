@@ -73,6 +73,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
       BuildContext context, int count, String title, image, Color textColor) {
     return Expanded(
       child: Container(
+        height: MediaQuery.of(context).size.height *0.15,
         width: (MediaQuery.of(context).size.width / 3),
         padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 5),

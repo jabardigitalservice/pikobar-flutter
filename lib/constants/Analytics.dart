@@ -93,4 +93,8 @@ class Analytics {
   static String tappedImportantInfoDetailShare = 'tapped_important_info_detail_share';
   static String tappedDownloadImportantInfo = 'tapped_download_important_info';
   static String openFileImportantInfo = 'open_file_important_info';
+
+   //event test
+  static String tappedRDT = 'tapped_rapid_test';
+  static String tappedPCR = 'tapped_pcr';
 }

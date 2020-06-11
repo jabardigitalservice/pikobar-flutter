@@ -1,12 +1,15 @@
 import 'dart:convert';
 
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/rapidTest/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -15,9 +18,11 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
+import 'package:html/dom.dart' as dom;
 
 class RapidTestDetail extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -29,9 +34,9 @@ class RapidTestDetail extends StatefulWidget {
 }
 
 class _RapidTestDetailState extends State<RapidTestDetail> {
-  Map<String, dynamic> dataAnnouncement;
+  List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
-
+  String typetest = Dictionary.rdt;
   @override
   Widget build(BuildContext context) {
     if (widget.remoteConfig != null) {
@@ -39,36 +44,95 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           .decode(widget.remoteConfig.getString(FirebaseConfig.rapidTestInfo));
     }
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBar.defaultAppBar(
         title: Dictionary.testSummaryTitleAppbar,
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         children: <Widget>[
-          buildHeader(Dictionary.rapidTestTitle, widget.document.data['total'],
-              Color(0xff27AE60)),
-          SizedBox(
-            height: 15,
+          DefaultTabController(
+            length: 2,
+            child: Column(
+              children: <Widget>[
+                TabBar(
+                  isScrollable: true,
+                  onTap: (index) {
+                    if (index == 0) {
+                      setState(() {
+                        typetest = Dictionary.rdt;
+                      });
+                      AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+                    } else if (index == 1) {
+                      setState(() {
+                        typetest = Dictionary.pcr;
+                      });
+
+                      AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+                    }
+                  },
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.grey,
+                  indicator: BubbleTabIndicator(
+                    indicatorHeight: 37.0,
+                    indicatorColor: ColorBase.green,
+                    tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                  ),
+                  indicatorColor: ColorBase.green,
+                  indicatorWeight: 0.1,
+                  labelPadding: EdgeInsets.all(10),
+                  tabs: <Widget>[
+                    Tab(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                                color: typetest == Dictionary.rdt
+                                    ? ColorBase.green
+                                    : Color(0xffE0E0E0),
+                                width: 1)),
+                        child: Text(
+                          Dictionary.rdt,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 10.0),
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border.all(
+                                color: typetest == Dictionary.pcr
+                                    ? ColorBase.green
+                                    : Color(0xffE0E0E0),
+                                width: 1)),
+                        child: Text(
+                          Dictionary.pcr,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 10.0),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 1.2,
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    children: <Widget>[_buildRDT(), _buildPCR()],
+                  ),
+                ),
+              ],
+            ),
           ),
-          buildDetailRDT(),
-          SizedBox(
-            height: 20,
-          ),
-          buildHeader(Dictionary.pcrTitle, widget.documentPCR.data['total'],
-              Color(0xff2D9CDB)),
-          SizedBox(
-            height: 15,
-          ),
-          buildDetailPCR(),
-          SizedBox(
-            height: 20,
-          ),
-          widget.remoteConfig != null && dataAnnouncement['enabled'] == true
-              ? buildAnnouncement()
-              : Container(),
-          SizedBox(
-            height: 20,
-          ),
+
           // widget.document.data['last_update'] == null
           //     ? Container()
           //     : Center(
@@ -85,110 +149,99 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
-  Widget buildAnnouncement() {
-    return Container(
-        width: (MediaQuery.of(context).size.width),
-        padding: EdgeInsets.all(10.0),
-        margin: EdgeInsets.only(left: 5, right: 5),
-        decoration: BoxDecoration(
-            color: ColorBase.announcementBackgroundColor,
-            borderRadius: BorderRadius.circular(8.0)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              dataAnnouncement['title'] != null
-                  ? dataAnnouncement['title']
-                  : Dictionary.titleInfoTextAnnouncement,
-              style: TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.bold,
-                  fontFamily: FontsFamily.productSans),
-            ),
-            SizedBox(height: 15),
-            RichText(
-              text: TextSpan(children: [
-            TextSpan(
-              text: dataAnnouncement['content'] != null
-                  ? dataAnnouncement['content']
-                  : Dictionary.infoTextAnnouncement,
-              style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.grey[600],
-                  fontFamily: FontsFamily.productSans),
-            ),
-              ]),
-            ),
-            SizedBox(height: 15),
-            RichText(
-              text: TextSpan(children: [
-                TextSpan(
-                  text: dataAnnouncement['content_pcr'] != null
-                      ? dataAnnouncement['content_pcr']
-                      : Dictionary.infoTextAnnouncement,
-                  style: TextStyle(
-                      fontSize: 13.0,
-                      color: Colors.grey[600],
-                      fontFamily: FontsFamily.productSans),
-                ),
-                dataAnnouncement['action_url'].toString().isNotEmpty
-                    ? TextSpan(
-                    text: Dictionary.moreDetailRapidTest,
-                    style: TextStyle(
-                        color: ColorBase.green,
-                        fontFamily: FontsFamily.productSans,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () async {
-                        if (widget.remoteConfig != null &&
-                            widget.remoteConfig.getString(
-                                FirebaseConfig.loginRequired) !=
-                                null) {
-                          Map<String, dynamic> _loginRequiredMenu =
-                          json.decode(widget.remoteConfig
-                              .getString(
-                              FirebaseConfig.loginRequired));
-
-                          if (_loginRequiredMenu['rdt_menu']) {
-                            bool hasToken =
-                            await AuthRepository().hasToken();
-                            if (!hasToken) {
-                              bool isLoggedIn = await Navigator.of(
-                                  context)
-                                  .push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      LoginScreen(
-                                          title: Dictionary
-                                              .rapidTestAppBar)));
-
-                              if (isLoggedIn != null && isLoggedIn) {
-                                var url = await userDataUrlAppend(
-                                    dataAnnouncement['action_url']);
-                                openChromeSafariBrowser(url: url);
-                              }
-                            } else {
-                              var url = await userDataUrlAppend(
-                                  dataAnnouncement['action_url']);
-                              openChromeSafariBrowser(url: url);
-                            }
-                          } else {
-                            openChromeSafariBrowser(
-                                url: dataAnnouncement['action_url']);
-                          }
-                        }
-                      })
-                    : TextSpan(text: ''),
-              ]),
-            ),
-          ],
-        ));
+  Widget _buildRDT() {
+    return Column(
+      children: <Widget>[
+        widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
+            ? buildAnnouncement(0)
+            : Container(),
+        SizedBox(
+          height: 20,
+        ),
+        buildHeader(Dictionary.rapidTestTitle, 'bloodTest.png',
+            widget.document.data['total'], Color(0xffFAFAFA)),
+        SizedBox(
+          height: 15,
+        ),
+        buildDetailRDT(),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
   }
 
-  Widget buildHeader(String title, int total, Color color) {
+  Widget _buildPCR() {
+    return Column(
+      children: <Widget>[
+        widget.remoteConfig != null && dataAnnouncement[1]['enabled'] == true
+            ? buildAnnouncement(1)
+            : Container(),
+        SizedBox(
+          height: 20,
+        ),
+        buildHeader(Dictionary.pcrTitle, 'bloodTestBlue.png',
+            widget.documentPCR.data['total'], Color(0xffFAFAFA)),
+        SizedBox(
+          height: 15,
+        ),
+        buildDetailPCR(),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
+  Widget buildAnnouncement(int i) {
+    return Container(
+      width: (MediaQuery.of(context).size.width),
+      margin: EdgeInsets.only(left: 5, right: 5),
+      decoration: BoxDecoration(
+          color: Color(0xffFFF3CC), borderRadius: BorderRadius.circular(8.0)),
+      child: Stack(
+        children: <Widget>[
+          Image.asset('${Environment.imageAssets}intersect.png', width: 73),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    dataAnnouncement[i]['title'] != null
+                        ? dataAnnouncement[i]['title']
+                        : Dictionary.titleInfoTextAnnouncement,
+                    style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.lato),
+                  ),
+                  SizedBox(height: 15),
+                  Html(
+                      data: dataAnnouncement[i]['content'],
+                      defaultTextStyle: TextStyle(
+                          color: Color(0xff828282),
+                          fontSize: 10.0,
+                          fontFamily: FontsFamily.lato),
+                      customTextAlign: (dom.Node node) {
+                        return TextAlign.justify;
+                      },
+                      onLinkTap: (url) {
+                        _launchURL(url);
+                      }),
+                ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildHeader(String title, image, int total, Color color) {
     String count =
         formatter.format(int.parse(total.toString())).replaceAll(',', '.');
     return Card(
+      elevation: 0,
       color: color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
@@ -198,7 +251,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           children: <Widget>[
             Container(
                 height: 60,
-                child: Image.asset('${Environment.imageAssets}rapid_test.png')),
+                child: Image.asset('${Environment.imageAssets}$image')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -209,18 +262,18 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: 12.0,
-                          color: Colors.white,
+                          color: Color(0xff828282),
                           fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
+                          fontFamily: FontsFamily.lato)),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                   child: Text(count,
                       style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.white,
+                          fontSize: 24.0,
+                          color: Color(0xff828282),
                           fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
+                          fontFamily: FontsFamily.roboto)),
                 )
               ],
             ),
@@ -243,24 +296,24 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             Dictionary.reaktif,
             widget.document.data['positif'].toString(),
             2,
-            Colors.grey[600],
-            ColorBase.green,
+            Color(0xff828282),
+            Color(0xff27AE60),
             widget.document.data['total']),
         buildContainer(
             '',
             Dictionary.nonReaktif,
             widget.document.data['negatif'].toString(),
             2,
-            Colors.grey[600],
-            ColorBase.green,
+            Color(0xff828282),
+            Color(0xffF2994A),
             widget.document.data['total']),
         buildContainer(
             '',
             Dictionary.invalid,
             widget.document.data['invalid'].toString(),
             2,
-            Colors.grey[600],
-            ColorBase.green,
+            Color(0xff828282),
+            Color(0xffF2994A),
             widget.document.data['total'])
       ],
     );
@@ -274,16 +327,24 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             Dictionary.positifText,
             widget.documentPCR.data['positif'].toString(),
             2,
-            Colors.grey[600],
-            ColorBase.green,
+            Color(0xff828282),
+            Color(0xffEB5757),
             widget.documentPCR.data['total']),
         buildContainer(
             '',
             Dictionary.negatifText,
             widget.documentPCR.data['negatif'].toString(),
             2,
-            Colors.grey[600],
-            ColorBase.green,
+            Color(0xff828282),
+            Color(0xff27AE60),
+            widget.documentPCR.data['total']),
+        buildContainer(
+            '',
+            Dictionary.invalid,
+            widget.documentPCR.data['invalid'].toString(),
+            2,
+            Color(0xff828282),
+            Color(0xffF2994A),
             widget.documentPCR.data['total']),
       ],
     );
@@ -308,62 +369,55 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 2.5),
         decoration: BoxDecoration(
+            color: Color(0xffFAFAFA),
             image: image != '' && image != null
                 ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
-                : null,
-            border: image == null || image == ''
-                ? Border.all(color: Colors.grey[400])
                 : null,
             borderRadius: BorderRadius.circular(8.0)),
         child: Column(
           children: <Widget>[
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5.0),
-                    child: Text(title,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 13.0,
-                            color: colorTextTitle,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5.0),
+                      child: Text(title,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: colorTextTitle,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato)),
+                    ),
                   ),
                 ),
               ],
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-                  child: Text(countFormatted,
-                      style: TextStyle(
-                          fontSize: 22.0,
-                          color: colorNumber,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.productSans)),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
+            Container(
+              margin: EdgeInsets.only(
+                  top: Dimens.padding, bottom: Dimens.padding, left: 5.0),
+              child: Text(countFormatted,
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      color: colorNumber,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.lato)),
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5.0),
-                    child: Text('(${percent.toStringAsFixed(2)})%',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 13.0,
-                            color: colorTextTitle,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5.0),
+                      child: Text('(${percent.toStringAsFixed(2)})%',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 10.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato)),
+                    ),
                   ),
                 ),
               ],
@@ -372,5 +426,32 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         ),
       ),
     );
+  }
+
+  _launchURL(String url) async {
+    List<String> items = [
+      '_googleIDToken_',
+      '_userUID_',
+      '_userName_',
+      '_userEmail_'
+    ];
+    if (StringUtils.containsWords(url, items)) {
+      bool hasToken = await AuthRepository().hasToken();
+      if (!hasToken) {
+        bool isLoggedIn = await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => LoginScreen()));
+
+        if (isLoggedIn != null && isLoggedIn) {
+          url = await userDataUrlAppend(url);
+
+          openChromeSafariBrowser(url: url);
+        }
+      } else {
+        url = await userDataUrlAppend(url);
+        openChromeSafariBrowser(url: url);
+      }
+    } else {
+      openChromeSafariBrowser(url: url);
+    }
   }
 }

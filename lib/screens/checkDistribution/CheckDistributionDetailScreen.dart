@@ -79,7 +79,9 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                 height: 1.2,
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               children: <Widget>[
                                 Image.asset(
@@ -91,7 +93,8 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                   child: Text(
                                     widget.address,
                                     style: TextStyle(
-                                      fontFamily: FontsFamily.lato,color: Colors.white,
+                                      fontFamily: FontsFamily.lato,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12.0,
                                       height: 1.2,
@@ -127,7 +130,6 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                       ),
                     ),
                     SizedBox(height: 10),
-
                     DefaultTabController(
                       length: 2,
                       child: Column(
@@ -210,7 +212,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                             ],
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.19,
+                            height: MediaQuery.of(context).size.height * 0.25,
                             child: TabBarView(
                               physics: NeverScrollableScrollPhysics(),
                               children: <Widget>[
@@ -247,33 +249,42 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(9)),
                             elevation: 0.1,
-                            child: Container(
-                                padding: EdgeInsets.all(Dimens.padding),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      Dictionary.disclaimer,
-                                      style: TextStyle(
-                                        fontFamily: FontsFamily.lato,
-                                        color: Colors.black,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                        height: 1.3,
+                            child: Stack(
+                              children: <Widget>[
+                                Image.asset(
+                                    '${Environment.imageAssets}intersect.png',
+                                    width: 73),
+                                Padding(
+                                  padding: EdgeInsets.all(Dimens.padding),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        Dictionary.disclaimer,
+                                        style: TextStyle(
+                                          fontFamily: FontsFamily.lato,
+                                          color: Colors.black,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.3,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      Dictionary.informationLocation,
-                                      style: TextStyle(
-                                        fontFamily: FontsFamily.lato,
-                                        color: Colors.grey[600],
-                                        fontSize: 12.0,
-                                        height: 1.3,
+                                      SizedBox(height: 10),
+                                      Text(
+                                        Dictionary.informationLocation,
+                                        style: TextStyle(
+                                          fontFamily: FontsFamily.lato,
+                                          color: Colors.grey[600],
+                                          fontSize: 12.0,
+                                          height: 1.3,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                )),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(

@@ -260,7 +260,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                         SizedBox(height: 10),
                                         OutlineButton(
                                             borderSide: BorderSide(
-                                                color: Color(0xffEB5757)),
+                                                color: Color(0xff27AE60)),
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8)),
@@ -302,7 +302,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                         .checkOtherLocation,
                                                     style: TextStyle(
                                                         color:
-                                                            Color(0xffEB5757),fontSize: 12,
+                                                            Color(0xff27AE60),fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontFamily:
