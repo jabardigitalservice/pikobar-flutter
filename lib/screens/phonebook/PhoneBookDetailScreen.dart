@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class PhoneBookDetailScreen extends StatelessWidget {
   DocumentSnapshot document;
 
@@ -23,6 +24,7 @@ class PhoneBookDetailScreen extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class PhoneBookDetail extends StatefulWidget {
   DocumentSnapshot document;
 

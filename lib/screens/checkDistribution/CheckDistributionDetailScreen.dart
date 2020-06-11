@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistri
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
+// ignore: must_be_immutable
 class CheckDistributionDetail extends StatefulWidget {
   CheckDistributionLoaded state;
   String address;

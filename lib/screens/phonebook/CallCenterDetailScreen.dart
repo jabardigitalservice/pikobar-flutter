@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class CallCenterDetailScreen extends StatelessWidget {
   DocumentSnapshot document;
 
@@ -23,6 +23,7 @@ class CallCenterDetailScreen extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class CallCenterDetail extends StatefulWidget {
   DocumentSnapshot document;
 

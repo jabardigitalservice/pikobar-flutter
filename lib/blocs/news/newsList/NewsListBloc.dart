@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/repositories/NewsRepository.dart';
-import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 import 'Bloc.dart';
 
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {

@@ -53,7 +53,6 @@ class _EditState extends State<Edit> {
 
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final ProfileRepository _profileRepository = ProfileRepository();
   ProfileBloc _profileBloc;
   PhoneVerificationCompleted verificationCompleted;

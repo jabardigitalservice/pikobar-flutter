@@ -485,6 +485,7 @@ class _MenuListState extends State<MenuList> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 11.0,
+                    // ignore: deprecated_member_use
                     color: Theme.of(context).textTheme.body1.color,
                     fontFamily: FontsFamily.productSans))
           ],
@@ -598,6 +599,7 @@ class _MenuListState extends State<MenuList> {
                       border: Border.all(color: ColorBase.menuBorderColor),
                       color: Colors.white),
                   child: IconButton(
+                    // ignore: deprecated_member_use
                     color: Theme.of(context).textTheme.body1.color,
                     iconSize: 32.0,
                     icon: Image.asset(
@@ -619,6 +621,7 @@ class _MenuListState extends State<MenuList> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 11.0,
+                      // ignore: deprecated_member_use
                       color: Theme.of(context).textTheme.body1.color,
                       fontFamily: FontsFamily.productSans))
             ],
@@ -657,6 +660,7 @@ class _MenuListState extends State<MenuList> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 11.0,
+                    // ignore: deprecated_member_use
                     color: Theme.of(context).textTheme.body1.color,
                     fontFamily: FontsFamily.productSans))
           ],

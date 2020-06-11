@@ -11,8 +11,6 @@ import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.da
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
-import 'package:pikobar_flutter/components/ErrorContent.dart';
-import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -24,9 +22,6 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionBanner.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -217,6 +212,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                           .checkCurrentLocation,
                                                       style: Theme.of(context)
                                                           .textTheme
+                                                          // ignore: deprecated_member_use
                                                           .subhead
                                                           .copyWith(
                                                               color:

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_web_browser/flutter_web_browser.dart';
 import 'package:meta/meta.dart';
 
