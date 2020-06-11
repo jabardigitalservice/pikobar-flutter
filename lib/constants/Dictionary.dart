@@ -102,6 +102,10 @@ class Dictionary {
   static String rapidTestTitle = 'Jumlah RDT yang telah dilakukan';
   static String pcrTitle = 'Jumlah PCR yang telah dilakukan';
   static String yourHealthStatus = 'Status Kesehatan Anda :';
+  static String rdt = 'Rapid Diagnostic Test (RDT)';
+  static String pcr = 'Polymerase Chain Reaction (PCR)';
+
+
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';

@@ -33,7 +33,8 @@ class _PhonebookState extends State<Phonebook> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white,
+    return Scaffold(
+        backgroundColor: Colors.white,
         appBar: _buildAppBar(),
         body: ListViewPhoneBooks(
           searchQuery: searchQuery,
@@ -42,12 +43,12 @@ class _PhonebookState extends State<Phonebook> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,bottom:  PreferredSize(
-            preferredSize:  Size.fromHeight(60.0),
-            child: _buildSearchField(),
-          ),
-        
-        title:  CustomAppBar.setTitleAppBar(Dictionary.phoneBookEmergency));
+        backgroundColor: Colors.white,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: _buildSearchField(),
+        ),
+        title: CustomAppBar.setTitleAppBar(Dictionary.phoneBookEmergency));
   }
 
   List<Widget> _buildActions() {
@@ -118,7 +119,7 @@ class _PhonebookState extends State<Phonebook> {
 
   Widget _buildSearchField() {
     return Container(
-      margin: EdgeInsets.only(left: 20.0, right: 20.0,bottom: 20),
+      margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
       decoration: BoxDecoration(
           color: Color(0xffFAFAFA),
@@ -127,10 +128,18 @@ class _PhonebookState extends State<Phonebook> {
       child: TextField(
         controller: _searchController,
         autofocus: false,
-        decoration: InputDecoration(prefixIcon: Icon(Icons.search,color: Color(0xff828282),),
+        decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.search,
+              color: Color(0xff828282),
+            ),
             hintText: Dictionary.findEmergencyPhone,
             border: InputBorder.none,
-            hintStyle: TextStyle(color: Color(0xff828282),fontFamily: FontsFamily.lato,fontSize: 12,height: 2.2),
+            hintStyle: TextStyle(
+                color: Color(0xff828282),
+                fontFamily: FontsFamily.lato,
+                fontSize: 12,
+                height: 2.2),
             contentPadding:
                 EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
         style: TextStyle(color: Colors.black, fontSize: 16.0),
