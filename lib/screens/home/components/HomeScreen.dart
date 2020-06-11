@@ -240,12 +240,20 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannersBloc.close();
     _statisticsBloc.close();
     _rapidTestBloc.close();
-    _pcrTestBloc.close();
+    if(_pcrTestBloc != null){
+      _pcrTestBloc.close();
+    }
     _newsListBloc.close();
-    _importantInfoListBloc.close();
+    if (_importantInfoListBloc != null) {
+      _importantInfoListBloc.close();
+    }
     _videoListBloc.close();
-    _infoGraphicsListBloc.close();
-    _documentsBloc.close();
+    if (_infoGraphicsListBloc != null) {
+      _infoGraphicsListBloc.close();
+    }
+    if (_documentsBloc != null) {
+      _documentsBloc.close();
+    }
     super.dispose();
   }
 }
