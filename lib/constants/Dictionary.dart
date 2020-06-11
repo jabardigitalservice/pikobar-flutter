@@ -42,7 +42,8 @@ class Dictionary {
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
-  static String positif = 'Terkonfirmasi';
+  static String caseTotal = 'Total Kasus';
+  static String positif = 'Positif Aktif';
   static String positifText = 'Positif';
   static String negatifText = 'Negatif';
   static String recover = 'Sembuh';
