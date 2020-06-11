@@ -15,7 +15,12 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
+// ignore: must_be_immutable
 class FaqScreen extends StatefulWidget {
+  bool isNewPage;
+
+  FaqScreen({this.isNewPage = true});
+
   @override
   _FaqScreenState createState() => _FaqScreenState();
 }
@@ -48,7 +53,8 @@ class _FaqScreenState extends State<FaqScreen> {
             backgroundColor: Colors.white,
             flexibleSpace: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 13, right: 13, top: 15),
+              padding: EdgeInsets.only(
+                  left: widget.isNewPage ? 50 : 13, right: 13, top: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +269,7 @@ class _FaqScreenState extends State<FaqScreen> {
                     child: Html(
                       data: dataHelp['content'].replaceAll('\n', '</br>'),
                       defaultTextStyle:
-                          TextStyle(color: Colors.black, fontSize: 14.0),
+                          TextStyle(color: Colors.grey[600], fontSize: 14.0),
                       onLinkTap: (url) {
                         launchExternal(url);
                       },

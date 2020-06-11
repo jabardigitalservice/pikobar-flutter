@@ -261,7 +261,7 @@ class IndexScreenState extends State<IndexScreen> {
 
       case 2:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
-        return FaqScreen();
+        return FaqScreen(isNewPage: false);
 
       case 3:
         return ProfileScreen();
