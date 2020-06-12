@@ -331,9 +331,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 5,
                 ),
                 Divider(
-                          color: Color(0xffE0E0E0),
-                          thickness: 1,
-                        ),
+                  color: Color(0xffE0E0E0),
+                  thickness: 1,
+                ),
                 SizedBox(
                   height: 5,
                 ),
@@ -614,19 +614,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Divider(
-                          color: Color(0xffE0E0E0),
-                          thickness: 1,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                      ],
-                    )
+                children: <Widget>[
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    color: Color(0xffE0E0E0),
+                    thickness: 1,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                ],
+              )
             ],
           )
         ],
@@ -659,7 +659,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void dispose() {
     _authenticationBloc.close();
-    _remoteConfigBloc.close();
+    if (_remoteConfigBloc != null) {
+      _remoteConfigBloc.close();
+    }
     super.dispose();
   }
 }

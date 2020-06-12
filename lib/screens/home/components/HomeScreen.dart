@@ -1,4 +1,3 @@
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +23,6 @@ import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
-import 'package:pikobar_flutter/screens/home/components/ImportantInfoScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
@@ -242,12 +240,20 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannersBloc.close();
     _statisticsBloc.close();
     _rapidTestBloc.close();
-    _pcrTestBloc.close();
+    if(_pcrTestBloc != null){
+      _pcrTestBloc.close();
+    }
     _newsListBloc.close();
-    _importantInfoListBloc.close();
+    if (_importantInfoListBloc != null) {
+      _importantInfoListBloc.close();
+    }
     _videoListBloc.close();
-    _infoGraphicsListBloc.close();
-    _documentsBloc.close();
+    if (_infoGraphicsListBloc != null) {
+      _infoGraphicsListBloc.close();
+    }
+    if (_documentsBloc != null) {
+      _documentsBloc.close();
+    }
     super.dispose();
   }
 }

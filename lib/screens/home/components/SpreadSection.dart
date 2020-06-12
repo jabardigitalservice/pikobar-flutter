@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -11,7 +10,6 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/SpreadCheckModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class SpreadSection extends StatefulWidget {
 

@@ -2,11 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
-import 'package:device_info/device_info.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -19,20 +17,16 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
-import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoDetailScreen.dart';
-import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoListScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/AnnouncementSharedPreference.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class IndexScreen extends StatefulWidget {
   @override

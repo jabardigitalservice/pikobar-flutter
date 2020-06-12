@@ -7,7 +7,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
-import 'package:pikobar_flutter/blocs/rapidTest/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -20,7 +19,6 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:html/dom.dart' as dom;
 

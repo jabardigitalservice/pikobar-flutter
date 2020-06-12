@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/models/CityModel.dart';
-import 'package:pikobar_flutter/models/UserModel.dart';
 
 @immutable
 abstract class ProfileState extends Equatable {

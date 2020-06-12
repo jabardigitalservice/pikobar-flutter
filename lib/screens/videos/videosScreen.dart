@@ -11,7 +11,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/repositories/VideoRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';

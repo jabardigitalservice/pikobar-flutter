@@ -2,11 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -27,7 +25,6 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
@@ -52,6 +49,7 @@ class NewsDetailScreen extends StatefulWidget {
 }
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
+  // ignore: close_sinks
   NewsDetailBloc _newsDetailBloc;
   String _newsType;
 

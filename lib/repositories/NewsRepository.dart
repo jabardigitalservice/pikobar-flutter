@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:async/async.dart';
-import 'package:rxdart/rxdart.dart';
 
 class NewsRepository {
   final Firestore firestore = Firestore.instance;
