@@ -223,18 +223,20 @@ class _DocumentsState extends State<Documents> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(width: 10),
-                        Text(
-                          unixTimeStampToDateDocs(
-                              document['published_at'].seconds),
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 13.0),
-                          textAlign: TextAlign.left,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        Container(
+                          width: 85,
+                          child: Text(
+                            unixTimeStampToDateDocs(
+                                document['published_at'].seconds),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: FontsFamily.lato,
+                                fontSize: 13.0),
+                            textAlign: TextAlign.left,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        SizedBox(width: 30),
                         Expanded(
                           child: InkWell(
                             onTap: () {
