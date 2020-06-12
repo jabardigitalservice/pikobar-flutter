@@ -495,7 +495,7 @@ class _StatisticsState extends State<Statistics> {
               ),
               total == ''
                   ? Container(
-                      margin: EdgeInsets.only(top: 10, left: 5.0),
+                      margin: EdgeInsets.only(top: 10, left: 1.0),
                       child: Text(title,
                           style: TextStyle(
                               fontSize: 9.0,
