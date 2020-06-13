@@ -103,8 +103,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             ),
           ),
           ListView.builder(
-              padding: const EdgeInsets.only(
-                   bottom: 16.0, top: 10.0),
+              padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: dataDocuments.length,
@@ -121,25 +120,26 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(width: 10),
-                          Text(
-                            unixTimeStampToDateDocs(
-                                document['published_at'].seconds),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14.0),
-                            textAlign: TextAlign.left,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                          Container(
+                            width: 85,
+                            child: Text(
+                              unixTimeStampToDateDocs(
+                                  document['published_at'].seconds),
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 14.0),
+                              textAlign: TextAlign.left,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          SizedBox(width: 30),
                           Expanded(
                             child: InkWell(
                               onTap: () {
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
-                                    document['document_url'])
+                                        document['document_url'])
                                     : _viewPdf(document['title'],
-                                    document['document_url']);
+                                        document['document_url']);
                               },
                               child: Text(
                                 document['title'],
@@ -157,7 +157,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                   size: 17, color: Color(0xFF27AE60)),
                               onPressed: () {
                                 DocumentServices().shareDocument(
-                                    document['title'], document['document_url']);
+                                    document['title'],
+                                    document['document_url']);
                               },
                             ),
                           )
