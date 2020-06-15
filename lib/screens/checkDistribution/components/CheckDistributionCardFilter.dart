@@ -22,48 +22,57 @@ class CheckDistributionCardFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical:Dimens.padding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return  Card(
+      elevation: 0,
+      margin: const EdgeInsets.only(top: Dimens.padding, ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Text.rich(
-          //   TextSpan(
-          //     children: <TextSpan>[
-          //       TextSpan(
-          //         text: '${Dictionary.regionInfo} $typeRegion ',
-          //         style: TextStyle(
-          //           color: Colors.grey[600],
-          //           fontFamily: FontsFamily.productSans,
-          //           fontSize: 14.0,
-          //           height: 1.5,
-          //         ),
-          //       ),
-          //       TextSpan(
-          //         text: region,
-          //         style: TextStyle(
-          //           color: Colors.grey[600],
-          //           fontFamily: FontsFamily.productSans,
-          //           fontWeight: FontWeight.bold,
-          //           fontSize: 14.0,
-          //           height: 1.5,
-          //         ),
-          //       )
-          //     ],
-          //   ),
-          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // Text.rich(
+              //   TextSpan(
+              //     children: <TextSpan>[
+              //       TextSpan(
+              //         text: '${Dictionary.regionInfo} $typeRegion ',
+              //         style: TextStyle(
+              //           color: Colors.grey[600],
+              //           fontFamily: FontsFamily.productSans,
+              //           fontSize: 14.0,
+              //           height: 1.5,
+              //         ),
+              //       ),
+              //       TextSpan(
+              //         text: region,
+              //         style: TextStyle(
+              //           color: Colors.grey[600],
+              //           fontFamily: FontsFamily.productSans,
+              //           fontWeight: FontWeight.bold,
+              //           fontSize: 14.0,
+              //           height: 1.5,
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
 
-          // build location by sub city
-          _buildContent(context, countPositif, Dictionary.confirmed,
-              '${Environment.iconAssets}virusRed.png', Color(0xffEB5757)),
+              // build location by sub city
+              _buildContent(context, countPositif, Dictionary.confirmed,
+                  '${Environment.iconAssets}virusRed.png', Color(0xffEB5757)),
 
-          // build ODP
-          _buildContent(context, countOdp, Dictionary.odp,
-              '${Environment.iconAssets}virus_3.png', Color(0xff2F80ED)),
+              // build ODP
+              _buildContent(context, countOdp, Dictionary.odp,
+                  '${Environment.iconAssets}virus_3.png', Color(0xff2F80ED)),
 
-          // build PDP
-          _buildContent(context, countPdp, Dictionary.pdp,
-              '${Environment.iconAssets}virusYellow.png', Color(0xffF2C94C)),
+              // build PDP
+              _buildContent(context, countPdp, Dictionary.pdp,
+                  '${Environment.iconAssets}virusYellow.png', Color(0xffF2C94C)),
+            ],
+          ),
         ],
       ),
     );
@@ -73,7 +82,6 @@ class CheckDistributionCardFilter extends StatelessWidget {
       BuildContext context, int count, String title, image, Color textColor) {
     return Expanded(
       child: Container(
-        height: MediaQuery.of(context).size.height *0.15,
         width: (MediaQuery.of(context).size.width / 3),
         padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 5),
