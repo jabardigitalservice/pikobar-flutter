@@ -53,15 +53,15 @@ class _FaqScreenState extends State<FaqScreen> {
             backgroundColor: Colors.white,
             flexibleSpace: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.only(
-                  left: widget.isNewPage ? 50 : 13, right: 13, top: 15),
+              padding: EdgeInsets.only(left: 13, right: 13, top: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _isSearch
-                      ? _buildSearchField()
-                      : CustomAppBar.setTitleAppBar(Dictionary.faq),
+                  Container(
+                    padding: EdgeInsets.only(left: widget.isNewPage ? 50 : 13),
+                    child: CustomAppBar.setTitleAppBar(Dictionary.faq),
+                  ),
                   _buildSearchField()
                 ],
               ),

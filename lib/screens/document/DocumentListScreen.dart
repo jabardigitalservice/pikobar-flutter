@@ -76,7 +76,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
             child: Row(
               children: <Widget>[
-                SizedBox(width: 20),
+                SizedBox(width: 22),
                 Text(
                   Dictionary.date,
                   style: TextStyle(
@@ -87,7 +87,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(width: 45),
+                SizedBox(width: 50),
                 Text(
                   Dictionary.titleDocument,
                   style: TextStyle(
