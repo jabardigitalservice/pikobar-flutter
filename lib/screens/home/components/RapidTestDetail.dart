@@ -52,6 +52,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           DefaultTabController(
             length: 2,
             child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TabBar(
                   isScrollable: true,
