@@ -179,18 +179,20 @@ class _DocumentsState extends State<Documents> {
             child: Row(
               children: <Widget>[
                 SizedBox(width: 10),
-                Text(
-                  Dictionary.date,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.0,
-                      fontFamily: FontsFamily.lato,
-                      fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                Container(
+                  width: 85,
+                  child: Text(
+                    Dictionary.date,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.0,
+                        fontFamily: FontsFamily.lato,
+                        fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                SizedBox(width: 35),
                 Text(
                   Dictionary.titleDocument,
                   style: TextStyle(

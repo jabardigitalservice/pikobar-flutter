@@ -77,17 +77,19 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             child: Row(
               children: <Widget>[
                 SizedBox(width: 22),
-                Text(
-                  Dictionary.date,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                Container(
+                  width: 85,
+                  child: Text(
+                    Dictionary.date,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                SizedBox(width: 50),
                 Text(
                   Dictionary.titleDocument,
                   style: TextStyle(
