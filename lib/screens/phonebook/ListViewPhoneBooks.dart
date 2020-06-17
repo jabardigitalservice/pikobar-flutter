@@ -59,30 +59,33 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        ChipsChoice<int>.single(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          value: tag,
-          onChanged: (val) => setState(() {
-            tag = val;
-            print(tag);
-            _detailEmergencyPhoneExpansionStateMap.clear();
-          }),
-          options: ChipsChoiceOption.listFrom<int, String>(
-            source: options,
-            value: (i, v) => i,
-            label: (i, v) => v,
-          ),
-          itemConfig: const ChipsChoiceItemConfig(
-            showCheckmark: false, selectedColor: Color(0xff27AE60),
-            labelStyle: TextStyle(
-              fontSize: 11.5,
-              color: Color(0xff828282),
-              fontFamily: 'lato',
+        Padding(
+          padding:  EdgeInsets.only(left: 5),
+          child: ChipsChoice<int>.single(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            value: tag,
+            onChanged: (val) => setState(() {
+              tag = val;
+              print(tag);
+              _detailEmergencyPhoneExpansionStateMap.clear();
+            }),
+            options: ChipsChoiceOption.listFrom<int, String>(
+              source: options,
+              value: (i, v) => i,
+              label: (i, v) => v,
             ),
-            selectedBrightness: Brightness.dark,
-            // unselectedBrightness: Brightness.dark,
+            itemConfig: const ChipsChoiceItemConfig(
+              showCheckmark: false, selectedColor: Color(0xff27AE60),
+              labelStyle: TextStyle(
+                fontSize: 11.5,
+                color: Color(0xff828282),
+                fontFamily: 'lato',
+              ),
+              selectedBrightness: Brightness.dark,
+              // unselectedBrightness: Brightness.dark,
+            ),
           ),
         ),
         Expanded(

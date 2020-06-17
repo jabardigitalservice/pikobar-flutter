@@ -134,6 +134,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                     DefaultTabController(
                       length: 2,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           TabBar(
                             isScrollable: true,
