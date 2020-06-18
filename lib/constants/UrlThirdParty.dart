@@ -15,6 +15,5 @@ class UrlThirdParty {
   static const String urlVolunteer = 'https://indorelawan.org/p/pikobar';
   static const String urlSelfDiagnose = 'http://dev.engine.prixa.ai/';
   static const String urlGoogle = 'https://www.google.com';
-  static const String urlTracking = 'https://tracking.staging.digitalservice.id';
-
+  static const String urlTracking = 'https://tracking.pikobar.jabarprov.go.id';
 }
