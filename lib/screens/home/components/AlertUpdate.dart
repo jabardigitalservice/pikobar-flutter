@@ -17,12 +17,19 @@ class AlertUpdate extends StatefulWidget {
 class _AlertUpdateState extends State<AlertUpdate> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-      builder: (context, state) {
-        return state is RemoteConfigLoaded
-            ? _buildContent(state.remoteConfig)
-            : Container();
+    return BlocListener<RemoteConfigBloc, RemoteConfigState>(
+      listener: (context, state) async {
+        if (state is RemoteConfigLoaded) {
+          await checkForceUpdate(context, state.remoteConfig);
+        }
       },
+      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+        builder: (context, state) {
+          return state is RemoteConfigLoaded
+              ? _buildContent(state.remoteConfig)
+              : Container();
+        },
+      ),
     );
   }
 
