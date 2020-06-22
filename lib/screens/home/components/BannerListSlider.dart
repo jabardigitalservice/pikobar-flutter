@@ -39,7 +39,7 @@ class BannerListSliderState extends State<BannerListSlider> {
 
   Widget _buildLoading() {
     return AspectRatio(
-      aspectRatio: 21 / 9,
+      aspectRatio: 21 / 10,
       child: ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
           scrollDirection: Axis.horizontal,
@@ -66,7 +66,7 @@ class BannerListSliderState extends State<BannerListSlider> {
         CarouselSlider(
           initialPage: 0,
           enableInfiniteScroll: state.records.length > 1 ? true : false,
-          aspectRatio: 21 / 9,
+          aspectRatio: 21 / 10,
           viewportFraction: 0.95,
           autoPlay: state.records.length > 1 ? true : false,
           autoPlayInterval: Duration(seconds: 5),
