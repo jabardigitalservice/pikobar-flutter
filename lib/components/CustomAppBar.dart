@@ -14,16 +14,6 @@ class CustomAppBar {
     );
   }
 
-  static Text setTitleAppBar(String title) {
-    return Text(title,
-        style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            fontFamily: FontsFamily.productSans),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis);
-  }
-
   static AppBar searchAppBar(
       BuildContext context, TextEditingController textController) {
     return AppBar(
@@ -59,6 +49,57 @@ class CustomAppBar {
         ]),
       ),
       titleSpacing: 0.0,
+    );
+  }
+
+  static AppBar bottomSearchAppBar({@required TextEditingController searchController, @required String title, @required String hintText, ValueChanged<String> onChanged}) {
+    return AppBar(
+        backgroundColor: Colors.white,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: buildSearchField(searchController, hintText, onChanged),
+        ),
+        title: CustomAppBar.setTitleAppBar(title));
+  }
+
+  static Text setTitleAppBar(String title) {
+    return Text(title,
+        style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w600,
+            fontFamily: FontsFamily.productSans),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis);
+  }
+
+  static Widget buildSearchField(TextEditingController searchController, String hintText, ValueChanged<String> onChanged) {
+    return Container(
+      margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
+      height: 40.0,
+      decoration: BoxDecoration(
+          color: Color(0xffFAFAFA),
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8.0)),
+      child: TextField(
+        controller: searchController,
+        autofocus: false,
+        decoration: InputDecoration(
+            prefixIcon: Icon(
+              Icons.search,
+              color: Color(0xff828282),
+            ),
+            hintText: hintText,
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+                color: Color(0xff828282),
+                fontFamily: FontsFamily.lato,
+                fontSize: 12,
+                height: 2.2),
+            contentPadding:
+            EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
+        style: TextStyle(color: Colors.black, fontSize: 16.0),
+        onChanged: onChanged,
+      ),
     );
   }
 }

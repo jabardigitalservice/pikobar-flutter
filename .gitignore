@@ -43,3 +43,4 @@ android/app/src/main/google-services.json
 /ios/Runner/GoogleService-Info.plist
 /android/key.properties
 /android/pikobar.keystore
+ios/Podfile.lock
