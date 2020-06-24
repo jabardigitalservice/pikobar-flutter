@@ -28,3 +28,17 @@ class NewsDetailLoaded extends NewsDetailState {
   @override
   String toString() => 'NewsDetailLoaded { record: $record }';
 }
+
+class NewsDetailFailure extends NewsDetailState {
+  final String error;
+
+  NewsDetailFailure({this.error});
+
+  @override
+  String toString() {
+    return 'State NewsDetailFailure{error: $error}';
+  }
+
+  @override
+  List<Object> get props => [error];
+}

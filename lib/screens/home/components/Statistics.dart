@@ -8,7 +8,6 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -32,12 +31,7 @@ class _StatisticsState extends State<Statistics> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [
-        BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            offset: Offset(0.0, 1),
-            blurRadius: 4.0),
-      ]),
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           _buildStatistics(),
@@ -92,7 +86,6 @@ class _StatisticsState extends State<Statistics> {
   _buildLoading() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(16.0),
       child: Skeleton(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,19 +95,46 @@ class _StatisticsState extends State<Statistics> {
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
-                  fontFamily: FontsFamily.productSans,
+                  fontFamily: FontsFamily.lato,
                   fontSize: 16.0),
             ),
             SizedBox(height: Dimens.padding),
+            SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer('', Dictionary.positif, Dictionary.positif, '-',
-                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
-                _buildContainer('', Dictionary.recover, Dictionary.recover, '-',
-                    3, Dictionary.people, Colors.grey[600], Colors.grey[600]),
-                _buildContainer('', Dictionary.die, Dictionary.die, '-', 3,
-                    Dictionary.people, Colors.grey[600], Colors.grey[600]),
+                _buildContainer(
+                    '',
+                    Dictionary.caseTotal,
+                    Dictionary.caseTotal,
+                    '-',
+                    4,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600],
+                    ''),
+                _buildContainer(
+                    '',
+                    Dictionary.positif,
+                    Dictionary.positif,
+                    '-',
+                    4,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600],
+                    ''),
+                _buildContainer(
+                    '',
+                    Dictionary.positif,
+                    Dictionary.positif,
+                    '-',
+                    4,
+                    Dictionary.people,
+                    Colors.grey[600],
+                    Colors.grey[600],
+                    ''),
+                _buildContainer('', Dictionary.die, Dictionary.die, '-', 4,
+                    Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
             ),
             SizedBox(height: Dimens.padding),
@@ -129,7 +149,8 @@ class _StatisticsState extends State<Statistics> {
                     2,
                     Dictionary.people,
                     Colors.grey[600],
-                    Colors.grey[600]),
+                    Colors.grey[600],
+                    ''),
                 _buildContainer(
                     '',
                     Dictionary.inMonitoring,
@@ -138,7 +159,8 @@ class _StatisticsState extends State<Statistics> {
                     2,
                     Dictionary.people,
                     Colors.grey[600],
-                    Colors.grey[600]),
+                    Colors.grey[600],
+                    ''),
               ],
             ),
           ],
@@ -165,51 +187,82 @@ class _StatisticsState extends State<Statistics> {
               Text(
                 Dictionary.statistics,
                 style: TextStyle(
-                    color: Colors.black,
+                    color: Color(0xff333333),
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.productSans,
+                    fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
-              Text(
-                unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
-                style: TextStyle(
-                    color: Colors.grey[650],
-                    fontFamily: FontsFamily.productSans,
-                    fontSize: 12.0),
+              InkWell(
+                onTap: () {
+                  openChromeSafariBrowser(
+                      url: urlStatistic.isNotEmpty
+                          ? urlStatistic
+                          : UrlThirdParty.urlCoronaInfoData);
+                },
+                child: Text(
+                  Dictionary.moreDetail,
+                  style: TextStyle(
+                      color: Color(0xff27AE60),
+                      fontFamily: FontsFamily.lato,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.0),
+                ),
               ),
             ],
+          ),
+          SizedBox(height: 10),
+          Text(
+            unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
+            style: TextStyle(
+                color: Color(0xff333333),
+                fontFamily: FontsFamily.lato,
+                fontSize: 12.0),
           ),
           SizedBox(height: Dimens.padding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.imageAssets}bg-positif.png',
-                  Dictionary.positif,
-                  Dictionary.positif,
+                  '${Environment.iconAssets}virusPurple.png',
+                  Dictionary.caseTotal,
+                  Dictionary.caseTotal,
                   '${data['aktif']['jabar']}',
-                  3,
+                  4,
                   Dictionary.people,
-                  Colors.white,
-                  Colors.white),
+                  Color(0xff333333),
+                  Color(0xff2C347C),
+                  ''),
               _buildContainer(
-                  '${Environment.imageAssets}bg-sembuh.png',
+                  '${Environment.iconAssets}virusRed.png',
+                  Dictionary.positif,
+                  Dictionary.positif,
+                  getDataActivePositive(data['aktif']['jabar'],
+                      data['sembuh']['jabar'], data['meninggal']['jabar']),
+                  4,
+                  Dictionary.people,
+                  Color(0xff333333),
+                  Color(0xffEB5757),
+                  ''),
+              _buildContainer(
+                  '${Environment.iconAssets}virusGreen.png',
                   Dictionary.recover,
                   Dictionary.recover,
                   '${data['sembuh']['jabar']}',
-                  3,
+                  4,
                   Dictionary.people,
-                  Colors.white,
-                  Colors.white),
+                  Color(0xff333333),
+                  Color(0xff27AE60),
+                  ''),
               _buildContainer(
-                  '${Environment.imageAssets}bg-meninggal.png',
+                  '${Environment.iconAssets}virusYellow.png',
                   Dictionary.die,
                   Dictionary.die,
                   '${data['meninggal']['jabar']}',
-                  3,
+                  4,
                   Dictionary.people,
-                  Colors.white,
-                  Colors.white),
+                  Color(0xff333333),
+                  Color(0xffF2994A),
+                  ''),
             ],
           ),
           SizedBox(height: Dimens.padding),
@@ -218,24 +271,26 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               _buildContainer(
                   '',
-                  Dictionary.inMonitoring,
+                  Dictionary.odp,
                   Dictionary.opdDesc,
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
                   2,
                   Dictionary.people,
-                  Colors.grey[600],
-                  ColorBase.green),
+                  Color(0xff828282),
+                  Color(0xff2F80ED),
+                  data['odp']['total']['jabar'].toString()),
               _buildContainer(
                   '',
-                  Dictionary.underSupervision,
+                  Dictionary.pdp,
                   Dictionary.pdpDesc,
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
                   2,
                   Dictionary.people,
-                  Colors.grey[600],
-                  ColorBase.green),
+                  Color(0xff828282),
+                  Color(0xffF2C94C),
+                  data['pdp']['total']['jabar'].toString()),
             ],
           )
         ],
@@ -245,7 +300,8 @@ class _StatisticsState extends State<Statistics> {
 
   Widget buildLoadingRapidTest() {
     return Card(
-      color: Color(0xff27AE60),
+      elevation: 0,
+      color: Color(0xffFAFAFA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: EdgeInsets.all(20.0),
@@ -254,7 +310,7 @@ class _StatisticsState extends State<Statistics> {
           children: <Widget>[
             Container(
                 height: 60,
-                child: Image.asset('${Environment.imageAssets}rapid_test.png')),
+                child: Image.asset('${Environment.imageAssets}bloodTest.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -266,9 +322,9 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.lato)),
                   ),
                 ),
                 Skeleton(
@@ -277,9 +333,9 @@ class _StatisticsState extends State<Statistics> {
                     child: Text('0',
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.roboto)),
                   ),
                 )
               ],
@@ -313,7 +369,8 @@ class _StatisticsState extends State<Statistics> {
         );
       },
       child: Card(
-        color: Color(0xff27AE60),
+        elevation: 0,
+        color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
           padding: EdgeInsets.all(20.0),
@@ -323,7 +380,7 @@ class _StatisticsState extends State<Statistics> {
               Container(
                   height: 60,
                   child:
-                      Image.asset('${Environment.imageAssets}rapid_test.png')),
+                      Image.asset('${Environment.imageAssets}bloodTest@4x.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -334,25 +391,25 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.lato)),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Colors.white,
+                            color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.productSans)),
+                            fontFamily: FontsFamily.roboto)),
                   )
                 ],
               ),
               Icon(
                 Icons.arrow_forward_ios,
                 size: 20,
-                color: Colors.white,
+                color: Color(0xff27AE60),
               )
             ],
           ),
@@ -366,6 +423,11 @@ class _StatisticsState extends State<Statistics> {
     return processData.toString();
   }
 
+  String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
+    int dataActivePositive = totalData - dataDone - dataRecover;
+    return dataActivePositive.toString();
+  }
+
   String getDataProcessPercent(int totalData, int dataDone) {
     double processData =
         100 - num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
@@ -373,11 +435,26 @@ class _StatisticsState extends State<Statistics> {
     return '(' + processData.toString() + '%)';
   }
 
-  _buildContainer(String image, String title, String description, String count,
-      int length, String label, Color colorTextTitle, Color colorNumber) {
+  _buildContainer(
+      String image,
+      String title,
+      String description,
+      String count,
+      int length,
+      String label,
+      Color colorTextTitle,
+      Color colorNumber,
+      String total) {
     if (count != null && count.isNotEmpty && count != '-') {
       try {
         count = formatter.format(int.parse(count)).replaceAll(',', '.');
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    if (total != null && total.isNotEmpty && total != '-') {
+      try {
+        total = formatter.format(int.parse(total)).replaceAll(',', '.');
       } catch (e) {
         print(e.toString());
       }
@@ -388,46 +465,55 @@ class _StatisticsState extends State<Statistics> {
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
           padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 2.5),
+          margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
-              image: image != '' && image != null
-                  ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
-                  : null,
-              border: image == null || image == ''
-                  ? Border.all(color: Colors.grey[400])
-                  : null,
+              color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              image == ""
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10, left: 5.0),
+                      child: Text(title,
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              color: colorTextTitle,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato)),
+                    )
+                  : Container(height: 15, child: Image.asset(image)),
               Container(
-                margin: EdgeInsets.only(left: 5.0),
-                child: Text(title,
+                margin: EdgeInsets.only(top: 10, left: 5.0),
+                child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 13.0,
-                        color: colorTextTitle,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-                child: Text(count,
-                    style: TextStyle(
-                        fontSize: 22.0,
+                        fontSize: 20.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.productSans)),
-              )
+                        fontFamily: FontsFamily.roboto)),
+              ),
+              total == ''
+                  ? Container(
+                      margin: EdgeInsets.only(top: 10, left: 1.0),
+                      child: Text(title,
+                          style: TextStyle(
+                              fontSize: 9.0,
+                              color: colorTextTitle,
+                              fontFamily: FontsFamily.lato)),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(top: 10, left: 5.0),
+                      child: Text(Dictionary.textSum + total,
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Color(0xff333333),
+                              fontFamily: FontsFamily.lato)),
+                    )
             ],
           ),
         ),
-        onTap: () {
-          openChromeSafariBrowser(
-              url: urlStatistic.isNotEmpty
-                  ? urlStatistic
-                  : UrlThirdParty.urlCoronaInfoData);
-        },
+        onTap: () {},
       ),
     );
   }

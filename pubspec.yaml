@@ -15,7 +15,7 @@ description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
 # GDrive version 1.4.1+13
 # PlayStore version 1.4.1+13
 
-version: 1.5.1+15
+version: 2.0.1+17
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -81,6 +81,9 @@ dependencies:
   flutter_masked_text: ^0.8.0
   app_settings: ^4.0.0
   flutter_full_pdf_viewer: ^1.0.6
+  chips_choice: ^1.2.0
+  bubble_tab_indicator: ^0.1.4
+
   
 
 dev_dependencies:
@@ -144,5 +147,13 @@ flutter:
     - family: intro
       fonts:
         - asset: assets/fonts/intro/Intro.otf
+
+    - family: roboto
+      fonts:
+        - asset: assets/fonts/roboto/Roboto-Regular.ttf
+
+    - family: lato
+      fonts:
+        - asset: assets/fonts/lato/Lato-Regular.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

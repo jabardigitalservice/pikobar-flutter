@@ -48,8 +48,8 @@ class _ImportantInfoState extends State<ImportantInfo> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: CustomAppBar.setTitleAppBar( Dictionary.importantInfo),
+        appBar: CustomAppBar.defaultAppBar(
+          title: Dictionary.importantInfo,
         ),
         body: ImportantInfoScreen()
     );

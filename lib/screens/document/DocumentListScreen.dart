@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -17,7 +14,6 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -76,32 +72,30 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(4.0)),
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+            color: Colors.grey[200],
+            padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
             child: Row(
               children: <Widget>[
-                SizedBox(width: 10),
-                Text(
-                  Dictionary.date,
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                SizedBox(width: 22),
+                Container(
+                  width: 85,
+                  child: Text(
+                    Dictionary.date,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                SizedBox(width: 35),
                 Text(
                   Dictionary.titleDocument,
                   style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0),
                   textAlign: TextAlign.left,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -111,8 +105,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             ),
           ),
           ListView.builder(
-              padding: const EdgeInsets.only(
-                  left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
+              padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: dataDocuments.length,
@@ -122,60 +115,66 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 return Container(
                     child: Column(
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(width: 10),
-                        Text(
-                          unixTimeStampToDateDocs(
-                              document['published_at'].seconds),
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.left,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(width: 30),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Platform.isAndroid
-                                  ? _downloadAttachment(document['title'],
-                                      document['document_url'])
-                                  : _viewPdf(document['title'],
-                                      document['document_url']);
-                            },
+                    Container(
+                      margin: EdgeInsets.only(left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(width: 10),
+                          Container(
+                            width: 85,
                             child: Text(
-                              document['title'],
+                              unixTimeStampToDateDocs(
+                                  document['published_at'].seconds),
                               style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600),
+                                  color: Colors.black, fontSize: 14.0),
                               textAlign: TextAlign.left,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        ),
-                        Container(
-                          child: IconButton(
-                            icon: Icon(FontAwesomeIcons.solidShareSquare,
-                                size: 17, color: Color(0xFF27AE60)),
-                            onPressed: () {
-                              DocumentServices().shareDocument(
-                                  document['title'], document['document_url']);
-                            },
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Platform.isAndroid
+                                    ? _downloadAttachment(document['title'],
+                                        document['document_url'])
+                                    : _viewPdf(document['title'],
+                                        document['document_url']);
+                              },
+                              child: Text(
+                                document['title'],
+                                style: TextStyle(
+                                    color: Colors.lightBlueAccent[700],
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 14.0),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
                           ),
-                        )
-                      ],
+                          Container(
+                            child: IconButton(
+                              icon: Icon(FontAwesomeIcons.share,
+                                  size: 17, color: Color(0xFF27AE60)),
+                              onPressed: () {
+                                DocumentServices().shareDocument(
+                                    document['title'],
+                                    document['document_url']);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      color: Colors.grey[200],
-                      width: MediaQuery.of(context).size.width,
-                      height: 1.5,
+                      margin: EdgeInsets.only(top: 20, bottom: 20),
+                      child: SizedBox(
+                        height: 10,
+                        child: Container(
+                          color: Colors.grey[200],
+                        ),
+                      ),
                     )
                   ],
                 ));

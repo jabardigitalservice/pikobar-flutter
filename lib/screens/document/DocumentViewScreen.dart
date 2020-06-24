@@ -48,8 +48,8 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = Environment.downloadStorage;
-      print("${dir}/$filename");
-      File file = File("${dir}/$filename");
+      print("$dir/$filename");
+      File file = File("$dir/$filename");
 
       await file.writeAsBytes(bytes, flush: true);
       completer.complete(file);

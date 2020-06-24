@@ -47,15 +47,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       child: BlocBuilder<MessageDetailBloc, MessageDetailState>(
           builder: (context, state) {
         return Scaffold(
-            appBar: AppBar(
-                title: CustomAppBar.setTitleAppBar(Dictionary.message),
+            appBar: CustomAppBar.defaultAppBar(
+                title: Dictionary.message,
                 actions: <Widget>[
                   state is MessageDetailLoaded
                       ? Container(
                           margin: EdgeInsets.only(right: 10.0),
                           child: IconButton(
-                            icon: Icon(FontAwesomeIcons.solidShareSquare,
-                                size: 17, color: Colors.white),
+                            icon: Icon(FontAwesomeIcons.share,
+                                size: 17, color: ColorBase.green,),
                             onPressed: () {
                               _shareMessage(state.data);
                             },
@@ -136,7 +136,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             Text(
               data.title,
               style: TextStyle(
-                  fontSize: 16.0,
+                fontFamily: FontsFamily.lato,
+                  fontSize: 18.0,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
@@ -144,7 +145,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         _buildText(
             Text(
               unixTimeStampToDateTime(data.publishedAt),
-              style: TextStyle(fontSize: 12.0, color: Colors.grey),
+              style: TextStyle(fontSize: 15.0, color: Colors.grey),
             ),
             context),
         Container(
@@ -154,7 +155,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               data: data.content,
               defaultTextStyle: TextStyle(
                   color: Colors.grey[800],
-                  fontSize: 14.0,
+                  fontSize: 15.0,
                   fontFamily: FontsFamily.productSans),
               customTextAlign: (dom.Node node) {
                 return TextAlign.left;
