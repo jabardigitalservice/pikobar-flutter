@@ -5,10 +5,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
+import 'package:pikobar_flutter/utilities/LocationService.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -106,6 +105,7 @@ class AuthRepository {
       authUserInfo = await signInWithGoogle();
       await persistUserInfo(authUserInfo);
       await registerFCMToken();
+      await LocationService.actionSendLocation();
     } else {
       authUserInfo = await readLocalUserInfo();
     }

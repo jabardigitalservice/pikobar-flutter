@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
 
+// ignore: camel_case_types
 abstract class importantInfoDetailState extends Equatable {
   const importantInfoDetailState([List props = const <dynamic>[]]);
 }

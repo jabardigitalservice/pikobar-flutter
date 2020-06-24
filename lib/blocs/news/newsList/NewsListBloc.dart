@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/repositories/NewsRepository.dart';
 import 'Bloc.dart';
 
@@ -16,18 +18,35 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     NewsListEvent event,
   ) async* {
     if (event is NewsListLoad) {
-      yield* _mapLoadVideosToState(event.newsCollection);
+      yield* _mapLoadVideosToState(event.newsCollection,
+          statImportantInfo: event.statImportantInfo);
     } else if (event is NewsListUpdate) {
       yield* _mapVideosUpdateToState(event);
     }
   }
 
-  Stream<NewsListState> _mapLoadVideosToState(String collection) async* {
+  Stream<NewsListState> _mapLoadVideosToState(String collection,
+      {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
     _subscription?.cancel();
-    _subscription = _repository.getNewsList(newsCollection: collection).listen(
-          (news) => add(NewsListUpdate(news)),
-    );
+    _subscription = collection == Collections.importantInfor
+        ? _repository
+            .getInfoImportantList(improtantInfoCollection: collection)
+            .listen(
+              (news) => add(NewsListUpdate(news)),
+            )
+        : collection == NewsType.allArticles
+            ? _repository.getAllNewsList(statImportantInfo).listen((event) {
+                List<NewsModel> dataListAllNews = [];
+                event.forEach((iterable) {
+                  dataListAllNews.addAll(iterable.toList());
+                });
+                dataListAllNews.sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
+                add(NewsListUpdate(dataListAllNews));
+              })
+            : _repository
+                .getNewsList(newsCollection: collection)
+                .listen((news) => add(NewsListUpdate(news)));
   }
 
   Stream<NewsListState> _mapVideosUpdateToState(NewsListUpdate event) async* {

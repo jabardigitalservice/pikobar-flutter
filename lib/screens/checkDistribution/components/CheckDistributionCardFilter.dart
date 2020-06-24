@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 
 class CheckDistributionCardFilter extends StatelessWidget {
   final String region;
@@ -21,140 +22,96 @@ class CheckDistributionCardFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(Dimens.padding),
+    return  Card(
+      elevation: 0,
+      margin: const EdgeInsets.only(top: Dimens.padding, ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text.rich(
-            TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '${Dictionary.regionInfo} $typeRegion ',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontFamily: FontsFamily.productSans,
-                    fontSize: 14.0,
-                    height: 1.5,
-                  ),
-                ),
-                TextSpan(
-                  text: region,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontFamily: FontsFamily.productSans,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0,
-                    height: 1.5,
-                  ),
-                )
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // Text.rich(
+              //   TextSpan(
+              //     children: <TextSpan>[
+              //       TextSpan(
+              //         text: '${Dictionary.regionInfo} $typeRegion ',
+              //         style: TextStyle(
+              //           color: Colors.grey[600],
+              //           fontFamily: FontsFamily.productSans,
+              //           fontSize: 14.0,
+              //           height: 1.5,
+              //         ),
+              //       ),
+              //       TextSpan(
+              //         text: region,
+              //         style: TextStyle(
+              //           color: Colors.grey[600],
+              //           fontFamily: FontsFamily.productSans,
+              //           fontWeight: FontWeight.bold,
+              //           fontSize: 14.0,
+              //           height: 1.5,
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
+
+              // build location by sub city
+              _buildContent(context, countPositif, Dictionary.confirmed,
+                  '${Environment.iconAssets}virusRed.png', Color(0xffEB5757)),
+
+              // build ODP
+              _buildContent(context, countOdp, Dictionary.odp,
+                  '${Environment.iconAssets}virus_3.png', Color(0xff2F80ED)),
+
+              // build PDP
+              _buildContent(context, countPdp, Dictionary.pdp,
+                  '${Environment.iconAssets}virusYellow.png', Color(0xffF2C94C)),
+            ],
           ),
-
-          SizedBox(height: 20),
-
-          // build location by sub city
-          _buildContent(context, countPositif, Dictionary.positifString,
-              Color(0xffF08484)),
-          SizedBox(height: 20),
-
-          // build ODP
-          _buildContent(
-              context, countOdp, Dictionary.odpString, Color(0xffFFCC29)),
-          SizedBox(height: 20),
-
-          // build PDP
-          _buildContent(
-              context, countPdp, Dictionary.pdpString, Color(0xffF2994A)),
         ],
       ),
     );
   }
 
   Widget _buildContent(
-      BuildContext context, int count, String description, Color color) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 0.0,
-              offset: Offset(0.0, 0.0),
+      BuildContext context, int count, String title, image, Color textColor) {
+    return Expanded(
+      child: Container(
+        width: (MediaQuery.of(context).size.width / 3),
+        padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+            color: Color(0xffFAFAFA), borderRadius: BorderRadius.circular(8.0)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(height: 15, child: Image.asset(image)),
+            Container(
+              margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+              child: Text(count.toString(),
+                  style: TextStyle(
+                      color: textColor,
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.roboto)),
             ),
-          ]),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          count > 0
-              ? Container(
-                  width: 5,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  padding: EdgeInsets.only(right: 4.0, left: 4.0),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(17.0),
-                        bottomLeft: Radius.circular(17.0)),
-                  ),
-                )
-              : Container(),
-          Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(Dimens.padding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      description,
-                      style: TextStyle(
-                        fontFamily: FontsFamily.productSans,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                        height: 1.2,
-                      ),
-                    ),
-                    // SizedBox(height: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(top: Dimens.padding),
-                          child: Text(count.toString(),
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 26.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.productSans)),
-                        ),
-                        SizedBox(height: 5),
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: Dimens.padding, left: 4.0, bottom: 2.0),
-                          child: Text(Dictionary.people,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.productSans)),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
+            Container(
+              margin: EdgeInsets.only(left: 5.0, top: Dimens.padding),
+              child: Text(title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 12.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.lato)),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

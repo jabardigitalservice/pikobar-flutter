@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
-import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/repositories/VideoRepository.dart';
 
 class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {

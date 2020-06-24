@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
@@ -12,7 +16,6 @@ import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:html/parser.dart';
 
 class Messages extends StatefulWidget {
   final IndexScreenState indexScreenState;
@@ -71,7 +74,7 @@ class _MessagesState extends State<Messages> {
                     });
                   }
                 },
-                icon: Icon(Icons.more_vert),
+                icon: Icon(Icons.more_horiz),
               ),
             ]),
         body: _buildContent());
@@ -151,32 +154,50 @@ class _MessagesState extends State<Messages> {
 
   _buildContent() {
     return listMessage.isNotEmpty
-        ? ListView.builder(
-      controller: _scrollController,
-      padding: EdgeInsets.all(15.0),
-      itemCount: listMessage.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: 15),
-          child: GestureDetector(
-            child: Card(
-                color: listMessage[index].readAt == null ||
-                    listMessage[index].readAt == 0
-                    ? Color(0xFFFFF9EE)
-                    : null,
-                margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
-                elevation: 0.5,
+        ? ListView.separated(
+            controller: _scrollController,
+            itemCount: listMessage.length,
+            separatorBuilder: (context, index) {
+              return Container(color: ColorBase.grey, height: 10);
+            },
+            itemBuilder: (context, index) {
+              bool hasRead = listMessage[index].readAt == null ||
+                      listMessage[index].readAt == 0
+                  ? false
+                  : true;
+
+              return GestureDetector(
                 child: Container(
-                  margin: EdgeInsets.all(15.0),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(Dimens.padding),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                          margin: EdgeInsets.only(right: 10.0, top: 5.0),
-                          child: Image.asset(
-                            '${Environment.iconAssets}broadcast.png',
-                            width: 24.0,
-                            height: 24.0,
+                          margin: EdgeInsets.only(right: Dimens.padding),
+                          child: Stack(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: hasRead ? 0.0 : 2.0),
+                                child: Image.asset(
+                                  '${Environment.iconAssets}broadcast.png',
+                                  width: 32.0,
+                                  height: 32.0,
+                                ),
+                              ),
+                              hasRead ? Container() :
+                              Positioned(
+                                right: 0.0,
+                                child: Container(
+                                  width: 12.0,
+                                  height: 12.0,
+                                  decoration: new BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              )
+                            ],
                           )),
                       Expanded(
                         child: Column(
@@ -185,43 +206,43 @@ class _MessagesState extends State<Messages> {
                             Text(
                               listMessage[index].title,
                               style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Color(0xff4F4F4F),
-                                  fontWeight: FontWeight.bold),
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 14.0,
+                                  color: hasRead ? Colors.grey : Colors.black,
+                                  fontWeight: hasRead
+                                      ? FontWeight.normal
+                                      : FontWeight.w900),
                             ),
                             Container(
-                              margin:
-                              EdgeInsets.only(top: 8.0, bottom: 15.0),
+                              margin: EdgeInsets.only(top: 5.0, bottom: 10.0),
                               child: Text(
-                                _parseHtmlString(
-                                    listMessage[index].content),
-                                maxLines: 3,
-                                overflow: TextOverflow.clip,
+                                unixTimeStampToDateTime(
+                                    listMessage[index].publishedAt),
                                 style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: Color(0xff828282)),
+                                    fontSize: 12.0, color: Colors.grey),
                               ),
                             ),
                             Text(
-                              unixTimeStampToDateTime(
-                                  listMessage[index].publishedAt),
+                              _parseHtmlString(listMessage[index].content),
+                              maxLines: 3,
+                              overflow: TextOverflow.clip,
                               style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Color(0xffBDBDBD)),
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 14.0,
+                                  color: hasRead ? Colors.grey : Colors.black),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                )),
-            onTap: () {
-              _openDetail(listMessage[index], index);
+                ),
+                onTap: () {
+                  _openDetail(listMessage[index], index);
+                },
+              );
             },
-          ),
-        );
-      },
-    )
+          )
         : _buildLoading();
   }
 

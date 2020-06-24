@@ -29,6 +29,7 @@ class Analytics {
   static String tappedQna = 'tapped_menu_qna';
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
+  static String tappedOthers = 'tapped_menu_lainnya';
   static String tappedBanner = 'tapped_banner';
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';
@@ -42,6 +43,7 @@ class Analytics {
   static String tappedNewsDetail = 'tapped_berita_detail';
   static String tappedNewsJabar = 'tapped_berita_jabar';
   static String tappedNewsNational = 'tapped_berita_nasional';
+  static String tappedAllNews = 'tapped_semua_berita';
   static String tappedNewsWorld = 'tapped_berita_dunia';
   static String tappedMore = 'tapped_berita_selengkapnya';
   static String tappedShareNews = 'tapped_share_news';
@@ -71,6 +73,8 @@ class Analytics {
   // event Info Graphics
   static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
   static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
+  static String openImage = 'open_image';
+  static String tappedDownloadImage = 'tapped_download_image';
 
   // event check distribution
   static String tappedCheckCurrentLocation = 'tapped_cek_lokasi_saat_ini';
@@ -84,8 +88,13 @@ class Analytics {
   static String openDocument = 'open_document';
 
   //important
+  static String tappedImportantInfo= 'tapped_important_info';
   static String tappedImportantInfoDetail = 'tapped_important_info_detail';
   static String tappedImportantInfoDetailShare = 'tapped_important_info_detail_share';
   static String tappedDownloadImportantInfo = 'tapped_download_important_info';
   static String openFileImportantInfo = 'open_file_important_info';
+
+   //event test
+  static String tappedRDT = 'tapped_rapid_test';
+  static String tappedPCR = 'tapped_pcr';
 }

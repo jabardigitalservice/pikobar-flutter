@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
-import 'package:pikobar_flutter/models/NewsModel.dart';
 
 class ImportantInfoRepository {
   final Firestore firestore = Firestore.instance;

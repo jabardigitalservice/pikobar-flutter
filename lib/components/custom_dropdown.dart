@@ -691,6 +691,7 @@ class DropdownButton<T> extends StatefulWidget {
   /// The text style to use for text in the dropdown button and the dropdown
   /// menu that appears when you tap the button.
   ///
+  // ignore: deprecated_member_use
   /// Defaults to the [TextTheme.subhead] value of the current
   /// [ThemeData.textTheme] of the current [Theme].
   final TextStyle style;
@@ -802,6 +803,7 @@ class _DropdownButtonState<T> extends State<DropdownButton<T>>
   }
 
   TextStyle get _textStyle =>
+      // ignore: deprecated_member_use
       widget.style ?? Theme.of(context).textTheme.subhead;
 
   void _handleTap() {
@@ -840,6 +842,7 @@ class _DropdownButtonState<T> extends State<DropdownButton<T>>
   // would be clipped.
   double get _denseButtonHeight {
     final double fontSize =
+        // ignore: deprecated_member_use
         _textStyle.fontSize ?? Theme.of(context).textTheme.subhead.fontSize;
     return math.max(fontSize, math.max(widget.iconSize, _kDenseButtonHeight));
   }

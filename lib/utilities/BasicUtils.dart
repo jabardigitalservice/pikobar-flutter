@@ -122,9 +122,19 @@ Future<Uint8List> bytesImageFromHtmlString(String htmlString) async {
 
 Future<String> stringFromHtmlString(String htmlString) async {
   String removedTag = htmlString
-      .replaceAll(RegExp('<br\s*\/?>', caseSensitive: false), '\n')
-      .replaceAll(RegExp('<\s*p[^>]*>'), '\n\n')
+      .replaceAll(RegExp('<\s*br[^>]*>'), '\n');
+
+  removedTag = removedTag.replaceAll(RegExp('<\s*p[^>]*>'), '\n\n')
       .replaceAll(RegExp('<\s*\/\s*p\s*>'), '');
+
+  removedTag = removedTag.replaceAll(RegExp('<\s*ul[^>]*>'), '')
+      .replaceAll(RegExp('<\s*\/\s*ul\s*>'), '')
+      .replaceAll(RegExp('<\s*ol[^>]*>'), '')
+      .replaceAll(RegExp('<\s*\/\s*ol\s*>'), '');
+
+  removedTag = removedTag.replaceAll(RegExp('<\s*li[^>]*>'), '\n')
+      .replaceAll(RegExp('<\s*\/\s*li\s*>'), '');
+
   var document = parse(removedTag);
   String parsedString = parse(document.body.text).documentElement.text;
   return parsedString;

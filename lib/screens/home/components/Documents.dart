@@ -4,23 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -50,17 +45,17 @@ class _DocumentsState extends State<Documents> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.productSans,
+                    fontFamily: FontsFamily.lato,
                     fontSize: 16.0),
               ),
               InkWell(
                 child: Text(
                   Dictionary.more,
                   style: TextStyle(
-                      color: Color(0xFF828282),
+                      color: ColorBase.green,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.productSans,
-                      fontSize: 14.0),
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.Document);
@@ -71,6 +66,19 @@ class _DocumentsState extends State<Documents> {
             ],
           ),
         ),
+
+        Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Text(
+            Dictionary.descDocument,
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: FontsFamily.lato,
+                fontSize: 12.0),
+            textAlign: TextAlign.left,
+          ),
+        ),
+
         BlocBuilder<DocumentsBloc, DocumentsState>(
           builder: (context, state) {
             return state is DocumentsLoaded ? _buildContent(state.documents) : _buildLoading();
@@ -165,27 +173,31 @@ class _DocumentsState extends State<Documents> {
             decoration: BoxDecoration(
                 color: Colors.grey[200],
                 border: Border.all(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(4.0)),
+                borderRadius: BorderRadius.circular(8.0)),
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Row(
               children: <Widget>[
                 SizedBox(width: 10),
-                Text(
-                  Dictionary.date,
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                Container(
+                  width: 85,
+                  child: Text(
+                    Dictionary.date,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.0,
+                        fontFamily: FontsFamily.lato,
+                        fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                SizedBox(width: 35),
                 Text(
                   Dictionary.titleDocument,
                   style: TextStyle(
-                      color: Colors.grey[600],
+                      color: Colors.black,
+                      fontFamily: FontsFamily.lato,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w600),
                   textAlign: TextAlign.left,
@@ -213,18 +225,20 @@ class _DocumentsState extends State<Documents> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(width: 10),
-                        Text(
-                          unixTimeStampToDateDocs(
-                              document['published_at'].seconds),
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.left,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        Container(
+                          width: 85,
+                          child: Text(
+                            unixTimeStampToDateDocs(
+                                document['published_at'].seconds),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: FontsFamily.lato,
+                                fontSize: 13.0),
+                            textAlign: TextAlign.left,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        SizedBox(width: 30),
                         Expanded(
                           child: InkWell(
                             onTap: () {
@@ -236,18 +250,17 @@ class _DocumentsState extends State<Documents> {
                             },
                             child: Text(
                               document['title'],
-                              style: TextStyle(
-                                  color: Colors.blue,
+                              style: TextStyle(fontFamily: FontsFamily.lato,
+                                  color: Colors.lightBlueAccent[700],
                                   decoration: TextDecoration.underline,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600),
+                                  fontSize: 13.0),
                               textAlign: TextAlign.left,
                             ),
                           ),
                         ),
                         Container(
                           child: IconButton(
-                            icon: Icon(FontAwesomeIcons.solidShareSquare,
+                            icon: Icon(FontAwesomeIcons.share,
                                 size: 17, color: Color(0xFF27AE60)),
                             onPressed: () {
                               DocumentServices().shareDocument(

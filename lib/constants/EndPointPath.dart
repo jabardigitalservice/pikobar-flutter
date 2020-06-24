@@ -1,4 +1,3 @@
-import 'package:pikobar_flutter/configs/FlavorConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
 class EndPointPath {

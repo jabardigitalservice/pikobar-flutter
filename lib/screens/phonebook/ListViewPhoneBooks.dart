@@ -1,3 +1,4 @@
+import 'package:chips_choice/chips_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'dart:convert';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -27,100 +30,150 @@ class ListViewPhoneBooks extends StatefulWidget {
 
 class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Map<String, bool> _categoryExpansionStateMap = Map<String, bool>();
+  Map<String, bool> _detailEmergencyPhoneExpansionStateMap =
+      Map<String, bool>();
+
   int callCenterPhoneCount, emergencyPhoneCount;
+  int tag = 0;
+  List<String> options = [
+    'No Darurat',
+    'RS Rujukan COVID-19',
+    'Call Center Kota/Kab',
+  ];
   @override
   void initState() {
     super.initState();
     _categoryExpansionStateMap = {
       "NomorDarurat": true,
-      "RumahSakitRujukan": false,
-      "CallCenter": false,
+      "RumahSakitRujukan": true,
+      "CallCenter": true,
     };
   }
 
   callback(String value, bool newValue) {
     setState(() {
-      _categoryExpansionStateMap["$value"] = !newValue;
+      _detailEmergencyPhoneExpansionStateMap["$value"] = !newValue;
+      print(_detailEmergencyPhoneExpansionStateMap["$value"]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(20),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(bottom: 10),
-          child: Column(
-            children: <Widget>[
-              widget.searchQuery == null
-                  ? _buildDaruratNumber(context)
-                  : Container(),
-              widget.searchQuery == null
-                  ? _buildCardHeader(
-                      context,
-                      'hospital.png',
-                      Dictionary.daftarRumahSakitRujukan,
-                      Dictionary.daftarRumahSakitRujukanCaption,
-                      'RumahSakitRujukan',
-                      _categoryExpansionStateMap["RumahSakitRujukan"])
-                  : Container(),
-              StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
-                      .collection(Collections.emergencyNumbers)
-                      .orderBy('name')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data.documents.isEmpty
-                          ? EmptyData(message: Dictionary.emptyDataPhoneBook)
-                          : Column(
-                              children: getListRumahSakitRujukan(snapshot),
-                            );
-                    } else {
-                      return Center(child: _buildLoading());
-                    }
-                  }),
-              SizedBox(
-                height: 20,
+          padding:  EdgeInsets.only(left: 5),
+          child: ChipsChoice<int>.single(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            value: tag,
+            onChanged: (val) => setState(() {
+              tag = val;
+              print(tag);
+              _detailEmergencyPhoneExpansionStateMap.clear();
+            }),
+            options: ChipsChoiceOption.listFrom<int, String>(
+              source: options,
+              value: (i, v) => i,
+              label: (i, v) => v,
+            ),
+            itemConfig: const ChipsChoiceItemConfig(
+              showCheckmark: false, selectedColor: Color(0xff27AE60),
+              labelStyle: TextStyle(
+                fontSize: 11.5,
+                color: Color(0xff828282),
+                fontFamily: 'lato',
               ),
-              widget.searchQuery == null
-                  ? _buildCardHeader(
-                      context,
-                      'call_center.png',
-                      Dictionary.callCenterTitle,
-                      Dictionary.callCenterCaption,
-                      'CallCenter',
-                      _categoryExpansionStateMap["CallCenter"])
-                  : Container(),
-              StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
-                      .collection(Collections.callCenters)
-                      .orderBy(
-                        'nama_kotkab',
-                      )
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data.documents.isEmpty
-                          ? EmptyData(message: Dictionary.emptyDataPhoneBook)
-                          : Column(
-                              children: getListCallCenter(snapshot),
-                            );
-                    } else {
-                      return Center(child: _buildLoading());
-                    }
-                  })
+              selectedBrightness: Brightness.dark,
+              // unselectedBrightness: Brightness.dark,
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            children: <Widget>[
+              tag == 0
+                  ? Column(
+                      children: <Widget>[
+                        widget.searchQuery == null
+                            ? _buildDaruratNumber(context)
+                            : Container(),
+                      ],
+                    )
+                  : tag == 1
+                      ? Column(
+                          children: <Widget>[
+                            StreamBuilder<QuerySnapshot>(
+                                stream: Firestore.instance
+                                    .collection(Collections.emergencyNumbers)
+                                    .orderBy('name')
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasData) {
+                                    return snapshot.data.documents.isEmpty
+                                        ? EmptyData(
+                                            message:
+                                                Dictionary.emptyDataPhoneBook)
+                                        : snapshot.data.documents[0]['name'] !=
+                                                null
+                                            ? Column(
+                                                children:
+                                                    getListRumahSakitRujukan(
+                                                        snapshot),
+                                              )
+                                            : Column(
+                                                children: _buildLoading(),
+                                              );
+                                  } else {
+                                    return Column(
+                                      children: _buildLoading(),
+                                    );
+                                  }
+                                }),
+                          ],
+                        )
+                      : Column(
+                          children: <Widget>[
+                            StreamBuilder<QuerySnapshot>(
+                                stream: Firestore.instance
+                                    .collection(Collections.callCenters)
+                                    .orderBy(
+                                      'nama_kotkab',
+                                    )
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.hasData) {
+                                    return snapshot.data.documents.isEmpty
+                                        ? EmptyData(
+                                            message:
+                                                Dictionary.emptyDataPhoneBook)
+                                        : snapshot.data.documents[0]
+                                                    ['nama_kotkab'] !=
+                                                null
+                                            ? Column(
+                                                children:
+                                                    getListCallCenter(snapshot),
+                                              )
+                                            : Column(
+                                                children: _buildLoading(),
+                                              );
+                                  } else {
+                                    return Column(
+                                      children: _buildLoading(),
+                                    );
+                                  }
+                                })
+                          ],
+                        ),
+              widget.searchQuery != null &&
+                      callCenterPhoneCount == 0 &&
+                      emergencyPhoneCount == 0
+                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  : Container()
             ],
           ),
         ),
-        widget.searchQuery != null &&
-                callCenterPhoneCount == 0 &&
-                emergencyPhoneCount == 0
-            ? EmptyData(message: Dictionary.emptyDataPhoneBook)
-            : Container()
       ],
     );
   }
@@ -128,27 +181,130 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   List<Widget> getListRumahSakitRujukan(AsyncSnapshot<QuerySnapshot> snapshot) {
     List<Widget> list = List();
 
-    ListTile _cardTile(DocumentSnapshot document) {
-      return ListTile(
-        leading: Container(
-            height: 25,
-            child: Image.asset('${Environment.iconAssets}office.png')),
-        title: Text(
-          document['name'],
-          style:
-              TextStyle(color: Color(0xff4F4F4F), fontWeight: FontWeight.bold),
-        ),
-        onTap: () => _onTapItem(context, document),
+    Column _cardTile(DocumentSnapshot document) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                      height: 15,
+                      child: Image.asset('${Environment.iconAssets}phone.png')),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  document['name'] == null
+                      ? Skeleton(
+                          height: 5,
+                          width: MediaQuery.of(context).size.width / 4,
+                        )
+                      : Text(document['name'],
+                          style: TextStyle(
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12)),
+                ],
+              ),
+              IconButton(
+                icon: Icon(
+                  _detailEmergencyPhoneExpansionStateMap[document['name']]
+                      ? Icons.keyboard_arrow_down
+                      : Icons.arrow_forward_ios,
+                  color: Color(0xff828282),
+                  size: _detailEmergencyPhoneExpansionStateMap[document['name']]
+                      ? 25
+                      : 15,
+                ),
+                onPressed: () {
+                  callback(document['name'],
+                      _detailEmergencyPhoneExpansionStateMap[document['name']]);
+                  print(_detailEmergencyPhoneExpansionStateMap);
+                },
+              )
+            ],
+          ),
+          _detailEmergencyPhoneExpansionStateMap[document['name']]
+              ? Padding(
+                  padding: EdgeInsets.only(left: 35, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      document['address'] != null
+                          ? Padding(
+                              padding: EdgeInsets.only(bottom: 15),
+                              child: Text(document['address'],
+                                  style: TextStyle(
+                                      color: Color(0xff828282),
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 12)),
+                            )
+                          : Container(),
+                      document['address'] != null
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['phones'] != null &&
+                              document['phones'].isNotEmpty
+                          ? Column(
+                              children:
+                                  _buildListDetailPhone(document, 'phones'),
+                            )
+                          : Container(),
+                      document['web'] != null && document['web'].isNotEmpty
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['web'] != null && document['web'].isNotEmpty
+                          ? ListTile(
+                              contentPadding: EdgeInsets.all(0),
+                              trailing: Container(
+                                  height: 15,
+                                  child: Image.asset(
+                                      '${Environment.iconAssets}web_underline.png')),
+                              title: Text(
+                                document['web'],
+                                style: TextStyle(
+                                    color: Color(0xff2D9CDB),
+                                    fontFamily: FontsFamily.lato,
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 12),
+                              ),
+                              onTap: () {
+                                _launchURL(document['web'], 'web');
+
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedphoneBookEmergencyWeb,
+                                    <String, dynamic>{
+                                      'title': document['name'],
+                                      'web': document['web']
+                                    });
+                              })
+                          : Container()
+                    ],
+                  ),
+                )
+              : Container()
+        ],
       );
     }
 
     Widget _card(DocumentSnapshot document) {
       return Card(
-          elevation: 2,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: _cardTile(document),
-          ));
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+          child: _cardTile(document));
     }
 
     List dataNomorDarurat;
@@ -164,22 +320,74 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
     emergencyPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
+      if (!_detailEmergencyPhoneExpansionStateMap
+          .containsKey(dataNomorDarurat[i]['name'])) {
+        _detailEmergencyPhoneExpansionStateMap
+            .addAll({dataNomorDarurat[i]['name']: false});
+      }
+
       Column column = Column(
         children: <Widget>[
-          emergencyPhoneCount == 0 && callCenterPhoneCount == 0
-              ? EmptyData(
-                  message:
-                      '${Dictionary.emptyData} ${Dictionary.phoneBookEmergency}')
-              : widget.searchQuery != null
+          widget.searchQuery != null
+              ? _card(dataNomorDarurat[i])
+              : _categoryExpansionStateMap["RumahSakitRujukan"]
                   ? _card(dataNomorDarurat[i])
-                  : _categoryExpansionStateMap["RumahSakitRujukan"]
-                      ? _card(dataNomorDarurat[i])
-                      : Container(),
+                  : Container(),
           _categoryExpansionStateMap["RumahSakitRujukan"]
-              ? SizedBox(
-                  height: 10,
-                )
+              ? i == emergencyPhoneCount - 1
+                  ? Container()
+                  : SizedBox(
+                      height: 15,
+                      child: Container(
+                        color: ColorBase.grey,
+                      ),
+                    )
               : Container()
+        ],
+      );
+
+      list.add(column);
+    }
+    return list;
+  }
+
+  List<Widget> _buildListDetailPhone(DocumentSnapshot document, String name) {
+    List<Widget> list = List();
+
+    for (int i = 0; i < document[name].length; i++) {
+      Column column = Column(
+        children: <Widget>[
+          ListTile(
+              contentPadding: EdgeInsets.all(0),
+              trailing: Container(
+                  height: 15,
+                  child: Image.asset(
+                      '${Environment.iconAssets}phone_underline.png')),
+              title: Text(
+                document[name][i],
+                style: TextStyle(
+                    color: Color(0xff2D9CDB),
+                    fontFamily: FontsFamily.lato,
+                    decoration: TextDecoration.underline,
+                    fontSize: 12),
+              ),
+              onTap: () {
+                _launchURL(document[name][i], 'number');
+
+                AnalyticsHelper.setLogEvent(
+                    Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
+                  'title': document['name'],
+                  'telp': document[name][i]
+                });
+              }),
+          i == document[name].length - 1
+              ? Container()
+              : SizedBox(
+                  height: 5,
+                  child: Container(
+                    color: ColorBase.grey,
+                  ),
+                )
         ],
       );
 
@@ -190,28 +398,108 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
   List<Widget> getListCallCenter(AsyncSnapshot<QuerySnapshot> snapshot) {
     List<Widget> list = List();
-
-    ListTile _cardTile(DocumentSnapshot document) {
-      return ListTile(
-        leading: Container(
-            height: 25,
-            child: Image.asset('${Environment.iconAssets}office.png')),
-        title: Text(
-          document['nama_kotkab'],
-          style:
-              TextStyle(color: Color(0xff4F4F4F), fontWeight: FontWeight.bold),
-        ),
-        onTap: () => _onTapCallCenter(context, document),
+    Column _cardTile(DocumentSnapshot document) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Container(
+                      height: 15,
+                      child: Image.asset('${Environment.iconAssets}phone.png')),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  document['nama_kotkab'] == null
+                      ? Skeleton(
+                          height: 5,
+                          width: MediaQuery.of(context).size.width / 4,
+                        )
+                      : Text(document['nama_kotkab'],
+                          style: TextStyle(
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12)),
+                ],
+              ),
+              IconButton(
+                icon: Icon(
+                  _detailEmergencyPhoneExpansionStateMap[
+                          document['nama_kotkab']]
+                      ? Icons.keyboard_arrow_down
+                      : Icons.arrow_forward_ios,
+                  color: Color(0xff828282),
+                  size: _detailEmergencyPhoneExpansionStateMap[
+                          document['nama_kotkab']]
+                      ? 25
+                      : 15,
+                ),
+                onPressed: () {
+                  callback(
+                      document['nama_kotkab'],
+                      _detailEmergencyPhoneExpansionStateMap[
+                          document['nama_kotkab']]);
+                  print(document);
+                  print(_detailEmergencyPhoneExpansionStateMap);
+                },
+              )
+            ],
+          ),
+          _detailEmergencyPhoneExpansionStateMap[document['nama_kotkab']]
+              ? Padding(
+                  padding: EdgeInsets.only(left: 35, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      document['call_center'] != null &&
+                              document['call_center'].isNotEmpty
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['call_center'] != null &&
+                              document['call_center'].isNotEmpty
+                          ? Column(
+                              children: _buildListDetailPhone(
+                                  document, 'call_center'),
+                            )
+                          : Container(),
+                      document['hotline'] != null &&
+                              document['hotline'].isNotEmpty
+                          ? SizedBox(
+                              height: 5,
+                              child: Container(
+                                color: ColorBase.grey,
+                              ),
+                            )
+                          : Container(),
+                      document['hotline'] != null &&
+                              document['hotline'].isNotEmpty
+                          ? Column(
+                              children:
+                                  _buildListDetailPhone(document, 'hotline'),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                )
+              : Container()
+        ],
       );
     }
 
     Widget _card(DocumentSnapshot document) {
       return Card(
-          elevation: 2,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: _cardTile(document),
-          ));
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+          child: _cardTile(document));
     }
 
     List dataNomorDarurat;
@@ -227,6 +515,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
     callCenterPhoneCount = dataNomorDarurat.length;
     for (int i = 0; i < callCenterPhoneCount; i++) {
+      if (!_detailEmergencyPhoneExpansionStateMap
+          .containsKey(dataNomorDarurat[i]['nama_kotkab'])) {
+        _detailEmergencyPhoneExpansionStateMap
+            .addAll({dataNomorDarurat[i]['nama_kotkab']: false});
+      }
       Column column = Column(
         children: <Widget>[
           widget.searchQuery != null
@@ -234,9 +527,14 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               : _categoryExpansionStateMap["CallCenter"]
                   ? _card(dataNomorDarurat[i])
                   : Container(),
-          SizedBox(
-            height: 10,
-          )
+          i == callCenterPhoneCount - 1
+              ? Container()
+              : SizedBox(
+                  height: 15,
+                  child: Container(
+                    color: ColorBase.grey,
+                  ),
+                ),
         ],
       );
 
@@ -253,8 +551,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         leading: Container(height: 25, child: Image.network(document['image'])),
         title: Text(
           document['title'],
-          style:
-              TextStyle(color: Color(0xff4F4F4F), fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Color(0xff333333),
+              fontWeight: FontWeight.bold,
+              fontFamily: FontsFamily.lato,
+              fontSize: 12),
         ),
         onTap: () {
           if (document['action'] == 'call') {
@@ -266,7 +567,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               'telp': document['phone_number']
             });
           } else if (document['action'] == 'whatsapp') {
-            _launchURL(document['phone_number'], 'whatsapp',message: document['message']);
+            _launchURL(document['phone_number'], 'whatsapp',
+                message: document['message']);
 
             AnalyticsHelper.setLogEvent(
                 Analytics.tappedphoneBookEmergencyWa, <String, dynamic>{
@@ -279,17 +581,22 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     }
 
     Widget _card(var document) {
-      return Card(
-          elevation: 2,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: _cardTile(document),
-          ));
+      return Card(elevation: 0, child: _cardTile(document));
     }
 
     for (int i = 0; i < snapshot.length; i++) {
       Column column = Column(
-        children: <Widget>[_card(snapshot[i])],
+        children: <Widget>[
+          _card(snapshot[i]),
+          i == snapshot.length - 1
+              ? Container()
+              : SizedBox(
+                  height: 15,
+                  child: Container(
+                    color: ColorBase.grey,
+                  ),
+                ),
+        ],
       );
 
       list.add(column);
@@ -297,66 +604,71 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  Widget _buildLoading() {
-    return Column(
-      children: <Widget>[
-        Skeleton(
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: Padding(
-              padding: EdgeInsets.all(17.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Skeleton(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width / 4,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 90,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  List<Widget> _buildLoading() {
+    List<Widget> list = List();
+    for (var i = 0; i < 8; i++) {
+      Column column = Column(children: <Widget>[
+        Card(
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 22, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Skeleton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Skeleton(
-                          width: MediaQuery.of(context).size.width / 3,
-                          height: 10,
+                        Container(
+                            height: 15,
+                            child: Image.asset(
+                                '${Environment.iconAssets}phone.png')),
+                        SizedBox(
+                          width: 20,
                         ),
                         Skeleton(
-                          width: MediaQuery.of(context).size.width / 3,
-                          height: 10,
-                        ),
+                          height: 5,
+                          width: MediaQuery.of(context).size.width / 4,
+                        )
                       ],
                     ),
-                  ),
-                ],
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Color(0xff828282),
+                      size: 15,
+                    )
+                  ],
+                ),
               ),
-            ),
+              SizedBox(
+                height: 10,
+              )
+            ],
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 15,
+          child: Container(
+            color: ColorBase.grey,
+          ),
         )
-      ],
-    );
+      ]);
+      list.add(column);
+    }
+    return list;
   }
 
   Widget _buildDaruratNumber(BuildContext context) {
     return Column(
       children: <Widget>[
-        _buildCardHeader(
-            context,
-            'emergency_phone.png',
-            Dictionary.phoneBookEmergencyInformation,
-            Dictionary.phoneBookEmergencyInformationCaption,
-            'NomorDarurat',
-            _categoryExpansionStateMap["NomorDarurat"]),
+        // _buildCardHeader(
+        //     context,
+        //     'emergency_phone.png',
+        //     Dictionary.phoneBookEmergencyInformation,
+        //     Dictionary.phoneBookEmergencyInformationCaption,
+        //     'NomorDarurat',
+        //     _categoryExpansionStateMap["NomorDarurat"]),
         _categoryExpansionStateMap["NomorDarurat"]
             ? FutureBuilder<RemoteConfig>(
                 future: setupRemoteConfig(),
@@ -464,12 +776,14 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         <String, dynamic>{'title': document['nama_kotkab']});
   }
 
-  _launchURL(String launchUrl, tipeURL,{String message}) async {
+  _launchURL(String launchUrl, tipeURL, {String message}) async {
     String url;
     if (tipeURL == 'number') {
       url = 'tel:$launchUrl';
+    } else if (tipeURL == 'web') {
+      url = launchUrl;
     } else {
-      url = 'whatsapp://send?phone=$launchUrl&text=$message';
+      url = Uri.encodeFull('whatsapp://send?phone=${launchUrl.replaceAll('+', '')}&text=$message');
     }
 
     if (await canLaunch(url)) {
