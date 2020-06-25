@@ -49,6 +49,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         children: <Widget>[
+
           DefaultTabController(
             length: 2,
             child: Column(
