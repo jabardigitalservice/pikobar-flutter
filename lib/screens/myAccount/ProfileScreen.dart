@@ -548,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         future: setupRemoteConfig(),
         builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
           var groupMenu;
-          String role;
+          String role,healthStatus;
           int groupMenuLength = 0;
           if (snapshot.data != null) {
             groupMenu = json.decode(
@@ -558,7 +558,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else {
               role = data['role'];
             }
+             if (data['health_status'] == null || data['health_status'] == '') {
+              healthStatus = 'healthy';
+            } else {
+              healthStatus = data['health_status'].toLowerCase();
+            }
             groupMenu.removeWhere((element) => !element['role'].contains(role));
+            groupMenu.removeWhere((element) => !element['health_status'].contains(healthStatus));
             groupMenu.removeWhere((element) => element['enabled'] == false);
             groupMenuLength = groupMenu.length;
           }
