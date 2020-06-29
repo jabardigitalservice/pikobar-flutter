@@ -1,13 +1,11 @@
 import 'dart:convert';
-
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -27,6 +25,7 @@ class RapidTestDetail extends StatefulWidget {
   final DocumentSnapshot document, documentPCR;
 
   RapidTestDetail(this.remoteConfig, this.document, this.documentPCR);
+
   @override
   _RapidTestDetailState createState() => _RapidTestDetailState();
 }
@@ -34,7 +33,8 @@ class RapidTestDetail extends StatefulWidget {
 class _RapidTestDetailState extends State<RapidTestDetail> {
   List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
-  String typetest = Dictionary.rdt;
+  List<String> listItemTitleTab = [Dictionary.rdt, Dictionary.pcr];
+
   @override
   Widget build(BuildContext context) {
     if (widget.remoteConfig != null) {
@@ -49,90 +49,22 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         children: <Widget>[
-
-          DefaultTabController(
-            length: 2,
-            child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TabBar(
-                  isScrollable: true,
-                  onTap: (index) {
-                    if (index == 0) {
-                      setState(() {
-                        typetest = Dictionary.rdt;
-                      });
-                      AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-                    } else if (index == 1) {
-                      setState(() {
-                        typetest = Dictionary.pcr;
-                      });
-
-                      AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-                    }
-                  },
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.grey,
-                  indicator: BubbleTabIndicator(
-                    indicatorHeight: 37.0,
-                    indicatorColor: ColorBase.green,
-                    tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                  ),
-                  indicatorColor: ColorBase.green,
-                  indicatorWeight: 0.1,
-                  labelPadding: EdgeInsets.all(10),
-                  tabs: <Widget>[
-                    Tab(
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: typetest == Dictionary.rdt
-                                    ? ColorBase.green
-                                    : Color(0xffE0E0E0),
-                                width: 1)),
-                        child: Text(
-                          Dictionary.rdt,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 10.0),
-                        ),
-                      ),
-                    ),
-                    Tab(
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: typetest == Dictionary.pcr
-                                    ? ColorBase.green
-                                    : Color(0xffE0E0E0),
-                                width: 1)),
-                        child: Text(
-                          Dictionary.pcr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 10.0),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 1.2,
-                  child: TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[_buildRDT(), _buildPCR()],
-                  ),
-                ),
-              ],
-            ),
+          CustomBubbleTab(
+            indicatorColor: ColorBase.green,
+            labelColor: Colors.white,
+            listItemTitleTab: listItemTitleTab,
+            unselectedlabelColor: Colors.grey,
+            onTap: (index) {
+              if (index == 0) {
+                  AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+              } else if (index == 1) {
+                AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+              }
+            },
+            tabBarView: <Widget>[_buildRDT(), _buildPCR()],
+            heightTabBarView: MediaQuery.of(context).size.height * 1.2,
+            paddingTopTabBarView: 0,
           ),
-
           // widget.document.data['last_update'] == null
           //     ? Container()
           //     : Center(
