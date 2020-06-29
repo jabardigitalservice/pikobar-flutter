@@ -110,7 +110,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     statImportantInfo = StatShowImportantInfo.getStatImportantTab(state);
     if (checkStatImportantInfo) {
       if (statImportantInfo) {
-        //      setListTab(null, statImportantInfo);
         setControllerTab(statImportantInfo);
       } else {
         listItemTitleTab.removeAt(1);
@@ -120,7 +119,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       }
       checkStatImportantInfo = false;
     }
-    print('cekkk isinya berapa panjangnya '+listItemTitleTab.length.toString());
     return Container(
       child: CustomBubbleTab(
         listItemTitleTab: listItemTitleTab,

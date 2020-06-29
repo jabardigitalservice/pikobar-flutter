@@ -31,10 +31,26 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
     Dictionary.worldNews
   ];
 
+  List<String> listCollectionData = [
+    Collections.importantInfor,
+    Collections.newsJabar,
+    Collections.newsNational,
+    Collections.newsWorld
+  ];
+
+  List<String> analyticsData = [
+    Analytics.tappedImportantInfo,
+    Analytics.tappedNewsJabar,
+    Analytics.tappedNewsNational,
+    Analytics.tappedNewsWorld,
+  ];
+
   buildContent(RemoteConfigLoaded state) {
     if (checkInitTypeNews) {
       if (!StatShowImportantInfo.getStatImportantTab(state)) {
         listItemTitleTab.removeAt(0);
+        listCollectionData.removeAt(0);
+        analyticsData.removeAt(0);
         newsListBloc.add(NewsListLoad(Collections.newsJabar));
         checkInitTypeNews = false;
       } else {
@@ -108,33 +124,8 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                 unselectedLabelColor: Colors.grey,
                 onTap: (index) {
                   setState(() {});
-                  if (StatShowImportantInfo.getStatImportantTab(state)) {
-                    if (index == 0) {
-                      newsListBloc
-                          .add(NewsListLoad(Collections.importantInfor));
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedImportantInfo);
-                    }
-                  }
-
-                  if (StatShowImportantInfo.getStatImportantTab(state)
-                      ? index == 1
-                      : index == 0) {
-                    newsListBloc.add(NewsListLoad(Collections.newsJabar));
-                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
-                  }
-                  if (StatShowImportantInfo.getStatImportantTab(state)
-                      ? index == 2
-                      : index == 1) {
-                    newsListBloc.add(NewsListLoad(Collections.newsNational));
-                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsNational);
-                  }
-                  if (StatShowImportantInfo.getStatImportantTab(state)
-                      ? index == 3
-                      : index == 2) {
-                    newsListBloc.add(NewsListLoad(Collections.newsWorld));
-                    AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
-                  }
+                  newsListBloc.add(NewsListLoad(listCollectionData[index]));
+                  AnalyticsHelper.setLogEvent(analyticsData[index]);
                 },
                 tabBarView: <Widget>[
                   if (StatShowImportantInfo.getStatImportantTab(state))
