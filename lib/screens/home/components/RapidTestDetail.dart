@@ -53,7 +53,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             indicatorColor: ColorBase.green,
             labelColor: Colors.white,
             listItemTitleTab: listItemTitleTab,
-            unselectedlabelColor: Colors.grey,
+            unselectedLabelColor: Colors.grey,
             onTap: (index) {
               if (index == 0) {
                   AnalyticsHelper.setLogEvent(Analytics.tappedRDT);

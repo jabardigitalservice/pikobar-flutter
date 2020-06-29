@@ -105,7 +105,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                 listItemTitleTab: listItemTitleTab,
                 indicatorColor: ColorBase.green,
                 labelColor: Colors.white,
-                unselectedlabelColor: Colors.grey,
+                unselectedLabelColor: Colors.grey,
                 onTap: (index) {
                   setState(() {});
                   if (StatShowImportantInfo.getStatImportantTab(state)) {

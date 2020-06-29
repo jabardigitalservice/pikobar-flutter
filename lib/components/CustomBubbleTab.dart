@@ -6,21 +6,26 @@ class CustomBubbleTab extends StatefulWidget {
   final List<String> listItemTitleTab;
   final Color indicatorColor;
   final Color labelColor;
-  final Color unselectedlabelColor;
+  final Color unselectedLabelColor;
   final ValueChanged<int> onTap;
   final List<Widget> tabBarView;
   final double heightTabBarView;
   final double paddingTopTabBarView;
+  final TabController tabController;
+  final String typeTabSelected;
 
   CustomBubbleTab(
       {this.listItemTitleTab,
       this.labelColor,
-      this.unselectedlabelColor,
+      this.unselectedLabelColor,
       this.indicatorColor,
       this.onTap,
       this.tabBarView,
       this.heightTabBarView,
-      this.paddingTopTabBarView});
+      this.paddingTopTabBarView,
+      this.tabController,
+      this.typeTabSelected
+      });
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -34,9 +39,13 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
   void initState() {
     listBubbleTabItem.clear();
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-      dataSelected = widget.listItemTitleTab[0];
+      if(widget.typeTabSelected != null){
+        dataSelected = widget.typeTabSelected;
+      }else{
+        dataSelected = widget.listItemTitleTab[0];
+      }
       listBubbleTabItem
-          .add(BubleTabItem(widget.listItemTitleTab[i], dataSelected));
+          .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
     }
     super.initState();
   }
@@ -49,6 +58,11 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TabBar(
+              controller:
+              widget.tabController != null
+                  ? widget.tabController
+                  :
+              null,
               isScrollable: true,
               onTap: (index) {
                 setState(() {
@@ -56,13 +70,13 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
                   listBubbleTabItem.clear();
                   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
                     listBubbleTabItem.add(
-                        BubleTabItem(widget.listItemTitleTab[i], dataSelected));
+                        bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
                   }
                 });
                 widget.onTap(index);
               },
               labelColor: widget.labelColor,
-              unselectedLabelColor: widget.unselectedlabelColor,
+              unselectedLabelColor: widget.unselectedLabelColor,
               indicator: BubbleTabIndicator(
                 indicatorHeight: 37.0,
                 indicatorColor: widget.indicatorColor,
@@ -76,6 +90,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
             height: widget.heightTabBarView,
             padding: EdgeInsets.only(top: widget.paddingTopTabBarView),
             child: TabBarView(
+              controller: widget.tabController != null
+                  ? widget.tabController
+                  : null,
               physics: NeverScrollableScrollPhysics(),
               children: widget.tabBarView,
             ),
@@ -86,7 +103,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
   }
 
   // ignore: non_constant_identifier_names
-  Widget BubleTabItem(String title, String dataSelected) {
+  Widget bubbleTabItem(String title, String dataSelected) {
     return Tab(
       child: Container(
         padding: EdgeInsets.all(10),
