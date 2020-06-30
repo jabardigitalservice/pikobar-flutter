@@ -47,28 +47,11 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
-        child: AppBar(
-            backgroundColor: Colors.white,
-            flexibleSpace: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 13, right: 13, top: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(left: widget.isNewPage ? 50 : 13),
-                    child: CustomAppBar.setTitleAppBar(Dictionary.faq),
-                  ),
-                  _buildSearchField()
-                ],
-              ),
-            )
-//           actions: _buildActions()
-            ),
-      ),
+      appBar: CustomAppBar.bottomSearchAppBar(
+          searchController: _searchController,
+          title: Dictionary.faq,
+          hintText: Dictionary.findFaq,
+          onChanged: updateSearchQuery),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
             .collection(Collections.faq)
@@ -108,34 +91,6 @@ class _FaqScreenState extends State<FaqScreen> {
             return _buildLoading();
           }
         },
-      ),
-    );
-  }
-
-  Widget _buildSearchField() {
-    return Container(
-      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-      height: 40.0,
-      decoration: BoxDecoration(
-          color: Colors.grey[100],
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(10.0)),
-      child: TextField(
-        controller: _searchController,
-        autofocus: false,
-        decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
-            hintText: Dictionary.findFaq,
-            border: InputBorder.none,
-            hintStyle:
-                TextStyle(color: Colors.black54, fontFamily: FontsFamily.lato),
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: 15.0, vertical: 14.0)),
-        style: TextStyle(color: Colors.black, fontSize: 14.0),
-        onChanged: (query) => updateSearchQuery,
       ),
     );
   }
