@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -59,8 +60,9 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                   padding: EdgeInsets.fromLTRB(
                       Dimens.padding, 0.0, Dimens.padding, Dimens.padding),
                   color: Colors.white,
-                  child: RaisedButton(
+                  child: OutlineButton(
                       splashColor: Colors.green,
+                      highlightColor: Colors.white,
                       padding: EdgeInsets.all(0.0),
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -68,35 +70,42 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                       ),
                       child: Row(
                         children: <Widget>[
-                          CachedNetworkImage(
-                              imageUrl: groupBanner[i]['image'],
-                              imageBuilder: (context, imageProvider) =>
-                                  Image.network(groupBanner[i]['image']),
-                              placeholder: (context, url) => Center(
-                                  child: CupertinoActivityIndicator()),
-                              errorWidget: (context, url, error) => Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(5.0),
-                                          topRight: Radius.circular(5.0)),
-                                    ),
-                                  )),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 12.0),
+                            child: CachedNetworkImage(
+                                imageUrl: groupBanner[i]['image'],
+                                imageBuilder: (context, imageProvider) =>
+                                    Image.network(groupBanner[i]['image']),
+                                placeholder: (context, url) =>
+                                    Center(child: CupertinoActivityIndicator()),
+                                errorWidget: (context, url, error) => Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(5.0),
+                                            topRight: Radius.circular(5.0)),
+                                      ),
+                                    )),
+                          ),
                           Expanded(
                               child: Container(
-                            margin: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
+                            margin: EdgeInsets.fromLTRB(
+                                Dimens.padding, 5.0, 5.0, 5.0),
                             child: Text(
                               groupBanner[i]['caption'],
                               style: TextStyle(
-                                  fontFamily: FontsFamily.productSans,
-                                  fontSize: 14.0,
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 12.0,
                                   height: 1.2,
                                   fontWeight: FontWeight.bold),
                             ),
                           )),
                           Container(
-                              margin: EdgeInsets.only(right: 20.0),
-                              child: Icon(Icons.chevron_right))
+                              margin: EdgeInsets.only(right: Dimens.padding),
+                              child: Icon(
+                                Icons.chevron_right,
+                                color: ColorBase.green,
+                              ))
                         ],
                       ),
                       onPressed: () async {
