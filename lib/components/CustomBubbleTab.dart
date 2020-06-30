@@ -13,6 +13,7 @@ class CustomBubbleTab extends StatefulWidget {
   final double paddingTopTabBarView;
   final TabController tabController;
   final String typeTabSelected;
+  bool isExpand;
 
   CustomBubbleTab(
       {this.listItemTitleTab,
@@ -24,8 +25,8 @@ class CustomBubbleTab extends StatefulWidget {
       this.heightTabBarView,
       this.paddingTopTabBarView,
       this.tabController,
-      this.typeTabSelected
-      });
+      this.typeTabSelected,
+      this.isExpand});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -34,18 +35,23 @@ class CustomBubbleTab extends StatefulWidget {
 class _CustomBubbleTabState extends State<CustomBubbleTab> {
   List<Widget> listBubbleTabItem = [];
   String dataSelected = "";
-
+  bool isExpand;
   @override
   void initState() {
     listBubbleTabItem.clear();
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-      if(widget.typeTabSelected != null){
+      if (widget.typeTabSelected != null) {
         dataSelected = widget.typeTabSelected;
-      }else{
+      } else {
         dataSelected = widget.listItemTitleTab[0];
       }
       listBubbleTabItem
           .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
+    }
+    if (widget.isExpand != null) {
+      isExpand = widget.isExpand;
+    } else {
+      isExpand = false;
     }
     super.initState();
   }
@@ -59,18 +65,15 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
         children: <Widget>[
           TabBar(
               controller:
-              widget.tabController != null
-                  ? widget.tabController
-                  :
-              null,
+                  widget.tabController != null ? widget.tabController : null,
               isScrollable: true,
               onTap: (index) {
                 setState(() {
                   dataSelected = widget.listItemTitleTab[index];
                   listBubbleTabItem.clear();
                   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-                    listBubbleTabItem.add(
-                        bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
+                    listBubbleTabItem.add(bubbleTabItem(
+                        widget.listItemTitleTab[i], dataSelected));
                   }
                 });
                 widget.onTap(index);
@@ -86,17 +89,27 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
               indicatorWeight: 0.1,
               labelPadding: EdgeInsets.all(10),
               tabs: listBubbleTabItem),
-          Container(
-            height: widget.heightTabBarView,
-            padding: EdgeInsets.only(top: widget.paddingTopTabBarView),
-            child: TabBarView(
-              controller: widget.tabController != null
-                  ? widget.tabController
-                  : null,
-              physics: NeverScrollableScrollPhysics(),
-              children: widget.tabBarView,
-            ),
-          ),
+         isExpand
+              ? Expanded(
+                  child: TabBarView(
+                    controller: widget.tabController != null
+                        ? widget.tabController
+                        : null,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: widget.tabBarView,
+                  ),
+                )
+              : Container(
+                  height: widget.heightTabBarView,
+                  padding: EdgeInsets.only(top: widget.paddingTopTabBarView),
+                  child: TabBarView(
+                    controller: widget.tabController != null
+                        ? widget.tabController
+                        : null,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: widget.tabBarView,
+                  ),
+                ),
         ],
       ),
     );

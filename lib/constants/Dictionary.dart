@@ -104,8 +104,10 @@ class Dictionary {
   static String yourHealthStatus = 'Status Kesehatan Anda :';
   static String rdt = 'Rapid Diagnostic Test (RDT)';
   static String pcr = 'Polymerase Chain Reaction (PCR)';
-
-
+  static String emergencyNumber = 'No Darurat';
+  static String referralHospital = 'RS Rujukan COVID-19';
+  static String callCenterArea = 'Call Center Kota/Kab';
+  static String gugusTugasWeb = 'Website Gugus Tugas Kota/Kabupaten Jawa Barat';
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';
@@ -126,7 +128,6 @@ class Dictionary {
   static String termsConditions = ' Terms & Conditions';
   static String agree = 'Setuju';
   static String back = 'Kembali';
-
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -172,6 +173,7 @@ class Dictionary {
   static String codeVerified = 'No hp telah terverifikasi';
   static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali... ';
   static String profileSaved = 'Perubahan tersimpan';
+  static String phoneNumberAlreadyUse='Nomor telepon telah dipakai oleh akun yang lain....';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
@@ -226,7 +228,8 @@ class Dictionary {
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
   static String subTitleMenus = 'Saatnya berbagi informasi dan lawan COVID-19';
-  static String surveyInfo = 'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
+  static String surveyInfo =
+      'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -240,7 +243,7 @@ class Dictionary {
   static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
   static String moreDetailRapidTest = ' Daftar Test Masif';
-  static String lastUpdate = 'Update terakhir pada';
+  static String lastUpdate = 'Update Terakhir';
 
   // check distribution virus
   static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';

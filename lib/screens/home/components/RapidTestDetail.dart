@@ -17,6 +17,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:html/dom.dart' as dom;
 
@@ -46,43 +47,29 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       appBar: CustomAppBar.defaultAppBar(
         title: Dictionary.testSummaryTitleAppbar,
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        children: <Widget>[
-          CustomBubbleTab(
-            indicatorColor: ColorBase.green,
-            labelColor: Colors.white,
-            listItemTitleTab: listItemTitleTab,
-            unselectedLabelColor: Colors.grey,
-            onTap: (index) {
-              if (index == 0) {
-                  AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-              } else if (index == 1) {
-                AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-              }
-            },
-            tabBarView: <Widget>[_buildRDT(), _buildPCR()],
-            heightTabBarView: MediaQuery.of(context).size.height * 1.2,
-            paddingTopTabBarView: 0,
-          ),
-          // widget.document.data['last_update'] == null
-          //     ? Container()
-          //     : Center(
-          //         child: Text(
-          //           '${Dictionary.lastUpdate} ${unixTimeStampToDateTimeWithoutDay(widget.document.data['last_update'].seconds)}',
-          //           style: TextStyle(
-          //               color: Color(0xff828282),
-          //               fontWeight: FontWeight.bold,
-          //               fontSize: 16),
-          //         ),
-          //       )
-        ],
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: CustomBubbleTab(
+          indicatorColor: ColorBase.green,
+          labelColor: Colors.white,
+          listItemTitleTab: listItemTitleTab,
+          unselectedLabelColor: Colors.grey,
+          onTap: (index) {
+            if (index == 0) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+            } else if (index == 1) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+            }
+          },
+          tabBarView: <Widget>[_buildRDT(), _buildPCR()],
+          isExpand: true,
+        ),
       ),
     );
   }
 
   Widget _buildRDT() {
-    return Column(
+    return ListView(
       children: <Widget>[
         widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
             ? buildAnnouncement(0)
@@ -90,6 +77,34 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
+        widget.document.data['last_update'] == null
+            ? Container()
+            : Padding(
+                padding: EdgeInsets.only(bottom: 20, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Dictionary.lastUpdate,
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '${unixTimeStampToDateTime(widget.document.data['last_update'].seconds)}',
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
         buildHeader(Dictionary.rapidTestTitle, 'bloodTest@4x.png',
             widget.document.data['total'], Color(0xffFAFAFA)),
         SizedBox(
@@ -104,7 +119,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   }
 
   Widget _buildPCR() {
-    return Column(
+    return ListView(
       children: <Widget>[
         widget.remoteConfig != null && dataAnnouncement[1]['enabled'] == true
             ? buildAnnouncement(1)
@@ -112,6 +127,34 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
+        widget.documentPCR.data['last_update'] == null
+            ? Container()
+            : Padding(
+                padding: EdgeInsets.only(bottom: 20, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Dictionary.lastUpdate,
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '${unixTimeStampToDateTime(widget.documentPCR.data['last_update'].seconds)}',
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
         buildHeader(Dictionary.pcrTitle, 'bloodTestBlue@4x.png',
             widget.documentPCR.data['total'], Color(0xffFAFAFA)),
         SizedBox(

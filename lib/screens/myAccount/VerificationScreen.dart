@@ -71,7 +71,10 @@ class _VerificationState extends State<Verification> {
                                     .toString()
                                     .contains('ERROR_INVALID_VERIFICATION_CODE')
                                 ? Dictionary.codeWrong
-                                : state.error.toString(),
+                                : state.error.toString().contains(
+                                        'ERROR_CREDENTIAL_ALREADY_IN_USE')
+                                    ? Dictionary.phoneNumberAlreadyUse
+                                    : state.error.toString(),
                             buttonText: Dictionary.ok,
                             onOkPressed: () {
                               Navigator.of(context)
