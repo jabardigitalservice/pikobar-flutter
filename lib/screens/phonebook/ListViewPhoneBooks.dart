@@ -1,8 +1,14 @@
+import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/emergencyNumber/Bloc.dart';
+import 'package:pikobar_flutter/blocs/emergencyNumber/EmergencyNumberBloc.dart';
+import 'package:pikobar_flutter/blocs/emergencyNumber/EmergencyNumberEvent.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -13,6 +19,10 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/CallCenterModel.dart';
+import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
+import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
+import 'package:pikobar_flutter/repositories/EmergencyNumberRepository.dart';
 import 'package:pikobar_flutter/screens/phonebook/CallCenterDetailScreen.dart';
 import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -31,14 +41,23 @@ class ListViewPhoneBooks extends StatefulWidget {
 class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Map<String, bool> _categoryExpansionStateMap = Map<String, bool>();
   Map<String, bool> _detailExpandList = Map<String, bool>();
-
+  String typeEmergenyNumber = Dictionary.emergencyNumber;
   int callCenterPhoneCount, emergencyPhoneCount, dataWebGugustugasCount;
   int tag = 0;
+  EmergencyNumberBloc _emergencyNumberBloc;
+  final EmergencyNumberRepository _emergencyNumberRepository =
+      EmergencyNumberRepository();
   List<String> options = [
     'No Darurat',
     'RS Rujukan COVID-19',
     'Call Center Kota/Kab',
     'Website Gugus Tugas Kota/Kabupaten Jawa Barat'
+  ];
+  List<String> listItemTitleTab = [
+    Dictionary.emergencyNumber,
+    Dictionary.referralHospital,
+    Dictionary.callCenterArea,
+    Dictionary.gugusTugasWeb
   ];
   @override
   void initState() {
@@ -59,166 +78,166 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: 5),
-          child: ChipsChoice<int>.single(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            value: tag,
-            onChanged: (val) => setState(() {
-              tag = val;
-              print(tag);
-              _detailExpandList.clear();
-            }),
-            options: ChipsChoiceOption.listFrom<int, String>(
-              source: options,
-              value: (i, v) => i,
-              label: (i, v) => v,
-            ),
-            itemConfig: const ChipsChoiceItemConfig(
-              showCheckmark: false, selectedColor: Color(0xff27AE60),
-              labelStyle: TextStyle(
-                fontSize: 11.5,
-                color: Color(0xff828282),
-                fontFamily: 'lato',
-              ),
-              selectedBrightness: Brightness.dark,
-              // unselectedBrightness: Brightness.dark,
-            ),
-          ),
-        ),
-        Expanded(
-          child: ListView(
-            children: <Widget>[
-              tag == 0
-                  ? Column(
-                      children: <Widget>[
-                        widget.searchQuery == null
-                            ? _buildDaruratNumber(context)
-                            : Container(),
-                      ],
-                    )
-                  : tag == 1
-                      ? Column(
-                          children: <Widget>[
-                            StreamBuilder<QuerySnapshot>(
-                                stream: Firestore.instance
-                                    .collection(Collections.emergencyNumbers)
-                                    .orderBy('name')
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                                  if (snapshot.hasData) {
-                                    return snapshot.data.documents.isEmpty
-                                        ? EmptyData(
-                                            message:
-                                                Dictionary.emptyDataPhoneBook)
-                                        : snapshot.data.documents[0]['name'] !=
-                                                null
-                                            ? Column(
-                                                children:
-                                                    getListRumahSakitRujukan(
-                                                        snapshot),
-                                              )
-                                            : Column(
-                                                children: _buildLoading(),
-                                              );
-                                  } else {
-                                    return Column(
-                                      children: _buildLoading(),
-                                    );
-                                  }
-                                }),
-                          ],
-                        )
-                      : tag == 2
-                          ? Column(
-                              children: <Widget>[
-                                StreamBuilder<QuerySnapshot>(
-                                    stream: Firestore.instance
-                                        .collection(Collections.callCenters)
-                                        .orderBy(
-                                          'nama_kotkab',
-                                        )
-                                        .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      if (snapshot.hasData) {
-                                        return snapshot.data.documents.isEmpty
-                                            ? EmptyData(
-                                                message: Dictionary
-                                                    .emptyDataPhoneBook)
-                                            : snapshot.data.documents[0]
-                                                        ['nama_kotkab'] !=
-                                                    null
-                                                ? Column(
-                                                    children: getListCallCenter(
-                                                        snapshot),
-                                                  )
-                                                : Column(
-                                                    children: _buildLoading(),
-                                                  );
-                                      } else {
-                                        return Column(
-                                          children: _buildLoading(),
-                                        );
-                                      }
-                                    })
-                              ],
-                            )
-                          : Column(
-                              children: <Widget>[
-                                StreamBuilder<QuerySnapshot>(
-                                    stream: Firestore.instance
-                                        .collection(Collections.taskForces)
-                                        .orderBy(
-                                          'name',
-                                        )
-                                        .snapshots(),
-                                    builder: (BuildContext context,
-                                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                                      if (snapshot.hasData) {
-                                        return snapshot.data.documents.isEmpty
-                                            ? EmptyData(
-                                                message: Dictionary
-                                                    .emptyDataPhoneBook)
-                                            : snapshot.data.documents[0]
-                                                        ['name'] !=
-                                                    null
-                                                ? Column(
-                                                    children:
-                                                        getListWebGugusTugas(
-                                                            snapshot),
-                                                  )
-                                                : Column(
-                                                    children: _buildLoading(),
-                                                  );
-                                      } else {
-                                        return Column(
-                                          children: _buildLoading(),
-                                        );
-                                      }
-                                    })
-                              ],
-                            ),
-              widget.searchQuery != null &&
-                      callCenterPhoneCount == 0 &&
-                      emergencyPhoneCount == 0
-                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
-                  : Container()
+    return BlocProvider<EmergencyNumberBloc>(
+      create: (BuildContext context) => _emergencyNumberBloc =
+          EmergencyNumberBloc(
+              emergencyNumberRepository: _emergencyNumberRepository),
+      child: BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+        builder: (context, state) {
+          return CustomBubbleTab(
+            indicatorColor: ColorBase.green,
+            labelColor: Colors.white,
+            listItemTitleTab: listItemTitleTab,
+            unselectedLabelColor: Colors.grey,
+            onTap: (index) {
+              if (index == 0) {
+                setState(() {
+                  typeEmergenyNumber = Dictionary.emergencyNumber;
+                });
+                // AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+              } else if (index == 1) {
+                setState(() {
+                  typeEmergenyNumber = Dictionary.referralHospital;
+                  _emergencyNumberBloc.add(ReferralHospitalLoad());
+                });
+                // AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+              } else if (index == 2) {
+                setState(() {
+                  typeEmergenyNumber = Dictionary.callCenterArea;
+                  _emergencyNumberBloc.add(CallCenterLoad());
+                });
+
+                // AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+              } else if (index == 3) {
+                setState(() {
+                  typeEmergenyNumber = Dictionary.gugusTugasWeb;
+                  _emergencyNumberBloc.add(GugusTugasWebLoad());
+                });
+
+                // AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+              }
+            },
+            tabBarView: <Widget>[
+              buildEmergencyNumberTab(),
+              buildReferralHospitalTab(),
+              buildCallCenterTab(),
+              buildWebGugusTugasTab()
             ],
-          ),
-        ),
+            isExpand: true,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildEmergencyNumberTab() {
+    return Column(
+      children: <Widget>[
+        widget.searchQuery == null ? _buildDaruratNumber(context) : Container(),
       ],
     );
   }
 
-  List<Widget> getListRumahSakitRujukan(AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget buildReferralHospitalTab() {
+    return ListView(
+      children: <Widget>[
+        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+          builder: (context, state) {
+            if (state is ReferralHospitalLoaded) {
+              List<ReferralHospitalModel> dataNomorDarurat;
+              if (widget.searchQuery != null) {
+                dataNomorDarurat = state.referralHospitalList
+                    .where((test) => test.name
+                        .toLowerCase()
+                        .contains(widget.searchQuery.toLowerCase()))
+                    .toList();
+              } else {
+                dataNomorDarurat = state.referralHospitalList;
+              }
+              return dataNomorDarurat.isEmpty
+                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  : Column(
+                      children: getListRumahSakitRujukan(dataNomorDarurat),
+                    );
+            } else {
+              return Column(
+                children: _buildLoading(),
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+
+  Widget buildCallCenterTab() {
+    return ListView(
+      children: <Widget>[
+        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+          builder: (context, state) {
+            if (state is CallCenterLoaded) {
+              List<CallCenterModel> dataCallCenter;
+              if (widget.searchQuery != null) {
+                dataCallCenter = state.callCenterList
+                    .where((test) => test.nameCity
+                        .toLowerCase()
+                        .contains(widget.searchQuery.toLowerCase()))
+                    .toList();
+              } else {
+                dataCallCenter = state.callCenterList;
+              }
+              return dataCallCenter.isEmpty
+                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  : Column(
+                      children: getListCallCenter(dataCallCenter),
+                    );
+            } else {
+              return Column(
+                children: _buildLoading(),
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+
+  Widget buildWebGugusTugasTab() {
+    return ListView(
+      children: <Widget>[
+        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+          builder: (context, state) {
+            if (state is GugusTugasWebLoaded) {
+              List<GugusTugasWebModel> dataWebGugusTugas;
+              if (widget.searchQuery != null) {
+                dataWebGugusTugas = state.gugusTugasWebModel
+                    .where((test) => test.name
+                        .toLowerCase()
+                        .contains(widget.searchQuery.toLowerCase()))
+                    .toList();
+              } else {
+                dataWebGugusTugas = state.gugusTugasWebModel;
+              }
+              return dataWebGugusTugas.isEmpty
+                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  : Column(
+                      children: getListWebGugusTugas(dataWebGugusTugas),
+                    );
+            } else {
+              return Column(
+                children: _buildLoading(),
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+
+  List<Widget> getListRumahSakitRujukan(List<ReferralHospitalModel> listModel) {
     List<Widget> list = List();
 
-    Column _cardTile(DocumentSnapshot document) {
+    Column _cardTile(ReferralHospitalModel document) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -233,52 +252,54 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   SizedBox(
                     width: 20,
                   ),
-                  document['name'] == null
+                  document.name == null
                       ? Skeleton(
                           height: 5,
                           width: MediaQuery.of(context).size.width / 4,
                         )
-                      : Text(document['name'],
-                          style: TextStyle(
-                              color: Color(0xff333333),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 12)),
+                      : Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(document.name,
+                              style: TextStyle(
+                                  color: Color(0xff333333),
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 12)),
+                        ),
                 ],
               ),
               IconButton(
                 icon: Icon(
-                  _detailExpandList[document['name']]
+                  _detailExpandList[document.name]
                       ? Icons.keyboard_arrow_down
                       : Icons.arrow_forward_ios,
                   color: Color(0xff828282),
-                  size: _detailExpandList[document['name']] ? 25 : 15,
+                  size: _detailExpandList[document.name] ? 25 : 15,
                 ),
                 onPressed: () {
-                  callback(
-                      document['name'], _detailExpandList[document['name']]);
+                  callback(document.name, _detailExpandList[document.name]);
                   print(_detailExpandList);
                 },
               )
             ],
           ),
-          _detailExpandList[document['name']]
+          _detailExpandList[document.name]
               ? Padding(
                   padding: EdgeInsets.only(left: 35, right: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      document['address'] != null
+                      document.address != null
                           ? Padding(
                               padding: EdgeInsets.only(bottom: 15),
-                              child: Text(document['address'],
+                              child: Text(document.address,
                                   style: TextStyle(
                                       color: Color(0xff828282),
                                       fontFamily: FontsFamily.lato,
                                       fontSize: 12)),
                             )
                           : Container(),
-                      document['address'] != null
+                      document.address != null
                           ? SizedBox(
                               height: 5,
                               child: Container(
@@ -286,14 +307,13 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                               ),
                             )
                           : Container(),
-                      document['phones'] != null &&
-                              document['phones'].isNotEmpty
+                      document.phones != null && document.phones.isNotEmpty
                           ? Column(
-                              children:
-                                  _buildListDetailPhone(document, 'phones'),
+                              children: _buildListDetailPhone(
+                                  document.phones, 'phones'),
                             )
                           : Container(),
-                      document['web'] != null && document['web'].isNotEmpty
+                      document.web != null && document.web.isNotEmpty
                           ? SizedBox(
                               height: 5,
                               child: Container(
@@ -301,7 +321,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                               ),
                             )
                           : Container(),
-                      document['web'] != null && document['web'].isNotEmpty
+                      document.web != null && document.web.isNotEmpty
                           ? ListTile(
                               contentPadding: EdgeInsets.all(0),
                               trailing: Container(
@@ -309,21 +329,22 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                   child: Image.asset(
                                       '${Environment.iconAssets}web_underline.png')),
                               title: Text(
-                                document['web'],
+                                document.web,
                                 style: TextStyle(
                                     color: Color(0xff2D9CDB),
-                                    fontFamily: FontsFamily.lato, fontWeight: FontWeight.bold,
+                                    fontFamily: FontsFamily.lato,
+                                    fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
                                     fontSize: 12),
                               ),
                               onTap: () {
-                                _launchURL(document['web'], 'web');
+                                _launchURL(document.web, 'web');
 
                                 AnalyticsHelper.setLogEvent(
                                     Analytics.tappedphoneBookEmergencyWeb,
                                     <String, dynamic>{
-                                      'title': document['name'],
-                                      'web': document['web']
+                                      'title': document.name,
+                                      'web': document.web
                                     });
                               })
                           : Container()
@@ -335,37 +356,23 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       );
     }
 
-    Widget _card(DocumentSnapshot document) {
+    Widget _card(ReferralHospitalModel document) {
       return Card(
           elevation: 0,
           margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
           child: _cardTile(document));
     }
 
-    List dataNomorDarurat;
-    if (widget.searchQuery != null) {
-      dataNomorDarurat = snapshot.data.documents
-          .where((test) => test['name']
-              .toLowerCase()
-              .contains(widget.searchQuery.toLowerCase()))
-          .toList();
-    } else {
-      dataNomorDarurat = snapshot.data.documents;
-    }
-
-    emergencyPhoneCount = dataNomorDarurat.length;
+    emergencyPhoneCount = listModel.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
-      if (!_detailExpandList.containsKey(dataNomorDarurat[i]['name'])) {
-        _detailExpandList.addAll({dataNomorDarurat[i]['name']: false});
+      print('object');
+      if (!_detailExpandList.containsKey(listModel[i].name)) {
+        _detailExpandList.addAll({listModel[i].name: false});
       }
 
       Column column = Column(
         children: <Widget>[
-          widget.searchQuery != null
-              ? _card(dataNomorDarurat[i])
-              : _categoryExpansionStateMap["RumahSakitRujukan"]
-                  ? _card(dataNomorDarurat[i])
-                  : Container(),
+          _card(listModel[i]),
           _categoryExpansionStateMap["RumahSakitRujukan"]
               ? i == emergencyPhoneCount - 1
                   ? Container()
@@ -384,10 +391,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  List<Widget> _buildListDetailPhone(DocumentSnapshot document, String name) {
+  List<Widget> _buildListDetailPhone(List<dynamic> document, String name) {
     List<Widget> list = List();
 
-    for (int i = 0; i < document[name].length; i++) {
+    for (int i = 0; i < document.length; i++) {
       Column column = Column(
         children: <Widget>[
           ListTile(
@@ -397,23 +404,22 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   child: Image.asset(
                       '${Environment.iconAssets}phone_underline.png')),
               title: Text(
-                document[name][i],
+                document[i],
                 style: TextStyle(
                     color: Color(0xff2D9CDB),
-                    fontFamily: FontsFamily.lato, fontWeight: FontWeight.bold,
+                    fontFamily: FontsFamily.lato,
+                    fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                     fontSize: 12),
               ),
               onTap: () {
-                _launchURL(document[name][i], 'number');
+                _launchURL(document[i], 'number');
 
                 AnalyticsHelper.setLogEvent(
-                    Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
-                  'title': document['name'],
-                  'telp': document[name][i]
-                });
+                    Analytics.tappedphoneBookEmergencyTelp,
+                    <String, dynamic>{'title': document, 'telp': document[i]});
               }),
-          i == document[name].length - 1
+          i == document.length - 1
               ? Container()
               : SizedBox(
                   height: 5,
@@ -429,9 +435,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  List<Widget> getListCallCenter(AsyncSnapshot<QuerySnapshot> snapshot) {
+  List<Widget> getListCallCenter(List<CallCenterModel> listModel) {
     List<Widget> list = List();
-    Column _cardTile(DocumentSnapshot document) {
+    Column _cardTile(CallCenterModel document) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -446,44 +452,47 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   SizedBox(
                     width: 20,
                   ),
-                  document['nama_kotkab'] == null
+                  document.nameCity == null
                       ? Skeleton(
                           height: 5,
                           width: MediaQuery.of(context).size.width / 4,
                         )
-                      : Text(document['nama_kotkab'],
-                          style: TextStyle(
-                              color: Color(0xff333333),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 12)),
+                      : Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(document.nameCity,
+                              style: TextStyle(
+                                  color: Color(0xff333333),
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 12)),
+                        ),
                 ],
               ),
               IconButton(
                 icon: Icon(
-                  _detailExpandList[document['nama_kotkab']]
+                  _detailExpandList[document.nameCity]
                       ? Icons.keyboard_arrow_down
                       : Icons.arrow_forward_ios,
                   color: Color(0xff828282),
-                  size: _detailExpandList[document['nama_kotkab']] ? 25 : 15,
+                  size: _detailExpandList[document.nameCity] ? 25 : 15,
                 ),
                 onPressed: () {
-                  callback(document['nama_kotkab'],
-                      _detailExpandList[document['nama_kotkab']]);
+                  callback(
+                      document.nameCity, _detailExpandList[document.nameCity]);
                   print(document);
                   print(_detailExpandList);
                 },
               )
             ],
           ),
-          _detailExpandList[document['nama_kotkab']]
+          _detailExpandList[document.nameCity]
               ? Padding(
                   padding: EdgeInsets.only(left: 35, right: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      document['call_center'] != null &&
-                              document['call_center'].isNotEmpty
+                      document.callCenter != null &&
+                              document.callCenter.isNotEmpty
                           ? SizedBox(
                               height: 5,
                               child: Container(
@@ -491,15 +500,14 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                               ),
                             )
                           : Container(),
-                      document['call_center'] != null &&
-                              document['call_center'].isNotEmpty
+                      document.callCenter != null &&
+                              document.callCenter.isNotEmpty
                           ? Column(
                               children: _buildListDetailPhone(
-                                  document, 'call_center'),
+                                  document.callCenter, 'call_center'),
                             )
                           : Container(),
-                      document['hotline'] != null &&
-                              document['hotline'].isNotEmpty
+                      document.hotline != null && document.hotline.isNotEmpty
                           ? SizedBox(
                               height: 5,
                               child: Container(
@@ -507,11 +515,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                               ),
                             )
                           : Container(),
-                      document['hotline'] != null &&
-                              document['hotline'].isNotEmpty
+                      document.hotline != null && document.hotline.isNotEmpty
                           ? Column(
-                              children:
-                                  _buildListDetailPhone(document, 'hotline'),
+                              children: _buildListDetailPhone(
+                                  document.hotline, 'hotline'),
                             )
                           : Container(),
                     ],
@@ -522,36 +529,21 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       );
     }
 
-    Widget _card(DocumentSnapshot document) {
+    Widget _card(CallCenterModel document) {
       return Card(
           elevation: 0,
           margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
           child: _cardTile(document));
     }
 
-    List dataNomorDarurat;
-    if (widget.searchQuery != null) {
-      dataNomorDarurat = snapshot.data.documents
-          .where((test) => test['nama_kotkab']
-              .toLowerCase()
-              .contains(widget.searchQuery.toLowerCase()))
-          .toList();
-    } else {
-      dataNomorDarurat = snapshot.data.documents;
-    }
-
-    callCenterPhoneCount = dataNomorDarurat.length;
+    callCenterPhoneCount = listModel.length;
     for (int i = 0; i < callCenterPhoneCount; i++) {
-      if (!_detailExpandList.containsKey(dataNomorDarurat[i]['nama_kotkab'])) {
-        _detailExpandList.addAll({dataNomorDarurat[i]['nama_kotkab']: false});
+      if (!_detailExpandList.containsKey(listModel[i].nameCity)) {
+        _detailExpandList.addAll({listModel[i].nameCity: false});
       }
       Column column = Column(
         children: <Widget>[
-          widget.searchQuery != null
-              ? _card(dataNomorDarurat[i])
-              : _categoryExpansionStateMap["CallCenter"]
-                  ? _card(dataNomorDarurat[i])
-                  : Container(),
+          _card(listModel[i]),
           i == callCenterPhoneCount - 1
               ? Container()
               : SizedBox(
@@ -568,9 +560,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  List<Widget> getListWebGugusTugas(AsyncSnapshot<QuerySnapshot> snapshot) {
+  List<Widget> getListWebGugusTugas(List<GugusTugasWebModel> listModel) {
     List<Widget> list = List();
-    Column _cardTile(DocumentSnapshot document) {
+    Column _cardTile(GugusTugasWebModel document) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -579,44 +571,45 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  document['name'] == null
+                  document.name == null
                       ? Skeleton(
                           height: 5,
                           width: MediaQuery.of(context).size.width / 4,
                         )
-                      : Text(document['name'],
-                          style: TextStyle(
-                              color: Color(0xff333333),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 12)),
+                      : Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(document.name,
+                              style: TextStyle(
+                                  color: Color(0xff333333),
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 12)),
+                        ),
                 ],
               ),
               IconButton(
                 icon: Icon(
-                  _detailExpandList[document['name']]
+                  _detailExpandList[document.name]
                       ? Icons.keyboard_arrow_down
                       : Icons.arrow_forward_ios,
                   color: Color(0xff828282),
-                  size: _detailExpandList[document['name']] ? 25 : 15,
+                  size: _detailExpandList[document.name] ? 25 : 15,
                 ),
                 onPressed: () {
-                  callback(
-                      document['name'], _detailExpandList[document['name']]);
+                  callback(document.name, _detailExpandList[document.name]);
                   print(document);
                   print(_detailExpandList);
                 },
               )
             ],
           ),
-          _detailExpandList[document['name']]
+          _detailExpandList[document.name]
               ? Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      document['website'] != null &&
-                              document['website'].isNotEmpty
+                      document.website != null && document.website.isNotEmpty
                           ? ListTile(
                               contentPadding: EdgeInsets.all(0),
                               trailing: Container(
@@ -624,7 +617,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                   child: Image.asset(
                                       '${Environment.iconAssets}web_underline.png')),
                               title: Text(
-                                document['website'],
+                                document.website,
                                 style: TextStyle(
                                     color: Color(0xff2D9CDB),
                                     fontFamily: FontsFamily.lato,
@@ -633,7 +626,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                                     fontSize: 12),
                               ),
                               onTap: () {
-                                _launchURL(document['website'], 'web');
+                                _launchURL(document.website, 'web');
 
                                 // AnalyticsHelper.setLogEvent(
                                 //     Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
@@ -650,36 +643,21 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       );
     }
 
-    Widget _card(DocumentSnapshot document) {
+    Widget _card(GugusTugasWebModel document) {
       return Card(
           elevation: 0,
           margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
           child: _cardTile(document));
     }
 
-    List dataWebGugusTugas;
-    if (widget.searchQuery != null) {
-      dataWebGugusTugas = snapshot.data.documents
-          .where((test) => test['name']
-              .toLowerCase()
-              .contains(widget.searchQuery.toLowerCase()))
-          .toList();
-    } else {
-      dataWebGugusTugas = snapshot.data.documents;
-    }
-
-    dataWebGugustugasCount = dataWebGugusTugas.length;
+    dataWebGugustugasCount = listModel.length;
     for (int i = 0; i < dataWebGugustugasCount; i++) {
-      if (!_detailExpandList.containsKey(dataWebGugusTugas[i]['name'])) {
-        _detailExpandList.addAll({dataWebGugusTugas[i]['name']: false});
+      if (!_detailExpandList.containsKey(listModel[i].name)) {
+        _detailExpandList.addAll({listModel[i].name: false});
       }
       Column column = Column(
         children: <Widget>[
-          widget.searchQuery != null
-              ? _card(dataWebGugusTugas[i])
-              : _categoryExpansionStateMap["CallCenter"]
-                  ? _card(dataWebGugusTugas[i])
-                  : Container(),
+          _card(listModel[i]),
           i == dataWebGugustugasCount - 1
               ? Container()
               : SizedBox(

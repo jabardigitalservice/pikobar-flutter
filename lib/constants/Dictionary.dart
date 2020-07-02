@@ -171,9 +171,9 @@ class Dictionary {
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
   static String codeVerified = 'No hp telah terverifikasi';
-  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali... ';
+  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali';
   static String profileSaved = 'Perubahan tersimpan';
-  static String phoneNumberAlreadyUse='Nomor telepon telah dipakai oleh akun yang lain....';
+  static String phoneNumberAlreadyUse='Mohon maaf nomor telepon telah digunakan oleh akun lain';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
