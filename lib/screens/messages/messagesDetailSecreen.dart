@@ -12,6 +12,7 @@ import 'package:html/parser.dart';
 import 'package:pikobar_flutter/blocs/messages/messageDetil/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -51,15 +52,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 title: Dictionary.message,
                 actions: <Widget>[
                   state is MessageDetailLoaded
-                      ? Container(
-                          margin: EdgeInsets.only(right: 10.0),
-                          child: IconButton(
-                            icon: Icon(FontAwesomeIcons.share,
-                                size: 17, color: ColorBase.green,),
-                            onPressed: () {
-                              _shareMessage(state.data);
-                            },
-                          ))
+                      ? ShareButton(
+                          onPressed: () {
+                            _shareMessage(state.data);
+                          },
+                        )
                       : Container()
                 ]),
             body: state is MessageDetailLoading
@@ -136,7 +133,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             Text(
               data.title,
               style: TextStyle(
-                fontFamily: FontsFamily.lato,
+                  fontFamily: FontsFamily.lato,
                   fontSize: 18.0,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),

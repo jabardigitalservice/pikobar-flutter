@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -144,7 +145,7 @@ class _VideoListState extends State<VideoList> {
               itemCount: data.length,
               itemBuilder: (context, index) {
                 return Container(
-                 
+
                   margin: EdgeInsets.only(right: 15.0),
                   width: MediaQuery.of(context).size.width * 0.8,
                   // decoration: BoxDecoration(shape: BoxShape.circle),
@@ -244,16 +245,14 @@ class _VideoListState extends State<VideoList> {
                                   ),
                                 ),
                               ),
-                              Container(
+
+                              ShareButton(
+                                paddingLeft: 10,
                                 height: 40.0,
-                                child: GestureDetector(
-                                  child: Icon(FontAwesomeIcons.share,
-                                      size: 17, color: ColorBase.green),
-                                  onTap: () {
-                                    _shareVideo(
-                                        data[index].title, data[index].url);
-                                  },
-                                ),
+                                onPressed: () {
+                                  _shareVideo(
+                                      data[index].title, data[index].url);
+                                },
                               ),
                             ],
                           ),

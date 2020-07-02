@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -153,16 +154,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                               ),
                             ),
                           ),
-                          Container(
-                            child: IconButton(
-                              icon: Icon(FontAwesomeIcons.share,
-                                  size: 17, color: Color(0xFF27AE60)),
-                              onPressed: () {
-                                DocumentServices().shareDocument(
-                                    document['title'],
-                                    document['document_url']);
-                              },
-                            ),
+                          ShareButton(
+                            onPressed: () {
+                              DocumentServices().shareDocument(
+                                  document['title'], document['document_url']);
+                            },
                           )
                         ],
                       ),
