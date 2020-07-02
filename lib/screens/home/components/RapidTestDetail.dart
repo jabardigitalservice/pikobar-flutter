@@ -203,7 +203,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                         return TextAlign.justify;
                       },
                       onLinkTap: (url) {
-                        _launchURL(url);
+                        _launchURL(
+                            url,
+                            dataAnnouncement[i]['title'] != null
+                                ? dataAnnouncement[i]['title']
+                                : Dictionary.titleInfoTextAnnouncement);
                       }),
                 ]),
           ),
@@ -403,13 +407,19 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
-  _launchURL(String url) async {
+  _launchURL(String url, String title) async {
     List<String> items = [
       '_googleIDToken_',
       '_userUID_',
       '_userName_',
       '_userEmail_'
     ];
+    String analyticsUrl;
+    if (title != null) {
+      analyticsUrl = 'tapped_url_' + title.replaceAll(" ", "_");
+    } else {
+      analyticsUrl = Analytics.tappedRappidTestUrl;
+    }
     if (StringUtils.containsWords(url, items)) {
       bool hasToken = await AuthRepository().hasToken();
       if (!hasToken) {
@@ -420,13 +430,16 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           url = await userDataUrlAppend(url);
 
           openChromeSafariBrowser(url: url);
+          AnalyticsHelper.setLogEvent(analyticsUrl);
         }
       } else {
         url = await userDataUrlAppend(url);
         openChromeSafariBrowser(url: url);
+        AnalyticsHelper.setLogEvent(analyticsUrl);
       }
     } else {
       openChromeSafariBrowser(url: url);
+      AnalyticsHelper.setLogEvent(analyticsUrl);
     }
   }
 }

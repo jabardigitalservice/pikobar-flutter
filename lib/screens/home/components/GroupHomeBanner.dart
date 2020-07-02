@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'dart:convert';
@@ -120,11 +121,13 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                             var url =
                                 await userDataUrlAppend(groupBanner[i]['url']);
                             openChromeSafariBrowser(url: url);
+                            AnalyticsHelper.setLogEvent(groupBanner[i]['analyticName']);
                           }
                         } else {
                           var url =
                               await userDataUrlAppend(groupBanner[i]['url']);
                           openChromeSafariBrowser(url: url);
+                          AnalyticsHelper.setLogEvent(groupBanner[i]['analyticName']);
                         }
                       }),
                 )
