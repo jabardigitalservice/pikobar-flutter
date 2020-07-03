@@ -131,8 +131,9 @@ class _VideoListState extends State<VideoList> {
           child: Text(
             Dictionary.videoUpToDateDesc,
             style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12.0,),
+                color: Colors.black,
+                fontFamily: FontsFamily.lato,
+                fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
         ),
