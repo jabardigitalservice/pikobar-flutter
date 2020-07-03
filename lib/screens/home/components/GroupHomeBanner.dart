@@ -120,14 +120,14 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                           if (isLoggedIn != null && isLoggedIn) {
                             var url =
                                 await userDataUrlAppend(groupBanner[i]['url']);
-                            openChromeSafariBrowser(url: url);
                             AnalyticsHelper.setLogEvent(groupBanner[i]['analyticName']);
+                            openChromeSafariBrowser(url: url);
                           }
                         } else {
                           var url =
                               await userDataUrlAppend(groupBanner[i]['url']);
-                          openChromeSafariBrowser(url: url);
                           AnalyticsHelper.setLogEvent(groupBanner[i]['analyticName']);
+                          openChromeSafariBrowser(url: url);
                         }
                       }),
                 )

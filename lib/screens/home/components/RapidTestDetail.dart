@@ -428,18 +428,17 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
 
         if (isLoggedIn != null && isLoggedIn) {
           url = await userDataUrlAppend(url);
-
-          openChromeSafariBrowser(url: url);
           AnalyticsHelper.setLogEvent(analyticsUrl);
+          openChromeSafariBrowser(url: url);
         }
       } else {
         url = await userDataUrlAppend(url);
-        openChromeSafariBrowser(url: url);
         AnalyticsHelper.setLogEvent(analyticsUrl);
+        openChromeSafariBrowser(url: url);
       }
     } else {
-      openChromeSafariBrowser(url: url);
       AnalyticsHelper.setLogEvent(analyticsUrl);
+      openChromeSafariBrowser(url: url);
     }
   }
 }
