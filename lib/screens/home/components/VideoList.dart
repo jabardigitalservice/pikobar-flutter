@@ -222,7 +222,8 @@ class _VideoListState extends State<VideoList> {
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: FontsFamily.lato,
-                                fontSize: 10.0),
+                                fontSize: 10.0,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                         Container(
@@ -239,9 +240,9 @@ class _VideoListState extends State<VideoList> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: 13.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                        fontSize: 14.0,
+                                        fontFamily: FontsFamily.lato,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ),
                               ),
