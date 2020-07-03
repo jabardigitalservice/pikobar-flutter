@@ -20,6 +20,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
+import 'package:pikobar_flutter/models/EmergencyNumber.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 import 'package:pikobar_flutter/repositories/EmergencyNumberRepository.dart';
@@ -133,7 +134,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Widget buildEmergencyNumberTab() {
     return Column(
       children: <Widget>[
-        widget.searchQuery == null ? _buildDaruratNumber(context) : Container(),
+        _buildDaruratNumber(context),
       ],
     );
   }
@@ -155,7 +156,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 dataNomorDarurat = state.referralHospitalList;
               }
               return dataNomorDarurat.isEmpty
-                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  ? EmptyData(
+                      message: Dictionary.emptyDataPhoneBook,
+                      desc: Dictionary.emptyDataPhoneBookDesc,
+                      isFlare: false,
+                      image: "${Environment.imageAssets}not_found.png",
+                    )
                   : Column(
                       children: getListRumahSakitRujukan(dataNomorDarurat),
                     );
@@ -187,7 +193,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 dataCallCenter = state.callCenterList;
               }
               return dataCallCenter.isEmpty
-                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  ? EmptyData(
+                      message: Dictionary.emptyDataPhoneBook,
+                      desc: Dictionary.emptyDataPhoneBookDesc,
+                      isFlare: false,
+                      image: "${Environment.imageAssets}not_found.png",
+                    )
                   : Column(
                       children: getListCallCenter(dataCallCenter),
                     );
@@ -219,7 +230,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 dataWebGugusTugas = state.gugusTugasWebModel;
               }
               return dataWebGugusTugas.isEmpty
-                  ? EmptyData(message: Dictionary.emptyDataPhoneBook)
+                  ? EmptyData(
+                      message: Dictionary.emptyDataPhoneBook,
+                      desc: Dictionary.emptyDataPhoneBookDesc,
+                      isFlare: false,
+                      image: "${Environment.imageAssets}not_found.png",
+                    )
                   : Column(
                       children: getListWebGugusTugas(dataWebGugusTugas),
                     );
@@ -365,7 +381,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
     emergencyPhoneCount = listModel.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
-      print('object');
       if (!_detailExpandList.containsKey(listModel[i].name)) {
         _detailExpandList.addAll({listModel[i].name: false});
       }
@@ -674,14 +689,14 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  List<Widget> getListEmergencyCall(var snapshot) {
+  List<Widget> getListEmergencyCall(List<EmergencyNumberModel> snapshot) {
     List<Widget> list = List();
 
-    ListTile _cardTile(var document) {
+    ListTile _cardTile(EmergencyNumberModel document) {
       return ListTile(
-        leading: Container(height: 25, child: Image.network(document['image'])),
+        leading: Container(height: 25, child: Image.network(document.image)),
         title: Text(
-          document['title'],
+          document.title,
           style: TextStyle(
               color: Color(0xff333333),
               fontWeight: FontWeight.bold,
@@ -689,29 +704,29 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               fontSize: 12),
         ),
         onTap: () {
-          if (document['action'] == 'call') {
-            _launchURL(document['phone_number'], 'number');
+          if (document.action == 'call') {
+            _launchURL(document.phoneNumber, 'number');
 
             AnalyticsHelper.setLogEvent(
                 Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
-              'title': document['title'],
-              'telp': document['phone_number']
+              'title': document.title,
+              'telp': document.phoneNumber
             });
-          } else if (document['action'] == 'whatsapp') {
-            _launchURL(document['phone_number'], 'whatsapp',
-                message: document['message']);
+          } else if (document.action == 'whatsapp') {
+            _launchURL(document.phoneNumber, 'whatsapp',
+                message: document.message);
 
             AnalyticsHelper.setLogEvent(
                 Analytics.tappedphoneBookEmergencyWa, <String, dynamic>{
-              'title': document['title'],
-              'wa': document['phone_number']
+              'title': document.title,
+              'wa': document.phoneNumber
             });
           }
         },
       );
     }
 
-    Widget _card(var document) {
+    Widget _card(EmergencyNumberModel document) {
       return Card(elevation: 0, child: _cardTile(document));
     }
 
@@ -805,16 +820,41 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 future: setupRemoteConfig(),
                 builder: (BuildContext context,
                     AsyncSnapshot<RemoteConfig> snapshot) {
-                  var getEmergencyCall;
+                  var tempGetEmergencyCall;
+                  List<EmergencyNumberModel> getEmergencyCallFilter;
+
                   if (snapshot.data != null) {
-                    getEmergencyCall = json.decode(
+                    tempGetEmergencyCall = json.decode(
                         snapshot.data.getString(FirebaseConfig.emergencyCall));
+                    List<EmergencyNumberModel> getEmergencyCall =
+                        (tempGetEmergencyCall as List)
+                            .map((itemWord) =>
+                                EmergencyNumberModel.fromJson(itemWord))
+                            .toList();
+
+                    if (widget.searchQuery != null) {
+                      getEmergencyCallFilter = getEmergencyCall
+                          .where((test) => test.title
+                              .toLowerCase()
+                              .contains(widget.searchQuery.toLowerCase()))
+                          .toList();
+                    } else {
+                      getEmergencyCallFilter = getEmergencyCall;
+                    }
                   }
 
                   return snapshot.data != null
-                      ? Column(
-                          children: getListEmergencyCall(getEmergencyCall),
-                        )
+                      ? getEmergencyCallFilter.isEmpty
+                          ? EmptyData(
+                              message: Dictionary.emptyDataPhoneBook,
+                              desc: Dictionary.emptyDataPhoneBookDesc,
+                              isFlare: false,
+                              image: "${Environment.imageAssets}not_found.png",
+                            )
+                          : Column(
+                              children:
+                                  getListEmergencyCall(getEmergencyCallFilter),
+                            )
                       : Container();
                 })
             : Container(),
@@ -938,5 +978,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
           'used');
     }
     return remoteConfig;
+  }
+
+  @override
+  void dispose() {
+    _emergencyNumberBloc.close();
+    super.dispose();
   }
 }
