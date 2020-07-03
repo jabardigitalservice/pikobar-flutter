@@ -150,7 +150,7 @@ class _VideosListState extends State<VideosList> {
                   child: Text(
                     unixTimeStampToDateTime(state.videos[index].publishedAt),
                     style: TextStyle(
-                        color: Color(0xff828282),
+                        color: Colors.grey,
                         fontFamily: FontsFamily.lato,
                         fontWeight: FontWeight.bold,
                         fontSize: 12.0),
@@ -165,7 +165,7 @@ class _VideosListState extends State<VideosList> {
                           child: Text(
                             state.videos[index].title,
                             style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.w600),
+                                fontSize: 15.0, fontWeight: FontWeight.w600, fontFamily: FontsFamily.lato),
                             textAlign: TextAlign.left,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
