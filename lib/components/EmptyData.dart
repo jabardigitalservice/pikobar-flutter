@@ -50,7 +50,7 @@ class EmptyData extends StatelessWidget {
             ),
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: 10),
-              child: Text(desc.isEmpty ? '' : desc,
+              child: Text(desc==null ? '' : desc,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12)),
             )
@@ -89,7 +89,7 @@ class EmptyData extends StatelessWidget {
             ),
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: 10),
-              child: Text(desc.isEmpty ? '' : desc,
+              child: Text(desc==null ? '' : desc,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12)),
             )
