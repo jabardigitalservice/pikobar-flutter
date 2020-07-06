@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -64,7 +65,7 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                 Text(
                   widget.termsConfig['date'],
                   style: TextStyle(
-                    color: Color(0xff828282),
+                    color: ColorBase.darkGrey,
                     fontSize: 14.0,
                   ),
                 ),

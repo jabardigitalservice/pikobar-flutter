@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
           child: Scaffold(
-              backgroundColor: Color(0xffFFFFFF),
+              backgroundColor: Colors.white,
               appBar: CustomAppBar.defaultAppBar(title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
@@ -187,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                         state.data['name'],
                         style: TextStyle(
-                            color: Color(0xff333333),
+                            color: ColorBase.veryDarkGrey,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.lato),
@@ -197,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 30.0,
                       child: Text(_profileLoaded.record.email,
                           style: TextStyle(
-                              color: Color(0xff333333),
+                              color: ColorBase.veryDarkGrey,
                               fontSize: 14,
                               fontFamily: FontsFamily.lato)),
                     )
@@ -226,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: EdgeInsets.only(left: 20, top: 10),
           child: Text(Dictionary.qrCode,
               style: TextStyle(
-                  color: Color(0xff333333),
+                  color: ColorBase.veryDarkGrey,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                   fontFamily: FontsFamily.lato)),
@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xffE0E0E0))),
+                  border: Border.all(color: ColorBase.menuBorderColor)),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -263,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             Dictionary.qrCodeMenu,
                             style: TextStyle(
-                                color: Color(0xff333333),
+                                color: ColorBase.veryDarkGrey,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: FontsFamily.lato),
@@ -290,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: EdgeInsets.only(left: 20, top: 10),
           child: Text(Dictionary.accountManage,
               style: TextStyle(
-                  color: Color(0xff333333),
+                  color: ColorBase.veryDarkGrey,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                   fontFamily: FontsFamily.lato)),
@@ -323,7 +323,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             Dictionary.edit,
                             style: TextStyle(
-                                color: Color(0xff333333),
+                                color: ColorBase.veryDarkGrey,
                                 fontSize: 12,
                                 fontFamily: FontsFamily.lato),
                           ),
@@ -331,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
-                        color: Color(0xff828282),
+                        color: ColorBase.darkGrey,
                         size: 15,
                       )
                     ],
@@ -341,7 +341,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 5,
                 ),
                 Divider(
-                  color: Color(0xffE0E0E0),
+                  color: ColorBase.menuBorderColor,
                   thickness: 1,
                 ),
                 SizedBox(
@@ -361,13 +361,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Text(
                           Dictionary.versionText,
-                          style: TextStyle(color: Color(0xff4F4F4F)),
+                          style: TextStyle(color: ColorBase.veryDarkGrey),
                         ),
                       ],
                     ),
                     Text(
                       _versionText + ' ' + Dictionary.betaText,
-                      style: TextStyle(color: Color(0xff828282)),
+                      style: TextStyle(color: ColorBase.darkGrey),
                     )
                   ],
                 ),
@@ -395,7 +395,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 18),
           child: OutlineButton(
-            borderSide: BorderSide(color: Color(0xffEB5757)),
+            borderSide: BorderSide(color: ColorBase.softRed),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             color: Colors.white,
@@ -410,7 +410,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                     Dictionary.textLogoutButton,
                     style: TextStyle(
-                        color: Color(0xffEB5757),
+                        color: ColorBase.softRed,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.lato),
                   ))),
@@ -434,7 +434,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(
                   fontFamily: FontsFamily.lato,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xff828282),
+                  color: ColorBase.darkGrey,
                   fontSize: 11.0),
               children: <TextSpan>[
                 TextSpan(
@@ -625,7 +625,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           groupMenu[i]['caption'],
                           style: TextStyle(
-                              color: Color(0xff333333),
+                              color: ColorBase.veryDarkGrey,
                               fontSize: 12,
                               fontFamily: FontsFamily.lato),
                         ),
@@ -633,7 +633,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: Color(0xff828282),
+                      color: ColorBase.darkGrey,
                       size: 15,
                     )
                   ],
@@ -645,7 +645,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 5,
                   ),
                   Divider(
-                    color: Color(0xffE0E0E0),
+                    color: ColorBase.menuBorderColor,
                     thickness: 1,
                   ),
                   SizedBox(

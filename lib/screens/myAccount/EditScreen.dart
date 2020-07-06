@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
@@ -302,7 +303,7 @@ class _EditState extends State<Edit> {
                                           Dictionary.locationAddress,
                                           style: TextStyle(
                                               fontSize: 12.0,
-                                              color: Color(0xff333333),
+                                              color: ColorBase.veryDarkGrey,
                                               fontFamily: FontsFamily.lato,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -329,7 +330,7 @@ class _EditState extends State<Edit> {
                                               child: Text(
                                                 Dictionary.setLocation,
                                                 style: TextStyle(
-                                                    color: Color(0xff828282),
+                                                    color: ColorBase.darkGrey,
                                                     fontSize: 12,
                                                     fontFamily:
                                                         FontsFamily.lato),
@@ -341,7 +342,7 @@ class _EditState extends State<Edit> {
                                             borderRadius:
                                                 BorderRadius.circular(5.0)),
                                         borderSide: BorderSide(
-                                            color: Color(0xffE0E0E0),
+                                            color: ColorBase.menuBorderColor,
                                             width: 1.5),
                                         onPressed: () async {
                                           await _handleLocation();
@@ -405,7 +406,7 @@ class _EditState extends State<Edit> {
                           height: 20,
                         ),
                         RaisedButton(
-                          color: Color(0xff27AE60),
+                          color: ColorBase.limeGreen,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
@@ -587,7 +588,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -601,7 +602,7 @@ class _EditState extends State<Edit> {
             height: 10,
           ),
           RadioButtonGroup(
-            activeColor: Color(0xff27AE60),
+            activeColor: ColorBase.limeGreen,
             labelStyle: TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
             orientation: GroupedButtonsOrientation.HORIZONTAL,
             onSelected: (String selected) => setState(() {
@@ -621,7 +622,7 @@ class _EditState extends State<Edit> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         border:
-                            Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                            Border.all(color: ColorBase.menuBorderColor, width: 1.5)),
                     child: Row(
                       children: <Widget>[
                         rb,
@@ -663,7 +664,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -686,7 +687,7 @@ class _EditState extends State<Edit> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: isEmpty ? Colors.red : Color(0xffE0E0E0),
+                      color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
                       width: 1.5)),
               child: Row(
                 children: <Widget>[
@@ -703,7 +704,7 @@ class _EditState extends State<Edit> {
                         fontSize: 12,
                         fontFamily: FontsFamily.lato,
                         color: placeholder == Dictionary.birthdayPlaceholder
-                            ? Color(0xff828282)
+                            ? ColorBase.darkGrey
                             : Colors.black),
                   ),
                 ],
@@ -750,7 +751,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -771,7 +772,7 @@ class _EditState extends State<Edit> {
                     fontFamily: FontsFamily.lato,
                     fontSize: 12)
                 : TextStyle(
-                    color: Color(0xffBDBDBD),
+                    color: ColorBase.disableText,
                     fontFamily: FontsFamily.lato,
                     fontSize: 12),
             enabled: isEdit,
@@ -781,7 +782,7 @@ class _EditState extends State<Edit> {
             decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: TextStyle(
-                    color: Color(0xff828282),
+                    color: ColorBase.darkGrey,
                     fontFamily: FontsFamily.lato,
                     fontSize: 12),
                 errorBorder: OutlineInputBorder(
@@ -790,15 +791,15 @@ class _EditState extends State<Edit> {
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                        BorderSide(color: ColorBase.menuBorderColor, width: 1.5)),
                 disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                        BorderSide(color: ColorBase.menuBorderColor, width: 1.5)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5))),
+                        BorderSide(color: ColorBase.menuBorderColor, width: 1.5))),
             keyboardType:
                 textInputType != null ? textInputType : TextInputType.text,
           )
@@ -822,7 +823,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -841,7 +842,7 @@ class _EditState extends State<Edit> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: isEmpty ? Colors.red : Color(0xffE0E0E0),
+                    color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
                     width: 1.5)),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -851,7 +852,7 @@ class _EditState extends State<Edit> {
                 hint: Text(
                   hintText,
                   style: TextStyle(
-                      color: Color(0xff828282),
+                      color: ColorBase.darkGrey,
                       fontFamily: FontsFamily.lato,
                       fontSize: 12),
                 ),
@@ -913,7 +914,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -934,14 +935,14 @@ class _EditState extends State<Edit> {
                 width: MediaQuery.of(context).size.width / 7,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                    border: Border.all(color: ColorBase.menuBorderColor, width: 1.5)),
                 child: Center(
                     child: Text(
                   Dictionary.inaCode,
                   style: TextStyle(
                       fontSize: 12,
                       fontFamily: FontsFamily.lato,
-                      color: Color(0xff828282)),
+                      color: ColorBase.darkGrey),
                 )),
               ),
               SizedBox(
@@ -955,7 +956,7 @@ class _EditState extends State<Edit> {
                           fontFamily: FontsFamily.lato,
                           fontSize: 12)
                       : TextStyle(
-                          color: Color(0xffBDBDBD),
+                          color: ColorBase.disableText,
                           fontFamily: FontsFamily.lato,
                           fontSize: 12),
                   enabled: isEdit,
@@ -964,7 +965,7 @@ class _EditState extends State<Edit> {
                   decoration: InputDecoration(
                       hintText: hintText,
                       hintStyle: TextStyle(
-                          color: Color(0xff828282),
+                          color: ColorBase.darkGrey,
                           fontFamily: FontsFamily.lato,
                           fontSize: 12),
                       errorBorder: OutlineInputBorder(
@@ -974,15 +975,15 @@ class _EditState extends State<Edit> {
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
-                              BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                              BorderSide(color: ColorBase.menuBorderColor, width: 1.5)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
-                              BorderSide(color: Color(0xffE0E0E0), width: 1)),
+                              BorderSide(color: ColorBase.menuBorderColor, width: 1)),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide:
-                              BorderSide(color: Color(0xffE0E0E0), width: 2))),
+                              BorderSide(color: ColorBase.menuBorderColor, width: 2))),
                   keyboardType: TextInputType.number,
                 ),
               ),

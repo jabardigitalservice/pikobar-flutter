@@ -6,6 +6,7 @@ import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/ProfileState.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
@@ -181,7 +182,7 @@ class _VerificationState extends State<Verification> {
                                     right: 20.0),
                                 child: Text(Dictionary.otpHasBeenSent,
                                     style: TextStyle(
-                                      color: Color(0xff828282),
+                                      color: ColorBase.darkGrey,
                                     )),
                               ),
                               SizedBox(
@@ -192,7 +193,7 @@ class _VerificationState extends State<Verification> {
                                     Dictionary.inaCode + widget.phoneNumber,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xff4F4F4F),
+                                      color: ColorBase.veryDarkGrey,
                                       fontWeight: FontWeight.bold,
                                     )),
                               ),
@@ -207,7 +208,7 @@ class _VerificationState extends State<Verification> {
                                     right: 20.0),
                                 child: Text(Dictionary.inputOTP,
                                     style: TextStyle(
-                                      color: Color(0xff828282),
+                                      color: ColorBase.darkGrey,
                                     )),
                               ),
                               SizedBox(
@@ -220,16 +221,16 @@ class _VerificationState extends State<Verification> {
                                     clearButtonIcon: Icon(Icons.backspace),
                                     inputDecoration: InputDecoration(
                                         hintText: '-',
-                                        fillColor: Color(0xffF2F2F2),
+                                        fillColor: ColorBase.veryLightGrey,
                                         filled: true,
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Color(0xffF2F2F2)),
+                                                color: ColorBase.veryLightGrey),
                                             borderRadius:
                                                 BorderRadius.circular(8)),
                                         border: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Color(0xffF2F2F2)),
+                                                color: ColorBase.veryLightGrey),
                                             borderRadius:
                                                 BorderRadius.circular(8)),
                                         counterText: ''),
@@ -264,7 +265,7 @@ class _VerificationState extends State<Verification> {
                                       },
                                       child: Text(Dictionary.sendAgainOTP,
                                           style: TextStyle(
-                                            color: Color(0xff2D9CDB),
+                                            color: ColorBase.brightBlue,
                                           )),
                                     )
                                   ],
@@ -280,7 +281,7 @@ class _VerificationState extends State<Verification> {
                       left: 0.0,
                       right: 0.0,
                       child: RaisedButton(
-                        color: Color(0xff27AE60),
+                        color: ColorBase.limeGreen,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         onPressed: onVerifyButtonPressed,
