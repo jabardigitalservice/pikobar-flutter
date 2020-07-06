@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
@@ -48,6 +51,79 @@ class AuthRepository {
     await googleSignIn.signOut().then((value) {
       _auth.signOut();
     });
+    await deleteToken();
+    await deleteLocalUserInfo();
+  }
+
+  /// Sign in with Apple
+  Future<UserModel> signInWithApple() async {
+    /// Perform the sign-in request
+    /// the requestedScopes are email and fullName
+    /// see: https://developer.apple.com/documentation/authenticationservices/asauthorization/scope
+    ///
+    final result = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+
+    /// Check the result
+    /// The three possible cases are [AuthorizationStatus.authorized],
+    /// [AuthorizationStatus.error] and [AuthorizationStatus.cancelled].
+    ///
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential;
+        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+        final credential = oAuthProvider.getCredential(
+            idToken: String.fromCharCodes(appleIdCredential.identityToken),
+            accessToken:
+                String.fromCharCodes(appleIdCredential.authorizationCode));
+        final authResult = await _auth.signInWithCredential(credential);
+        final FirebaseUser user = authResult.user;
+
+        assert(!user.isAnonymous);
+        assert(await user.getIdToken() != null);
+
+        /// Optional, Update user data in Firestore
+        /*final updateUser = UserUpdateInfo();
+        updateUser.displayName =
+        "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
+
+        await user.updateProfile(updateUser);*/
+
+        final FirebaseUser currentUser = await _auth.currentUser();
+        assert(user.uid == currentUser.uid);
+
+        return UserModel(
+            googleIdToken:
+                String.fromCharCodes(appleIdCredential.identityToken),
+            uid: currentUser.uid,
+            email: currentUser.email,
+            name: currentUser.displayName,
+            photoUrlFull: currentUser.photoUrl,
+            phoneNumber: currentUser.phoneNumber);
+
+      case AuthorizationStatus.error:
+        print(result.error.toString());
+        throw PlatformException(
+            code: 'ERROR_AUTHORIZATION_DENIED',
+            message: result.error.toString());
+
+      case AuthorizationStatus.cancelled:
+        throw PlatformException(
+            code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
+    }
+    return null;
+  }
+
+  /// Sign out when user sign in with apple
+  Future signOutApple() async {
+    /// remove the fcm token that is currently logged in
+    await removeFCMToken();
+
+    /// sign out from firebase
+    await _auth.signOut();
+
+    /// delete token and user data on the local device
     await deleteToken();
     await deleteLocalUserInfo();
   }
@@ -99,18 +175,31 @@ class AuthRepository {
   }
 
   Future<UserModel> getUserInfo() async {
-    UserModel authUserInfo;
-    bool hasUserInfo = await hasLocalUserInfo();
-    if (hasUserInfo == false) {
-      authUserInfo = await signInWithGoogle();
-      await persistUserInfo(authUserInfo);
-      await registerFCMToken();
-      await LocationService.actionSendLocation();
-    } else {
-      authUserInfo = await readLocalUserInfo();
-    }
+    try {
+      UserModel authUserInfo;
+      bool hasUserInfo = await hasLocalUserInfo();
+      if (hasUserInfo == false) {
 
-    return authUserInfo;
+        /// Determine if Sign In with Apple is supported on the current device
+        bool isAvailable = await AppleSignIn.isAvailable();
+
+        if (Platform.isIOS && isAvailable) {
+          authUserInfo = await signInWithApple();
+        } else {
+          authUserInfo = await signInWithGoogle();
+        }
+
+        await persistUserInfo(authUserInfo);
+        await registerFCMToken();
+        await LocationService.actionSendLocation();
+      } else {
+        authUserInfo = await readLocalUserInfo();
+      }
+
+      return authUserInfo;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<void> updateIdToken() async {
@@ -172,7 +261,6 @@ class AuthRepository {
           FirebaseAnalytics().setUserProperty(name: 'city_id', value: snapshot.data['city_id']);
         }
       });
-
     }
   }
 
