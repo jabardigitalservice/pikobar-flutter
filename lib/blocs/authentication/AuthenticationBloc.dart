@@ -52,7 +52,7 @@ class AuthenticationBloc
 
     if (event is LoggedOut) {
       yield AuthenticationLoading();
-      await authRepository.signOutGoogle();
+      await authRepository.signOut();
       yield AuthenticationUnauthenticated();
     }
   }

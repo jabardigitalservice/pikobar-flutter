@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,7 +47,7 @@ class AuthRepository {
         phoneNumber: currentUser.phoneNumber);
   }
 
-  Future signOutGoogle() async {
+  Future signOut() async {
     await removeFCMToken();
     await googleSignIn.signOut().then((value) {
       _auth.signOut();
@@ -55,40 +56,60 @@ class AuthRepository {
     await deleteLocalUserInfo();
   }
 
-  /// Sign in with Apple
+  /// Sign In with Apple
+  ///
+  /// User info is only sent in the ASAuthorizationAppleIDCredential upon initial
+  /// user sign in. Subsequent logins to your app using Sign In with Apple with
+  /// the same account do not share any user info and will only return a user
+  /// identifier in the ASAuthorizationAppleIDCredential.
   Future<UserModel> signInWithApple() async {
+
     /// Perform the sign-in request
     /// the requestedScopes are email and fullName
     /// see: https://developer.apple.com/documentation/authenticationservices/asauthorization/scope
-    ///
     final result = await AppleSignIn.performRequests([
       AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
     ]);
 
     /// Check the result
-    /// The three possible cases are [AuthorizationStatus.authorized],
+    /// the three possible cases are [AuthorizationStatus.authorized],
     /// [AuthorizationStatus.error] and [AuthorizationStatus.cancelled].
-    ///
     switch (result.status) {
       case AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
         final oAuthProvider = OAuthProvider(providerId: 'apple.com');
         final credential = oAuthProvider.getCredential(
-            idToken: String.fromCharCodes(appleIdCredential.identityToken),
-            accessToken:
-                String.fromCharCodes(appleIdCredential.authorizationCode));
+          idToken: String.fromCharCodes(appleIdCredential.identityToken),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode),
+        );
         final authResult = await _auth.signInWithCredential(credential);
         final FirebaseUser user = authResult.user;
 
-        assert(!user.isAnonymous);
-        assert(await user.getIdToken() != null);
+        if (appleIdCredential.fullName.givenName != null) {
+          /// Update the firebase display name
+          /// from the data provided by appleIdCredential.
+          String displayName =
+              "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
 
-        /// Optional, Update user data in Firestore
-        /*final updateUser = UserUpdateInfo();
-        updateUser.displayName =
-        "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
+          final updateUser = UserUpdateInfo();
+          updateUser.displayName = displayName;
+          await user.updateProfile(updateUser);
 
-        await user.updateProfile(updateUser);*/
+          /// If the name on the user document firestore is null,
+          /// update the name from the data provided by appleIdCredential.
+          ///
+          /// This is required to prevent errors due to a null value of name.
+          final userDocument = Firestore.instance
+              .collection(Collections.users)
+              .document(user.uid);
+
+          await userDocument.get().then((snapshot) async {
+            if (snapshot.exists && snapshot.data['name'] == null) {
+              await userDocument.updateData({'name': displayName});
+            }
+          });
+        }
 
         final FirebaseUser currentUser = await _auth.currentUser();
         assert(user.uid == currentUser.uid);
@@ -103,7 +124,6 @@ class AuthRepository {
             phoneNumber: currentUser.phoneNumber);
 
       case AuthorizationStatus.error:
-        print(result.error.toString());
         throw PlatformException(
             code: 'ERROR_AUTHORIZATION_DENIED',
             message: result.error.toString());
@@ -113,19 +133,6 @@ class AuthRepository {
             code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
     }
     return null;
-  }
-
-  /// Sign out when user sign in with apple
-  Future signOutApple() async {
-    /// remove the fcm token that is currently logged in
-    await removeFCMToken();
-
-    /// sign out from firebase
-    await _auth.signOut();
-
-    /// delete token and user data on the local device
-    await deleteToken();
-    await deleteLocalUserInfo();
   }
 
   Future<void> deleteToken() async {
