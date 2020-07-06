@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +127,9 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                       ),
                       onPressed: () {
                         if (isAgree) {
-                          widget.authenticationBloc.add(LoggedIn());
+                          Platform.isAndroid ?
+                          widget.authenticationBloc.add(LoggedIn()) :
+                          _loginBottomSheet(context);
                         } else {
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
@@ -198,6 +202,125 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
     } else {
       return Container();
     }
+  }
+
+  void _loginBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+        ),
+        elevation: 60.0,
+        builder: (BuildContext context) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 20.0),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 14.0),
+                  color: Colors.black,
+                  height: 1.5,
+                  width: 40.0,
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  padding: EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.05),
+                      offset: Offset(0.0, 0.05),
+                    ),
+                  ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 5.0),
+
+                      _appleSignInButton(),
+
+                      SizedBox(
+                        height: 16.0,
+                      ),
+
+                      _googleSignInButton()
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  Widget _appleSignInButton() {
+    return RaisedButton(
+      splashColor: Colors.grey,
+      color: Colors.black,
+      onPressed: () {
+        Navigator.pop(context);
+        widget.authenticationBloc.add(LoggedIn(isApple: true));
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(image: AssetImage('${Environment.iconAssets}apple_white.png'), height: 24.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Apple',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _googleSignInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        Navigator.pop(context);
+        widget.authenticationBloc.add(LoggedIn(isApple: false));
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(image: AssetImage('${Environment.iconAssets}google.png'), height: 24.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override

@@ -31,15 +31,18 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             print(state);
             if (state is AuthenticationFailure) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                    description: state.error.toString(),
-                    buttonText: "OK",
-                    onOkPressed: () {
-                      Navigator.of(context).pop(); // To close the dialog
-                    },
-                  ));
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: "OK",
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
               _scaffoldKey.currentState.hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
               _scaffoldKey.currentState.showSnackBar(
@@ -54,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       )
                     ],
                   ),
-                  duration: Duration(seconds: 5),
+                  duration: Duration(seconds: 15),
                 ),
               );
             } else if (state is AuthenticationAuthenticated) {

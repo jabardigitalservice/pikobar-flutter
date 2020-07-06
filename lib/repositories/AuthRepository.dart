@@ -181,7 +181,7 @@ class AuthRepository {
     return UserModel.fromJson(userInfoMap);
   }
 
-  Future<UserModel> getUserInfo() async {
+  Future<UserModel> getUserInfo({bool isApple = false}) async {
     try {
       UserModel authUserInfo;
       bool hasUserInfo = await hasLocalUserInfo();
@@ -190,7 +190,7 @@ class AuthRepository {
         /// Determine if Sign In with Apple is supported on the current device
         bool isAvailable = await AppleSignIn.isAvailable();
 
-        if (Platform.isIOS && isAvailable) {
+        if (Platform.isIOS && isApple && isAvailable) {
           authUserInfo = await signInWithApple();
         } else {
           authUserInfo = await signInWithGoogle();

@@ -64,15 +64,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: "OK",
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: "OK",
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
               Scaffold.of(context).hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
               Scaffold.of(context).showSnackBar(
@@ -87,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     ],
                   ),
-                  duration: Duration(seconds: 5),
+                  duration: Duration(seconds: 15),
                 ),
               );
             } else {
@@ -133,6 +136,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
                           }
                         });
+                  } else if (state is AuthenticationFailure ||
+                      state is AuthenticationLoading) {
+                    return OnBoardingLoginScreen(
+                      authenticationBloc: _authenticationBloc,
+                    );
                   } else {
                     return Container();
                   }
