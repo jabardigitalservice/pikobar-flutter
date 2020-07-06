@@ -177,6 +177,8 @@ class Dictionary {
   static String profileSaved = 'Perubahan tersimpan';
   static String phoneNumberAlreadyUse =
       'Mohon maaf nomor telepon telah digunakan oleh akun lain';
+  static String otpExpired =
+      'Mohon maaf kode otp telah expired, silahkan kirim ulang kode';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';

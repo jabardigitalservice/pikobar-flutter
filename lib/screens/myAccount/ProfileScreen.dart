@@ -64,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
+              // Show dialog message error when login
               showDialog(
                   context: context,
                   builder: (BuildContext context) => DialogTextOnly(
@@ -75,6 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ));
               Scaffold.of(context).hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
+              // Show dialog when loading
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).primaryColor,
@@ -104,11 +106,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ) {
                   if (state is AuthenticationUnauthenticated ||
                       state is AuthenticationLoading) {
+                    // When user is not login show login screen
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
                     );
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
+                    // When user already login get data user from firestore
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     return StreamBuilder<DocumentSnapshot>(
@@ -119,13 +123,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         builder: (BuildContext context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
                           if (snapshot.hasError)
+                            // Show error ui when unable to get data
                             return ErrorContent(error: snapshot.error);
                           switch (snapshot.connectionState) {
+                            // Show loading while get data
                             case ConnectionState.waiting:
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
                             default:
+                              // Show content when data is ready
                               return snapshot.data.exists
                                   ? _buildContent(snapshot, _profileLoaded)
                                   : Center(
@@ -141,6 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ));
   }
 
+  // Function to build content
   Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
       AuthenticationAuthenticated _profileLoaded) {
     return ListView(
@@ -160,6 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   minRadius: 90,
                   maxRadius: 150,
                   backgroundImage: (_profileLoaded.record.photoUrlFull) != null
+                      // if image user is null show default image
                       ? NetworkImage(_profileLoaded.record.photoUrlFull)
                       : ExactAssetImage('${Environment.imageAssets}user.png'),
                 ),
@@ -198,6 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+        // Get health status visible from remote config
         BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           bloc: _remoteConfigBloc,
           builder: (context, remoteState) {
@@ -368,6 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SizedBox(
           height: 15,
         ),
+        // Get terms and condition string from remote config
         BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, state) {
             return state is RemoteConfigLoaded
@@ -410,6 +421,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Function to build text terms and conditions
   _buildTermsConditions(RemoteConfig remoteConfig) {
     var termsConditions;
     if (remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
@@ -448,16 +460,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Function to build health status container
   _buildHealthStatus(RemoteConfig remoteConfig, DocumentSnapshot data) {
     Color cardColor = ColorBase.grey;
     Color textColor = Colors.white;
     String uriImage = '${Environment.iconAssets}user_health.png';
-
+    // Get data health status visible or not
     bool visible = remoteConfig != null &&
             remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
         ? remoteConfig.getBool(FirebaseConfig.healthStatusVisible)
         : false;
-
+    // Get data health status color from remote config
     if (remoteConfig != null &&
         remoteConfig.getString(FirebaseConfig.healthStatusColors) != null &&
         data['health_status'] != null) {
@@ -497,7 +510,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           cardColor = Colors.grey;
       }
     }
-
+    // Check if health status visible or not
     return visible && data['health_status_text'] != null
         ? Container(
             margin: EdgeInsets.only(left: 20, right: 20, bottom: 15),
@@ -543,28 +556,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : Container();
   }
 
+  // Function to build group menu
   FutureBuilder<RemoteConfig> _buildGroupMenu(DocumentSnapshot data) {
+    // Get data group menu from remote config
     return FutureBuilder<RemoteConfig>(
         future: setupRemoteConfig(),
         builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
           var groupMenu;
-          String role,healthStatus;
+          String role, healthStatus;
           int groupMenuLength = 0;
           if (snapshot.data != null) {
             groupMenu = json.decode(
                 snapshot.data.getString(FirebaseConfig.groupMenuProfile));
+            // Set default value to public if data [role] in collection users is null
             if (data['role'] == null || data['role'] == '') {
               role = 'public';
             } else {
               role = data['role'];
             }
-             if (data['health_status'] == null || data['health_status'] == '') {
+            // Set default value to healthy if data [health_status] in collection users is null
+            if (data['health_status'] == null || data['health_status'] == '') {
               healthStatus = 'healthy';
             } else {
               healthStatus = data['health_status'].toLowerCase();
             }
+            // Filtering data by role and health status and visible or not
             groupMenu.removeWhere((element) => !element['role'].contains(role));
-            groupMenu.removeWhere((element) => !element['health_status'].contains(healthStatus));
+            groupMenu.removeWhere(
+                (element) => !element['health_status'].contains(healthStatus));
             groupMenu.removeWhere((element) => element['enabled'] == false);
             groupMenuLength = groupMenu.length;
           }
@@ -578,6 +597,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 
+  // Function to build list of group menu
   List<Widget> getGroupMenu(List<dynamic> groupMenu) {
     List<Widget> list = List();
 
@@ -643,6 +663,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return list;
   }
 
+  // Function to call remote config
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{

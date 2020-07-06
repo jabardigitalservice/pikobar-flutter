@@ -89,6 +89,7 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
         ));
   }
 
+  // Function to launch webview and catch parameter
   _launchURL(String url) async {
     List<String> items = [
       '_googleIDToken_',
@@ -97,21 +98,27 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
       '_userEmail_'
     ];
     if (StringUtils.containsWords(url, items)) {
+      // Check if user login or not
       bool hasToken = await AuthRepository().hasToken();
       if (!hasToken) {
+        // User not login send to login page
         bool isLoggedIn = await Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => LoginScreen()));
 
         if (isLoggedIn != null && isLoggedIn) {
+          // Catch parameter and change value
           url = await userDataUrlAppend(url);
-
+          // Open webview
           openChromeSafariBrowser(url: url);
         }
       } else {
+        // Catch parameter and change value
         url = await userDataUrlAppend(url);
+        // Open webview
         openChromeSafariBrowser(url: url);
       }
     } else {
+      // Open webview
       openChromeSafariBrowser(url: url);
     }
   }
