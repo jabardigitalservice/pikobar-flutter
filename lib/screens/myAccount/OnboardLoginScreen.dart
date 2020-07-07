@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -127,9 +128,9 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                       ),
                       onPressed: () {
                         if (isAgree) {
-                          Platform.isAndroid ?
-                          widget.authenticationBloc.add(LoggedIn()) :
-                          _loginBottomSheet(context);
+                          Platform.isAndroid
+                              ? widget.authenticationBloc.add(LoggedIn())
+                              : _loginBottomSheet(context);
                         } else {
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
@@ -204,7 +205,10 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
     }
   }
 
-  void _loginBottomSheet(context) {
+  void _loginBottomSheet(context) async {
+    /// Determine if Sign In with Apple is supported on the current device
+    bool isAvailable = await AppleSignIn.isAvailable();
+
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.white,
@@ -240,14 +244,15 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 5.0),
-
-                      _appleSignInButton(),
-
-                      SizedBox(
-                        height: 16.0,
-                      ),
-
-                      _googleSignInButton()
+                      isAvailable
+                          ? Column(children: <Widget>[
+                              _signInButton(isApple: true),
+                              SizedBox(
+                                height: 16.0,
+                              )
+                            ])
+                          : Container(),
+                      _signInButton(isApple: false)
                     ],
                   ),
                 )
@@ -257,67 +262,25 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
         });
   }
 
-  Widget _appleSignInButton() {
-    return RaisedButton(
-      splashColor: Colors.grey,
-      color: Colors.black,
+  Widget _signInButton({bool isApple = false}) {
+    return CustomButton.icon(
+      color: isApple ? Colors.black : Colors.transparent,
+      borderColor: isApple ? Colors.black : Colors.grey,
       onPressed: () {
         Navigator.pop(context);
-        widget.authenticationBloc.add(LoggedIn(isApple: true));
+        widget.authenticationBloc.add(LoggedIn(isApple: isApple));
       },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      elevation: 0,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image(image: AssetImage('${Environment.iconAssets}apple_white.png'), height: 24.0),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Sign in with Apple',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _googleSignInButton() {
-    return OutlineButton(
-      splashColor: Colors.grey,
-      onPressed: () {
-        Navigator.pop(context);
-        widget.authenticationBloc.add(LoggedIn(isApple: false));
-      },
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.grey),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image(image: AssetImage('${Environment.iconAssets}google.png'), height: 24.0),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                'Sign in with Google',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          ],
+      icon: Image(
+          image: AssetImage(
+              '${Environment.iconAssets}${isApple ? 'apple_white.png' : 'google.png'}'),
+          height: 24.0),
+      label: Text(
+        isApple
+            ? Dictionary.signInWithApple
+            : Dictionary.signInWithGoogle,
+        style: TextStyle(
+          fontSize: 15,
+          color: isApple ? Colors.white : Colors.grey[600],
         ),
       ),
     );

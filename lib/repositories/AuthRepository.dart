@@ -187,10 +187,7 @@ class AuthRepository {
       bool hasUserInfo = await hasLocalUserInfo();
       if (hasUserInfo == false) {
 
-        /// Determine if Sign In with Apple is supported on the current device
-        bool isAvailable = await AppleSignIn.isAvailable();
-
-        if (Platform.isIOS && isApple && isAvailable) {
+        if (Platform.isIOS && isApple) {
           authUserInfo = await signInWithApple();
         } else {
           authUserInfo = await signInWithGoogle();

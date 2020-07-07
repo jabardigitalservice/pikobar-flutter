@@ -130,6 +130,8 @@ class Dictionary {
   static String termsConditions = ' Terms & Conditions';
   static String agree = 'Setuju';
   static String back = 'Kembali';
+  static String signInWithGoogle = 'Masuk dengan Google';
+  static String signInWithApple = 'Masuk dengan Apple';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
