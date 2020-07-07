@@ -41,11 +41,11 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 children: <Widget>[
                   _buildContainer(
                       '${Environment.iconAssets}calendar_disable.png',
-                      'Pemantauan Harian',
+                      Dictionary.dailyMonitoring,
                       2),
                   _buildContainer(
                       '${Environment.iconAssets}history_contact_disable.png',
-                      'Riwayat Kontak',
+                      Dictionary.historyContact,
                       2),
                 ],
               ),
@@ -55,7 +55,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               Container(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  'Konten Edukasi',
+                  Dictionary.educationContent,
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
@@ -69,7 +69,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               Container(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  'Unduh file dibawah ini untuk mendapatkan Edukasi terkait isolasi mandiri',
+                  Dictionary.educationContentdesc,
                   style: TextStyle(
                     color: Colors.black,
                     fontFamily: FontsFamily.lato,
@@ -157,7 +157,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Profil Anda Belum Lengkap',
+                    Dictionary.profileNotComplete,
                     style: TextStyle(
                         fontSize: 12.0,
                         color: Colors.black,
@@ -170,14 +170,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                     text: TextSpan(children: [
                       TextSpan(
                         text:
-                            'Lengkapi data diri anda untuk mengisi Pemantauan Harian. ',
+                            Dictionary.descProfile1,
                         style: TextStyle(
                             fontSize: 12.0,
                             color: Colors.black,
                             fontFamily: FontsFamily.lato),
                       ),
                       TextSpan(
-                          text: 'Klik di sini',
+                          text: Dictionary.descProfile2,
                           style: TextStyle(
                               fontSize: 12.0,
                               color: ColorBase.blue,
@@ -186,7 +186,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               fontWeight: FontWeight.bold),
                           recognizer: TapGestureRecognizer()..onTap = () {}),
                       TextSpan(
-                        text: ' untuk melengkapi.',
+                        text: Dictionary.descProfile3,
                         style: TextStyle(
                             fontSize: 12.0,
                             color: Colors.black,

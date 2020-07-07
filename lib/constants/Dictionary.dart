@@ -314,4 +314,12 @@ class Dictionary {
 
   //self report
   static String titleSelfReport = 'Lapor Mandiri';
+  static String dailyMonitoring = 'Pemantauan Harian';
+  static String historyContact = 'Riwayat Kontak';
+  static String educationContent = 'Konten Edukasi';
+  static String educationContentdesc = 'Unduh file dibawah ini untuk mendapatkan Edukasi terkait isolasi mandiri';
+  static String profileNotComplete = 'Profil Anda Belum Lengkap';
+  static String descProfile1 = 'Lengkapi data diri anda untuk mengisi Pemantauan Harian. ';
+  static String descProfile2 = 'Klik di sini';
+  static String descProfile3 = ' untuk melengkapi.';
 }
