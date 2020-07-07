@@ -81,64 +81,62 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               SizedBox(
                 height: 15,
               ),
-             Container(
-               padding: EdgeInsets.only(left: 10, right: 10),
-               child:  OutlineButton(
-                 splashColor: Colors.green,
-                 highlightColor: Colors.white,
-                 padding: EdgeInsets.all(0.0),
-                 color: Colors.white,
-                 shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.circular(8.0),
-                 ),
-                 child: Row(
-                   children: <Widget>[
-                     Container(
-                       margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 10.0),
-                       child: CachedNetworkImage(
-                           imageUrl: '',
-                           imageBuilder: (context, imageProvider) =>
-                               Image.network(''),
-                           placeholder: (context, url) =>
-                               Center(child: CupertinoActivityIndicator()),
-                           errorWidget: (context, url, error) => Container(
-                             child: Image.asset(
-                               '${Environment.imageAssets}default_image_education.png',
-                               height: 80,
-                               width: 80,
-                             ),
-                           )),
-                     ),
-                     Expanded(
-                         child: Container(
-                           margin:
-                           EdgeInsets.fromLTRB(Dimens.padding, 5.0, 5.0, 5.0),
-                           child: Text(
-                             'Klik disini untuk mengunduh file Edukasi isolasi Mandiri',
-                             style: TextStyle(
-                               color: Colors.black,
-                               fontFamily: FontsFamily.lato,
-                               fontSize: 12.0,
-                               height: 1.2,
-                             ),
-                           ),
-                         )),
-                     InkWell(
-                       child: Container(
-                           margin: EdgeInsets.only(right: Dimens.padding),
-                           child: Image.asset(
-                             '${Environment.iconAssets}download_icon.png',
-                             height: 20,
-                             width: 20,
-                           )),
-                       onTap: (){
-
-                       },
-                     )
-                   ],
-                 ),
-               ),
-             )
+              Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: OutlineButton(
+                  splashColor: Colors.green,
+                  highlightColor: Colors.white,
+                  padding: EdgeInsets.all(0.0),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 10.0),
+                        child: CachedNetworkImage(
+                            imageUrl: '',
+                            imageBuilder: (context, imageProvider) =>
+                                Image.network(''),
+                            placeholder: (context, url) =>
+                                Center(child: CupertinoActivityIndicator()),
+                            errorWidget: (context, url, error) => Container(
+                                  child: Image.asset(
+                                    '${Environment.imageAssets}default_image_education.png',
+                                    height: 80,
+                                    width: 80,
+                                  ),
+                                )),
+                      ),
+                      Expanded(
+                          child: Container(
+                        margin:
+                            EdgeInsets.fromLTRB(Dimens.padding, 5.0, 5.0, 5.0),
+                        child: Text(
+                          'Klik disini untuk mengunduh file Edukasi isolasi Mandiri',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 12.0,
+                            height: 1.2,
+                          ),
+                        ),
+                      )),
+                      InkWell(
+                        child: Container(
+                            margin: EdgeInsets.only(right: Dimens.padding),
+                            child: Image.asset(
+                              '${Environment.iconAssets}download_icon.png',
+                              height: 20,
+                              width: 20,
+                            )),
+                        onTap: () {},
+                      )
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ));
@@ -213,15 +211,25 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              '${Dictionary.currentLocationTitle}',
-              style: TextStyle(
-                fontFamily: FontsFamily.lato,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-                fontSize: 12.0,
-                height: 1.2,
-              ),
+            Row(
+              children: <Widget>[
+                Text(
+                  '${Dictionary.currentLocationTitle.replaceAll(':', '')}',
+                  style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    color: Colors.black,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12.0,
+                    height: 1.2,
+                  ),
+                ),
+                Container(
+                    child: Icon(
+                      Icons.expand_more,
+                      color: Colors.black,
+                      size: 17,
+                    )),
+              ],
             ),
             SizedBox(
               height: 10,
