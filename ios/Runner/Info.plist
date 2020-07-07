@@ -47,9 +47,9 @@
 		<true/>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Pikobar memerlukan izin akses lokasi untuk menggunakan fitur ini</string>
+	<string>Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Pikobar memerlukan izin akses lokasi untuk menggunakan fitur ini</string>
+	<string>Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -62,8 +62,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

@@ -64,16 +64,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
-              // Show dialog message error when login
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: "OK",
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
+              // Show an error message dialog when login,
+              // except for errors caused by users who were canceled to login.
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: "OK",
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
               Scaffold.of(context).hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
               // Show dialog when loading
@@ -89,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     ],
                   ),
-                  duration: Duration(seconds: 5),
+                  duration: Duration(seconds: 15),
                 ),
               );
             } else {
@@ -140,6 +144,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
                           }
                         });
+                  } else if (state is AuthenticationFailure ||
+                      state is AuthenticationLoading) {
+                    return OnBoardingLoginScreen(
+                      authenticationBloc: _authenticationBloc,
+                    );
                   } else {
                     return Container();
                   }

@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -125,7 +128,9 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                       ),
                       onPressed: () {
                         if (isAgree) {
-                          widget.authenticationBloc.add(LoggedIn());
+                          Platform.isAndroid
+                              ? widget.authenticationBloc.add(LoggedIn())
+                              : _loginBottomSheet(context);
                         } else {
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
@@ -198,6 +203,87 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
     } else {
       return Container();
     }
+  }
+
+  void _loginBottomSheet(context) async {
+    /// Determine if Sign In with Apple is supported on the current device
+    bool isAvailable = await AppleSignIn.isAvailable();
+
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+        ),
+        elevation: 60.0,
+        builder: (BuildContext context) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 20.0),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 14.0),
+                  color: Colors.black,
+                  height: 1.5,
+                  width: 40.0,
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  padding: EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.05),
+                      offset: Offset(0.0, 0.05),
+                    ),
+                  ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 5.0),
+                      isAvailable
+                          ? Column(children: <Widget>[
+                              _signInButton(isApple: true),
+                              SizedBox(
+                                height: 16.0,
+                              )
+                            ])
+                          : Container(),
+                      _signInButton(isApple: false)
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  Widget _signInButton({bool isApple = false}) {
+    return CustomButton.icon(
+      color: isApple ? Colors.black : Colors.transparent,
+      borderColor: isApple ? Colors.black : Colors.grey,
+      onPressed: () {
+        Navigator.pop(context);
+        widget.authenticationBloc.add(LoggedIn(isApple: isApple));
+      },
+      icon: Image(
+          image: AssetImage(
+              '${Environment.iconAssets}${isApple ? 'apple_white.png' : 'google.png'}'),
+          height: 24.0),
+      label: Text(
+        isApple
+            ? Dictionary.signInWithApple
+            : Dictionary.signInWithGoogle,
+        style: TextStyle(
+          fontSize: 15,
+          color: isApple ? Colors.white : Colors.grey[600],
+        ),
+      ),
+    );
   }
 
   @override

@@ -45,15 +45,18 @@ class _SurveysScreenState extends State<SurveysScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: "OK",
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: "OK",
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
               _scaffoldKey.currentState.hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
               _scaffoldKey.currentState.showSnackBar(
@@ -109,6 +112,11 @@ class _SurveysScreenState extends State<SurveysScreen> {
                         return _buildLoading();
                       }
                     },
+                  );
+                } else if (state is AuthenticationFailure ||
+                    state is AuthenticationLoading) {
+                  return OnBoardingLoginScreen(
+                    authenticationBloc: _authenticationBloc,
                   );
                 } else {
                   return Container();
