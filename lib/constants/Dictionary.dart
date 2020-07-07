@@ -311,4 +311,7 @@ class Dictionary {
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 
   static String labelImportantInfo = "PENTING";
+
+  //self report
+  static String titleSelfReport = 'Lapor Mandiri';
 }
