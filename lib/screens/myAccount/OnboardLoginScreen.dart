@@ -160,8 +160,8 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
           children: <Widget>[
             Checkbox(
               value: isAgree,
-              activeColor: Color(0xffD5F6E3),
-              checkColor: Color(0xff27AE60),
+              activeColor: ColorBase.lightLimeGreen,
+              checkColor: ColorBase.limeGreen,
               onChanged: (bool value) {
                 setState(() {
                   isAgree = value;
@@ -175,7 +175,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     text: termsConditions['agreement'],
                     style: TextStyle(
                         fontFamily: FontsFamily.lato,
-                        color: Color(0xff828282),
+                        color: ColorBase.darkGrey,
                         fontSize: 11.0),
                     children: <TextSpan>[
                       TextSpan(

@@ -6,6 +6,7 @@ import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/ProfileState.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
@@ -64,17 +65,12 @@ class _VerificationState extends State<Verification> {
             child: BlocListener<ProfileBloc, ProfileState>(
               listener: (context, state) {
                 if (state is ProfileFailure) {
+                  // Show dialog error message otp
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => DialogTextOnly(
-                            description: state.error
-                                    .toString()
-                                    .contains('ERROR_INVALID_VERIFICATION_CODE')
-                                ? Dictionary.codeWrong
-                                : state.error.toString().contains(
-                                        'ERROR_CREDENTIAL_ALREADY_IN_USE')
-                                    ? Dictionary.phoneNumberAlreadyUse
-                                    : state.error.toString(),
+                            description:
+                                getErrorMessage(state.error.toString()),
                             buttonText: Dictionary.ok,
                             onOkPressed: () {
                               Navigator.of(context)
@@ -84,6 +80,7 @@ class _VerificationState extends State<Verification> {
                   Scaffold.of(context).hideCurrentSnackBar();
                 } else if (state is ProfileWaiting) {
                 } else if (state is ProfileVerified) {
+                  // Show dialog when otp is confirmed and back to profile menu
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => DialogTextOnly(
@@ -97,6 +94,7 @@ class _VerificationState extends State<Verification> {
                           ));
                   Scaffold.of(context).hideCurrentSnackBar();
                 } else if (state is ProfileSaved) {
+                  // Show dialog when profile succesfully change without change phone number or otp disable
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => DialogTextOnly(
@@ -110,6 +108,8 @@ class _VerificationState extends State<Verification> {
                           ));
                   Scaffold.of(context).hideCurrentSnackBar();
                 } else if (state is ProfileOTPSent) {
+                  // Show dialog when otp succesfully send to phone number
+
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => DialogTextOnly(
@@ -123,6 +123,7 @@ class _VerificationState extends State<Verification> {
                           ));
                   Scaffold.of(context).hideCurrentSnackBar();
                 } else if (state is ProfileVerifiedFailed) {
+                  // Show dialog when otp failed send to phone number
                   showDialog(
                       context: context,
                       builder: (BuildContext context) => DialogTextOnly(
@@ -134,6 +135,7 @@ class _VerificationState extends State<Verification> {
                           ));
                   Scaffold.of(context).hideCurrentSnackBar();
                 } else if (state is ProfileLoading) {
+                  // Show dialog when loading
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Theme.of(context).primaryColor,
@@ -180,7 +182,7 @@ class _VerificationState extends State<Verification> {
                                     right: 20.0),
                                 child: Text(Dictionary.otpHasBeenSent,
                                     style: TextStyle(
-                                      color: Color(0xff828282),
+                                      color: ColorBase.darkGrey,
                                     )),
                               ),
                               SizedBox(
@@ -191,7 +193,7 @@ class _VerificationState extends State<Verification> {
                                     Dictionary.inaCode + widget.phoneNumber,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Color(0xff4F4F4F),
+                                      color: ColorBase.veryDarkGrey,
                                       fontWeight: FontWeight.bold,
                                     )),
                               ),
@@ -206,7 +208,7 @@ class _VerificationState extends State<Verification> {
                                     right: 20.0),
                                 child: Text(Dictionary.inputOTP,
                                     style: TextStyle(
-                                      color: Color(0xff828282),
+                                      color: ColorBase.darkGrey,
                                     )),
                               ),
                               SizedBox(
@@ -219,16 +221,16 @@ class _VerificationState extends State<Verification> {
                                     clearButtonIcon: Icon(Icons.backspace),
                                     inputDecoration: InputDecoration(
                                         hintText: '-',
-                                        fillColor: Color(0xffF2F2F2),
+                                        fillColor: ColorBase.veryLightGrey,
                                         filled: true,
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Color(0xffF2F2F2)),
+                                                color: ColorBase.veryLightGrey),
                                             borderRadius:
                                                 BorderRadius.circular(8)),
                                         border: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Color(0xffF2F2F2)),
+                                                color: ColorBase.veryLightGrey),
                                             borderRadius:
                                                 BorderRadius.circular(8)),
                                         counterText: ''),
@@ -263,7 +265,7 @@ class _VerificationState extends State<Verification> {
                                       },
                                       child: Text(Dictionary.sendAgainOTP,
                                           style: TextStyle(
-                                            color: Color(0xff2D9CDB),
+                                            color: ColorBase.brightBlue,
                                           )),
                                     )
                                   ],
@@ -279,7 +281,7 @@ class _VerificationState extends State<Verification> {
                       left: 0.0,
                       right: 0.0,
                       child: RaisedButton(
-                        color: Color(0xff27AE60),
+                        color: ColorBase.limeGreen,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         onPressed: onVerifyButtonPressed,
@@ -300,6 +302,7 @@ class _VerificationState extends State<Verification> {
             )));
   }
 
+// Function for check otp is valid or not
   onVerifyButtonPressed() {
     _profileBloc.add(ConfirmOTP(
         smsCode: smsCode,
@@ -317,6 +320,7 @@ class _VerificationState extends State<Verification> {
         nik: widget.nik));
   }
 
+// Function for resend code otp
   Future<void> sendCodeToPhoneNumber() async {
     verificationCompleted = (AuthCredential credential) async {
       await _profileRepository.linkCredential(
@@ -349,5 +353,18 @@ class _VerificationState extends State<Verification> {
         verificationCompleted: verificationCompleted,
         verificationFailed: verificationFailed,
         codeSent: codeSent));
+  }
+
+// Function for change message error otp to bahasa
+  String getErrorMessage(String errorMessage) {
+    if (errorMessage.contains('ERROR_INVALID_VERIFICATION_CODE')) {
+      return Dictionary.codeWrong;
+    } else if (errorMessage.contains('ERROR_CREDENTIAL_ALREADY_IN_USE')) {
+      return Dictionary.phoneNumberAlreadyUse;
+    } else if (errorMessage.toString().contains('ERROR_SESSION_EXPIRED')) {
+      return Dictionary.otpExpired;
+    } else {
+      return errorMessage;
+    }
   }
 }

@@ -36,7 +36,9 @@ class Dictionary {
   static String videoUpToDateDesc = 'Cari informasi melalui video dibawah ini';
   static String hintSearch = 'Ketikkan kata kunci ...';
   static String address = 'Alamat';
-  static String emptyDataPhoneBook = 'Nomor darurat tidak ada';
+  static String emptyDataPhoneBook = 'Nomor Tidak Ditemukan';
+  static String emptyDataPhoneBookDesc =
+      'Nomor atau kota yang Anda cari sepertinya tidak ada dalam data kami, silahkan hubungi nomor atau kota lainnya.';
   static String nomorDarurat = 'Detail Nomor Darurat';
   static String odp = 'ODP';
   static String pdp = 'PDP';
@@ -173,7 +175,10 @@ class Dictionary {
   static String codeVerified = 'No hp telah terverifikasi';
   static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali';
   static String profileSaved = 'Perubahan tersimpan';
-  static String phoneNumberAlreadyUse='Mohon maaf nomor telepon telah digunakan oleh akun lain';
+  static String phoneNumberAlreadyUse =
+      'Mohon maaf nomor telepon telah digunakan oleh akun lain';
+  static String otpExpired =
+      'Mohon maaf kode otp telah expired, silahkan kirim ulang kode';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
