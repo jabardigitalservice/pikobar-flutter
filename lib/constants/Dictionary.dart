@@ -322,4 +322,5 @@ class Dictionary {
   static String descProfile1 = 'Lengkapi data diri anda untuk mengisi Pemantauan Harian. ';
   static String descProfile2 = 'Klik di sini';
   static String descProfile3 = ' untuk melengkapi.';
+  static String currentLocationTitleSelfReport = 'Lokasi isolasi Anda saat ini :';
 }
