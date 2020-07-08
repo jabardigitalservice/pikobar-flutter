@@ -1,13 +1,23 @@
+import 'dart:io';
+
+import 'package:app_settings/app_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class SelfReportScreen extends StatefulWidget {
   @override
@@ -15,6 +25,16 @@ class SelfReportScreen extends StatefulWidget {
 }
 
 class _SelfReportScreenState extends State<SelfReportScreen> {
+
+  LatLng latLng;
+  String addressMyLocation;
+
+  @override
+  void initState() {
+    addressMyLocation = '-';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,62 +222,67 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   }
 
   Widget location() {
-    return Card(
-      elevation: 0,
-      color: Colors.grey[200],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text(
-                  '${Dictionary.currentLocationTitle.replaceAll(':', '')}',
-                  style: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 12.0,
-                    height: 1.2,
-                  ),
-                ),
-                Container(
-                    child: Icon(
-                      Icons.expand_more,
-                      color: Colors.black,
-                      size: 17,
-                    )),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: <Widget>[
-                Image.asset(
-                  '${Environment.iconAssets}pin_location_red.png',
-                  scale: 3,
-                ),
-                SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    'Jalan Sekelimus VIII, Kecamatan Bandung Kidul, Kota Bandung',
+    return GestureDetector(
+      child: Card(
+        elevation: 0,
+        color: Colors.grey[200],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    '${Dictionary.currentLocationTitle.replaceAll(':', '')}',
                     style: TextStyle(
                       fontFamily: FontsFamily.lato,
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.normal,
                       fontSize: 12.0,
                       height: 1.2,
                     ),
                   ),
-                )
-              ],
-            )
-          ],
+                  Container(
+                      child: Icon(
+                        Icons.expand_more,
+                        color: Colors.black,
+                        size: 17,
+                      )),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: <Widget>[
+                  Image.asset(
+                    '${Environment.iconAssets}pin_location_red.png',
+                    scale: 3,
+                  ),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      addressMyLocation,
+                      style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        height: 1.2,
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
+      onTap: (){
+        _handleLocation();
+      },
     );
   }
 
@@ -296,4 +321,73 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       ),
     ));
   }
+
+  // Function to get location user
+  Future<void> _handleLocation() async {
+    //Checking permission status
+    var permissionService =
+    Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+
+    if (await permissionService.status.isGranted) {
+      // Permission allowed
+      await _openLocationPicker();
+    } else {
+      // Permission disallowed
+      // Show dialog to ask permission
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogRequestPermission(
+            image: Image.asset(
+              '${Environment.iconAssets}map_pin.png',
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            description: Dictionary.permissionLocationSpread,
+            onOkPressed: () async {
+              Navigator.of(context).pop();
+              if (await permissionService.status.isDenied) {
+                await AppSettings.openLocationSettings();
+              } else {
+                permissionService.request().then((status) {
+                  _onStatusRequested(context, status);
+                });
+              }
+            },
+            onCancelPressed: () {
+              AnalyticsHelper.setLogEvent(
+                  Analytics.permissionDismissLocation);
+              Navigator.of(context).pop();
+            },
+          ));
+    }
+  }
+
+  // Function to get lat long user and auto complete address field
+  Future<void> _openLocationPicker() async {
+    latLng = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LocationPicker()));
+    final String address = await GeocoderRepository().getAddress(latLng);
+    if (address != null) {
+      setState(() {
+        addressMyLocation = address;
+      });
+    }
+  }
+
+  // Function to get status for access location
+  void _onStatusRequested(
+      BuildContext context, PermissionStatus statuses) async {
+    if (statuses.isGranted) {
+      _openLocationPicker();
+      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+    } else {
+      AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 }
