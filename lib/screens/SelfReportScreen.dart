@@ -435,7 +435,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       ),
       onTap: () {
         hasLogin
-            ? !showIsHealty(state)
+            ? !showProfileNotComplete(state) && !showIsHealty(state)
                 ? _handleLocation()
                 // ignore: unnecessary_statements
                 : null
