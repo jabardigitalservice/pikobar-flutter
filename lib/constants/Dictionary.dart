@@ -311,4 +311,12 @@ class Dictionary {
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 
   static String labelImportantInfo = "PENTING";
+
+  // Self Report
+  static String detailSelfReport = 'Detail Pemantauan Harian';
+  static String monitoringDays = 'Pemantauan Hari ke-';
+  static String monitoringCompleted = 'Proses pemantauan sudah terisi';
+  static String inputDate = 'Tanggal Pengisian';
+  static String bodyTemperature = 'Suhu Tubuh';
+  static String indications = 'Gejala yang Dirasakan';
 }
