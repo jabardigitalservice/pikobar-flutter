@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
@@ -119,7 +120,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
 
   bool showProfileNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
     if (state != null &&
-        state.data['nik'].toString().isNotEmpty &&
         state.data['name'].toString().isNotEmpty &&
         state.data['email'].toString().isNotEmpty &&
         state.data['phone_number'].toString().isNotEmpty &&
@@ -128,7 +128,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         state.data['gender'].toString().isNotEmpty &&
         state.data['city_id'].toString().isNotEmpty &&
         state.data['location'].toString().isNotEmpty &&
-        state.data['nik'] != null &&
         state.data['health_status'] == null &&
         state.data['name'] != null &&
         state.data['email'] != null &&
@@ -174,7 +173,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           SizedBox(
             height: 10,
           ),
-          location(),
+          location(state),
           SizedBox(
             height: 10,
           ),
@@ -185,8 +184,18 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   '${Environment.iconAssets}calendar_disable.png',
                   '${Environment.iconAssets}calendar_enable.png',
                   Dictionary.dailyMonitoring,
-                  2,
-                  () {},
+                  2, () {
+                if (latLng == null ||
+                    addressMyLocation == '-' ||
+                    addressMyLocation.isEmpty ||
+                    addressMyLocation == null) {
+                  Fluttertoast.showToast(
+                      msg: Dictionary.alertLocationSelfReport,
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      fontSize: 16.0);
+                } else {}
+              },
                   hasLogin
                       ? !showProfileNotComplete(state) && !showIsHealty(state)
                           ? hasLogin
@@ -356,7 +365,16 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     );
   }
 
-  Widget location() {
+  Widget location(AsyncSnapshot<DocumentSnapshot> state) {
+    if (state != null) {
+      if (state.data['address'] != null) {
+        addressMyLocation = state.data['address'].toString();
+      }
+      if (state.data['location'] != null) {
+        latLng = new LatLng(
+            state.data['location'].latitude, state.data['location'].longitude);
+      }
+    }
     return GestureDetector(
       child: Card(
         elevation: 0,
@@ -416,7 +434,13 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         ),
       ),
       onTap: () {
-        _handleLocation();
+        hasLogin
+            ? !showIsHealty(state)
+                ? _handleLocation()
+                // ignore: unnecessary_statements
+                : null
+            // ignore: unnecessary_statements
+            : null;
       },
     );
   }
