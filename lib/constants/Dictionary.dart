@@ -324,7 +324,7 @@ class Dictionary {
   static String descProfile3 = ' untuk melengkapi.';
   static String currentLocationTitleSelfReport = 'Lokasi isolasi Anda saat ini :';
   static String alertLocationSelfReport = 'Untuk melakukan pemantauan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
-  static String healty = 'HEALTHY';
+  static String healthy = 'HEALTHY';
   static String detailSelfReport = 'Detail Pemantauan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
   static String monitoringCompleted = 'Proses pemantauan sudah terisi';

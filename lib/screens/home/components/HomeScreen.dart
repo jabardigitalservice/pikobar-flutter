@@ -189,6 +189,27 @@ class _HomeScreenState extends State<HomeScreen> {
 //              ),
             ],
           ),
+
+          InkWell(
+            child: Text(
+              Dictionary.more,
+              style: TextStyle(
+                  color: ColorBase.green,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: FontsFamily.lato,
+                  fontSize: 12.0),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SelfReportScreen(),
+                ),
+              );
+              AnalyticsHelper.setLogEvent(Analytics.tappedMore);
+            },
+          ),
           
           /// News & Videos Sections
           SizedBox(

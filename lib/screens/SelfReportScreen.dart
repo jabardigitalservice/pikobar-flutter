@@ -8,6 +8,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
@@ -112,11 +113,12 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       ),
     );
   }
-  
+
   /// Function for check if profile not complete user must fill profile in menu edit profile
   bool _isProfileUserNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
     if (state != null &&
         state.data['name'].toString().isNotEmpty &&
+        state.data['nik'].toString().isNotEmpty &&
         state.data['email'].toString().isNotEmpty &&
         state.data['phone_number'].toString().isNotEmpty &&
         state.data['address'].toString().isNotEmpty &&
@@ -126,6 +128,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         state.data['location'].toString().isNotEmpty &&
         state.data['health_status'] == null &&
         state.data['name'] != null &&
+        state.data['nik'] != null &&
         state.data['email'] != null &&
         state.data['phone_number'] != null &&
         state.data['address'] != null &&
@@ -138,18 +141,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       return true;
     }
   }
-  
+
   /// Function for check user health status
   bool isUserHealty(AsyncSnapshot<DocumentSnapshot> state) {
-    if (state.data['health_status'].toString().isNotEmpty &&
-        state.data['health_status'] != null &&
-        state.data['health_status'].toString() != 'null') {
-      if (state.data['health_status'].toString() == Dictionary.healty) {
-        return true;
-      } else {
-        return false;
-      }
+    //condition for check data is null or not
+    if (state != null && state.data['health_status'] != null) {
+      return state.data['health_status'].toString() == Dictionary.healthy;
     } else {
+      //if health status is null that give indication that user is healthy
       return true;
     }
   }
@@ -183,8 +182,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   '${Environment.iconAssets}calendar_enable.png',
                   Dictionary.dailyMonitoring,
                   2,
-                      //for give condition onPressed in widget _buildContainer
-                      () {
+                  //for give condition onPressed in widget _buildContainer
+                  () {
                 if (latLng == null ||
                     addressMyLocation == '-' ||
                     addressMyLocation.isEmpty ||
@@ -197,10 +196,12 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 } else {
                   // add Screen in this section for redirect to another screen / menu
                 }
-              },// condition for check if user login and user complete fill that profile
+              },
+                  // condition for check if user login and user complete fill that profile
                   // and health status is not healthy user can access for press the button in _buildContainer
                   hasLogin
-                      ? !_isProfileUserNotComplete(state) && !isUserHealty(state)
+                      ? !_isProfileUserNotComplete(state) &&
+                              !isUserHealty(state)
                           ? hasLogin
                           : false
                       : false),
@@ -306,27 +307,38 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   }
 
   ///Function for build widget announcement if profile user not complete
-  Widget _buildAnnounceProfileNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
+  Widget _buildAnnounceProfileNotComplete(
+      AsyncSnapshot<DocumentSnapshot> state) {
     return Container(
       width: (MediaQuery.of(context).size.width),
       margin: EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
-          color: Color(0xffFFF3CC), borderRadius: BorderRadius.circular(8.0)),
+          color: Color(0xffEB5757), borderRadius: BorderRadius.circular(8.0)),
       child: Stack(
         children: <Widget>[
-          Image.asset('${Environment.imageAssets}intersect.png', width: 73),
+//          Image.asset('${Environment.imageAssets}intersect.png', width: 73),
           Padding(
             padding: EdgeInsets.all(10.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    Dictionary.profileNotComplete,
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.lato),
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        FontAwesomeIcons.exclamationTriangle,
+                        size: 12,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        Dictionary.profileNotComplete,
+                        style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: FontsFamily.lato),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 15),
                   Container(
@@ -336,14 +348,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                         text: Dictionary.descProfile1,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Colors.black,
+                            color: Colors.white,
                             fontFamily: FontsFamily.lato),
                       ),
                       TextSpan(
                           text: Dictionary.descProfile2,
                           style: TextStyle(
                               fontSize: 12.0,
-                              color: ColorBase.blue,
+                              color: Colors.white,
                               fontFamily: FontsFamily.lato,
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.bold),
@@ -357,7 +369,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                         text: Dictionary.descProfile3,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Colors.black,
+                            color: Colors.white,
                             fontFamily: FontsFamily.lato),
                       ),
                     ]),
