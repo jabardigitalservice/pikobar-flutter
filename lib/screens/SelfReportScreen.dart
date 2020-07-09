@@ -44,12 +44,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   @override
   void initState() {
     addressMyLocation = '-';
-    getDataToken();
     super.initState();
-  }
-
-  getDataToken() async {
-    setState(() {});
   }
 
   @override
@@ -117,8 +112,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       ),
     );
   }
-
-  bool showProfileNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
+  
+  /// Function for check if profile not complete user must fill profile in menu edit profile
+  bool _isProfileUserNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
     if (state != null &&
         state.data['name'].toString().isNotEmpty &&
         state.data['email'].toString().isNotEmpty &&
@@ -142,12 +138,13 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       return true;
     }
   }
-
-  bool showIsHealty(AsyncSnapshot<DocumentSnapshot> state) {
+  
+  /// Function for check user health status
+  bool isUserHealty(AsyncSnapshot<DocumentSnapshot> state) {
     if (state.data['health_status'].toString().isNotEmpty &&
         state.data['health_status'] != null &&
         state.data['health_status'].toString() != 'null') {
-      if (state.data['health_status'].toString() == 'HEALTHY') {
+      if (state.data['health_status'].toString() == Dictionary.healty) {
         return true;
       } else {
         return false;
@@ -157,6 +154,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     }
   }
 
+  /// Function for build widget content
   Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state) {
     return Padding(
       padding: EdgeInsets.all(10),
@@ -166,14 +164,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             height: 10,
           ),
           hasLogin
-              ? showProfileNotComplete(state)
-                  ? buildAnnouncement(state)
+              ? _isProfileUserNotComplete(state)
+                  ? _buildAnnounceProfileNotComplete(state)
                   : Container()
               : Container(),
           SizedBox(
             height: 10,
           ),
-          location(state),
+          _buildLocation(state),
           SizedBox(
             height: 10,
           ),
@@ -184,7 +182,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   '${Environment.iconAssets}calendar_disable.png',
                   '${Environment.iconAssets}calendar_enable.png',
                   Dictionary.dailyMonitoring,
-                  2, () {
+                  2,
+                      //for give condition onPressed in widget _buildContainer
+                      () {
                 if (latLng == null ||
                     addressMyLocation == '-' ||
                     addressMyLocation.isEmpty ||
@@ -194,10 +194,13 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       fontSize: 16.0);
-                } else {}
-              },
+                } else {
+                  // add Screen in this section for redirect to another screen / menu
+                }
+              },// condition for check if user login and user complete fill that profile
+                  // and health status is not healthy user can access for press the button in _buildContainer
                   hasLogin
-                      ? !showProfileNotComplete(state) && !showIsHealty(state)
+                      ? !_isProfileUserNotComplete(state) && !isUserHealty(state)
                           ? hasLogin
                           : false
                       : false),
@@ -302,7 +305,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     );
   }
 
-  Widget buildAnnouncement(AsyncSnapshot<DocumentSnapshot> state) {
+  ///Function for build widget announcement if profile user not complete
+  Widget _buildAnnounceProfileNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
     return Container(
       width: (MediaQuery.of(context).size.width),
       margin: EdgeInsets.only(left: 5, right: 5),
@@ -365,7 +369,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     );
   }
 
-  Widget location(AsyncSnapshot<DocumentSnapshot> state) {
+  ///Function for build widget location user
+  Widget _buildLocation(AsyncSnapshot<DocumentSnapshot> state) {
     if (state != null) {
       if (state.data['address'] != null) {
         addressMyLocation = state.data['address'].toString();
@@ -435,7 +440,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       ),
       onTap: () {
         hasLogin
-            ? !showProfileNotComplete(state) && !showIsHealty(state)
+            ? !_isProfileUserNotComplete(state) && !isUserHealty(state)
                 ? _handleLocation()
                 // ignore: unnecessary_statements
                 : null
@@ -445,6 +450,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     );
   }
 
+  /// Function for build widget button self report
   _buildContainer(String imageDisable, String imageEnable, String title,
       int length, GestureTapCallback onPressed, bool isShowMenu) {
     return Expanded(
@@ -484,7 +490,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     ));
   }
 
-  // Function to get location user
+  /// Function to get location user
   Future<void> _handleLocation() async {
     //Checking permission status
     var permissionService =
@@ -545,10 +551,5 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
