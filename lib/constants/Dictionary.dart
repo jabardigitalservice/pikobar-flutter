@@ -314,7 +314,7 @@ class Dictionary {
 
   // Self Report
   static String titleSelfReport = 'Lapor Mandiri';
-  static String dailyMonitoring = 'Pemantauan Harian';
+  static String dailyMonitoring = 'Kesehatan Harian';
   static String historyContact = 'Riwayat Kontak';
   static String educationContent = 'Konten Edukasi';
   static String educationContentdesc = 'Unduh file dibawah ini untuk mendapatkan Edukasi terkait isolasi mandiri';

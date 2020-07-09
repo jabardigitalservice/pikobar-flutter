@@ -24,6 +24,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
+import 'package:pikobar_flutter/screens/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
@@ -217,90 +218,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           SizedBox(
             height: 30,
           ),
-          Container(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              Dictionary.educationContent,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: FontsFamily.lato,
-                  fontSize: 14.0),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              Dictionary.educationContentdesc,
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: 12.0,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: OutlineButton(
-              splashColor: Colors.green,
-              highlightColor: Colors.white,
-              padding: EdgeInsets.all(0.0),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 10.0),
-                    child: CachedNetworkImage(
-                        imageUrl: '',
-                        imageBuilder: (context, imageProvider) =>
-                            Image.network(''),
-                        placeholder: (context, url) =>
-                            Center(child: CupertinoActivityIndicator()),
-                        errorWidget: (context, url, error) => Container(
-                              child: Image.asset(
-                                '${Environment.imageAssets}default_image_education.png',
-                                height: 80,
-                                width: 80,
-                              ),
-                            )),
-                  ),
-                  Expanded(
-                      child: Container(
-                    margin: EdgeInsets.fromLTRB(Dimens.padding, 5.0, 5.0, 5.0),
-                    child: Text(
-                      'Klik disini untuk mengunduh file Edukasi isolasi Mandiri',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12.0,
-                        height: 1.2,
-                      ),
-                    ),
-                  )),
-                  InkWell(
-                    child: Container(
-                        margin: EdgeInsets.only(right: Dimens.padding),
-                        child: Image.asset(
-                          '${Environment.iconAssets}download_icon.png',
-                          height: 20,
-                          width: 20,
-                        )),
-                    onTap: () {},
-                  )
-                ],
-              ),
-            ),
-          )
+
+         EducationListScreen()
         ],
       ),
     );
