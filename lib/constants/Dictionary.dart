@@ -312,7 +312,7 @@ class Dictionary {
 
   static String labelImportantInfo = "PENTING";
 
-  //self report
+  // Self Report
   static String titleSelfReport = 'Lapor Mandiri';
   static String dailyMonitoring = 'Pemantauan Harian';
   static String historyContact = 'Riwayat Kontak';
@@ -325,4 +325,10 @@ class Dictionary {
   static String currentLocationTitleSelfReport = 'Lokasi isolasi Anda saat ini :';
   static String alertLocationSelfReport = 'Untuk melakukan pemantauan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
   static String healty = 'HEALTHY';
+  static String detailSelfReport = 'Detail Pemantauan Harian';
+  static String monitoringDays = 'Pemantauan Hari ke-';
+  static String monitoringCompleted = 'Proses pemantauan sudah terisi';
+  static String inputDate = 'Tanggal Pengisian';
+  static String bodyTemperature = 'Suhu Tubuh';
+  static String indications = 'Gejala yang Dirasakan';
 }

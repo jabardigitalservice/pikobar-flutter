@@ -39,7 +39,7 @@ class BannerListSliderState extends State<BannerListSlider> {
 
   Widget _buildLoading() {
     return AspectRatio(
-      aspectRatio: 21 / 10,
+      aspectRatio: 16 / 9,
       child: ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
           scrollDirection: Axis.horizontal,
