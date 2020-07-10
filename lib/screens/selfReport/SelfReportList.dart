@@ -136,7 +136,6 @@ class _SelfReportListState extends State<SelfReportList> {
                                               SelfReportListUpdateReminder(
                                                   isReminder));
                                         });
-                                        print(isReminder);
                                       },
                                     );
                                   } else if (state
