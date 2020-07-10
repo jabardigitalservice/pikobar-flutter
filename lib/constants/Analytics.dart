@@ -98,4 +98,7 @@ class Analytics {
   static String tappedRDT = 'tapped_rapid_test';
   static String tappedPCR = 'tapped_pcr';
   static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
+
+  //event education
+  static String tappedDetailEducation = "tapped_detail_education";
 }

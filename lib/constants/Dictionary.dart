@@ -317,7 +317,7 @@ class Dictionary {
   static String dailyMonitoring = 'Kesehatan Harian';
   static String historyContact = 'Riwayat Kontak';
   static String educationContent = 'Konten Edukasi';
-  static String educationContentdesc = 'Unduh file dibawah ini untuk mendapatkan Edukasi terkait isolasi mandiri';
+  static String educationContentdesc = 'Dibawah ini merupakan konten edukasi untuk Isolasi Mandiri';
   static String profileNotComplete = 'Profil Anda Belum Lengkap';
   static String descProfile1 = 'Lengkapi data diri anda untuk mengisi Pemantauan Harian. ';
   static String descProfile2 = 'Klik di sini';
