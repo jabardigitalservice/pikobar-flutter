@@ -114,7 +114,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              // Show image from server
+              // Show data image from server
               Container(
                 width: 70,
                 height: 70,
@@ -141,9 +141,9 @@ class _EducationListScreenState extends State<EducationListScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Add text data content from server
+                    // Add data title from server to widget text
                     Text(
-                      educationModel.content,
+                      educationModel.title,
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w600,
@@ -156,7 +156,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    // Add timestamp data from server
+                    // Add data timestamp from server to widget text
                     Text(
                       unixTimeStampToDateTime(educationModel.publishedAt),
                       style: TextStyle(

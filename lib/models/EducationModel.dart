@@ -4,12 +4,14 @@ class EducationModel {
   String id;
   String content;
   String image;
+  String title;
   String sourceChannel;
   int publishedAt;
 
   EducationModel(
       {this.id,
       this.content,
+      this.title,
       this.image,
       this.publishedAt,
       this.sourceChannel});
@@ -22,6 +24,7 @@ class EducationModel {
       content: json["content"] ?? '',
       image: json["image"] ?? '',
       sourceChannel: json["source_channel"] ?? '',
+      title: json["title"] ?? '',
       publishedAt:
           json["published_at"] != null ? json["published_at"].seconds : null,
     );

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:pikobar_flutter/blocs/educations/educationDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
@@ -13,6 +14,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:html/dom.dart' as dom;
+import 'package:url_launcher/url_launcher.dart';
 
 class EducationDetailScreen extends StatefulWidget {
   final String id;
@@ -40,7 +43,9 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<EducationDetailBloc>(
       create: (context) => _educationDetailBloc = EducationDetailBloc()
-        ..add(EducationDetailLoad(educationCollection: widget.educationCollection, educationId: widget.id)),
+        ..add(EducationDetailLoad(
+            educationCollection: widget.educationCollection,
+            educationId: widget.id)),
       child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
         bloc: _educationDetailBloc,
         builder: (context, state) {
@@ -51,7 +56,6 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
   }
 
   Scaffold _buildScaffold(BuildContext context, EducationDetailState state) {
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -205,8 +209,9 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  //add title data from server to widget text
                   Text(
-                    data.content,
+                    data.title,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.0,
@@ -223,17 +228,26 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                           Text(
                             data.sourceChannel,
                             style: TextStyle(
-                                fontSize: 12.0,
-                                fontFamily: FontsFamily.lato),
+                                fontSize: 12.0, fontFamily: FontsFamily.lato),
                           ),
                           // Add data timestamp to Text from server
-                          Text(
-                              unixTimeStampToDateTime(data.publishedAt),
+                          Text(unixTimeStampToDateTime(data.publishedAt),
                               style: TextStyle(
-                                  fontSize: 12.0,
-                                  fontFamily: FontsFamily.lato))
+                                  fontSize: 12.0, fontFamily: FontsFamily.lato))
                         ]),
                   ),
+                  SizedBox(height: 10.0),
+                  //add content data from server to widget text
+                  Html(
+                      data: data.content,
+                      defaultTextStyle:
+                          TextStyle(color: Colors.black, fontSize: 15.0),
+                      customTextAlign: (dom.Node node) {
+                        return TextAlign.left;
+                      },
+                      onLinkTap: (url) {
+                        _launchURL(url);
+                      }),
                   SizedBox(height: 10.0),
                 ],
               ),
@@ -242,5 +256,13 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
         ),
       ),
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
