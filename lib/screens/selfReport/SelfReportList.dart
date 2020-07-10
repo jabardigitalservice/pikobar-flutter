@@ -125,7 +125,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                       height: 20.0,
                                       toggleColor: ColorBase.darkGrey,
                                       valueFontSize: 12.0,
-                                      activeColor: ColorBase.limeGreen,
+                                      activeColor: ColorBase.toggleOn,
                                       inactiveColor: ColorBase.menuBorderColor,
                                       toggleSize: 18.0,
                                       value: isReminder,
