@@ -46,6 +46,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   @override
   void initState() {
     addressMyLocation = '-';
+    AnalyticsHelper.setCurrentScreen(Analytics.tappedMainSelfReport);
     super.initState();
   }
 
@@ -235,7 +236,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           color: Color(0xffEB5757), borderRadius: BorderRadius.circular(8.0)),
       child: Stack(
         children: <Widget>[
-//          Image.asset('${Environment.imageAssets}intersect.png', width: 73),
           Padding(
             padding: EdgeInsets.all(10.0),
             child: Column(

@@ -83,13 +83,16 @@ class _EducationListScreenState extends State<EducationListScreen> {
     );
   }
 
+  /// Widget for show loading when request data from server
   Widget _buildLoading() {
     return Center(
       child: CircularProgressIndicator(),
     );
   }
 
+  /// Widget data for show data when loaded from server
   Widget _buildContent(EducationListLoaded state) {
+    //Create list education content
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -101,6 +104,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
     );
   }
 
+  /// Widget for create item education list
   Widget _educationItem(EducationModel educationModel) {
     return Container(
       child: GestureDetector(
@@ -110,6 +114,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // Show image from server
               Container(
                 width: 70,
                 height: 70,
@@ -136,6 +141,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    // Add text data content from server
                     Text(
                       educationModel.content,
                       style: TextStyle(
@@ -150,6 +156,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                     SizedBox(
                       height: 10,
                     ),
+                    // Add timestamp data from server
                     Text(
                       unixTimeStampToDateTime(educationModel.publishedAt),
                       style: TextStyle(
@@ -163,6 +170,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
             ],
           ),
         ),
+        // Function for direct page to screen detail education
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => EducationDetailScreen(

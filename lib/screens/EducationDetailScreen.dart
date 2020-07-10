@@ -66,6 +66,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                     : Container());
   }
 
+  /// Widget for show loading when request data from server
   _buildLoading(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -133,6 +134,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
     );
   }
 
+  /// Setup text when loading data from server
   _loadingText() {
     List<Widget> widgets = [];
 
@@ -156,6 +158,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start, children: widgets);
   }
 
+  /// Widget data for show data when loaded from server
   _buildContent(BuildContext context, EducationModel data) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -165,6 +168,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             GestureDetector(
+              // widget for show image
               child: Hero(
                 tag: Dictionary.heroImageTag,
                 child: Container(
@@ -184,6 +188,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                   ),
                 ),
               ),
+              // Function for direct to preview page image
               onTap: () {
                 Navigator.push(
                     context,
@@ -214,12 +219,14 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          // Add data source channel to Text from server
                           Text(
                             data.sourceChannel,
                             style: TextStyle(
                                 fontSize: 12.0,
                                 fontFamily: FontsFamily.lato),
                           ),
+                          // Add data timestamp to Text from server
                           Text(
                               unixTimeStampToDateTime(data.publishedAt),
                               style: TextStyle(

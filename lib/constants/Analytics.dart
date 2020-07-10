@@ -101,4 +101,7 @@ class Analytics {
 
   //event education
   static String tappedDetailEducation = "tapped_detail_education";
+
+  //event self report
+  static String tappedMainSelfReport = "tapped_main_self_report";
 }
