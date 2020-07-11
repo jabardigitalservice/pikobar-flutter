@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';

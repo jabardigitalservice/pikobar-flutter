@@ -317,6 +317,18 @@ class Dictionary {
   // Self Report
   static String selfReportDetail = 'Detail Pemantauan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
+  static String titleSelfReport = 'Lapor Mandiri';
+  static String historyContact = 'Riwayat Kontak';
+  static String educationContent = 'Konten Edukasi';
+  static String educationContentdesc = 'Dibawah ini merupakan konten edukasi untuk Isolasi Mandiri';
+  static String profileNotComplete = 'Profil Anda Belum Lengkap';
+  static String descProfile1 = 'Lengkapi data diri anda untuk mengisi Pemantauan Harian. ';
+  static String descProfile2 = 'Klik di sini';
+  static String descProfile3 = ' untuk melengkapi.';
+  static String currentLocationTitleSelfReport = 'Lokasi isolasi Anda saat ini :';
+  static String alertLocationSelfReport = 'Untuk melakukan pemantauan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
+  static String healthy = 'HEALTHY';
+  static String detailSelfReport = 'Detail Pemantauan Harian';
   static String monitoringCompleted = 'Proses pemantauan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
@@ -328,5 +340,11 @@ class Dictionary {
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
   static String inputBodyTemperature = 'Masukan Suhu Tubuh';
-
+  static String dailyMonitoring = 'Lapor Kesehatan Harian';
+  static String dailyMonitoringProgress='Lapor Kesehatan Harian Terisi';
+  static String rememberMe='Ingatkan Saya';
+  static String countDay='Hari ke -';
+  static String dailyMonitoringFilled='Proses pelaporan sudah terisi';
+  static String dailyMonitoringUnfilled='Proses pelaporan belum terisi';
+  static String errorMessageDailyMonitoring='Mohon maaf anda belum bisa mengisi untuk hari ke -';
 }

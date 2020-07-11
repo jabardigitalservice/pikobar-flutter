@@ -17,6 +17,7 @@ class ColorBase {
   static final softRed=Color(0xffEB5757);
   static final brightBlue=Color(0xff2D9CDB);
   static final veryLightGrey=Color(0xffF2F2F2);
+  static final toggleOn=Color(0xff9FDFBA);
 
   static final gradientBlue = [Color(0xFF00AADE), Color(0xFF0669B1)];
   static final gradientGreen = [Color(0xFF0ad178), Color(0xFF009D57)];

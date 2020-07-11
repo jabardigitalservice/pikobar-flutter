@@ -84,6 +84,8 @@ dependencies:
   flutter_full_pdf_viewer: ^1.0.6
   chips_choice: ^1.2.0
   bubble_tab_indicator: ^0.1.4
+  percent_indicator: ^2.1.5
+  flutter_switch: ^0.1.1
   
 
 dev_dependencies:

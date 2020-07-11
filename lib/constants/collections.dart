@@ -22,5 +22,6 @@ class Collections {
   static String userDevices = 'devices_info';
   static String selfReports = 'self_reports';
   static String dailyReport = 'daily_report';
+  static String educationContent = 'education_content';
 
 }
