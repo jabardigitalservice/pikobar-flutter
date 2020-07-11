@@ -21,5 +21,6 @@ class Collections {
   static String newsWorld = 'articles_world';
   static String userDevices = 'devices_info';
   static String selfReports = 'self_reports';
+  static String educationContent = 'education_content';
 
 }
