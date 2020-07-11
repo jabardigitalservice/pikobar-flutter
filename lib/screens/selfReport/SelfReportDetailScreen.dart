@@ -161,7 +161,9 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                     fontSize: 12.0,
                     color: Colors.white),
               ),
-              onPressed: () {}),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
         )
       ],
     );

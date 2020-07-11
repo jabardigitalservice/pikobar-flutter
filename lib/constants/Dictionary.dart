@@ -326,9 +326,16 @@ class Dictionary {
   static String alertLocationSelfReport = 'Untuk melakukan pemantauan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
   static String healthy = 'HEALTHY';
   static String detailSelfReport = 'Detail Pemantauan Harian';
-  static String monitoringDays = 'Pemantauan Hari ke-';
+  static String monitoringDays = 'Hari ke-';
   static String monitoringCompleted = 'Proses pemantauan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
+  static String dailyMonitoring = 'Lapor Kesehatan Harian';
+  static String dailyMonitoringProgress='Lapor Kesehatan Harian Terisi';
+  static String rememberMe='Ingatkan Saya';
+  static String countDay='Hari ke -';
+  static String dailyMonitoringFilled='Proses pelaporan sudah terisi';
+  static String dailyMonitoringUnfilled='Proses pelaporan belum terisi';
+  static String errorMessageDailyMonitoring='Mohon maaf anda belum bisa mengisi untuk hari ke -';
 }
