@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class EducationListScreen extends StatefulWidget {
@@ -19,6 +21,12 @@ class EducationListScreen extends StatefulWidget {
 class _EducationListScreenState extends State<EducationListScreen> {
   // ignore: close_sinks
   EducationListBloc _educationListBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
+  }
 
   @override
   Widget build(BuildContext context) {

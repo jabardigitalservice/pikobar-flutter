@@ -44,7 +44,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   @override
   void initState() {
     addressMyLocation = '-';
-    AnalyticsHelper.setCurrentScreen(Analytics.tappedMainSelfReport);
+    AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     super.initState();
   }
 

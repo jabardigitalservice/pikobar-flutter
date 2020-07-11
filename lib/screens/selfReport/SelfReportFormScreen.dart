@@ -11,12 +11,14 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/GroupedCheckBox.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/RegexInputFormatter.dart';
 
 class SelfReportFormScreen extends StatefulWidget {
@@ -65,6 +67,13 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   List<String> _checkedItemList = [];
 
   @override
+  void initState() {
+    super.initState();
+    AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
+    AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportForm);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportForm),
@@ -74,9 +83,11 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
           bloc: _dailyReportBloc,
           listener: (context, state) {
             if (state is DailyReportSaved) {
+              AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);
               Navigator.of(context).pop();
               _showSuccessBottomSheet();
             } else if (state is DailyReportFailed) {
+              AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);
               Navigator.of(context).pop();
               showDialog(
                   context: context,
