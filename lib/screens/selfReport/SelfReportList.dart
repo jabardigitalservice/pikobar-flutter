@@ -332,15 +332,10 @@ class _SelfReportListState extends State<SelfReportList> {
                         );
                       } else {
                         /// Move to form screen
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: 'Masuk ke page isi form',
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportFormScreen(
+                                dailyId: '${i + 1}',
+                                location: widget.location)));
                       }
                     }
                   },
