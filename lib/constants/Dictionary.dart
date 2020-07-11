@@ -171,7 +171,6 @@ class Dictionary {
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
-
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
   static String codeVerified = 'No hp telah terverifikasi';
@@ -181,6 +180,8 @@ class Dictionary {
       'Mohon maaf nomor telepon telah digunakan oleh akun lain';
   static String otpExpired =
       'Mohon maaf kode otp telah expired, silahkan kirim ulang kode';
+  static String savedSuccessfully = 'Berhasil Disimpan';
+  static String dailySuccess = 'Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
@@ -201,6 +202,7 @@ class Dictionary {
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
   static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
   static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
@@ -313,10 +315,18 @@ class Dictionary {
   static String labelImportantInfo = "PENTING";
 
   // Self Report
-  static String detailSelfReport = 'Detail Pemantauan Harian';
+  static String selfReportDetail = 'Detail Pemantauan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
   static String monitoringCompleted = 'Proses pemantauan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
+  static String contactDate = 'Tanggal Terakhir Kontak';
+  static String selfReportForm = 'Form Lapor Kesehatan Harian';
+  static String selfReportQuestion1 = 'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
+  static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
+  static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
+  static String otherIndication = 'Gejala Lainnya';
+  static String inputBodyTemperature = 'Masukan Suhu Tubuh';
+
 }

@@ -23,7 +23,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.detailSelfReport),
+      appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportDetail),
       body: BlocProvider<SelfReportDetailBloc>(
         create: (context) => SelfReportDetailBloc()
           ..add(SelfReportDetailLoad(selfReportId: widget.reportId)),
@@ -161,7 +161,9 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                     fontSize: 12.0,
                     color: Colors.white),
               ),
-              onPressed: () {}),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
         )
       ],
     );

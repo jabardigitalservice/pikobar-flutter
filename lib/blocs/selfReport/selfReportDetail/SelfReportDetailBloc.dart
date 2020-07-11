@@ -26,7 +26,7 @@ class SelfReportDetailBloc
       try {
         String userId = await AuthRepository().getToken();
         DocumentSnapshot doc = await SelfReportRepository().getSelfReportDetail(
-            userId: userId, selfReportId: event.selfReportId);
+            userId: userId, dailyReportId: event.selfReportId);
 
         yield SelfReportDetailLoaded(documentSnapshot: doc);
       } catch (error) {
