@@ -13,6 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -22,6 +23,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
+import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -60,12 +62,43 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationFailure) {
+            // Show an error message dialog when login,
+            // except for errors caused by users who were canceled to login.
+            if (!state.error.contains('ERROR_ABORTED_BY_USER') &&
+                !state.error.contains('NoSuchMethodError')) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => DialogTextOnly(
+                        description: state.error.toString(),
+                        buttonText: "OK",
+                        onOkPressed: () {
+                          Navigator.of(context).pop(); // To close the dialog
+                        },
+                      ));
+            }
+            Scaffold.of(context).hideCurrentSnackBar();
             setState(() {
               hasLogin = false;
             });
           }
           if (state is AuthenticationLoading) {
             setState(() {
+              // Show dialog when loading
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  content: Row(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      Container(
+                        margin: EdgeInsets.only(left: 15.0),
+                        child: Text(Dictionary.loading),
+                      )
+                    ],
+                  ),
+                  duration: Duration(seconds: 15),
+                ),
+              );
               hasLogin = false;
             });
           }
@@ -86,30 +119,53 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             appBar: CustomAppBar.defaultAppBar(
               title: Dictionary.titleSelfReport,
             ),
-            body: StreamBuilder<DocumentSnapshot>(
-                stream: Firestore.instance
-                    .collection('users')
-                    .document(
-                        profileLoaded != null ? profileLoaded.record.uid : null)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasError)
-                    // Show error ui when unable to get data
-                    return ErrorContent(error: snapshot.error);
-                  switch (snapshot.connectionState) {
-                    // Show loading while get data
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    default:
-                      // Show content when data is ready
-                      return snapshot.data.exists
-                          ? _buildContent(snapshot)
-                          : _buildContent(null);
-                  }
-                })),
+            body:
+                BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: (
+              BuildContext context,
+              AuthenticationState state,
+            ) {
+              if (state is AuthenticationUnauthenticated ||
+                  state is AuthenticationLoading) {
+                // When user is not login show login screen
+                return OnBoardingLoginScreen(
+                  authenticationBloc: _authenticationBloc,
+                );
+              } else if (state is AuthenticationAuthenticated ||
+                  state is AuthenticationLoading) {
+                return StreamBuilder<DocumentSnapshot>(
+                    stream: Firestore.instance
+                        .collection('users')
+                        .document(profileLoaded != null
+                            ? profileLoaded.record.uid
+                            : null)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError)
+                        // Show error ui when unable to get data
+                        return ErrorContent(error: snapshot.error);
+                      switch (snapshot.connectionState) {
+                        // Show loading while get data
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        default:
+                          // Show content when data is ready
+                          return snapshot.data.exists
+                              ? _buildContent(snapshot)
+                              : _buildContent(null);
+                      }
+                    });
+              } else if (state is AuthenticationFailure ||
+                  state is AuthenticationLoading) {
+                return OnBoardingLoginScreen(
+                  authenticationBloc: _authenticationBloc,
+                );
+              } else {
+                return Container();
+              }
+            })),
       ),
     );
   }
@@ -126,7 +182,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         state.data['gender'].toString().isNotEmpty &&
         state.data['city_id'].toString().isNotEmpty &&
         state.data['location'].toString().isNotEmpty &&
-        state.data['health_status'] != null &&
         state.data['name'] != null &&
         state.data['nik'] != null &&
         state.data['email'] != null &&
@@ -163,7 +218,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             height: 10,
           ),
           hasLogin
-              ? _isProfileUserNotComplete(state)
+              ? !isUserHealty(state) && _isProfileUserNotComplete(state)
                   ? _buildAnnounceProfileNotComplete(state)
                   : Container()
               : Container(),
@@ -194,7 +249,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       gravity: ToastGravity.BOTTOM,
                       fontSize: 16.0);
                 } else {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SelfReportList(latLng)));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SelfReportList(latLng)));
                 }
               },
                   // condition for check if user login and user complete fill that profile
@@ -217,8 +273,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           SizedBox(
             height: 30,
           ),
-
-         EducationListScreen()
+          EducationListScreen()
         ],
       ),
     );
