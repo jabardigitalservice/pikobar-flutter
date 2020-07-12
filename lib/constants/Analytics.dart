@@ -6,12 +6,14 @@ class Analytics {
   static String survey = 'Survei';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String news = 'News';
-  // TODO: belum di implementasikan
   static String notifications = 'Notifikasi';
   static String video = 'Video Terkini';
   static String infoGraphics = 'Info Praktikal';
   static String checkDistribution = 'Cek Sebaran';
   static String document = 'Dokumen';
+  static String selfReports = 'Lapor Mandiri';
+  static String education = 'Konten Edukasi';
+
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -26,6 +28,7 @@ class Analytics {
   static String tappedVolunteer = 'tapped_menu_relawan';
   static String tappedCaseReport = 'tapped_menu_lapor_kasus';
   static String tappedSelfTracing = 'tapped_menu_self_tracing';
+  static String tappedSelfReports = 'tapped_menu_lapor_mandiri';
   static String tappedQna = 'tapped_menu_qna';
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
@@ -100,8 +103,13 @@ class Analytics {
   static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
 
   //event education
-  static String tappedDetailEducation = "tapped_detail_education";
+  static String tappedEducationDetail = "tapped_detail_education";
 
   //event self report
-  static String tappedMainSelfReport = "tapped_main_self_report";
+  static String tappedDailyReport = "tapped_lapor_kesehatan_harian";
+  static String tappedDailyReportDetail = "tapped_lapor_kesehatan_harian_detail";
+  static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
+  static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
+  static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
+
 }

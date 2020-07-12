@@ -42,5 +42,6 @@ class NavigationConstrants {
   static const String CheckDistribution = "/check-distribution";
   static const String Faq = "/faq";
   static const String RapidTest = "/rapid-test";
+  static const String SelfReports = "/self-reports";
 
 }

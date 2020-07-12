@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportList/SelfReportListBloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportReminder/SelfReportReminderBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportDetailScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class SelfReportList extends StatefulWidget {
+  final LatLng location;
+
+  SelfReportList(this.location);
+
   @override
   _SelfReportListState createState() => _SelfReportListState();
 }
@@ -23,6 +31,14 @@ class _SelfReportListState extends State<SelfReportList> {
   var listDocumentId = [];
   DateTime firstDay, currentDay;
   Color textColor;
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
+    AnalyticsHelper.setLogEvent(Analytics.tappedDailyReport);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -236,16 +252,10 @@ class _SelfReportListState extends State<SelfReportList> {
                               );
                             } else {
                               /// Move to form screen
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      DialogTextOnly(
-                                        description: 'Masuk ke page isi form',
-                                        buttonText: Dictionary.ok,
-                                        onOkPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SelfReportFormScreen(
+                                      dailyId: '${i + 1}',
+                                      location: widget.location)));
                             }
                           } else {
                             showDialog(
@@ -276,16 +286,10 @@ class _SelfReportListState extends State<SelfReportList> {
                               );
                             } else {
                               /// Move to form screen
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      DialogTextOnly(
-                                        description: 'Masuk ke page isi form',
-                                        buttonText: Dictionary.ok,
-                                        onOkPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => SelfReportFormScreen(
+                                      dailyId: '${i + 1}',
+                                      location: widget.location)));
                             }
                           } else {
                             showDialog(
@@ -328,15 +332,10 @@ class _SelfReportListState extends State<SelfReportList> {
                         );
                       } else {
                         /// Move to form screen
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: 'Masuk ke page isi form',
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportFormScreen(
+                                dailyId: '${i + 1}',
+                                location: widget.location)));
                       }
                     }
                   },

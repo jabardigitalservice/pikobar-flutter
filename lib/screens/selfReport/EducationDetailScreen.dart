@@ -34,7 +34,8 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
 
   @override
   void initState() {
-    AnalyticsHelper.setCurrentScreen(Analytics.tappedDetailEducation);
+    AnalyticsHelper.setCurrentScreen(Analytics.education);
+    AnalyticsHelper.setLogEvent(Analytics.tappedEducationDetail);
 
     super.initState();
   }

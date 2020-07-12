@@ -34,8 +34,7 @@ class SelfReportReminderBloc
       yield SelfReportReminderLoading();
       try {
         String userId = await AuthRepository().getToken();
-        await SelfReportRepository()
-            .updateToCollection(userId: userId, isReminder: event.isReminder);
+        await SelfReportRepository().updateToCollection(userId: userId, isReminder: event.isReminder);
         yield SelfReportIsreminderSaved();
       } catch (e) {
         yield SelfReportReminderFailure(error: e.toString());
