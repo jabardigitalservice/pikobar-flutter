@@ -318,7 +318,7 @@ class Dictionary {
   static String selfReportDetail = 'Detail Pemantauan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
   static String titleSelfReport = 'Lapor Mandiri';
-  static String historyContact = 'Riwayat Kontak';
+  static String historyContact = 'Riwayat \nKontak';
   static String educationContent = 'Konten Edukasi';
   static String educationContentdesc = 'Dibawah ini merupakan konten edukasi untuk Isolasi Mandiri';
   static String profileNotComplete = 'Profil Anda Belum Lengkap';
@@ -334,13 +334,13 @@ class Dictionary {
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
-  static String selfReportForm = 'Form Lapor Kesehatan Harian';
+  static String selfReportForm = 'Form Lapor  Kesehatan Harian';
   static String selfReportQuestion1 = 'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
   static String inputBodyTemperature = 'Masukan Suhu Tubuh';
-  static String dailyMonitoring = 'Lapor Kesehatan Harian';
+  static String dailyMonitoring = 'Lapor Kesehatan \nHarian';
   static String dailyMonitoringProgress='Lapor Kesehatan Harian Terisi';
   static String rememberMe='Ingatkan Saya';
   static String countDay='Hari ke -';

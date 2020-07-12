@@ -459,10 +459,11 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   height: 60,
                   child: Image.asset(isShowMenu ? imageEnable : imageDisable)),
               Container(
-                margin: EdgeInsets.only(top: 15, left: 5.0),
+                margin: EdgeInsets.only(top: 15, left: 5.0, right: 5.0),
                 child: Text(title,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 13.0,
+                        fontSize: 14.0,
                         color: Color(0xff333333),
                         fontFamily: FontsFamily.lato)),
               )
