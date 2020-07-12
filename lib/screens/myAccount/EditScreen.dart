@@ -256,6 +256,7 @@ class _EditState extends State<Edit> {
                                   controller: _nikController,
                                   textInputType: TextInputType.number,
                                   hintText: Dictionary.placeHolderNIK,
+                                  validation: Validations.nikValidation,
                                   isEdit: true),
                               SizedBox(
                                 height: 20,
@@ -621,8 +622,8 @@ class _EditState extends State<Edit> {
                     width: MediaQuery.of(context).size.width / 2.8,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        border:
-                            Border.all(color: ColorBase.menuBorderColor, width: 1.5)),
+                        border: Border.all(
+                            color: ColorBase.menuBorderColor, width: 1.5)),
                     child: Row(
                       children: <Widget>[
                         rb,
@@ -756,7 +757,7 @@ class _EditState extends State<Edit> {
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                title == Dictionary.nik ? '' : ' (*)',
+                ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -790,16 +791,16 @@ class _EditState extends State<Edit> {
                     borderSide: BorderSide(color: Colors.red, width: 1.5)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide: BorderSide(
+                        color: ColorBase.menuBorderColor, width: 1.5)),
                 disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide: BorderSide(
+                        color: ColorBase.menuBorderColor, width: 1.5)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: ColorBase.menuBorderColor, width: 1.5))),
+                    borderSide: BorderSide(
+                        color: ColorBase.menuBorderColor, width: 1.5))),
             keyboardType:
                 textInputType != null ? textInputType : TextInputType.text,
           )
@@ -935,7 +936,8 @@ class _EditState extends State<Edit> {
                 width: MediaQuery.of(context).size.width / 7,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: ColorBase.menuBorderColor, width: 1.5)),
+                    border: Border.all(
+                        color: ColorBase.menuBorderColor, width: 1.5)),
                 child: Center(
                     child: Text(
                   Dictionary.inaCode,
@@ -974,16 +976,16 @@ class _EditState extends State<Edit> {
                               BorderSide(color: Colors.red, width: 1.5)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: ColorBase.menuBorderColor, width: 1.5)),
+                          borderSide: BorderSide(
+                              color: ColorBase.menuBorderColor, width: 1.5)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: ColorBase.menuBorderColor, width: 1)),
+                          borderSide: BorderSide(
+                              color: ColorBase.menuBorderColor, width: 1)),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: ColorBase.menuBorderColor, width: 2))),
+                          borderSide: BorderSide(
+                              color: ColorBase.menuBorderColor, width: 2))),
                   keyboardType: TextInputType.number,
                 ),
               ),
