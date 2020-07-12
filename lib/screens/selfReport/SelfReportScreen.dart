@@ -82,23 +82,23 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             });
           }
           if (state is AuthenticationLoading) {
-            setState(() {
-              // Show dialog when loading
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  content: Row(
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Container(
-                        margin: EdgeInsets.only(left: 15.0),
-                        child: Text(Dictionary.loading),
-                      )
-                    ],
-                  ),
-                  duration: Duration(seconds: 15),
+            // Show dialog when loading
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                content: Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Container(
+                      margin: EdgeInsets.only(left: 15.0),
+                      child: Text(Dictionary.loading),
+                    )
+                  ],
                 ),
-              );
+                duration: Duration(seconds: 15),
+              ),
+            );
+            setState(() {
               hasLogin = false;
             });
           }
