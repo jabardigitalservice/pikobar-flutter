@@ -1,15 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/selfReport/dailyReport/DailyReportBloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
+import 'package:pikobar_flutter/components/GroupedCheckBox.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
-import 'package:pikobar_flutter/components/GroupedCheckBox.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -127,8 +125,16 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       : Container(),
                   buildLabel(text: Dictionary.selfReportQuestion2),
                   SizedBox(height: Dimens.padding),
-                  GroupedCheckbox(
-                    itemList: _allItemList,
+                  GroupedCheckBox(
+                    color: ColorBase.menuBorderColor,
+                    activeColor: ColorBase.green,
+                    itemLabelList: _allItemList,
+                    itemValueList: _allItemList,
+                    orientation: CheckboxOrientation.WRAP,
+                    itemWidth: MediaQuery.of(context).size.width / 2 - 21,
+                    wrapDirection: Axis.horizontal,
+                    wrapSpacing: 10.0,
+                    wrapRunSpacing: 10.0,
                     onChanged: (itemList) {
                       setState(() {
                         _checkedItemList = itemList;
@@ -137,15 +143,10 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         _isIndicationEmpty = itemList.isEmpty;
                       });
                     },
-                    orientation: CheckboxOrientation.WRAP,
-                    wrapDirection: Axis.horizontal,
-                    wrapSpacing: 10.0,
-                    checkColor: Colors.white,
-                    activeColor: Colors.green,
-                    enabledBox: true,
                     textStyle:
-                        TextStyle(fontFamily: FontsFamily.lato, fontSize: 12.0),
+                        TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
                   ),
+                  SizedBox(height: Dimens.padding),
                   Container(
                     decoration: BoxDecoration(
                         border: Border.all(
@@ -421,10 +422,8 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       _isIndicationEmpty = _checkedItemList.isEmpty;
       if (widget.dailyId == '1') {
         _isDateEmpty = _dateController.text.isEmpty;
-        print('OK');
       } else {
         _isDateEmpty = false;
-        print('NOK');
       }
       if (_isOtherIndication) {
         _isOtherIndicationEmpty = _otherIndicationsController.text.isEmpty;
@@ -441,7 +440,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         final data = DailyReportModel(
             id: widget.dailyId,
             createdAt: DateTime.now(),
-            contactDate: _dateController.text.isNotEmpty ? DateTime.parse(_dateController.text) : null,
+            contactDate: _dateController.text.isNotEmpty
+                ? DateTime.parse(_dateController.text)
+                : null,
             indications: _checkedItemList.toString(),
             bodyTemperature: _bodyTempController.text,
             location: widget.location);
