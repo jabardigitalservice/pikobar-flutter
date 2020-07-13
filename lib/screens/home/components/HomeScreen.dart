@@ -167,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
               color: ColorBase.grey,
               margin: EdgeInsets.only(top: 10.0),
-              padding: EdgeInsets.only(bottom: 24.0),
+              padding: EdgeInsets.only(bottom: 10.0),
               child: Statistics()),
 
           /// Menus & Spread Sections
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
           
           /// News & Videos Sections
           SizedBox(
-            height: 24,
+            height: 10,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
           TabNewsScreen(),
 
           SizedBox(
-            height: 24,
+            height: 10,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: VideoList(),
           ),
           SizedBox(
-            height: 24,
+            height: 10,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -220,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: InfoGraphics(),
           ),
           SizedBox(
-            height: 24,
+            height: 10,
             child: Container(
               color: ColorBase.grey,
             ),
