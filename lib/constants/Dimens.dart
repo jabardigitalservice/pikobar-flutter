@@ -11,4 +11,5 @@ class Dimens {
   static const double textBodySize = 15.0;
 
   static const double sbHeight = 10.0;
+  static const double dividerHeight = 10.0;
 }
