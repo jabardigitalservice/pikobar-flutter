@@ -515,6 +515,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               : Colors.red);
           break;
 
+        case "OTG":
+          cardColor = HexColor.fromHex(healthStatusColor['otg'] != null
+              ? healthStatusColor['otg']
+              : Colors.black);
+          break;
+
         default:
           cardColor = Colors.grey;
       }
