@@ -1,57 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
-enum CheckboxOrientation{
-  HORIZONTAL,
-  VERTICAL,
-  WRAP
-}
+enum CheckboxOrientation { HORIZONTAL, VERTICAL, WRAP }
 
-class GroupedCheckbox extends StatefulWidget {
-  /// A list of string that describes each checkbox. Each item must be distinct.
-  final List<String> itemList;
+class GroupedCheckBox extends StatefulWidget {
+  /// A list of strings that will be displayed as labels for each check box.
+  final List<String> itemLabelList;
 
-  /// A list of string which specifies automatically checked checkboxes.
-  /// Every element must match an item from itemList.
-  final List<String> checkedItemList;
+  /// A list of strings that describe the value of each checkbox.
+  /// Each item must be distinct.
+  final List<String> itemValueList;
 
-  /// Specifies which boxes should be disabled.
-  /// If this is non-null, no boxes will be disabled.
-  /// The strings passed to this must match the labels.
-  final List<String> disabled;
+  /// A list of strings that determine the checkboxes that are checked automatically.
+  /// Each element must match an item from the [itemValueList].
+  final List<String> defaultSelectedList;
 
-  /// The style to use for the labels.
-  final TextStyle textStyle;
-
-  /// If true, then a border will be displayed on each checkbox.
-  final bool enabledBox;
-
-  /// Specifies the orientation of the elements in itemList.
-  final CheckboxOrientation orientation;
-
-  /// Called when the value of the checkbox group changes.
-  final Function onChanged;
+  /// Called when the value of the checkbox should change.
+  ///
+  /// The checkbox passes the new value to the callback but does not actually
+  /// change state until the parent widget rebuilds the checkbox with the new
+  /// value.
+  ///
+  /// The callback provided to [onChanged] should update the state of the parent
+  /// [StatefulWidget] using the [State.setState] method, so that the parent
+  /// gets rebuilt; for example:
+  ///
+  /// ```dart
+  /// GroupedCheckBox(
+  ///   onChanged: (List<String> newValue) {
+  ///     setState(() {
+  ///       _throwShotAway = newValue;
+  ///     });
+  ///   },
+  /// )
+  /// ```
+  final ValueChanged<List<String>> onChanged;
 
   /// The color to use when this checkbox is checked.
   ///
   /// Defaults to [ThemeData.toggleableActiveColor].
   final Color activeColor;
 
-  /// The color to use for the check icon when this checkbox is checked.
+  /// The color to use when this checkbox is unchecked.
   ///
-  /// Defaults to Color(0xFFFFFFFF)
-  final Color checkColor;
+  /// Defaults to Color(0xFFE0E0E0)
+  final Color color;
 
-  /// If true the checkbox's value can be true, false, or null.
-  final bool tristate;
+  /// The orientation of the elements in itemList.
+  ///
+  /// Defaults to [CheckboxOrientation.WRAP].
+  final CheckboxOrientation orientation;
 
-  /// Configures the minimum size of the tap target.
-  final MaterialTapTargetSize materialTapTargetSize;
+  /// How much space to place between the end of the item.
+  ///
+  /// The [itemSpacing] can only work if [orientation] is
+  /// [CheckboxOrientation.HORIZONTAL] or [CheckboxOrientation.VERTICAL]
+  ///
+  /// For example, if [CheckboxOrientation.HORIZONTAL] and [itemSpacing] is 10.0,
+  /// the right side of the item will be spaced at least 10.0 pixels apart.
+  ///
+  /// Defaults to 0.0.
+  final double itemSpacing;
 
-  /// The color for the checkbox's Material when it has the input focus.
-  final Color focusColor;
+  /// If non-null, require the item to have this width.
+  ///
+  /// If null, the item will pick a size based on children's size calculations.
+  final double itemWidth;
 
-  /// The color for the checkbox's Material when a pointer is hovering over it.
-  final Color hoverColor;
+  /// If non-null, require the item to have this height.
+  ///
+  /// If null, the item will pick a size based on children's size calculations.
+  final double itemHeight;
+
+  /// The style to use for the labels.
+  final TextStyle textStyle;
 
   //.......................WRAP ORIENTATION.....................................
 
@@ -91,21 +114,6 @@ class GroupedCheckbox extends StatefulWidget {
   /// Defaults to 0.0.
   final double wrapSpacing;
 
-  /// How the runs themselves should be placed in the cross axis.
-  ///
-  /// For example, if [wrapRunAlignment] is [WrapAlignment.center], the runs are
-  /// grouped together in the center of the overall [Wrap] in the cross axis.
-  ///
-  /// Defaults to [WrapAlignment.start].
-  ///
-  /// See also:
-  ///
-  ///  * [wrapAlignment], which controls how the children within each run are placed
-  ///    relative to each other in the main axis.
-  ///  * [wrapCrossAxisAlignment], which controls how the children within each run
-  ///    are placed relative to each other in the cross axis.
-  final WrapAlignment wrapRunAlignment;
-
   /// How much space to place between the runs themselves in the cross axis.
   ///
   /// For example, if [wrapRunSpacing] is 10.0, the runs will be spaced at least
@@ -118,199 +126,138 @@ class GroupedCheckbox extends StatefulWidget {
   /// Defaults to 0.0.
   final double wrapRunSpacing;
 
-  /// How the children within a run should be aligned relative to each other in
-  /// the cross axis.
-  ///
-  /// For example, if this is set to [WrapCrossAlignment.end], and the
-  /// [wrapDirection] is [Axis.horizontal], then the children within each
-  /// run will have their bottom edges aligned to the bottom edge of the run.
-  ///
-  /// Defaults to [WrapCrossAlignment.start].
-  ///
-  /// See also:
-  ///
-  ///  * [wrapAlignment], which controls how the children within each run are placed
-  ///    relative to each other in the main axis.
-  ///  * [wrapRunAlignment], which controls how the runs are placed relative to each
-  ///    other in the cross axis.
-  final WrapCrossAlignment wrapCrossAxisAlignment;
-
-  /// Determines the order to lay children out horizontally and how to interpret
-  /// `start` and `end` in the horizontal direction.
-  ///
-  /// Defaults to the ambient [Directionality].
-  ///
-  /// If the [wrapDirection] is [Axis.horizontal], this controls order in which the
-  /// children are positioned (left-to-right or right-to-left), and the meaning
-  /// of the [wrapAlignment] property's [WrapAlignment.start] and
-  /// [WrapAlignment.end] values.
-  ///
-  /// If the [wrapDirection] is [Axis.horizontal], and either the
-  /// [wrapAlignment] is either [WrapAlignment.start] or [WrapAlignment.end], or
-  /// there's more than one child, then the [wrapTextDirection] (or the ambient
-  /// [Directionality]) must not be null.
-  ///
-  /// If the [wrapDirection] is [Axis.vertical], this controls the order in which
-  /// runs are positioned, the meaning of the [wrapRunAlignment] property's
-  /// [WrapAlignment.start] and [WrapAlignment.end] values, as well as the
-  /// [wrapCrossAxisAlignment] property's [WrapCrossAlignment.start] and
-  /// [WrapCrossAlignment.end] values.
-  ///
-  /// If the [wrapDirection] is [Axis.vertical], and either the
-  /// [wrapRunAlignment] is either [WrapAlignment.start] or [WrapAlignment.end], the
-  /// [wrapCrossAxisAlignment] is either [WrapCrossAlignment.start] or
-  /// [WrapCrossAlignment.end], or there's more than one child, then the
-  /// [wrapTextDirection] (or the ambient [Directionality]) must not be null.
-  final TextDirection wrapTextDirection;
-
-  /// Determines the order to lay children out vertically and how to interpret
-  /// `start` and `end` in the vertical direction.
-  ///
-  /// If the [wrapDirection] is [Axis.vertical], this controls which order children
-  /// are painted in (down or up), the meaning of the [wrapAlignment] property's
-  /// [WrapAlignment.start] and [WrapAlignment.end] values.
-  ///
-  /// If the [wrapDirection] is [Axis.vertical], and either the [wrapAlignment]
-  /// is either [WrapAlignment.start] or [WrapAlignment.end], or there's
-  /// more than one child, then the [wrapVerticalDirection] must not be null.
-  ///
-  /// If the [wrapDirection] is [Axis.horizontal], this controls the order in which
-  /// runs are positioned, the meaning of the [wrapRunAlignment] property's
-  /// [WrapAlignment.start] and [WrapAlignment.end] values, as well as the
-  /// [wrapCrossAxisAlignment] property's [WrapCrossAlignment.start] and
-  /// [WrapCrossAlignment.end] values.
-  ///
-  /// If the [wrapDirection] is [Axis.horizontal], and either the
-  /// [wrapRunAlignment] is either [WrapAlignment.start] or [WrapAlignment.end], the
-  /// [wrapCrossAxisAlignment] is either [WrapCrossAlignment.start] or
-  /// [WrapCrossAlignment.end], or there's more than one child, then the
-  /// [wrapVerticalDirection] must not be null.
-  final VerticalDirection wrapVerticalDirection;
-
-  GroupedCheckbox({
-    @required this.itemList,
-    @required this.orientation,
-    @required this.onChanged,
-    this.checkedItemList,
-    this.textStyle = const TextStyle(),
-    this.enabledBox = false,
-    this.disabled,
-    this.activeColor,
-    this.checkColor,
-    this.focusColor,
-    this.hoverColor,
-    this.materialTapTargetSize,
-    this.tristate = false,
-    this.wrapDirection = Axis.horizontal,
-    this.wrapAlignment = WrapAlignment.start,
-    this.wrapSpacing = 0.0,
-    this.wrapRunAlignment = WrapAlignment.start,
-    this.wrapRunSpacing = 0.0,
-    this.wrapCrossAxisAlignment = WrapCrossAlignment.start,
-    this.wrapTextDirection,
-    this.wrapVerticalDirection = VerticalDirection.down,
-  });
+  GroupedCheckBox(
+      {@required this.itemLabelList,
+      @required this.itemValueList,
+      @required this.orientation,
+      this.defaultSelectedList,
+      this.color,
+      this.activeColor,
+      this.textStyle,
+      this.onChanged,
+      this.itemSpacing = 0.0,
+      this.itemWidth,
+      this.itemHeight,
+      this.wrapDirection = Axis.horizontal,
+      this.wrapAlignment = WrapAlignment.start,
+      this.wrapSpacing = 0.0,
+      this.wrapRunSpacing = 0.0})
+      : assert(itemLabelList.length == itemValueList.length);
 
   @override
-  _GroupedCheckboxState createState() => _GroupedCheckboxState();
+  _GroupedCheckBoxState createState() => _GroupedCheckBoxState();
 }
 
-class _GroupedCheckboxState extends State<GroupedCheckbox> {
-  List<String> selectedListItems = List<String>();
+class _GroupedCheckBoxState extends State<GroupedCheckBox> {
+  List<String> selectedItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.defaultSelectedList != null)
+      selectedItems.addAll(widget.defaultSelectedList);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget finalWidget = generateItems();
-    return finalWidget;
+    return generateItems();
   }
 
   Widget generateItems() {
     List<Widget> content = [];
-    Widget finalWidget;
-    if (widget.checkedItemList != null) {
-      selectedListItems = widget.checkedItemList;
-    }
     List<Widget> widgetList = List<Widget>();
-    for (int i = 0; i < widget.itemList.length; i++) {
-      Widget boxItem;
 
-      if (widget.enabledBox) {
-        boxItem = Container(
-          width: MediaQuery.of(context).size.width / 2.3,
-          /*decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: BorderRadius.circular(8.0)
-          ),*/
-          child: item(i),
-        );
-      } else {
-        boxItem = item(i);
-      }
-
-      widgetList.add(boxItem);
+    for (int index = 0; index < widget.itemLabelList.length; index++) {
+      widgetList.add(item(index));
     }
+
     if (widget.orientation == CheckboxOrientation.VERTICAL) {
       for (final item in widgetList) {
-        content.add(Row(children: <Widget>[item]));
+        content.add(Column(
+            children: <Widget>[item, SizedBox(height: widget.itemSpacing)]));
       }
-      finalWidget = SingleChildScrollView(
+
+      return SingleChildScrollView(
           scrollDirection: Axis.vertical, child: Column(children: content));
     } else if (widget.orientation == CheckboxOrientation.HORIZONTAL) {
       for (final item in widgetList) {
-        content.add(Column(children: <Widget>[item]));
+        content.add(
+            Row(children: <Widget>[item, SizedBox(width: widget.itemSpacing)]));
       }
-      finalWidget = SingleChildScrollView(
+
+      return SingleChildScrollView(
           scrollDirection: Axis.horizontal, child: Row(children: content));
     } else {
-      finalWidget = SingleChildScrollView(
-        child: Wrap(
+      return SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Wrap(
             children: widgetList,
             spacing: widget.wrapSpacing,
             runSpacing: widget.wrapRunSpacing,
-            textDirection: widget.wrapTextDirection,
-            crossAxisAlignment: widget.wrapCrossAxisAlignment,
-            verticalDirection: widget.wrapVerticalDirection,
+            direction: widget.wrapDirection,
             alignment: widget.wrapAlignment,
-            direction: Axis.horizontal,
-            runAlignment: widget.wrapRunAlignment),
+          ),
+        ),
       );
     }
-    return finalWidget;
   }
 
   Widget item(int index) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Checkbox(
-            activeColor: widget.activeColor,
-            checkColor: widget.checkColor,
-            focusColor: widget.focusColor,
-            hoverColor: widget.hoverColor,
-            materialTapTargetSize: widget.materialTapTargetSize,
-            value: selectedListItems.contains(widget.itemList[index]),
-            tristate: widget.tristate,
-            onChanged: (widget.disabled != null &&
-                widget.disabled.contains(widget.itemList.elementAt(index)))
-                ? null
-                : (bool selected) {
-              selected
-                  ? selectedListItems.add(widget.itemList[index])
-                  : selectedListItems.remove(widget.itemList[index]);
-              setState(() {
-                widget.onChanged(selectedListItems);
-              });
-            }),
-        Expanded(
-          child: Text(
-            widget.itemList[index].isEmpty ? '' : widget.itemList[index],
-            style: widget.disabled != null &&
-                widget.disabled.contains(widget.itemList.elementAt(index))
-                ? TextStyle(color: Theme.of(context).disabledColor)
-                : widget.textStyle,
-          ),
-        )
-      ],
+    return Container(
+      width: widget.itemWidth != null
+          ? widget.itemWidth
+          : widget.orientation == CheckboxOrientation.HORIZONTAL
+              ? MediaQuery.of(context).size.width / 2.5
+              : null,
+      height: widget.itemHeight,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          border: Border.all(
+            color: selectedItems.contains(widget.itemValueList[index])
+                ? widget.activeColor
+                : widget.color,
+          )),
+      child: MaterialButton(
+        onPressed: () {
+          if (selectedItems.contains(widget.itemValueList[index])) {
+            selectedItems.remove(widget.itemValueList[index]);
+          } else {
+            selectedItems.add(widget.itemValueList[index]);
+          }
+          setState(() {});
+          widget.onChanged(selectedItems);
+        },
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 16,
+              height: 16,
+              margin: EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  border: Border.all(
+                      color: selectedItems.contains(widget.itemValueList[index])
+                          ? widget.activeColor
+                          : widget.color)),
+              child: selectedItems.contains(widget.itemValueList[index])
+                  ? Icon(FontAwesomeIcons.check,
+                      size: 10,
+                      color: selectedItems.contains(widget.itemValueList[index])
+                          ? widget.activeColor
+                          : widget.color)
+                  : null,
+            ),
+            Expanded(
+              child: Text(widget.itemLabelList[index],
+                  style: widget.textStyle ??
+                      TextStyle(fontFamily: FontsFamily.lato)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
