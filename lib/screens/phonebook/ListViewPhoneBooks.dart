@@ -92,27 +92,27 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 setState(() {
                   typeEmergenyNumber = Dictionary.emergencyNumber;
                 });
-                // AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+                AnalyticsHelper.setLogEvent(
+                    Analytics.tappedphoneBookEmergencyTab);
               } else if (index == 1) {
                 setState(() {
                   typeEmergenyNumber = Dictionary.referralHospital;
                   _emergencyNumberBloc.add(ReferralHospitalLoad());
                 });
-                // AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+                AnalyticsHelper.setLogEvent(
+                    Analytics.tappedRefferalHospitalTab);
               } else if (index == 2) {
                 setState(() {
                   typeEmergenyNumber = Dictionary.callCenterArea;
                   _emergencyNumberBloc.add(CallCenterLoad());
                 });
-
-                // AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+                AnalyticsHelper.setLogEvent(Analytics.tappedCallCenterTab);
               } else if (index == 3) {
                 setState(() {
                   typeEmergenyNumber = Dictionary.gugusTugasWeb;
                   _emergencyNumberBloc.add(GugusTugasWebLoad());
                 });
-
-                // AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+                AnalyticsHelper.setLogEvent(Analytics.tappedGugusTugasWebTab);
               }
             },
             tabBarView: <Widget>[
@@ -128,6 +128,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     );
   }
 
+  /// Function to build Emergency Number Screen
   Widget buildEmergencyNumberTab() {
     return Column(
       children: <Widget>[
@@ -136,6 +137,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     );
   }
 
+  /// Function to build Referral Hospital Screen
   Widget buildReferralHospitalTab() {
     return ListView(
       children: <Widget>[
@@ -143,7 +145,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
           builder: (context, state) {
             if (state is ReferralHospitalLoaded) {
               List<ReferralHospitalModel> dataNomorDarurat;
+
+              /// Checking search field
               if (widget.searchQuery != null) {
+                /// Filtering data by search
                 dataNomorDarurat = state.referralHospitalList
                     .where((test) => test.name
                         .toLowerCase()
@@ -173,6 +178,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     );
   }
 
+  /// Function to build Call Center Screen
   Widget buildCallCenterTab() {
     return ListView(
       children: <Widget>[
@@ -180,7 +186,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
           builder: (context, state) {
             if (state is CallCenterLoaded) {
               List<CallCenterModel> dataCallCenter;
+
+              /// Checking search field
               if (widget.searchQuery != null) {
+                /// Filtering data by search
                 dataCallCenter = state.callCenterList
                     .where((test) => test.nameCity
                         .toLowerCase()
@@ -210,6 +219,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     );
   }
 
+  /// Function to build Web Gugus Tugas Screen
   Widget buildWebGugusTugasTab() {
     return ListView(
       children: <Widget>[
@@ -217,7 +227,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
           builder: (context, state) {
             if (state is GugusTugasWebLoaded) {
               List<GugusTugasWebModel> dataWebGugusTugas;
+
+              /// Checking search field
               if (widget.searchQuery != null) {
+                /// Filtering data by search
                 dataWebGugusTugas = state.gugusTugasWebModel
                     .where((test) => test.name
                         .toLowerCase()
@@ -247,6 +260,63 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     );
   }
 
+  /// Function to build Emergency Number Screen
+  Widget _buildDaruratNumber(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        _categoryExpansionStateMap["NomorDarurat"]
+            ? FutureBuilder<RemoteConfig>(
+                future: setupRemoteConfig(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<RemoteConfig> snapshot) {
+                  var tempGetEmergencyCall;
+                  List<EmergencyNumberModel> getEmergencyCallFilter;
+
+                  if (snapshot.data != null) {
+                    tempGetEmergencyCall = json.decode(
+                        snapshot.data.getString(FirebaseConfig.emergencyCall));
+                    List<EmergencyNumberModel> getEmergencyCall =
+                        (tempGetEmergencyCall as List)
+                            .map((itemWord) =>
+                                EmergencyNumberModel.fromJson(itemWord))
+                            .toList();
+
+                    /// Checking search field
+                    if (widget.searchQuery != null) {
+                      /// Filtering data by search
+                      getEmergencyCallFilter = getEmergencyCall
+                          .where((test) => test.title
+                              .toLowerCase()
+                              .contains(widget.searchQuery.toLowerCase()))
+                          .toList();
+                    } else {
+                      getEmergencyCallFilter = getEmergencyCall;
+                    }
+                  }
+
+                  return snapshot.data != null
+                      ? getEmergencyCallFilter.isEmpty
+                          ? EmptyData(
+                              message: Dictionary.emptyDataPhoneBook,
+                              desc: Dictionary.emptyDataPhoneBookDesc,
+                              isFlare: false,
+                              image: "${Environment.imageAssets}not_found.png",
+                            )
+                          : Column(
+                              children:
+                                  getListEmergencyCall(getEmergencyCallFilter),
+                            )
+                      : Container();
+                })
+            : Container(),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
+  /// Build list of Refferal Hospital
   List<Widget> getListRumahSakitRujukan(List<ReferralHospitalModel> listModel) {
     List<Widget> list = List();
 
@@ -291,7 +361,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 ),
                 onPressed: () {
                   callback(document.name, _detailExpandList[document.name]);
-                  print(_detailExpandList);
+                  if (_detailExpandList[document.name]) {
+                    AnalyticsHelper.setLogEvent(
+                        Analytics.tappedphoneBookEmergencyDetail,
+                        <String, dynamic>{'title': document.name});
+                  }
                 },
               )
             ],
@@ -379,6 +453,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     emergencyPhoneCount = listModel.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
       if (!_detailExpandList.containsKey(listModel[i].name)) {
+        /// Add list of name and boolean for expanded container
         _detailExpandList.addAll({listModel[i].name: false});
       }
 
@@ -403,6 +478,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
+  /// Build list of phone number
   List<Widget> _buildListDetailPhone(List<dynamic> document, String name) {
     List<Widget> list = List();
 
@@ -447,6 +523,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
+  /// Build list of Call Center
   List<Widget> getListCallCenter(List<CallCenterModel> listModel) {
     List<Widget> list = List();
     Column _cardTile(CallCenterModel document) {
@@ -491,8 +568,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 onPressed: () {
                   callback(
                       document.nameCity, _detailExpandList[document.nameCity]);
-                  print(document);
-                  print(_detailExpandList);
+                  if (_detailExpandList[document.nameCity]) {
+                    AnalyticsHelper.setLogEvent(
+                        Analytics.tappedphoneBookEmergencyDetail,
+                        <String, dynamic>{'title': document.nameCity});
+                  }
                 },
               )
             ],
@@ -551,6 +631,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     callCenterPhoneCount = listModel.length;
     for (int i = 0; i < callCenterPhoneCount; i++) {
       if (!_detailExpandList.containsKey(listModel[i].nameCity)) {
+        /// Add list of name and boolean for expanded container
         _detailExpandList.addAll({listModel[i].nameCity: false});
       }
       Column column = Column(
@@ -572,6 +653,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
+  /// Build list of Web Gugus Tugas
   List<Widget> getListWebGugusTugas(List<GugusTugasWebModel> listModel) {
     List<Widget> list = List();
     Column _cardTile(GugusTugasWebModel document) {
@@ -609,8 +691,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 ),
                 onPressed: () {
                   callback(document.name, _detailExpandList[document.name]);
-                  print(document);
-                  print(_detailExpandList);
+                  if (_detailExpandList[document.name]) {
+                    AnalyticsHelper.setLogEvent(
+                        Analytics.tappedphoneBookEmergencyDetail,
+                        <String, dynamic>{'title': document.name});
+                  }
                 },
               )
             ],
@@ -640,11 +725,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                               onTap: () {
                                 _launchURL(document.website, 'web');
 
-                                // AnalyticsHelper.setLogEvent(
-                                //     Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
-                                //   'title':  document['website'],
-                                //   'telp': document[name][i]
-                                // });
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedphoneBookEmergencyWeb,
+                                    <String, dynamic>{
+                                      'title': document.name,
+                                      'web': document.website
+                                    });
                               })
                           : Container(),
                     ],
@@ -665,6 +751,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     dataWebGugustugasCount = listModel.length;
     for (int i = 0; i < dataWebGugustugasCount; i++) {
       if (!_detailExpandList.containsKey(listModel[i].name)) {
+        /// Add list of name and boolean for expanded container
         _detailExpandList.addAll({listModel[i].name: false});
       }
       Column column = Column(
@@ -686,6 +773,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
+  /// Build list of Emergency Number
   List<Widget> getListEmergencyCall(List<EmergencyNumberModel> snapshot) {
     List<Widget> list = List();
 
@@ -800,66 +888,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       list.add(column);
     }
     return list;
-  }
-
-  Widget _buildDaruratNumber(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        // _buildCardHeader(
-        //     context,
-        //     'emergency_phone.png',
-        //     Dictionary.phoneBookEmergencyInformation,
-        //     Dictionary.phoneBookEmergencyInformationCaption,
-        //     'NomorDarurat',
-        //     _categoryExpansionStateMap["NomorDarurat"]),
-        _categoryExpansionStateMap["NomorDarurat"]
-            ? FutureBuilder<RemoteConfig>(
-                future: setupRemoteConfig(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<RemoteConfig> snapshot) {
-                  var tempGetEmergencyCall;
-                  List<EmergencyNumberModel> getEmergencyCallFilter;
-
-                  if (snapshot.data != null) {
-                    tempGetEmergencyCall = json.decode(
-                        snapshot.data.getString(FirebaseConfig.emergencyCall));
-                    List<EmergencyNumberModel> getEmergencyCall =
-                        (tempGetEmergencyCall as List)
-                            .map((itemWord) =>
-                                EmergencyNumberModel.fromJson(itemWord))
-                            .toList();
-
-                    if (widget.searchQuery != null) {
-                      getEmergencyCallFilter = getEmergencyCall
-                          .where((test) => test.title
-                              .toLowerCase()
-                              .contains(widget.searchQuery.toLowerCase()))
-                          .toList();
-                    } else {
-                      getEmergencyCallFilter = getEmergencyCall;
-                    }
-                  }
-
-                  return snapshot.data != null
-                      ? getEmergencyCallFilter.isEmpty
-                          ? EmptyData(
-                              message: Dictionary.emptyDataPhoneBook,
-                              desc: Dictionary.emptyDataPhoneBookDesc,
-                              isFlare: false,
-                              image: "${Environment.imageAssets}not_found.png",
-                            )
-                          : Column(
-                              children:
-                                  getListEmergencyCall(getEmergencyCallFilter),
-                            )
-                      : Container();
-                })
-            : Container(),
-        SizedBox(
-          height: 20,
-        ),
-      ],
-    );
   }
 
   Widget _buildCardHeader(BuildContext context, String iconPath, title, content,

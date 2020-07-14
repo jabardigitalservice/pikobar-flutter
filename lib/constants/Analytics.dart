@@ -58,6 +58,14 @@ class Analytics {
   static String tappedphoneBookEmergencyWa = 'tapped_nomor_darurat_wa';
   static String tappedphoneBookEmergencyTelp = 'tapped_nomor_darurat_telp';
   static String tappedphoneBookEmergencyWeb = 'tapped_nomor_darurat_web';
+  static String tappedphoneBookEmergencyTab = 'tapped_nomor_darurat_tab';
+  static String tappedRefferalHospitalTab = 'tapped_rs_rujukan_tab';
+  static String tappedCallCenterTab = 'tapped_call_center_tab';
+  static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
+
+
+
+
 
   //message
   static String tappedShareNewsFromMessage = 'tapped_share_news_from_message';
