@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/selfReport/dailyReport/DailyReportBloc.dart';
@@ -35,7 +36,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
   final _otherIndicationsController = TextEditingController();
-  final _bodyTempController = TextEditingController();
+  final _bodyTempController = MaskedTextController(mask: '00.0');
 
   DailyReportBloc _dailyReportBloc;
 
@@ -202,9 +203,12 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                               '^\$|^(0|([1-9][0-9]{0,}))(\\.[0-9]{0,})?\$')
                         ],
                         maxLines: 1,
+                        maxLength: 4,
                         decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: Dictionary.inputBodyTemperature),
+                            hintText: Dictionary.inputBodyTemperature,
+                            counterText: "",
+                        ),
                       ),
                     ),
                     Positioned(

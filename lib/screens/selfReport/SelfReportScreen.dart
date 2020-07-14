@@ -34,6 +34,7 @@ class SelfReportScreen extends StatefulWidget {
 }
 
 class _SelfReportScreenState extends State<SelfReportScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationAuthenticated profileLoaded;
 
@@ -76,14 +77,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                         },
                       ));
             }
-            Scaffold.of(context).hideCurrentSnackBar();
+            _scaffoldKey.currentState.hideCurrentSnackBar();
             setState(() {
               hasLogin = false;
             });
           }
           if (state is AuthenticationLoading) {
             // Show dialog when loading
-            Scaffold.of(context).showSnackBar(
+            _scaffoldKey.currentState.showSnackBar(
               SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
                 content: Row(
@@ -103,12 +104,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             });
           }
           if (state is AuthenticationUnauthenticated) {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
             setState(() {
               hasLogin = false;
             });
           }
 
           if (state is AuthenticationAuthenticated) {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
             setState(() {
               profileLoaded = state;
               hasLogin = true;
@@ -116,6 +119,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           }
         },
         child: Scaffold(
+            key: _scaffoldKey,
             appBar: CustomAppBar.defaultAppBar(
               title: Dictionary.titleSelfReport,
             ),
