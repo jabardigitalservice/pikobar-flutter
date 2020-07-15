@@ -323,6 +323,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       TextSpan(
                         text: Dictionary.descProfile1,
                         style: TextStyle(
+                            height: 1.7,
                             fontSize: 12.0,
                             color: Colors.white,
                             fontFamily: FontsFamily.lato),
@@ -331,6 +332,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                           text: Dictionary.descProfile2,
                           style: TextStyle(
                               fontSize: 12.0,
+                              height: 1.7,
                               color: Colors.white,
                               fontFamily: FontsFamily.lato,
                               decoration: TextDecoration.underline,
@@ -345,6 +347,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                         text: Dictionary.descProfile3,
                         style: TextStyle(
                             fontSize: 12.0,
+                            height: 1.7,
                             color: Colors.white,
                             fontFamily: FontsFamily.lato),
                       ),
