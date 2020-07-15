@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -19,7 +19,6 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
-import 'package:html/dom.dart' as dom;
 
 class RapidTestDetail extends StatefulWidget {
   final RemoteConfig remoteConfig;
@@ -169,50 +168,20 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   }
 
   Widget buildAnnouncement(int i) {
-    return Container(
-      width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 5, right: 5),
-      decoration: BoxDecoration(
-          color: Color(0xffFFF3CC), borderRadius: BorderRadius.circular(8.0)),
-      child: Stack(
-        children: <Widget>[
-          Image.asset('${Environment.imageAssets}intersect.png', width: 73),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    dataAnnouncement[i]['title'] != null
-                        ? dataAnnouncement[i]['title']
-                        : Dictionary.titleInfoTextAnnouncement,
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.lato),
-                  ),
-                  SizedBox(height: 15),
-                  Html(
-                      data: dataAnnouncement[i]['content'],
-                      defaultTextStyle: TextStyle(
-                          color: Color(0xff828282),
-                          fontSize: 10.0,
-                          fontFamily: FontsFamily.lato),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.justify;
-                      },
-                      onLinkTap: (url) {
-                        _launchURL(
-                            url,
-                            dataAnnouncement[i]['title'] != null
-                                ? dataAnnouncement[i]['title']
-                                : Dictionary.titleInfoTextAnnouncement);
-                      }),
-                ]),
-          ),
-        ],
-      ),
+    return
+      Announcement(
+      title: dataAnnouncement[i]['title'] != null
+          ? dataAnnouncement[i]['title']
+          : Dictionary.titleInfoTextAnnouncement,
+      content: dataAnnouncement[i]['content'],
+      context: context,
+      onLinkTap: (url) {
+        _launchURL(
+            url,
+            dataAnnouncement[i]['title'] != null
+                ? dataAnnouncement[i]['title']
+                : Dictionary.titleInfoTextAnnouncement);
+      },
     );
   }
 

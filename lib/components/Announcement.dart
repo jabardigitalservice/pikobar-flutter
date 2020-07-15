@@ -1,14 +1,26 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/rich_text_parser.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Announcement extends StatelessWidget {
   final String title;
   final String content;
+  final BuildContext context;
+  final OnLinkTap onLinkTap;
+  final String actionUrl;
 
-  Announcement({this.title, this.content});
+  Announcement(
+      {this.title, this.content, this.context, this.onLinkTap, this.actionUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -28,33 +40,51 @@ class Announcement extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 13.0,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.lato),
                   ),
-                  SizedBox(height: 15),
-                  Html(
-                      data:content,
-                      defaultTextStyle: TextStyle(
-                          color: Color(0xff828282),
-                          fontSize: 10.0,
-                          fontFamily: FontsFamily.lato),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.justify;
-                      },
-                      onLinkTap: (url) {
-//                        _launchURL(
-//                            url,
-//                            dataAnnouncement[i]['title'] != null
-//                                ? dataAnnouncement[i]['title']
-//                                : Dictionary.titleInfoTextAnnouncement);
-                      }),
+                  SizedBox(height: 10),
+                  actionUrl != null && actionUrl.isNotEmpty
+                      ? RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                              text: content,
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey[600],
+                                  fontFamily: FontsFamily.lato),
+                            ),
+                            TextSpan(
+                                text: Dictionary.moreDetail,
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    height: 1.5,
+                                    color: ColorBase.green,
+                                    fontFamily: FontsFamily.lato,
+                                    fontWeight: FontWeight.bold),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    openChromeSafariBrowser(url: actionUrl);
+                                  })
+                          ]),
+                        )
+                      : Html(
+                          data: content,
+                          defaultTextStyle: TextStyle(
+                              color: Color(0xff828282),
+                              height: 1.5,
+                              fontSize: 12.0,
+                              fontFamily: FontsFamily.lato),
+                          customTextAlign: (dom.Node node) {
+                            return TextAlign.justify;
+                          },
+                          onLinkTap: onLinkTap)
                 ]),
           ),
         ],
       ),
     );
   }
-
 }
