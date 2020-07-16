@@ -67,6 +67,7 @@ class _EditState extends State<Edit> {
   bool isBirthdayEmpty = false;
   bool isGenderEmpty = false;
   LatLng latLng;
+  List<dynamic> listCity;
 
   @override
   void initState() {
@@ -389,6 +390,8 @@ class _EditState extends State<Edit> {
                                             _cityController,
                                             false);
                                       default:
+                                        listCity =
+                                            snapshot.data.documents.toList();
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
                                             Dictionary.cityPlaceholder,
@@ -1051,15 +1054,50 @@ class _EditState extends State<Edit> {
     }
   }
 
-  // Function to get lat long user and auto complete address field
+  // Function to get lat long user, auto complete address field and auto complete city field
   Future<void> _openLocationPicker() async {
     latLng = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => LocationPicker()));
     final String address = await GeocoderRepository().getAddress(latLng);
+    String city = await GeocoderRepository().getCity(latLng);
+    var tempCity;
+
+    /// Checking city contains kab
+    if (city.toLowerCase().contains('kab')) {
+      /// Replace Kabupaten or Kabupatén to kab.
+      setState(() {
+        city = city.replaceAll('Kabupaten', 'kab.');
+        city = city.replaceAll('Kabupatén', 'kab.');
+      });
+    }
+
+    /// Checking city contains regency
+    if (city.toLowerCase().contains('regency')) {
+      /// Add kab. and delete Regency string.
+      setState(() {
+        city = city.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
+        city = 'kab. ' + city.replaceAll('Regency', '');
+      });
+    }
+    for (var i = 0; i < listCity.length; i++) {
+      /// Checking same name of [city] in [listCity]
+      if (listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
+        setState(() {
+          tempCity = listCity[i];
+        });
+      }
+    }
     if (address != null) {
       setState(() {
         _addressController.text = address;
       });
+      if (tempCity != null) {
+        setState(() {
+          _cityController.text = tempCity['code'];
+        });
+      } else {
+        _cityController.text = '';
+      }
     }
   }
 
