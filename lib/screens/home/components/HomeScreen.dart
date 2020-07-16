@@ -19,7 +19,6 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
-import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';

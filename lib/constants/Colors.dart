@@ -7,7 +7,7 @@ class ColorBase {
   static final pink = Color(0xFFD71149);
   static final bubbleChatBlue = Color(0xFFD5E9F4);
   static final darkRed = Color(0xFFD23C3C);
-  static final announcementBackgroundColor = Color(0xFFF9EFD0);
+  static final announcementBackgroundColor = Color(0xffFFF3CC);
   static final menuBorderColor = Color(0xFFE0E0E0);
   static final darkGrey=Color(0xff828282);
   static final veryDarkGrey=Color(0xff333333);

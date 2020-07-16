@@ -283,7 +283,7 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.\n\nData yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.';
+      '<p>Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.</p> <p>Data yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.</p>';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -13,7 +14,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -179,26 +179,16 @@ class _SurveysScreenState extends State<SurveysScreen> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(
-                vertical: Dimens.padding, horizontal: Dimens.padding),
-            decoration: BoxDecoration(
-                color: ColorBase.announcementBackgroundColor,
-                borderRadius: BorderRadius.circular(8.0)),
-            child: Stack(
-              children: <Widget>[
-                Image.asset('${Environment.imageAssets}intersect.png',
-                    width: 73),
-                Padding(
-                  padding: const EdgeInsets.all(Dimens.padding),
-                  child: Text(Dictionary.surveyInfo,
-                    style: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                        height: 1.5),
-                  ),
-                )
-              ],
+      margin: EdgeInsets.symmetric(
+                vertical: 10, horizontal: 10),
+            /// Set up for show announcement widget
+            child: Announcement(
+              content: Dictionary.surveyInfo,
+              textStyleContent: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.0,
+                  height: 1.5),
             ),
           ),
           Container(

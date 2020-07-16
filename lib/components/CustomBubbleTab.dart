@@ -2,6 +2,7 @@ import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
+// ignore: must_be_immutable
 class CustomBubbleTab extends StatefulWidget {
   final List<String> listItemTitleTab;
   final Color indicatorColor;
