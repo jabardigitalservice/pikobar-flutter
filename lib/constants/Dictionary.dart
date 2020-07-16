@@ -347,4 +347,5 @@ class Dictionary {
   static String dailyMonitoringFilled='Proses pelaporan sudah terisi';
   static String dailyMonitoringUnfilled='Proses pelaporan belum terisi';
   static String errorMessageDailyMonitoring='Mohon maaf anda belum bisa mengisi untuk hari ke -';
+  static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
 }

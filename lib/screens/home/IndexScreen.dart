@@ -6,6 +6,7 @@ import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,6 +43,7 @@ class IndexScreenState extends State<IndexScreen> {
   BottomNavigationBadge badger;
   List<BottomNavigationBarItem> items;
   int countMessage = 0;
+  DateTime currentBackPressTime;
 
   @override
   void initState() {
@@ -236,13 +238,28 @@ class IndexScreenState extends State<IndexScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildContent(_currentIndex),
+      body: WillPopScope(
+        child: _buildContent(_currentIndex),
+        onWillPop: onWillPop,
+      ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: onTabTapped,
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
           items: items),
     );
+  }
+
+  /// Function double tap back when close from apps
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: Dictionary.infoTapBack);
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 
   Widget _buildContent(int index) {
