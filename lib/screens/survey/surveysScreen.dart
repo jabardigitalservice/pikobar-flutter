@@ -182,6 +182,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
           Container(
       margin: EdgeInsets.symmetric(
                 vertical: 10, horizontal: 10),
+            /// Set up for show announcement widget
             child: Announcement(
               content: Dictionary.surveyInfo,
               textStyleContent: TextStyle(

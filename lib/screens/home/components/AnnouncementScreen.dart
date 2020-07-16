@@ -28,11 +28,13 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   }
 
   _buildContent(RemoteConfig remoteConfig) {
+    /// Condition for get data announcement from remote config
     if (remoteConfig != null) {
       dataAnnouncement =
           json.decode(remoteConfig.getString(FirebaseConfig.announcement));
     }
 
+    /// Set up for show announcement widget
     return remoteConfig != null && dataAnnouncement['enabled'] == true
         ? Container(
             margin: EdgeInsets.only(left: 10, right: 10),

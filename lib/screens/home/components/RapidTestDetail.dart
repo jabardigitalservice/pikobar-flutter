@@ -166,7 +166,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       ],
     );
   }
-
+  /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
     return
       Announcement(

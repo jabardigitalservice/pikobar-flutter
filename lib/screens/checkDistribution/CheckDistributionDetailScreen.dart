@@ -252,6 +252,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                         ],
                       ),
                     ),
+                    /// Set up for show announcement widget
                     Announcement(
                       title: Dictionary.disclaimer,
                       content: Dictionary.informationLocation,
