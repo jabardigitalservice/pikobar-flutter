@@ -57,12 +57,16 @@ class Announcement extends StatelessWidget {
                                   fontFamily: FontsFamily.lato),
                         )
                       : Container(),
+                  ///Set Text title section
                   title != null && title.isNotEmpty
                       ? SizedBox(height: 10)
                       : Container(),
+
+                  ///Set Text content & url if actionUrl is not empty
                   actionUrl != null && actionUrl.isNotEmpty
                       ? RichText(
                           text: TextSpan(children: [
+                            /// Set Text content section
                             TextSpan(
                               text: content,
                               style: textStyleContent != null
@@ -73,6 +77,8 @@ class Announcement extends StatelessWidget {
                                       color: Colors.grey[600],
                                       fontFamily: FontsFamily.lato),
                             ),
+
+                            /// Set Text url section
                             TextSpan(
                                 text: Dictionary.moreDetail,
                                 style: textStyleMoreDetail != null
@@ -89,6 +95,8 @@ class Announcement extends StatelessWidget {
                                   })
                           ]),
                         )
+
+                      ///Set Text content if actionUrl is empty
                       : Html(
                           data: content,
                           defaultTextStyle: textStyleContent != null
