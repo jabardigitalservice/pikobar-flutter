@@ -42,18 +42,13 @@ class SelfReportRepository {
 
     /// Reads the self report document referenced by the [CollectionReference].
     Stream<QuerySnapshot> getSelfReportList({@required String userId}) {
-      String getToken;
-      _firebaseMessaging.getToken().then((token) {
-        getToken = token;
-      });
-
-      final selfReport =
+    final selfReport =
       _firestore.collection(Collections.selfReports).document(userId);
       selfReport.get().then((snapshot) {
         if (snapshot.exists) {} else {
           selfReport
               .setData(
-              {'remind_me': false, 'token': getToken, 'userId': userId});
+              {'remind_me': false, 'user_id': userId});
         }
       });
 
