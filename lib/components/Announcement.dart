@@ -45,6 +45,7 @@ class Announcement extends StatelessWidget {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  ///Set Text title section
                   title != null && title.isNotEmpty
                       ? Text(
                           title,
@@ -57,7 +58,6 @@ class Announcement extends StatelessWidget {
                                   fontFamily: FontsFamily.lato),
                         )
                       : Container(),
-                  ///Set Text title section
                   title != null && title.isNotEmpty
                       ? SizedBox(height: 10)
                       : Container(),
