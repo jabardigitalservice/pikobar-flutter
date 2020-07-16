@@ -67,16 +67,12 @@ class SelfReportRepository {
 
     Future updateToCollection(
         {@required String userId, bool isReminder}) async {
-      String getToken;
-      await _firebaseMessaging.getToken().then((token) {
-        getToken = token;
-      });
+
       return await _firestore
           .collection(Collections.selfReports)
           .document(userId)
           .updateData({
         'remind_me': isReminder,
-        'token': getToken,
       });
     }
 }
