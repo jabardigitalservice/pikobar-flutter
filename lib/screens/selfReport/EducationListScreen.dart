@@ -115,7 +115,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
   /// Widget for create item education list
   Widget _educationItem(EducationModel educationModel) {
     return Container(
-      child: GestureDetector(
+      child: InkWell(
         child: Container(
           padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
           child: Row(
