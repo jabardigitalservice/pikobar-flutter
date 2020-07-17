@@ -43,7 +43,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   LatLng latLng;
   String addressMyLocation;
   bool hasLogin = false;
-  bool isChangeLocation = false;
+  bool isLocationChange = false;
 
   @override
   void initState() {
@@ -363,7 +363,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
 
   ///Function for build widget location user
   Widget _buildLocation(AsyncSnapshot<DocumentSnapshot> state) {
-    if (!isChangeLocation) {
+    if (!isLocationChange) {
       if (state != null) {
         if (state.data['address'] != null) {
           addressMyLocation = state.data['address'].toString();
@@ -533,7 +533,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     final String address = await GeocoderRepository().getAddress(latLng);
     if (address != null) {
       setState(() {
-        isChangeLocation = true;
+        isLocationChange = true;
         addressMyLocation = address;
       });
     }
