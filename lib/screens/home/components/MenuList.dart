@@ -91,16 +91,16 @@ class _MenuListState extends State<MenuList> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}pikobar.png',
               Dictionary.pikobar, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlCoronaInfo),
+              arguments: kUrlCoronaInfo),
           _buildButtonColumn('${Environment.iconAssets}indo_flag.png',
               Dictionary.nationalInfo, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlCoronaEscort),
+              arguments: kUrlCoronaEscort),
           _buildButtonColumn('${Environment.iconAssets}world.png',
               Dictionary.worldInfo, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlWorldCoronaInfo),
+              arguments: kUrlWorldCoronaInfo),
           _buildButtonColumn('${Environment.iconAssets}report_case_active.png',
               Dictionary.caseReport, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlCaseReport),
+              arguments: kUrlCaseReport),
         ],
       ),
     );
@@ -119,7 +119,7 @@ class _MenuListState extends State<MenuList> {
               NavigationConstrants.CheckDistribution),
           _buildButtonColumn('${Environment.iconAssets}bansos.png',
               Dictionary.bansos, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlBansos),
+              arguments: kUrlBansos),
           _buildButtonColumn('${Environment.iconAssets}report.png',
               Dictionary.titleSelfReport, NavigationConstrants.SelfReports, isNew: true),
           _buildButtonColumnLayananLain(
@@ -138,15 +138,15 @@ class _MenuListState extends State<MenuList> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}conversation_active.png',
               Dictionary.qna, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlQNA),
+              arguments: kUrlQNA),
           _buildButtonColumn('${Environment.iconAssets}survey.png',
               Dictionary.survey, NavigationConstrants.Survey),
           _buildButtonColumn('${Environment.iconAssets}logistics.png',
               Dictionary.logistic, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlLogisticsInfo),
+              arguments: kUrlLogisticsInfo),
           _buildButtonColumn('${Environment.iconAssets}relawan_active.png',
               Dictionary.volunteer, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlVolunteer),
+              arguments: kUrlVolunteer),
         ],
       ),
     );
@@ -161,12 +161,12 @@ class _MenuListState extends State<MenuList> {
         children: [
           _buildButtonColumn('${Environment.iconAssets}help.png',
               Dictionary.donation, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlDonation),
+              arguments: kUrlDonation),
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
           _buildButtonColumn('${Environment.iconAssets}saber_hoax.png',
               Dictionary.saberHoax, NavigationConstrants.Browser,
-              arguments: UrlThirdParty.urlIGSaberHoax),
+              arguments: kUrlIGSaberHoax),
           _buildButtonDisable(
               '${Environment.iconAssets}report_case.png', Dictionary.volunteer,
               visible: false),
@@ -193,7 +193,7 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.pikobarUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.pikobarUrl)
-                      : UrlThirdParty.urlCoronaInfo,
+                      : kUrlCoronaInfo,
               remoteMenuLoginKey: FirebaseConfig.pikobarInfoMenu),
 
           /// Menu Button Data National
@@ -209,7 +209,7 @@ class _MenuListState extends State<MenuList> {
                   _remoteConfig.getString(FirebaseConfig.nationalInfoUrl) !=
                           null
                       ? _remoteConfig.getString(FirebaseConfig.nationalInfoUrl)
-                      : UrlThirdParty.urlCoronaEscort,
+                      : kUrlCoronaEscort,
               remoteMenuLoginKey: FirebaseConfig.nationalInfoMenu),
 
           /// Menu Button Data World
@@ -223,7 +223,7 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.worldInfoUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.worldInfoUrl)
-                      : UrlThirdParty.urlWorldCoronaInfo,
+                      : kUrlWorldCoronaInfo,
               remoteMenuLoginKey: FirebaseConfig.worldInfoMenu),
 
           /// Menu Button Report
@@ -243,7 +243,7 @@ class _MenuListState extends State<MenuList> {
                           _remoteConfig.getString(FirebaseConfig.reportUrl) !=
                               null
                       ? _remoteConfig.getString(FirebaseConfig.reportUrl)
-                      : UrlThirdParty.urlCaseReport,
+                      : kUrlCaseReport,
                   remoteMenuLoginKey: FirebaseConfig.reportMenu)
               : _buildButtonDisable(
                   '${Environment.iconAssets}report_case.png',
@@ -283,7 +283,7 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.bansosUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.bansosUrl)
-                      : UrlThirdParty.urlBansos,
+                      : kUrlBansos,
               remoteMenuLoginKey: FirebaseConfig.bansosMenu),
 
           /// Menu Button Self Diagnose
@@ -349,7 +349,7 @@ class _MenuListState extends State<MenuList> {
                   arguments: _remoteConfig != null &&
                           _remoteConfig.getString(FirebaseConfig.qnaUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.qnaUrl)
-                      : UrlThirdParty.urlQNA,
+                      : kUrlQNA,
                   remoteMenuLoginKey: FirebaseConfig.qnaMenu)
               : _buildButtonDisable(
                   '${Environment.iconAssets}conversation.png',
@@ -378,7 +378,7 @@ class _MenuListState extends State<MenuList> {
                       _remoteConfig.getString(FirebaseConfig.logisticUrl) !=
                           null
                   ? _remoteConfig.getString(FirebaseConfig.logisticUrl)
-                  : UrlThirdParty.urlLogisticsInfo,
+                  : kUrlLogisticsInfo,
               remoteMenuLoginKey: FirebaseConfig.logisticMenu),
 
           /// Menu Button Volunteer
@@ -399,7 +399,7 @@ class _MenuListState extends State<MenuList> {
                                   .getString(FirebaseConfig.volunteerUrl) !=
                               null
                       ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
-                      : UrlThirdParty.urlVolunteer,
+                      : kUrlVolunteer,
                   remoteMenuLoginKey: FirebaseConfig.volunteerMenu)
               : _buildButtonDisable(
                   '${Environment.iconAssets}relawan.png',
@@ -432,7 +432,7 @@ class _MenuListState extends State<MenuList> {
               arguments:
                   _remoteConfig.getString(FirebaseConfig.donationUrl) != null
                       ? _remoteConfig.getString(FirebaseConfig.donationUrl)
-                      : UrlThirdParty.urlDonation,
+                      : kUrlDonation,
               remoteMenuLoginKey: FirebaseConfig.donationMenu),
 
           /// Menu Button Emergency Numbers
@@ -452,7 +452,7 @@ class _MenuListState extends State<MenuList> {
               arguments: _remoteConfig != null &&
                       _remoteConfig.getString(FirebaseConfig.jshUrl) != null
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
-                  : UrlThirdParty.urlIGSaberHoax,
+                  : kUrlIGSaberHoax,
               remoteMenuLoginKey: FirebaseConfig.jshMenu),
 
           /// Hidden Menu

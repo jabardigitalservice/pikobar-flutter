@@ -523,7 +523,7 @@ class _EditState extends State<Edit> {
           // Otp is enable
           // Check connection
           bool isConnected =
-              await Connection().checkConnection(UrlThirdParty.urlGoogle);
+              await Connection().checkConnection(kUrlGoogle);
           if (isConnected) {
             // Process for auto verification
             verificationCompleted = (AuthCredential credential) async {
