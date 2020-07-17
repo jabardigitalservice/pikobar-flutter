@@ -12,9 +12,9 @@ class SelfReportRepository {
   Future<DocumentSnapshot> getSelfReportDetail(
       {@required String userId, @required String dailyReportId}) async {
     DocumentSnapshot doc = await _firestore
-        .collection(Collections.selfReports)
+        .collection(kSelfReports)
         .document(userId)
-        .collection(Collections.dailyReport)
+        .collection(kDailyReport)
         .document(dailyReportId)
         .get();
     return doc;
@@ -24,9 +24,9 @@ class SelfReportRepository {
       {@required String userId, @required DailyReportModel dailyReport}) async {
     try {
       DocumentReference doc = _firestore
-          .collection(Collections.selfReports)
+          .collection(kSelfReports)
           .document(userId)
-          .collection(Collections.dailyReport)
+          .collection(kDailyReport)
           .document(dailyReport.id);
 
       await doc.get().then((snapshot) async {
@@ -40,39 +40,33 @@ class SelfReportRepository {
     }
   }
 
-    /// Reads the self report document referenced by the [CollectionReference].
-    Stream<QuerySnapshot> getSelfReportList({@required String userId}) {
-    final selfReport =
-      _firestore.collection(Collections.selfReports).document(userId);
-      selfReport.get().then((snapshot) {
-        if (snapshot.exists) {} else {
-          selfReport
-              .setData(
-              {'remind_me': false, 'user_id': userId});
-        }
-      });
+  /// Reads the self report document referenced by the [CollectionReference].
+  Stream<QuerySnapshot> getSelfReportList({@required String userId}) {
+    final selfReport = _firestore.collection(kSelfReports).document(userId);
+    selfReport.get().then((snapshot) {
+      if (snapshot.exists) {
+      } else {
+        selfReport.setData({'remind_me': false, 'user_id': userId});
+      }
+    });
 
-      return _firestore
-          .collection(Collections.selfReports)
-          .document(userId)
-          .collection(Collections.dailyReport)
-          .snapshots();
-    }
+    return _firestore
+        .collection(kSelfReports)
+        .document(userId)
+        .collection(kDailyReport)
+        .snapshots();
+  }
 
-    Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
-      return _firestore.collection(Collections.selfReports)
-          .document(userId)
-          .snapshots();
-    }
+  Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
+    return _firestore.collection(kSelfReports).document(userId).snapshots();
+  }
 
-    Future updateToCollection(
-        {@required String userId, bool isReminder}) async {
-
-      return await _firestore
-          .collection(Collections.selfReports)
-          .document(userId)
-          .updateData({
-        'remind_me': isReminder,
-      });
-    }
+  Future updateToCollection({@required String userId, bool isReminder}) async {
+    return await _firestore
+        .collection(kSelfReports)
+        .document(userId)
+        .updateData({
+      'remind_me': isReminder,
+    });
+  }
 }

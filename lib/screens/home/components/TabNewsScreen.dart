@@ -32,10 +32,10 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
   ];
 
   List<String> listCollectionData = [
-    Collections.importantInfor,
-    Collections.newsJabar,
-    Collections.newsNational,
-    Collections.newsWorld
+    kImportantInfor,
+    kNewsJabar,
+    kNewsNational,
+    kNewsWorld
   ];
 
   List<String> analyticsData = [
@@ -51,10 +51,10 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         listItemTitleTab.removeAt(0);
         listCollectionData.removeAt(0);
         analyticsData.removeAt(0);
-        newsListBloc.add(NewsListLoad(Collections.newsJabar));
+        newsListBloc.add(NewsListLoad(kNewsJabar));
         checkInitTypeNews = false;
       } else {
-        newsListBloc.add(NewsListLoad(Collections.importantInfor));
+        newsListBloc.add(NewsListLoad(kImportantInfor));
         checkInitTypeNews = false;
       }
     }

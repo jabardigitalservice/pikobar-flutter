@@ -1,27 +1,23 @@
 /// fireStore Collections
-
-class Collections {
-  static String banners = 'banners';
-  static String surveys = 'surveys';
-  static String faq = 'faqs';
-  static String emergencyNumbers = 'emergency_numbers';
-  static String callCenters = 'call_centers';
-  static String taskForces = 'task_forces';
-  static String videos = 'videos';
-  static String infographics = 'infographics';
-  static String documents = 'documents';
-  static String areas = 'areas';
-  static String users = 'users';
-  static String userTokens = 'tokens';
-  static String userLocations = 'locations';
-  static String statistics = 'statistics';
-  static String importantInfor = 'articles_important';
-  static String newsJabar = 'articles';
-  static String newsNational = 'articles_national';
-  static String newsWorld = 'articles_world';
-  static String userDevices = 'devices_info';
-  static String selfReports = 'self_reports';
-  static String dailyReport = 'daily_report';
-  static String educationContent = 'education_content';
-
-}
+const String kBanners = 'banners';
+const String kSurveys = 'surveys';
+const String kFaq = 'faqs';
+const String kEmergencyNumbers = 'emergency_numbers';
+const String kCallCenters = 'call_centers';
+const String kTaskForces = 'task_forces';
+const String kVideos = 'videos';
+const String kInfographics = 'infographics';
+const String kDocuments = 'documents';
+const String kAreas = 'areas';
+const String kUsers = 'users';
+const String kUserTokens = 'tokens';
+const String kUserLocations = 'locations';
+const String kStatistics = 'statistics';
+const String kImportantInfor = 'articles_important';
+const String kNewsJabar = 'articles';
+const String kNewsNational = 'articles_national';
+const String kNewsWorld = 'articles_world';
+const String kUserDevices = 'devices_info';
+const String kSelfReports = 'self_reports';
+const String kDailyReport = 'daily_report';
+const String kEducationContent = 'education_content';

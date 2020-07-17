@@ -31,7 +31,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.infoGraphics),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
-            .collection(Collections.infographics)
+            .collection(kDocuments)
             .orderBy('published_date', descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -157,8 +157,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             ),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailInfoGraphicScreen(
-                      dataInfoGraphic: data)));
+                  builder: (context) =>
+                      DetailInfoGraphicScreen(dataInfoGraphic: data)));
 
               AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
                   <String, dynamic>{'title': data['title']});
@@ -174,8 +174,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                   child: InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DetailInfoGraphicScreen(
-                              dataInfoGraphic: data)));
+                          builder: (context) =>
+                              DetailInfoGraphicScreen(dataInfoGraphic: data)));
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsDetail,

@@ -33,9 +33,8 @@ class _EducationListScreenState extends State<EducationListScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<EducationListBloc>(
-            create: (BuildContext context) =>
-                _educationListBloc = EducationListBloc()
-                  ..add(EducationListLoad(Collections.educationContent))),
+            create: (BuildContext context) => _educationListBloc =
+                EducationListBloc()..add(EducationListLoad(kEducationContent))),
       ],
       child: BlocListener<EducationListBloc, EducationListState>(
         listener: (context, state) {},
@@ -183,7 +182,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => EducationDetailScreen(
                     id: educationModel.id,
-                    educationCollection: Collections.educationContent,
+                    educationCollection: kEducationContent,
                     model: educationModel,
                   )));
         },
