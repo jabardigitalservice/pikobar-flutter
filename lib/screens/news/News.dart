@@ -57,10 +57,10 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   List<String> listCollectionData = [
     NewsType.allArticles,
-    Collections.importantInfor,
-    Collections.newsJabar,
-    Collections.newsNational,
-    Collections.newsWorld
+    kImportantInfor,
+    kNewsJabar,
+    kNewsNational,
+    kNewsWorld
   ];
 
   List<String> analyticsData = [
@@ -131,7 +131,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           AnalyticsHelper.setLogEvent(analyticsData[index]);
         },
         tabBarView: <Widget>[
-          NewsScreen(news:  Dictionary.allNews),
+          NewsScreen(news: Dictionary.allNews),
           if (statImportantInfo) NewsScreen(news: Dictionary.importantInfo),
           NewsScreen(news: Dictionary.latestNews),
           NewsScreen(news: Dictionary.nationalNews),

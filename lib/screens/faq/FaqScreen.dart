@@ -53,7 +53,7 @@ class _FaqScreenState extends State<FaqScreen> {
           onChanged: updateSearchQuery),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
-            .collection(Collections.faq)
+            .collection(kFaq)
             .orderBy('sequence_number')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

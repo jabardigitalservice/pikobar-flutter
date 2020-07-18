@@ -45,11 +45,11 @@ class _SurveysScreenState extends State<SurveysScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
-              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') &&
+                  !state.error.contains('NoSuchMethodError')) {
                 showDialog(
                     context: context,
-                    builder: (BuildContext context) =>
-                        DialogTextOnly(
+                    builder: (BuildContext context) => DialogTextOnly(
                           description: state.error.toString(),
                           buttonText: "OK",
                           onOkPressed: () {
@@ -97,9 +97,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
                   return StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance
-                        .collection(Collections.surveys)
-                        .snapshots(),
+                    stream: Firestore.instance.collection(kSurveys).snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
@@ -155,16 +153,15 @@ class _SurveysScreenState extends State<SurveysScreen> {
                             color: Colors.grey[300]),
                         SizedBox(height: 5.0),
                         Container(
-                            width: 150.0, height: 20.0, color: Colors.grey[300]),
+                            width: 150.0,
+                            height: 20.0,
+                            color: Colors.grey[300]),
                       ],
                     ),
                   ),
-
                   Skeleton(child: Icon(Icons.chevron_right))
-
                 ],
               )),
-
           Container(
             height: 10.0,
             color: ColorBase.grey,
@@ -179,8 +176,8 @@ class _SurveysScreenState extends State<SurveysScreen> {
       child: Column(
         children: <Widget>[
           Container(
-      margin: EdgeInsets.symmetric(
-                vertical: 10, horizontal: 10),
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+
             /// Set up for show announcement widget
             child: Announcement(
               content: Dictionary.surveyInfo,
@@ -216,7 +213,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontFamily: FontsFamily.lato,
+                                          fontFamily: FontsFamily.lato,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black)),

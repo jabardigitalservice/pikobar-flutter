@@ -17,7 +17,7 @@ class NewsDetailBloc extends Bloc<NewsDetailEvent, NewsDetailState> {
     if (event is NewsDetailLoad) {
       try {
         yield NewsDetailLoading();
-        NewsModel record = event.newsCollection == Collections.importantInfor
+        NewsModel record = event.newsCollection == kImportantInfor
             ? await NewsRepository()
                 .getImportantInfoDetail(importantInfoid: event.newsId)
             : await NewsRepository().getNewsDetail(

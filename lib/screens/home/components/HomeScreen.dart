@@ -100,12 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
             create: (context) =>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
-            create: (context) => _newsListBloc = NewsListBloc()
-              ..add(NewsListLoad(Collections.newsJabar))),
+            create: (context) =>
+                _newsListBloc = NewsListBloc()..add(NewsListLoad(kNewsJabar))),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
                 _importantInfoListBloc = ImportantInfoListBloc()
-                  ..add(ImportantInfoListLoad(Collections.importantInfor))),
+                  ..add(ImportantInfoListLoad(kImportantInfor))),
         BlocProvider<VideoListBloc>(
             create: (context) =>
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //              ),
             ],
           ),
-          
+
           /// News & Videos Sections
           SizedBox(
             height: Dimens.dividerHeight,
@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannersBloc.close();
     _statisticsBloc.close();
     _rapidTestBloc.close();
-    if(_pcrTestBloc != null){
+    if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
     }
     _newsListBloc.close();

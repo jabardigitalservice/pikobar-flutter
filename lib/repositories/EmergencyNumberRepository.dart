@@ -9,7 +9,7 @@ class EmergencyNumberRepository {
 
   Stream<List<ReferralHospitalModel>> getReferralHospitalModelList() {
     return firestore
-        .collection(Collections.emergencyNumbers)
+        .collection(kEmergencyNumbers)
         .orderBy('name')
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.documents
@@ -19,7 +19,7 @@ class EmergencyNumberRepository {
 
   Stream<List<CallCenterModel>> getCallCenterModelList() {
     return firestore
-        .collection(Collections.callCenters)
+        .collection(kCallCenters)
         .orderBy('nama_kotkab')
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.documents
@@ -28,11 +28,8 @@ class EmergencyNumberRepository {
   }
 
   Stream<List<GugusTugasWebModel>> getGugusTugasWebList() {
-    return firestore
-        .collection(Collections.taskForces)
-        .orderBy('name')
-        .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents
+    return firestore.collection(kTaskForces).orderBy('name').snapshots().map(
+        (QuerySnapshot snapshot) => snapshot.documents
             .map((doc) => GugusTugasWebModel.fromFirestore(doc))
             .toList());
   }

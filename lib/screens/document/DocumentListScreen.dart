@@ -38,7 +38,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.document),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
-            .collection(Collections.documents)
+            .collection(kDocuments)
             .orderBy('published_at', descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

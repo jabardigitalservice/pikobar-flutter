@@ -63,7 +63,6 @@ class AuthRepository {
   /// the same account do not share any user info and will only return a user
   /// identifier in the ASAuthorizationAppleIDCredential.
   Future<UserModel> signInWithApple() async {
-
     /// Perform the sign-in request
     /// the requestedScopes are email and fullName
     /// see: https://developer.apple.com/documentation/authenticationservices/asauthorization/scope
@@ -100,9 +99,8 @@ class AuthRepository {
           /// update the name from the data provided by appleIdCredential.
           ///
           /// This is required to prevent errors due to a null value of name.
-          final userDocument = Firestore.instance
-              .collection(Collections.users)
-              .document(user.uid);
+          final userDocument =
+              Firestore.instance.collection(kUsers).document(user.uid);
 
           await userDocument.get().then((snapshot) async {
             if (snapshot.exists && snapshot.data['name'] == null) {
@@ -186,7 +184,6 @@ class AuthRepository {
       UserModel authUserInfo;
       bool hasUserInfo = await hasLocalUserInfo();
       if (hasUserInfo == false) {
-
         if (Platform.isIOS && isApple) {
           authUserInfo = await signInWithApple();
         } else {
@@ -215,7 +212,8 @@ class AuthRepository {
         if (googleSignIn.currentUser != null) {
           signInAuthentication = await googleSignIn.currentUser.authentication;
         } else {
-          GoogleSignInAccount signInAccount = await googleSignIn.signInSilently();
+          GoogleSignInAccount signInAccount =
+              await googleSignIn.signInSilently();
           signInAuthentication = await signInAccount.authentication;
         }
 
@@ -242,18 +240,17 @@ class AuthRepository {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
-      final userDocument = Firestore.instance
-          .collection(Collections.users)
-          .document(_user.uid);
+      final userDocument =
+          Firestore.instance.collection(kUsers).document(_user.uid);
 
       _firebaseMessaging.getToken().then((token) {
-        final tokensDocument =  userDocument.collection(Collections.userTokens)
-            .document(token);
+        final tokensDocument =
+            userDocument.collection(kUserTokens).document(token);
 
         tokensDocument.get().then((snapshot) {
           if (!snapshot.exists) {
-            tokensDocument.setData(
-                {'token': token, 'created_at': DateTime.now()});
+            tokensDocument
+                .setData({'token': token, 'created_at': DateTime.now()});
           }
         });
       });
@@ -262,7 +259,8 @@ class AuthRepository {
 
       userDocument.get().then((snapshot) {
         if (snapshot.exists && snapshot.data['city_id'] != null) {
-          FirebaseAnalytics().setUserProperty(name: 'city_id', value: snapshot.data['city_id']);
+          FirebaseAnalytics().setUserProperty(
+              name: 'city_id', value: snapshot.data['city_id']);
         }
       });
     }
@@ -273,9 +271,9 @@ class AuthRepository {
 
     await _firebaseMessaging.getToken().then((token) async {
       final tokensDocument = Firestore.instance
-          .collection(Collections.users)
+          .collection(kUsers)
           .document(authUserInfo.uid)
-          .collection(Collections.userTokens)
+          .collection(kUserTokens)
           .document(token);
 
       await tokensDocument.get().then((snapshot) async {

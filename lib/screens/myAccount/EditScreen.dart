@@ -369,7 +369,7 @@ class _EditState extends State<Edit> {
                               ),
                               StreamBuilder<QuerySnapshot>(
                                   stream: Firestore.instance
-                                      .collection(Collections.areas)
+                                      .collection(kAreas)
                                       .orderBy('name')
                                       .snapshots(),
                                   builder: (BuildContext context,
@@ -522,8 +522,7 @@ class _EditState extends State<Edit> {
         if (otpEnabled) {
           // Otp is enable
           // Check connection
-          bool isConnected =
-              await Connection().checkConnection(kUrlGoogle);
+          bool isConnected = await Connection().checkConnection(kUrlGoogle);
           if (isConnected) {
             // Process for auto verification
             verificationCompleted = (AuthCredential credential) async {
