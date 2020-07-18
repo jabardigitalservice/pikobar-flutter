@@ -975,7 +975,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   _launchURL(String launchUrl, tipeURL, {String message}) async {
     String url;
     if (tipeURL == 'number') {
-      url = 'tel:$launchUrl';
+      url = 'tel:${launchUrl.replaceAll(RegExp(r'(\s+)'), '')}';
     } else if (tipeURL == 'web') {
       url = launchUrl;
     } else {
