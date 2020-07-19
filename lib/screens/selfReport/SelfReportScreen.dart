@@ -369,7 +369,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           addressMyLocation = state.data['address'].toString();
         }
         if (state.data['location'] != null) {
-          latLng = new LatLng(state.data['location'].latitude,
+          latLng = LatLng(state.data['location'].latitude,
               state.data['location'].longitude);
         }
       }
