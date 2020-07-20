@@ -315,8 +315,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
+                        Center(
                           child: RichText(
                             textAlign: TextAlign.center,
                             softWrap: true,

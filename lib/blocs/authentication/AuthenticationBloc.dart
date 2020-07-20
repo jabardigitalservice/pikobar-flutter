@@ -38,9 +38,9 @@ class AuthenticationBloc
     if (event is LoggedIn) {
       yield AuthenticationLoading();
 
-      record = await authRepository.getUserInfo();
-
       try {
+        record = await authRepository.getUserInfo(isApple: event.isApple);
+
         await authRepository.persistToken(
           record.uid,
         );
@@ -52,7 +52,7 @@ class AuthenticationBloc
 
     if (event is LoggedOut) {
       yield AuthenticationLoading();
-      await authRepository.signOutGoogle();
+      await authRepository.signOut();
       yield AuthenticationUnauthenticated();
     }
   }

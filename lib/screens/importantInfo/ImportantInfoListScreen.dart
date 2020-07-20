@@ -10,7 +10,6 @@ import 'package:pikobar_flutter/screens/home/components/ImportantInfoScreen.dart
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class ImportantInfoListScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -18,21 +17,20 @@ class ImportantInfoListScreen extends StatelessWidget {
         BlocProvider<RemoteConfigBloc>(
             create: (context) => RemoteConfigBloc()..add(RemoteConfigLoad())),
         BlocProvider<ImportantInfoListBloc>(
-        create: (context) => ImportantInfoListBloc())
+            create: (context) => ImportantInfoListBloc())
       ],
       child: ImportantInfo(),
     );
   }
 }
 
-
 class ImportantInfo extends StatefulWidget {
-
   @override
   _ImportantInfoState createState() => _ImportantInfoState();
 }
 
-class _ImportantInfoState extends State<ImportantInfo> with SingleTickerProviderStateMixin {
+class _ImportantInfoState extends State<ImportantInfo>
+    with SingleTickerProviderStateMixin {
   ImportantInfoListBloc _importantInfoListBloc;
 
   @override
@@ -41,8 +39,7 @@ class _ImportantInfoState extends State<ImportantInfo> with SingleTickerProvider
 
     super.initState();
     _importantInfoListBloc = BlocProvider.of<ImportantInfoListBloc>(context);
-    _importantInfoListBloc.add(ImportantInfoListLoad(Collections.importantInfor));
-
+    _importantInfoListBloc.add(ImportantInfoListLoad(kImportantInfor));
   }
 
   @override
@@ -51,11 +48,8 @@ class _ImportantInfoState extends State<ImportantInfo> with SingleTickerProvider
         appBar: CustomAppBar.defaultAppBar(
           title: Dictionary.importantInfo,
         ),
-        body: ImportantInfoScreen()
-    );
+        body: ImportantInfoScreen());
   }
-
-
 
   @override
   void dispose() {

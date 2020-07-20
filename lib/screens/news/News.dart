@@ -1,13 +1,12 @@
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -44,11 +43,33 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> with SingleTickerProviderStateMixin {
-  List<Tab> myTabs = [];
   TabController tabController;
   NewsListBloc _newsListBloc;
   bool statImportantInfo = true;
   bool checkStatImportantInfo = true;
+  List<String> listItemTitleTab = [
+    Dictionary.allNews,
+    Dictionary.importantInfo,
+    Dictionary.latestNews,
+    Dictionary.nationalNews,
+    Dictionary.worldNews
+  ];
+
+  List<String> listCollectionData = [
+    NewsType.allArticles,
+    kImportantInfor,
+    kNewsJabar,
+    kNewsNational,
+    kNewsWorld
+  ];
+
+  List<String> analyticsData = [
+    Analytics.tappedAllNews,
+    Analytics.tappedImportantInfo,
+    Analytics.tappedNewsJabar,
+    Analytics.tappedNewsNational,
+    Analytics.tappedNewsWorld,
+  ];
 
   @override
   void initState() {
@@ -57,68 +78,17 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
-  setListTab(Color color, bool statImportantInfo) {
-    myTabs.clear();
-    myTabs.add(addTab(Dictionary.allNews, Dictionary.allNews, color));
-    if (statImportantInfo) {
-      myTabs.add(
-          addTab(Dictionary.importantInfo, Dictionary.importantInfo, color));
-    }
-    myTabs
-        .add(addTab(Dictionary.titleLatestNews, Dictionary.latestNews, color));
-    myTabs.add(
-        addTab(Dictionary.titleNationalNews, Dictionary.nationalNews, color));
-    myTabs.add(addTab(Dictionary.titleWorldNews, Dictionary.worldNews, color));
-  }
-
   setControllerTab(bool statImportantInfo) {
-    tabController = new TabController(vsync: this, length: myTabs.length);
+    tabController =
+        new TabController(vsync: this, length: listItemTitleTab.length);
     tabController.addListener(_handleTabSelection);
-    if (widget.news == Dictionary.allNews) {
-      tabController.animateTo(0);
-      _newsListBloc.add(NewsListLoad(NewsType.allArticles,
-          statImportantInfo: statImportantInfo));
-    }
-    if (statImportantInfo) {
-      if (widget.news == Dictionary.importantInfo) {
-        tabController.animateTo(1);
-        _newsListBloc.add(NewsListLoad(Collections.importantInfor));
+    for (int i = 0; i < listItemTitleTab.length; i++) {
+      if (widget.news == listItemTitleTab[i]) {
+        tabController.animateTo(i);
+        _newsListBloc.add(NewsListLoad(listCollectionData[i],
+            statImportantInfo: statImportantInfo));
       }
     }
-    if (widget.news == Dictionary.latestNews) {
-      tabController.animateTo(statImportantInfo ? 2 : 1);
-      _newsListBloc.add(NewsListLoad(Collections.newsJabar));
-    }
-    if (widget.news == Dictionary.nationalNews) {
-      tabController.animateTo(statImportantInfo ? 3 : 2);
-      _newsListBloc.add(NewsListLoad(Collections.newsNational));
-    }
-    if (widget.news == Dictionary.worldNews) {
-      tabController.animateTo(statImportantInfo ? 4 : 3);
-      _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-    }
-  }
-
-  Tab addTab(String titleTab, String typeNews, Color color) {
-    return Tab(
-        child: Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-              color: color != null
-                  ? color
-                  : widget.news == typeNews ? ColorBase.green : Colors.grey,
-              width: 1)),
-      child: Text(
-        titleTab,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontFamily: FontsFamily.lato,
-            fontSize: 13.0),
-      ),
-    ));
   }
 
   @override
@@ -139,116 +109,44 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   buildContent(RemoteConfigLoaded state) {
     statImportantInfo = StatShowImportantInfo.getStatImportantTab(state);
     if (checkStatImportantInfo) {
-      setListTab(null, statImportantInfo);
-      setControllerTab(statImportantInfo);
+      if (statImportantInfo) {
+        setControllerTab(statImportantInfo);
+      } else {
+        listItemTitleTab.removeAt(1);
+        listCollectionData.removeAt(1);
+        listCollectionData.removeAt(1);
+        setControllerTab(statImportantInfo);
+      }
       checkStatImportantInfo = false;
     }
     return Container(
-        child: DefaultTabController(
-      length: statImportantInfo ? 5 : 4,
-      child: Column(
-        children: <Widget>[
-          TabBar(
-            labelPadding: EdgeInsets.all(6),
-            isScrollable: true,
-            indicator: BubbleTabIndicator(
-              indicatorHeight: 37.0,
-              indicatorColor: ColorBase.green,
-              tabBarIndicatorSize: TabBarIndicatorSize.tab,
-            ),
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: ColorBase.orange,
-            indicatorWeight: 2.8,
-            tabs: myTabs,
-            controller: tabController,
-            onTap: (index) {
-              setListTab(Colors.grey,
-                  StatShowImportantInfo.getStatImportantTab(state));
-              if (index == 0) {
-                widget.news = Dictionary.allNews;
-                myTabs[index] =
-                    addTab(Dictionary.allNews, widget.news, ColorBase.green);
-                AnalyticsHelper.setLogEvent(Analytics.tappedAllNews);
-              }
-              if (StatShowImportantInfo.getStatImportantTab(state)) {
-                if (index == 1) {
-                  widget.news = Dictionary.importantInfo;
-                  myTabs[index] = addTab(
-                      Dictionary.importantInfo, widget.news, ColorBase.green);
-                  AnalyticsHelper.setLogEvent(Analytics.tappedImportantInfo);
-                }
-              }
-
-              if (StatShowImportantInfo.getStatImportantTab(state)
-                  ? index == 2
-                  : index == 1) {
-                widget.news = Dictionary.latestNews;
-                myTabs[index] = addTab(
-                    Dictionary.titleLatestNews, widget.news, ColorBase.green);
-                AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
-              }
-              if (StatShowImportantInfo.getStatImportantTab(state)
-                  ? index == 3
-                  : index == 2) {
-                widget.news = Dictionary.nationalNews;
-                myTabs[index] = addTab(
-                    Dictionary.titleNationalNews, widget.news, ColorBase.green);
-                AnalyticsHelper.setLogEvent(Analytics.tappedNewsNational);
-              }
-              if (StatShowImportantInfo.getStatImportantTab(state)
-                  ? index == 4
-                  : index == 3) {
-                widget.news = Dictionary.worldNews;
-                myTabs[index] = addTab(
-                    Dictionary.titleWorldNews, widget.news, ColorBase.green);
-                AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
-              }
-              setState(() {});
-            },
-          ),
-          SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height - 145,
-              child: TabBarView(
-                controller: tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: <Widget>[
-                  NewsScreen(news: NewsType.allArticles),
-                  if (statImportantInfo)
-                    NewsScreen(news: Dictionary.importantInfo),
-                  NewsScreen(news: Dictionary.latestNews),
-                  NewsScreen(news: Dictionary.nationalNews),
-                  NewsScreen(news: Dictionary.worldNews),
-                ],
-              ),
-            ),
-          )
+      child: CustomBubbleTab(
+        listItemTitleTab: listItemTitleTab,
+        indicatorColor: ColorBase.green,
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.grey,
+        tabController: tabController,
+        typeTabSelected: widget.news,
+        onTap: (index) {
+          AnalyticsHelper.setLogEvent(analyticsData[index]);
+        },
+        tabBarView: <Widget>[
+          NewsScreen(news: Dictionary.allNews),
+          if (statImportantInfo) NewsScreen(news: Dictionary.importantInfo),
+          NewsScreen(news: Dictionary.latestNews),
+          NewsScreen(news: Dictionary.nationalNews),
+          NewsScreen(news: Dictionary.worldNews),
         ],
+        heightTabBarView: MediaQuery.of(context).size.height - 148,
+        paddingTopTabBarView: 0,
       ),
-    ));
+    );
   }
 
   _handleTabSelection() {
     if (tabController.indexIsChanging) {
-      switch (tabController.index) {
-        case 0:
-          _newsListBloc.add(NewsListLoad(NewsType.allArticles,
-              statImportantInfo: statImportantInfo));
-          break;
-        case 1:
-          _newsListBloc.add(NewsListLoad(Collections.importantInfor));
-          break;
-        case 2:
-          _newsListBloc.add(NewsListLoad(Collections.newsJabar));
-          break;
-        case 3:
-          _newsListBloc.add(NewsListLoad(Collections.newsNational));
-          break;
-        case 4:
-          _newsListBloc.add(NewsListLoad(Collections.newsWorld));
-          break;
-      }
+      _newsListBloc.add(NewsListLoad(listCollectionData[tabController.index],
+          statImportantInfo: statImportantInfo));
     }
   }
 

@@ -1,5 +1,6 @@
 class Dimens {
   static const double padding = 16.0;
+  static const double verticalPadding = 24.0;
   static const double avatarRadius = 66.0;
   static const double dialogRadius = 6.5;
   static const double contentPadding = 15.0;
@@ -10,4 +11,5 @@ class Dimens {
   static const double textBodySize = 15.0;
 
   static const double sbHeight = 10.0;
+  static const double dividerHeight = 10.0;
 }

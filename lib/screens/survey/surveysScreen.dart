@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -13,7 +14,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -45,15 +45,18 @@ class _SurveysScreenState extends State<SurveysScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: "OK",
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') &&
+                  !state.error.contains('NoSuchMethodError')) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: "OK",
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
               _scaffoldKey.currentState.hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
               _scaffoldKey.currentState.showSnackBar(
@@ -94,9 +97,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
                   return StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance
-                        .collection(Collections.surveys)
-                        .snapshots(),
+                    stream: Firestore.instance.collection(kSurveys).snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
@@ -109,6 +110,11 @@ class _SurveysScreenState extends State<SurveysScreen> {
                         return _buildLoading();
                       }
                     },
+                  );
+                } else if (state is AuthenticationFailure ||
+                    state is AuthenticationLoading) {
+                  return OnBoardingLoginScreen(
+                    authenticationBloc: _authenticationBloc,
                   );
                 } else {
                   return Container();
@@ -147,16 +153,15 @@ class _SurveysScreenState extends State<SurveysScreen> {
                             color: Colors.grey[300]),
                         SizedBox(height: 5.0),
                         Container(
-                            width: 150.0, height: 20.0, color: Colors.grey[300]),
+                            width: 150.0,
+                            height: 20.0,
+                            color: Colors.grey[300]),
                       ],
                     ),
                   ),
-
                   Skeleton(child: Icon(Icons.chevron_right))
-
                 ],
               )),
-
           Container(
             height: 10.0,
             color: ColorBase.grey,
@@ -171,26 +176,16 @@ class _SurveysScreenState extends State<SurveysScreen> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.symmetric(
-                vertical: Dimens.padding, horizontal: Dimens.padding),
-            decoration: BoxDecoration(
-                color: ColorBase.announcementBackgroundColor,
-                borderRadius: BorderRadius.circular(8.0)),
-            child: Stack(
-              children: <Widget>[
-                Image.asset('${Environment.imageAssets}intersect.png',
-                    width: 73),
-                Padding(
-                  padding: const EdgeInsets.all(Dimens.padding),
-                  child: Text(Dictionary.surveyInfo,
-                    style: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                        height: 1.5),
-                  ),
-                )
-              ],
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+
+            /// Set up for show announcement widget
+            child: Announcement(
+              content: Dictionary.surveyInfo,
+              textStyleContent: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.0,
+                  height: 1.5),
             ),
           ),
           Container(
@@ -218,7 +213,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontFamily: FontsFamily.lato,
+                                          fontFamily: FontsFamily.lato,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black)),

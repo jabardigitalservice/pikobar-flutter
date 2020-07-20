@@ -29,7 +29,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
       {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
     _subscription?.cancel();
-    _subscription = collection == Collections.importantInfor
+    _subscription = collection == kImportantInfor
         ? _repository
             .getInfoImportantList(improtantInfoCollection: collection)
             .listen(
@@ -41,7 +41,8 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 event.forEach((iterable) {
                   dataListAllNews.addAll(iterable.toList());
                 });
-                dataListAllNews.sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
+                dataListAllNews
+                    .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
                 add(NewsListUpdate(dataListAllNews));
               })
             : _repository

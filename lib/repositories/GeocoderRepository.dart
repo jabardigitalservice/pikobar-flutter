@@ -24,4 +24,21 @@ class GeocoderRepository {
       }
     }
   }
+
+  Future getCity(LatLng coordinate) async {
+    await Future.delayed(Duration(seconds: 1));
+
+    if (coordinate != null) {
+      List<Placemark> placemarks = await Geolocator()
+          .placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
+
+      if (placemarks != null && placemarks.isNotEmpty) {
+        final Placemark pos = placemarks[0];
+
+        return pos.subAdministrativeArea;
+      } else {
+        throw Exception(Dictionary.somethingWrong);
+      }
+    }
+  }
 }

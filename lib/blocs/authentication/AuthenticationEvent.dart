@@ -15,7 +15,11 @@ class AppStarted extends AuthenticationEvent {
 }
 
 class LoggedIn extends AuthenticationEvent {
- 
+
+  final bool isApple;
+
+  LoggedIn({this.isApple = false});
+
   @override
   String toString() => 'LoggedIn';
 

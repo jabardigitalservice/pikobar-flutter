@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
@@ -66,6 +67,7 @@ class _EditState extends State<Edit> {
   bool isBirthdayEmpty = false;
   bool isGenderEmpty = false;
   LatLng latLng;
+  List<dynamic> listCity;
 
   @override
   void initState() {
@@ -115,6 +117,7 @@ class _EditState extends State<Edit> {
                   child: BlocListener<ProfileBloc, ProfileState>(
                     listener: (context, state) {
                       if (state is ProfileFailure) {
+                        // Show dialog error message otp
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => DialogTextOnly(
@@ -128,6 +131,7 @@ class _EditState extends State<Edit> {
                         Scaffold.of(context).hideCurrentSnackBar();
                       } else if (state is ProfileWaiting) {
                       } else if (state is ProfileVerified) {
+                        // Show dialog when otp is confirmed and back to profile menu
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => DialogTextOnly(
@@ -141,6 +145,7 @@ class _EditState extends State<Edit> {
                                 ));
                         Scaffold.of(context).hideCurrentSnackBar();
                       } else if (state is ProfileSaved) {
+                        // Show dialog when profile succesfully change without change phone number or otp disable
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => DialogTextOnly(
@@ -154,6 +159,7 @@ class _EditState extends State<Edit> {
                                 ));
                         Scaffold.of(context).hideCurrentSnackBar();
                       } else if (state is ProfileOTPSent) {
+                        // Show dialog when otp succesfully send to phone number and move page to Verification Screen
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => DialogTextOnly(
@@ -162,7 +168,9 @@ class _EditState extends State<Edit> {
                                       _phoneNumberController.text,
                                   buttonText: Dictionary.ok,
                                   onOkPressed: () {
+                                    // Close dialog
                                     Navigator.of(context).pop();
+                                    // Move page to Verification Screen
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -189,6 +197,7 @@ class _EditState extends State<Edit> {
                                 ));
                         Scaffold.of(context).hideCurrentSnackBar();
                       } else if (state is ProfileVerifiedFailed) {
+                        // Show dialog when otp failed send to phone number
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => DialogTextOnly(
@@ -200,6 +209,7 @@ class _EditState extends State<Edit> {
                                 ));
                         Scaffold.of(context).hideCurrentSnackBar();
                       } else if (state is ProfileLoading) {
+                        // Show dialog when loading
                         Scaffold.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: Theme.of(context).primaryColor,
@@ -247,6 +257,7 @@ class _EditState extends State<Edit> {
                                   controller: _nikController,
                                   textInputType: TextInputType.number,
                                   hintText: Dictionary.placeHolderNIK,
+                                  validation: Validations.nikValidation,
                                   isEdit: true),
                               SizedBox(
                                 height: 20,
@@ -294,7 +305,7 @@ class _EditState extends State<Edit> {
                                           Dictionary.locationAddress,
                                           style: TextStyle(
                                               fontSize: 12.0,
-                                              color: Color(0xff333333),
+                                              color: ColorBase.veryDarkGrey,
                                               fontFamily: FontsFamily.lato,
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -321,7 +332,10 @@ class _EditState extends State<Edit> {
                                               child: Text(
                                                 Dictionary.setLocation,
                                                 style: TextStyle(
-                                                    color: Color(0xff828282),fontSize: 12,fontFamily: FontsFamily.lato),
+                                                    color: ColorBase.darkGrey,
+                                                    fontSize: 12,
+                                                    fontFamily:
+                                                        FontsFamily.lato),
                                               ),
                                             ),
                                           ],
@@ -330,7 +344,7 @@ class _EditState extends State<Edit> {
                                             borderRadius:
                                                 BorderRadius.circular(5.0)),
                                         borderSide: BorderSide(
-                                            color: Color(0xffE0E0E0),
+                                            color: ColorBase.menuBorderColor,
                                             width: 1.5),
                                         onPressed: () async {
                                           await _handleLocation();
@@ -355,7 +369,7 @@ class _EditState extends State<Edit> {
                               ),
                               StreamBuilder<QuerySnapshot>(
                                   stream: Firestore.instance
-                                      .collection(Collections.areas)
+                                      .collection(kAreas)
                                       .orderBy('name')
                                       .snapshots(),
                                   builder: (BuildContext context,
@@ -376,6 +390,8 @@ class _EditState extends State<Edit> {
                                             _cityController,
                                             false);
                                       default:
+                                        listCity =
+                                            snapshot.data.documents.toList();
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
                                             Dictionary.cityPlaceholder,
@@ -394,7 +410,7 @@ class _EditState extends State<Edit> {
                           height: 20,
                         ),
                         RaisedButton(
-                          color: Color(0xff27AE60),
+                          color: ColorBase.limeGreen,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
@@ -418,6 +434,7 @@ class _EditState extends State<Edit> {
     );
   }
 
+  // Function to build Date Picker
   void _showDatePickerBirthday() {
     DatePicker.showDatePicker(
       context,
@@ -451,7 +468,9 @@ class _EditState extends State<Edit> {
     );
   }
 
+  // Function to process user input in edit profile
   _onSaveProfileButtonPressed(bool otpEnabled) async {
+    // Check empty field
     if (_cityController.text == '') {
       setState(() {
         isCityFieldEmpty = true;
@@ -482,8 +501,11 @@ class _EditState extends State<Edit> {
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
       if (isGenderEmpty || isBirthdayEmpty || isCityFieldEmpty) {
+        // If the field is empty doing nothing and validator will be shown
+
       } else if (widget.state.data['phone_number'] ==
           Dictionary.inaCode + _phoneNumberController.text) {
+        // If phone number field not change by user it will be save to firebase and skip otp
         _profileBloc.add(Save(
             id: widget.state.data['id'],
             phoneNumber: _phoneNumberController.text,
@@ -496,10 +518,13 @@ class _EditState extends State<Edit> {
             latLng: latLng,
             birthdate: DateTime.parse(_birthDayController.text)));
       } else {
+        // If phone number field changed, check otp enable or disable
         if (otpEnabled) {
-          bool isConnected =
-              await Connection().checkConnection(UrlThirdParty.urlGoogle);
+          // Otp is enable
+          // Check connection
+          bool isConnected = await Connection().checkConnection(kUrlGoogle);
           if (isConnected) {
+            // Process for auto verification
             verificationCompleted = (AuthCredential credential) async {
               await _profileRepository.linkCredential(
                   widget.state.data['id'],
@@ -513,16 +538,20 @@ class _EditState extends State<Edit> {
                   DateTime.parse(_birthDayController.text),
                   credential,
                   latLng);
+              // Change state to verified
               _profileBloc.add(VerifyConfirm());
             };
             verificationFailed = (AuthException authException) {
+              // Change state to verification failed
               _profileBloc.add(VerifyFailed());
             };
-
+            // Process for sending otp code
             codeSent =
                 (String verificationId, [int forceResendingToken]) async {
+              // Change state to code successfully sent
               _profileBloc.add(CodeSend(verificationID: verificationId));
             };
+            // Execute otp process
             _profileBloc.add(Verify(
                 id: widget.state.data['id'],
                 phoneNumber: _phoneNumberController.text,
@@ -531,6 +560,8 @@ class _EditState extends State<Edit> {
                 codeSent: codeSent));
           }
         } else {
+          // Otp is disable
+          // Save change directly to firestore
           _profileBloc.add(Save(
               id: widget.state.data['id'],
               phoneNumber: _phoneNumberController.text,
@@ -547,6 +578,7 @@ class _EditState extends State<Edit> {
     }
   }
 
+  // Function to build radio button
   Widget buildRadioButton({String title, List<String> label, bool isEmpty}) {
     return Padding(
       padding: EdgeInsets.only(left: 16.0, right: 16),
@@ -559,7 +591,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -573,10 +605,11 @@ class _EditState extends State<Edit> {
             height: 10,
           ),
           RadioButtonGroup(
-            activeColor: Color(0xff27AE60),
+            activeColor: ColorBase.limeGreen,
             labelStyle: TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
             orientation: GroupedButtonsOrientation.HORIZONTAL,
             onSelected: (String selected) => setState(() {
+              // Set value to M or F
               _genderController.text = selected.contains('Laki') ? 'M' : 'F';
             }),
             labels: label,
@@ -591,8 +624,8 @@ class _EditState extends State<Edit> {
                     width: MediaQuery.of(context).size.width / 2.8,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        border:
-                            Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                        border: Border.all(
+                            color: ColorBase.menuBorderColor, width: 1.5)),
                     child: Row(
                       children: <Widget>[
                         rb,
@@ -621,6 +654,7 @@ class _EditState extends State<Edit> {
     );
   }
 
+// Funtion to build date field
   Widget buildDateField({String title, placeholder, bool isEmpty}) {
     return Container(
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
@@ -633,7 +667,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -656,7 +690,7 @@ class _EditState extends State<Edit> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: isEmpty ? Colors.red : Color(0xffE0E0E0),
+                      color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
                       width: 1.5)),
               child: Row(
                 children: <Widget>[
@@ -669,8 +703,12 @@ class _EditState extends State<Edit> {
                   ),
                   Text(
                     placeholder,
-                    style:
-                        TextStyle(fontSize: 12, fontFamily: FontsFamily.lato,color:placeholder==Dictionary.birthdayPlaceholder? Color(0xff828282):Colors.black),
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: FontsFamily.lato,
+                        color: placeholder == Dictionary.birthdayPlaceholder
+                            ? ColorBase.darkGrey
+                            : Colors.black),
                   ),
                 ],
               ),
@@ -695,6 +733,7 @@ class _EditState extends State<Edit> {
     );
   }
 
+  // Funtion to build text field
   Widget buildTextField(
       {String title,
       TextEditingController controller,
@@ -715,12 +754,12 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                title == Dictionary.nik ? '' : ' (*)',
+                ' (*)',
                 style: TextStyle(fontSize: 15.0, color: Colors.red),
               ),
             ],
@@ -736,7 +775,7 @@ class _EditState extends State<Edit> {
                     fontFamily: FontsFamily.lato,
                     fontSize: 12)
                 : TextStyle(
-                    color: Color(0xffBDBDBD),
+                    color: ColorBase.disableText,
                     fontFamily: FontsFamily.lato,
                     fontSize: 12),
             enabled: isEdit,
@@ -746,24 +785,24 @@ class _EditState extends State<Edit> {
             decoration: InputDecoration(
                 hintText: hintText,
                 hintStyle: TextStyle(
-                    color: Color(0xff828282),
+                    color: ColorBase.darkGrey,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 12),errorBorder:  OutlineInputBorder(
+                    fontSize: 12),
+                errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Colors.red, width: 1.5)),
+                    borderSide: BorderSide(color: Colors.red, width: 1.5)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                    borderSide: BorderSide(
+                        color: ColorBase.menuBorderColor, width: 1.5)),
                 disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                    borderSide: BorderSide(
+                        color: ColorBase.menuBorderColor, width: 1.5)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: Color(0xffE0E0E0), width: 1.5))),
+                    borderSide: BorderSide(
+                        color: ColorBase.menuBorderColor, width: 1.5))),
             keyboardType:
                 textInputType != null ? textInputType : TextInputType.text,
           )
@@ -772,6 +811,7 @@ class _EditState extends State<Edit> {
     );
   }
 
+// Funtion to build dropdown field
   Widget buildDropdownField(String title, String hintText, List items,
       TextEditingController controller, bool isEmpty,
       [validation]) {
@@ -786,7 +826,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -805,8 +845,8 @@ class _EditState extends State<Edit> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: isEmpty ? Colors.red : Color(0xffE0E0E0),
-                    width:  1.5)),
+                    color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
+                    width: 1.5)),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: custom.DropdownButton<dynamic>(
@@ -815,7 +855,7 @@ class _EditState extends State<Edit> {
                 hint: Text(
                   hintText,
                   style: TextStyle(
-                      color: Color(0xff828282),
+                      color: ColorBase.darkGrey,
                       fontFamily: FontsFamily.lato,
                       fontSize: 12),
                 ),
@@ -857,6 +897,7 @@ class _EditState extends State<Edit> {
     );
   }
 
+// Function to build phone field
   Widget buildPhoneField(
       {String title,
       TextEditingController controller,
@@ -876,7 +917,7 @@ class _EditState extends State<Edit> {
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: Color(0xff333333),
+                    color: ColorBase.veryDarkGrey,
                     fontFamily: FontsFamily.lato,
                     fontWeight: FontWeight.bold),
               ),
@@ -897,14 +938,15 @@ class _EditState extends State<Edit> {
                 width: MediaQuery.of(context).size.width / 7,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Color(0xffE0E0E0), width: 1.5)),
+                    border: Border.all(
+                        color: ColorBase.menuBorderColor, width: 1.5)),
                 child: Center(
                     child: Text(
                   Dictionary.inaCode,
                   style: TextStyle(
                       fontSize: 12,
                       fontFamily: FontsFamily.lato,
-                      color: Color(0xff828282)),
+                      color: ColorBase.darkGrey),
                 )),
               ),
               SizedBox(
@@ -918,7 +960,7 @@ class _EditState extends State<Edit> {
                           fontFamily: FontsFamily.lato,
                           fontSize: 12)
                       : TextStyle(
-                          color: Color(0xffBDBDBD),
+                          color: ColorBase.disableText,
                           fontFamily: FontsFamily.lato,
                           fontSize: 12),
                   enabled: isEdit,
@@ -927,7 +969,7 @@ class _EditState extends State<Edit> {
                   decoration: InputDecoration(
                       hintText: hintText,
                       hintStyle: TextStyle(
-                          color: Color(0xff828282),
+                          color: ColorBase.darkGrey,
                           fontFamily: FontsFamily.lato,
                           fontSize: 12),
                       errorBorder: OutlineInputBorder(
@@ -936,16 +978,16 @@ class _EditState extends State<Edit> {
                               BorderSide(color: Colors.red, width: 1.5)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: Color(0xffE0E0E0), width: 1.5)),
+                          borderSide: BorderSide(
+                              color: ColorBase.menuBorderColor, width: 1.5)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: Color(0xffE0E0E0), width: 1)),
+                          borderSide: BorderSide(
+                              color: ColorBase.menuBorderColor, width: 1)),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: Color(0xffE0E0E0), width: 2))),
+                          borderSide: BorderSide(
+                              color: ColorBase.menuBorderColor, width: 2))),
                   keyboardType: TextInputType.number,
                 ),
               ),
@@ -956,6 +998,7 @@ class _EditState extends State<Edit> {
     );
   }
 
+  // Function to call remote config
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
@@ -970,13 +1013,18 @@ class _EditState extends State<Edit> {
     return remoteConfig;
   }
 
+  // Function to get location user
   Future<void> _handleLocation() async {
+    //Checking permission status
     var permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
     if (await permissionService.status.isGranted) {
+      // Permission allowed
       await _openLocationPicker();
     } else {
+      // Permission disallowed
+      // Show dialog to ask permission
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
@@ -1005,17 +1053,54 @@ class _EditState extends State<Edit> {
     }
   }
 
+  // Function to get lat long user, auto complete address field and auto complete city field
   Future<void> _openLocationPicker() async {
     latLng = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => LocationPicker()));
     final String address = await GeocoderRepository().getAddress(latLng);
+    String city = await GeocoderRepository().getCity(latLng);
+    var tempCity;
+
+    /// Checking city contains kab
+    if (city.toLowerCase().contains('kab')) {
+      /// Replace Kabupaten or Kabupatén to kab.
+      setState(() {
+        city = city.replaceAll('Kabupaten', 'kab.');
+        city = city.replaceAll('Kabupatén', 'kab.');
+      });
+    }
+
+    /// Checking city contains regency
+    if (city.toLowerCase().contains('regency')) {
+      /// Add kab. and delete Regency string.
+      setState(() {
+        city = city.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
+        city = 'kab. ' + city.replaceAll('Regency', '');
+      });
+    }
+    for (var i = 0; i < listCity.length; i++) {
+      /// Checking same name of [city] in [listCity]
+      if (listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
+        setState(() {
+          tempCity = listCity[i];
+        });
+      }
+    }
     if (address != null) {
       setState(() {
         _addressController.text = address;
       });
+      if (tempCity != null) {
+        setState(() {
+          _cityController.text = tempCity['code'];
+        });
+      } else {
+        _cityController.text = '';
+      }
     }
   }
 
+  // Function to get status for access location
   void _onStatusRequested(
       BuildContext context, PermissionStatus statuses) async {
     if (statuses.isGranted) {

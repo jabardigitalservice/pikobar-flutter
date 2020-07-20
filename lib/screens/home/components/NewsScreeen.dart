@@ -71,8 +71,8 @@ class _NewsScreenState extends State<NewsScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    NewsDetailScreen(id: data.id, news: widget.news, model: data),
+                builder: (context) => NewsDetailScreen(
+                    id: data.id, news: widget.news, model: data),
               ),
             );
 
@@ -174,26 +174,38 @@ class _NewsScreenState extends State<NewsScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Image.network(
-                                    data.newsChannelIcon,
-                                    width: 25.0,
-                                    height: 25.0,
+                              Expanded(
+                                child: Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Image.network(
+                                        data.newsChannelIcon,
+                                        width: 25.0,
+                                        height: 25.0,
+                                      ),
+                                      SizedBox(width: 3.0),
+                                      Expanded(
+                                        child: Text(
+                                          data.newsChannel,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          style: TextStyle(
+                                              fontSize: 10.0,
+                                              color: Colors.grey),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(width: 3.0),
-                                  Text(
-                                    data.newsChannel,
-                                    style: TextStyle(
-                                        fontSize: 10.0, color: Colors.grey),
-                                  ),
-                                ],
+                                ),
                               ),
+//                              Expanded(
+//                                child:
                               Text(
                                 unixTimeStampToDateTime(data.publishedAt),
                                 style: TextStyle(
                                     fontSize: 10.0, color: Colors.grey),
                               ),
+//                              )
                             ],
                           )),
                     ],
@@ -207,158 +219,166 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Widget designListNews(NewsModel data) {
     return Container(
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: RaisedButton(
-              elevation: 0,
-              color: Colors.white,
-              child: Container(
-                padding: EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: 70,
-                      height: 80,
-                      child: widget.news == Dictionary.importantInfo || data.published
-                          ? Stack(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(left: 6),
-                            width: 70,
-                            height: 70,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: CachedNetworkImage(
-                                imageUrl: data.image,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Center(
-                                    heightFactor: 4.2,
-                                    child: CupertinoActivityIndicator()),
-                                errorWidget: (context, url, error) => Container(
-                                    height:
-                                    MediaQuery.of(context).size.height /
-                                        3.3,
-                                    color: Colors.grey[200],
-                                    child: Image.asset(
-                                        '${Environment.iconAssets}pikobar.png',
-                                        fit: BoxFit.fitWidth)),
+        child: Column(
+      children: <Widget>[
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: RaisedButton(
+            elevation: 0,
+            color: Colors.white,
+            child: Container(
+              padding: EdgeInsets.only(left: 5, right: 5, top: 17, bottom: 17),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 70,
+                    height: 80,
+                    child: widget.news == Dictionary.importantInfo ||
+                            data.published
+                        ? Stack(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(left: 6),
+                                width: 70,
+                                height: 70,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: CachedNetworkImage(
+                                    imageUrl: data.image,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Center(
+                                        heightFactor: 4.2,
+                                        child: CupertinoActivityIndicator()),
+                                    errorWidget: (context, url, error) => Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3.3,
+                                        color: Colors.grey[200],
+                                        child: Image.asset(
+                                            '${Environment.iconAssets}pikobar.png',
+                                            fit: BoxFit.fitWidth)),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 5),
-                            child: Image.asset(
-                                '${Environment.imageAssets}label.png',
-                                fit: BoxFit.fill,
-                                width: 65.0,
-                                height: 32.0),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 9, left: 5),
-                            child: Text(
-                              Dictionary.labelImportantInfo,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                              Container(
+                                margin: EdgeInsets.only(top: 5),
+                                child: Image.asset(
+                                    '${Environment.imageAssets}label.png',
+                                    fit: BoxFit.fill,
+                                    width: 65.0,
+                                    height: 32.0),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 9, left: 5),
+                                child: Text(
+                                  Dictionary.labelImportantInfo,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                            ],
                           )
-                        ],
-                      )
-                          : ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: CachedNetworkImage(
-                          imageUrl: data.image,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(
-                              heightFactor: 4.2,
-                              child: CupertinoActivityIndicator()),
-                          errorWidget: (context, url, error) => Container(
-                              height:
-                              MediaQuery.of(context).size.height / 3.3,
-                              color: Colors.grey[200],
-                              child: Image.asset(
-                                  '${Environment.iconAssets}pikobar.png',
-                                  fit: BoxFit.fitWidth)),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      width: MediaQuery.of(context).size.width - 120,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            data.title,
-                            style: TextStyle(
-                                fontSize: 16.0, fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.left,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: CachedNetworkImage(
+                              imageUrl: data.image,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Center(
+                                  heightFactor: 4.2,
+                                  child: CupertinoActivityIndicator()),
+                              errorWidget: (context, url, error) => Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 3.3,
+                                  color: Colors.grey[200],
+                                  child: Image.asset(
+                                      '${Environment.iconAssets}pikobar.png',
+                                      fit: BoxFit.fitWidth)),
+                            ),
                           ),
-                          Container(
-                              padding: EdgeInsets.only(top: 5.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Image.network(
-                                        data.newsChannelIcon,
-                                        width: 25.0,
-                                        height: 25.0,
-                                      ),
-                                      SizedBox(width: 3.0),
-                                      Text(
-                                        data.newsChannel,
-                                        style: TextStyle(
-                                            fontSize: 10.0, color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    unixTimeStampToDateTime(data.publishedAt),
-                                    style: TextStyle(
-                                        fontSize: 10.0, color: Colors.grey),
-                                  ),
-                                ],
-                              )),
-                        ],
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        NewsDetailScreen(id: data.id, news: widget.news, model: data),
                   ),
-                );
-                AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
-                    <String, dynamic>{'title': data.title});
-              },
+                  Container(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    width: MediaQuery.of(context).size.width - 120,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          data.title,
+                          style: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(top: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Container(
+                                    child: Row(
+                                      children: <Widget>[
+                                        Image.network(
+                                          data.newsChannelIcon,
+                                          width: 25.0,
+                                          height: 25.0,
+                                        ),
+                                        SizedBox(width: 3.0),
+                                        Expanded(
+                                          child: Text(
+                                            data.newsChannel,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                fontSize: 10.0,
+                                                color: Colors.grey),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  unixTimeStampToDateTime(data.publishedAt),
+                                  style: TextStyle(
+                                      fontSize: 10.0, color: Colors.grey),
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewsDetailScreen(
+                      id: data.id, news: widget.news, model: data),
+                ),
+              );
+              AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+                  <String, dynamic>{'title': data.title});
+            },
           ),
-          Container(
-            height: 10,
-            color: ColorBase.grey,
-          ),
-        ],
-      )
-    );
+        ),
+        Container(
+          height: 10,
+          color: ColorBase.grey,
+        ),
+      ],
+    ));
   }
 
   _buildContentList(List<NewsModel> list) {

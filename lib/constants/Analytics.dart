@@ -6,12 +6,14 @@ class Analytics {
   static String survey = 'Survei';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String news = 'News';
-  // TODO: belum di implementasikan
   static String notifications = 'Notifikasi';
   static String video = 'Video Terkini';
   static String infoGraphics = 'Info Praktikal';
   static String checkDistribution = 'Cek Sebaran';
   static String document = 'Dokumen';
+  static String selfReports = 'Lapor Mandiri';
+  static String education = 'Konten Edukasi';
+
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -26,6 +28,7 @@ class Analytics {
   static String tappedVolunteer = 'tapped_menu_relawan';
   static String tappedCaseReport = 'tapped_menu_lapor_kasus';
   static String tappedSelfTracing = 'tapped_menu_self_tracing';
+  static String tappedSelfReports = 'tapped_menu_lapor_mandiri';
   static String tappedQna = 'tapped_menu_qna';
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
@@ -55,6 +58,14 @@ class Analytics {
   static String tappedphoneBookEmergencyWa = 'tapped_nomor_darurat_wa';
   static String tappedphoneBookEmergencyTelp = 'tapped_nomor_darurat_telp';
   static String tappedphoneBookEmergencyWeb = 'tapped_nomor_darurat_web';
+  static String tappedphoneBookEmergencyTab = 'tapped_nomor_darurat_tab';
+  static String tappedRefferalHospitalTab = 'tapped_rs_rujukan_tab';
+  static String tappedCallCenterTab = 'tapped_call_center_tab';
+  static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
+
+
+
+
 
   //message
   static String tappedShareNewsFromMessage = 'tapped_share_news_from_message';
@@ -97,4 +108,16 @@ class Analytics {
    //event test
   static String tappedRDT = 'tapped_rapid_test';
   static String tappedPCR = 'tapped_pcr';
+  static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
+
+  //event education
+  static String tappedEducationDetail = "tapped_detail_education";
+
+  //event self report
+  static String tappedDailyReport = "tapped_lapor_kesehatan_harian";
+  static String tappedDailyReportDetail = "tapped_lapor_kesehatan_harian_detail";
+  static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
+  static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
+  static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
+
 }

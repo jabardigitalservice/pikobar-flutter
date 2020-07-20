@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -66,9 +66,8 @@ class _DocumentsState extends State<Documents> {
             ],
           ),
         ),
-
         Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Text(
             Dictionary.descDocument,
             style: TextStyle(
@@ -78,10 +77,11 @@ class _DocumentsState extends State<Documents> {
             textAlign: TextAlign.left,
           ),
         ),
-
         BlocBuilder<DocumentsBloc, DocumentsState>(
           builder: (context, state) {
-            return state is DocumentsLoaded ? _buildContent(state.documents) : _buildLoading();
+            return state is DocumentsLoaded
+                ? _buildContent(state.documents)
+                : _buildLoading();
           },
         )
       ],
@@ -250,7 +250,8 @@ class _DocumentsState extends State<Documents> {
                             },
                             child: Text(
                               document['title'],
-                              style: TextStyle(fontFamily: FontsFamily.lato,
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.lato,
                                   color: Colors.lightBlueAccent[700],
                                   decoration: TextDecoration.underline,
                                   fontSize: 13.0),
@@ -258,15 +259,11 @@ class _DocumentsState extends State<Documents> {
                             ),
                           ),
                         ),
-                        Container(
-                          child: IconButton(
-                            icon: Icon(FontAwesomeIcons.share,
-                                size: 17, color: Color(0xFF27AE60)),
-                            onPressed: () {
-                              DocumentServices().shareDocument(
-                                  document['title'], document['document_url']);
-                            },
-                          ),
+                        ShareButton(
+                          onPressed: () {
+                            DocumentServices().shareDocument(
+                                document['title'], document['document_url']);
+                          },
                         )
                       ],
                     ),
@@ -343,7 +340,6 @@ class _DocumentsState extends State<Documents> {
 //        );
 //      }
 
-
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -361,8 +357,7 @@ class _DocumentsState extends State<Documents> {
     }
   }
 
-  void _onStatusRequested(PermissionStatus statuses,
-      String name, String url) {
+  void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }

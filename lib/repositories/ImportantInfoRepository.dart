@@ -6,15 +6,23 @@ import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
 class ImportantInfoRepository {
   final Firestore firestore = Firestore.instance;
 
-  Stream<List<ImportantinfoModel>> getInfoImportantList({@required String improtantInfoCollection}) {
-    return firestore.collection(improtantInfoCollection).orderBy('published_at', descending: true).snapshots().map(
-            (QuerySnapshot snapshot) => snapshot.documents
+  Stream<List<ImportantinfoModel>> getInfoImportantList(
+      {@required String improtantInfoCollection}) {
+    return firestore
+        .collection(improtantInfoCollection)
+        .orderBy('published_at', descending: true)
+        .snapshots()
+        .map((QuerySnapshot snapshot) => snapshot.documents
             .map((doc) => ImportantinfoModel.fromFirestore(doc))
             .toList());
   }
 
-  Future<ImportantinfoModel> getImportantInfoDetail({ @required String importantInfoid}) async {
-    DocumentSnapshot doc = await firestore.collection(Collections.importantInfor).document(importantInfoid).get();
+  Future<ImportantinfoModel> getImportantInfoDetail(
+      {@required String importantInfoid}) async {
+    DocumentSnapshot doc = await firestore
+        .collection(kImportantInfor)
+        .document(importantInfoid)
+        .get();
     return ImportantinfoModel.fromFirestore(doc);
   }
 }

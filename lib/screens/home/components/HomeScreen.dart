@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -99,12 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
             create: (context) =>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
-            create: (context) => _newsListBloc = NewsListBloc()
-              ..add(NewsListLoad(Collections.newsJabar))),
+            create: (context) =>
+                _newsListBloc = NewsListBloc()..add(NewsListLoad(kNewsJabar))),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
                 _importantInfoListBloc = ImportantInfoListBloc()
-                  ..add(ImportantInfoListLoad(Collections.importantInfor))),
+                  ..add(ImportantInfoListLoad(kImportantInfor))),
         BlocProvider<VideoListBloc>(
             create: (context) =>
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
@@ -166,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
               color: ColorBase.grey,
               margin: EdgeInsets.only(top: 10.0),
-              padding: EdgeInsets.only(bottom: 24.0),
+              padding: EdgeInsets.only(bottom: Dimens.dividerHeight),
               child: Statistics()),
 
           /// Menus & Spread Sections
@@ -191,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           /// News & Videos Sections
           SizedBox(
-            height: 24,
+            height: Dimens.dividerHeight,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -199,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
           TabNewsScreen(),
 
           SizedBox(
-            height: 24,
+            height: Dimens.dividerHeight,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -209,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: VideoList(),
           ),
           SizedBox(
-            height: 24,
+            height: Dimens.dividerHeight,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -219,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: InfoGraphics(),
           ),
           SizedBox(
-            height: 24,
+            height: Dimens.dividerHeight,
             child: Container(
               color: ColorBase.grey,
             ),
@@ -240,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannersBloc.close();
     _statisticsBloc.close();
     _rapidTestBloc.close();
-    if(_pcrTestBloc != null){
+    if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
     }
     _newsListBloc.close();

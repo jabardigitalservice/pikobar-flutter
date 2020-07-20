@@ -56,7 +56,7 @@ class ProfileRepository {
   Future<void> saveToCollection(String id, phoneNumber, gender, address, cityId,
       provinceId, name, nik, DateTime birthdate, LatLng latLng) async {
     print(latLng);
-    Firestore.instance.collection(Collections.users).document(id).updateData({
+    Firestore.instance.collection(kUsers).document(id).updateData({
       'phone_number': Dictionary.inaCode + phoneNumber,
       'gender': gender,
       'birthdate': birthdate,

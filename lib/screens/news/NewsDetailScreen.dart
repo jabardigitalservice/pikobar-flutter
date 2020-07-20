@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,6 +19,7 @@ import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -259,18 +259,20 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                 children: <Widget>[
                                   Text(
                                     data.newsChannel,
-                                    style: TextStyle(fontSize: 12.0, fontFamily: FontsFamily.lato),
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontFamily: FontsFamily.lato),
                                   ),
                                   Text(
                                       unixTimeStampToDateTime(data.publishedAt),
-                                      style: TextStyle(fontSize: 12.0, fontFamily: FontsFamily.lato))
+                                      style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontFamily: FontsFamily.lato))
                                 ]),
                           )
                         ],
                       ),
-                      IconButton(
-                        icon: Icon(FontAwesomeIcons.share,
-                            size: 17, color: ColorBase.green),
+                      ShareButton(
                         onPressed: () {
                           widget.news == Dictionary.importantInfo
                               ? _shareMessage(data)

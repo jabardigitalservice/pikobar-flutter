@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
@@ -43,13 +47,90 @@ class AuthRepository {
         phoneNumber: currentUser.phoneNumber);
   }
 
-  Future signOutGoogle() async {
+  Future signOut() async {
     await removeFCMToken();
     await googleSignIn.signOut().then((value) {
       _auth.signOut();
     });
     await deleteToken();
     await deleteLocalUserInfo();
+  }
+
+  /// Sign In with Apple
+  ///
+  /// User info is only sent in the ASAuthorizationAppleIDCredential upon initial
+  /// user sign in. Subsequent logins to your app using Sign In with Apple with
+  /// the same account do not share any user info and will only return a user
+  /// identifier in the ASAuthorizationAppleIDCredential.
+  Future<UserModel> signInWithApple() async {
+    /// Perform the sign-in request
+    /// the requestedScopes are email and fullName
+    /// see: https://developer.apple.com/documentation/authenticationservices/asauthorization/scope
+    final result = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+
+    /// Check the result
+    /// the three possible cases are [AuthorizationStatus.authorized],
+    /// [AuthorizationStatus.error] and [AuthorizationStatus.cancelled].
+    switch (result.status) {
+      case AuthorizationStatus.authorized:
+        final appleIdCredential = result.credential;
+        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
+        final credential = oAuthProvider.getCredential(
+          idToken: String.fromCharCodes(appleIdCredential.identityToken),
+          accessToken:
+              String.fromCharCodes(appleIdCredential.authorizationCode),
+        );
+        final authResult = await _auth.signInWithCredential(credential);
+        final FirebaseUser user = authResult.user;
+
+        if (appleIdCredential.fullName.givenName != null) {
+          /// Update the firebase display name
+          /// from the data provided by appleIdCredential.
+          String displayName =
+              "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
+
+          final updateUser = UserUpdateInfo();
+          updateUser.displayName = displayName;
+          await user.updateProfile(updateUser);
+
+          /// If the name on the user document firestore is null,
+          /// update the name from the data provided by appleIdCredential.
+          ///
+          /// This is required to prevent errors due to a null value of name.
+          final userDocument =
+              Firestore.instance.collection(kUsers).document(user.uid);
+
+          await userDocument.get().then((snapshot) async {
+            if (snapshot.exists && snapshot.data['name'] == null) {
+              await userDocument.updateData({'name': displayName});
+            }
+          });
+        }
+
+        final FirebaseUser currentUser = await _auth.currentUser();
+        assert(user.uid == currentUser.uid);
+
+        return UserModel(
+            googleIdToken:
+                String.fromCharCodes(appleIdCredential.identityToken),
+            uid: currentUser.uid,
+            email: currentUser.email,
+            name: currentUser.displayName,
+            photoUrlFull: currentUser.photoUrl,
+            phoneNumber: currentUser.phoneNumber);
+
+      case AuthorizationStatus.error:
+        throw PlatformException(
+            code: 'ERROR_AUTHORIZATION_DENIED',
+            message: result.error.toString());
+
+      case AuthorizationStatus.cancelled:
+        throw PlatformException(
+            code: 'ERROR_ABORTED_BY_USER', message: 'Sign in aborted by user');
+    }
+    return null;
   }
 
   Future<void> deleteToken() async {
@@ -98,19 +179,28 @@ class AuthRepository {
     return UserModel.fromJson(userInfoMap);
   }
 
-  Future<UserModel> getUserInfo() async {
-    UserModel authUserInfo;
-    bool hasUserInfo = await hasLocalUserInfo();
-    if (hasUserInfo == false) {
-      authUserInfo = await signInWithGoogle();
-      await persistUserInfo(authUserInfo);
-      await registerFCMToken();
-      await LocationService.actionSendLocation();
-    } else {
-      authUserInfo = await readLocalUserInfo();
-    }
+  Future<UserModel> getUserInfo({bool isApple = false}) async {
+    try {
+      UserModel authUserInfo;
+      bool hasUserInfo = await hasLocalUserInfo();
+      if (hasUserInfo == false) {
+        if (Platform.isIOS && isApple) {
+          authUserInfo = await signInWithApple();
+        } else {
+          authUserInfo = await signInWithGoogle();
+        }
 
-    return authUserInfo;
+        await persistUserInfo(authUserInfo);
+        await registerFCMToken();
+        await LocationService.actionSendLocation();
+      } else {
+        authUserInfo = await readLocalUserInfo();
+      }
+
+      return authUserInfo;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<void> updateIdToken() async {
@@ -122,7 +212,8 @@ class AuthRepository {
         if (googleSignIn.currentUser != null) {
           signInAuthentication = await googleSignIn.currentUser.authentication;
         } else {
-          GoogleSignInAccount signInAccount = await googleSignIn.signInSilently();
+          GoogleSignInAccount signInAccount =
+              await googleSignIn.signInSilently();
           signInAuthentication = await signInAccount.authentication;
         }
 
@@ -149,18 +240,17 @@ class AuthRepository {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
-      final userDocument = Firestore.instance
-          .collection(Collections.users)
-          .document(_user.uid);
+      final userDocument =
+          Firestore.instance.collection(kUsers).document(_user.uid);
 
       _firebaseMessaging.getToken().then((token) {
-        final tokensDocument =  userDocument.collection(Collections.userTokens)
-            .document(token);
+        final tokensDocument =
+            userDocument.collection(kUserTokens).document(token);
 
         tokensDocument.get().then((snapshot) {
           if (!snapshot.exists) {
-            tokensDocument.setData(
-                {'token': token, 'created_at': DateTime.now()});
+            tokensDocument
+                .setData({'token': token, 'created_at': DateTime.now()});
           }
         });
       });
@@ -169,10 +259,10 @@ class AuthRepository {
 
       userDocument.get().then((snapshot) {
         if (snapshot.exists && snapshot.data['city_id'] != null) {
-          FirebaseAnalytics().setUserProperty(name: 'city_id', value: snapshot.data['city_id']);
+          FirebaseAnalytics().setUserProperty(
+              name: 'city_id', value: snapshot.data['city_id']);
         }
       });
-
     }
   }
 
@@ -181,9 +271,9 @@ class AuthRepository {
 
     await _firebaseMessaging.getToken().then((token) async {
       final tokensDocument = Firestore.instance
-          .collection(Collections.users)
+          .collection(kUsers)
           .document(authUserInfo.uid)
-          .collection(Collections.userTokens)
+          .collection(kUserTokens)
           .document(token);
 
       await tokensDocument.get().then((snapshot) async {

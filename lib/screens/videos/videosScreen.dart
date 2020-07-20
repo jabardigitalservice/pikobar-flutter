@@ -2,11 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -109,7 +108,8 @@ class _VideosListState extends State<VideosList> {
           itemCount: state.videos.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return Column(crossAxisAlignment: CrossAxisAlignment.start,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 GestureDetector(
                   child: Container(
@@ -144,13 +144,13 @@ class _VideosListState extends State<VideosList> {
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(
-                        Dimens.padding, 10.0, Dimens.padding, 0),
+                      Dimens.padding, 10.0, Dimens.padding, 0),
                   child: Text(
-                    unixTimeStampToDateTime(
-                        state.videos[index].publishedAt),
+                    unixTimeStampToDateTime(state.videos[index].publishedAt),
                     style: TextStyle(
-                        color: Color(0xff828282),
-                        fontFamily: FontsFamily.lato,fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                        fontFamily: FontsFamily.lato,
+                        fontWeight: FontWeight.bold,
                         fontSize: 12.0),
                   ),
                 ),
@@ -163,24 +163,21 @@ class _VideosListState extends State<VideosList> {
                           child: Text(
                             state.videos[index].title,
                             style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.w600),
+                                fontSize: 15.0, fontWeight: FontWeight.w600, fontFamily: FontsFamily.lato),
                             textAlign: TextAlign.left,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        GestureDetector(
-                          child: Container(
-                            height: 40.0,
-                            padding: EdgeInsets.only(left: 20.0, right: 10.0),
-                            child: Icon(FontAwesomeIcons.share,
-                                size: 17, color: ColorBase.green),
-                          ),
-                          onTap: () {
+                        ShareButton(
+                          height: 40.0,
+                          paddingLeft: 20,
+                          paddingRight: 10,
+                          onPressed: () {
                             _shareApp(state.videos[index].title,
                                 state.videos[index].url);
                           },
-                        )
+                        ),
                       ],
                     )),
               ],
