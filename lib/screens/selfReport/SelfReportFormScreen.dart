@@ -127,6 +127,8 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   buildLabel(text: Dictionary.selfReportQuestion2),
                   SizedBox(height: Dimens.padding),
                   GroupedCheckBox(
+                    itemHeight: 40.0,
+                    borderRadius: BorderRadius.circular(8.0),
                     color: ColorBase.menuBorderColor,
                     activeColor: ColorBase.green,
                     itemLabelList: _allItemList,
@@ -149,6 +151,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   ),
                   SizedBox(height: Dimens.padding),
                   Container(
+                    height: 40.0,
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: _isOtherIndicationEmpty
@@ -159,8 +162,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     child: TextField(
                       controller: _otherIndicationsController,
                       enabled: _isOtherIndication,
-                      minLines: 4,
-                      maxLines: 5,
+                      maxLines: 1,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: Dictionary.tellOtherIndication),
