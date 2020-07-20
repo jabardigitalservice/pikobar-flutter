@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/contactHistoryList/ContactHistoryListBloc.dart';
@@ -38,24 +39,26 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
         child: BlocBuilder<ContactHistoryListBloc, ContactHistoryListState>(
             builder: (context, state) {
           if (state is ContactHistoryListLoaded) {
-            return buildContent(state);
+            return buildContent(state.querySnapshot.documents);
           } else if (state is ContactHistoryListFailure) {
             return ErrorContent(error: state.error);
           } else {
-            return Center(child: CircularProgressIndicator(),);
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         }),
       ),
     );
   }
 
-  Widget buildContent(ContactHistoryListLoaded state) {
-    return state.querySnapshot.documents.length == 0
+  Widget buildContent(List<DocumentSnapshot> documents) {
+    return documents.length == 0
         ? buildEmptyScreen()
-        : buildContactHistoryList(state);
+        : buildContactHistoryList(documents);
   }
 
- /// Function to build create button
+  /// Function to build create button
   Widget buildCreateButton() {
     return RoundedButton(
         title: Dictionary.reportNewContact,
@@ -72,7 +75,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
         });
   }
 
- /// Function to build empty screen
+  /// Function to build empty screen
   Widget buildEmptyScreen() {
     return Stack(
       children: <Widget>[
@@ -127,7 +130,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
   }
 
   /// Function to build contact history list screen
-  Widget buildContactHistoryList(ContactHistoryListLoaded state) {
+  Widget buildContactHistoryList(List<DocumentSnapshot> documents) {
     return Padding(
       padding: EdgeInsets.all(Dimens.contentPadding),
       child: Column(
@@ -150,7 +153,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                         fontSize: 12),
                   ),
                   Text(
-                    state.querySnapshot.documents.length.toString(),
+                    documents.length.toString(),
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: ColorBase.limeGreen,
@@ -166,7 +169,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
           ),
           Expanded(
             child: ListView.builder(
-                itemCount: state.querySnapshot.documents.length,
+                itemCount: documents.length,
                 itemBuilder: (context, i) {
                   return Column(
                     children: <Widget>[
@@ -192,25 +195,14 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                                 color:
                                                     ColorBase.menuBorderColor),
                                           )),
-                                      state.querySnapshot.documents[i]
-                                                  .data['gender'] ==
-                                              'M'
-                                          ? Positioned(
-                                              left: 15,
-                                              top: 15,
-                                              child: Image.asset(
-                                                '${Environment.imageAssets}male_icon.png',
-                                                height: 20,
-                                              ),
-                                            )
-                                          : Positioned(
-                                              left: 15,
-                                              top: 15,
-                                              child: Image.asset(
-                                                '${Environment.imageAssets}female_icon.png',
-                                                height: 20,
-                                              ),
-                                            ),
+                                      Positioned(
+                                        left: 15,
+                                        top: 15,
+                                        child: Image.asset(
+                                          '${Environment.imageAssets}${documents[i].data['gender'] == 'M' ? 'male_icon' : 'female_icon'}.png',
+                                          height: 20,
+                                        ),
+                                      )
                                     ],
                                   ),
                                   SizedBox(
@@ -221,8 +213,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        state.querySnapshot.documents[i]
-                                            .data['name'],
+                                        documents[i].data['name'],
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12,
@@ -232,8 +223,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                         height: 10,
                                       ),
                                       Text(
-                                        state.querySnapshot.documents[i]
-                                            .data['relation'],
+                                        documents[i].data['relation'],
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontFamily: FontsFamily.lato),
@@ -253,7 +243,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                       SizedBox(
                         height: 5,
                       ),
-                      i == state.querySnapshot.documents.length - 1
+                      i == documents.length - 1
                           ? Container()
                           : Divider(
                               color: ColorBase.grey,
