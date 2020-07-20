@@ -24,6 +24,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/ContactHistoryScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -271,8 +272,27 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   '${Environment.iconAssets}history_contact_disable.png',
                   Dictionary.historyContact,
                   2,
-                  () {},
-                  false),
+                  () {
+                     if (latLng == null ||
+                    addressMyLocation == '-' ||
+                    addressMyLocation.isEmpty ||
+                    addressMyLocation == null) {
+                  Fluttertoast.showToast(
+                      msg: Dictionary.alertLocationSelfReport,
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      fontSize: 16.0);
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ContactHistoryScreen()));
+                }
+                  },
+                    hasLogin
+                      ? !_isProfileUserNotComplete(state) &&
+                              !isUserHealty(state)
+                          ? hasLogin
+                          : false
+                      : false),
             ],
           ),
           SizedBox(

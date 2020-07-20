@@ -57,6 +57,22 @@ class SelfReportRepository {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> getContactHistoryList({@required String userId}) {
+    final selfReport = _firestore.collection(kSelfReports).document(userId);
+    selfReport.get().then((snapshot) {
+      if (snapshot.exists) {
+      } else {
+        selfReport.setData({'remind_me': false, 'user_id': userId});
+      }
+    });
+
+    return _firestore
+        .collection(kSelfReports)
+        .document(userId)
+        .collection(kContactHistory)
+        .snapshots();
+  }
+
   Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
     return _firestore.collection(kSelfReports).document(userId).snapshots();
   }
