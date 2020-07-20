@@ -43,6 +43,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   LatLng latLng;
   String addressMyLocation;
   bool hasLogin = false;
+  bool isLocationChange = false;
 
   @override
   void initState() {
@@ -362,15 +363,18 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
 
   ///Function for build widget location user
   Widget _buildLocation(AsyncSnapshot<DocumentSnapshot> state) {
-    if (state != null) {
-      if (state.data['address'] != null) {
-        addressMyLocation = state.data['address'].toString();
-      }
-      if (state.data['location'] != null) {
-        latLng = new LatLng(
-            state.data['location'].latitude, state.data['location'].longitude);
+    if (!isLocationChange) {
+      if (state != null) {
+        if (state.data['address'] != null) {
+          addressMyLocation = state.data['address'].toString();
+        }
+        if (state.data['location'] != null) {
+          latLng = LatLng(state.data['location'].latitude,
+              state.data['location'].longitude);
+        }
       }
     }
+
     return GestureDetector(
       child: Card(
         elevation: 0,
@@ -529,6 +533,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     final String address = await GeocoderRepository().getAddress(latLng);
     if (address != null) {
       setState(() {
+        isLocationChange = true;
         addressMyLocation = address;
       });
     }
