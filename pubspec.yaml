@@ -12,10 +12,10 @@ description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-# GDrive version 3.0.0+18
-# PlayStore version 2.0.1+17
+# GDrive version 3.0.0+19
+# PlayStore version 2.1.0+18
 
-version: 3.0.0+18     # Staging Version
+version: 3.0.0+19     # Staging Version
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
