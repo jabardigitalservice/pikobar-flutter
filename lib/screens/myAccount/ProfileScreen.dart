@@ -66,11 +66,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (state is AuthenticationFailure) {
               // Show an error message dialog when login,
               // except for errors caused by users who were canceled to login.
-              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') &&
+                  !state.error.contains('NoSuchMethodError')) {
                 showDialog(
                     context: context,
-                    builder: (BuildContext context) =>
-                        DialogTextOnly(
+                    builder: (BuildContext context) => DialogTextOnly(
                           description: state.error.toString(),
                           buttonText: "OK",
                           onOkPressed: () {
@@ -129,6 +129,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           if (snapshot.hasError)
                             // Show error ui when unable to get data
                             return ErrorContent(error: snapshot.error);
+
+                          // Logout when data doesn't exist
+                          if (snapshot.connectionState !=
+                                  ConnectionState.waiting &&
+                              !snapshot.data.exists) {
+                            _authenticationBloc.add(LoggedOut());
+                          }
+
                           switch (snapshot.connectionState) {
                             // Show loading while get data
                             case ConnectionState.waiting:
