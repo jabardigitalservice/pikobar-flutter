@@ -1,13 +1,11 @@
 import 'dart:convert';
-
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -19,14 +17,15 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
-import 'package:html/dom.dart' as dom;
 
 class RapidTestDetail extends StatefulWidget {
   final RemoteConfig remoteConfig;
   final DocumentSnapshot document, documentPCR;
 
   RapidTestDetail(this.remoteConfig, this.document, this.documentPCR);
+
   @override
   _RapidTestDetailState createState() => _RapidTestDetailState();
 }
@@ -34,7 +33,8 @@ class RapidTestDetail extends StatefulWidget {
 class _RapidTestDetailState extends State<RapidTestDetail> {
   List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
-  String typetest = Dictionary.rdt;
+  List<String> listItemTitleTab = [Dictionary.rdt, Dictionary.pcr];
+
   @override
   Widget build(BuildContext context) {
     if (widget.remoteConfig != null) {
@@ -46,110 +46,29 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       appBar: CustomAppBar.defaultAppBar(
         title: Dictionary.testSummaryTitleAppbar,
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        children: <Widget>[
-          DefaultTabController(
-            length: 2,
-            child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TabBar(
-                  isScrollable: true,
-                  onTap: (index) {
-                    if (index == 0) {
-                      setState(() {
-                        typetest = Dictionary.rdt;
-                      });
-                      AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-                    } else if (index == 1) {
-                      setState(() {
-                        typetest = Dictionary.pcr;
-                      });
-
-                      AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-                    }
-                  },
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.grey,
-                  indicator: BubbleTabIndicator(
-                    indicatorHeight: 37.0,
-                    indicatorColor: ColorBase.green,
-                    tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                  ),
-                  indicatorColor: ColorBase.green,
-                  indicatorWeight: 0.1,
-                  labelPadding: EdgeInsets.all(10),
-                  tabs: <Widget>[
-                    Tab(
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: typetest == Dictionary.rdt
-                                    ? ColorBase.green
-                                    : Color(0xffE0E0E0),
-                                width: 1)),
-                        child: Text(
-                          Dictionary.rdt,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 10.0),
-                        ),
-                      ),
-                    ),
-                    Tab(
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: typetest == Dictionary.pcr
-                                    ? ColorBase.green
-                                    : Color(0xffE0E0E0),
-                                width: 1)),
-                        child: Text(
-                          Dictionary.pcr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 10.0),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 1.2,
-                  child: TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[_buildRDT(), _buildPCR()],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // widget.document.data['last_update'] == null
-          //     ? Container()
-          //     : Center(
-          //         child: Text(
-          //           '${Dictionary.lastUpdate} ${unixTimeStampToDateTimeWithoutDay(widget.document.data['last_update'].seconds)}',
-          //           style: TextStyle(
-          //               color: Color(0xff828282),
-          //               fontWeight: FontWeight.bold,
-          //               fontSize: 16),
-          //         ),
-          //       )
-        ],
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: CustomBubbleTab(
+          indicatorColor: ColorBase.green,
+          labelColor: Colors.white,
+          listItemTitleTab: listItemTitleTab,
+          unselectedLabelColor: Colors.grey,
+          onTap: (index) {
+            if (index == 0) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+            } else if (index == 1) {
+              AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+            }
+          },
+          tabBarView: <Widget>[_buildRDT(), _buildPCR()],
+          isExpand: true,
+        ),
       ),
     );
   }
 
   Widget _buildRDT() {
-    return Column(
+    return ListView(
       children: <Widget>[
         widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
             ? buildAnnouncement(0)
@@ -157,6 +76,34 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
+        widget.document.data['last_update'] == null
+            ? Container()
+            : Padding(
+                padding: EdgeInsets.only(bottom: 20, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Dictionary.lastUpdate,
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '${unixTimeStampToDateTime(widget.document.data['last_update'].seconds)}',
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
         buildHeader(Dictionary.rapidTestTitle, 'bloodTest@4x.png',
             widget.document.data['total'], Color(0xffFAFAFA)),
         SizedBox(
@@ -171,7 +118,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   }
 
   Widget _buildPCR() {
-    return Column(
+    return ListView(
       children: <Widget>[
         widget.remoteConfig != null && dataAnnouncement[1]['enabled'] == true
             ? buildAnnouncement(1)
@@ -179,6 +126,34 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
+        widget.documentPCR.data['last_update'] == null
+            ? Container()
+            : Padding(
+                padding: EdgeInsets.only(bottom: 20, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      Dictionary.lastUpdate,
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '${unixTimeStampToDateTime(widget.documentPCR.data['last_update'].seconds)}',
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
         buildHeader(Dictionary.pcrTitle, 'bloodTestBlue@4x.png',
             widget.documentPCR.data['total'], Color(0xffFAFAFA)),
         SizedBox(
@@ -191,48 +166,22 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       ],
     );
   }
-
+  /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
-    return Container(
-      width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 5, right: 5),
-      decoration: BoxDecoration(
-          color: Color(0xffFFF3CC), borderRadius: BorderRadius.circular(8.0)),
-      child: Stack(
-        children: <Widget>[
-          Image.asset('${Environment.imageAssets}intersect.png', width: 73),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    dataAnnouncement[i]['title'] != null
-                        ? dataAnnouncement[i]['title']
-                        : Dictionary.titleInfoTextAnnouncement,
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.lato),
-                  ),
-                  SizedBox(height: 15),
-                  Html(
-                      data: dataAnnouncement[i]['content'],
-                      defaultTextStyle: TextStyle(
-                          color: Color(0xff828282),
-                          fontSize: 10.0,
-                          fontFamily: FontsFamily.lato),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.justify;
-                      },
-                      onLinkTap: (url) {
-                        _launchURL(url);
-                      }),
-                ]),
-          ),
-        ],
-      ),
+    return
+      Announcement(
+      title: dataAnnouncement[i]['title'] != null
+          ? dataAnnouncement[i]['title']
+          : Dictionary.titleInfoTextAnnouncement,
+      content: dataAnnouncement[i]['content'],
+      context: context,
+      onLinkTap: (url) {
+        _launchURL(
+            url,
+            dataAnnouncement[i]['title'] != null
+                ? dataAnnouncement[i]['title']
+                : Dictionary.titleInfoTextAnnouncement);
+      },
     );
   }
 
@@ -427,13 +376,19 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
-  _launchURL(String url) async {
+  _launchURL(String url, String title) async {
     List<String> items = [
       '_googleIDToken_',
       '_userUID_',
       '_userName_',
       '_userEmail_'
     ];
+    String analyticsUrl;
+    if (title != null) {
+      analyticsUrl = 'tapped_url_' + title.replaceAll(" ", "_");
+    } else {
+      analyticsUrl = Analytics.tappedRappidTestUrl;
+    }
     if (StringUtils.containsWords(url, items)) {
       bool hasToken = await AuthRepository().hasToken();
       if (!hasToken) {
@@ -442,14 +397,16 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
 
         if (isLoggedIn != null && isLoggedIn) {
           url = await userDataUrlAppend(url);
-
+          AnalyticsHelper.setLogEvent(analyticsUrl);
           openChromeSafariBrowser(url: url);
         }
       } else {
         url = await userDataUrlAppend(url);
+        AnalyticsHelper.setLogEvent(analyticsUrl);
         openChromeSafariBrowser(url: url);
       }
     } else {
+      AnalyticsHelper.setLogEvent(analyticsUrl);
       openChromeSafariBrowser(url: url);
     }
   }

@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/screens/survey/surveysScreen.dart';
 import 'package:pikobar_flutter/screens/videos/videosScreen.dart';
 
@@ -38,6 +39,8 @@ Route generateRoutes(RouteSettings settings) {
           MessageDetailScreen(
             id: args,
           ));
+    case NavigationConstrants.SelfReports:
+      return buildRoute(settings, SelfReportScreen());
 
     case NavigationConstrants.Survey:
       return buildRoute(settings, SurveysScreen());

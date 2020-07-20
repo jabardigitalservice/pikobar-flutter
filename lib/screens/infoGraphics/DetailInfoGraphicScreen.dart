@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -16,6 +15,7 @@ import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -151,8 +151,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        unixTimeStampToDateTime(widget
-                            .dataInfoGraphic['published_date'].seconds),
+                        unixTimeStampToDateTime(
+                            widget.dataInfoGraphic['published_date'].seconds),
                         style: TextStyle(
                             color: Colors.grey,
                             fontFamily: FontsFamily.lato,
@@ -166,38 +166,30 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                         height: 10,
                       ),
                       Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                           Expanded(
-                             child:  Text(
-                              widget.dataInfoGraphic['title'],
-                               style: TextStyle(
-                                 fontWeight: FontWeight.bold,
-                                 fontFamily: FontsFamily.lato,
-                               ),
-                               textAlign: TextAlign.left,
-                               maxLines: 2,
-                               overflow: TextOverflow.ellipsis,
-                             ),
-                           ),
-                            Container(
-                              height: 20,
-                              child: IconButton(
-                                padding: EdgeInsets.all(0),
-                                alignment: Alignment.topRight,
-                                icon: Icon(FontAwesomeIcons.share,
-                                    size: 17, color: Color(0xFF27AE60)),
-                                onPressed: () {
-                                  InfoGraphicsServices()
-                                      .shareInfoGraphics(
-                                      widget
-                                          .dataInfoGraphic['title'],
-                                      widget.dataInfoGraphic[
-                                      'images']);
-                                },
+                            Expanded(
+                              child: Text(
+                                widget.dataInfoGraphic['title'],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: FontsFamily.lato,
+                                ),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
+                            ),
+                            ShareButton(
+                              height: 20,
+                              paddingLeft: 0,
+                              alignmentIcon: Alignment.topRight,
+                              onPressed: () {
+                                InfoGraphicsServices().shareInfoGraphics(
+                                    widget.dataInfoGraphic['title'],
+                                    widget.dataInfoGraphic['images']);
+                              },
                             )
                           ]),
                     ],

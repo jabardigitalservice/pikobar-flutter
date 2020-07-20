@@ -197,7 +197,7 @@ class _StatisticsState extends State<Statistics> {
                   openChromeSafariBrowser(
                       url: urlStatistic.isNotEmpty
                           ? urlStatistic
-                          : UrlThirdParty.urlCoronaInfoData);
+                          : kUrlCoronaInfoData);
                 },
                 child: Text(
                   Dictionary.moreDetail,

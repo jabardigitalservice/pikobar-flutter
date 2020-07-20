@@ -3,12 +3,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -130,8 +129,9 @@ class _VideoListState extends State<VideoList> {
           child: Text(
             Dictionary.videoUpToDateDesc,
             style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12.0,),
+                color: Colors.black,
+                fontFamily: FontsFamily.lato,
+                fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
         ),
@@ -144,7 +144,7 @@ class _VideoListState extends State<VideoList> {
               itemCount: data.length,
               itemBuilder: (context, index) {
                 return Container(
-                 
+
                   margin: EdgeInsets.only(right: 15.0),
                   width: MediaQuery.of(context).size.width * 0.8,
                   // decoration: BoxDecoration(shape: BoxShape.circle),
@@ -221,7 +221,8 @@ class _VideoListState extends State<VideoList> {
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: FontsFamily.lato,
-                                fontSize: 10.0),
+                                fontSize: 10.0,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                         Container(
@@ -238,22 +239,20 @@ class _VideoListState extends State<VideoList> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: 13.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                                        fontSize: 14.0,
+                                        fontFamily: FontsFamily.lato,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ),
                               ),
-                              Container(
+
+                              ShareButton(
+                                paddingLeft: 10,
                                 height: 40.0,
-                                child: GestureDetector(
-                                  child: Icon(FontAwesomeIcons.share,
-                                      size: 17, color: ColorBase.green),
-                                  onTap: () {
-                                    _shareVideo(
-                                        data[index].title, data[index].url);
-                                  },
-                                ),
+                                onPressed: () {
+                                  _shareVideo(
+                                      data[index].title, data[index].url);
+                                },
                               ),
                             ],
                           ),

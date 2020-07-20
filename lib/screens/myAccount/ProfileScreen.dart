@@ -64,17 +64,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationFailure) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: "OK",
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
+              // Show an error message dialog when login,
+              // except for errors caused by users who were canceled to login.
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: "OK",
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
               Scaffold.of(context).hideCurrentSnackBar();
             } else if (state is AuthenticationLoading) {
+              // Show dialog when loading
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).primaryColor,
@@ -87,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       )
                     ],
                   ),
-                  duration: Duration(seconds: 5),
+                  duration: Duration(seconds: 15),
                 ),
               );
             } else {
@@ -95,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
           child: Scaffold(
-              backgroundColor: Color(0xffFFFFFF),
+              backgroundColor: Colors.white,
               appBar: CustomAppBar.defaultAppBar(title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
@@ -104,11 +110,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ) {
                   if (state is AuthenticationUnauthenticated ||
                       state is AuthenticationLoading) {
+                    // When user is not login show login screen
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
                     );
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
+                    // When user already login get data user from firestore
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     return StreamBuilder<DocumentSnapshot>(
@@ -119,13 +127,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         builder: (BuildContext context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
                           if (snapshot.hasError)
+                            // Show error ui when unable to get data
                             return ErrorContent(error: snapshot.error);
                           switch (snapshot.connectionState) {
+                            // Show loading while get data
                             case ConnectionState.waiting:
                               return Center(
                                 child: CircularProgressIndicator(),
                               );
                             default:
+                              // Show content when data is ready
                               return snapshot.data.exists
                                   ? _buildContent(snapshot, _profileLoaded)
                                   : Center(
@@ -133,6 +144,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
                           }
                         });
+                  } else if (state is AuthenticationFailure ||
+                      state is AuthenticationLoading) {
+                    return OnBoardingLoginScreen(
+                      authenticationBloc: _authenticationBloc,
+                    );
                   } else {
                     return Container();
                   }
@@ -141,6 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ));
   }
 
+  // Function to build content
   Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
       AuthenticationAuthenticated _profileLoaded) {
     return ListView(
@@ -160,6 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   minRadius: 90,
                   maxRadius: 150,
                   backgroundImage: (_profileLoaded.record.photoUrlFull) != null
+                      // if image user is null show default image
                       ? NetworkImage(_profileLoaded.record.photoUrlFull)
                       : ExactAssetImage('${Environment.imageAssets}user.png'),
                 ),
@@ -178,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                         state.data['name'],
                         style: TextStyle(
-                            color: Color(0xff333333),
+                            color: ColorBase.veryDarkGrey,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.lato),
@@ -188,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 30.0,
                       child: Text(_profileLoaded.record.email,
                           style: TextStyle(
-                              color: Color(0xff333333),
+                              color: ColorBase.veryDarkGrey,
                               fontSize: 14,
                               fontFamily: FontsFamily.lato)),
                     )
@@ -198,6 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+        // Get health status visible from remote config
         BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           bloc: _remoteConfigBloc,
           builder: (context, remoteState) {
@@ -216,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: EdgeInsets.only(left: 20, top: 10),
           child: Text(Dictionary.qrCode,
               style: TextStyle(
-                  color: Color(0xff333333),
+                  color: ColorBase.veryDarkGrey,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                   fontFamily: FontsFamily.lato)),
@@ -235,7 +254,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xffE0E0E0))),
+                  border: Border.all(color: ColorBase.menuBorderColor)),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -253,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             Dictionary.qrCodeMenu,
                             style: TextStyle(
-                                color: Color(0xff333333),
+                                color: ColorBase.veryDarkGrey,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: FontsFamily.lato),
@@ -280,7 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: EdgeInsets.only(left: 20, top: 10),
           child: Text(Dictionary.accountManage,
               style: TextStyle(
-                  color: Color(0xff333333),
+                  color: ColorBase.veryDarkGrey,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                   fontFamily: FontsFamily.lato)),
@@ -313,7 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             Dictionary.edit,
                             style: TextStyle(
-                                color: Color(0xff333333),
+                                color: ColorBase.veryDarkGrey,
                                 fontSize: 12,
                                 fontFamily: FontsFamily.lato),
                           ),
@@ -321,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
-                        color: Color(0xff828282),
+                        color: ColorBase.darkGrey,
                         size: 15,
                       )
                     ],
@@ -331,7 +350,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 5,
                 ),
                 Divider(
-                  color: Color(0xffE0E0E0),
+                  color: ColorBase.menuBorderColor,
                   thickness: 1,
                 ),
                 SizedBox(
@@ -351,13 +370,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Text(
                           Dictionary.versionText,
-                          style: TextStyle(color: Color(0xff4F4F4F)),
+                          style: TextStyle(color: ColorBase.veryDarkGrey),
                         ),
                       ],
                     ),
                     Text(
                       _versionText + ' ' + Dictionary.betaText,
-                      style: TextStyle(color: Color(0xff828282)),
+                      style: TextStyle(color: ColorBase.darkGrey),
                     )
                   ],
                 ),
@@ -368,6 +387,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SizedBox(
           height: 15,
         ),
+        // Get terms and condition string from remote config
         BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, state) {
             return state is RemoteConfigLoaded
@@ -384,7 +404,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 18),
           child: OutlineButton(
-            borderSide: BorderSide(color: Color(0xffEB5757)),
+            borderSide: BorderSide(color: ColorBase.softRed),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             color: Colors.white,
@@ -399,7 +419,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                     Dictionary.textLogoutButton,
                     style: TextStyle(
-                        color: Color(0xffEB5757),
+                        color: ColorBase.softRed,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.lato),
                   ))),
@@ -410,6 +430,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Function to build text terms and conditions
   _buildTermsConditions(RemoteConfig remoteConfig) {
     var termsConditions;
     if (remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
@@ -422,7 +443,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(
                   fontFamily: FontsFamily.lato,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xff828282),
+                  color: ColorBase.darkGrey,
                   fontSize: 11.0),
               children: <TextSpan>[
                 TextSpan(
@@ -448,16 +469,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Function to build health status container
   _buildHealthStatus(RemoteConfig remoteConfig, DocumentSnapshot data) {
     Color cardColor = ColorBase.grey;
     Color textColor = Colors.white;
     String uriImage = '${Environment.iconAssets}user_health.png';
-
+    // Get data health status visible or not
     bool visible = remoteConfig != null &&
             remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
         ? remoteConfig.getBool(FirebaseConfig.healthStatusVisible)
         : false;
-
+    // Get data health status color from remote config
     if (remoteConfig != null &&
         remoteConfig.getString(FirebaseConfig.healthStatusColors) != null &&
         data['health_status'] != null) {
@@ -493,11 +515,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               : Colors.red);
           break;
 
+        case "OTG":
+          cardColor = HexColor.fromHex(healthStatusColor['otg'] != null
+              ? healthStatusColor['otg']
+              : Colors.black);
+          break;
+
         default:
           cardColor = Colors.grey;
       }
     }
-
+    // Check if health status visible or not
     return visible && data['health_status_text'] != null
         ? Container(
             margin: EdgeInsets.only(left: 20, right: 20, bottom: 15),
@@ -543,22 +571,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : Container();
   }
 
+  // Function to build group menu
   FutureBuilder<RemoteConfig> _buildGroupMenu(DocumentSnapshot data) {
+    // Get data group menu from remote config
     return FutureBuilder<RemoteConfig>(
         future: setupRemoteConfig(),
         builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
           var groupMenu;
-          String role;
+          String role, healthStatus;
           int groupMenuLength = 0;
           if (snapshot.data != null) {
             groupMenu = json.decode(
                 snapshot.data.getString(FirebaseConfig.groupMenuProfile));
+            // Set default value to public if data [role] in collection users is null
             if (data['role'] == null || data['role'] == '') {
               role = 'public';
             } else {
               role = data['role'];
             }
+            // Set default value to healthy if data [health_status] in collection users is null
+            if (data['health_status'] == null || data['health_status'] == '') {
+              healthStatus = 'healthy';
+            } else {
+              healthStatus = data['health_status'].toLowerCase();
+            }
+            // Filtering data by role and health status and visible or not
             groupMenu.removeWhere((element) => !element['role'].contains(role));
+            groupMenu.removeWhere(
+                (element) => !element['health_status'].contains(healthStatus));
             groupMenu.removeWhere((element) => element['enabled'] == false);
             groupMenuLength = groupMenu.length;
           }
@@ -572,6 +612,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
   }
 
+  // Function to build list of group menu
   List<Widget> getGroupMenu(List<dynamic> groupMenu) {
     List<Widget> list = List();
 
@@ -599,7 +640,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           groupMenu[i]['caption'],
                           style: TextStyle(
-                              color: Color(0xff333333),
+                              color: ColorBase.veryDarkGrey,
                               fontSize: 12,
                               fontFamily: FontsFamily.lato),
                         ),
@@ -607,7 +648,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: Color(0xff828282),
+                      color: ColorBase.darkGrey,
                       size: 15,
                     )
                   ],
@@ -619,7 +660,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 5,
                   ),
                   Divider(
-                    color: Color(0xffE0E0E0),
+                    color: ColorBase.menuBorderColor,
                     thickness: 1,
                   ),
                   SizedBox(
@@ -637,6 +678,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return list;
   }
 
+  // Function to call remote config
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{

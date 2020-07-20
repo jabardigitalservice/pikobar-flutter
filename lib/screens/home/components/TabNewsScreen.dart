@@ -1,9 +1,9 @@
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/RemoteConfigBloc.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -17,28 +17,44 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 
 // ignore: must_be_immutable
 class TabNewsScreen extends StatefulWidget {
-
   @override
   _TabNewsScreenState createState() => _TabNewsScreenState();
 }
 
 class _TabNewsScreenState extends State<TabNewsScreen> {
-  String typeNews = Dictionary.importantInfo;
   NewsListBloc newsListBloc;
   bool checkInitTypeNews = true;
+  List<String> listItemTitleTab = [
+    Dictionary.importantInfo,
+    Dictionary.latestNews,
+    Dictionary.nationalNews,
+    Dictionary.worldNews
+  ];
 
+  List<String> listCollectionData = [
+    kImportantInfor,
+    kNewsJabar,
+    kNewsNational,
+    kNewsWorld
+  ];
+
+  List<String> analyticsData = [
+    Analytics.tappedImportantInfo,
+    Analytics.tappedNewsJabar,
+    Analytics.tappedNewsNational,
+    Analytics.tappedNewsWorld,
+  ];
 
   buildContent(RemoteConfigLoaded state) {
     if (checkInitTypeNews) {
       if (!StatShowImportantInfo.getStatImportantTab(state)) {
-        typeNews = Dictionary.latestNews;
-        newsListBloc
-            .add(NewsListLoad(Collections.newsJabar));
-
+        listItemTitleTab.removeAt(0);
+        listCollectionData.removeAt(0);
+        analyticsData.removeAt(0);
+        newsListBloc.add(NewsListLoad(kNewsJabar));
         checkInitTypeNews = false;
-      }else{
-        newsListBloc
-            .add(NewsListLoad(Collections.importantInfor));
+      } else {
+        newsListBloc.add(NewsListLoad(kImportantInfor));
         checkInitTypeNews = false;
       }
     }
@@ -76,7 +92,8 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NewsListScreen(news: Dictionary.allNews),
+                          builder: (context) =>
+                              NewsListScreen(news: Dictionary.allNews),
                         ),
                       );
                       AnalyticsHelper.setLogEvent(Analytics.tappedMore);
@@ -91,167 +108,35 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
             child: Text(
               Dictionary.descNews,
               style: TextStyle(
-                  color: Colors.black,
+                color: Colors.black,
                 fontFamily: FontsFamily.lato,
-                  fontSize: 12.0,),
+                fontSize: 12.0,
+              ),
               textAlign: TextAlign.left,
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 5),
-            child: DefaultTabController(
-              length: StatShowImportantInfo.getStatImportantTab(state) ? 4 : 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TabBar(
-                    isScrollable: true,
-                    onTap: (index) {
-                      setState(() {});
-                      if (StatShowImportantInfo.getStatImportantTab(state)) {
-                        if (index == 0) {
-                          typeNews = Dictionary.importantInfo;
-                          newsListBloc
-                              .add(NewsListLoad(Collections.importantInfor));
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedImportantInfo);
-                        }
-                      }
-
-                      if (StatShowImportantInfo.getStatImportantTab(state)
-                          ? index == 1
-                          : index == 0) {
-                        typeNews = Dictionary.latestNews;
-                        newsListBloc
-                            .add(NewsListLoad(Collections.newsJabar));
-                        AnalyticsHelper.setLogEvent(Analytics.tappedNewsJabar);
-                      }
-                      if (StatShowImportantInfo.getStatImportantTab(state)
-                          ? index == 2
-                          : index == 1) {
-                        typeNews = Dictionary.nationalNews;
-                        newsListBloc
-                            .add(NewsListLoad(Collections.newsNational));
-                        AnalyticsHelper.setLogEvent(
-                            Analytics.tappedNewsNational);
-                      }
-                      if (StatShowImportantInfo.getStatImportantTab(state)
-                          ? index == 3
-                          : index == 2) {
-                        typeNews = Dictionary.worldNews;
-                        newsListBloc
-                            .add(NewsListLoad(Collections.newsWorld));
-                        AnalyticsHelper.setLogEvent(Analytics.tappedNewsWorld);
-                      }
-                    },
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.grey,
-                    indicator: BubbleTabIndicator(
-                      indicatorHeight: 37.0,
-                      indicatorColor: ColorBase.green,
-                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                    ),
-                    indicatorColor: ColorBase.green,
-                    indicatorWeight: 0.1,
-                    labelPadding: EdgeInsets.all(10),
-                    tabs: <Widget>[
-                      if (StatShowImportantInfo.getStatImportantTab(state))
-                        Tab(
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border.all(
-                                    color: typeNews == Dictionary.importantInfo
-                                        ? ColorBase.green
-                                        : Colors.grey,
-                                    width: 1)),
-                            child: Text(
-                              Dictionary.importantInfo,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: FontsFamily.lato,
-                                  fontSize: 12.0),
-                            ),
-                          ),
-                        ),
-                      Tab(
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              border: Border.all(
-                                  color: typeNews == Dictionary.latestNews
-                                      ? ColorBase.green
-                                      : Colors.grey,
-                                  width: 1)),
-                          child: Text(
-                            Dictionary.titleLatestNews,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 12.0),
-                          ),
-                        ),
-                      ),
-                      Tab(
-                          child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: typeNews == Dictionary.nationalNews
-                                    ? ColorBase.green
-                                    : Colors.grey,
-                                width: 1)),
-                        child: Text(
-                          Dictionary.titleNationalNews,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 12.0),
-                        ),
-                      )),
-                      Tab(
-                          child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(
-                                color: typeNews == Dictionary.worldNews
-                                    ? ColorBase.green
-                                    : Colors.grey,
-                                width: 1)),
-                        child: Text(
-                          Dictionary.titleWorldNews,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 12.0),
-                        ),
-                      )),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    height: 320,
-                    child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: <Widget>[
-                        if (StatShowImportantInfo.getStatImportantTab(state))
-                          NewsScreen(
-                              news: Dictionary.importantInfo, maxLength: 3),
-                        NewsScreen(news: Dictionary.latestNews, maxLength: 3),
-                        NewsScreen(news: Dictionary.nationalNews, maxLength: 3),
-                        NewsScreen(news: Dictionary.worldNews, maxLength: 3),
-                      ],
-                    ),
-                  )
+              margin: EdgeInsets.only(left: 5),
+              child: CustomBubbleTab(
+                listItemTitleTab: listItemTitleTab,
+                indicatorColor: ColorBase.green,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                onTap: (index) {
+                  setState(() {});
+                  newsListBloc.add(NewsListLoad(listCollectionData[index]));
+                  AnalyticsHelper.setLogEvent(analyticsData[index]);
+                },
+                tabBarView: <Widget>[
+                  if (StatShowImportantInfo.getStatImportantTab(state))
+                    NewsScreen(news: Dictionary.importantInfo, maxLength: 3),
+                  NewsScreen(news: Dictionary.latestNews, maxLength: 3),
+                  NewsScreen(news: Dictionary.nationalNews, maxLength: 3),
+                  NewsScreen(news: Dictionary.worldNews, maxLength: 3),
                 ],
-              ),
-            ),
-          ),
+                heightTabBarView: 320,
+                paddingTopTabBarView: 10,
+              )),
         ],
       ),
     );

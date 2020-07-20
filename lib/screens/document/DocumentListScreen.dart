@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -38,7 +38,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.document),
       body: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
-            .collection(Collections.documents)
+            .collection(kDocuments)
             .orderBy('published_at', descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -153,16 +153,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                               ),
                             ),
                           ),
-                          Container(
-                            child: IconButton(
-                              icon: Icon(FontAwesomeIcons.share,
-                                  size: 17, color: Color(0xFF27AE60)),
-                              onPressed: () {
-                                DocumentServices().shareDocument(
-                                    document['title'],
-                                    document['document_url']);
-                              },
-                            ),
+                          ShareButton(
+                            onPressed: () {
+                              DocumentServices().shareDocument(
+                                  document['title'], document['document_url']);
+                            },
                           )
                         ],
                       ),

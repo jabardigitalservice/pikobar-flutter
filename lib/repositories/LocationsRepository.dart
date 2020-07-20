@@ -15,23 +15,21 @@ class LocationsRepository {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
-      final userDocument = Firestore.instance
-          .collection(Collections.users)
-          .document(_user.uid);
+      final userDocument =
+          Firestore.instance.collection(kUsers).document(_user.uid);
 
-      final locationsDocument =  userDocument.collection(Collections.userLocations)
-            .document(data.id);
+      final locationsDocument =
+          userDocument.collection(kUserLocations).document(data.id);
 
       locationsDocument.get().then((snapshot) {
-          if (!snapshot.exists) {
-            locationsDocument.setData(
-                {
-                  'id': data.id,
-                  'location': GeoPoint(data.latitude, data.longitude),
-                  'timestamp': DateTime.fromMillisecondsSinceEpoch(data.timestamp),
-                });
-          }
-        });
+        if (!snapshot.exists) {
+          locationsDocument.setData({
+            'id': data.id,
+            'location': GeoPoint(data.latitude, data.longitude),
+            'timestamp': DateTime.fromMillisecondsSinceEpoch(data.timestamp),
+          });
+        }
+      });
 
       await sendLocationToGeocreate(_user.uid, data.latitude, data.longitude);
 
@@ -40,20 +38,26 @@ class LocationsRepository {
     }
   }
 
-  Future<void> sendLocationToGeocreate(String userId, double lat, double lon) async {
-
-    List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(lat, lon);
+  Future<void> sendLocationToGeocreate(
+      String userId, double lat, double lon) async {
+    List<Placemark> placemarks =
+        await Geolocator().placemarkFromCoordinates(lat, lon);
 
     if (placemarks != null && placemarks.isNotEmpty) {
       final Placemark pos = placemarks[0];
       final fullAddress = pos.thoroughfare +
-          ' ' + pos.subThoroughfare +
-          ' ' + pos.subLocality +
-          ', ' + pos.locality +
-          ', ' + pos.subAdministrativeArea +
-          ', ' + pos.administrativeArea +
-          ' ' + pos.postalCode;
+          ' ' +
+          pos.subThoroughfare +
+          ' ' +
+          pos.subLocality +
+          ', ' +
+          pos.locality +
+          ', ' +
+          pos.subAdministrativeArea +
+          ', ' +
+          pos.administrativeArea +
+          ' ' +
+          pos.postalCode;
 
       Map parameterData = {
         "userId": userId,
@@ -67,11 +71,10 @@ class LocationsRepository {
       var requestBody = json.encode(parameterData);
 
       await http
-          .patch('${UrlThirdParty.urlTracking}/user/location',
-          headers: await HttpHeaders.headers(token: null),
-          body: requestBody)
+          .patch('$kUrlTracking/user/location',
+              headers: await HttpHeaders.headers(token: null),
+              body: requestBody)
           .timeout(Duration(seconds: 10));
     }
-
   }
 }

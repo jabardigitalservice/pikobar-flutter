@@ -38,7 +38,7 @@ class NewsRepository {
   Future<NewsModel> getImportantInfoDetail(
       {@required String importantInfoid}) async {
     DocumentSnapshot doc = await firestore
-        .collection(Collections.importantInfor)
+        .collection(kImportantInfor)
         .document(importantInfoid)
         .get();
     return NewsModel.fromFirestore(doc);
@@ -47,19 +47,19 @@ class NewsRepository {
   Stream<List<Iterable<NewsModel>>> getAllNewsList(bool statImportantInfo) {
     print('cekkk mana bos ' + statImportantInfo.toString());
     var importantCollection = firestore
-        .collection(Collections.importantInfor)
+        .collection(kImportantInfor)
         .orderBy('published_at', descending: true)
         .snapshots();
     var newsJabarCollection = firestore
-        .collection(Collections.newsJabar)
+        .collection(kNewsJabar)
         .orderBy('published_at', descending: true)
         .snapshots();
     var newsNationalCollection = firestore
-        .collection(Collections.newsNational)
+        .collection(kNewsNational)
         .orderBy('published_at', descending: true)
         .snapshots();
     var newsWorldCollection = firestore
-        .collection(Collections.newsWorld)
+        .collection(kNewsWorld)
         .orderBy('published_at', descending: true)
         .snapshots();
 

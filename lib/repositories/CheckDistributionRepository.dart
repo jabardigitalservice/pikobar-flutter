@@ -32,9 +32,9 @@ class CheckDistributionReposity {
     }
   }
 
-  Future<void> saveToCollection(String id,lat,long) async {
+  Future<void> saveToCollection(String id, lat, long) async {
     Firestore.instance
-        .collection(Collections.users)
+        .collection(kUsers)
         .document(id)
         .updateData({'location': GeoPoint(lat, long)});
   }

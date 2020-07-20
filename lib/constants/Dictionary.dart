@@ -36,7 +36,9 @@ class Dictionary {
   static String videoUpToDateDesc = 'Cari informasi melalui video dibawah ini';
   static String hintSearch = 'Ketikkan kata kunci ...';
   static String address = 'Alamat';
-  static String emptyDataPhoneBook = 'Nomor darurat tidak ada';
+  static String emptyDataPhoneBook = 'Nomor Tidak Ditemukan';
+  static String emptyDataPhoneBookDesc =
+      'Nomor atau kota yang Anda cari sepertinya tidak ada dalam data kami, silahkan hubungi nomor atau kota lainnya.';
   static String nomorDarurat = 'Detail Nomor Darurat';
   static String odp = 'ODP';
   static String pdp = 'PDP';
@@ -104,8 +106,10 @@ class Dictionary {
   static String yourHealthStatus = 'Status Kesehatan Anda :';
   static String rdt = 'Rapid Diagnostic Test (RDT)';
   static String pcr = 'Polymerase Chain Reaction (PCR)';
-
-
+  static String emergencyNumber = 'No Darurat';
+  static String referralHospital = 'RS Rujukan COVID-19';
+  static String callCenterArea = 'Call Center Kota/Kab';
+  static String gugusTugasWeb = 'Website Gugus Tugas Kota/Kabupaten Jawa Barat';
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';
@@ -126,7 +130,8 @@ class Dictionary {
   static String termsConditions = ' Terms & Conditions';
   static String agree = 'Setuju';
   static String back = 'Kembali';
-
+  static String signInWithGoogle = 'Masuk dengan Google';
+  static String signInWithApple = 'Masuk dengan Apple';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -166,12 +171,17 @@ class Dictionary {
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
-
   static String codeSend = 'Kode terkirim ke nomor ';
   static String codeSendFailed = 'Nomor telepon salah silahkan cek kembali';
   static String codeVerified = 'No hp telah terverifikasi';
-  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali... ';
+  static String codeWrong = 'Kode OTP anda salah, silahkan cek kembali';
   static String profileSaved = 'Perubahan tersimpan';
+  static String phoneNumberAlreadyUse =
+      'Mohon maaf nomor telepon telah digunakan oleh akun lain';
+  static String otpExpired =
+      'Mohon maaf kode otp telah expired, silahkan kirim ulang kode';
+  static String savedSuccessfully = 'Berhasil Disimpan';
+  static String dailySuccess = 'Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
@@ -192,6 +202,7 @@ class Dictionary {
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
   static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
   static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
@@ -226,7 +237,8 @@ class Dictionary {
   static String spreadRedaction =
       'Cek di sini untuk ketahui sebaran kasus COVID-19\ndi sekitar lokasi Anda';
   static String subTitleMenus = 'Saatnya berbagi informasi dan lawan COVID-19';
-  static String surveyInfo = 'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
+  static String surveyInfo =
+      'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -240,7 +252,7 @@ class Dictionary {
   static String titleInfoTextAnnouncement = 'Info';
   static String moreDetail = ' Selengkapnya';
   static String moreDetailRapidTest = ' Daftar Test Masif';
-  static String lastUpdate = 'Update terakhir pada';
+  static String lastUpdate = 'Update Terakhir';
 
   // check distribution virus
   static String checkDistributionTitle = 'Cek Sebaran Lokasi Anda Disini';
@@ -271,7 +283,7 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      'Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.\n\nData yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.';
+      '<p>Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.</p> <p>Data yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.</p>';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
@@ -301,4 +313,39 @@ class Dictionary {
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 
   static String labelImportantInfo = "PENTING";
+
+  // Self Report
+  static String selfReportDetail = 'Detail Pemantauan Harian';
+  static String monitoringDays = 'Pemantauan Hari ke-';
+  static String titleSelfReport = 'Lapor Mandiri';
+  static String historyContact = 'Riwayat \nKontak';
+  static String educationContent = 'Konten Edukasi';
+  static String educationContentdesc = 'Dibawah ini merupakan konten edukasi untuk Isolasi Mandiri';
+  static String profileNotComplete = 'Profil Anda Belum Lengkap';
+  static String descProfile1 = 'Lengkapi data diri anda untuk mengisi Laporan Kesehatan Harian. ';
+  static String descProfile2 = 'Klik di sini';
+  static String descProfile3 = ' untuk melengkapi.';
+  static String currentLocationTitleSelfReport = 'Lokasi isolasi Anda saat ini :';
+  static String alertLocationSelfReport = 'Untuk melakukan lapor kesehatan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
+  static String healthy = 'HEALTHY';
+  static String detailSelfReport = 'Detail Pemantauan Harian';
+  static String monitoringCompleted = 'Proses pemantauan sudah terisi';
+  static String inputDate = 'Tanggal Pengisian';
+  static String bodyTemperature = 'Suhu Tubuh';
+  static String indications = 'Gejala yang Dirasakan';
+  static String contactDate = 'Tanggal Terakhir Kontak';
+  static String selfReportForm = 'Form Lapor  Kesehatan Harian';
+  static String selfReportQuestion1 = 'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
+  static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
+  static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
+  static String otherIndication = 'Gejala Lainnya';
+  static String inputBodyTemperature = 'Masukan Suhu Tubuh';
+  static String dailyMonitoring = 'Lapor Kesehatan \nHarian';
+  static String dailyMonitoringProgress='Lapor Kesehatan Harian Terisi';
+  static String rememberMe='Ingatkan Saya';
+  static String countDay='Hari ke -';
+  static String dailyMonitoringFilled='Proses pelaporan sudah terisi';
+  static String dailyMonitoringUnfilled='Proses pelaporan belum terisi';
+  static String errorMessageDailyMonitoring='Mohon maaf anda belum bisa mengisi untuk hari ke -';
+  static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
 }

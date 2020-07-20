@@ -19,11 +19,18 @@ Future<void> initializePlatformState() async {
       if (Platform.isAndroid) {
         AndroidDeviceInfo _deviceInfo = await deviceInfoPlugin.androidInfo;
         deviceData = _readAndroidBuildData(_deviceInfo, _packageInfo);
-        _sendDataToFirestore(_user, '${_deviceInfo.model ?? (_deviceInfo.manufacturer + _deviceInfo.product) ?? _deviceInfo.androidId}', deviceData);
+        _sendDataToFirestore(
+            _user,
+            '${_deviceInfo.model ?? (_deviceInfo.manufacturer + _deviceInfo.product) ?? _deviceInfo.androidId}',
+            deviceData);
       } else if (Platform.isIOS) {
         IosDeviceInfo _deviceInfo = await deviceInfoPlugin.iosInfo;
-        deviceData = _readIosDeviceInfo(_deviceInfo, await PackageInfo.fromPlatform());
-        _sendDataToFirestore(_user, '${_deviceInfo.model + ' ' + _deviceInfo.identifierForVendor.split('-')[0]}', deviceData);
+        deviceData =
+            _readIosDeviceInfo(_deviceInfo, await PackageInfo.fromPlatform());
+        _sendDataToFirestore(
+            _user,
+            '${_deviceInfo.model + ' ' + _deviceInfo.identifierForVendor.split('-')[0]}',
+            deviceData);
       }
     } on PlatformException {
       deviceData = <String, dynamic>{
@@ -68,14 +75,14 @@ Map<String, dynamic> _readIosDeviceInfo(
   };
 }
 
-Future<void> _sendDataToFirestore(FirebaseUser user,
-    String deviceId, Map<String, dynamic> data) async {
+Future<void> _sendDataToFirestore(
+    FirebaseUser user, String deviceId, Map<String, dynamic> data) async {
   if (user != null) {
     final userDocument =
-        Firestore.instance.collection(Collections.users).document(user.uid);
+        Firestore.instance.collection(kUsers).document(user.uid);
 
     final devicesDocument =
-        userDocument.collection(Collections.userDevices).document(deviceId);
+        userDocument.collection(kUserDevices).document(deviceId);
 
     devicesDocument.get().then((snapshot) {
       if (!snapshot.exists) {
