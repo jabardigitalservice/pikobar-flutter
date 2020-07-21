@@ -73,6 +73,17 @@ class SelfReportRepository {
         .snapshots();
   }
 
+   Future<DocumentSnapshot> getContactHistoryDetail(
+      {@required String userId, @required String contactHistoryId}) async {
+    DocumentSnapshot doc = await _firestore
+        .collection(kSelfReports)
+        .document(userId)
+        .collection(kContactHistory)
+        .document(contactHistoryId)
+        .get();
+    return doc;
+  }
+
   Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
     return _firestore.collection(kSelfReports).document(userId).snapshots();
   }

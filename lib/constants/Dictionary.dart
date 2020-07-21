@@ -361,4 +361,6 @@ class Dictionary {
   static String emptyContactDesc =
       'Terima kasih sudah membantu mempercepat pelacakan kasus dengan mengisi laporan kontak Anda secara jujur. Mari hentikan rantai penularan COVID-19 dengan melakukan isolasi mandiri dengan tertib.';
   static String sumContactHistory = 'Total Riwayat Kontak';
+  static String mobilePhoneNumber = 'No. HP';
+  static String lastContactDate = 'Tanggal Kontak Terakhir';
 }
