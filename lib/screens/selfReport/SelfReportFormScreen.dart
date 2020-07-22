@@ -72,7 +72,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   @override
   void initState() {
     super.initState();
-
+    /// If DailyReportModel not null fill data to form
     if (widget.dailyReportModel != null) {
       _dateController.text = widget.dailyReportModel.contactDate != null
           ? widget.dailyReportModel.contactDate.toString()

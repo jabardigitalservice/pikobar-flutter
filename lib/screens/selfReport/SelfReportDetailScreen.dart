@@ -205,6 +205,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                           color: Colors.white),
                     ),
                     onPressed: () async {
+                    /// Add data to DailyReportModel that will be used for edit data
                       LatLng latLng = LatLng(
                           state.documentSnapshot['location'].latitude,
                           state.documentSnapshot['location'].longitude);
@@ -234,6 +235,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                                     location: latLng,
                                     dailyReportModel: dailyReportModel,
                                   )));
+
+                      /// If data form updates, will get the newest data detail
                       if (isUpdateForm != null && isUpdateForm) {
                         _selfReportDetailBloc
                           ..add(SelfReportDetailLoad(
@@ -246,6 +249,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
     );
   }
 
+  /// Condition for check report is same day or not
   bool isSameDate(DateTime createReportDay, DateTime currentDay) {
     return createReportDay.year == currentDay.year &&
         createReportDay.month == currentDay.month &&
