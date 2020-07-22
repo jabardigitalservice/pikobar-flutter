@@ -238,7 +238,7 @@ class _EditState extends State<Edit> {
                             children: <Widget>[
                               buildTextField(
                                   title: Dictionary.name,
-                                  hintText: Dictionary.placeHolderName,
+                                  hintText: Dictionary.placeholderYourName,
                                   controller: _nameController,
                                   validation: Validations.nameValidation,
                                   isEdit: true),
@@ -256,14 +256,14 @@ class _EditState extends State<Edit> {
                                   title: Dictionary.nik,
                                   controller: _nikController,
                                   textInputType: TextInputType.number,
-                                  hintText: Dictionary.placeHolderNIK,
+                                  hintText: Dictionary.placeholderYourNIK,
                                   validation: Validations.nikValidation,
                                   isEdit: true),
                               SizedBox(
                                 height: 20,
                               ),
                               buildPhoneField(
-                                  title: Dictionary.phoneNumber,
+                                  title: Dictionary.telephoneNumber,
                                   controller: _phoneNumberController,
                                   validation: Validations.phoneValidation,
                                   isEdit: true,

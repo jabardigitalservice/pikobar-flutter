@@ -65,7 +65,7 @@ class Dictionary {
   static String name = 'Nama';
   static String nik = 'NIK';
   static String email = 'Email';
-  static String phoneNumber = 'No. Telepon';
+  static String telephoneNumber = 'No. Telepon';
   static String inaCode = '+62';
   static String provinceId = '32';
   static String sharedFrom = '_dibagikan dari Pikobar_';
@@ -208,8 +208,10 @@ class Dictionary {
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
   static String provincePlaceholder = 'Masukan Provinsi Domisili Anda';
-  static String placeHolderName = 'Masukkan Nama Anda';
-  static String placeHolderNIK = 'Masukkan NIK Anda';
+  static String placeholderYourName = 'Masukkan Nama Anda';
+  static String placeholderYourNIK = 'Masukkan NIK Anda';
+  static String placeholderName = 'Masukkan Nama';
+  static String placeholderPhone = 'Masukkan Nomor HP';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
@@ -361,4 +363,10 @@ class Dictionary {
   static String emptyContactDesc =
       'Terima kasih sudah membantu mempercepat pelacakan kasus dengan mengisi laporan kontak Anda secara jujur. Mari hentikan rantai penularan COVID-19 dengan melakukan isolasi mandiri dengan tertib.';
   static String sumContactHistory = 'Total Riwayat Kontak';
+  
+  static String contactHistoryForm = 'Form Riwayat Kontak';
+  static String contactName = 'Nama Kontak';
+  static String phoneNumber = 'Nomor HP';
+  static String relation = 'Hubungan';
+  static String lastDateInTouch = 'Tanggal Kontak Terkahir';
 }

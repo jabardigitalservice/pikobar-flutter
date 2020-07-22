@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
-import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
-import 'package:pikobar_flutter/components/GroupedCheckBox.dart';
+import 'package:pikobar_flutter/components/GroupedRadioButton.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -18,16 +17,24 @@ class ContactHistoryFormScreen extends StatefulWidget {
 }
 
 class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final _nameFieldController = TextEditingController();
   final _phoneFieldController = TextEditingController();
-  final _genderFieldController = TextEditingController();
   final _dateController = TextEditingController();
 
   String _format = 'yyyy-MMMM-dd';
   String _minDate = '2019-01-01';
+  String _gender = '';
+  String _relation = '';
+
+  bool _isNameEmpty = false;
+  bool _isPhoneEmpty = false;
+  bool _isGenderEmpty = false;
+  bool _isRelationEmpty = false;
   bool _isDateEmpty = false;
 
-  List<String> _allItemList = [
+  List<String> _relationList = [
     'Kontak Serumah',
     'Kerabat Kerja',
     'Teman',
@@ -36,60 +43,58 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
     'Lainnya'
   ];
 
-  List<String> _checkedItemList = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: 'Form Riwayat Kontak'),
+      appBar: CustomAppBar.defaultAppBar(title: Dictionary.contactHistoryForm),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
         child: Form(
+          key: _formKey,
           child: ListView(
             children: <Widget>[
               SizedBox(height: Dimens.padding),
-              _buildLabel(text: 'Nama Kontak'),
-              _buildTextField(
-                  controller: _nameFieldController, hint: 'Masukkan Nama'),
-              _buildLabel(text: 'Nomor HP'),
-              _buildTextField(
-                  controller: _phoneFieldController, hint: 'Masukkan Nomor HP'),
-              _buildLabel(text: 'Jenis Kelamin'),
-              _buildGenderOption(
-                  controller: _genderFieldController,
-                  title: 'Jenis Kelamin',
-                  label: <String>[
+              _buildLabel(text: Dictionary.contactName),
+              _buildTextField(title: Dictionary.contactName,
+                  controller: _nameFieldController, hint: Dictionary.placeholderName, isEmpty: _isNameEmpty),
+              _buildLabel(text: Dictionary.phoneNumber),
+              _buildTextField(title: Dictionary.phoneNumber,
+                  controller: _phoneFieldController, hint: Dictionary.placeholderPhone, isEmpty: _isPhoneEmpty, textInputType: TextInputType.phone),
+              _buildLabel(text: Dictionary.gender),
+              _buildRadioButton(
+                  title: Dictionary.gender,
+                  itemList: <String>[
                     "Laki - Laki",
                     "Perempuan",
                   ],
-                  isEmpty: false),
-              _buildLabel(text: 'Hubungan'),
-              Container(
-                margin: EdgeInsets.only(
-                    top: Dimens.fieldMarginTop,
-                    bottom: Dimens.fieldMarginBottom),
-                child: GroupedCheckBox(
-                  itemHeight: 40.0,
-                  borderRadius: BorderRadius.circular(8.0),
-                  color: ColorBase.menuBorderColor,
-                  activeColor: ColorBase.green,
-                  itemLabelList: _allItemList,
-                  itemValueList: _allItemList,
-                  orientation: CheckboxOrientation.WRAP,
-                  itemWidth: MediaQuery.of(context).size.width / 2 - 21,
-                  wrapDirection: Axis.horizontal,
-                  wrapSpacing: 10.0,
-                  wrapRunSpacing: 10.0,
-                  onChanged: (itemList) {
+                  onChanged: (label, index) {
                     setState(() {
-                      _checkedItemList = itemList;
+                      print(label);
+                      _gender = index == 0 ? 'M' : 'F';
+                      _isGenderEmpty = _gender.isEmpty;
                     });
                   },
-                  textStyle:
-                      TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
-                ),
-              ),
-              _buildLabel(text: 'Tanggal Kontak Terakhir', required: false),
+                  validator: (string) {
+                    return _isGenderEmpty
+                        ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
+                        : null;
+                  }),
+              _buildLabel(text: Dictionary.relation),
+              _buildRadioButton(
+                  title: Dictionary.relation,
+                  itemList: _relationList,
+                  onChanged: (label, index) {
+                    setState(() {
+                      _relation = label;
+                      _isRelationEmpty = _relation.isEmpty;
+                    });
+                  },
+                  validator: (string) {
+                    return _isRelationEmpty
+                        ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
+                        : null;
+                  }),
+              _buildLabel(text: Dictionary.lastDateInTouch, required: false),
               Container(
                 margin: EdgeInsets.only(
                     top: Dimens.fieldMarginTop,
@@ -99,7 +104,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                     placeholder: _dateController.text == ''
                         ? Dictionary.contactDatePlaceholder
                         : DateFormat.yMMMMd('id')
-                            .format(DateTime.parse(_dateController.text)),
+                        .format(DateTime.parse(_dateController.text)),
                     isEmpty: _isDateEmpty),
               ),
               Container(
@@ -115,7 +120,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                         fontSize: 12.0,
                         fontWeight: FontWeight.w900,
                         color: Colors.white),
-                    onPressed: (){}),
+                    onPressed: _saveSelfReport),
               ),
             ],
           ),
@@ -127,16 +132,16 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
   _buildLabel({@required String text, bool required = true}) {
     return RichText(
         text: TextSpan(children: [
-      TextSpan(
-          text: text,
-          style: TextStyle(
-              fontFamily: FontsFamily.lato,
-              fontSize: 12.0,
-              fontWeight: FontWeight.bold,
-              height: 18.0 / 12.0,
-              color: Colors.black)),
-      required
-          ? TextSpan(
+          TextSpan(
+              text: text,
+              style: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  height: 18.0 / 12.0,
+                  color: Colors.black)),
+          required
+              ? TextSpan(
               text: ' (*)',
               style: TextStyle(
                   fontFamily: FontsFamily.lato,
@@ -144,82 +149,80 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                   fontWeight: FontWeight.bold,
                   height: 18.0 / 12.0,
                   color: Colors.red))
-          : TextSpan()
-    ]));
+              : TextSpan()
+        ]));
   }
 
   _buildTextField(
-      {@required TextEditingController controller, @required String hint}) {
-    return Container(
-      height: Dimens.fieldSize,
-      margin: EdgeInsets.only(
-          top: Dimens.fieldMarginTop, bottom: Dimens.fieldMarginBottom),
-      decoration: BoxDecoration(
-          border: Border.all(color: ColorBase.menuBorderColor),
-          borderRadius: BorderRadius.circular(8.0)),
-      padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
-      child: TextField(
-        controller: controller,
-        maxLines: 1,
-        decoration: InputDecoration(border: InputBorder.none, hintText: hint),
-      ),
+      {@required TextEditingController controller, @required title, @required String hint, bool isEmpty, TextInputType textInputType}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          height: Dimens.fieldSize,
+          margin: EdgeInsets.only(
+              top: Dimens.fieldMarginTop, bottom: isEmpty ? Dimens.sbHeight : Dimens.fieldMarginBottom),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                  color: isEmpty ? Colors.red : ColorBase.menuBorderColor)),
+          padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          child: TextFormField(
+            controller: controller,
+            maxLines: 1,
+            decoration: InputDecoration(
+                border: InputBorder.none, hintText: hint, hintStyle: TextStyle(
+                color: ColorBase.darkGrey,
+                fontFamily: FontsFamily.lato,
+                fontSize: 12),
+                contentPadding: EdgeInsets.only(top: -Dimens.fieldMarginTop)
+            ),
+            keyboardType: textInputType != null ? textInputType : TextInputType.text,
+          ),
+        ),
+
+        isEmpty
+            ? Padding(
+          padding: EdgeInsets.only(left: Dimens.contentPadding, bottom: Dimens.fieldMarginBottom),
+          child: Text(
+            title + Dictionary.pleaseCompleteAllField,
+            style: TextStyle(color: Colors.red, fontSize: 12),
+          ),
+        )
+            : Container()
+      ],
     );
   }
 
-  _buildGenderOption(
-      {@required TextEditingController controller,
-      @required String title,
-      @required List<String> label,
-      @required bool isEmpty}) {
+  _buildRadioButton({@required title,
+    @required List<String> itemList,
+    @required void Function(String label, int index) onChanged,
+    FormFieldValidator<String> validator}) {
     return Container(
       margin: EdgeInsets.only(
           top: Dimens.fieldMarginTop, bottom: Dimens.fieldMarginBottom),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          RadioButtonGroup(
-            activeColor: ColorBase.limeGreen,
-            labelStyle: TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
-            orientation: GroupedButtonsOrientation.HORIZONTAL,
-            onSelected: (String selected) => setState(() {
-              // Set value to M or F
-              controller.text = selected.contains('Laki') ? 'M' : 'F';
-            }),
-            labels: label,
-            itemBuilder: (Radio rb, Text txt, int i) {
-              return Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width / 2.8,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: ColorBase.menuBorderColor, width: 1)),
-                    child: Row(
-                      children: <Widget>[
-                        rb,
-                        txt,
-                      ],
-                    )),
-              );
-            },
-          ),
-          isEmpty
-              ? SizedBox(
-                  height: 10,
-                )
-              : Container(),
-          isEmpty
-              ? Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    title + Dictionary.pleaseCompleteAllField,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                )
-              : Container()
-        ],
+      child: GroupedRadioButton(
+        itemWidth: MediaQuery
+            .of(context)
+            .size
+            .width / 2 - 21,
+        itemHeight: 40.0,
+        borderRadius: BorderRadius.circular(8.0),
+        color: ColorBase.menuBorderColor,
+        activeColor: ColorBase.green,
+        itemLabelList: itemList,
+        orientation: RadioButtonOrientation.WRAP,
+        wrapDirection: Axis.horizontal,
+        wrapSpacing: 10.0,
+        wrapRunSpacing: 10.0,
+        onChanged: (label, index) {
+          setState(() {
+            onChanged(label, index);
+            FocusScope.of(context).unfocus();
+          });
+        },
+        textStyle: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+        validator: validator,
       ),
     );
   }
@@ -233,8 +236,11 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             _showDatePicker();
           },
           child: Container(
-            height: 40,
-            width: MediaQuery.of(context).size.width,
+            height: Dimens.fieldSize,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
@@ -246,7 +252,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                   child: Container(
                       height: 20,
                       child:
-                          Image.asset('${Environment.iconAssets}calendar.png')),
+                      Image.asset('${Environment.iconAssets}calendar.png')),
                 ),
                 Text(
                   placeholder,
@@ -262,25 +268,20 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           ),
         ),
         isEmpty
-            ? SizedBox(
-                height: 10,
-              )
-            : Container(),
-        isEmpty
             ? Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text(
-                  title + Dictionary.pleaseCompleteAllField,
-                  style: TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              )
+          padding: EdgeInsets.only(left: Dimens.contentPadding, top: Dimens.sbHeight),
+          child: Text(
+            title + Dictionary.pleaseCompleteAllField,
+            style: TextStyle(color: Colors.red, fontSize: 12),
+          ),
+        )
             : Container()
       ],
     );
   }
 
   // Function to build Date Picker
-  void _showDatePicker() {
+  _showDatePicker() {
     DatePicker.showDatePicker(
       context,
       pickerTheme: DateTimePickerTheme(
@@ -302,5 +303,23 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         });
       },
     );
+  }
+
+  // Validate and Record data to firestore
+  _saveSelfReport() async {
+    setState(() {
+      _isNameEmpty = _nameFieldController.text.isEmpty;
+      _isPhoneEmpty = _phoneFieldController.text.isEmpty;
+      _isGenderEmpty = _gender.isEmpty;
+      _isRelationEmpty = _relation.isEmpty;
+    });
+
+    if (_formKey.currentState.validate()) {
+      FocusScope.of(context).unfocus();
+
+      if (!_isNameEmpty && !_isPhoneEmpty && !_isGenderEmpty && !_isRelationEmpty) {
+        print('OKE');
+      }
+    }
   }
 }
