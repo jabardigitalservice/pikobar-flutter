@@ -200,11 +200,13 @@ class _NewsScreenState extends State<NewsScreen> {
                               ),
 //                              Expanded(
 //                                child:
-                              Text(
-                                unixTimeStampToDateTime(data.publishedAt),
-                                style: TextStyle(
-                                    fontSize: 10.0, color: Colors.grey),
-                              ),
+                              widget.news != Dictionary.importantInfo
+                                  ? Text(
+                                      unixTimeStampToDateTime(data.publishedAt),
+                                      style: TextStyle(
+                                          fontSize: 10.0, color: Colors.grey),
+                                    )
+                                  : Container(),
 //                              )
                             ],
                           )),
@@ -347,11 +349,14 @@ class _NewsScreenState extends State<NewsScreen> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  unixTimeStampToDateTime(data.publishedAt),
-                                  style: TextStyle(
-                                      fontSize: 10.0, color: Colors.grey),
-                                ),
+                                widget.news != Dictionary.importantInfo && data.newsChannel.isNotEmpty
+                                    ? Text(
+                                        unixTimeStampToDateTime(
+                                            data.publishedAt),
+                                        style: TextStyle(
+                                            fontSize: 10.0, color: Colors.grey),
+                                      )
+                                    : Container(),
                               ],
                             )),
                       ],
