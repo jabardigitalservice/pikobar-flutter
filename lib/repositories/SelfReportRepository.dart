@@ -23,7 +23,7 @@ class SelfReportRepository {
   Future<void> saveDailyReport(
       {@required String userId, @required DailyReportModel dailyReport}) async {
     try {
-      DocumentReference doc = _firestore
+      var doc = _firestore
           .collection(kSelfReports)
           .document(userId)
           .collection(kDailyReport)
@@ -32,6 +32,8 @@ class SelfReportRepository {
       await doc.get().then((snapshot) async {
         if (!snapshot.exists) {
           await doc.setData(dailyReport.toJson());
+        }else{
+          await doc.updateData(dailyReport.toJson());
         }
       });
     } catch (e) {

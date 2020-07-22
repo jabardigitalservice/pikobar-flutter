@@ -355,6 +355,7 @@ class Dictionary {
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
+  static String editDailyMonitoring = 'Edit';
   static String contactHistory = 'Riwayat Kontak';
   static String reportNewContact = 'Lapor Kontak Baru';
   static String emptyContactTitle = 'Belum Ada Kontak Selama Pemantauan';
