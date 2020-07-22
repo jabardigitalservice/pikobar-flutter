@@ -181,7 +181,8 @@ class Dictionary {
   static String otpExpired =
       'Mohon maaf kode otp telah expired, silahkan kirim ulang kode';
   static String savedSuccessfully = 'Berhasil Disimpan';
-  static String dailySuccess = 'Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.';
+  static String dailySuccess =
+      'Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.';
 
   static String liveUpdate = 'Live Update';
   static String latestNews = 'Berita Jabar';
@@ -320,13 +321,17 @@ class Dictionary {
   static String titleSelfReport = 'Lapor Mandiri';
   static String historyContact = 'Riwayat \nKontak';
   static String educationContent = 'Konten Edukasi';
-  static String educationContentdesc = 'Dibawah ini merupakan konten edukasi untuk Isolasi Mandiri';
+  static String educationContentdesc =
+      'Dibawah ini merupakan konten edukasi untuk Isolasi Mandiri';
   static String profileNotComplete = 'Profil Anda Belum Lengkap';
-  static String descProfile1 = 'Lengkapi data diri anda untuk mengisi Laporan Kesehatan Harian. ';
+  static String descProfile1 =
+      'Lengkapi data diri anda untuk mengisi Laporan Kesehatan Harian. ';
   static String descProfile2 = 'Klik di sini';
   static String descProfile3 = ' untuk melengkapi.';
-  static String currentLocationTitleSelfReport = 'Lokasi isolasi Anda saat ini :';
-  static String alertLocationSelfReport = 'Untuk melakukan lapor kesehatan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
+  static String currentLocationTitleSelfReport =
+      'Lokasi isolasi Anda saat ini :';
+  static String alertLocationSelfReport =
+      'Untuk melakukan lapor kesehatan harian silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
   static String healthy = 'HEALTHY';
   static String detailSelfReport = 'Detail Pemantauan Harian';
   static String monitoringCompleted = 'Proses pemantauan sudah terisi';
@@ -335,18 +340,28 @@ class Dictionary {
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
-  static String selfReportQuestion1 = 'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
+  static String selfReportQuestion1 =
+      'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
   static String inputBodyTemperature = 'Masukan Suhu Tubuh';
   static String dailyMonitoring = 'Lapor Kesehatan \nHarian';
-  static String dailyMonitoringProgress='Lapor Kesehatan Harian Terisi';
-  static String rememberMe='Ingatkan Saya';
-  static String countDay='Hari ke -';
-  static String dailyMonitoringFilled='Proses pelaporan sudah terisi';
-  static String dailyMonitoringUnfilled='Proses pelaporan belum terisi';
-  static String errorMessageDailyMonitoring='Mohon maaf anda belum bisa mengisi untuk hari ke -';
+  static String dailyMonitoringProgress = 'Lapor Kesehatan Harian Terisi';
+  static String rememberMe = 'Ingatkan Saya';
+  static String countDay = 'Hari ke -';
+  static String dailyMonitoringFilled = 'Proses pelaporan sudah terisi';
+  static String dailyMonitoringUnfilled = 'Proses pelaporan belum terisi';
+  static String errorMessageDailyMonitoring =
+      'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
   static String editDailyMonitoring = 'Edit';
+  static String contactHistory = 'Riwayat Kontak';
+  static String reportNewContact = 'Lapor Kontak Baru';
+  static String emptyContactTitle = 'Belum Ada Kontak Selama Pemantauan';
+  static String emptyContactDesc =
+      'Terima kasih sudah membantu mempercepat pelacakan kasus dengan mengisi laporan kontak Anda secara jujur. Mari hentikan rantai penularan COVID-19 dengan melakukan isolasi mandiri dengan tertib.';
+  static String sumContactHistory = 'Total Riwayat Kontak';
+  static String mobilePhoneNumber = 'No. HP';
+  static String lastContactDate = 'Tanggal Kontak Terakhir';
 }

@@ -119,5 +119,9 @@ class Analytics {
   static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
   static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
   static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
+  static String tappedContactHistory = "tapped_riwayat_kontak";
+  static String tappedContactHistoryDetail = "tapped_riwayat_kontak_detail";
+
+
 
 }
