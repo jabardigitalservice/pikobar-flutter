@@ -45,7 +45,6 @@ class NewsRepository {
   }
 
   Stream<List<Iterable<NewsModel>>> getAllNewsList(bool statImportantInfo) {
-    print('cekkk mana bos ' + statImportantInfo.toString());
     var importantCollection = firestore
         .collection(kImportantInfor)
         .orderBy('published_at', descending: true)

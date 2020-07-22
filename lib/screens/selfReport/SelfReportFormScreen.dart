@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
@@ -23,8 +25,10 @@ import 'package:pikobar_flutter/utilities/RegexInputFormatter.dart';
 class SelfReportFormScreen extends StatefulWidget {
   final String dailyId;
   final LatLng location;
+  final DailyReportModel dailyReportModel;
 
-  SelfReportFormScreen({@required this.dailyId, @required this.location})
+  SelfReportFormScreen(
+      {@required this.dailyId, @required this.location, this.dailyReportModel})
       : assert(dailyId != null),
         assert(location != null);
 
@@ -68,6 +72,22 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   @override
   void initState() {
     super.initState();
+
+    if (widget.dailyReportModel != null) {
+      _dateController.text = widget.dailyReportModel.contactDate != null
+          ? widget.dailyReportModel.contactDate.toString()
+          : '';
+      _bodyTempController.text = widget.dailyReportModel.bodyTemperature;
+      _checkedItemList = widget.dailyReportModel.indications
+          .substring(1, widget.dailyReportModel.indications.length - 1)
+          .split(', ');
+      if (_checkedItemList.contains(_allItemList[12])) {
+        _otherIndicationsController.text =
+            _checkedItemList[_checkedItemList.length - 1];
+        _checkedItemList.removeLast();
+      }
+    }
+
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportForm);
   }
@@ -91,12 +111,12 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: Dictionary.ok,
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
+                    description: state.error.toString(),
+                    buttonText: Dictionary.ok,
+                    onOkPressed: () {
+                      Navigator.of(context).pop(); // To close the dialog
+                    },
+                  ));
             } else {
               blockCircleLoading(context: context, dismissible: false);
             }
@@ -110,19 +130,19 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   SizedBox(height: Dimens.padding),
                   widget.dailyId == '1'
                       ? Column(
-                          children: <Widget>[
-                            buildLabel(text: Dictionary.selfReportQuestion1),
-                            SizedBox(height: Dimens.padding),
-                            buildDateField(
-                                title: Dictionary.contactDate,
-                                placeholder: _dateController.text == ''
-                                    ? Dictionary.contactDatePlaceholder
-                                    : DateFormat.yMMMMd('id').format(
-                                        DateTime.parse(_dateController.text)),
-                                isEmpty: _isDateEmpty),
-                            SizedBox(height: Dimens.padding),
-                          ],
-                        )
+                    children: <Widget>[
+                      buildLabel(text: Dictionary.selfReportQuestion1),
+                      SizedBox(height: Dimens.padding),
+                      buildDateField(
+                          title: Dictionary.contactDate,
+                          placeholder: _dateController.text == ''
+                              ? Dictionary.contactDatePlaceholder
+                              : DateFormat.yMMMMd('id').format(
+                              DateTime.parse(_dateController.text)),
+                          isEmpty: _isDateEmpty),
+                      SizedBox(height: Dimens.padding),
+                    ],
+                  )
                       : Container(),
                   buildLabel(text: Dictionary.selfReportQuestion2),
                   SizedBox(height: Dimens.padding),
@@ -130,6 +150,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     itemHeight: 40.0,
                     borderRadius: BorderRadius.circular(8.0),
                     color: ColorBase.menuBorderColor,
+                    defaultSelectedList: _checkedItemList,
                     activeColor: ColorBase.green,
                     itemLabelList: _allItemList,
                     itemValueList: _allItemList,
@@ -147,7 +168,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       });
                     },
                     textStyle:
-                        TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+                    TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
                   ),
                   SizedBox(height: Dimens.padding),
                   Container(
@@ -170,23 +191,23 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   ),
                   _isIndicationEmpty
                       ? Padding(
-                          padding: EdgeInsets.only(left: 15.0, top: 10.0),
-                          child: Text(
-                            Dictionary.indications +
-                                Dictionary.pleaseCompleteAllField,
-                            style: TextStyle(color: Colors.red, fontSize: 12),
-                          ),
-                        )
+                    padding: EdgeInsets.only(left: 15.0, top: 10.0),
+                    child: Text(
+                      Dictionary.indications +
+                          Dictionary.pleaseCompleteAllField,
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  )
                       : Container(),
                   _isOtherIndicationEmpty
                       ? Padding(
-                          padding: EdgeInsets.only(left: 15.0, top: 10.0),
-                          child: Text(
-                            Dictionary.otherIndication +
-                                Dictionary.pleaseCompleteAllField,
-                            style: TextStyle(color: Colors.red, fontSize: 12),
-                          ),
-                        )
+                    padding: EdgeInsets.only(left: 15.0, top: 10.0),
+                    child: Text(
+                      Dictionary.otherIndication +
+                          Dictionary.pleaseCompleteAllField,
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  )
                       : Container(),
                   SizedBox(height: Dimens.padding),
                   buildLabel(text: Dictionary.bodyTemperature, required: false),
@@ -207,9 +228,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         maxLines: 1,
                         maxLength: 4,
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: Dictionary.inputBodyTemperature,
-                            counterText: "",
+                          border: InputBorder.none,
+                          hintText: Dictionary.inputBodyTemperature,
+                          counterText: "",
                         ),
                       ),
                     ),
@@ -221,7 +242,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             border:
-                                Border.all(color: ColorBase.menuBorderColor),
+                            Border.all(color: ColorBase.menuBorderColor),
                             borderRadius: BorderRadius.circular(8.0)),
                         child: Text(
                           '°C',
@@ -413,8 +434,8 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     color: ColorBase.green,
                     elevation: 0.0,
                     onPressed: () async {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
                     })
               ],
             ),
