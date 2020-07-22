@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/selfReport/ContactHistoryDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class ContactHistoryScreen extends StatefulWidget {
@@ -176,6 +177,13 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                       InkWell(
                         onTap: () {
                           // move to detail screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ContactHistoryDetailScreen(
+                                        documents[i].documentID)),
+                          );
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
