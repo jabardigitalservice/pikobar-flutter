@@ -172,7 +172,6 @@ class GroupedRadioButton extends StatefulWidget {
 class _GroupedRadioButtonState extends State<GroupedRadioButton> {
   int currentSelectedIndex;
   String currentSelectedLabel;
-  String val;
 
   @override
   void initState() {
@@ -193,10 +192,10 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
     List<Widget> content = [];
     List<Widget> widgetList = List<Widget>();
 
-    String validatorValue = widget.validator?.call(val);
+    String validatorValue = widget.validator?.call(currentSelectedLabel);
 
     for (int index = 0; index < widget.itemLabelList.length; index++) {
-      widgetList.add(item(index));
+      widgetList.add(item(index, validatorValue));
     }
 
     if (widget.orientation == RadioButtonOrientation.VERTICAL) {
@@ -302,10 +301,10 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
     }
   }
 
-  Widget item(int index) {
+  Widget item(int index, String validatorValue) {
     return Container(
       width: widget.itemWidth != null
-          ? widget.itemWidth - (widget.validator?.call(val) != null ? 11.0 : 0.0)
+          ? widget.itemWidth - (validatorValue != null ? 11.0 : 0.0)
           : widget.orientation == RadioButtonOrientation.HORIZONTAL
               ? MediaQuery.of(context).size.width / 2.5
               : null,

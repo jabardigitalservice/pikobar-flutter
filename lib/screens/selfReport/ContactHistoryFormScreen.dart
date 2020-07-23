@@ -168,7 +168,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                   _isGenderEmpty = _gender.isEmpty;
                 });
               },
-              validator: (string) {
+              validator: (value) {
                 return _isGenderEmpty
                     ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
                     : null;
@@ -183,7 +183,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                   _isRelationEmpty = _relation.isEmpty;
                 });
               },
-              validator: (string) {
+              validator: (value) {
                 return _isRelationEmpty
                     ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
                     : null;
