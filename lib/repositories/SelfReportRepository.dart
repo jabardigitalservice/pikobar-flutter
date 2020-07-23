@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/models/ContactHistoryModel.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
 
 class SelfReportRepository {
   final Firestore _firestore = Firestore.instance;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   /// Reads the daily report document in the self reports collection referenced by the [DocumentReference].
   Future<DocumentSnapshot> getSelfReportDetail(
@@ -84,5 +84,24 @@ class SelfReportRepository {
         .updateData({
       'remind_me': isReminder,
     });
+  }
+
+  /// Save the contact history to firestore with provided [data]
+  /// to the [kContactHistory] collection
+  /// in documents in the [kSelfReports] collection referenced by the [userId]
+  Future<void> saveContactHistory(
+      {@required String userId, @required ContactHistoryModel data}) async {
+    try {
+      CollectionReference ref = _firestore
+          .collection(kSelfReports)
+          .document(userId)
+          .collection(kContactHistory);
+
+      await ref.add(data.toJson()).then((doc) async {
+        await doc.updateData({'id': doc.documentID});
+      });
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }
