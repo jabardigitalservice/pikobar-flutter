@@ -13,10 +13,12 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -29,11 +31,16 @@ class _SurveysScreenState extends State<SurveysScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
+  bool isConnected=false;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.survey);
     super.initState();
+    checkConnection();
+  }
+  checkConnection() async {
+    isConnected = await Connection().checkConnection(kUrlGoogle);
   }
 
   @override
@@ -104,7 +111,13 @@ class _SurveysScreenState extends State<SurveysScreen> {
                         if (snapshot.data.documents.isNotEmpty) {
                           return _buildContent(snapshot);
                         } else {
-                          return EmptyData(message: 'Tidak ada data survei');
+                          if (isConnected) {
+                          return EmptyData(message: Dictionary.surveyEmpty);
+                            
+                          } else {
+                          return EmptyData(message: Dictionary.errorConnection);
+
+                          }
                         }
                       } else {
                         return _buildLoading();
