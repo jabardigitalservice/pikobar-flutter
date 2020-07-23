@@ -33,6 +33,7 @@ class Analytics {
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
   static String tappedOthers = 'tapped_menu_lainnya';
+  static String tappedDataCovid = 'tapped_data_covid';
   static String tappedBanner = 'tapped_banner';
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';
@@ -119,8 +120,8 @@ class Analytics {
   static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
   static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
   static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
-
   static String tappedContactHistory = "tapped_riwayat_kontak";
+  static String tappedContactHistoryDetail = "tapped_riwayat_kontak_detail";
   static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";
   static String contactHistorySaved = "riwayat_kontak_baru_tersimpan";
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";

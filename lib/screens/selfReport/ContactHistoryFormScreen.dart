@@ -188,7 +188,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                     ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
                     : null;
               }),
-          _buildLabel(text: Dictionary.lastDateInTouch, required: false),
+          _buildLabel(text: Dictionary.lastContactDate, required: false),
           Container(
             margin: EdgeInsets.only(
                 top: Dimens.fieldMarginTop, bottom: Dimens.fieldMarginBottom),

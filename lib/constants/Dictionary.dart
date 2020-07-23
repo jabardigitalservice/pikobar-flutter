@@ -32,6 +32,7 @@ class Dictionary {
   static String documents = 'Dokumen';
   static String importantInfo = 'Info Penting';
   static String otherMenus = 'Menu lainnya';
+  static String otherMenusDesc = 'Akses berbagai menu lain dari aplikasi Pikobar';
   static String videoUpToDate = 'Video Terkini';
   static String videoUpToDateDesc = 'Cari informasi melalui video dibawah ini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -110,6 +111,9 @@ class Dictionary {
   static String referralHospital = 'RS Rujukan COVID-19';
   static String callCenterArea = 'Call Center Kota/Kab';
   static String gugusTugasWeb = 'Website Gugus Tugas Kota/Kabupaten Jawa Barat';
+  static String dataCovid = 'Data Covid-19';
+  static String dataCovidDesc = 'Dapatkan data terkini Covid-19';
+
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';
@@ -161,7 +165,7 @@ class Dictionary {
   static String errorEmptyName = 'Nama harus diisi';
   static String errorMinimumName =
       'Nama harus terdiri dari 4 karakter atau lebih';
-  static String errorMaximumName = 'Nama harus kurang dari 255 karakter';
+  static String errorMaximumName = 'Nama harus kurang dari 30 karakter';
   static String errorInvalidName = 'Format nama tidak sesuai';
   static String errorEmptyNIK = 'NIK harus diisi';
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
@@ -357,16 +361,18 @@ class Dictionary {
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
+  static String editDailyMonitoring = 'Edit';
   static String contactHistory = 'Riwayat Kontak';
   static String reportNewContact = 'Lapor Kontak Baru';
   static String emptyContactTitle = 'Belum Ada Kontak Selama Pemantauan';
   static String emptyContactDesc =
       'Terima kasih sudah membantu mempercepat pelacakan kasus dengan mengisi laporan kontak Anda secara jujur. Mari hentikan rantai penularan COVID-19 dengan melakukan isolasi mandiri dengan tertib.';
   static String sumContactHistory = 'Total Riwayat Kontak';
-  
+
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
   static String phoneNumber = 'Nomor HP';
   static String relation = 'Hubungan';
-  static String lastDateInTouch = 'Tanggal Kontak Terkahir';
+  static String lastContactDate = 'Tanggal Kontak Terakhir';
+
 }

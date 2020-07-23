@@ -263,11 +263,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                         fontSize: 12.0,
                                         fontFamily: FontsFamily.lato),
                                   ),
-                                  Text(
-                                      unixTimeStampToDateTime(data.publishedAt),
-                                      style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontFamily: FontsFamily.lato))
+                                  _newsType != NewsType.articlesImportantInfo && data.newsChannel.isNotEmpty
+                                      ? Text(
+                                          unixTimeStampToDateTime(
+                                              data.publishedAt),
+                                          style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontFamily: FontsFamily.lato))
+                                      : Container()
                                 ]),
                           )
                         ],
