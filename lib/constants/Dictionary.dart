@@ -161,7 +161,7 @@ class Dictionary {
   static String errorEmptyName = 'Nama harus diisi';
   static String errorMinimumName =
       'Nama harus terdiri dari 4 karakter atau lebih';
-  static String errorMaximumName = 'Nama harus kurang dari 255 karakter';
+  static String errorMaximumName = 'Nama harus kurang dari 30 karakter';
   static String errorInvalidName = 'Format nama tidak sesuai';
   static String errorEmptyNIK = 'NIK harus diisi';
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';

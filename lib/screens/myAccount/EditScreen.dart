@@ -285,7 +285,9 @@ class _EditState extends State<Edit> {
                                   title: Dictionary.birthday,
                                   placeholder: _birthDayController.text == ''
                                       ? Dictionary.birthdayPlaceholder
-                                      : DateFormat.yMMMMd().format(
+  
+       
+                                      : DateFormat.yMMMMd('id').format(
                                           DateTime.parse(_birthDayController
                                               .text
                                               .substring(0, 10))),
@@ -1127,3 +1129,5 @@ class _EditState extends State<Edit> {
     super.dispose();
   }
 }
+
+

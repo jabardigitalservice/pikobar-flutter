@@ -43,7 +43,7 @@ class Validations {
 
     if (val.length < 4) return Dictionary.errorMinimumName;
 
-    if (val.length > 255) return Dictionary.errorMaximumName;
+    if (val.length > 30) return Dictionary.errorMaximumName;
 
     if (!regex.hasMatch(val)) return Dictionary.errorInvalidName;
 
