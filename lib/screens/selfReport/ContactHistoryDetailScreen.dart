@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/contactHistoryDetail/ContactHistoryDetailBloc.dart';
@@ -43,7 +44,7 @@ class _ContactHistoryDetailScreenState
         child: BlocBuilder<ContactHistoryDetailBloc, ContactHistoryDetailState>(
             builder: (context, state) {
           return state is ContactHistoryDetailLoaded
-              ? _buildContent(state)
+              ? _buildContent(state.documentSnapshot.data)
               : state is ContactHistoryDetailFailure
                   ? ErrorContent(error: state.error)
                   : Center(child: CircularProgressIndicator());
@@ -52,7 +53,7 @@ class _ContactHistoryDetailScreenState
     );
   }
 
-  Widget _buildContent(ContactHistoryDetailLoaded state) {
+  Widget _buildContent(Map<String, dynamic> data) {
     return ListView(
       children: <Widget>[
         Container(
@@ -77,7 +78,7 @@ class _ContactHistoryDetailScreenState
                           left: 16,
                           top: 14,
                           child: Image.asset(
-                            '${Environment.imageAssets}${state.documentSnapshot.data['gender'] == 'M' ? 'male_icon' : 'female_icon'}.png',
+                            '${Environment.imageAssets}${data['gender'] == 'M' ? 'male_icon' : 'female_icon'}.png',
                             height: 39,
                           ),
                         )
@@ -88,7 +89,7 @@ class _ContactHistoryDetailScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          '${state.documentSnapshot.data['name']}',
+                          '${data['name']}',
                           style: TextStyle(
                               fontFamily: FontsFamily.lato,
                               fontWeight: FontWeight.bold,
@@ -96,9 +97,7 @@ class _ContactHistoryDetailScreenState
                               height: 1.214),
                         ),
                         SizedBox(height: 8.0),
-                        _buildText(
-                            text: state.documentSnapshot.data['relation'],
-                            isLabel: true),
+                        _buildText(text: data['relation'], isLabel: true),
                       ],
                     )
                   ],
@@ -115,9 +114,8 @@ class _ContactHistoryDetailScreenState
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    _buildText(
-                        text: Dictionary.mobilePhoneNumber, isLabel: true),
-                    _buildText(text: state.documentSnapshot['phone_number'])
+                    _buildText(text: Dictionary.phoneNumber, isLabel: true),
+                    _buildText(text: data['phone_number'])
                   ],
                 ),
               )
@@ -141,34 +139,42 @@ class _ContactHistoryDetailScreenState
             children: <Widget>[
               _buildText(text: Dictionary.gender, isLabel: true),
               _buildText(
-                  text:
-                      '${state.documentSnapshot['gender'] == 'M' ? 'Laki-laki' : 'Perempuan'}')
+                  text: '${data['gender'] == 'M' ? 'Laki-laki' : 'Perempuan'}')
             ],
           ),
-        ),
-
-        /// Divider
-        Container(
-          height: 8.0,
-          color: ColorBase.grey,
         ),
 
         /// Last contact date section
-        Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _buildText(text: Dictionary.lastContactDate, isLabel: true),
-              _buildText(
-                  text: unixTimeStampToDate(
-                      state.documentSnapshot['last_contact_date'].seconds),
-                  textAlign: TextAlign.end),
-            ],
-          ),
-        ),
+        data['last_contact_date'] != null
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                    /// Divider
+                    Container(
+                      height: 8.0,
+                      color: ColorBase.grey,
+                    ),
+
+                    /// Last contact date
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Dimens.padding,
+                          vertical: Dimens.verticalPadding),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          _buildText(
+                              text: Dictionary.lastContactDate, isLabel: true),
+                          _buildText(
+                              text: unixTimeStampToDate(
+                                  data['last_contact_date'].seconds),
+                              textAlign: TextAlign.end),
+                        ],
+                      ),
+                    ),
+                  ])
+            : Container(),
 
         /// Back button section
         Container(

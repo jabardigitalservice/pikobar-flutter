@@ -1,65 +1,61 @@
+//library custom_radio_grouped_button;
 import 'package:flutter/material.dart';
 
-class CustomCheckBoxGroup extends StatefulWidget {
-  CustomCheckBoxGroup({
+class CustomRadioButton extends StatefulWidget {
+  CustomRadioButton({
     this.buttonLables,
+    this.buttonValues,
     this.fontSize = 15,
-    this.buttonValuesList,
-    this.checkBoxButtonValues,
+    this.autoWidth = true,
+    this.radioButtonValue,
     this.buttonColor,
+    this.padding = 3,
     this.selectedColor,
     this.height = 35,
     this.width = 100,
-    this.autoWidth = true,
-    this.defaultSelected,
-    this.padding = 3,
     this.horizontal = false,
     this.enableShape = false,
-    this.elevation = 0,
+    this.elevation = 10,
     this.customShape,
-  })  : assert(buttonLables.length == buttonValuesList.length),
+  })  : assert(buttonLables.length == buttonValues.length),
         assert(buttonColor != null),
-  // assert(defaultSelected != null
-  // ? buttonValuesList.contains(defaultSelected) != false
-  // : true),
         assert(selectedColor != null);
 
   final bool horizontal;
 
-  final List buttonValuesList;
-  final double fontSize;
+  final List buttonValues;
 
   final double height;
+  final double width;
   final double padding;
 
   ///Only applied when in vertical mode
   final bool autoWidth;
-  final double width;
-  final bool enableShape;
-  final double elevation;
 
   final List<String> buttonLables;
 
-  final Function(List<dynamic>) checkBoxButtonValues;
+  final double fontSize;
+
+  final Function(dynamic) radioButtonValue;
 
   final Color selectedColor;
-  final dynamic defaultSelected;
 
   final Color buttonColor;
   final ShapeBorder customShape;
+  final bool enableShape;
+  final double elevation;
 
-  _CustomCheckBoxGroupState createState() => _CustomCheckBoxGroupState();
+  _CustomRadioButtonState createState() => _CustomRadioButtonState();
 }
 
-class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
-  List<dynamic> selectedLables = [];
+class _CustomRadioButtonState extends State<CustomRadioButton> {
+  int currentSelected = 0;
+  String currentSelectedLabel;
 
   @override
   void initState() {
     super.initState();
-    if (widget.defaultSelected != null)
-    selectedLables.add(widget.defaultSelected);
-    // currentSelectedLabel = widget.buttonLables[0];
+    currentSelectedLabel = widget.buttonLables[0];
   }
 
   List<Widget> buildButtonsColumn() {
@@ -68,7 +64,7 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
       var button = Padding(
         padding: EdgeInsets.all(widget.padding),
         child: Card(
-          color: selectedLables.contains(widget.buttonValuesList[index])
+          color: currentSelectedLabel == widget.buttonLables[index]
               ? widget.selectedColor
               : widget.buttonColor,
           elevation: widget.elevation,
@@ -86,8 +82,7 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
                   ? widget.customShape == null
                   ? OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 1),
+                    color: Theme.of(context).primaryColor, width: 1),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               )
                   : widget.customShape
@@ -97,20 +92,16 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
                 borderRadius: BorderRadius.zero,
               ),
               onPressed: () {
-                if (selectedLables.contains(widget.buttonValuesList[index])) {
-                  selectedLables.remove(widget.buttonValuesList[index]);
-                } else {
-                  selectedLables.add(widget.buttonValuesList[index]);
-                }
-                setState(() {});
-                widget.checkBoxButtonValues(selectedLables);
+                widget.radioButtonValue(widget.buttonValues[index]);
+                setState(() {
+                  currentSelected = index;
+                  currentSelectedLabel = widget.buttonLables[index];
+                });
               },
               child: Text(
                 widget.buttonLables[index],
-                textAlign: TextAlign.center,
                 style: TextStyle(
-                  color:
-                  selectedLables.contains(widget.buttonValuesList[index])
+                  color: currentSelectedLabel == widget.buttonLables[index]
                       ? Colors.white
                       : Theme.of(context).textTheme.bodyText1.color,
                   fontSize: widget.fontSize,
@@ -129,7 +120,7 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
     List<Widget> buttons = [];
     for (int index = 0; index < widget.buttonLables.length; index++) {
       var button = Card(
-        color: selectedLables.contains(widget.buttonValuesList[index])
+        color: currentSelectedLabel == widget.buttonLables[index]
             ? widget.selectedColor
             : widget.buttonColor,
         elevation: widget.elevation,
@@ -144,7 +135,6 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
           height: widget.height,
           width: widget.autoWidth ? null : widget.width,
           constraints: BoxConstraints(maxWidth: 250),
-          decoration: BoxDecoration(),
           child: MaterialButton(
             shape: widget.enableShape
                 ? widget.customShape == null
@@ -159,20 +149,17 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
                   color: Theme.of(context).primaryColor, width: 1),
               borderRadius: BorderRadius.zero,
             ),
-
             onPressed: () {
-              if (selectedLables.contains(widget.buttonValuesList[index])) {
-                selectedLables.remove(widget.buttonValuesList[index]);
-              } else {
-                selectedLables.add(widget.buttonValuesList[index]);
-              }
-              setState(() {});
-              widget.checkBoxButtonValues(selectedLables);
+              widget.radioButtonValue(widget.buttonValues[index]);
+              setState(() {
+                currentSelected = index;
+                currentSelectedLabel = widget.buttonLables[index];
+              });
             },
             child: Text(
               widget.buttonLables[index],
               style: TextStyle(
-                color: selectedLables.contains(widget.buttonValuesList[index])
+                color: currentSelectedLabel == widget.buttonLables[index]
                     ? Colors.white
                     : Theme.of(context).textTheme.bodyText1.color,
                 fontSize: widget.fontSize,
@@ -180,7 +167,6 @@ class _CustomCheckBoxGroupState extends State<CustomCheckBoxGroup> {
             ),
           ),
         ),
-        // ),
       );
       buttons.add(button);
     }

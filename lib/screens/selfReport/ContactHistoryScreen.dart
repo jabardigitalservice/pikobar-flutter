@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/selfReport/ContactHistoryFormScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/ContactHistoryDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
@@ -73,6 +74,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
             color: Colors.white),
         onPressed: () {
           // move to form screen
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactHistoryFormScreen()));
         });
   }
 
