@@ -32,6 +32,7 @@ class Dictionary {
   static String documents = 'Dokumen';
   static String importantInfo = 'Info Penting';
   static String otherMenus = 'Menu lainnya';
+  static String otherMenusDesc = 'Akses berbagai menu lain dari aplikasi Pikobar';
   static String videoUpToDate = 'Video Terkini';
   static String videoUpToDateDesc = 'Cari informasi melalui video dibawah ini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -110,6 +111,9 @@ class Dictionary {
   static String referralHospital = 'RS Rujukan COVID-19';
   static String callCenterArea = 'Call Center Kota/Kab';
   static String gugusTugasWeb = 'Website Gugus Tugas Kota/Kabupaten Jawa Barat';
+  static String dataCovid = 'Data Covid-19';
+  static String dataCovidDesc = 'Dapatkan data terkini Covid-19';
+
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';

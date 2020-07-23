@@ -33,6 +33,7 @@ class Analytics {
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
   static String tappedOthers = 'tapped_menu_lainnya';
+  static String tappedDataCovid = 'tapped_data_covid';
   static String tappedBanner = 'tapped_banner';
   static String tappedVideo = 'tapped_video';
   static String tappedNotification = 'tapped_notifikasi';
