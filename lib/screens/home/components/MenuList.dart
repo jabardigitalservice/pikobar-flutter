@@ -117,10 +117,9 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}report.png',
               Dictionary.titleSelfReport, NavigationConstrants.SelfReports,
               isNew: true),
-          _buildButtonColumn(
-              '${Environment.iconAssets}self_diagnose.png',
-              Dictionary.selfDiagnose,
-              NavigationConstrants.Browser, arguments: kUrlSelfDiagnose),
+          _buildButtonColumn('${Environment.iconAssets}self_diagnose.png',
+              Dictionary.selfDiagnose, NavigationConstrants.Browser,
+              arguments: kUrlSelfDiagnose),
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
           _buildButtonColumnLayananLain(
@@ -251,9 +250,9 @@ class _MenuListState extends State<MenuList> {
                   : Dictionary.bansos,
               NavigationConstrants.Browser,
               arguments:
-              _remoteConfig.getString(FirebaseConfig.bansosUrl) != null
-                  ? _remoteConfig.getString(FirebaseConfig.bansosUrl)
-                  : kUrlBansos,
+                  _remoteConfig.getString(FirebaseConfig.bansosUrl) != null
+                      ? _remoteConfig.getString(FirebaseConfig.bansosUrl)
+                      : kUrlBansos,
               remoteMenuLoginKey: FirebaseConfig.bansosMenu),
         ],
       ),
@@ -300,6 +299,7 @@ class _MenuListState extends State<MenuList> {
                           ? _remoteConfig
                               .getString(FirebaseConfig.selfDiagnoseCaption)
                           : Dictionary.selfDiagnose),
+
           /// Menu Button Emergency Numbers
           _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
               Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook,
@@ -376,9 +376,9 @@ class _MenuListState extends State<MenuList> {
                   : Dictionary.donation,
               NavigationConstrants.Browser,
               arguments:
-              _remoteConfig.getString(FirebaseConfig.donationUrl) != null
-                  ? _remoteConfig.getString(FirebaseConfig.donationUrl)
-                  : kUrlDonation,
+                  _remoteConfig.getString(FirebaseConfig.donationUrl) != null
+                      ? _remoteConfig.getString(FirebaseConfig.donationUrl)
+                      : kUrlDonation,
               remoteMenuLoginKey: FirebaseConfig.donationMenu),
         ],
       ),
@@ -395,31 +395,31 @@ class _MenuListState extends State<MenuList> {
           /// Menu Button Volunteer
           /// Remote Config : enabled, caption & url
           _remoteConfig != null &&
-              _remoteConfig.getBool(FirebaseConfig.volunteerEnabled)
+                  _remoteConfig.getBool(FirebaseConfig.volunteerEnabled)
               ? _buildButtonColumn(
-              '${Environment.iconAssets}relawan_active.png',
-              _remoteConfig != null &&
-                  _remoteConfig
-                      .getString(FirebaseConfig.volunteerCaption) !=
-                      null
-                  ? _remoteConfig.getString(FirebaseConfig.volunteerCaption)
-                  : Dictionary.volunteer,
-              NavigationConstrants.Browser,
-              arguments: _remoteConfig != null &&
-                  _remoteConfig
-                      .getString(FirebaseConfig.volunteerUrl) !=
-                      null
-                  ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
-                  : kUrlVolunteer,
-              remoteMenuLoginKey: FirebaseConfig.volunteerMenu)
+                  '${Environment.iconAssets}relawan_active.png',
+                  _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.volunteerCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.volunteerCaption)
+                      : Dictionary.volunteer,
+                  NavigationConstrants.Browser,
+                  arguments: _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.volunteerUrl) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.volunteerUrl)
+                      : kUrlVolunteer,
+                  remoteMenuLoginKey: FirebaseConfig.volunteerMenu)
               : _buildButtonDisable(
-              '${Environment.iconAssets}relawan.png',
-              _remoteConfig != null &&
-                  _remoteConfig
-                      .getString(FirebaseConfig.volunteerCaption) !=
-                      null
-                  ? _remoteConfig.getString(FirebaseConfig.volunteerCaption)
-                  : Dictionary.volunteer),
+                  '${Environment.iconAssets}relawan.png',
+                  _remoteConfig != null &&
+                          _remoteConfig
+                                  .getString(FirebaseConfig.volunteerCaption) !=
+                              null
+                      ? _remoteConfig.getString(FirebaseConfig.volunteerCaption)
+                      : Dictionary.volunteer),
 
           /// Menu Button Saber Hoax
           /// Remote Config : caption & url
@@ -719,7 +719,19 @@ class _MenuListState extends State<MenuList> {
           ],
         ),
         onTap: () {
-          _mainHomeBottomSheet(context);
+          _mainHomeBottomSheet(context, Dictionary.otherMenus,
+              Dictionary.otherMenusDesc, <Widget>[
+            SizedBox(height: 5.0),
+            _remoteConfig == null
+                ? _defaultRowMenusThree()
+                : _remoteRowMenusThree(),
+            SizedBox(
+              height: 8.0,
+            ),
+            _remoteConfig == null
+                ? _defaultRowMenusFour()
+                : _remoteRowMenusFour(),
+          ]);
 
           AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
         },
@@ -755,7 +767,16 @@ class _MenuListState extends State<MenuList> {
           ],
         ),
         onTap: () {
-          _mainBottomSheetDataCovid(context);
+          _mainHomeBottomSheet(
+              context, Dictionary.dataCovid, Dictionary.dataCovidDesc, <Widget>[
+            SizedBox(height: 5.0),
+            _remoteConfig == null
+                ? _defaultRowMenusFive()
+                : _remoteRowMenusFive(),
+            SizedBox(
+              height: 8.0,
+            ),
+          ]);
 
           AnalyticsHelper.setLogEvent(Analytics.tappedDataCovid);
         },
@@ -763,7 +784,8 @@ class _MenuListState extends State<MenuList> {
     );
   }
 
-  void _mainHomeBottomSheet(context) {
+  void _mainHomeBottomSheet(context, String titleBottomSheet,
+      String descBottomSheet, List<Widget> dataColumn) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.white,
@@ -790,7 +812,7 @@ class _MenuListState extends State<MenuList> {
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
                   child: Text(
-                    Dictionary.otherMenus,
+                    titleBottomSheet,
                     style:
                         TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                   ),
@@ -799,103 +821,23 @@ class _MenuListState extends State<MenuList> {
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
                   child: Text(
-                    Dictionary.otherMenusDesc,
+                    descBottomSheet,
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),
                 Container(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.05),
-                      offset: Offset(0.0, 0.05),
-                    ),
-                  ]),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 5.0),
-                      _remoteConfig == null
-                          ? _defaultRowMenusThree()
-                          : _remoteRowMenusThree(),
-                      SizedBox(
-                        height: 8.0,
+                    alignment: Alignment.topCenter,
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.05),
+                        offset: Offset(0.0, 0.05),
                       ),
-                      _remoteConfig == null
-                          ? _defaultRowMenusFour()
-                          : _remoteRowMenusFour(),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  void _mainBottomSheetDataCovid(context) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-          ),
-        ),
-        elevation: 60.0,
-        builder: (BuildContext context) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 20.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 14.0),
-                  color: Colors.black,
-                  height: 1.5,
-                  width: 40.0,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
-                  child: Text(
-                    Dictionary.dataCovid,
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(left: Dimens.padding, top: 10.0),
-                  child: Text(
-                    Dictionary.dataCovidDesc,
-                    style: TextStyle(fontSize: 12.0),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.05),
-                      offset: Offset(0.0, 0.05),
-                    ),
-                  ]),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 5.0),
-                      _remoteConfig == null
-                          ? _defaultRowMenusFive()
-                          : _remoteRowMenusFive(),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                    ],
-                  ),
-                )
+                    ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: dataColumn,
+                    ))
               ],
             ),
           );
