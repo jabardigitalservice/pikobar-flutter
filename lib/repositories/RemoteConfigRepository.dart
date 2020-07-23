@@ -42,7 +42,8 @@ class RemoteConfigRepository {
       FirebaseConfig.rapidTestEnable: false,
       FirebaseConfig.groupHomeBanner:false,
       FirebaseConfig.importantinfoStatusVisible: false,
-      FirebaseConfig.termsConditions:false
+      FirebaseConfig.termsConditions:false,
+      FirebaseConfig.contactHistoryForm: FirebaseConfig.contactHistoryFormDefaultValue
     });
 
     try {

@@ -38,14 +38,11 @@ class FirebaseConfig {
   static String spreadCheckLocation = 'ceksebaran_location';
   static String healthStatusColors = 'health_status_colors';
   static String emergencyCall = 'emergency_call';
-  static String rapidTestInfo='rapid_test_info';
-  static String rapidTestEnable='rapid_test_enable';
-  static String groupMenuProfile='group_menu_profile';
-  static String groupHomeBanner='group_home_bigbanner';
+  static String rapidTestInfo = 'rapid_test_info';
+  static String rapidTestEnable = 'rapid_test_enable';
+  static String groupMenuProfile = 'group_menu_profile';
+  static String groupHomeBanner = 'group_home_bigbanner';
   static String importantinfoStatusVisible = 'important_info_status_visible';
-
-
-
 
   /// Remote config parameter key
   /// Access requires a login
@@ -85,5 +82,14 @@ class FirebaseConfig {
   static String otpEnabled = 'otp_enabled';
   static String termsConditions = 'terms_conditions';
 
-
+  /// Remote config parameter key
+  /// Contact History
+  static String contactHistoryForm = 'contact_history_form';
+  static String contactHistoryFormDefaultValue = '{'
+      '"relation_list":['
+      '"Keluarga Serumah",'
+      '"Teman Kerja",'
+      '"Jamaah di Tempat Ibadah",'
+      '"Lainnya"]'
+      '}';
 }

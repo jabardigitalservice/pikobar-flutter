@@ -119,7 +119,10 @@ class Analytics {
   static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
   static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
   static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
-  static String tappedContactHistory = "tapped_riwayat_kontak";
 
+  static String tappedContactHistory = "tapped_riwayat_kontak";
+  static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";
+  static String contactHistorySaved = "riwayat_kontak_baru_tersimpan";
+  static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
 
 }
