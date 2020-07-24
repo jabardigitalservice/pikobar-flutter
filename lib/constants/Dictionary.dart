@@ -303,6 +303,10 @@ class Dictionary {
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
 
+     //survey
+  static String surveyEmpty = 'Tidak ada data survei';
+
+
   //document
   static String document = "Dokumen";
   static String date = "Tanggal";

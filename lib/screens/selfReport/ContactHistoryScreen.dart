@@ -55,6 +55,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
   }
 
   Widget buildContent(List<DocumentSnapshot> documents) {
+    documents.sort((b, a) => a['created_at'].compareTo(b['created_at']));
     return documents.length == 0
         ? buildEmptyScreen()
         : buildContactHistoryList(documents);

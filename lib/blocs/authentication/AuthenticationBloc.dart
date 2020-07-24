@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 import './Bloc.dart';
 
@@ -46,7 +47,7 @@ class AuthenticationBloc
         );
         yield AuthenticationAuthenticated(record: record);
       } catch (e) {
-        yield AuthenticationFailure(error: e.toString());
+        yield AuthenticationFailure(error: CustomException.onConnectionException(e.toString()));
       }
     }
 
