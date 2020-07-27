@@ -73,6 +73,12 @@ class _AppState extends State<App> {
           primaryColorBrightness: Brightness.light,
           fontFamily: FontsFamily.sourceSansPro),
       debugShowCheckedModeBanner: false,
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child,
+        );
+      },
       home: IndexScreen(),
       onGenerateRoute: generateRoutes,
       navigatorKey: NavigationConstrants.navKey,
