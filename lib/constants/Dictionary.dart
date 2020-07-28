@@ -82,6 +82,8 @@ class Dictionary {
   static String checkLocationSpread = 'Cek Sebaran Lokasi Anda';
   static String checkLocationSpreadDesc =
       'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol ‘Cek Lokasi Saat Ini';
+  static String phoneNumberHasBeenUsed =
+      'No telepon sudah digunakan';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
