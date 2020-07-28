@@ -265,7 +265,7 @@ class _EditState extends State<Edit> {
                               buildPhoneField(
                                   title: Dictionary.telephoneNumber,
                                   controller: _phoneNumberController,
-                                  validation: Validations.phoneValidation,
+                                  validation: Validations.telephoneValidation,
                                   isEdit: true,
                                   hintText: Dictionary.phoneNumberPlaceholder),
                               SizedBox(

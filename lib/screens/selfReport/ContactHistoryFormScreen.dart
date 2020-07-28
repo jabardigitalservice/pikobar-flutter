@@ -22,6 +22,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/ContactHistoryModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/Validations.dart';
 
 class ContactHistoryFormScreen extends StatefulWidget {
   @override
@@ -34,6 +35,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
 
   final _nameFieldController = TextEditingController();
   final _phoneFieldController = TextEditingController();
+  final _otherRelationFieldController = TextEditingController();
   final _dateController = TextEditingController();
 
   RemoteConfigBloc _remoteConfigBloc;
@@ -43,11 +45,13 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
   String _minDate = '2019-01-01';
   String _gender = '';
   String _relation = '';
+  String _errorName;
+  String _errorPhone;
+  String _errorOtherRelation;
 
-  bool _isNameEmpty = false;
-  bool _isPhoneEmpty = false;
   bool _isGenderEmpty = false;
   bool _isRelationEmpty = false;
+  bool _isOther = false;
   bool _isDateEmpty = false;
 
   @override
@@ -147,13 +151,15 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
               title: Dictionary.contactName,
               controller: _nameFieldController,
               hint: Dictionary.placeholderName,
-              isEmpty: _isNameEmpty),
+              maxLength: 30,
+              error: _errorName),
           _buildLabel(text: Dictionary.phoneNumber),
           _buildTextField(
               title: Dictionary.phoneNumber,
               controller: _phoneFieldController,
               hint: Dictionary.placeholderPhone,
-              isEmpty: _isPhoneEmpty,
+              maxLength: 13,
+              error: _errorPhone,
               textInputType: TextInputType.phone),
           _buildLabel(text: Dictionary.gender),
           _buildRadioButton(
@@ -181,6 +187,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                 setState(() {
                   _relation = label;
                   _isRelationEmpty = _relation.isEmpty;
+                  _isOther = label == 'Lainnya';
                 });
               },
               validator: (value) {
@@ -188,6 +195,15 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                     ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
                     : null;
               }),
+
+          _isOther ? _buildTextField(
+              title: Dictionary.otherRelation,
+              controller: _otherRelationFieldController,
+              hint: Dictionary.placeholderOtherRelation,
+              maxLength: 25,
+              error: _errorOtherRelation,
+              textInputType: TextInputType.text) : Container(),
+
           _buildLabel(text: Dictionary.lastContactDate, required: false),
           Container(
             margin: EdgeInsets.only(
@@ -249,7 +265,8 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
       {@required TextEditingController controller,
       @required title,
       @required String hint,
-      bool isEmpty,
+        int maxLength,
+      String error,
       TextInputType textInputType}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,18 +275,20 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           height: Dimens.fieldSize,
           margin: EdgeInsets.only(
               top: Dimens.fieldMarginTop,
-              bottom: isEmpty ? Dimens.sbHeight : Dimens.fieldMarginBottom),
+              bottom: error != null ? Dimens.sbHeight : Dimens.fieldMarginBottom),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                  color: isEmpty ? Colors.red : ColorBase.menuBorderColor)),
+                  color: error != null ? Colors.red : ColorBase.menuBorderColor)),
           padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
           child: TextFormField(
             controller: controller,
+            maxLength: maxLength,
             maxLines: 1,
             decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hint,
+                counterText: '',
                 hintStyle: TextStyle(
                     color: ColorBase.darkGrey,
                     fontFamily: FontsFamily.lato,
@@ -279,13 +298,12 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                 textInputType != null ? textInputType : TextInputType.text,
           ),
         ),
-        isEmpty
+        error != null
             ? Padding(
                 padding: EdgeInsets.only(
                     left: Dimens.contentPadding,
                     bottom: Dimens.fieldMarginBottom),
-                child: Text(
-                  title + Dictionary.pleaseCompleteAllField,
+                child: Text(error,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 ),
               )
@@ -406,8 +424,10 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
   // Validate and record data to firestore
   _saveContactHistory() async {
     setState(() {
-      _isNameEmpty = _nameFieldController.text.isEmpty;
-      _isPhoneEmpty = _phoneFieldController.text.isEmpty;
+      _errorName = Validations.nameValidation(_nameFieldController.text);
+      _errorPhone = Validations.phoneValidation(_phoneFieldController.text);
+      _errorOtherRelation = _isOther ? Validations.otherRelationValidation(_otherRelationFieldController.text) : null;
+
       _isGenderEmpty = _gender.isEmpty;
       _isRelationEmpty = _relation.isEmpty;
       _isDateEmpty = _dateController.text.isEmpty;
@@ -416,8 +436,9 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
 
-      if (!_isNameEmpty &&
-          !_isPhoneEmpty &&
+      if (_errorName == null &&
+          _errorPhone == null &&
+          _errorOtherRelation == null &&
           !_isGenderEmpty &&
           !_isRelationEmpty) {
         final data = ContactHistoryModel(
@@ -427,7 +448,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             name: _nameFieldController.text.trim(),
             phoneNumber: _phoneFieldController.text,
             gender: _gender,
-            relation: _relation);
+            relation: '${_isOther ? _otherRelationFieldController.text : _relation}'.trim());
 
         _contactHistorySaveBloc.add(ContactHistorySave(data: data));
       }
@@ -443,6 +464,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
     }
     _nameFieldController.dispose();
     _phoneFieldController.dispose();
+    _otherRelationFieldController.dispose();
     _dateController.dispose();
   }
 }

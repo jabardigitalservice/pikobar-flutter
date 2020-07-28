@@ -32,7 +32,8 @@ class Dictionary {
   static String documents = 'Dokumen';
   static String importantInfo = 'Info Penting';
   static String otherMenus = 'Menu lainnya';
-  static String otherMenusDesc = 'Akses berbagai menu lain dari aplikasi Pikobar';
+  static String otherMenusDesc =
+      'Akses berbagai menu lain dari aplikasi Pikobar';
   static String videoUpToDate = 'Video Terkini';
   static String videoUpToDateDesc = 'Cari informasi melalui video dibawah ini';
   static String hintSearch = 'Ketikkan kata kunci ...';
@@ -114,7 +115,6 @@ class Dictionary {
   static String dataCovid = 'Data Covid-19';
   static String dataCovidDesc = 'Dapatkan data terkini Covid-19';
 
-
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';
 
@@ -152,11 +152,21 @@ class Dictionary {
   static String errorStatusUnActive = 'Username belum aktif';
   static String errorListComment = 'Tidak dapat menampilkan komentar';
   static String somethingWrong = 'Terjadi kesalahan';
-  static String errorMaximumPhone = 'Nomor Telepon harus kurang dari 13 nomor';
-  static String errorEmptyPhone = 'Nomor Telepon harus diisi';
-  static String errorInvalidPhone = 'Format nomor telepon tidak sesuai';
-  static String errorMinimumPhone =
+  static String errorMaximumTelephone =
+      'Nomor Telepon harus kurang dari 13 nomor';
+  static String errorEmptyTelephone = 'Nomor Telepon harus diisi';
+  static String errorInvalidTelephone = 'Format nomor telepon tidak sesuai';
+  static String errorMinimumTelephone =
       'Nomor telepon harus terdiri 3 sampai 13 nomor';
+  static String errorMaximumPhone = 'Nomor HP harus kurang dari 13 nomor';
+  static String errorEmptyPhone = 'Nomor HP harus diisi';
+  static String errorInvalidPhone = 'Format nomor HP tidak sesuai';
+  static String errorMinimumPhone = 'Nomor HP harus terdiri 3 sampai 13 nomor';
+  static String errorEmptyOtherRelation = 'Hubungan lainnya harus diisi';
+  static String errorMinimumOtherRelation =
+      'Hubungan lainnya harus terdiri dari 4 karakter atau lebih';
+  static String errorMaximumOtherRelation =
+      'Hubungan lainnya harus kurang dari 25 karakter';
   static String errorStatisticsNotExists =
       'Data statistik saat ini tidak tersedia, silakan coba kembali beberapa saat';
   static String errorMaximumAddress = 'Alamat harus kurang dari 255 karakter';
@@ -216,6 +226,7 @@ class Dictionary {
   static String placeholderYourNIK = 'Masukkan NIK Anda';
   static String placeholderName = 'Masukkan Nama';
   static String placeholderPhone = 'Masukkan Nomor HP';
+  static String placeholderOtherRelation = 'Masukkan Hubungan Lainnya';
 
   // Popup Permission Redaction
   static String permissionLocationSpread =
@@ -303,9 +314,8 @@ class Dictionary {
   //message
   static String markAsRead = "Tandai Semua Sudah Dibaca";
 
-     //survey
+  //survey
   static String surveyEmpty = 'Tidak ada data survei';
-
 
   //document
   static String document = "Dokumen";
@@ -377,6 +387,6 @@ class Dictionary {
   static String contactName = 'Nama Kontak';
   static String phoneNumber = 'Nomor HP';
   static String relation = 'Hubungan';
+  static String otherRelation = 'Hubungan lainnya';
   static String lastContactDate = 'Tanggal Kontak Terakhir';
-
 }
