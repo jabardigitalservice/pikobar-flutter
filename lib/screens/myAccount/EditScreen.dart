@@ -417,16 +417,15 @@ class _EditState extends State<Edit> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            if (widget.state.data['phone_number'] != null &&
-                                widget.state.data['phone_number']
-                                        .toString()
-                                        .substring(3) !=
-                                    _phoneNumberController.text) {
+                            if (widget.state.data['phone_number']
+                                    .toString()
+                                    .substring(3) !=
+                                _phoneNumberController.text) {
                               var data = Firestore.instance
                                   .collection(kUsers)
                                   .where("phone_number",
                                       isEqualTo:
-                                          '+62' + _phoneNumberController.text)
+                                          Dictionary.inaCode + _phoneNumberController.text)
                                   .getDocuments();
 
                               data.then((docs) {
