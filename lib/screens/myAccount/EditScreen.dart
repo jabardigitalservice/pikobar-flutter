@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -35,7 +36,9 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Edit extends StatefulWidget {
   final AsyncSnapshot<DocumentSnapshot> state;
+
   Edit({this.state});
+
   @override
   _EditState createState() => _EditState();
 }
@@ -285,8 +288,6 @@ class _EditState extends State<Edit> {
                                   title: Dictionary.birthday,
                                   placeholder: _birthDayController.text == ''
                                       ? Dictionary.birthdayPlaceholder
-  
-       
                                       : DateFormat.yMMMMd('id').format(
                                           DateTime.parse(_birthDayController
                                               .text
@@ -416,7 +417,38 @@ class _EditState extends State<Edit> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            _onSaveProfileButtonPressed(otpEnabled);
+                            if (widget.state.data['phone_number']
+                                    .toString()
+                                    .substring(3) !=
+                                _phoneNumberController.text) {
+                              var data = Firestore.instance
+                                  .collection(kUsers)
+                                  .where("phone_number",
+                                      isEqualTo:
+                                          Dictionary.inaCode + _phoneNumberController.text)
+                                  .getDocuments();
+
+                              data.then((docs) {
+                                if (docs.documents.isNotEmpty) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          DialogTextOnly(
+                                            description: Dictionary
+                                                .phoneNumberHasBeenUsed,
+                                            buttonText: Dictionary.ok,
+                                            onOkPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // To close the dialog
+                                            },
+                                          ));
+                                } else {
+                                  _onSaveProfileButtonPressed(otpEnabled);
+                                }
+                              });
+                            } else {
+                              _onSaveProfileButtonPressed(otpEnabled);
+                            }
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 13),
@@ -1129,5 +1161,3 @@ class _EditState extends State<Edit> {
     super.dispose();
   }
 }
-
-

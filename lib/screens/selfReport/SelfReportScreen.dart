@@ -269,7 +269,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       : false),
               _buildContainer(
                   '${Environment.iconAssets}history_contact_disable.png',
-                  '${Environment.iconAssets}history_contact_disable.png',
+                  '${Environment.iconAssets}history_contact_enable.png',
                   Dictionary.historyContact,
                   2,
                   () {
