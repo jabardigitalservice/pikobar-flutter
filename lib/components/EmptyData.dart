@@ -9,6 +9,13 @@ class EmptyData extends StatelessWidget {
   final EdgeInsetsGeometry margin;
   final bool isFlare;
   final String image;
+
+  /// * [message] type String must not be null.
+  /// * [desc] type String.
+  /// * [margin] type from class EdgeInsetsGeometry.
+  /// * [isFlare] type bool default value is true.
+  /// * [center] type bool default value is true.
+  /// * [image] type String must not be null if [isFlare] is false.
   EmptyData(
       {this.message,
       this.desc,
