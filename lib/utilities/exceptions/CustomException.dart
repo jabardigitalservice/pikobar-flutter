@@ -10,6 +10,10 @@ class CustomException {
       e = Dictionary.errorConnection;
     } else if (error
         .toLowerCase()
+        .contains(ErrorException.offline.toLowerCase())) {
+      e = Dictionary.errorConnection;
+    } else if (error
+        .toLowerCase()
         .contains(ErrorException.timeoutException.toLowerCase())) {
       e = Dictionary.errorTimeOut;
     } else if (error

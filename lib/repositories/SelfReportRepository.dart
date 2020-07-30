@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/constants/ErrorException.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/ContactHistoryModel.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
+import 'package:pikobar_flutter/utilities/Connection.dart';
 
 class SelfReportRepository {
   final Firestore _firestore = Firestore.instance;
@@ -104,7 +109,7 @@ class SelfReportRepository {
   /// in documents in the [kSelfReports] collection referenced by the [userId]
   Future<void> saveContactHistory(
       {@required String userId, @required ContactHistoryModel data}) async {
-    try {
+    if (await Connection().checkConnection(kUrlGoogle)) {
       CollectionReference ref = _firestore
           .collection(kSelfReports)
           .document(userId)
@@ -113,8 +118,8 @@ class SelfReportRepository {
       await ref.add(data.toJson()).then((doc) async {
         await doc.updateData({'id': doc.documentID});
       });
-    } catch (e) {
-      throw Exception(e);
+    } else {
+      throw SocketException(ErrorException.socketException);
     }
   }
 }
