@@ -48,6 +48,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
+        // Tab section
         child: CustomBubbleTab(
           indicatorColor: ColorBase.green,
           labelColor: Colors.white,
@@ -66,16 +67,19 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       ),
     );
   }
-
+ 
+ // Function to build RDT Screen
   Widget _buildRDT() {
     return ListView(
       children: <Widget>[
+        // Announcement section
         widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
             ? buildAnnouncement(0)
             : Container(),
         SizedBox(
           height: 20,
         ),
+        // Last update section
         widget.document.data['last_update'] == null
             ? Container()
             : Padding(
@@ -117,6 +121,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
+ // Function to build PCR Screen
   Widget _buildPCR() {
     return ListView(
       children: <Widget>[

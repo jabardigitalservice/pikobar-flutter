@@ -43,6 +43,8 @@ class FirebaseConfig {
   static String groupMenuProfile = 'group_menu_profile';
   static String groupHomeBanner = 'group_home_bigbanner';
   static String importantinfoStatusVisible = 'important_info_status_visible';
+  static String lastUpdateLabel = 'update_terkini_label';
+
 
   /// Remote config parameter key
   /// Access requires a login
@@ -91,5 +93,15 @@ class FirebaseConfig {
       '"Teman Kerja",'
       '"Jamaah di Tempat Ibadah",'
       '"Lainnya"]'
+      '}';
+
+  static String lastUpdateLabelDefaultValue='{'
+      '"label":['
+      '"Terkonfirmasi",'
+      '"Positif Aktif",'
+      '"Sembuh",'
+      '"Meninggal",'
+      '"ODP",'
+      '"PDP"]'
       '}';
 }

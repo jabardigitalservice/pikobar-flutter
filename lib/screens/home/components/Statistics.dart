@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +50,13 @@ class _StatisticsState extends State<Statistics> {
     return BlocBuilder<StatisticsBloc, StatisticsState>(
       builder: (context, state) {
         return state is StatisticsLoaded
-            ? _buildContent(state.snapshot)
+            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                builder: (context, remoteState) {
+                  return remoteState is RemoteConfigLoaded
+                      ? _buildContent(state.snapshot,remoteState.remoteConfig)
+                      : _buildLoading();
+                },
+              )
             : _buildLoading();
       },
     );
@@ -169,13 +177,19 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(DocumentSnapshot data) {
+  Container _buildContent(DocumentSnapshot data,RemoteConfig remoteConfig) {
     if (!data.exists)
       return Container(
         child: Center(
           child: Text(Dictionary.errorStatisticsNotExists),
         ),
       );
+
+       // Get label from the remote config
+    Map<String, dynamic> labelUpdateTerkini = remoteConfig != null &&
+            remoteConfig.getString(FirebaseConfig.lastUpdateLabel) != null
+        ? json.decode(remoteConfig.getString(FirebaseConfig.lastUpdateLabel))
+        : json.decode(FirebaseConfig.lastUpdateLabelDefaultValue);
 
     return Container(
       child: Column(
@@ -224,8 +238,8 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               _buildContainer(
                   '${Environment.iconAssets}virusPurple.png',
-                  Dictionary.caseTotal,
-                  Dictionary.caseTotal,
+                  labelUpdateTerkini['label'][0],
+                  labelUpdateTerkini['label'][0],
                   '${data['aktif']['jabar']}',
                   4,
                   Dictionary.people,
@@ -234,8 +248,8 @@ class _StatisticsState extends State<Statistics> {
                   ''),
               _buildContainer(
                   '${Environment.iconAssets}virusRed.png',
-                  Dictionary.positif,
-                  Dictionary.positif,
+                  labelUpdateTerkini['label'][1],
+                  labelUpdateTerkini['label'][1],
                   getDataActivePositive(data['aktif']['jabar'],
                       data['sembuh']['jabar'], data['meninggal']['jabar']),
                   4,
@@ -245,8 +259,8 @@ class _StatisticsState extends State<Statistics> {
                   ''),
               _buildContainer(
                   '${Environment.iconAssets}virusGreen.png',
-                  Dictionary.recover,
-                  Dictionary.recover,
+                  labelUpdateTerkini['label'][2],
+                  labelUpdateTerkini['label'][2],
                   '${data['sembuh']['jabar']}',
                   4,
                   Dictionary.people,
@@ -255,8 +269,8 @@ class _StatisticsState extends State<Statistics> {
                   ''),
               _buildContainer(
                   '${Environment.iconAssets}virusYellow.png',
-                  Dictionary.die,
-                  Dictionary.die,
+                  labelUpdateTerkini['label'][3],
+                 labelUpdateTerkini['label'][3],
                   '${data['meninggal']['jabar']}',
                   4,
                   Dictionary.people,
@@ -271,7 +285,7 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               _buildContainer(
                   '',
-                  Dictionary.odp,
+                  labelUpdateTerkini['label'][4],
                   Dictionary.opdDesc,
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
@@ -282,7 +296,7 @@ class _StatisticsState extends State<Statistics> {
                   data['odp']['total']['jabar'].toString()),
               _buildContainer(
                   '',
-                  Dictionary.pdp,
+                  labelUpdateTerkini['label'][5],
                   Dictionary.pdpDesc,
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
@@ -379,8 +393,8 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               Container(
                   height: 60,
-                  child:
-                      Image.asset('${Environment.imageAssets}bloodTest@4x.png')),
+                  child: Image.asset(
+                      '${Environment.imageAssets}bloodTest@4x.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

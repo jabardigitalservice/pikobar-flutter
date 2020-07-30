@@ -63,6 +63,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
               : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // Current location section
               Card(
                 elevation: 0,
                 color: Color(0xff27AE60),
