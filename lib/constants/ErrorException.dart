@@ -6,5 +6,6 @@ class ErrorException {
   static String socketException = 'SocketException';
   static String ioException = 'IOException';
   static String emptyList = 'EmptyList';
+  static String offline = 'Offline';
   static String notFound = 'NotFound';
 }

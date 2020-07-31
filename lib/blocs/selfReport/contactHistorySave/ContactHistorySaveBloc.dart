@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/ContactHistoryModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
+import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 part 'ContactHistorySaveEvent.dart';
 part 'ContactHistorySaveState.dart';
@@ -29,7 +30,7 @@ class ContactHistorySaveBloc extends Bloc<ContactHistorySaveEvent, ContactHistor
 
         yield ContactHistorySaved();
       } catch (e) {
-        yield ContactHistorySaveFailure(error: e.toString());
+        yield ContactHistorySaveFailure(error: CustomException.onConnectionException(e.toString()));
       }
     }
   }
