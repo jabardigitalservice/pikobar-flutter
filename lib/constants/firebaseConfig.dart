@@ -43,8 +43,7 @@ class FirebaseConfig {
   static String groupMenuProfile = 'group_menu_profile';
   static String groupHomeBanner = 'group_home_bigbanner';
   static String importantinfoStatusVisible = 'important_info_status_visible';
-  static String lastUpdateLabel = 'update_terkini_label';
-
+  static String labels = 'labels';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -95,13 +94,49 @@ class FirebaseConfig {
       '"Lainnya"]'
       '}';
 
-  static String lastUpdateLabelDefaultValue='{'
-      '"label":['
-      '"Terkonfirmasi",'
-      '"Positif Aktif",'
-      '"Sembuh",'
-      '"Meninggal",'
-      '"ODP",'
-      '"PDP"]'
+  static String labelsDefaultValue = '{'
+      '"statistics":{'
+      '"confirmed": "Terkonfirmasi",'
+      '"positif": "Positif Aktif",'
+      '"recovered": "Sembuh",'
+      '"deaths": "Meninggal",'
+      '"odp": "ODP",'
+      '"pdp": "PDP"'
+      '},'
+      '"pcr_rdt": {'
+      '"rdt": {'
+      '"sum": "Jumlah RDT yang telah dilakukan",'
+      '"positif": "Reaktif",'
+      '"negatif": "Non-Reaktif",'
+      '"invalid": "Invalid"'
+      '},'
+      '"pcr": {'
+      '"sum": "Jumlah PCR yang telah dilakukan",'
+      '"positif": "Positif",'
+      '"negatif": "Negatif",'
+      '"invalid": "Invalid"'
+      '}'
+      '},'
+      '"profile": {},'
+      '"menu": {'
+      '"title": "Pusat Layanan & Informasi",'
+      '"description": "Saatnya berbagi informasi dan lawan COVID-19"'
+      '},'
+      '"news": {'
+      '"title": "Berita Terkini",'
+      '"description": "Anti-hoax dengan berita terpercaya"'
+      '},'
+      '"video": {'
+      '"title": "Video Terkini",'
+      '"description": "Cari informasi melalui video dibawawah ini"'
+      '},'
+      '"info_graphics": {'
+      '"title": "Info Praktikal",'
+      '"description": "Info yang memuat infograpis terkait COVID-19"'
+      '},'
+      '"documents": {'
+      '"title": "Dokumen",'
+      '"description": "Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat"'
+      '}'
       '}';
 }
