@@ -1,0 +1,51 @@
+# This is a basic workflow to help you get started with Actions
+
+name: BUILD
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ develop ]
+  # pull_request:
+  #   branches: [ feature/Feature-github-workflow ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build_staging_android"
+  build_staging_android:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Build APK staging android
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        # run spesific version
+        # flutter-version: '1.9.1+hotfix.6'
+
+        # channel version
+        channel: 'stable' # or: 'dev' or 'beta'
+
+    # Runs a command using the runners shell
+
+    # Runs setup env
+    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
+    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
+
+    # build APK
+    - run: flutter pub get
+    - run: flutter build apk --release
+
+    # move to APK to root directory
+    - run: mv build/app/outputs/apk/release/app-release.apk pikobar-staging.apk
+
+    # send to telegram channel
+    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging.apk' -F caption=PiKOBAR_STAGING https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
+
