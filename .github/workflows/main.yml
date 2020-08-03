@@ -32,20 +32,20 @@ jobs:
 
         # channel version
         channel: 'stable' # or: 'dev' or 'beta'
-    
+
+    # Runs a command using the runners shell
+
     # Runs setup env
-    - name: setup env
-      run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
-      run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
+    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
+    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
 
     # build APK
-    - name: build APK
-      run: flutter pub get
-      run: flutter build apk --release
+    - run: flutter pub get
+    - run: flutter build apk --release
 
     # move to APK to root directory
     - run: mv build/app/outputs/apk/release/app-release.apk pikobar-staging.apk
 
-    - name: send to telegram channel
-      run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging.apk' -F caption=adaygbarunih https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
+    # send to telegram channel
+    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging.apk' -F caption=adaygbarunih https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
 
