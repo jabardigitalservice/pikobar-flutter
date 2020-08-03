@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class MenuList extends StatefulWidget {
@@ -41,7 +42,7 @@ class _MenuListState extends State<MenuList> {
 
   _buildContent(RemoteConfig remoteConfig) {
     _remoteConfig = remoteConfig;
-
+    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
     return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),
@@ -53,7 +54,7 @@ class _MenuListState extends State<MenuList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  Dictionary.menus,
+                  getLabel['menu']['title'],
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
@@ -62,7 +63,7 @@ class _MenuListState extends State<MenuList> {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  Dictionary.subTitleMenus,
+                  getLabel['menu']['description'],
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: FontsFamily.lato,
@@ -783,6 +784,7 @@ class _MenuListState extends State<MenuList> {
       ),
     );
   }
+
   /// Base Component BottomSheet
   void _mainHomeBottomSheet(context, String titleBottomSheet,
       String descBottomSheet, List<Widget> dataColumn) {
