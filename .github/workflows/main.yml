@@ -44,8 +44,8 @@ jobs:
     - run: flutter build apk --release
 
     # move to APK to root directory
-    - run: mv build/app/outputs/apk/release/app-release.apk pikobar-staging-'${{ GITHUB_RUN_ID }}'.apk
+    - run: mv build/app/outputs/apk/release/app-release.apk pikobar-staging-${{ GITHUB_RUN_ID }}.apk
 
     # send to telegram channel
-    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging-'${{ GITHUB_RUN_ID }}'.apk' -F caption="PiKOBAR STAGING - ada yang baru nih" https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
+    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging-${{ GITHUB_RUN_ID }}.apk' -F caption="PiKOBAR STAGING - ada yang baru nih" https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
 
