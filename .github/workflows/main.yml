@@ -34,8 +34,11 @@ jobs:
         channel: 'stable' # or: 'dev' or 'beta'
     
     # Runs a command using the runners shell
+    - run: echo ${{ secrets.GOOGLE_SERVICES }}
+    - run: echo ${{ secrets.GOOGLE_SERVICES }} > ./android/app/google-services.json
+    - run: echo ${{ secrets.GOOGLE_SERVICES }} > ./android/app/src/main/google-services.json
     - run: flutter pub get
     - run: flutter build apk
-    - run: echo ${{ secrets.TELEGRAM_CHAT_ID }}
+    # - run: echo ${{ secrets.TELEGRAM_CHAT_ID }}
     # - run: curl -F chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -F document=@app-staging-debug.apk -F caption=adaygbarunih https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
 
