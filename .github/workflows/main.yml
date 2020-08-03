@@ -34,8 +34,8 @@ jobs:
         channel: 'stable' # or: 'dev' or 'beta'
     
     # Runs a command using the runners shell
-    - run: echo ${{ secrets.GOOGLE_SERVICES }} > ./android/app/google-services.json
-    - run: echo ${{ secrets.GOOGLE_SERVICES }} > ./android/app/src/main/google-services.json
+    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
+    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
     - run: flutter pub get
     - run: flutter build apk
     # - run: echo ${{ secrets.TELEGRAM_CHAT_ID }}
