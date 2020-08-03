@@ -12,7 +12,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a single job called "build_staging_android"
   build_staging_android:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -44,8 +44,8 @@ jobs:
     - run: flutter build apk --release
 
     # move to APK to root directory
-    - run: mv build/app/outputs/apk/release/app-release.apk pikobar-$GITHUB_RUN_ID.apk
+    - run: mv build/app/outputs/apk/release/app-release.apk pikobar-staging-$GITHUB_RUN_ID.apk
 
     # send to telegram channel
-    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-$GITHUB_RUN_ID.apk' -F caption="ada APK staging baru nih" https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
+    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging-$GITHUB_RUN_ID.apk' -F caption=PIKOBAR_STAGING https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
 
