@@ -111,6 +111,39 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           ),
         ),
 
+        state.documentSnapshot['contact_date'] != null &&
+                state.documentSnapshot['contact_date'].toString().isNotEmpty
+            ? Column(
+                children: <Widget>[
+                  /// Divider
+                  Container(
+                    height: 8.0,
+                    color: ColorBase.grey,
+                  ),
+
+                  /// Contact date section
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Dimens.padding,
+                        vertical: Dimens.verticalPadding),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: _buildText(
+                              text: Dictionary.contactDateCovid, isLabel: true),
+                        ),SizedBox(width: 40,),
+                        _buildText(
+                            text: unixTimeStampToDate(
+                                state.documentSnapshot['contact_date'].seconds))
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Container(),
+
         /// Divider
         Container(
           height: 8.0,
@@ -187,9 +220,13 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 DateTime.fromMillisecondsSinceEpoch(
                     state.documentSnapshot['created_at'].seconds * 1000),
                 currentDay)
-            ? Container(
+            ?
+        Container(
                 height: 38.0,
-                margin: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, bottom: Dimens.padding),
+                margin: EdgeInsets.only(
+                    left: Dimens.padding,
+                    right: Dimens.padding,
+                    bottom: Dimens.padding),
                 child: RaisedButton(
                     splashColor: Colors.lightGreenAccent,
                     color: ColorBase.green,
@@ -205,7 +242,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                           color: Colors.white),
                     ),
                     onPressed: () async {
-                    /// Add data to DailyReportModel that will be used for edit data
+                      /// Add data to DailyReportModel that will be used for edit data
                       LatLng latLng = LatLng(
                           state.documentSnapshot['location'].latitude,
                           state.documentSnapshot['location'].longitude);
