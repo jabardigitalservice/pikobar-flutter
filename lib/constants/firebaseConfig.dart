@@ -137,6 +137,18 @@ class FirebaseConfig {
       '"documents": {'
       '"title": "Dokumen",'
       '"description": "Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat"'
+      '},'
+      '"check_distribution": {'
+      ' "by_radius": {'
+      '"confirmed": "Terkonfirmasi",'
+      '"odp": "ODP",'
+      '"pdp": "PDP"'
+      ' },'
+      '"by_region": {'
+      '"confirmed": "Terkonfirmasi",'
+      '"odp": "ODP",'
+      '"pdp": "PDP"'
+      '}'
       '}'
       '}';
 }
