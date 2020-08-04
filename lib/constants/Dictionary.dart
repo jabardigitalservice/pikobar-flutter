@@ -361,7 +361,7 @@ class Dictionary {
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
-  static String contactDateCovid = 'Tanggal Terakhir Kontak Dengan Terduga COVID-19';
+  static String contactDateCovid = 'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
