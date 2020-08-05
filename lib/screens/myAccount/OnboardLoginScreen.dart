@@ -124,7 +124,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   width: MediaQuery.of(context).size.width,
                   height: 40.0,
                   margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, Dimens.padding, Dimens.padding, 15.0),
+                      Dimens.padding, Dimens.padding, Dimens.padding, Dimens.padding),
                   child: RaisedButton(
                       splashColor: Colors.lightGreenAccent,
                       padding: EdgeInsets.all(0.0),
