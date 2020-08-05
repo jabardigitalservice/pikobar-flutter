@@ -6,6 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomButton.dart';
@@ -32,6 +33,19 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
   RemoteConfigBloc _remoteConfigBloc;
 
   bool isAgree = false;
+  String _versionText = Dictionary.version;
+
+  @override
+  void initState() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() {
+        _versionText = packageInfo.version != null
+            ? packageInfo.version
+            : Dictionary.version;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +124,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   width: MediaQuery.of(context).size.width,
                   height: 40.0,
                   margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, Dimens.padding, Dimens.padding, 25.0),
+                      Dimens.padding, Dimens.padding, Dimens.padding, 15.0),
                   child: RaisedButton(
                       splashColor: Colors.lightGreenAccent,
                       padding: EdgeInsets.all(0.0),
@@ -141,7 +155,19 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                           );
                         }
                       }),
-                )
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(
+                      Dimens.padding, 0.0, Dimens.padding, 20.0),
+                  child: Text(
+                    '${Dictionary.versionText} '+_versionText,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: ColorBase.darkGrey,
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 12.0),
+                  ),
+                ),
               ],
             ),
           ),
@@ -275,9 +301,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
               '${Environment.iconAssets}${isApple ? 'apple_white.png' : 'google.png'}'),
           height: 24.0),
       label: Text(
-        isApple
-            ? Dictionary.signInWithApple
-            : Dictionary.signInWithGoogle,
+        isApple ? Dictionary.signInWithApple : Dictionary.signInWithGoogle,
         style: TextStyle(
           fontSize: 15,
           color: isApple ? Colors.white : Colors.grey[600],
