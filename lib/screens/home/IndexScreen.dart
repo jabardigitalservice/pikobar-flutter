@@ -195,7 +195,7 @@ class IndexScreenState extends State<IndexScreen> {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => NewsDetailScreen(
-                  id: data['id'],
+                  id: data['id'].toString().trim(),
                   news: newsType,
                 )));
       } else {
@@ -205,7 +205,7 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(id: data['id'])));
+            builder: (context) => MessageDetailScreen(id: data['id'].toString().trim())));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
@@ -214,7 +214,7 @@ class IndexScreenState extends State<IndexScreen> {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => NewsDetailScreen(
-                  id: data['id'],
+                  id: data['id'].toString().trim(),
                   news: Dictionary.importantInfo,
                 )));
       } else {
