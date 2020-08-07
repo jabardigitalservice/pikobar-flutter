@@ -28,10 +28,10 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         # run spesific version
-        # flutter-version: '1.9.1+hotfix.6'
+        flutter-version: '1.17.5'
 
         # channel version
-        channel: 'stable' # or: 'dev' or 'beta'
+        # channel: 'stable' # or: 'dev' or 'beta'
 
     # Runs a command using the runners shell
 
