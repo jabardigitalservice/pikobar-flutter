@@ -62,9 +62,9 @@ class _EditState extends State<Edit> {
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
-  String _format = 'yyyy-MMMM-dd';
+  String _format = 'dd-MMMM-yyyy';
   String minDate = '1900-01-01';
-  DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
+  DateTimePickerLocale _locale = DateTimePickerLocale.id;
   bool otpEnabled;
   bool isCityFieldEmpty = false;
   bool isBirthdayEmpty = false;

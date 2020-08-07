@@ -44,7 +44,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
 
   DailyReportBloc _dailyReportBloc;
 
-  String _format = 'yyyy-MMMM-dd';
+  String _format = 'dd-MMMM-yyyy';
   String _minDate = '2019-01-01';
   bool _isDateEmpty = false;
   bool _isIndicationEmpty = false;
