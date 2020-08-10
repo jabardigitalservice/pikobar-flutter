@@ -37,7 +37,7 @@ class LocationService {
           isDismissible: false,
           builder: (context) {
             return Container(
-              margin: EdgeInsets.all(Dimens.padding),
+              margin: EdgeInsets.all(10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
