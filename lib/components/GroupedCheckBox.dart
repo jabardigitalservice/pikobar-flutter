@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 
 enum CheckboxOrientation { HORIZONTAL, VERTICAL, WRAP }
 
@@ -231,11 +232,28 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
       child: InkWell(
         borderRadius: widget.borderRadius,
         onTap: () {
-          if (selectedItems.contains(widget.itemValueList[index])) {
-            selectedItems.remove(widget.itemValueList[index]);
+          if (!selectedItems.contains(widget.itemValueList[11]) &&
+              selectedItems.isNotEmpty) {
+            if (index == 11) {
+            } else {
+              if (selectedItems.contains(widget.itemValueList[index])) {
+                selectedItems.remove(widget.itemValueList[index]);
+              } else {
+                selectedItems.add(widget.itemValueList[index]);
+              }
+            }
           } else {
-            selectedItems.add(widget.itemValueList[index]);
+            if (selectedItems.contains(widget.itemValueList[11])) {
+              selectedItems.remove(widget.itemValueList[index]);
+            } else {
+              if (selectedItems.contains(widget.itemValueList[index])) {
+                selectedItems.remove(widget.itemValueList[index]);
+              } else {
+                selectedItems.add(widget.itemValueList[index]);
+              }
+            }
           }
+
           setState(() {});
           widget.onChanged(selectedItems);
         },
@@ -250,21 +268,38 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(4.0)),
                     border: Border.all(
-                        color: selectedItems.contains(widget.itemValueList[index])
-                            ? widget.activeColor
-                            : widget.color)),
+                        color:
+                            selectedItems.contains(widget.itemValueList[index])
+                                ? widget.activeColor
+                                : widget.color)),
                 child: selectedItems.contains(widget.itemValueList[index])
                     ? Icon(FontAwesomeIcons.check,
                         size: 10,
-                        color: selectedItems.contains(widget.itemValueList[index])
-                            ? widget.activeColor
-                            : widget.color)
+                        color:
+                            selectedItems.contains(widget.itemValueList[index])
+                                ? widget.activeColor
+                                : widget.color)
                     : null,
               ),
               Expanded(
                 child: Text(widget.itemLabelList[index],
-                    style: widget.textStyle ??
-                        TextStyle(fontFamily: FontsFamily.lato)),
+                    style: !selectedItems.contains(widget.itemValueList[11]) &&
+                            selectedItems.isNotEmpty
+                        ? index == 11
+                            ? TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                color: ColorBase.menuBorderColor,
+                                fontSize: 12)
+                            : widget.textStyle
+                        : selectedItems.contains(widget.itemValueList[11])
+                            ? index == 11
+                                ? widget.textStyle
+                                : TextStyle(
+                                    fontFamily: FontsFamily.lato,
+                                    color: ColorBase.menuBorderColor,
+                                    fontSize: 12)
+                            : widget.textStyle ??
+                                TextStyle(fontFamily: FontsFamily.lato)),
               ),
             ],
           ),
