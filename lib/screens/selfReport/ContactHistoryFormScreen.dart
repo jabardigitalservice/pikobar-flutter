@@ -41,7 +41,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
   RemoteConfigBloc _remoteConfigBloc;
   ContactHistorySaveBloc _contactHistorySaveBloc;
 
-  String _format = 'yyyy-MMMM-dd';
+  String _format = 'dd-MMMM-yyyy';
   String _minDate = '2019-01-01';
   String _gender = '';
   String _relation = '';
