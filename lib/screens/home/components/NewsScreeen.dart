@@ -349,7 +349,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                     ),
                                   ),
                                 ),
-                                widget.news != Dictionary.importantInfo && data.newsChannel.isNotEmpty
+                                widget.news != Dictionary.importantInfo &&
+                                        data.newsChannel.isNotEmpty
                                     ? Text(
                                         unixTimeStampToDateTime(
                                             data.publishedAt),
@@ -421,52 +422,54 @@ class _NewsScreenState extends State<NewsScreen> {
                             child: Skeleton(
                                 width: MediaQuery.of(context).size.width / 4),
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(5.0),
-                            width: MediaQuery.of(context).size.width - 135,
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                    child: Skeleton(
-                                  height: 15.0,
-                                  width: MediaQuery.of(context).size.width,
-                                )),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Container(
-                                    child: Skeleton(
-                                  height: 15.0,
-                                  width: MediaQuery.of(context).size.width,
-                                )),
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Skeleton(
-                                            height: 20.0,
-                                            width: 20.0,
-                                          ),
-                                          Skeleton(
-                                            height: 15.0,
-                                            width: 55.0,
-                                            margin: 10.0,
-                                          ),
-                                        ],
-                                      ),
-                                      Skeleton(
-                                        height: 15.0,
-                                        width: 55.0,
-                                      ),
-                                    ],
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(5.0),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                      child: Skeleton(
+                                    height: 15.0,
+                                    width: MediaQuery.of(context).size.width,
+                                  )),
+                                  SizedBox(
+                                    height: 5,
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                      child: Skeleton(
+                                    height: 15.0,
+                                    width: MediaQuery.of(context).size.width,
+                                  )),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Skeleton(
+                                              height: 20.0,
+                                              width: 20.0,
+                                            ),
+                                            Skeleton(
+                                              height: 15.0,
+                                              width: 55.0,
+                                              margin: 10.0,
+                                            ),
+                                          ],
+                                        ),
+                                        Skeleton(
+                                          height: 15.0,
+                                          width: 55.0,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     );
