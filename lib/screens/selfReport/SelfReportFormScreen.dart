@@ -72,6 +72,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   @override
   void initState() {
     super.initState();
+
     /// If DailyReportModel not null fill data to form
     if (widget.dailyReportModel != null) {
       _dateController.text = widget.dailyReportModel.contactDate != null
@@ -149,6 +150,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   SizedBox(height: Dimens.padding),
                   GroupedCheckBox(
                     itemHeight: 40.0,
+                    indexAllDisabled: 11,
                     borderRadius: BorderRadius.circular(8.0),
                     color: ColorBase.menuBorderColor,
                     defaultSelectedList: _checkedItemList,
