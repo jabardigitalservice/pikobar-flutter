@@ -134,6 +134,11 @@ class GroupedCheckBox extends StatefulWidget {
   /// Defaults to 0.0.
   final double wrapRunSpacing;
 
+  /// An index that determine a specific checkbox item that can disable all the checkboxes.
+  /// When the checkbox that has an index matches the value [indexAllDisabled] is selected,
+  /// all other checkboxes will be disabled automatically.
+  final int indexAllDisabled;
+
   GroupedCheckBox(
       {@required this.itemLabelList,
       @required this.itemValueList,
@@ -150,7 +155,8 @@ class GroupedCheckBox extends StatefulWidget {
       this.wrapDirection = Axis.horizontal,
       this.wrapAlignment = WrapAlignment.start,
       this.wrapSpacing = 0.0,
-      this.wrapRunSpacing = 0.0})
+      this.wrapRunSpacing = 0.0,
+      this.indexAllDisabled})
       : assert(itemLabelList.length == itemValueList.length);
 
   @override
@@ -232,9 +238,10 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
       child: InkWell(
         borderRadius: widget.borderRadius,
         onTap: () {
-          if (!selectedItems.contains(widget.itemValueList[11]) &&
+          if (!selectedItems
+                  .contains(widget.itemValueList[widget.indexAllDisabled]) &&
               selectedItems.isNotEmpty) {
-            if (index == 11) {
+            if (index == widget.indexAllDisabled) {
             } else {
               if (selectedItems.contains(widget.itemValueList[index])) {
                 selectedItems.remove(widget.itemValueList[index]);
@@ -243,7 +250,8 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
               }
             }
           } else {
-            if (selectedItems.contains(widget.itemValueList[11])) {
+            if (selectedItems
+                .contains(widget.itemValueList[widget.indexAllDisabled])) {
               selectedItems.remove(widget.itemValueList[index]);
             } else {
               if (selectedItems.contains(widget.itemValueList[index])) {
@@ -283,16 +291,18 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
               ),
               Expanded(
                 child: Text(widget.itemLabelList[index],
-                    style: !selectedItems.contains(widget.itemValueList[11]) &&
+                    style: !selectedItems.contains(widget
+                                .itemValueList[widget.indexAllDisabled]) &&
                             selectedItems.isNotEmpty
-                        ? index == 11
+                        ? index == widget.indexAllDisabled
                             ? TextStyle(
                                 fontFamily: FontsFamily.lato,
                                 color: ColorBase.menuBorderColor,
                                 fontSize: 12)
                             : widget.textStyle
-                        : selectedItems.contains(widget.itemValueList[11])
-                            ? index == 11
+                        : selectedItems.contains(
+                                widget.itemValueList[widget.indexAllDisabled])
+                            ? index == widget.indexAllDisabled
                                 ? widget.textStyle
                                 : TextStyle(
                                     fontFamily: FontsFamily.lato,
