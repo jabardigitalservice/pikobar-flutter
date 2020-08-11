@@ -12,11 +12,11 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build_staging_android"
-  build_staging_android:
+  # This workflow contains a single job called "build"
+  build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    name: Build APK staging android
+    name: Build Android APK
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -33,9 +33,23 @@ jobs:
         # channel version
         # channel: 'stable' # or: 'dev' or 'beta'
 
-    # Runs a command using the runners shell
+    # Write a pikobar.keystore file from a base64-encoded string
+    - name: Write Keystore
+        id: write_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: 'pikobar.keystore'
+          encodedString: ${{ secrets.PIKOBAR_KEY }}
 
+
+    # Runs a command using the runners shell
     # Runs setup env
+    - run: mv ${{ steps.write_keystore.outputs.filePath }} ./android/pikobar.keystore
+    - run: sed -i -e 's/%GOOGLE_API_KEY%/${{ secrets.GOOGLE_API_KEY }}/g' ./android/app/src/main/AndroidManifest.xml
+    - run: echo 'storeFile=pikobar.keystore' > ./android/key.properties
+    - run: echo 'storePassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
+    - run: echo 'keyPassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
+    - run: echo 'keyAlias=${{ secrets.PIKOBAR_ALIAS }}' >> ./android/key.properties
     - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
     - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
 
