@@ -35,9 +35,9 @@ jobs:
 
     # Write a pikobar.keystore file from a base64-encoded string
     - name: Write Keystore
-        id: write_keystore
-        uses: timheuer/base64-to-file@v1.0.3
-        with:
+      id: write_keystore
+      uses: timheuer/base64-to-file@v1.0.3
+      with:
           fileName: 'pikobar.keystore'
           encodedString: ${{ secrets.PIKOBAR_KEY }}
 
