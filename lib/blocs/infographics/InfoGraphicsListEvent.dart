@@ -7,8 +7,9 @@ abstract class InfoGraphicsListEvent extends Equatable {
 
 class InfoGraphicsListLoad extends InfoGraphicsListEvent {
   final int limit;
+  final String infoGraphicsCollection;
 
-  InfoGraphicsListLoad({this.limit});
+  InfoGraphicsListLoad({this.limit, this.infoGraphicsCollection});
 
   @override
   List<Object> get props => [limit];

@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -23,6 +25,34 @@ class InfoGraphics extends StatefulWidget {
 }
 
 class _InfoGraphicsState extends State<InfoGraphics> {
+  InfoGraphicsListBloc infoGraphicsListBloc;
+
+  List<String> listItemTitleTab = [
+    Dictionary.titleLatestNews,
+    Dictionary.center,
+    Dictionary.who,
+  ];
+
+  List<String> listCollectionData = [
+    kInfographics,
+    kInfographicsCenter,
+    kInfographicsWho,
+  ];
+
+  List<String> analyticsData = [
+    Analytics.tappedInfographicJabar,
+    Analytics.tappedInfographicCenter,
+    Analytics.tappedInfographicWho,
+  ];
+
+  @override
+  void initState() {
+    infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
+    infoGraphicsListBloc
+        .add(InfoGraphicsListLoad(infoGraphicsCollection: kInfographics, limit: 3));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
@@ -79,13 +109,26 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 textAlign: TextAlign.left,
               ),
             ),
-            BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-              builder: (context, state) {
-                return state is InfoGraphicsListLoaded
-                    ? _buildContent(state.infoGraphicsList)
-                    : _buildLoading();
-              },
-            )
+            Container(
+                margin: EdgeInsets.only(left: 5),
+                child: CustomBubbleTab(
+                  listItemTitleTab: listItemTitleTab,
+                  indicatorColor: ColorBase.green,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.grey,
+                  onTap: (index) {
+                    setState(() {});
+                    infoGraphicsListBloc.add(InfoGraphicsListLoad(
+                        infoGraphicsCollection: listCollectionData[index], limit: 3));
+                    AnalyticsHelper.setLogEvent(analyticsData[index]);
+                  },
+                  tabBarView: <Widget>[
+                    _buildInfographic(),
+                    _buildInfographic(),
+                    _buildInfographic(),
+                  ],
+                  heightTabBarView: 240,
+                )),
           ],
         );
       } else {
@@ -143,6 +186,16 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         ;
       }
     });
+  }
+
+  Widget _buildInfographic() {
+    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+      builder: (context, state) {
+        return state is InfoGraphicsListLoaded
+            ? _buildContent(state.infoGraphicsList)
+            : _buildLoading();
+      },
+    );
   }
 
   Widget _buildLoading() {
@@ -219,11 +272,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
     return Container(
-      height: 260,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           padding: const EdgeInsets.only(
-              left: 11.0, right: 16.0, top: 16.0, bottom: 16.0),
+               right: 16.0, bottom: 16.0),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: listData.length,
@@ -283,6 +335,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           child: Container(
                             padding: EdgeInsets.only(top: 10),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Row(
                                   mainAxisAlignment:

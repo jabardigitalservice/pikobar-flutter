@@ -119,6 +119,8 @@ class Dictionary {
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';
+  static String center = "Pusat";
+  static String who = "WHO";
 
   // Button Text
   static String yes = 'Ya';
@@ -392,4 +394,5 @@ class Dictionary {
   static String relation = 'Hubungan';
   static String otherRelation = 'Hubungan lainnya';
   static String lastContactDate = 'Tanggal Kontak Terakhir';
+
 }

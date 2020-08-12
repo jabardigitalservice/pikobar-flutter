@@ -37,6 +37,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
   List<Widget> listBubbleTabItem = [];
   String dataSelected = "";
   bool isExpand;
+
   @override
   void initState() {
     listBubbleTabItem.clear();
@@ -90,7 +91,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
               indicatorWeight: 0.1,
               labelPadding: EdgeInsets.all(10),
               tabs: listBubbleTabItem),
-         isExpand
+          isExpand
               ? Expanded(
                   child: TabBarView(
                     controller: widget.tabController != null
@@ -102,7 +103,10 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
                 )
               : Container(
                   height: widget.heightTabBarView,
-                  padding: EdgeInsets.only(top: widget.paddingTopTabBarView),
+                  padding: EdgeInsets.only(
+                      top: widget.paddingTopTabBarView != null
+                          ? widget.paddingTopTabBarView
+                          : 0.0),
                   child: TabBarView(
                     controller: widget.tabController != null
                         ? widget.tabController
