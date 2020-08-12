@@ -44,7 +44,8 @@ class RemoteConfigRepository {
       FirebaseConfig.termsConditions: false,
       FirebaseConfig.contactHistoryForm:
           FirebaseConfig.contactHistoryFormDefaultValue,
-      FirebaseConfig.labels: FirebaseConfig.labelsDefaultValue
+      FirebaseConfig.labels: FirebaseConfig.labelsDefaultValue,
+      FirebaseConfig.statisticsSwitch: false
     });
 
     try {
