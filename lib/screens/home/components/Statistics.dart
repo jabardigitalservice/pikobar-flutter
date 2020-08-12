@@ -190,6 +190,8 @@ class _StatisticsState extends State<Statistics> {
     Map<String, dynamic> labelUpdateTerkini =
         GetLabelRemoteConfig.getLabel(remoteConfig);
 
+    bool statisticsSwitch = getStatisticsSwitch(remoteConfig);
+
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +281,33 @@ class _StatisticsState extends State<Statistics> {
             ],
           ),
           SizedBox(height: Dimens.padding),
-          Row(
+          statisticsSwitch ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _buildContainer(
+                  '',
+                  labelUpdateTerkini['statistics']['odp'],
+                  Dictionary.opdDesc,
+                  data['kontak_erat']['total'].toString(),
+                  2,
+                  Dictionary.people,
+                  Color(0xff828282),
+                  Color(0xff2F80ED),
+                  data['kontak_erat']['karantina'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
+              _buildContainer(
+                  '',
+                  labelUpdateTerkini['statistics']['pdp'],
+                  Dictionary.pdpDesc,
+                  data['suspek']['total'].toString(),
+                  2,
+                  Dictionary.people,
+                  Color(0xff828282),
+                  Color(0xffF2C94C),
+                  data['suspek']['isolasi'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
+            ],
+          ) : Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
@@ -532,5 +560,13 @@ class _StatisticsState extends State<Statistics> {
         onTap: () {},
       ),
     );
+  }
+
+  bool getStatisticsSwitch(RemoteConfig remoteConfig) {
+    if (remoteConfig != null && remoteConfig.getBool(FirebaseConfig.statisticsSwitch) != null) {
+      return remoteConfig.getBool(FirebaseConfig.statisticsSwitch);
+    } else {
+      return false;
+    }
   }
 }

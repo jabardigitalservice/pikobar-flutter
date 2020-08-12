@@ -4,7 +4,6 @@ class FirebaseConfig {
   static String forceUpdateRequired = 'force_update_required';
 
   /// Remote config parameter key
-  /// for menus
   static String jshUrl = 'jabarsaberhoax_url';
   static String announcement = 'announcement';
   static String jshCaption = 'jabarsaberhoax_caption';
@@ -44,6 +43,7 @@ class FirebaseConfig {
   static String groupHomeBanner = 'group_home_bigbanner';
   static String importantinfoStatusVisible = 'important_info_status_visible';
   static String labels = 'labels';
+  static String statisticsSwitch = 'statistics_switch';
 
   /// Remote config parameter key
   /// Access requires a login
