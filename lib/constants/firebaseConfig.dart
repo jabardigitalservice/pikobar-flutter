@@ -101,6 +101,8 @@ class FirebaseConfig {
       '"recovered": "Sembuh",'
       '"deaths": "Meninggal",'
       '"odp": "ODP",'
+      '"odp_detail": "Dari Total ",'
+      '"pdp_detail": "Dari Total ",'
       '"pdp": "PDP"'
       '},'
       '"pcr_rdt": {'
