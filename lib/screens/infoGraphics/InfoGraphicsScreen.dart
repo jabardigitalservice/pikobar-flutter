@@ -84,7 +84,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 heightTabBarView: MediaQuery.of(context).size.height - 148,
               )),
         ));
-    //   body:
   }
 
   Widget _buildInfoGraphic() {
