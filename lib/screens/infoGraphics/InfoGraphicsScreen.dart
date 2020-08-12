@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -13,6 +14,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -56,9 +58,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         body: MultiBlocProvider(
           providers: [
             BlocProvider<InfoGraphicsListBloc>(
-                create: (context) => _infoGraphicsListBloc
-                  ..add(InfoGraphicsListLoad(
-                      infoGraphicsCollection: kInfographics)),
+              create: (context) => _infoGraphicsListBloc
+                ..add(InfoGraphicsListLoad(
+                    infoGraphicsCollection: kInfographics)),
             ),
           ],
           child: Container(
@@ -96,17 +98,23 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   }
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
-    final int dataCount = listData.length;
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 0.7),
-      shrinkWrap: true,
-      itemCount: dataCount,
-      padding: EdgeInsets.only(bottom: 20.0, left: 14.0),
-      itemBuilder: (_, int index) {
-        return _cardContent(listData[index]);
-      },
-    );
+    return listData.isNotEmpty
+        ? GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, childAspectRatio: 0.7),
+            shrinkWrap: true,
+            itemCount: listData.length,
+            padding: EdgeInsets.only(bottom: 20.0, left: 14.0),
+            itemBuilder: (_, int index) {
+              return _cardContent(listData[index]);
+            },
+          )
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: '',
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
+          );
   }
 
   _buildLoading() {
