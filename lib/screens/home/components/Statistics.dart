@@ -292,7 +292,8 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.people,
                   Color(0xff828282),
                   Color(0xff2F80ED),
-                  data['odp']['total']['jabar'].toString()),
+                  data['odp']['total']['jabar'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
               _buildContainer(
                   '',
                   labelUpdateTerkini['statistics']['pdp'],
@@ -303,7 +304,8 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.people,
                   Color(0xff828282),
                   Color(0xffF2C94C),
-                  data['pdp']['total']['jabar'].toString()),
+                  data['pdp']['total']['jabar'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
             ],
           )
         ],
@@ -457,7 +459,8 @@ class _StatisticsState extends State<Statistics> {
       String label,
       Color colorTextTitle,
       Color colorNumber,
-      String total) {
+      String total,
+      {String detailText}) {
     if (count != null && count.isNotEmpty && count != '-') {
       try {
         count = formatter.format(int.parse(count)).replaceAll(',', '.');
@@ -517,7 +520,7 @@ class _StatisticsState extends State<Statistics> {
                     )
                   : Container(
                       margin: EdgeInsets.only(top: 10, left: 5.0),
-                      child: Text(Dictionary.textSum + total,
+                      child: Text(detailText + total,
                           style: TextStyle(
                               fontSize: 12.0,
                               color: Color(0xff333333),
