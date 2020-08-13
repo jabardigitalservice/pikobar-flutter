@@ -25,7 +25,7 @@ class LocationService {
     if (await permissionService.status.isGranted) {
       await actionSendLocation();
     } else {
-      showModalBottomSheet(
+      showModalBottomSheet(isScrollControlled: true,
           context: context,
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
@@ -38,7 +38,7 @@ class LocationService {
           builder: (context) {
             return SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -101,7 +101,7 @@ class LocationService {
                                     Platform.isAndroid
                                         ? await AppSettings.openAppSettings()
                                         : await AppSettings
-                                            .openLocationSettings();
+                                        .openLocationSettings();
                                   } else {
                                     permissionService.request().then((status) {
                                       _onStatusRequested(context, status);
@@ -109,7 +109,8 @@ class LocationService {
                                   }
                                 }))
                       ],
-                    )
+                    ),
+                    SizedBox(height: 22),
                   ],
                 ),
               ),
