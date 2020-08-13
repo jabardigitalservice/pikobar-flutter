@@ -64,25 +64,24 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             ),
           ],
           child: Container(
-              margin: EdgeInsets.only(left: 5),
               child: CustomBubbleTab(
-                listItemTitleTab: listItemTitleTab,
-                indicatorColor: ColorBase.green,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
-                onTap: (index) {
-                  setState(() {});
-                  _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-                      infoGraphicsCollection: listCollectionData[index]));
-                  AnalyticsHelper.setLogEvent(analyticsData[index]);
-                },
-                tabBarView: <Widget>[
-                  _buildInfoGraphic(),
-                  _buildInfoGraphic(),
-                  _buildInfoGraphic(),
-                ],
-                heightTabBarView: MediaQuery.of(context).size.height - 148,
-              )),
+            listItemTitleTab: listItemTitleTab,
+            indicatorColor: ColorBase.green,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            onTap: (index) {
+              setState(() {});
+              _infoGraphicsListBloc.add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: listCollectionData[index]));
+              AnalyticsHelper.setLogEvent(analyticsData[index]);
+            },
+            tabBarView: <Widget>[
+              _buildInfoGraphic(),
+              _buildInfoGraphic(),
+              _buildInfoGraphic(),
+            ],
+            heightTabBarView: MediaQuery.of(context).size.height - 148,
+          )),
         ));
   }
 
@@ -117,65 +116,75 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   }
 
   _buildLoading() {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      elevation: 1.5,
-      margin: EdgeInsets.only(right: 14, top: 10, bottom: 0),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.20,
-            decoration: BoxDecoration(shape: BoxShape.circle),
-            child: Skeleton(
-              width: MediaQuery.of(context).size.width,
-              padding: 10.0,
-            ),
+    return Container(
+        child: GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, childAspectRatio: 0.7),
+      shrinkWrap: true,
+      itemCount: 10,
+      padding: EdgeInsets.only(bottom: 20.0, left: 5.0, right: 5.0),
+      itemBuilder: (_, int index) {
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 14.0, right: 14.0, top: 14.0, bottom: 14.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Skeleton(
-                        height: 20.0,
-                        width: MediaQuery.of(context).size.width / 1.4,
-                        padding: 10.0,
-                      ),
-                      SizedBox(height: 8),
-                      Skeleton(
-                        height: 20.0,
-                        width: MediaQuery.of(context).size.width / 2,
-                        padding: 10.0,
-                      ),
-                    ],
-                  ),
+          elevation: 1.5,
+          margin: EdgeInsets.only(top: 10, bottom: 10, left: 5, right: 5),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.20,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: Skeleton(
+                  width: MediaQuery.of(context).size.width,
+                  padding: 10.0,
                 ),
-                SizedBox(
-                  width: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10.0, right: 14.0, top: 14.0, bottom: 14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Skeleton(
+                            height: 20.0,
+                            width: MediaQuery.of(context).size.width / 1.4,
+                            padding: 10.0,
+                          ),
+                          SizedBox(height: 8),
+                          Skeleton(
+                            height: 20.0,
+                            width: MediaQuery.of(context).size.width / 2,
+                            padding: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      child: Skeleton(
+                        height: 20.0,
+                        width: 20,
+                      ),
+                    )
+                  ],
                 ),
-                Container(
-                  child: Skeleton(
-                    height: 20.0,
-                    width: 20,
-                  ),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+      },
+    ));
   }
 
   Widget _cardContent(DocumentSnapshot data) {
