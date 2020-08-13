@@ -190,6 +190,8 @@ class _StatisticsState extends State<Statistics> {
     Map<String, dynamic> labelUpdateTerkini =
         GetLabelRemoteConfig.getLabel(remoteConfig);
 
+    bool statisticsSwitch = getStatisticsSwitch(remoteConfig);
+
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,25 +288,33 @@ class _StatisticsState extends State<Statistics> {
                   '',
                   labelUpdateTerkini['statistics']['odp'],
                   Dictionary.opdDesc,
-                  getDataProcess(data['odp']['total']['jabar'],
-                      data['odp']['selesai']['jabar']),
+                  statisticsSwitch
+                      ? data['kontak_erat']['total'].toString()
+                      : getDataProcess(data['odp']['total']['jabar'],
+                          data['odp']['selesai']['jabar']),
                   2,
                   Dictionary.people,
                   Color(0xff828282),
                   Color(0xff2F80ED),
-                  data['odp']['total']['jabar'].toString(),
+                  statisticsSwitch
+                      ? data['kontak_erat']['karantina'].toString()
+                      : data['odp']['total']['jabar'].toString(),
                   detailText: labelUpdateTerkini['statistics']['odp_detail']),
               _buildContainer(
                   '',
                   labelUpdateTerkini['statistics']['pdp'],
                   Dictionary.pdpDesc,
-                  getDataProcess(data['pdp']['total']['jabar'],
-                      data['pdp']['selesai']['jabar']),
+                  statisticsSwitch
+                      ? data['suspek']['total'].toString()
+                      : getDataProcess(data['pdp']['total']['jabar'],
+                          data['pdp']['selesai']['jabar']),
                   2,
                   Dictionary.people,
                   Color(0xff828282),
                   Color(0xffF2C94C),
-                  data['pdp']['total']['jabar'].toString(),
+                  statisticsSwitch
+                      ? data['suspek']['isolasi'].toString()
+                      : data['pdp']['total']['jabar'].toString(),
                   detailText: labelUpdateTerkini['statistics']['pdp_detail']),
             ],
           )
@@ -532,5 +542,14 @@ class _StatisticsState extends State<Statistics> {
         onTap: () {},
       ),
     );
+  }
+
+  bool getStatisticsSwitch(RemoteConfig remoteConfig) {
+    if (remoteConfig != null &&
+        remoteConfig.getBool(FirebaseConfig.statisticsSwitch) != null) {
+      return remoteConfig.getBool(FirebaseConfig.statisticsSwitch);
+    } else {
+      return false;
+    }
   }
 }
