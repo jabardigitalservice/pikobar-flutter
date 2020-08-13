@@ -65,7 +65,10 @@ class Analytics {
   static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
 
 
-
+  // event infographic
+  static String tappedInfographicJabar = 'tapped_info_praktikal_jabar';
+  static String tappedInfographicCenter = 'tapped_info_praktikal_pusat';
+  static String tappedInfographicWho = 'tapped_info_praktikal_who';
 
 
   //message
