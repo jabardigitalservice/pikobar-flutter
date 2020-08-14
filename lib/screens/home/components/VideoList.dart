@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -146,128 +147,141 @@ class _VideoListState extends State<VideoList> {
         ),
         Container(
           height: 280.0,
-          child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
-              scrollDirection: Axis.horizontal,
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.only(right: 15.0),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  // decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        GestureDetector(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 180.0,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: <Widget>[
-                                CachedNetworkImage(
-                                  imageUrl: getYtThumbnail(
-                                      youtubeUrl: data[index].url,
-                                      error: false),
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
-                                  placeholder: (context, url) => Center(
-                                      heightFactor: 10.2,
-                                      child: CupertinoActivityIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      CachedNetworkImage(
-                                    imageUrl: getYtThumbnail(
-                                        youtubeUrl: data[index].url,
-                                        error: true),
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.fill,
+          child: data.isNotEmpty
+              ? ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(right: 15.0),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      // decoration: BoxDecoration(shape: BoxShape.circle),
+                      child: Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            GestureDetector(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 180.0,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    CachedNetworkImage(
+                                      imageUrl: getYtThumbnail(
+                                          youtubeUrl: data[index].url,
+                                          error: false),
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fill,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    placeholder: (context, url) => Center(
-                                        heightFactor: 10.2,
-                                        child: CupertinoActivityIndicator()),
-                                    errorWidget: (context, url, error) =>
-                                        Center(
+                                      placeholder: (context, url) => Center(
+                                          heightFactor: 10.2,
+                                          child: CupertinoActivityIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          CachedNetworkImage(
+                                        imageUrl: getYtThumbnail(
+                                            youtubeUrl: data[index].url,
+                                            error: true),
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) => Center(
                                             heightFactor: 10.2,
-                                            child: Icon(Icons.error)),
-                                  ),
+                                            child:
+                                                CupertinoActivityIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            Center(
+                                                heightFactor: 10.2,
+                                                child: Icon(Icons.error)),
+                                      ),
+                                    ),
+                                    Image.asset(
+                                      '${Environment.iconAssets}play_button.png',
+                                      scale: 1.5,
+                                    )
+                                  ],
                                 ),
-                                Image.asset(
-                                  '${Environment.iconAssets}play_button.png',
-                                  scale: 1.5,
-                                )
-                              ],
-                            ),
-                          ),
-                          onTap: () {
-                            launchExternal(data[index].url);
+                              ),
+                              onTap: () {
+                                launchExternal(data[index].url);
 
-                            AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
-                                <String, dynamic>{'title': data[index].title});
-                          },
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(
-                            unixTimeStampToDateTime(data[index].publishedAt),
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 10.0,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(top: 10),
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  height: 40.0,
-                                  margin: EdgeInsets.only(right: 5.0),
-                                  child: Text(
-                                    data[index].title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontFamily: FontsFamily.lato,
-                                        fontWeight: FontWeight.w600),
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedVideo, <String, dynamic>{
+                                  'title': data[index].title
+                                });
+                              },
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Text(
+                                unixTimeStampToDateTime(
+                                    data[index].publishedAt),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(top: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      height: 40.0,
+                                      margin: EdgeInsets.only(right: 5.0),
+                                      child: Text(
+                                        data[index].title,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontFamily: FontsFamily.lato,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  ShareButton(
+                                    paddingLeft: 10,
+                                    height: 40.0,
+                                    onPressed: () {
+                                      _shareVideo(
+                                          data[index].title, data[index].url);
+                                    },
+                                  ),
+                                ],
                               ),
-                              ShareButton(
-                                paddingLeft: 10,
-                                height: 40.0,
-                                onPressed: () {
-                                  _shareVideo(
-                                      data[index].title, data[index].url);
-                                },
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  })
+              : EmptyData(
+                  message: Dictionary.emptyData,
+                  desc: '',
+                  isFlare: false,
+                  image: "${Environment.imageAssets}not_found.png",
+                ),
         ),
       ],
     );
