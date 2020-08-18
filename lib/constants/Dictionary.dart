@@ -365,12 +365,14 @@ class Dictionary {
   static String contactDate = 'Tanggal Terakhir Kontak';
   static String contactDateCovid = 'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
+  static String additionalTemperatureInformation = 'Informasi Tambahan';
+  static String descTemperatureInformation = 'Agar dapat memantau suhu tubuh secara akurat, penting bagi Anda untuk memiliki thermometer selama isolasi mandiri.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
-  static String inputBodyTemperature = 'Masukan Suhu Tubuh';
+  static String inputBodyTemperature = 'Isi jika memiliki thermometer';
   static String dailyMonitoring = 'Lapor Kesehatan \nHarian';
   static String dailyMonitoringProgress = 'Lapor Kesehatan Harian Terisi';
   static String rememberMe = 'Ingatkan Saya';
