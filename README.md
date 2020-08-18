@@ -1,6 +1,6 @@
 
 # Pikobar Android (Flutter)
-[![Codemagic build status](https://api.codemagic.io/apps/5e7dcf5ec986423f712285cb/5e7dcf5ec986423f712285ca/status_badge.svg)](https://codemagic.io/apps/5e7dcf5ec986423f712285cb/5e7dcf5ec986423f712285ca/latest_build)
+[![Codemagic build status](https://api.codemagic.io/apps/5f3b5884dd10566f84fcfcdc/5f3b5884dd10566f84fcfcdb/status_badge.svg)](https://codemagic.io/apps/5f3b5884dd10566f84fcfcdc/5f3b5884dd10566f84fcfcdb/latest_build)
 
 > Pikobar Mobile App menggunakan Flutter saat ini sudah [dirilis untuk Android.](https://play.google.com/store/apps/details?id=id.go.jabarprov.pikobar "dirilis untuk Android.")
 
