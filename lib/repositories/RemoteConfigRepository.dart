@@ -4,7 +4,6 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 
 class RemoteConfigRepository {
-
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
@@ -40,9 +39,13 @@ class RemoteConfigRepository {
       FirebaseConfig.loginRequired: FirebaseConfig.loginRequiredDefaultVal,
       FirebaseConfig.rapidTestInfo: false,
       FirebaseConfig.rapidTestEnable: false,
-      FirebaseConfig.groupHomeBanner:false,
+      FirebaseConfig.groupHomeBanner: false,
       FirebaseConfig.importantinfoStatusVisible: false,
-      FirebaseConfig.termsConditions:false
+      FirebaseConfig.termsConditions: false,
+      FirebaseConfig.contactHistoryForm:
+          FirebaseConfig.contactHistoryFormDefaultValue,
+      FirebaseConfig.labels: FirebaseConfig.labelsDefaultValue,
+      FirebaseConfig.statisticsSwitch: false
     });
 
     try {

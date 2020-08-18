@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
@@ -90,13 +91,13 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           backgroundColor: Colors.white,
           title: CustomAppBar.setTitleAppBar(Dictionary.news),
         ),
-        body: state is NewsDetailLoading
+        body: widget.model == null ? state is NewsDetailLoading
             ? _buildLoading(context)
             : state is NewsDetailLoaded
                 ? _buildContent(context, state.record)
                 : state is NewsDetailFailure
-                    ? _buildContent(context, widget.model)
-                    : Container());
+                    ? ErrorContent(error: state.error)
+                    : Container() : _buildContent(context, widget.model));
   }
 
   _buildLoading(BuildContext context) {
@@ -263,11 +264,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                         fontSize: 12.0,
                                         fontFamily: FontsFamily.lato),
                                   ),
-                                  Text(
-                                      unixTimeStampToDateTime(data.publishedAt),
-                                      style: TextStyle(
-                                          fontSize: 12.0,
-                                          fontFamily: FontsFamily.lato))
+                                  _newsType != NewsType.articlesImportantInfo && data.newsChannel.isNotEmpty
+                                      ? Text(
+                                          unixTimeStampToDateTime(
+                                              data.publishedAt),
+                                          style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontFamily: FontsFamily.lato))
+                                      : Container()
                                 ]),
                           )
                         ],

@@ -38,7 +38,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           if (snapshot.hasData) {
             final List data = snapshot.data.documents;
             final int dataCount = data.length;
-
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, childAspectRatio: 0.7),

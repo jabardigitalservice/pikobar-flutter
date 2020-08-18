@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportDetail/SelfReportDetailBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
@@ -9,6 +11,8 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/DailyReportModel.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
@@ -22,6 +26,8 @@ class SelfReportDetailScreen extends StatefulWidget {
 }
 
 class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
+  DateTime currentDay = DateTime.now();
+  SelfReportDetailBloc _selfReportDetailBloc = SelfReportDetailBloc();
 
   @override
   void initState() {
@@ -35,7 +41,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportDetail),
       body: BlocProvider<SelfReportDetailBloc>(
-        create: (context) => SelfReportDetailBloc()
+        create: (context) => _selfReportDetailBloc
           ..add(SelfReportDetailLoad(selfReportId: widget.reportId)),
         child: BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
             builder: (context, state) {
@@ -104,6 +110,39 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
             ],
           ),
         ),
+
+        state.documentSnapshot['contact_date'] != null &&
+                state.documentSnapshot['contact_date'].toString().isNotEmpty
+            ? Column(
+                children: <Widget>[
+                  /// Divider
+                  Container(
+                    height: 8.0,
+                    color: ColorBase.grey,
+                  ),
+
+                  /// Contact date section
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Dimens.padding,
+                        vertical: Dimens.verticalPadding),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: _buildText(
+                              text: Dictionary.contactDateCovid, isLabel: true),
+                        ),SizedBox(width: 40,),
+                        _buildText(
+                            text: unixTimeStampToDate(
+                                state.documentSnapshot['contact_date'].seconds))
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Container(),
 
         /// Divider
         Container(
@@ -174,9 +213,84 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
               onPressed: () {
                 Navigator.pop(context);
               }),
-        )
+        ),
+
+        /// Edit button section
+        isSameDate(
+                DateTime.fromMillisecondsSinceEpoch(
+                    state.documentSnapshot['created_at'].seconds * 1000),
+                currentDay)
+            ?
+        Container(
+                height: 38.0,
+                margin: EdgeInsets.only(
+                    left: Dimens.padding,
+                    right: Dimens.padding,
+                    bottom: Dimens.padding),
+                child: RaisedButton(
+                    splashColor: Colors.lightGreenAccent,
+                    color: ColorBase.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      Dictionary.editDailyMonitoring,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+                          color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      /// Add data to DailyReportModel that will be used for edit data
+                      LatLng latLng = LatLng(
+                          state.documentSnapshot['location'].latitude,
+                          state.documentSnapshot['location'].longitude);
+
+                      var dailyReportModel = DailyReportModel(
+                          id: state.documentSnapshot['id'],
+                          createdAt: DateTime.fromMillisecondsSinceEpoch(
+                              state.documentSnapshot['created_at'].seconds *
+                                  1000),
+                          contactDate:
+                              state.documentSnapshot['contact_date'] != null
+                                  ? DateTime.fromMillisecondsSinceEpoch(state
+                                          .documentSnapshot['contact_date']
+                                          .seconds *
+                                      1000)
+                                  : null,
+                          indications: state.documentSnapshot['indications'],
+                          bodyTemperature:
+                              state.documentSnapshot['body_temperature'],
+                          location: latLng);
+
+                      /// Move to form screen
+                      bool isUpdateForm =
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SelfReportFormScreen(
+                                    dailyId: state.documentSnapshot['id'],
+                                    location: latLng,
+                                    dailyReportModel: dailyReportModel,
+                                  )));
+
+                      /// If data form updates, will get the newest data detail
+                      if (isUpdateForm != null && isUpdateForm) {
+                        _selfReportDetailBloc
+                          ..add(SelfReportDetailLoad(
+                              selfReportId: widget.reportId));
+                      }
+                    }),
+              )
+            : Container()
       ],
     );
+  }
+
+  /// Condition for check report is same day or not
+  bool isSameDate(DateTime createReportDay, DateTime currentDay) {
+    return createReportDay.year == currentDay.year &&
+        createReportDay.month == currentDay.month &&
+        createReportDay.day == currentDay.day;
   }
 
   /// Creates a text widget.
@@ -194,5 +308,10 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           height: 1.1667),
       textAlign: textAlign,
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

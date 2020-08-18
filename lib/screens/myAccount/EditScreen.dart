@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -35,7 +36,9 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Edit extends StatefulWidget {
   final AsyncSnapshot<DocumentSnapshot> state;
+
   Edit({this.state});
+
   @override
   _EditState createState() => _EditState();
 }
@@ -59,9 +62,9 @@ class _EditState extends State<Edit> {
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
-  String _format = 'yyyy-MMMM-dd';
+  String _format = 'dd-MMMM-yyyy';
   String minDate = '1900-01-01';
-  DateTimePickerLocale _locale = DateTimePickerLocale.en_us;
+  DateTimePickerLocale _locale = DateTimePickerLocale.id;
   bool otpEnabled;
   bool isCityFieldEmpty = false;
   bool isBirthdayEmpty = false;
@@ -238,7 +241,7 @@ class _EditState extends State<Edit> {
                             children: <Widget>[
                               buildTextField(
                                   title: Dictionary.name,
-                                  hintText: Dictionary.placeHolderName,
+                                  hintText: Dictionary.placeholderYourName,
                                   controller: _nameController,
                                   validation: Validations.nameValidation,
                                   isEdit: true),
@@ -256,16 +259,16 @@ class _EditState extends State<Edit> {
                                   title: Dictionary.nik,
                                   controller: _nikController,
                                   textInputType: TextInputType.number,
-                                  hintText: Dictionary.placeHolderNIK,
+                                  hintText: Dictionary.placeholderYourNIK,
                                   validation: Validations.nikValidation,
                                   isEdit: true),
                               SizedBox(
                                 height: 20,
                               ),
                               buildPhoneField(
-                                  title: Dictionary.phoneNumber,
+                                  title: Dictionary.telephoneNumber,
                                   controller: _phoneNumberController,
-                                  validation: Validations.phoneValidation,
+                                  validation: Validations.telephoneValidation,
                                   isEdit: true,
                                   hintText: Dictionary.phoneNumberPlaceholder),
                               SizedBox(
@@ -285,7 +288,7 @@ class _EditState extends State<Edit> {
                                   title: Dictionary.birthday,
                                   placeholder: _birthDayController.text == ''
                                       ? Dictionary.birthdayPlaceholder
-                                      : DateFormat.yMMMMd().format(
+                                      : DateFormat.yMMMMd('id').format(
                                           DateTime.parse(_birthDayController
                                               .text
                                               .substring(0, 10))),
@@ -414,7 +417,38 @@ class _EditState extends State<Edit> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            _onSaveProfileButtonPressed(otpEnabled);
+                            if (widget.state.data['phone_number']
+                                    .toString()
+                                    .substring(3) !=
+                                _phoneNumberController.text) {
+                              var data = Firestore.instance
+                                  .collection(kUsers)
+                                  .where("phone_number",
+                                      isEqualTo:
+                                          Dictionary.inaCode + _phoneNumberController.text)
+                                  .getDocuments();
+
+                              data.then((docs) {
+                                if (docs.documents.isNotEmpty) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          DialogTextOnly(
+                                            description: Dictionary
+                                                .phoneNumberHasBeenUsed,
+                                            buttonText: Dictionary.ok,
+                                            onOkPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // To close the dialog
+                                            },
+                                          ));
+                                } else {
+                                  _onSaveProfileButtonPressed(otpEnabled);
+                                }
+                              });
+                            } else {
+                              _onSaveProfileButtonPressed(otpEnabled);
+                            }
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 13),

@@ -10,8 +10,10 @@ import 'package:pikobar_flutter/components/Expandable.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 // ignore: must_be_immutable
@@ -28,7 +30,7 @@ class _FaqScreenState extends State<FaqScreen> {
   TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
   Timer _debounce;
-
+  bool isConnected = false;
   bool _isSearch = false;
   final containerWidth = 40.0;
 
@@ -39,8 +41,12 @@ class _FaqScreenState extends State<FaqScreen> {
     _searchController.addListener((() {
       _onSearchChanged();
     }));
-
+    checkConnection();
     super.initState();
+  }
+
+  checkConnection() async {
+    isConnected = await Connection().checkConnection(kUrlGoogle);
   }
 
   @override
@@ -75,8 +81,12 @@ class _FaqScreenState extends State<FaqScreen> {
 
             // check if data is empty
             if (dataFaq.length == 0) {
-              return EmptyData(
-                  message: '${Dictionary.emptyData} ${Dictionary.faq}');
+              if (isConnected) {
+                return EmptyData(
+                    message: '${Dictionary.emptyData} ${Dictionary.faq}');
+              } else {
+                return EmptyData(message: Dictionary.errorConnection);
+              }
             }
 
             return ListView.builder(

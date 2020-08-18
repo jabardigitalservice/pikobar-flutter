@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/constants/ErrorException.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/models/ContactHistoryModel.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
+import 'package:pikobar_flutter/utilities/Connection.dart';
 
 class SelfReportRepository {
   final Firestore _firestore = Firestore.instance;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   /// Reads the daily report document in the self reports collection referenced by the [DocumentReference].
   Future<DocumentSnapshot> getSelfReportDetail(
@@ -23,7 +28,7 @@ class SelfReportRepository {
   Future<void> saveDailyReport(
       {@required String userId, @required DailyReportModel dailyReport}) async {
     try {
-      DocumentReference doc = _firestore
+      var doc = _firestore
           .collection(kSelfReports)
           .document(userId)
           .collection(kDailyReport)
@@ -32,6 +37,8 @@ class SelfReportRepository {
       await doc.get().then((snapshot) async {
         if (!snapshot.exists) {
           await doc.setData(dailyReport.toJson());
+        }else{
+          await doc.updateData(dailyReport.toJson());
         }
       });
     } catch (e) {
@@ -57,6 +64,33 @@ class SelfReportRepository {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> getContactHistoryList({@required String userId}) {
+    final selfReport = _firestore.collection(kSelfReports).document(userId);
+    selfReport.get().then((snapshot) {
+      if (snapshot.exists) {
+      } else {
+        selfReport.setData({'remind_me': false, 'user_id': userId});
+      }
+    });
+
+    return _firestore
+        .collection(kSelfReports)
+        .document(userId)
+        .collection(kContactHistory)
+        .snapshots();
+  }
+
+   Future<DocumentSnapshot> getContactHistoryDetail(
+      {@required String userId, @required String contactHistoryId}) async {
+    DocumentSnapshot doc = await _firestore
+        .collection(kSelfReports)
+        .document(userId)
+        .collection(kContactHistory)
+        .document(contactHistoryId)
+        .get();
+    return doc;
+  }
+
   Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
     return _firestore.collection(kSelfReports).document(userId).snapshots();
   }
@@ -68,5 +102,24 @@ class SelfReportRepository {
         .updateData({
       'remind_me': isReminder,
     });
+  }
+
+  /// Save the contact history to firestore with provided [data]
+  /// to the [kContactHistory] collection
+  /// in documents in the [kSelfReports] collection referenced by the [userId]
+  Future<void> saveContactHistory(
+      {@required String userId, @required ContactHistoryModel data}) async {
+    if (await Connection().checkConnection(kUrlGoogle)) {
+      CollectionReference ref = _firestore
+          .collection(kSelfReports)
+          .document(userId)
+          .collection(kContactHistory);
+
+      await ref.add(data.toJson()).then((doc) async {
+        await doc.updateData({'id': doc.documentID});
+      });
+    } else {
+      throw SocketException(ErrorException.socketException);
+    }
   }
 }

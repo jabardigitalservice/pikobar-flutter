@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
+import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 part 'DailyReportEvent.dart';
 
@@ -29,7 +30,7 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
 
         yield DailyReportSaved();
       } catch (e) {
-        yield DailyReportFailed(error: e.toString());
+        yield DailyReportFailed(error: CustomException.onConnectionException(e.toString()));
       }
     }
   }

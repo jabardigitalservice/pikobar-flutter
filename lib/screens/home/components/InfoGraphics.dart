@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -14,6 +15,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 
 class InfoGraphics extends StatefulWidget {
   @override
@@ -23,62 +25,124 @@ class InfoGraphics extends StatefulWidget {
 class _InfoGraphicsState extends State<InfoGraphics> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                Dictionary.infoGraphics,
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+        builder: (context, remoteState) {
+      if (remoteState is RemoteConfigLoaded) {
+        Map<String, dynamic> getLabel =
+            GetLabelRemoteConfig.getLabel(remoteState.remoteConfig);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    getLabel['info_graphics']['title'],
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 16.0),
+                  ),
+                  InkWell(
+                    child: Text(
+                      Dictionary.more,
+                      style: TextStyle(
+                          color: ColorBase.green,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 12.0),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, NavigationConstrants.InfoGraphics);
+
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedInfoGraphicsMore);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: Text(
+                getLabel['info_graphics']['description'],
                 style: TextStyle(
                     color: Colors.black,
-                    fontWeight: FontWeight.w600,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 16.0),
+                    fontSize: 12.0),
+                textAlign: TextAlign.left,
               ),
-              InkWell(
-                child: Text(
-                  Dictionary.more,
-                  style: TextStyle(
-                      color: ColorBase.green,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(
-                      context, NavigationConstrants.InfoGraphics);
+            ),
+            BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+              builder: (context, state) {
+                return state is InfoGraphicsListLoaded
+                    ? _buildContent(state.infoGraphicsList)
+                    : _buildLoading();
+              },
+            )
+          ],
+        );
+      } else {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    Dictionary.infoGraphics,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 16.0),
+                  ),
+                  InkWell(
+                    child: Text(
+                      Dictionary.more,
+                      style: TextStyle(
+                          color: ColorBase.green,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 12.0),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, NavigationConstrants.InfoGraphics);
 
-                  AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsMore);
-                },
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedInfoGraphicsMore);
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Text(
-            Dictionary.descInfoGraphic,
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: 12.0),
-            textAlign: TextAlign.left,
-          ),
-        ),
-        BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-          builder: (context, state) {
-            return state is InfoGraphicsListLoaded
-                ? _buildContent(state.infoGraphicsList)
-                : _buildLoading();
-          },
-        )
-      ],
-    );
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: Text(
+                Dictionary.descInfoGraphic,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12.0),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ],
+        );
+        ;
+      }
+    });
   }
 
   Widget _buildLoading() {

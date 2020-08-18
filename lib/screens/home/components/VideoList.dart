@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
 import 'package:pikobar_flutter/components/ShareButton.dart';
@@ -16,6 +18,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
@@ -31,7 +34,12 @@ class _VideoListState extends State<VideoList> {
     return BlocBuilder<VideoListBloc, VideoListState>(
         builder: (context, state) {
       return state is VideosLoaded
-          ? _buildContent(state.videos)
+          ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+              builder: (context, remoteState) {
+              return remoteState is RemoteConfigLoaded
+                  ? _buildContent(state.videos, remoteState.remoteConfig)
+                  : _buildLoading();
+            })
           : _buildLoading();
     });
   }
@@ -88,7 +96,8 @@ class _VideoListState extends State<VideoList> {
     );
   }
 
-  Widget _buildContent(List<VideoModel> data) {
+  Widget _buildContent(List<VideoModel> data, RemoteConfig remoteConfig) {
+    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -99,7 +108,7 @@ class _VideoListState extends State<VideoList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                Dictionary.videoUpToDate,
+                getLabel['video']['title'],
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
@@ -124,10 +133,10 @@ class _VideoListState extends State<VideoList> {
             ],
           ),
         ),
-         Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0,bottom: 15),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 15),
           child: Text(
-            Dictionary.videoUpToDateDesc,
+            getLabel['video']['description'],
             style: TextStyle(
                 color: Colors.black,
                 fontFamily: FontsFamily.lato,
@@ -135,7 +144,6 @@ class _VideoListState extends State<VideoList> {
             textAlign: TextAlign.left,
           ),
         ),
-
         Container(
           height: 280.0,
           child: ListView.builder(
@@ -144,7 +152,6 @@ class _VideoListState extends State<VideoList> {
               itemCount: data.length,
               itemBuilder: (context, index) {
                 return Container(
-
                   margin: EdgeInsets.only(right: 15.0),
                   width: MediaQuery.of(context).size.width * 0.8,
                   // decoration: BoxDecoration(shape: BoxShape.circle),
@@ -215,9 +222,9 @@ class _VideoListState extends State<VideoList> {
                           },
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(top:10),
-                          child: Text(unixTimeStampToDateTime(
-                                data[index].publishedAt),
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            unixTimeStampToDateTime(data[index].publishedAt),
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: FontsFamily.lato,
@@ -245,7 +252,6 @@ class _VideoListState extends State<VideoList> {
                                   ),
                                 ),
                               ),
-
                               ShareButton(
                                 paddingLeft: 10,
                                 height: 40.0,

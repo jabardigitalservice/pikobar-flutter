@@ -4,7 +4,6 @@ class FirebaseConfig {
   static String forceUpdateRequired = 'force_update_required';
 
   /// Remote config parameter key
-  /// for menus
   static String jshUrl = 'jabarsaberhoax_url';
   static String announcement = 'announcement';
   static String jshCaption = 'jabarsaberhoax_caption';
@@ -38,14 +37,13 @@ class FirebaseConfig {
   static String spreadCheckLocation = 'ceksebaran_location';
   static String healthStatusColors = 'health_status_colors';
   static String emergencyCall = 'emergency_call';
-  static String rapidTestInfo='rapid_test_info';
-  static String rapidTestEnable='rapid_test_enable';
-  static String groupMenuProfile='group_menu_profile';
-  static String groupHomeBanner='group_home_bigbanner';
+  static String rapidTestInfo = 'rapid_test_info';
+  static String rapidTestEnable = 'rapid_test_enable';
+  static String groupMenuProfile = 'group_menu_profile';
+  static String groupHomeBanner = 'group_home_bigbanner';
   static String importantinfoStatusVisible = 'important_info_status_visible';
-
-
-
+  static String labels = 'labels';
+  static String statisticsSwitch = 'statistics_switch';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -85,5 +83,74 @@ class FirebaseConfig {
   static String otpEnabled = 'otp_enabled';
   static String termsConditions = 'terms_conditions';
 
+  /// Remote config parameter key
+  /// Contact History
+  static String contactHistoryForm = 'contact_history_form';
+  static String contactHistoryFormDefaultValue = '{'
+      '"relation_list":['
+      '"Keluarga Serumah",'
+      '"Teman Kerja",'
+      '"Jamaah di Tempat Ibadah",'
+      '"Lainnya"]'
+      '}';
 
+  static String labelsDefaultValue = '{'
+      '"statistics":{'
+      '"confirmed": "Terkonfirmasi",'
+      '"positif": "Positif Aktif",'
+      '"recovered": "Sembuh",'
+      '"deaths": "Meninggal",'
+      '"odp": "ODP",'
+      '"odp_detail": "Dari Total ",'
+      '"pdp_detail": "Dari Total ",'
+      '"pdp": "PDP"'
+      '},'
+      '"pcr_rdt": {'
+      '"rdt": {'
+      '"sum": "Jumlah RDT yang telah dilakukan",'
+      '"positif": "Reaktif",'
+      '"negatif": "Non-Reaktif",'
+      '"invalid": "Invalid"'
+      '},'
+      '"pcr": {'
+      '"sum": "Jumlah PCR yang telah dilakukan",'
+      '"positif": "Positif",'
+      '"negatif": "Negatif",'
+      '"invalid": "Invalid"'
+      '}'
+      '},'
+      '"profile": {},'
+      '"menu": {'
+      '"title": "Pusat Layanan & Informasi",'
+      '"description": "Saatnya berbagi informasi dan lawan COVID-19"'
+      '},'
+      '"news": {'
+      '"title": "Berita Terkini",'
+      '"description": "Anti-hoax dengan berita terpercaya"'
+      '},'
+      '"video": {'
+      '"title": "Video Terkini",'
+      '"description": "Cari informasi melalui video dibawawah ini"'
+      '},'
+      '"info_graphics": {'
+      '"title": "Info Praktikal",'
+      '"description": "Info yang memuat infograpis terkait COVID-19"'
+      '},'
+      '"documents": {'
+      '"title": "Dokumen",'
+      '"description": "Lihat dan unduh dokumen serta rilis pers seputar informasi COVID-19 di Jawa Barat"'
+      '},'
+      '"check_distribution": {'
+      ' "by_radius": {'
+      '"confirmed": "Terkonfirmasi",'
+      '"odp": "ODP",'
+      '"pdp": "PDP"'
+      ' },'
+      '"by_region": {'
+      '"confirmed": "Terkonfirmasi",'
+      '"odp": "ODP",'
+      '"pdp": "PDP"'
+      '}'
+      '}'
+      '}';
 }

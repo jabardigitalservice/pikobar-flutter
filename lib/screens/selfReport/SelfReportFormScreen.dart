@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
@@ -23,8 +25,10 @@ import 'package:pikobar_flutter/utilities/RegexInputFormatter.dart';
 class SelfReportFormScreen extends StatefulWidget {
   final String dailyId;
   final LatLng location;
+  final DailyReportModel dailyReportModel;
 
-  SelfReportFormScreen({@required this.dailyId, @required this.location})
+  SelfReportFormScreen(
+      {@required this.dailyId, @required this.location, this.dailyReportModel})
       : assert(dailyId != null),
         assert(location != null);
 
@@ -40,7 +44,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
 
   DailyReportBloc _dailyReportBloc;
 
-  String _format = 'yyyy-MMMM-dd';
+  String _format = 'dd-MMMM-yyyy';
   String _minDate = '2019-01-01';
   bool _isDateEmpty = false;
   bool _isIndicationEmpty = false;
@@ -68,6 +72,24 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   @override
   void initState() {
     super.initState();
+
+    /// If DailyReportModel not null fill data to form
+    if (widget.dailyReportModel != null) {
+      _dateController.text = widget.dailyReportModel.contactDate != null
+          ? widget.dailyReportModel.contactDate.toString()
+          : '';
+      _bodyTempController.text = widget.dailyReportModel.bodyTemperature;
+      _checkedItemList = widget.dailyReportModel.indications
+          .substring(1, widget.dailyReportModel.indications.length - 1)
+          .split(', ');
+      if (_checkedItemList.contains(_allItemList[12])) {
+        _otherIndicationsController.text =
+            _checkedItemList[_checkedItemList.length - 1];
+        _isOtherIndication = true;
+        _checkedItemList.removeLast();
+      }
+    }
+
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportForm);
   }
@@ -127,7 +149,11 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   buildLabel(text: Dictionary.selfReportQuestion2),
                   SizedBox(height: Dimens.padding),
                   GroupedCheckBox(
+                    itemHeight: 40.0,
+                    indexAllDisabled: 11,
+                    borderRadius: BorderRadius.circular(8.0),
                     color: ColorBase.menuBorderColor,
+                    defaultSelectedList: _checkedItemList,
                     activeColor: ColorBase.green,
                     itemLabelList: _allItemList,
                     itemValueList: _allItemList,
@@ -149,6 +175,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   ),
                   SizedBox(height: Dimens.padding),
                   Container(
+                    height: 40.0,
                     decoration: BoxDecoration(
                         border: Border.all(
                             color: _isOtherIndicationEmpty
@@ -159,8 +186,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     child: TextField(
                       controller: _otherIndicationsController,
                       enabled: _isOtherIndication,
-                      minLines: 4,
-                      maxLines: 5,
+                      maxLines: 1,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: Dictionary.tellOtherIndication),
@@ -205,9 +231,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         maxLines: 1,
                         maxLength: 4,
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: Dictionary.inputBodyTemperature,
-                            counterText: "",
+                          border: InputBorder.none,
+                          hintText: Dictionary.inputBodyTemperature,
+                          counterText: "",
                         ),
                       ),
                     ),
@@ -411,8 +437,8 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     color: ColorBase.green,
                     elevation: 0.0,
                     onPressed: () async {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
                     })
               ],
             ),

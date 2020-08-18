@@ -68,6 +68,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
         backgroundColor: Colors.white,
         body: BlocListener<CheckdistributionBloc, CheckdistributionState>(
           listener: (context, state) {
+            // Show dialog error message
+            // When check distribution failed to load
             if (state is CheckDistributionFailure) {
               showDialog(
                   context: context,
@@ -79,6 +81,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                         },
                       ));
               Scaffold.of(context).hideCurrentSnackBar();
+              // Move to detail screen
+              // When check distribution successfully loaded
             } else if (state is CheckDistributionLoaded) {
               Navigator.push(
                 context,
@@ -101,6 +105,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      // Image section
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.3,
@@ -109,6 +114,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                           fit: BoxFit.fitWidth,
                         ),
                       ),
+                      // Title Section
                       Container(
                         margin: EdgeInsets.fromLTRB(
                             Dimens.padding, 0.0, Dimens.padding, 0.0),
@@ -121,6 +127,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                               fontSize: 14.0),
                         ),
                       ),
+                      // Description Section
                       Container(
                         margin: EdgeInsets.fromLTRB(
                             Dimens.padding, 10.0, Dimens.padding, 0.0),
@@ -152,6 +159,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        // Button Section
                         boxContainer(
                           Column(
                             children: <Widget>[
@@ -227,7 +235,10 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                 bool hasToken =
                                                     await AuthRepository()
                                                         .hasToken();
+
+                                                /// Checking user is login
                                                 if (!hasToken) {
+                                                  /// Move to login screen
                                                   bool isLoggedIn = await Navigator
                                                           .of(context)
                                                       .push(MaterialPageRoute(
@@ -248,6 +259,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                   String id =
                                                       await AuthRepository()
                                                           .getToken();
+
+                                                  /// Get user location
                                                   _handleLocation(
                                                       isOther: false, id: id);
                                                 }
@@ -262,6 +275,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                     BorderRadius.circular(8)),
                                             color: Colors.white,
                                             onPressed: () {
+                                              /// Get user location
                                               _handleLocation(isOther: true);
                                             },
                                             child: Padding(
@@ -298,7 +312,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                         .checkOtherLocation,
                                                     style: TextStyle(
                                                         color:
-                                                            Color(0xff27AE60),fontSize: 12,
+                                                            Color(0xff27AE60),
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         fontFamily:
@@ -315,6 +330,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                             ],
                           ),
                         ),
+
+                        /// Info section
                         Center(
                           child: RichText(
                             textAlign: TextAlign.center,
@@ -379,13 +396,16 @@ class _CheckDistributionState extends State<CheckDistribution> {
     );
   }
 
+  // Get user location by current location or pick in maps
   Future<void> _handleLocation({bool isOther = false, String id}) async {
     var permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
-
+   // Check status permission
     if (await permissionService.status.isGranted) {
+      // Get user location by current location or pick in maps
       await _actionFindLocation(isOther, id);
     } else {
+      // Show permission dialog
       showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
@@ -415,12 +435,15 @@ class _CheckDistributionState extends State<CheckDistribution> {
     }
   }
 
+ // Get distribution from api
   _checkDistribution(latitude, longitude, bool isOther, {String id}) {
     _checkdistributionBloc.add(LoadCheckDistribution(
         lat: latitude, long: longitude, id: id, isOther: isOther));
   }
 
   _actionFindLocation(bool isOther, String id) async {
+    /// Checking [isOther] 
+    /// When true pick location in maps
     if (isOther) {
       LatLng result = await Navigator.push(
           context, MaterialPageRoute(builder: (context) => LocationPicker()));
@@ -445,6 +468,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
         });
       }
     } else {
+      // Pick location by current location
       Position position = await Geolocator()
           .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       if (position != null && position.latitude != null) {
