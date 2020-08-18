@@ -10,6 +10,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
   final int countOdp;
   final int countPdp;
   final String typeRegion;
+  final Map<String,dynamic> getLabel;
 
   const CheckDistributionCardFilter(
       {Key key,
@@ -17,7 +18,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
       @required this.countPositif,
       @required this.countOdp,
       @required this.countPdp,
-      @required this.typeRegion})
+      @required this.typeRegion, @required this.getLabel})
       : super(key: key);
 
   @override
@@ -61,15 +62,15 @@ class CheckDistributionCardFilter extends StatelessWidget {
               // ),
 
               // build location by sub city
-              _buildContent(context, countPositif, Dictionary.confirmed,
+              _buildContent(context, countPositif, getLabel['check_distribution']['by_region']['confirmed'],
                   '${Environment.iconAssets}virusRed.png', Color(0xffEB5757)),
 
               // build ODP
-              _buildContent(context, countOdp, Dictionary.odp,
+              _buildContent(context, countOdp, getLabel['check_distribution']['by_region']['odp'],
                   '${Environment.iconAssets}virus_3.png', Color(0xff2F80ED)),
 
               // build PDP
-              _buildContent(context, countPdp, Dictionary.pdp,
+              _buildContent(context, countPdp, getLabel['check_distribution']['by_region']['pdp'],
                   '${Environment.iconAssets}virusYellow.png', Color(0xffF2C94C)),
             ],
           ),

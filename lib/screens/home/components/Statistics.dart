@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Statistics extends StatefulWidget {
@@ -48,7 +51,13 @@ class _StatisticsState extends State<Statistics> {
     return BlocBuilder<StatisticsBloc, StatisticsState>(
       builder: (context, state) {
         return state is StatisticsLoaded
-            ? _buildContent(state.snapshot)
+            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                builder: (context, remoteState) {
+                  return remoteState is RemoteConfigLoaded
+                      ? _buildContent(state.snapshot, remoteState.remoteConfig)
+                      : _buildLoading();
+                },
+              )
             : _buildLoading();
       },
     );
@@ -169,13 +178,19 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(DocumentSnapshot data) {
+  Container _buildContent(DocumentSnapshot data, RemoteConfig remoteConfig) {
     if (!data.exists)
       return Container(
         child: Center(
           child: Text(Dictionary.errorStatisticsNotExists),
         ),
       );
+
+    // Get label from the remote config
+    Map<String, dynamic> labelUpdateTerkini =
+        GetLabelRemoteConfig.getLabel(remoteConfig);
+
+    bool statisticsSwitch = getStatisticsSwitch(remoteConfig);
 
     return Container(
       child: Column(
@@ -224,8 +239,8 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               _buildContainer(
                   '${Environment.iconAssets}virusPurple.png',
-                  Dictionary.caseTotal,
-                  Dictionary.caseTotal,
+                  labelUpdateTerkini['statistics']['confirmed'],
+                  labelUpdateTerkini['statistics']['confirmed'],
                   '${data['aktif']['jabar']}',
                   4,
                   Dictionary.people,
@@ -234,8 +249,8 @@ class _StatisticsState extends State<Statistics> {
                   ''),
               _buildContainer(
                   '${Environment.iconAssets}virusRed.png',
-                  Dictionary.positif,
-                  Dictionary.positif,
+                  labelUpdateTerkini['statistics']['positif'],
+                  labelUpdateTerkini['statistics']['positif'],
                   getDataActivePositive(data['aktif']['jabar'],
                       data['sembuh']['jabar'], data['meninggal']['jabar']),
                   4,
@@ -245,8 +260,8 @@ class _StatisticsState extends State<Statistics> {
                   ''),
               _buildContainer(
                   '${Environment.iconAssets}virusGreen.png',
-                  Dictionary.recover,
-                  Dictionary.recover,
+                  labelUpdateTerkini['statistics']['recovered'],
+                  labelUpdateTerkini['statistics']['recovered'],
                   '${data['sembuh']['jabar']}',
                   4,
                   Dictionary.people,
@@ -255,8 +270,8 @@ class _StatisticsState extends State<Statistics> {
                   ''),
               _buildContainer(
                   '${Environment.iconAssets}virusYellow.png',
-                  Dictionary.die,
-                  Dictionary.die,
+                  labelUpdateTerkini['statistics']['deaths'],
+                  labelUpdateTerkini['statistics']['deaths'],
                   '${data['meninggal']['jabar']}',
                   4,
                   Dictionary.people,
@@ -266,12 +281,38 @@ class _StatisticsState extends State<Statistics> {
             ],
           ),
           SizedBox(height: Dimens.padding),
-          Row(
+          statisticsSwitch ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
                   '',
-                  Dictionary.odp,
+                  labelUpdateTerkini['statistics']['odp'],
+                  Dictionary.opdDesc,
+                  data['kontak_erat']['total'].toString(),
+                  2,
+                  Dictionary.people,
+                  Color(0xff828282),
+                  Color(0xff2F80ED),
+                  data['kontak_erat']['karantina'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
+              _buildContainer(
+                  '',
+                  labelUpdateTerkini['statistics']['pdp'],
+                  Dictionary.pdpDesc,
+                  data['suspek']['total'].toString(),
+                  2,
+                  Dictionary.people,
+                  Color(0xff828282),
+                  Color(0xffF2C94C),
+                  data['suspek']['isolasi'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
+            ],
+          ) : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _buildContainer(
+                  '',
+                  labelUpdateTerkini['statistics']['odp'],
                   Dictionary.opdDesc,
                   getDataProcess(data['odp']['total']['jabar'],
                       data['odp']['selesai']['jabar']),
@@ -279,10 +320,11 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.people,
                   Color(0xff828282),
                   Color(0xff2F80ED),
-                  data['odp']['total']['jabar'].toString()),
+                  data['odp']['total']['jabar'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
               _buildContainer(
                   '',
-                  Dictionary.pdp,
+                  labelUpdateTerkini['statistics']['pdp'],
                   Dictionary.pdpDesc,
                   getDataProcess(data['pdp']['total']['jabar'],
                       data['pdp']['selesai']['jabar']),
@@ -290,7 +332,8 @@ class _StatisticsState extends State<Statistics> {
                   Dictionary.people,
                   Color(0xff828282),
                   Color(0xffF2C94C),
-                  data['pdp']['total']['jabar'].toString()),
+                  data['pdp']['total']['jabar'].toString(),
+                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
             ],
           )
         ],
@@ -379,8 +422,8 @@ class _StatisticsState extends State<Statistics> {
             children: <Widget>[
               Container(
                   height: 60,
-                  child:
-                      Image.asset('${Environment.imageAssets}bloodTest@4x.png')),
+                  child: Image.asset(
+                      '${Environment.imageAssets}bloodTest@4x.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -444,7 +487,8 @@ class _StatisticsState extends State<Statistics> {
       String label,
       Color colorTextTitle,
       Color colorNumber,
-      String total) {
+      String total,
+      {String detailText}) {
     if (count != null && count.isNotEmpty && count != '-') {
       try {
         count = formatter.format(int.parse(count)).replaceAll(',', '.');
@@ -504,7 +548,7 @@ class _StatisticsState extends State<Statistics> {
                     )
                   : Container(
                       margin: EdgeInsets.only(top: 10, left: 5.0),
-                      child: Text(Dictionary.textSum + total,
+                      child: Text(detailText + total,
                           style: TextStyle(
                               fontSize: 12.0,
                               color: Color(0xff333333),
@@ -516,5 +560,13 @@ class _StatisticsState extends State<Statistics> {
         onTap: () {},
       ),
     );
+  }
+
+  bool getStatisticsSwitch(RemoteConfig remoteConfig) {
+    if (remoteConfig != null && remoteConfig.getBool(FirebaseConfig.statisticsSwitch) != null) {
+      return remoteConfig.getBool(FirebaseConfig.statisticsSwitch);
+    } else {
+      return false;
+    }
   }
 }

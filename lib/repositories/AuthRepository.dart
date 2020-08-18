@@ -49,8 +49,10 @@ class AuthRepository {
 
   Future signOut() async {
     await removeFCMToken();
-    await googleSignIn.signOut().then((value) {
-      _auth.signOut();
+    await googleSignIn.signOut().then((value) async {
+      await _auth.signOut();
+    }, onError: (error) {
+      print(error.toString());
     });
     await deleteToken();
     await deleteLocalUserInfo();
@@ -138,7 +140,6 @@ class AuthRepository {
     await Future.delayed(Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('uid');
-    return;
   }
 
   Future<void> persistToken(String uid) async {
@@ -280,6 +281,8 @@ class AuthRepository {
         if (snapshot.exists) {
           await tokensDocument.delete();
         }
+      }, onError: (error) {
+        print(error.toString());
       });
     });
   }

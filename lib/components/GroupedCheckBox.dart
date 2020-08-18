@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 
 enum CheckboxOrientation { HORIZONTAL, VERTICAL, WRAP }
 
@@ -70,8 +71,15 @@ class GroupedCheckBox extends StatefulWidget {
 
   /// If non-null, require the item to have this height.
   ///
-  /// If null, the item will pick a size based on children's size calculations.
+  /// Defaults to 40.0.
   final double itemHeight;
+
+  /// The borderRadius specifies offsets in terms of visual corners
+  ///
+  /// If non-null, the corners of this box are rounded by this BorderRadiusGeometry value.
+  ///
+  /// If null, it is interpreted as [BorderRadius.zero].
+  final BorderRadiusGeometry borderRadius;
 
   /// The style to use for the labels.
   final TextStyle textStyle;
@@ -126,6 +134,11 @@ class GroupedCheckBox extends StatefulWidget {
   /// Defaults to 0.0.
   final double wrapRunSpacing;
 
+  /// An index that determine a specific checkbox item that can disable all the checkboxes.
+  /// When the checkbox that has an index matches the value [indexAllDisabled] is selected,
+  /// all other checkboxes will be disabled automatically.
+  final int indexAllDisabled;
+
   GroupedCheckBox(
       {@required this.itemLabelList,
       @required this.itemValueList,
@@ -138,10 +151,12 @@ class GroupedCheckBox extends StatefulWidget {
       this.itemSpacing = 0.0,
       this.itemWidth,
       this.itemHeight,
+      this.borderRadius,
       this.wrapDirection = Axis.horizontal,
       this.wrapAlignment = WrapAlignment.start,
       this.wrapSpacing = 0.0,
-      this.wrapRunSpacing = 0.0})
+      this.wrapRunSpacing = 0.0,
+      this.indexAllDisabled})
       : assert(itemLabelList.length == itemValueList.length);
 
   @override
@@ -212,50 +227,92 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
           : widget.orientation == CheckboxOrientation.HORIZONTAL
               ? MediaQuery.of(context).size.width / 2.5
               : null,
-      height: widget.itemHeight,
+      height: widget.itemHeight ?? 40.0,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          borderRadius: widget.borderRadius,
           border: Border.all(
             color: selectedItems.contains(widget.itemValueList[index])
                 ? widget.activeColor
                 : widget.color,
           )),
-      child: MaterialButton(
-        onPressed: () {
-          if (selectedItems.contains(widget.itemValueList[index])) {
-            selectedItems.remove(widget.itemValueList[index]);
+      child: InkWell(
+        borderRadius: widget.borderRadius,
+        onTap: () {
+          if (!selectedItems
+                  .contains(widget.itemValueList[widget.indexAllDisabled]) &&
+              selectedItems.isNotEmpty) {
+            if (index == widget.indexAllDisabled) {
+            } else {
+              if (selectedItems.contains(widget.itemValueList[index])) {
+                selectedItems.remove(widget.itemValueList[index]);
+              } else {
+                selectedItems.add(widget.itemValueList[index]);
+              }
+            }
           } else {
-            selectedItems.add(widget.itemValueList[index]);
+            if (selectedItems
+                .contains(widget.itemValueList[widget.indexAllDisabled])) {
+              selectedItems.remove(widget.itemValueList[index]);
+            } else {
+              if (selectedItems.contains(widget.itemValueList[index])) {
+                selectedItems.remove(widget.itemValueList[index]);
+              } else {
+                selectedItems.add(widget.itemValueList[index]);
+              }
+            }
           }
+
           setState(() {});
           widget.onChanged(selectedItems);
         },
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: 16,
-              height: 16,
-              margin: EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                  border: Border.all(
-                      color: selectedItems.contains(widget.itemValueList[index])
-                          ? widget.activeColor
-                          : widget.color)),
-              child: selectedItems.contains(widget.itemValueList[index])
-                  ? Icon(FontAwesomeIcons.check,
-                      size: 10,
-                      color: selectedItems.contains(widget.itemValueList[index])
-                          ? widget.activeColor
-                          : widget.color)
-                  : null,
-            ),
-            Expanded(
-              child: Text(widget.itemLabelList[index],
-                  style: widget.textStyle ??
-                      TextStyle(fontFamily: FontsFamily.lato)),
-            ),
-          ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 16,
+                height: 16,
+                margin: EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                    border: Border.all(
+                        color:
+                            selectedItems.contains(widget.itemValueList[index])
+                                ? widget.activeColor
+                                : widget.color)),
+                child: selectedItems.contains(widget.itemValueList[index])
+                    ? Icon(FontAwesomeIcons.check,
+                        size: 10,
+                        color:
+                            selectedItems.contains(widget.itemValueList[index])
+                                ? widget.activeColor
+                                : widget.color)
+                    : null,
+              ),
+              Expanded(
+                child: Text(widget.itemLabelList[index],
+                    style: !selectedItems.contains(widget
+                                .itemValueList[widget.indexAllDisabled]) &&
+                            selectedItems.isNotEmpty
+                        ? index == widget.indexAllDisabled
+                            ? TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                color: ColorBase.menuBorderColor,
+                                fontSize: 12)
+                            : widget.textStyle
+                        : selectedItems.contains(
+                                widget.itemValueList[widget.indexAllDisabled])
+                            ? index == widget.indexAllDisabled
+                                ? widget.textStyle
+                                : TextStyle(
+                                    fontFamily: FontsFamily.lato,
+                                    color: ColorBase.menuBorderColor,
+                                    fontSize: 12)
+                            : widget.textStyle ??
+                                TextStyle(fontFamily: FontsFamily.lato)),
+              ),
+            ],
+          ),
         ),
       ),
     );

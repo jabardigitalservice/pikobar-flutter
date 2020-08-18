@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 
 // ignore: must_be_immutable
@@ -58,6 +59,8 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         checkInitTypeNews = false;
       }
     }
+    Map<String, dynamic> getLabel =
+        GetLabelRemoteConfig.getLabel(state.remoteConfig);
     return Container(
       color: Colors.white,
       child: Column(
@@ -72,7 +75,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    Dictionary.newsUpdate,
+                    getLabel['news']['title'],
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
@@ -106,7 +109,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                 left: Dimens.padding, right: Dimens.padding, top: 5),
             alignment: Alignment.centerLeft,
             child: Text(
-              Dictionary.descNews,
+              getLabel['news']['description'],
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: FontsFamily.lato,

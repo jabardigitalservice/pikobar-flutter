@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/ShareButton.dart';
@@ -20,6 +22,7 @@ import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 
 class Documents extends StatefulWidget {
   @override
@@ -31,6 +34,75 @@ class _DocumentsState extends State<Documents> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      builder: (context, remoteState) {
+        return remoteState is RemoteConfigLoaded
+            ? _buildHeader(remoteState.remoteConfig)
+            : _buildHeaderLoading();
+      },
+    );
+  }
+
+  Widget _buildHeader(RemoteConfig remoteConfig) {
+    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                getLabel['documents']['title'],
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 16.0),
+              ),
+              InkWell(
+                child: Text(
+                  Dictionary.more,
+                  style: TextStyle(
+                      color: ColorBase.green,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, NavigationConstrants.Document);
+
+                  AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
+                },
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: Text(
+           getLabel['documents']['description'],
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: FontsFamily.lato,
+                fontSize: 12.0),
+            textAlign: TextAlign.left,
+          ),
+        ),
+        BlocBuilder<DocumentsBloc, DocumentsState>(
+          builder: (context, state) {
+            return state is DocumentsLoaded
+                ? _buildContent(state.documents)
+                : _buildLoading();
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _buildHeaderLoading() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -77,13 +149,6 @@ class _DocumentsState extends State<Documents> {
             textAlign: TextAlign.left,
           ),
         ),
-        BlocBuilder<DocumentsBloc, DocumentsState>(
-          builder: (context, state) {
-            return state is DocumentsLoaded
-                ? _buildContent(state.documents)
-                : _buildLoading();
-          },
-        )
       ],
     );
   }

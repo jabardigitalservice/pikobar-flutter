@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class RapidTestDetail extends StatefulWidget {
@@ -34,12 +35,14 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
   List<String> listItemTitleTab = [Dictionary.rdt, Dictionary.pcr];
+  Map<String, dynamic> label;
 
   @override
   Widget build(BuildContext context) {
     if (widget.remoteConfig != null) {
       dataAnnouncement = json
           .decode(widget.remoteConfig.getString(FirebaseConfig.rapidTestInfo));
+      label = GetLabelRemoteConfig.getLabel(widget.remoteConfig);
     }
     return Scaffold(
       backgroundColor: Colors.white,
@@ -48,6 +51,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       ),
       body: Padding(
         padding: EdgeInsets.all(10),
+        // Tab section
         child: CustomBubbleTab(
           indicatorColor: ColorBase.green,
           labelColor: Colors.white,
@@ -67,15 +71,18 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
+  // Function to build RDT Screen
   Widget _buildRDT() {
     return ListView(
       children: <Widget>[
+        // Announcement section
         widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
             ? buildAnnouncement(0)
             : Container(),
         SizedBox(
           height: 20,
         ),
+        // Last update section
         widget.document.data['last_update'] == null
             ? Container()
             : Padding(
@@ -104,7 +111,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                   ],
                 ),
               ),
-        buildHeader(Dictionary.rapidTestTitle, 'bloodTest@4x.png',
+        buildHeader(label['pcr_rdt']['rdt']['sum'], 'bloodTest@4x.png',
             widget.document.data['total'], Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
@@ -117,6 +124,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
+  // Function to build PCR Screen
   Widget _buildPCR() {
     return ListView(
       children: <Widget>[
@@ -154,7 +162,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                   ],
                 ),
               ),
-        buildHeader(Dictionary.pcrTitle, 'bloodTestBlue@4x.png',
+        buildHeader(label['pcr_rdt']['pcr']['sum'], 'bloodTestBlue@4x.png',
             widget.documentPCR.data['total'], Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
@@ -166,10 +174,10 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       ],
     );
   }
+
   /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
-    return
-      Announcement(
+    return Announcement(
       title: dataAnnouncement[i]['title'] != null
           ? dataAnnouncement[i]['title']
           : Dictionary.titleInfoTextAnnouncement,
@@ -241,7 +249,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       children: <Widget>[
         buildContainer(
             '',
-            Dictionary.reaktif,
+            label['pcr_rdt']['rdt']['positif'],
             widget.document.data['positif'].toString(),
             2,
             Color(0xff828282),
@@ -249,7 +257,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             widget.document.data['total']),
         buildContainer(
             '',
-            Dictionary.nonReaktif,
+           label['pcr_rdt']['rdt']['negatif'],
             widget.document.data['negatif'].toString(),
             2,
             Color(0xff828282),
@@ -257,7 +265,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             widget.document.data['total']),
         buildContainer(
             '',
-            Dictionary.invalid,
+            label['pcr_rdt']['rdt']['invalid'],
             widget.document.data['invalid'].toString(),
             2,
             Color(0xff828282),
@@ -272,7 +280,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       children: <Widget>[
         buildContainer(
             '',
-            Dictionary.positifText,
+            label['pcr_rdt']['pcr']['positif'],
             widget.documentPCR.data['positif'].toString(),
             2,
             Color(0xff828282),
@@ -280,7 +288,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             widget.documentPCR.data['total']),
         buildContainer(
             '',
-            Dictionary.negatifText,
+            label['pcr_rdt']['pcr']['negatif'],
             widget.documentPCR.data['negatif'].toString(),
             2,
             Color(0xff828282),
@@ -288,7 +296,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             widget.documentPCR.data['total']),
         buildContainer(
             '',
-            Dictionary.invalid,
+            label['pcr_rdt']['pcr']['invalid'],
             widget.documentPCR.data['invalid'].toString(),
             2,
             Color(0xff828282),

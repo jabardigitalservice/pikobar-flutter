@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'dart:convert';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
@@ -24,6 +25,7 @@ import 'package:pikobar_flutter/repositories/EmergencyNumberRepository.dart';
 import 'package:pikobar_flutter/screens/phonebook/CallCenterDetailScreen.dart';
 import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
@@ -39,6 +41,7 @@ class ListViewPhoneBooks extends StatefulWidget {
 class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   Map<String, bool> _categoryExpansionStateMap = Map<String, bool>();
   Map<String, bool> _detailExpandList = Map<String, bool>();
+  bool isConnected = false;
   String typeEmergenyNumber = Dictionary.emergencyNumber;
   int callCenterPhoneCount, emergencyPhoneCount, dataWebGugustugasCount;
   int tag = 0;
@@ -65,6 +68,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       "RumahSakitRujukan": true,
       "CallCenter": true,
     };
+    checkConnection();
+  }
+
+  checkConnection() async {
+    isConnected = await Connection().checkConnection(kUrlGoogle);
   }
 
   callback(String value, bool newValue) {
@@ -158,12 +166,19 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 dataNomorDarurat = state.referralHospitalList;
               }
               return dataNomorDarurat.isEmpty
-                  ? EmptyData(
-                      message: Dictionary.emptyDataPhoneBook,
-                      desc: Dictionary.emptyDataPhoneBookDesc,
-                      isFlare: false,
-                      image: "${Environment.imageAssets}not_found.png",
-                    )
+                  ? isConnected
+                      ? EmptyData(
+                          message: Dictionary.emptyDataPhoneBook,
+                          desc: Dictionary.emptyDataPhoneBookDesc,
+                          isFlare: false,
+                          image: "${Environment.imageAssets}not_found.png",
+                        )
+                      : EmptyData(
+                          message: Dictionary.errorConnection,
+                          desc: '',
+                          isFlare: false,
+                          image: "${Environment.imageAssets}not_found.png",
+                        )
                   : Column(
                       children: getListRumahSakitRujukan(dataNomorDarurat),
                     );
@@ -199,12 +214,19 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 dataCallCenter = state.callCenterList;
               }
               return dataCallCenter.isEmpty
-                  ? EmptyData(
-                      message: Dictionary.emptyDataPhoneBook,
-                      desc: Dictionary.emptyDataPhoneBookDesc,
-                      isFlare: false,
-                      image: "${Environment.imageAssets}not_found.png",
-                    )
+                  ? isConnected
+                      ? EmptyData(
+                          message: Dictionary.emptyDataPhoneBook,
+                          desc: Dictionary.emptyDataPhoneBookDesc,
+                          isFlare: false,
+                          image: "${Environment.imageAssets}not_found.png",
+                        )
+                      : EmptyData(
+                          message: Dictionary.errorConnection,
+                          desc: '',
+                          isFlare: false,
+                          image: "${Environment.imageAssets}not_found.png",
+                        )
                   : Column(
                       children: getListCallCenter(dataCallCenter),
                     );
@@ -240,12 +262,19 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                 dataWebGugusTugas = state.gugusTugasWebModel;
               }
               return dataWebGugusTugas.isEmpty
-                  ? EmptyData(
-                      message: Dictionary.emptyDataPhoneBook,
-                      desc: Dictionary.emptyDataPhoneBookDesc,
-                      isFlare: false,
-                      image: "${Environment.imageAssets}not_found.png",
-                    )
+                  ? isConnected
+                      ? EmptyData(
+                          message: Dictionary.emptyDataPhoneBook,
+                          desc: Dictionary.emptyDataPhoneBookDesc,
+                          isFlare: false,
+                          image: "${Environment.imageAssets}not_found.png",
+                        )
+                      : EmptyData(
+                          message: Dictionary.errorConnection,
+                          desc: '',
+                          isFlare: false,
+                          image: "${Environment.imageAssets}not_found.png",
+                        )
                   : Column(
                       children: getListWebGugusTugas(dataWebGugusTugas),
                     );
@@ -296,12 +325,21 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
                   return snapshot.data != null
                       ? getEmergencyCallFilter.isEmpty
-                          ? EmptyData(
-                              message: Dictionary.emptyDataPhoneBook,
-                              desc: Dictionary.emptyDataPhoneBookDesc,
-                              isFlare: false,
-                              image: "${Environment.imageAssets}not_found.png",
-                            )
+                          ? isConnected
+                              ? EmptyData(
+                                  message: Dictionary.emptyDataPhoneBook,
+                                  desc: Dictionary.emptyDataPhoneBookDesc,
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                              : EmptyData(
+                                  message: Dictionary.errorConnection,
+                                  desc: '',
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
                           : Column(
                               children:
                                   getListEmergencyCall(getEmergencyCallFilter),
