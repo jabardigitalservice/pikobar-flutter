@@ -106,7 +106,14 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             if (state is DailyReportSaved) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);
               Navigator.of(context).pop();
-              _showSuccessBottomSheet();
+              // Bottom sheet success message
+              _showBottomSheetForm(
+                  '${Environment.imageAssets}daily_success.png',
+                  Dictionary.savedSuccessfully,
+                  Dictionary.dailySuccess, () async {
+                Navigator.of(context).pop(true);
+                Navigator.of(context).pop(true);
+              });
             } else if (state is DailyReportFailed) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);
               Navigator.of(context).pop();
@@ -267,7 +274,20 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           fontSize: 12.0,
                           fontWeight: FontWeight.w900,
                           color: Colors.white),
-                      onPressed: _saveSelfReport),
+                      onPressed: () {
+                        if (_bodyTempController.text.isEmpty) {
+                          // Bottom sheet temperature message
+                          _showBottomSheetForm(
+                              '${Environment.imageAssets}temperature_info.png',
+                              Dictionary.additionalTemperatureInformation,
+                              Dictionary.descTemperatureInformation, () {
+                            Navigator.of(context).pop(true);
+                            _saveSelfReport();
+                          });
+                        } else {
+                          _saveSelfReport();
+                        }
+                      }),
                   SizedBox(height: Dimens.padding),
                 ],
               ),
@@ -383,8 +403,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
     );
   }
 
-  // Bottom sheet success message
-  void _showSuccessBottomSheet() {
+  // Bottom sheet message form
+  void _showBottomSheetForm(String image, String titleDialog, String descDialog,
+      GestureTapCallback onPressed) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.white,
@@ -404,13 +425,13 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 44.0),
                   child: Image.asset(
-                    '${Environment.imageAssets}daily_success.png',
+                    image,
                     fit: BoxFit.fitWidth,
                   ),
                 ),
                 SizedBox(height: 24.0),
                 Text(
-                  Dictionary.savedSuccessfully,
+                  titleDialog,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: FontsFamily.lato,
@@ -419,7 +440,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  Dictionary.dailySuccess,
+                  descDialog,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: FontsFamily.lato,
@@ -436,10 +457,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         color: Colors.white),
                     color: ColorBase.green,
                     elevation: 0.0,
-                    onPressed: () async {
-                      Navigator.of(context).pop(true);
-                      Navigator.of(context).pop(true);
-                    })
+                    onPressed: onPressed)
               ],
             ),
           );
