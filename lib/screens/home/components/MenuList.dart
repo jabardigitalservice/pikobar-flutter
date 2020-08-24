@@ -437,6 +437,13 @@ class _MenuListState extends State<MenuList> {
                   : kUrlIGSaberHoax,
               remoteMenuLoginKey: FirebaseConfig.jshMenu),
 
+          /// Menu Button Saber Hoax
+          /// Remote Config : caption & url
+          _buildButtonColumn(
+              '',
+              '',
+              '',),
+
           /// Hidden Menu
           _buildButtonDisable(
               '${Environment.iconAssets}report_case.png', Dictionary.volunteer,
