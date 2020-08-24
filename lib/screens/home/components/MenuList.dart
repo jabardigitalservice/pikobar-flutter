@@ -437,12 +437,13 @@ class _MenuListState extends State<MenuList> {
                   : kUrlIGSaberHoax,
               remoteMenuLoginKey: FirebaseConfig.jshMenu),
 
-          /// Menu Button Saber Hoax
-          /// Remote Config : caption & url
+          /// Add Empty button to adjust the spacing between buttons
+          /// Remove if a new button is added
           _buildButtonColumn(
-              '',
-              '',
-              '',),
+            '',
+            '',
+            '',
+          ),
 
           /// Hidden Menu
           _buildButtonDisable(
@@ -522,10 +523,12 @@ class _MenuListState extends State<MenuList> {
                 width: 70.0,
                 height: 70.0,
                 padding: EdgeInsets.all(18.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(color: ColorBase.menuBorderColor),
-                    color: Colors.white),
+                decoration: label.isNotEmpty
+                    ? BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: ColorBase.menuBorderColor),
+                        color: Colors.white)
+                    : null,
                 child: Image.asset(
                   iconPath,
                 ),
