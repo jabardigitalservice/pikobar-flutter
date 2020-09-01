@@ -13,10 +13,14 @@ class DocumentServices {
       var request = await HttpClient().getUrl(Uri.parse(document));
       var response = await request.close();
       Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-      await Share.file(Dictionary.appName, '$title.pdf', bytes, 'text/pdf',
+      var namefile =
+          title.replaceAll(RegExp(r"\|.*"), '').replaceAll('/', '').trim();
+      await Share.file(Dictionary.appName, '$namefile.pdf', bytes, 'text/pdf',
           text: '${Dictionary.sharedFrom}');
       AnalyticsHelper.setLogEvent(
-          Analytics.tappedShareDocuments, <String, dynamic>{'title': title.length < 100 ? title : title.substring(0, 100)});
+          Analytics.tappedShareDocuments, <String, dynamic>{
+        'title': title.length < 100 ? title : title.substring(0, 100)
+      });
     } catch (e) {
       print('error: $e');
     }
