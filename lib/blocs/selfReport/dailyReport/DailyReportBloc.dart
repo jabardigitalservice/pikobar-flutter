@@ -27,10 +27,14 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
         String userId = await AuthRepository().getToken();
         await SelfReportRepository().saveDailyReport(
             userId: userId, dailyReport: event.dailyReportModel);
-
+        if (event.dailyReportModel.id == '14') {
+          await SelfReportRepository()
+              .updateToCollection(userId: userId, isReminder: false);
+        }
         yield DailyReportSaved();
       } catch (e) {
-        yield DailyReportFailed(error: CustomException.onConnectionException(e.toString()));
+        yield DailyReportFailed(
+            error: CustomException.onConnectionException(e.toString()));
       }
     }
   }

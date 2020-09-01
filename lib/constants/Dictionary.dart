@@ -83,8 +83,7 @@ class Dictionary {
   static String checkLocationSpread = 'Cek Sebaran Lokasi Anda';
   static String checkLocationSpreadDesc =
       'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol ‘Cek Lokasi Saat Ini';
-  static String phoneNumberHasBeenUsed =
-      'No telepon sudah digunakan';
+  static String phoneNumberHasBeenUsed = 'No telepon sudah digunakan';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -363,10 +362,12 @@ class Dictionary {
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
-  static String contactDateCovid = 'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
+  static String contactDateCovid =
+      'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
   static String additionalTemperatureInformation = 'Informasi Tambahan';
-  static String descTemperatureInformation = 'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
+  static String descTemperatureInformation =
+      'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
@@ -379,6 +380,7 @@ class Dictionary {
   static String countDay = 'Hari ke -';
   static String dailyMonitoringFilled = 'Proses pelaporan sudah terisi';
   static String dailyMonitoringUnfilled = 'Proses pelaporan belum terisi';
+  static String dailySelfReport = 'Lapor Kesehatan Harian';
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
@@ -396,5 +398,15 @@ class Dictionary {
   static String relation = 'Hubungan';
   static String otherRelation = 'Hubungan lainnya';
   static String lastContactDate = 'Tanggal Kontak Terakhir';
-
+  static String monitoringIsComplete = 'Pemantauan Selesai!';
+  static String selfReportSummary =
+      'Dalam 14 hari terakhir, ';
+  static String selfReportHistory = 'Lihat Riwayat Kesehatan Saya';
+  static String info = 'Info';
+  static String announcementDescHealthy =
+      '<p>Tetap waspada dengan menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Jaga jarak dan gunakan masker ketika beraktivitas.</p>';
+  static String announcementDescIndication =
+      '<p>Kondisi Anda bisa membaik jika Anda menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Lakukan isolasi mandiri untuk melindungi orang di sekitar Anda. Segera periksakan diri apabila gejala memburuk.</p>';
+  static String readHealthTips = 'Baca Tips Kesehatan';
+  static String callEmergencyNumber = 'Hubungi Nomor Darurat';
 }
