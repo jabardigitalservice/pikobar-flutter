@@ -30,6 +30,7 @@ class ColorBase {
     Color(0xFF000000).withOpacity(0.1),
     Color(0xFF000000).withOpacity(0.7)
   ];
+  static final gradientBlueStatistics = [Color(0xFF2C347C), Color(0xFF4E59C0)];
 
   static final yellow = Color(0xfffdcc3b);
   static final orange = Color(0xffe8b638);
