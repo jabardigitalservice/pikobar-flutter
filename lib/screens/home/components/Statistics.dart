@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +8,15 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class Statistics extends StatefulWidget {
   @override
@@ -41,7 +38,33 @@ class _StatisticsState extends State<Statistics> {
           SizedBox(
             height: 20,
           ),
-          _buildRapidTest()
+          _buildRapidTest(),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: Dimens.verticalPadding),
+            child: InkWell(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    Dictionary.moreDetail,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: ColorBase.green),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -112,16 +135,6 @@ class _StatisticsState extends State<Statistics> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer(
-                    '',
-                    Dictionary.caseTotal,
-                    Dictionary.caseTotal,
-                    '-',
-                    4,
-                    Dictionary.people,
-                    Colors.grey[600],
-                    Colors.grey[600],
-                    ''),
                 _buildContainer(
                     '',
                     Dictionary.positif,
@@ -196,34 +209,13 @@ class _StatisticsState extends State<Statistics> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                Dictionary.statistics,
-                style: TextStyle(
-                    color: Color(0xff333333),
-                    fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 16.0),
-              ),
-              InkWell(
-                onTap: () {
-                  openChromeSafariBrowser(
-                      url: urlStatistic.isNotEmpty
-                          ? urlStatistic
-                          : kUrlCoronaInfoData);
-                },
-                child: Text(
-                  Dictionary.moreDetail,
-                  style: TextStyle(
-                      color: Color(0xff27AE60),
-                      fontFamily: FontsFamily.lato,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0),
-                ),
-              ),
-            ],
+          Text(
+            Dictionary.statistics,
+            style: TextStyle(
+                color: Color(0xff333333),
+                fontWeight: FontWeight.w600,
+                fontFamily: FontsFamily.lato,
+                fontSize: 16.0),
           ),
           SizedBox(height: 10),
           Text(
@@ -234,21 +226,15 @@ class _StatisticsState extends State<Statistics> {
                 fontSize: 12.0),
           ),
           SizedBox(height: Dimens.padding),
+          _buildConfirmedBox(
+              label: labelUpdateTerkini['statistics']['confirmed'],
+              caseTotal: '${data['aktif']['jabar']}'),
+          SizedBox(height: Dimens.padding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}virusPurple.png',
-                  labelUpdateTerkini['statistics']['confirmed'],
-                  labelUpdateTerkini['statistics']['confirmed'],
-                  '${data['aktif']['jabar']}',
-                  4,
-                  Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff2C347C),
-                  ''),
-              _buildContainer(
-                  '${Environment.iconAssets}virusRed.png',
+                  '${Environment.iconAssets}virus_yellow.png',
                   labelUpdateTerkini['statistics']['positif'],
                   labelUpdateTerkini['statistics']['positif'],
                   getDataActivePositive(data['aktif']['jabar'],
@@ -256,68 +242,37 @@ class _StatisticsState extends State<Statistics> {
                   4,
                   Dictionary.people,
                   Color(0xff333333),
-                  Color(0xffEB5757),
-                  ''),
+                  Color(0xff333333),
+                  getDataProcessPercent(
+                      data['aktif']['jabar'],
+                      int.parse(getDataActivePositive(
+                          data['aktif']['jabar'],
+                          data['sembuh']['jabar'],
+                          data['meninggal']['jabar'])))),
               _buildContainer(
-                  '${Environment.iconAssets}virusGreen.png',
+                  '${Environment.iconAssets}virus_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
                   labelUpdateTerkini['statistics']['recovered'],
                   '${data['sembuh']['jabar']}',
                   4,
                   Dictionary.people,
                   Color(0xff333333),
-                  Color(0xff27AE60),
-                  ''),
+                  Color(0xff333333),
+                  getDataProcessPercent(
+                      data['aktif']['jabar'], data['sembuh']['jabar'])),
               _buildContainer(
-                  '${Environment.iconAssets}virusYellow.png',
+                  '${Environment.iconAssets}virus_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
                   labelUpdateTerkini['statistics']['deaths'],
                   '${data['meninggal']['jabar']}',
                   4,
                   Dictionary.people,
                   Color(0xff333333),
-                  Color(0xffF2994A),
-                  ''),
+                  Color(0xff333333),
+                  getDataProcessPercent(
+                      data['aktif']['jabar'], data['meninggal']['jabar'])),
             ],
           ),
-          SizedBox(height: Dimens.padding),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _buildContainer(
-                  '',
-                  labelUpdateTerkini['statistics']['odp'],
-                  Dictionary.opdDesc,
-                  statisticsSwitch
-                      ? data['kontak_erat']['total'].toString()
-                      : getDataProcess(data['odp']['total']['jabar'],
-                          data['odp']['selesai']['jabar']),
-                  2,
-                  Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xff2F80ED),
-                  statisticsSwitch
-                      ? data['kontak_erat']['karantina'].toString()
-                      : data['odp']['total']['jabar'].toString(),
-                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
-              _buildContainer(
-                  '',
-                  labelUpdateTerkini['statistics']['pdp'],
-                  Dictionary.pdpDesc,
-                  statisticsSwitch
-                      ? data['suspek']['total'].toString()
-                      : getDataProcess(data['pdp']['total']['jabar'],
-                          data['pdp']['selesai']['jabar']),
-                  2,
-                  Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xffF2C94C),
-                  statisticsSwitch
-                      ? data['suspek']['isolasi'].toString()
-                      : data['pdp']['total']['jabar'].toString(),
-                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
-            ],
-          )
         ],
       ),
     );
@@ -416,7 +371,7 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Color(0xff828282),
+                            color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.lato)),
                   ),
@@ -425,7 +380,7 @@ class _StatisticsState extends State<Statistics> {
                     child: Text(count,
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Color(0xff828282),
+                            color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   )
@@ -455,9 +410,9 @@ class _StatisticsState extends State<Statistics> {
 
   String getDataProcessPercent(int totalData, int dataDone) {
     double processData =
-        100 - num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
+        num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
 
-    return '(' + processData.toString() + '%)';
+    return processData.toString() + '%';
   }
 
   _buildContainer(
@@ -469,22 +424,8 @@ class _StatisticsState extends State<Statistics> {
       String label,
       Color colorTextTitle,
       Color colorNumber,
-      String total,
-      {String detailText}) {
-    if (count != null && count.isNotEmpty && count != '-') {
-      try {
-        count = formatter.format(int.parse(count)).replaceAll(',', '.');
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-    if (total != null && total.isNotEmpty && total != '-') {
-      try {
-        total = formatter.format(int.parse(total)).replaceAll(',', '.');
-      } catch (e) {
-        print(e.toString());
-      }
-    }
+      String percentage) {
+    count = formattedStringNumber(count);
 
     return Expanded(
       child: InkWell(
@@ -496,19 +437,24 @@ class _StatisticsState extends State<Statistics> {
               color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              image == ""
-                  ? Container(
-                      margin: EdgeInsets.only(top: 10, left: 5.0),
-                      child: Text(title,
-                          style: TextStyle(
-                              fontSize: 13.0,
-                              color: colorTextTitle,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato)),
-                    )
-                  : Container(height: 15, child: Image.asset(image)),
+              Container(
+                  margin: EdgeInsets.only(left: 5.0),
+                  child: image != ''
+                      ? Image.asset(
+                          image,
+                          height: 15.0,
+                        )
+                      : null),
+              Container(
+                margin: EdgeInsets.only(top: 10, left: 5.0),
+                child: Text(title,
+                    style: TextStyle(
+                        fontSize: 12.0,
+                        color: colorTextTitle,
+                        fontFamily: FontsFamily.lato)),
+              ),
               Container(
                 margin: EdgeInsets.only(top: 10, left: 5.0),
                 child: Text(count,
@@ -519,27 +465,72 @@ class _StatisticsState extends State<Statistics> {
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
               ),
-              total == ''
-                  ? Container(
-                      margin: EdgeInsets.only(top: 10, left: 1.0),
-                      child: Text(title,
-                          style: TextStyle(
-                              fontSize: 9.0,
-                              color: colorTextTitle,
-                              fontFamily: FontsFamily.lato)),
-                    )
-                  : Container(
-                      margin: EdgeInsets.only(top: 10, left: 5.0),
-                      child: Text(detailText + total,
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              color: Color(0xff333333),
-                              fontFamily: FontsFamily.lato)),
-                    )
+              Container(
+                margin: EdgeInsets.only(top: 10, left: 5.0),
+                child: percentage != ''
+                    ? Text(percentage,
+                        style: TextStyle(
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff828282),
+                            fontFamily: FontsFamily.lato))
+                    : null,
+              )
             ],
           ),
         ),
         onTap: () {},
+      ),
+    );
+  }
+
+  _buildConfirmedBox({@required String label, @required caseTotal}) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
+          borderRadius: BorderRadius.circular(8.0)),
+      child: Stack(
+        children: [
+          Positioned(
+              width: 60.0,
+              height: 60.0,
+              right: 0.0,
+              top: 0.0,
+              child: Image.asset(
+                '${Environment.iconAssets}virus_purple.png',
+                width: 60.0,
+                height: 60.0,
+              )),
+          Container(
+            margin: EdgeInsets.all(Dimens.padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    formattedStringNumber(caseTotal),
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -551,5 +542,17 @@ class _StatisticsState extends State<Statistics> {
     } else {
       return false;
     }
+  }
+
+  String formattedStringNumber(String number) {
+    String num = '';
+    if (number != null && number.isNotEmpty && number != '-') {
+      try {
+        num = formatter.format(int.parse(number)).replaceAll(',', '.');
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    return num;
   }
 }

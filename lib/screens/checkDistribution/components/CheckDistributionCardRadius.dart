@@ -47,7 +47,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               buildCard(context,
-                  image: '${Environment.iconAssets}virusRed.png',
+                  image: '${Environment.iconAssets}virus_red.png',
                   title: getLabel['check_distribution']['by_radius']['confirmed'],
                   total: state.record.detected.radius.positif,textColor: Color(0xffEB5757)),
               buildCard(context,
@@ -55,7 +55,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
                   title: getLabel['check_distribution']['by_radius']['odp'],
                   total: state.record.detected.radius.odpProses,textColor: Color(0xff2F80ED)),
               buildCard(context,
-                  image: '${Environment.iconAssets}virusYellow.png',
+                  image: '${Environment.iconAssets}virus_yellow.png',
                   title: getLabel['check_distribution']['by_radius']['pdp'],
                   total: state.record.detected.radius.pdpProses,textColor: Color(0xffF2C94C)),
             ],

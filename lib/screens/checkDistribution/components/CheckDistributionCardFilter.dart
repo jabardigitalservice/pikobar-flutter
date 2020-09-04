@@ -63,7 +63,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
 
               // build location by sub city
               _buildContent(context, countPositif, getLabel['check_distribution']['by_region']['confirmed'],
-                  '${Environment.iconAssets}virusRed.png', Color(0xffEB5757)),
+                  '${Environment.iconAssets}virus_red.png', Color(0xffEB5757)),
 
               // build ODP
               _buildContent(context, countOdp, getLabel['check_distribution']['by_region']['odp'],
@@ -71,7 +71,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
 
               // build PDP
               _buildContent(context, countPdp, getLabel['check_distribution']['by_region']['pdp'],
-                  '${Environment.iconAssets}virusYellow.png', Color(0xffF2C94C)),
+                  '${Environment.iconAssets}virus_yellow.png', Color(0xffF2C94C)),
             ],
           ),
         ],
