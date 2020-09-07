@@ -96,6 +96,10 @@ class Analytics {
   static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
   static String tappedFindByVillage = 'tapped_cari_berdasarkan_kelurahan';
   static String tappedFindByDistricts = 'tapped_cari_berdasarkan_kecamatan';
+  static String tappedConfirmedByDistricts = 'tapped_konfirmasi_berdasarkan_kecamatan';
+  static String tappedCloseContactByDistricts = 'tapped_kontak_erat_berdasarkan_kecamatan';
+  static String tappedSuspectByDistricts = 'tapped_suspek_berdasarkan_kecamatan';
+  static String tappedProbableByDistricts = 'tapped_probable_berdasarkan_kecamatan';
 
   //event document
   static String tappedShareDocuments = 'tapped_share_documents';

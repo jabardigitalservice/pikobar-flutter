@@ -286,6 +286,9 @@ class Dictionary {
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String findLocation = 'Cek Lokasi';
   static String confirmed = 'Terkonfirmasi';
+  static String closeContact = 'Kontak Erat';
+  static String suspect = 'Suspek';
+  static String probable = 'Probable';
   static String checkOtherLocation = 'Cek Berdasarkan Lokasi Lain';
   static String checkByLocation = 'Cari Berdasarkan Lokasi';
   static String positifString = 'Total Pasien Terkonfirmasi COVID-19';
@@ -296,7 +299,8 @@ class Dictionary {
   static String unreachableLocation = 'Lokasi Tidak Terjangkau';
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
   static String locationRadiusTitle = 'Lokasi Dalam Radius';
-  static String locationKecamatanTitle = 'Lokasi Dalam Kelurahan & Kecamatan';
+  static String location = 'Lokasi';
+  static String locationKecamatanTitle = 'Lokasi lain dalam kec. ';
   static String locationKecamatanDesc =
       'Data di bawah ini merupakan jumlah kasus aktif';
   static String village = 'Kelurahan';

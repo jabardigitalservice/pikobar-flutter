@@ -66,11 +66,18 @@ class Detected {
   Desa desa;
   Desa kec;
   Radius radius;
+  List<DesaLainnya> desaLainnya;
 
-  Detected({this.desa, this.kec, this.radius});
+  Detected({this.desa, this.desaLainnya,this.kec, this.radius});
 
   Detected.fromJson(Map<String, dynamic> json) {
     desa = json['desa'] != null ? new Desa.fromJson(json['desa']) : null;
+    if (json['desa_lainnya'] != null) {
+      desaLainnya = new List<DesaLainnya>();
+      json['desa_lainnya'].forEach((v) {
+        desaLainnya.add(new DesaLainnya.fromJson(v));
+      });
+    }
     kec = json['kec'] != null ? new Desa.fromJson(json['kec']) : null;
     radius =
         json['radius'] != null ? new Radius.fromJson(json['radius']) : null;
@@ -80,6 +87,9 @@ class Detected {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.desa != null) {
       data['desa'] = this.desa.toJson();
+    }
+    if (this.desaLainnya != null) {
+      data['desa_lainnya'] = this.desaLainnya.map((v) => v.toJson()).toList();
     }
     if (this.kec != null) {
       data['kec'] = this.kec.toJson();
@@ -95,6 +105,10 @@ class Desa {
   int odpProses;
   int pdpProses;
   int positif;
+  int closecontactDikarantina;
+  int confirmation;
+  int suspectDiisolasi;
+
 
   Desa({this.odpProses, this.pdpProses, this.positif});
 
@@ -102,6 +116,9 @@ class Desa {
     odpProses = json['odp_proses'];
     pdpProses = json['pdp_proses'];
     positif = json['positif'];
+    closecontactDikarantina = json['closecontact_dikarantina'];
+    confirmation = json['confirmation'];
+    suspectDiisolasi = json['suspect_diisolasi'];
   }
 
   Map<String, dynamic> toJson() {
@@ -109,6 +126,9 @@ class Desa {
     data['odp_proses'] = this.odpProses;
     data['pdp_proses'] = this.pdpProses;
     data['positif'] = this.positif;
+    data['closecontact_dikarantina'] = this.closecontactDikarantina;
+    data['confirmation'] = this.confirmation;
+    data['suspect_diisolasi'] = this.suspectDiisolasi;
     return data;
   }
 }
@@ -118,6 +138,9 @@ class Radius {
   int odpProses;
   int pdpProses;
   int positif;
+  int closecontactDikarantina;
+  int confirmation;
+  int suspectDiisolasi;
 
   Radius({this.kmRadius, this.odpProses, this.pdpProses, this.positif});
 
@@ -126,6 +149,9 @@ class Radius {
     odpProses = json['odp_proses'];
     pdpProses = json['pdp_proses'];
     positif = json['positif'];
+    closecontactDikarantina = json['closecontact_dikarantina'];
+    confirmation = json['confirmation'];
+    suspectDiisolasi = json['suspect_diisolasi'];
   }
 
   Map<String, dynamic> toJson() {
@@ -134,6 +160,42 @@ class Radius {
     data['odp_proses'] = this.odpProses;
     data['pdp_proses'] = this.pdpProses;
     data['positif'] = this.positif;
+    data['closecontact_dikarantina'] = this.closecontactDikarantina;
+    data['confirmation'] = this.confirmation;
+    data['suspect_diisolasi'] = this.suspectDiisolasi;
+    return data;
+  }
+}
+
+class DesaLainnya {
+  int closecontactDikarantina;
+  int confirmation;
+  String kodeDesa;
+  String namaDesa;
+  int suspectDiisolasi;
+
+  DesaLainnya(
+      {this.closecontactDikarantina,
+        this.confirmation,
+        this.kodeDesa,
+        this.namaDesa,
+        this.suspectDiisolasi});
+
+  DesaLainnya.fromJson(Map<String, dynamic> json) {
+    closecontactDikarantina = json['closecontact_dikarantina'];
+    confirmation = json['confirmation'];
+    kodeDesa = json['kode_desa'];
+    namaDesa = json['nama_desa'];
+    suspectDiisolasi = json['suspect_diisolasi'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['closecontact_dikarantina'] = this.closecontactDikarantina;
+    data['confirmation'] = this.confirmation;
+    data['kode_desa'] = this.kodeDesa;
+    data['nama_desa'] = this.namaDesa;
+    data['suspect_diisolasi'] = this.suspectDiisolasi;
     return data;
   }
 }

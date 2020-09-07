@@ -3,6 +3,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
@@ -33,20 +34,19 @@ class CheckDistributionDetail extends StatefulWidget {
 }
 
 class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
-  String typeLocation = Dictionary.village;
+  String typeLocation = Dictionary.confirmed;
   Map<String, dynamic> getLabel;
   RemoteConfigBloc _remoteConfigBloc;
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.back),
       backgroundColor: Colors.white,
-      body:  BlocProvider<RemoteConfigBloc>(
-            create: (BuildContext context) => _remoteConfigBloc =
-                RemoteConfigBloc()..add(RemoteConfigLoad()),
-              child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+      body: BlocProvider<RemoteConfigBloc>(
+        create: (BuildContext context) =>
+            _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
+        child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, remoteState) {
             return remoteState is RemoteConfigLoaded
                 ? _buildContent(remoteState.remoteConfig)
@@ -61,7 +61,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
     // Get label from the remote config
     getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
     return ListView(
-      padding: EdgeInsets.all(Dimens.padding),
+      padding: EdgeInsets.only(top: Dimens.padding, bottom: Dimens.padding),
       children: <Widget>[
         widget.state.record.detected == null
             ? Column(
@@ -88,8 +88,9 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                 children: <Widget>[
                   // Current location section
                   Card(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
                     elevation: 0,
-                    color: Color(0xff27AE60),
+                    color: Colors.grey[200],
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                     child: Padding(
@@ -101,7 +102,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                             '${Dictionary.currentLocationTitle}',
                             style: TextStyle(
                               fontFamily: FontsFamily.lato,
-                              color: Colors.white,
+                              color: Colors.black,
                               fontWeight: FontWeight.normal,
                               fontSize: 12.0,
                               height: 1.2,
@@ -113,7 +114,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           Row(
                             children: <Widget>[
                               Image.asset(
-                                '${Environment.iconAssets}pin_location_white.png',
+                                '${Environment.iconAssets}pin_location_red.png',
                                 scale: 2.5,
                               ),
                               SizedBox(width: 14),
@@ -122,7 +123,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                   widget.address,
                                   style: TextStyle(
                                     fontFamily: FontsFamily.lato,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12.0,
                                     height: 1.2,
@@ -135,34 +136,51 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                       ),
                     ),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    height: Dimens.dividerHeight,
+                    color: ColorBase.grey,
+                  ),
                   // build Section Location by radius
                   CheckDistributionCardRadius(
                     state: widget.state,
                     getLabel: getLabel,
+                    remoteConfig: remoteConfig,
                   ),
-                  SizedBox(height: 30),
-                  Text(
-                    '${Dictionary.locationKecamatanTitle}',
-                    style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
-                      height: 1.2,
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20, bottom: 20),
+                    height: Dimens.dividerHeight,
+                    color: ColorBase.grey,
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                    Dictionary.locationKecamatanDesc,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 10.0,
-                      height: 1.2,
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          '${Dictionary.locationKecamatanTitle} ${widget.state.record.currentLocation.namaKec.toLowerCase()}',
+                          style: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                            height: 1.2,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          Dictionary.locationKecamatanDesc,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 10.0,
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 10),
                   DefaultTabController(
-                    length: 2,
+                    length: 4,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -171,17 +189,31 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           onTap: (index) {
                             if (index == 0) {
                               setState(() {
-                                typeLocation = Dictionary.village;
+                                typeLocation = Dictionary.confirmed;
                               });
                               AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedFindByVillage);
+                                  Analytics.tappedConfirmedByDistricts);
                             } else if (index == 1) {
                               setState(() {
-                                typeLocation = Dictionary.districts;
+                                typeLocation = Dictionary.closeContact;
                               });
 
                               AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedFindByDistricts);
+                                  Analytics.tappedCloseContactByDistricts);
+                            } else if (index == 2) {
+                              setState(() {
+                                typeLocation = Dictionary.suspect;
+                              });
+
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedSuspectByDistricts);
+                            } else if (index == 3) {
+                              setState(() {
+                                typeLocation = Dictionary.probable;
+                              });
+
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedProbableByDistricts);
                             }
                           },
                           labelColor: Colors.white,
@@ -202,15 +234,32 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(
                                         color:
-                                            typeLocation == Dictionary.village
+                                            typeLocation == Dictionary.confirmed
                                                 ? ColorBase.green
                                                 : Color(0xffE0E0E0),
                                         width: 1)),
                                 child: Text(
-                                  Dictionary.village +
-                                      ' ' +
-                                      widget
-                                          .state.record.currentLocation.namaKel,
+                                  Dictionary.confirmed,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 10.0),
+                                ),
+                              ),
+                            ),
+                            Tab(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        color: typeLocation ==
+                                                Dictionary.closeContact
+                                            ? ColorBase.green
+                                            : Color(0xffE0E0E0),
+                                        width: 1)),
+                                child: Text(
+                                  Dictionary.closeContact,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontFamily: FontsFamily.lato,
@@ -225,15 +274,32 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(
                                         color:
-                                            typeLocation == Dictionary.districts
+                                            typeLocation == Dictionary.suspect
                                                 ? ColorBase.green
                                                 : Color(0xffE0E0E0),
                                         width: 1)),
                                 child: Text(
-                                  Dictionary.districts +
-                                      ' ' +
-                                      widget
-                                          .state.record.currentLocation.namaKec,
+                                  Dictionary.suspect,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 10.0),
+                                ),
+                              ),
+                            ),
+                            Tab(
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(
+                                        color:
+                                            typeLocation == Dictionary.probable
+                                                ? ColorBase.green
+                                                : Color(0xffE0E0E0),
+                                        width: 1)),
+                                child: Text(
+                                  Dictionary.probable,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontFamily: FontsFamily.lato,
@@ -259,6 +325,9 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                 countPdp:
                                     widget.state.record.detected.desa.pdpProses,
                                 typeRegion: Dictionary.village,
+                                listOtherVillage:
+                                    widget.state.record.detected.desaLainnya,
+                                statusType: typeLocation,
                                 getLabel: getLabel,
                               ),
 
@@ -273,15 +342,59 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                   countPdp: widget
                                       .state.record.detected.kec.pdpProses,
                                   typeRegion: Dictionary.districts,
+                                  listOtherVillage:
+                                      widget.state.record.detected.desaLainnya,
+                                  statusType: typeLocation,
                                   getLabel: getLabel),
+
+                              CheckDistributionCardFilter(
+                                region:
+                                    widget.state.record.currentLocation.namaKel,
+                                countPositif:
+                                    widget.state.record.detected.desa.positif,
+                                countOdp:
+                                    widget.state.record.detected.desa.odpProses,
+                                countPdp:
+                                    widget.state.record.detected.desa.pdpProses,
+                                typeRegion: Dictionary.village,
+                                listOtherVillage:
+                                    widget.state.record.detected.desaLainnya,
+                                statusType: typeLocation,
+                                getLabel: getLabel,
+                              ),
+
+                              CheckDistributionCardFilter(
+                                region:
+                                    widget.state.record.currentLocation.namaKel,
+                                countPositif:
+                                    widget.state.record.detected.desa.positif,
+                                countOdp:
+                                    widget.state.record.detected.desa.odpProses,
+                                countPdp:
+                                    widget.state.record.detected.desa.pdpProses,
+                                typeRegion: Dictionary.village,
+                                listOtherVillage:
+                                    widget.state.record.detected.desaLainnya,
+                                statusType: typeLocation,
+                                getLabel: getLabel,
+                              ),
                             ],
                           ),
                         ),
 
+                        Container(
+                          margin: EdgeInsets.only(top: 20, bottom: 20),
+                          height: Dimens.dividerHeight,
+                          color: ColorBase.grey,
+                        ),
+
                         /// Set up for show announcement widget
-                        Announcement(
-                          title: Dictionary.disclaimer,
-                          content: Dictionary.informationLocation,
+                        Container(
+                          padding:EdgeInsets.symmetric(horizontal: 10),
+                          child: Announcement(
+                            title: Dictionary.disclaimer,
+                            content: Dictionary.informationLocation,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
