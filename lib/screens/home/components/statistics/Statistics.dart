@@ -15,8 +15,10 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
+import 'package:pikobar_flutter/screens/home/components/statistics/StatisticsDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Statistics extends StatefulWidget {
   @override
@@ -26,6 +28,10 @@ class Statistics extends StatefulWidget {
 class _StatisticsState extends State<Statistics> {
   final formatter = new NumberFormat("#,###");
   String urlStatistic = "";
+  RemoteConfigLoaded remoteConfigLoaded;
+  StatisticsLoaded statisticsLoaded;
+  RapidTestLoaded rapidTestLoaded;
+  PcrTestLoaded pcrTestLoaded;
 
   @override
   Widget build(BuildContext context) {
@@ -39,32 +45,38 @@ class _StatisticsState extends State<Statistics> {
             height: 20,
           ),
           _buildRapidTest(),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: Dimens.verticalPadding),
+          statisticsLoaded != null ? Container(
+            margin: EdgeInsets.symmetric(vertical: Dimens.padding),
             child: InkWell(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    Dictionary.moreDetail,
-                    style: TextStyle(
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: ColorBase.green),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                      color: Colors.green,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      Dictionary.moreDetail,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: ColorBase.green),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatisticsDetailScreen(remoteConfigLoaded: remoteConfigLoaded, statisticsLoaded: statisticsLoaded, rapidTestLoaded: rapidTestLoaded, pcrTestLoaded: pcrTestLoaded)));
+              },
             ),
-          )
+          ) : Container()
         ],
       ),
     );
@@ -76,8 +88,9 @@ class _StatisticsState extends State<Statistics> {
         return state is StatisticsLoaded
             ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
                 builder: (context, remoteState) {
+                  this.statisticsLoaded = state;
                   return remoteState is RemoteConfigLoaded
-                      ? _buildContent(state.snapshot, remoteState.remoteConfig)
+                      ? _buildContent(state.snapshot, remoteState)
                       : _buildLoading();
                 },
               )
@@ -98,11 +111,12 @@ class _StatisticsState extends State<Statistics> {
                       return rapidState is RapidTestLoaded
                           ? BlocBuilder<PcrTestBloc, PcrTestState>(
                               builder: (context, pcrState) {
+                                this.rapidTestLoaded = rapidState;
                                 return pcrState is PcrTestLoaded
                                     ? buildContentRapidTest(
                                         remoteState.remoteConfig,
                                         rapidState.snapshot,
-                                        pcrState.snapshot)
+                                        pcrState)
                                     : buildLoadingRapidTest();
                               },
                             )
@@ -191,7 +205,9 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(DocumentSnapshot data, RemoteConfig remoteConfig) {
+  Container _buildContent(DocumentSnapshot data, RemoteConfigLoaded remoteConfigLoaded) {
+    this.remoteConfigLoaded = remoteConfigLoaded;
+    RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
     if (!data.exists)
       return Container(
         child: Center(
@@ -201,9 +217,8 @@ class _StatisticsState extends State<Statistics> {
 
     // Get label from the remote config
     Map<String, dynamic> labelUpdateTerkini =
-        GetLabelRemoteConfig.getLabel(remoteConfig);
+    RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
 
-    bool statisticsSwitch = getStatisticsSwitch(remoteConfig);
 
     return Container(
       child: Column(
@@ -334,7 +349,10 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Widget buildContentRapidTest(RemoteConfig remoteConfig,
-      DocumentSnapshot document, DocumentSnapshot documentPCR) {
+      DocumentSnapshot document, PcrTestLoaded pcrTestLoaded) {
+    this.pcrTestLoaded = pcrTestLoaded;
+    DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+
     String count = formatter
         .format(document.data['total'] + documentPCR.data['total'])
         .replaceAll(',', '.');
@@ -396,23 +414,6 @@ class _StatisticsState extends State<Statistics> {
         ),
       ),
     );
-  }
-
-  String getDataProcess(int totalData, int dataDone) {
-    int processData = totalData - dataDone;
-    return processData.toString();
-  }
-
-  String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
-    int dataActivePositive = totalData - dataDone - dataRecover;
-    return dataActivePositive.toString();
-  }
-
-  String getDataProcessPercent(int totalData, int dataDone) {
-    double processData =
-        num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
-
-    return processData.toString() + '%';
   }
 
   _buildContainer(
@@ -479,7 +480,8 @@ class _StatisticsState extends State<Statistics> {
             ],
           ),
         ),
-        onTap: () {},
+        onTap: () {
+        },
       ),
     );
   }
@@ -543,16 +545,21 @@ class _StatisticsState extends State<Statistics> {
       return false;
     }
   }
+}
 
-  String formattedStringNumber(String number) {
-    String num = '';
-    if (number != null && number.isNotEmpty && number != '-') {
-      try {
-        num = formatter.format(int.parse(number)).replaceAll(',', '.');
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-    return num;
-  }
+String getDataProcess(int totalData, int dataDone) {
+  int processData = totalData - dataDone;
+  return processData.toString();
+}
+
+String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
+  int dataActivePositive = totalData - dataDone - dataRecover;
+  return dataActivePositive.toString();
+}
+
+String getDataProcessPercent(int totalData, int dataDone) {
+  double processData =
+  num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
+
+  return processData.toString() + '%';
 }
