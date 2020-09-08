@@ -300,7 +300,7 @@ class Dictionary {
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
   static String locationRadiusTitle = 'Lokasi Dalam Radius';
   static String location = 'Lokasi';
-  static String locationKecamatanTitle = 'Lokasi lain dalam kec. ';
+  static String locationKecamatanTitle = 'Kelurahan lain dalam Kec. ';
   static String locationKecamatanDesc =
       'Data di bawah ini merupakan jumlah kasus aktif';
   static String village = 'Kelurahan';

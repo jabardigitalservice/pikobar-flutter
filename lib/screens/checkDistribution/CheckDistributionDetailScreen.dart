@@ -19,6 +19,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 
 // ignore: must_be_immutable
@@ -155,9 +156,12 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          '${Dictionary.locationKecamatanTitle} ${widget.state.record.currentLocation.namaKec.toLowerCase()}',
+                          Dictionary.locationKecamatanTitle +
+                              StringUtils.capitalizeWord(
+                                  '${widget.state.record.currentLocation.namaKec}'),
                           style: TextStyle(
                             fontFamily: FontsFamily.lato,
                             fontWeight: FontWeight.bold,
@@ -390,7 +394,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
 
                         /// Set up for show announcement widget
                         Container(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Announcement(
                             title: Dictionary.disclaimer,
                             content: Dictionary.informationLocation,

@@ -7,6 +7,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 
 class CheckDistributionCardRadius extends StatelessWidget {
@@ -38,7 +39,8 @@ class CheckDistributionCardRadius extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              '${Dictionary.location} ${state.record.currentLocation.namaKel.toLowerCase()} , kec. ${state.record.currentLocation.namaKec.toLowerCase()}',
+              StringUtils.capitalizeWord(
+                  '${Dictionary.location} ${state.record.currentLocation.namaKel} , kec. ${state.record.currentLocation.namaKec}'),
               style: TextStyle(
                 fontFamily: FontsFamily.lato,
                 fontWeight: FontWeight.bold,
@@ -90,7 +92,9 @@ class CheckDistributionCardRadius extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            formattedStringNumber(state.record.detected.radius.confirmation.toString()),
+                            formattedStringNumber(state
+                                .record.detected.radius.confirmation
+                                .toString()),
                             style: TextStyle(
                                 fontFamily: FontsFamily.lato,
                                 fontSize: 20.0,
