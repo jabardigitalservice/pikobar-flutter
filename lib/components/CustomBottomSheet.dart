@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -93,6 +94,70 @@ void showSuccessBottomSheet(
                   color: ColorBase.green,
                   elevation: 0.0,
                   onPressed: onPressed)
+            ],
+          ),
+        );
+      });
+}
+
+void showTextBottomSheet(
+    {@required BuildContext context,
+      String title,
+      @required String message}) {
+  showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.all(Dimens.padding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              /// Divider section
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: Dimens.padding),
+                  height: 4,
+                  width: 80.0,
+                  decoration: BoxDecoration(
+                    color: ColorBase.menuBorderColor,
+                    borderRadius: BorderRadius.circular(30.0)
+                  ),
+                ),
+              ),
+
+              /// Title section
+              ///
+              /// If title null, the title section will be hidden
+              title != null ? Padding(
+                padding: EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ) : Container(),
+
+              /// Message section
+              ///
+              /// Message section is required, it can't be null
+              Html(data: message,
+                defaultTextStyle: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12.0,
+                    height: 1.5,
+                    color: ColorBase.veryDarkGrey),
+              ),
+              SizedBox(height: Dimens.sbHeight)
             ],
           ),
         );
