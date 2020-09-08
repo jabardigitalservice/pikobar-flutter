@@ -15,11 +15,12 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
@@ -98,7 +99,7 @@ class _VideoListState extends State<VideoList> {
   }
 
   Widget _buildContent(List<VideoModel> data, RemoteConfig remoteConfig) {
-    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

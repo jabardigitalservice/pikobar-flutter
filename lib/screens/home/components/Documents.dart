@@ -19,12 +19,13 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Documents extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class _DocumentsState extends State<Documents> {
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
-    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

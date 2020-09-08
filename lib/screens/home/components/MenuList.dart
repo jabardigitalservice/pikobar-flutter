@@ -18,7 +18,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class MenuList extends StatefulWidget {
@@ -42,7 +42,7 @@ class _MenuListState extends State<MenuList> {
 
   _buildContent(RemoteConfig remoteConfig) {
     _remoteConfig = remoteConfig;
-    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),

@@ -18,7 +18,7 @@ import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class RapidTestDetail extends StatefulWidget {
@@ -42,7 +42,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     if (widget.remoteConfig != null) {
       dataAnnouncement = json
           .decode(widget.remoteConfig.getString(FirebaseConfig.rapidTestInfo));
-      label = GetLabelRemoteConfig.getLabel(widget.remoteConfig);
+      label = RemoteConfigHelper.decode(remoteConfig: widget.remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     }
     return Scaffold(
       backgroundColor: Colors.white,
