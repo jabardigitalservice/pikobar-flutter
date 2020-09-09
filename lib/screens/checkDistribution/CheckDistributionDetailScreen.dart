@@ -14,11 +14,12 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardFilter.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
 class CheckDistributionDetail extends StatefulWidget {
@@ -59,7 +60,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
 
   Widget _buildContent(RemoteConfig remoteConfig) {
     // Get label from the remote config
-    getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return ListView(
       padding: EdgeInsets.all(Dimens.padding),
       children: <Widget>[

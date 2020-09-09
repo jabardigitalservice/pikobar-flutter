@@ -27,7 +27,7 @@ import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
-import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
+import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';

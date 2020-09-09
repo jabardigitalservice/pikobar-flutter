@@ -10,10 +10,11 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 
 // ignore: must_be_immutable
@@ -60,7 +61,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
       }
     }
     Map<String, dynamic> getLabel =
-        GetLabelRemoteConfig.getLabel(state.remoteConfig);
+    RemoteConfigHelper.decode(remoteConfig: state.remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Container(
       color: Colors.white,
       child: Column(

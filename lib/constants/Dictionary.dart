@@ -252,6 +252,7 @@ class Dictionary {
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
+  static String lastUpdateOn = 'Terakhir Diupdate Pada';
   static String updateProfile = 'Akun berhasil diperbarui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
