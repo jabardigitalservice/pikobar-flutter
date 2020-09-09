@@ -30,76 +30,6 @@ class CheckDistributionCardFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildStatusContent(context);
-//      Card(
-//        elevation: 0,
-//        margin: const EdgeInsets.only(
-//          top: Dimens.padding,
-//        ),
-//        shape: RoundedRectangleBorder(
-//          borderRadius: BorderRadius.circular(8.0),
-//        ),
-//        child:
-////      Column(
-////        crossAxisAlignment: CrossAxisAlignment.start,
-////        children: <Widget>[
-////          Row(
-////            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-////            children: <Widget>[
-////              // Text.rich(
-////              //   TextSpan(
-////              //     children: <TextSpan>[
-////              //       TextSpan(
-////              //         text: '${Dictionary.regionInfo} $typeRegion ',
-////              //         style: TextStyle(
-////              //           color: Colors.grey[600],
-////              //           fontFamily: FontsFamily.productSans,
-////              //           fontSize: 14.0,
-////              //           height: 1.5,
-////              //         ),
-////              //       ),
-////              //       TextSpan(
-////              //         text: region,
-////              //         style: TextStyle(
-////              //           color: Colors.grey[600],
-////              //           fontFamily: FontsFamily.productSans,
-////              //           fontWeight: FontWeight.bold,
-////              //           fontSize: 14.0,
-////              //           height: 1.5,
-////              //         ),
-////              //       )
-////              //     ],
-////              //   ),
-////              // ),
-////
-////              // build location by sub city
-//////              _buildContent(
-//////                  context,
-//////                  countPositif,
-//////                  getLabel['check_distribution']['by_region']['confirmed'],
-//////                  '${Environment.iconAssets}virus_red.png',
-//////                  Color(0xffEB5757)),
-//////
-//////              // build ODP
-//////              _buildContent(
-//////                  context,
-//////                  countOdp,
-//////                  getLabel['check_distribution']['by_region']['odp'],
-//////                  '${Environment.iconAssets}virus_3.png',
-//////                  Color(0xff2F80ED)),
-//////
-//////              // build PDP
-//////              _buildContent(
-//////                  context,
-//////                  countPdp,
-//////                  getLabel['check_distribution']['by_region']['pdp'],
-//////                  '${Environment.iconAssets}virus_yellow.png',
-//////                  Color(0xffF2C94C)),
-////
-////            ],
-////          ),
-////        ],
-////      ),
-//        );
   }
 
   // ignore: missing_return
@@ -111,7 +41,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
     } else if (statusType == Dictionary.suspect) {
       return dataOtherVillage.suspectDiisolasi.toString();
     } else if (statusType == Dictionary.probable) {
-      return dataOtherVillage.suspectDiisolasi.toString();
+      return dataOtherVillage.probable.toString();
     }
   }
 

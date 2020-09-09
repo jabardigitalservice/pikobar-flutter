@@ -128,7 +128,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
                     image: '',
                     title: getLabel['check_distribution']['by_radius']
                         ['probable'],
-                    total: state.record.detected.radius.pdpProses,
+                    total: state.record.detected.radius.probable,
                     textColor: Colors.black),
               ],
             )

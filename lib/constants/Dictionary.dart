@@ -83,8 +83,7 @@ class Dictionary {
   static String checkLocationSpread = 'Cek Sebaran Lokasi Anda';
   static String checkLocationSpreadDesc =
       'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol ‘Cek Lokasi Saat Ini';
-  static String phoneNumberHasBeenUsed =
-      'No telepon sudah digunakan';
+  static String phoneNumberHasBeenUsed = 'No telepon sudah digunakan';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -309,7 +308,7 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      '<p>Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.</p> <p>Data yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.</p>';
+      '<p>Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.</p> <p>Data yang ditampilkan adalah data 24 jam terakhir. Jika ada perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi Jawa Barat atau Dinas Kesehatan masing-masing Kabupaten/Kota di Jawa Barat.</p> <p>Sumber Data:<br>Terkonfirmasi: Pusdatin Kemenkes<br>Kontak Erat, Suspek dan Probable: Aplikasi Pelaporan Covid-19 Jawa Barat</p>';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
@@ -367,10 +366,12 @@ class Dictionary {
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
-  static String contactDateCovid = 'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
+  static String contactDateCovid =
+      'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
   static String additionalTemperatureInformation = 'Informasi Tambahan';
-  static String descTemperatureInformation = 'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
+  static String descTemperatureInformation =
+      'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
@@ -400,5 +401,4 @@ class Dictionary {
   static String relation = 'Hubungan';
   static String otherRelation = 'Hubungan lainnya';
   static String lastContactDate = 'Tanggal Kontak Terakhir';
-
 }
