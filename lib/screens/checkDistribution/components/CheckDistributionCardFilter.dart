@@ -40,7 +40,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
       return dataOtherVillage.closecontactDikarantina.toString();
     } else if (statusType == Dictionary.suspect) {
       return dataOtherVillage.suspectDiisolasi.toString();
-    } else if (statusType == Dictionary.probable) {
+    } else {
       return dataOtherVillage.probable.toString();
     }
   }
