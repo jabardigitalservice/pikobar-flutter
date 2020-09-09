@@ -19,6 +19,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportDoneScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/RegexInputFormatter.dart';
 
@@ -111,8 +112,19 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   '${Environment.imageAssets}daily_success.png',
                   Dictionary.savedSuccessfully,
                   Dictionary.dailySuccess, () async {
-                Navigator.of(context).pop(true);
-                Navigator.of(context).pop(true);
+                if (widget.dailyId == '14') {
+                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop(true);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SelfReportDoneScreen(widget.location)),
+                  );
+                } else {
+                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop(true);
+                }
               });
             } else if (state is DailyReportFailed) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);

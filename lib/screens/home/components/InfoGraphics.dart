@@ -14,11 +14,12 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class InfoGraphics extends StatefulWidget {
   @override
@@ -60,7 +61,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         builder: (context, remoteState) {
       if (remoteState is RemoteConfigLoaded) {
         Map<String, dynamic> getLabel =
-            GetLabelRemoteConfig.getLabel(remoteState.remoteConfig);
+        RemoteConfigHelper.decode(remoteConfig: remoteState.remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
