@@ -209,25 +209,33 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
 
           /// Total Kasus Probable
           _buildContainerTwo(
-              labels['statistics']['probable'],
-              () {
-                showTextBottomSheet(
-                    context: context,
-                    title: statisticBottomSheet['probable']['title'],
-                    message: statisticBottomSheet['probable']['message']);
-              },
-              '946',
-              labels['statistics']['positif'],
-              '95',
-              '10.04%',
-              labels['statistics']['recovered'],
-              null,
-              '283',
-              '29.92%',
-              fourthTitle: labels['statistics']['deaths'],
-              fourthTitleHelpOnTap: null,
-              fourthCount: '568',
-              fourthPercentage: '60.04%'),
+            labels['statistics']['probable'],
+            () {
+              showTextBottomSheet(
+                  context: context,
+                  title: statisticBottomSheet['probable']['title'],
+                  message: statisticBottomSheet['probable']['message']);
+            },
+            '${statisticsDoc['probable']['total']}',
+            labels['statistics']['positif'],
+            '${statisticsDoc['probable']['isolasi']}',
+            getDataProcessPercent(statisticsDoc['probable']['total'],
+                statisticsDoc['probable']['isolasi']),
+            labels['statistics']['recovered'],
+            null,
+            '${statisticsDoc['probable']['selesai']}',
+            getDataProcessPercent(statisticsDoc['probable']['total'],
+                statisticsDoc['probable']['selesai']),
+            fourthTitle: labels['statistics']['deaths'],
+            fourthTitleHelpOnTap: null,
+            fourthCount:
+                '${statisticsDoc['probable']['total'] - statisticsDoc['probable']['isolasi'] - statisticsDoc['probable']['selesai']}',
+            fourthPercentage: getDataProcessPercent(
+                statisticsDoc['probable']['total'],
+                statisticsDoc['probable']['total'] -
+                    statisticsDoc['probable']['isolasi'] -
+                    statisticsDoc['probable']['selesai']),
+          ),
 
           _buildContentRapidTest()
         ],
@@ -378,11 +386,13 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       fontSize: 12.0,
                       color: ColorBase.veryDarkGrey,
                       fontFamily: FontsFamily.lato)),
-              SizedBox(width: 5.0),
               GestureDetector(
                   onTap: mainTitleHelpOnTap,
-                  child: Icon(Icons.help_outline,
-                      size: 12.0, color: ColorBase.darkGrey))
+                  child: SizedBox(
+                    width: 20,
+                    child: Icon(Icons.help_outline,
+                        size: 13.0, color: ColorBase.darkGrey),
+                  ),)
             ],
           ),
           Container(
@@ -445,12 +455,14 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                 fontSize: 12.0,
                                 color: ColorBase.darkGrey,
                                 fontFamily: FontsFamily.lato)),
-                        SizedBox(width: 5.0),
                         thirdTitleHelpOnTap != null
                             ? GestureDetector(
                                 onTap: thirdTitleHelpOnTap,
-                                child: Icon(Icons.help_outline,
-                                    size: 12.0, color: ColorBase.darkGrey),
+                                child: SizedBox(
+                                  width: 20,
+                                  child: Icon(Icons.help_outline,
+                                      size: 13.0, color: ColorBase.darkGrey),
+                                ),
                               )
                             : Container()
                       ],
@@ -493,9 +505,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                               fourthTitleHelpOnTap != null
                                   ? GestureDetector(
                                       onTap: fourthTitleHelpOnTap,
-                                      child: Icon(Icons.help_outline,
-                                          size: 12.0,
-                                          color: ColorBase.darkGrey),
+                                      child: SizedBox(
+                                        width: 20,
+                                        child: Icon(Icons.help_outline,
+                                            size: 13.0, color: ColorBase.darkGrey),
+                                      ),
                                     )
                                   : Container()
                             ],
@@ -549,37 +563,44 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(Dimens.padding),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
-                  height: 60,
-                  child: Image.asset(
-                      '${Environment.imageAssets}bloodTest@4x.png')),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(left: 5.0),
-                    child: Text(Dictionary.testSummaryTitle,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 12.0,
-                            color: ColorBase.veryDarkGrey,
-                            fontFamily: FontsFamily.lato)),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-                    child: Text(count,
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: ColorBase.veryDarkGrey,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.roboto)),
-                  )
-                ],
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                        height: 41,
+                        child: Image.asset(
+                            '${Environment.imageAssets}bloodTest@4x.png')),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: Dimens.verticalPadding),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(Dictionary.testSummaryTitle,
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: ColorBase.veryDarkGrey,
+                                    fontFamily: FontsFamily.lato)),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(count,
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: ColorBase.veryDarkGrey,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: FontsFamily.roboto)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Icon(
                 Icons.arrow_forward_ios,
