@@ -21,7 +21,6 @@ import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistri
 import 'package:pikobar_flutter/screens/checkDistribution/components/CheckDistributionCardRadius.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable

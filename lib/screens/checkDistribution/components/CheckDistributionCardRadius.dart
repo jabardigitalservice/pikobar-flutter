@@ -6,9 +6,10 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class CheckDistributionCardRadius extends StatelessWidget {
   final CheckDistributionLoaded state;
@@ -24,7 +25,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get label from the remote config
     Map<String, dynamic> labelUpdateTerkini =
-        GetLabelRemoteConfig.getLabel(remoteConfig);
+    RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(
