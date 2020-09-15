@@ -121,8 +121,9 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}self_diagnose.png',
               Dictionary.selfDiagnose, NavigationConstrants.Browser,
               arguments: kUrlSelfDiagnose),
-          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
+          _buildButtonColumn('${Environment.iconAssets}help.png',
+              Dictionary.donation, NavigationConstrants.Browser,
+              arguments: kUrlDonation),
           _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
         ],
@@ -145,9 +146,8 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}logistics.png',
               Dictionary.logistic, NavigationConstrants.Browser,
               arguments: kUrlLogisticsInfo),
-          _buildButtonColumn('${Environment.iconAssets}help.png',
-              Dictionary.donation, NavigationConstrants.Browser,
-              arguments: kUrlDonation),
+          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
         ],
       ),
     );
@@ -301,10 +301,19 @@ class _MenuListState extends State<MenuList> {
                               .getString(FirebaseConfig.selfDiagnoseCaption)
                           : Dictionary.selfDiagnose),
 
-          /// Menu Button Emergency Numbers
-          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook,
-              remoteMenuLoginKey: FirebaseConfig.emergencyNumberMenu),
+          /// Menu Button Donation
+          /// Remote Config : caption & url
+          _buildButtonColumn(
+              '${Environment.iconAssets}help.png',
+              _remoteConfig.getString(FirebaseConfig.donationCaption) != null
+                  ? _remoteConfig.getString(FirebaseConfig.donationCaption)
+                  : Dictionary.donation,
+              NavigationConstrants.Browser,
+              arguments:
+              _remoteConfig.getString(FirebaseConfig.donationUrl) != null
+                  ? _remoteConfig.getString(FirebaseConfig.donationUrl)
+                  : kUrlDonation,
+              remoteMenuLoginKey: FirebaseConfig.donationMenu),
 
           /// Menu Button Others
           _buildButtonColumnLayananLain(
@@ -368,19 +377,10 @@ class _MenuListState extends State<MenuList> {
                   : kUrlLogisticsInfo,
               remoteMenuLoginKey: FirebaseConfig.logisticMenu),
 
-          /// Menu Button Donation
-          /// Remote Config : caption & url
-          _buildButtonColumn(
-              '${Environment.iconAssets}help.png',
-              _remoteConfig.getString(FirebaseConfig.donationCaption) != null
-                  ? _remoteConfig.getString(FirebaseConfig.donationCaption)
-                  : Dictionary.donation,
-              NavigationConstrants.Browser,
-              arguments:
-                  _remoteConfig.getString(FirebaseConfig.donationUrl) != null
-                      ? _remoteConfig.getString(FirebaseConfig.donationUrl)
-                      : kUrlDonation,
-              remoteMenuLoginKey: FirebaseConfig.donationMenu),
+          /// Menu Button Emergency Numbers
+          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook,
+              remoteMenuLoginKey: FirebaseConfig.emergencyNumberMenu),
         ],
       ),
     );
@@ -439,11 +439,10 @@ class _MenuListState extends State<MenuList> {
 
           /// Add Empty button to adjust the spacing between buttons
           /// Remove if a new button is added
-          _buildButtonColumn(
-            '',
-            '',
-            '',
-          ),
+          /// Hidden Menu
+          _buildButtonDisable(
+              '${Environment.iconAssets}report_case.png', Dictionary.volunteer,
+              visible: false),
 
           /// Hidden Menu
           _buildButtonDisable(
