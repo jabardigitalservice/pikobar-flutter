@@ -269,21 +269,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               )
-//                              Container(
-//                                height: 25,
-//                                child: IconButton(
-//                                  padding: EdgeInsets.all(0),
-//                                  alignment: Alignment.topRight,
-//                                  icon: Icon(FontAwesomeIcons.share,
-//                                      size: 17, color: Color(0xFF27AE60)),
-//                                  onPressed: () {
-//                                    InfoGraphicsServices()
-//                                        .shareInfoGraphics(
-//                                        data['title'],
-//                                        data['images']);
-//                                  },
-//                                ),
-//                              )
                             ]),
                         SizedBox(
                           height: 10,
