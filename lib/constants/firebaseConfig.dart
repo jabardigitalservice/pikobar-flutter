@@ -44,7 +44,7 @@ class FirebaseConfig {
   static String importantinfoStatusVisible = 'important_info_status_visible';
   static String labels = 'labels';
   static String statisticsSwitch = 'statistics_switch';
-  static String statisticsBottomSheet = 'statistics_bottom_sheet';
+  static String bottomSheetContent = 'bottom_sheet_content';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -155,22 +155,52 @@ class FirebaseConfig {
       '}'
       '}';
 
-  static String statisticsBottomSheetDefaultValue = '{'
+  static String bottomSheetDefaultValue = '{'
+      '"statistics_bottom_sheet": {'
         '"kontak_erat": {'
-            '"title": "Kontak Erat",'
-            '"message": "Orang yang memiliki riwayat kontak dengan kasus probable atau terkonfirmasi COVID-19."'
+          '"title": "Kontak Erat",'
+          '"message": "Orang yang memiliki riwayat kontak dengan kasus probable atau terkonfirmasi COVID-19."'
         '},'
         '"suspek": {'
-            '"title": "Suspek",'
-            '"message": "<p>Orang yang memiliki salah satu dari kriteria berikut : <br><br>i. Mengalami Infeksi Saluran Pernapasan Akut (ISPA) DAN pada 14 hari terakhir sebelum timbul gejala memiliki riwayat perjalanan atau tinggal di negara/wilayah Indonesia yang melaporkan transmisi lokal. <br><br>ii. Mengalami salah satu gejala/tanda ISPA DAN pada 14 hari terakhir sebelum timbul gejala memiliki riwayat kontak dengan kasus terkonfirmasi/probable COVID-19. <br><br>iii. Mengalami ISPA berat/pneumonia berat yang membutuhkan perawatan di rumah sakit DAN tidak ada penyebab lain berdasarkan gambaran klinik yang meyakinkan.</p>"'
+          '"title": "Suspek",'
+          '"message": "<p>Orang yang memiliki salah satu dari kriteria berikut : <br><br>i. Mengalami Infeksi Saluran Pernapasan Akut (ISPA) DAN pada 14 hari terakhir sebelum timbul gejala memiliki riwayat perjalanan atau tinggal di negara/wilayah Indonesia yang melaporkan transmisi lokal. <br><br>ii. Mengalami salah satu gejala/tanda ISPA DAN pada 14 hari terakhir sebelum timbul gejala memiliki riwayat kontak dengan kasus terkonfirmasi/probable COVID-19. <br><br>iii. Mengalami ISPA berat/pneumonia berat yang membutuhkan perawatan di rumah sakit DAN tidak ada penyebab lain berdasarkan gambaran klinik yang meyakinkan.</p>"'
         '},'
         '"probable": {'
-            '"title": "Probable",'
-            '"message": "Kasus suspek dengan ISPA Berat/ARDS/meninggal dengan gambaran klinis yang meyakinkan COVID-19 dan belum ada hasil pemeriksaan laboratorium RT-PCR."'
+          '"title": "Probable",'
+          '"message": "Kasus suspek dengan ISPA Berat/ARDS/meninggal dengan gambaran klinis yang meyakinkan COVID-19 dan belum ada hasil pemeriksaan laboratorium RT-PCR."'
         '},'
         '"discarded": {'
-            '"title": "Discarded",'
-            '"message": "Kasus dikatakan discarded apabila orang dengan status ini dinyatakan selesai menjalani masa perawatan / karantina"'
+          '"title": "Discarded",'
+          '"message": "Kasus dikatakan discarded apabila orang dengan status ini dinyatakan selesai menjalani masa perawatan / karantina"'
         '}'
-      '}';
+      '},'
+      '"rdt_bottom_sheet": {'
+        '"reaktif": {'
+          '"title": "Reaktif",'
+          '"message": "Reaktif artinya ditemukan adanya antibodi terhadap virus penyebab COVID-19."'
+        '},'
+        '"non-reaktif": {'
+          '"title": "Non-Reaktif",'
+          '"message": "Non Reaktif artinya tidak ditemukan adanya antibodi terhadap virus penyebab COVID-19."'
+        '},'
+        '"invalid": {'
+          '"title": "Invalid",'
+          '"message": "Negatif artinya sampel yang diperiksa tidak dapat mengeluarkan hasil pemeriksaan."'
+        '}'
+      '},'
+      '"pcr_bottom_sheet": {'
+        '"positif": {'
+          '"title": "Positif",'
+          '"message": "Positif artinya ditemukan adanya RNA dari SARS-CoV-2 yang merupakan penyebab COVID-19."'
+        '},'
+        '"negatif": {'
+          '"title": "Negatif",'
+          '"message": "Negatif artinya tidak ditemukan adanya RNA dari SARS-CoV-2 yang merupakan penyebab COVID 19."'
+        '},'
+        '"inkonklusif": {'
+          '"title": "Inkonklusif",'
+          '"message": "Inkonklusif artinya keberadaan RNA dari SARS-CoV-2 yang merupakan penyebab COVID 19 belum dapat disimpulkan."'
+        '}'
+      '}'
+  '}';
 }

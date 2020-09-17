@@ -75,8 +75,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     // Get bottom sheet config from the remote config
     Map<String, dynamic> statisticBottomSheet = RemoteConfigHelper.decode(
         remoteConfig: remoteConfig,
-        firebaseConfig: FirebaseConfig.statisticsBottomSheet,
-        defaultValue: FirebaseConfig.statisticsBottomSheetDefaultValue);
+        firebaseConfig: FirebaseConfig.bottomSheetContent,
+        defaultValue: FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: Dimens.padding),
