@@ -255,33 +255,20 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                unixTimeStampToDateTime(
-                                    data['published_date'].seconds),
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.left,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-//                              Container(
-//                                height: 25,
-//                                child: IconButton(
-//                                  padding: EdgeInsets.all(0),
-//                                  alignment: Alignment.topRight,
-//                                  icon: Icon(FontAwesomeIcons.share,
-//                                      size: 17, color: Color(0xFF27AE60)),
-//                                  onPressed: () {
-//                                    InfoGraphicsServices()
-//                                        .shareInfoGraphics(
-//                                        data['title'],
-//                                        data['images']);
-//                                  },
-//                                ),
-//                              )
+                              Expanded(
+                                child: Text(
+                                  unixTimeStampToDateTime(
+                                      data['published_date'].seconds),
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 10.0,
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
                             ]),
                         SizedBox(
                           height: 10,

@@ -60,8 +60,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
         builder: (context, remoteState) {
       if (remoteState is RemoteConfigLoaded) {
-        Map<String, dynamic> getLabel =
-        RemoteConfigHelper.decode(remoteConfig: remoteState.remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
+        Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+            remoteConfig: remoteState.remoteConfig,
+            firebaseConfig: FirebaseConfig.labels,
+            defaultValue: FirebaseConfig.labelsDefaultValue);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -348,32 +350,21 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Text(
-                                          unixTimeStampToDateTime(
-                                              document['published_date']
-                                                  .seconds),
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontFamily: FontsFamily.lato,
-                                              fontSize: 10.0,
-                                              fontWeight: FontWeight.w600),
-                                          textAlign: TextAlign.left,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-//                                    Container(
-//                                      height: 30,
-//                                      child: IconButton(
-//                                        icon: Icon(FontAwesomeIcons.share,
-//                                            size: 17, color: Color(0xFF27AE60)),
-//                                        onPressed: () {
-//                                          InfoGraphicsServices()
-//                                              .shareInfoGraphics(
-//                                                  document['title'],
-//                                                  document['images']);
-//                                        },
-//                                      ),
-//                                    )
+                                        Expanded(
+                                          child: Text(
+                                            unixTimeStampToDateTime(
+                                                document['published_date']
+                                                    .seconds),
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontFamily: FontsFamily.lato,
+                                                fontSize: 10.0,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.left,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
                                       ],
                                     ),
                                     SizedBox(
