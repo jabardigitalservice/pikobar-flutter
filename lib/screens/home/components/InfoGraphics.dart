@@ -348,19 +348,21 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        Text(
-                                          unixTimeStampToDateTime(
-                                              document['published_date']
-                                                  .seconds),
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontFamily: FontsFamily.lato,
-                                              fontSize: 10.0,
-                                              fontWeight: FontWeight.w600),
-                                          textAlign: TextAlign.left,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                       Expanded(
+                                         child:  Text(
+                                           unixTimeStampToDateTime(
+                                               document['published_date']
+                                                   .seconds),
+                                           style: TextStyle(
+                                               color: Colors.grey,
+                                               fontFamily: FontsFamily.lato,
+                                               fontSize: 10.0,
+                                               fontWeight: FontWeight.w600),
+                                           textAlign: TextAlign.left,
+                                           maxLines: 2,
+                                           overflow: TextOverflow.ellipsis,
+                                         ),
+                                       )
 //                                    Container(
 //                                      height: 30,
 //                                      child: IconButton(
