@@ -90,7 +90,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           color: ColorBase.green,
                           fontWeight: FontWeight.w600,
                           fontFamily: FontsFamily.lato,
-                          fontSize: 12.0),
+                          fontSize: Dimens.textSubtitleSize),
                     ),
                     onTap: () {
                       Navigator.pushNamed(
@@ -163,7 +163,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           color: ColorBase.green,
                           fontWeight: FontWeight.w600,
                           fontFamily: FontsFamily.lato,
-                          fontSize: 12.0),
+                          fontSize: Dimens.textSubtitleSize),
                     ),
                     onTap: () {
                       Navigator.pushNamed(

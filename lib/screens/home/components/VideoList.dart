@@ -124,7 +124,7 @@ class _VideoListState extends State<VideoList> {
                       color: Color(0xFF27AE60),
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.VideoList);

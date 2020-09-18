@@ -114,7 +114,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: FontsFamily.lato,
-                fontSize: 12.0,
+                fontSize: Dimens.textSubtitleSize,
               ),
               textAlign: TextAlign.left,
             ),
