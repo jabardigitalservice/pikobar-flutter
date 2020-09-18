@@ -59,7 +59,7 @@ class _MenuListState extends State<MenuList> {
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 16.0),
+                      fontSize: Dimens.textTitleSize),
                 ),
                 SizedBox(height: 8.0),
                 Text(
@@ -67,7 +67,7 @@ class _MenuListState extends State<MenuList> {
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
               ],
             ),

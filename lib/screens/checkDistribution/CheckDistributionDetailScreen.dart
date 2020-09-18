@@ -3,7 +3,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
@@ -38,6 +37,7 @@ class CheckDistributionDetail extends StatefulWidget {
 class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
   String typeLocation = Dictionary.confirmed;
   Map<String, dynamic> getLabel;
+  // ignore: unused_field, close_sinks
   RemoteConfigBloc _remoteConfigBloc;
 
   @override

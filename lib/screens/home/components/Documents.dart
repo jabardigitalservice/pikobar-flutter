@@ -17,6 +17,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -63,7 +64,7 @@ class _DocumentsState extends State<Documents> {
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 16.0),
+                    fontSize: Dimens.textTitleSize),
               ),
               InkWell(
                 child: Text(
@@ -72,7 +73,7 @@ class _DocumentsState extends State<Documents> {
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.Document);

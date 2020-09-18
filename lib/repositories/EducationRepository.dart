@@ -1,9 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
-import 'package:pikobar_flutter/models/NewsModel.dart';
-import 'package:async/async.dart';
 
 class EducationRepository {
   final Firestore firestore = Firestore.instance;

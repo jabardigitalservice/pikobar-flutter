@@ -142,7 +142,7 @@ class _StatisticsState extends State<Statistics> {
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
                   fontFamily: FontsFamily.lato,
-                  fontSize: 16.0),
+                  fontSize: Dimens.textTitleSize),
             ),
             SizedBox(height: Dimens.padding),
             SizedBox(height: 15),
@@ -230,7 +230,7 @@ class _StatisticsState extends State<Statistics> {
                 color: Color(0xff333333),
                 fontWeight: FontWeight.w600,
                 fontFamily: FontsFamily.lato,
-                fontSize: 16.0),
+                fontSize: Dimens.textTitleSize),
           ),
           SizedBox(height: 10),
           Text(
@@ -238,7 +238,7 @@ class _StatisticsState extends State<Statistics> {
             style: TextStyle(
                 color: Color(0xff333333),
                 fontFamily: FontsFamily.lato,
-                fontSize: 12.0),
+                fontSize: Dimens.textSubtitleSize),
           ),
           SizedBox(height: Dimens.padding),
           _buildConfirmedBox(

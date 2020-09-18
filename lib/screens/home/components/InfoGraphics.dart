@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -80,7 +81,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                         fontFamily: FontsFamily.lato,
-                        fontSize: 16.0),
+                        fontSize: Dimens.textTitleSize),
                   ),
                   InkWell(
                     child: Text(
@@ -109,7 +110,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 style: TextStyle(
                     color: Colors.black,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 12.0),
+                    fontSize: Dimens.textSubtitleSize),
                 textAlign: TextAlign.left,
               ),
             ),
@@ -188,7 +189,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ),
           ],
         );
-        ;
       }
     });
   }
