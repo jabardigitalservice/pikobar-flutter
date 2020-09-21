@@ -209,11 +209,7 @@ class _SelfReportListState extends State<SelfReportList> {
             if (i != 0) {
               if (currentDay != null) {
                 if (differenceMonth) {
-                  if (currentDay.day <= firstDay.add(Duration(days: i)).day) {
-                    textColor = Colors.black;
-                  } else {
-                    textColor = ColorBase.darkGrey;
-                  }
+                  textColor = Colors.black;
                 } else {
                   if (currentDay.day >= firstDay.add(Duration(days: i)).day) {
                     textColor = Colors.black;
@@ -236,39 +232,22 @@ class _SelfReportListState extends State<SelfReportList> {
                       /// Checking data if [currentDay] not null
                       if (currentDay != null) {
                         if (differenceMonth) {
-                          /// Checking data if [currentDay] same as the day user can fill the form
-                          if (currentDay.day <=
-                              firstDay.add(Duration(days: i)).day) {
-                            /// [currentDay] same as the day user can fill the form
-                            /// Checking data is already filled or not
-                            if (listDocumentId.contains('${i + 1}')) {
-                              /// Data is already filled
-                              /// Move to detail screeen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelfReportDetailScreen('${i + 1}')),
-                              );
-                            } else {
-                              /// Move to form screen
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SelfReportFormScreen(
-                                      dailyId: '${i + 1}',
-                                      location: widget.location)));
-                            }
+                          /// Checking data is already filled or not
+                          if (listDocumentId.contains('${i + 1}')) {
+                            /// Data is already filled
+                            /// Move to detail screeen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SelfReportDetailScreen('${i + 1}')),
+                            );
                           } else {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    DialogTextOnly(
-                                      description:
-                                          '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
-                                      buttonText: Dictionary.ok,
-                                      onOkPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ));
+                            /// Move to form screen
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SelfReportFormScreen(
+                                    dailyId: '${i + 1}',
+                                    location: widget.location)));
                           }
                         } else {
                           if (currentDay.day >=
