@@ -53,9 +53,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
         itemCount: listOtherVillage.length,
         itemBuilder: (context, index) {
           final DesaLainnya dataOtherVillage = listOtherVillage[index];
-
-          return Container(
-              child: Column(
+          return Column(
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(left: 16, right: 16),
@@ -105,7 +103,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
                 ),
               )
             ],
-          ));
+          );
         });
   }
 
