@@ -45,57 +45,72 @@ class _StatisticsState extends State<Statistics> {
             height: 20,
           ),
           _buildRapidTest(),
-          statisticsLoaded != null ? Container(
-            margin: EdgeInsets.symmetric(vertical: Dimens.padding),
-            child: InkWell(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      Dictionary.moreDetail,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.roboto,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: ColorBase.green),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0),
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 12,
-                        color: Colors.green,
+          statisticsLoaded != null
+              ? Container(
+                  margin: EdgeInsets.symmetric(vertical: Dimens.padding),
+                  child: InkWell(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            Dictionary.moreDetail,
+                            style: TextStyle(
+                                fontFamily: FontsFamily.roboto,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: ColorBase.green),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => StatisticsDetailScreen(remoteConfigLoaded: remoteConfigLoaded, statisticsLoaded: statisticsLoaded, rapidTestLoaded: rapidTestLoaded, pcrTestLoaded: pcrTestLoaded)));
-              },
-            ),
-          ) : Container()
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => StatisticsDetailScreen(
+                              remoteConfigLoaded: remoteConfigLoaded,
+                              statisticsLoaded: statisticsLoaded,
+                              rapidTestLoaded: rapidTestLoaded,
+                              pcrTestLoaded: pcrTestLoaded)));
+                    },
+                  ),
+                )
+              : Container()
         ],
       ),
     );
   }
 
   _buildStatistics() {
-    return BlocBuilder<StatisticsBloc, StatisticsState>(
-      builder: (context, state) {
-        return state is StatisticsLoaded
-            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                builder: (context, remoteState) {
-                  this.statisticsLoaded = state;
-                  return remoteState is RemoteConfigLoaded
-                      ? _buildContent(state.snapshot, remoteState)
-                      : _buildLoading();
-                },
-              )
-            : _buildLoading();
+    return BlocListener<StatisticsBloc, StatisticsState>(
+      listener: (context, state) {
+        if (state is StatisticsLoaded) {
+          setState(() {
+            this.statisticsLoaded = state;
+          });
+        }
       },
+      child: BlocBuilder<StatisticsBloc, StatisticsState>(
+        builder: (context, state) {
+          return state is StatisticsLoaded
+              ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                  builder: (context, remoteState) {
+                    return remoteState is RemoteConfigLoaded
+                        ? _buildContent(state.snapshot, remoteState)
+                        : _buildLoading();
+                  },
+                )
+              : _buildLoading();
+        },
+      ),
     );
   }
 
@@ -104,24 +119,41 @@ class _StatisticsState extends State<Statistics> {
       builder: (context, remoteState) {
         return remoteState is RemoteConfigLoaded
             ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
-                ? BlocBuilder<RapidTestBloc, RapidTestState>(
-                    builder: (context, rapidState) {
-                      urlStatistic = remoteState.remoteConfig
-                          .getString(FirebaseConfig.pikobarUrl);
-                      return rapidState is RapidTestLoaded
-                          ? BlocBuilder<PcrTestBloc, PcrTestState>(
-                              builder: (context, pcrState) {
-                                this.rapidTestLoaded = rapidState;
-                                return pcrState is PcrTestLoaded
-                                    ? buildContentRapidTest(
-                                        remoteState.remoteConfig,
-                                        rapidState.snapshot,
-                                        pcrState)
-                                    : buildLoadingRapidTest();
-                              },
-                            )
-                          : buildLoadingRapidTest();
-                    },
+                ? MultiBlocListener(
+                    listeners: [
+                      BlocListener<RapidTestBloc, RapidTestState>(listener: (context, rapidState) {
+                        if (rapidState is RapidTestLoaded) {
+                          setState(() {
+                            this.rapidTestLoaded = rapidState;
+                          });
+                        }
+                      }),
+                      BlocListener<PcrTestBloc, PcrTestState>(listener: (context, pcrState) {
+                        if (pcrState is PcrTestLoaded) {
+                          setState(() {
+                            this.pcrTestLoaded = pcrState;
+                          });
+                        }
+                      })
+                    ],
+                    child: BlocBuilder<RapidTestBloc, RapidTestState>(
+                      builder: (context, rapidState) {
+                        urlStatistic = remoteState.remoteConfig
+                            .getString(FirebaseConfig.pikobarUrl);
+                        return rapidState is RapidTestLoaded
+                            ? BlocBuilder<PcrTestBloc, PcrTestState>(
+                                builder: (context, pcrState) {
+                                  return pcrState is PcrTestLoaded
+                                      ? buildContentRapidTest(
+                                          remoteState.remoteConfig,
+                                          rapidState.snapshot,
+                                          pcrState)
+                                      : buildLoadingRapidTest();
+                                },
+                              )
+                            : buildLoadingRapidTest();
+                      },
+                    ),
                   )
                 : Container()
             : buildLoadingRapidTest();
@@ -205,7 +237,8 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(DocumentSnapshot data, RemoteConfigLoaded remoteConfigLoaded) {
+  Container _buildContent(
+      DocumentSnapshot data, RemoteConfigLoaded remoteConfigLoaded) {
     this.remoteConfigLoaded = remoteConfigLoaded;
     RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
     if (!data.exists)
@@ -216,9 +249,10 @@ class _StatisticsState extends State<Statistics> {
       );
 
     // Get label from the remote config
-    Map<String, dynamic> labelUpdateTerkini =
-    RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
-
+    Map<String, dynamic> labelUpdateTerkini = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
 
     return Container(
       child: Column(
@@ -350,7 +384,6 @@ class _StatisticsState extends State<Statistics> {
 
   Widget buildContentRapidTest(RemoteConfig remoteConfig,
       DocumentSnapshot document, PcrTestLoaded pcrTestLoaded) {
-    this.pcrTestLoaded = pcrTestLoaded;
     DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
 
     String count = formatter
@@ -480,8 +513,7 @@ class _StatisticsState extends State<Statistics> {
             ],
           ),
         ),
-        onTap: () {
-        },
+        onTap: () {},
       ),
     );
   }
@@ -559,7 +591,7 @@ String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
 
 String getDataProcessPercent(int totalData, int dataDone) {
   double processData =
-  num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
+      num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
 
   return processData.toString() + '%';
 }
