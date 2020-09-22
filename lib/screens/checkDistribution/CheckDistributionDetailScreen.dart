@@ -301,7 +301,9 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                       content: Dictionary.informationLocation,
                     ),
                   ),
-                  Padding(
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
                     padding:
                         const EdgeInsets.only(left: 25, right: 25, top: 10),
                     child: RichText(
