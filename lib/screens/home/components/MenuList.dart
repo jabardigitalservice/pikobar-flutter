@@ -116,8 +116,7 @@ class _MenuListState extends State<MenuList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}report.png',
-              Dictionary.titleSelfReport, NavigationConstrants.SelfReports,
-              isNew: true),
+              Dictionary.titleSelfReport, NavigationConstrants.SelfReports,),
           _buildButtonColumn('${Environment.iconAssets}self_diagnose.png',
               Dictionary.selfDiagnose, NavigationConstrants.Browser,
               arguments: kUrlSelfDiagnose),
@@ -269,8 +268,7 @@ class _MenuListState extends State<MenuList> {
         children: [
           /// Menu Button Self Reports
           _buildButtonColumn('${Environment.iconAssets}report.png',
-              Dictionary.titleSelfReport, NavigationConstrants.SelfReports,
-              isNew: true),
+              Dictionary.titleSelfReport, NavigationConstrants.SelfReports),
 
           /// Menu Button Self Diagnose
           /// Remote Config : enabled, caption & url
