@@ -15,51 +15,48 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    name: Build Android APK
+    runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v1
-      with:
-        # run spesific version
-        # flutter-version: '1.17.5'
+    
+    - name: "Execution Permission"
+      run: chmod -R +x ./.github/workflows/scripts
 
-        # channel version
-        channel: 'stable' # or: 'dev' or 'beta'
+    # Install Flutter
+    - name: "Install Flutter"
+      run: ./.github/workflows/scripts/install-flutter.sh stable # or: beta
 
+    # Install Tools
+    - name: "Install Tools"
+      run: ./.github/workflows/scripts/install-tools.sh
+    
     # Write a pikobar.keystore file from a base64-encoded string
-    - name: Write Keystore
+    - name: "Write Keystore"
       id: write_keystore
       uses: timheuer/base64-to-file@v1.0.3
       with:
-          fileName: 'pikobar.keystore'
-          encodedString: ${{ secrets.PIKOBAR_KEY }}
+        fileName: 'pikobar.keystore'
+        encodedString: ${{ secrets.PIKOBAR_KEY }}
 
+    # Setup Environments
+    - name: "Setup Environments"
+      run: |
+        mv ${{ steps.write_keystore.outputs.filePath }} ./android/pikobar.keystore
+        sed -i -e 's/%GOOGLE_API_KEY%/${{ secrets.GOOGLE_API_KEY }}/g' ./android/app/src/main/AndroidManifest.xml
+        echo 'storeFile=pikobar.keystore' > ./android/key.properties
+        echo 'storePassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
+        echo 'keyPassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
+        echo 'keyAlias=${{ secrets.PIKOBAR_ALIAS }}' >> ./android/key.properties
+        echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
+        echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
 
-    # Runs a command using the runners shell
-    # Runs setup env
-    - run: mv ${{ steps.write_keystore.outputs.filePath }} ./android/pikobar.keystore
-    - run: sed -i -e 's/%GOOGLE_API_KEY%/${{ secrets.GOOGLE_API_KEY }}/g' ./android/app/src/main/AndroidManifest.xml
-    - run: echo 'storeFile=pikobar.keystore' > ./android/key.properties
-    - run: echo 'storePassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
-    - run: echo 'keyPassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
-    - run: echo 'keyAlias=${{ secrets.PIKOBAR_ALIAS }}' >> ./android/key.properties
-    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/google-services.json
-    - run: echo '${{ secrets.GOOGLE_SERVICES }}' > ./android/app/src/main/google-services.json
+    # Build APK
+    - name: "Build Release APK"
+      run: ./.github/workflows/scripts/flutter-build.sh
 
-    # build APK
-    - run: flutter pub get
-    - run: flutter build apk --release
-
-    # move to APK to root directory
-    - run: mv build/app/outputs/apk/release/app-release.apk pikobar-staging.apk
-
-    # send to telegram channel
-    - run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging.apk' -F caption=PiKOBAR_STAGING https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
-
+    # Send to telegram channel
+    - name: "Send APK"
+      run: curl -F chat_id='${{ secrets.TELEGRAM_CHAT_ID }}' -F document=@'pikobar-staging.apk' -F caption=PIKOBAR_STAGING https://api.telegram.org/bot'${{ secrets.TELEGRAM_TOKEN }}'/sendDocument
