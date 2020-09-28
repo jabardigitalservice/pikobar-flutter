@@ -29,7 +29,6 @@ class _StatisticsState extends State<Statistics> {
   final formatter = new NumberFormat("#,###");
   String urlStatistic = "";
   RemoteConfigLoaded remoteConfigLoaded;
-  StatisticsLoaded statisticsLoaded;
   RapidTestLoaded rapidTestLoaded;
   PcrTestLoaded pcrTestLoaded;
 
@@ -38,127 +37,108 @@ class _StatisticsState extends State<Statistics> {
     return Container(
       padding: EdgeInsets.all(16.0),
       color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          _buildStatistics(),
-          SizedBox(
-            height: 20,
-          ),
-          _buildRapidTest(),
-          statisticsLoaded != null
-              ? Container(
-                  margin: EdgeInsets.symmetric(vertical: Dimens.padding),
-                  child: InkWell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            Dictionary.moreDetail,
-                            style: TextStyle(
-                                fontFamily: FontsFamily.roboto,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: ColorBase.green),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 12,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
+      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+          builder: (context, remoteState) {
+            return remoteState is RemoteConfigLoaded ?
+            BlocBuilder<StatisticsBloc, StatisticsState>(
+                builder: (context, statisticState) {
+                  return statisticState is StatisticsLoaded ?
+                  Column(
+                    children: <Widget>[
+                      _buildContent(statisticState.snapshot, remoteState),
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => StatisticsDetailScreen(
-                              remoteConfigLoaded: remoteConfigLoaded,
-                              statisticsLoaded: statisticsLoaded,
-                              rapidTestLoaded: rapidTestLoaded,
-                              pcrTestLoaded: pcrTestLoaded)));
-                    },
-                  ),
-                )
-              : Container()
-        ],
+                      _buildRapidTest(remoteState),
+                     _buildMore(statisticState)
+                    ],
+                  ) : _buildLoading();
+                }
+            ) : _buildLoading();
+          }
       ),
     );
   }
 
-  _buildStatistics() {
-    return BlocListener<StatisticsBloc, StatisticsState>(
-      listener: (context, state) {
-        if (state is StatisticsLoaded) {
-          setState(() {
-            this.statisticsLoaded = state;
-          });
-        }
-      },
-      child: BlocBuilder<StatisticsBloc, StatisticsState>(
-        builder: (context, state) {
-          return state is StatisticsLoaded
-              ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                  builder: (context, remoteState) {
-                    return remoteState is RemoteConfigLoaded
-                        ? _buildContent(state.snapshot, remoteState)
-                        : _buildLoading();
-                  },
-                )
-              : _buildLoading();
+  _buildMore(StatisticsLoaded statisticState) {
+    return Container(
+                      margin: EdgeInsets.symmetric(vertical: Dimens.padding),
+                      child: InkWell(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                Dictionary.moreDetail,
+                                style: TextStyle(
+                                    fontFamily: FontsFamily.roboto,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorBase.green),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => StatisticsDetailScreen(
+                                  remoteConfigLoaded: remoteConfigLoaded,
+                                  statisticsLoaded: statisticState,
+                                  rapidTestLoaded: rapidTestLoaded,
+                                  pcrTestLoaded: pcrTestLoaded)));
+                        },
+                      ),
+                    );
+  }
+
+  _buildRapidTest(RemoteConfigLoaded remoteState) {
+    return remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
+        ? MultiBlocListener(
+      listeners: [
+        BlocListener<RapidTestBloc, RapidTestState>(listener: (context, rapidState) {
+          if (rapidState is RapidTestLoaded) {
+            setState(() {
+              this.rapidTestLoaded = rapidState;
+            });
+          }
+        }),
+        BlocListener<PcrTestBloc, PcrTestState>(listener: (context, pcrState) {
+          if (pcrState is PcrTestLoaded) {
+            setState(() {
+              this.pcrTestLoaded = pcrState;
+            });
+          }
+        })
+      ],
+      child: BlocBuilder<RapidTestBloc, RapidTestState>(
+        builder: (context, rapidState) {
+          urlStatistic = remoteState.remoteConfig
+              .getString(FirebaseConfig.pikobarUrl);
+          return rapidState is RapidTestLoaded
+              ? BlocBuilder<PcrTestBloc, PcrTestState>(
+            builder: (context, pcrState) {
+              return pcrState is PcrTestLoaded
+                  ? buildContentRapidTest(
+                  remoteState.remoteConfig,
+                  rapidState.snapshot,
+                  pcrState)
+                  : buildLoadingRapidTest();
+            },
+          )
+              : buildLoadingRapidTest();
         },
       ),
-    );
-  }
-
-  _buildRapidTest() {
-    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-      builder: (context, remoteState) {
-        return remoteState is RemoteConfigLoaded
-            ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
-                ? MultiBlocListener(
-                    listeners: [
-                      BlocListener<RapidTestBloc, RapidTestState>(listener: (context, rapidState) {
-                        if (rapidState is RapidTestLoaded) {
-                          setState(() {
-                            this.rapidTestLoaded = rapidState;
-                          });
-                        }
-                      }),
-                      BlocListener<PcrTestBloc, PcrTestState>(listener: (context, pcrState) {
-                        if (pcrState is PcrTestLoaded) {
-                          setState(() {
-                            this.pcrTestLoaded = pcrState;
-                          });
-                        }
-                      })
-                    ],
-                    child: BlocBuilder<RapidTestBloc, RapidTestState>(
-                      builder: (context, rapidState) {
-                        urlStatistic = remoteState.remoteConfig
-                            .getString(FirebaseConfig.pikobarUrl);
-                        return rapidState is RapidTestLoaded
-                            ? BlocBuilder<PcrTestBloc, PcrTestState>(
-                                builder: (context, pcrState) {
-                                  return pcrState is PcrTestLoaded
-                                      ? buildContentRapidTest(
-                                          remoteState.remoteConfig,
-                                          rapidState.snapshot,
-                                          pcrState)
-                                      : buildLoadingRapidTest();
-                                },
-                              )
-                            : buildLoadingRapidTest();
-                      },
-                    ),
-                  )
-                : Container()
-            : buildLoadingRapidTest();
-      },
-    );
+    )
+        : Container();
   }
 
   _buildLoading() {
