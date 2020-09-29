@@ -10,7 +10,7 @@ class EmergencyNumberRepository {
   Stream<List<ReferralHospitalModel>> getReferralHospitalModelList() {
     return firestore
         .collection(kEmergencyNumbers)
-        .orderBy('name')
+        .orderBy('city')
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.documents
             .map((doc) => ReferralHospitalModel.fromFirestore(doc))
