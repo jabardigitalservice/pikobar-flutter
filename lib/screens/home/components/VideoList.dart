@@ -58,7 +58,7 @@ class _VideoListState extends State<VideoList> {
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
                 fontFamily: FontsFamily.lato,
-                fontSize: 16.0),
+                fontSize: Dimens.textTitleSize),
           ),
         ),
         CarouselSlider(
@@ -115,7 +115,7 @@ class _VideoListState extends State<VideoList> {
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 16.0),
+                    fontSize: Dimens.textTitleSize),
               ),
               InkWell(
                 child: Text(
@@ -124,7 +124,7 @@ class _VideoListState extends State<VideoList> {
                       color: Color(0xFF27AE60),
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.VideoList);
@@ -142,7 +142,7 @@ class _VideoListState extends State<VideoList> {
             style: TextStyle(
                 color: Colors.black,
                 fontFamily: FontsFamily.lato,
-                fontSize: 12.0),
+                fontSize: Dimens.textSubtitleSize),
             textAlign: TextAlign.left,
           ),
         ),

@@ -1,6 +1,5 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:meta/meta.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'dart:convert';
 
 class RemoteConfigHelper{

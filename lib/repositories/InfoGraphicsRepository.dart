@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
+
 
 class InfoGraphicsRepository {
   final firestore = Firestore.instance;

@@ -81,7 +81,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                         fontFamily: FontsFamily.lato,
-                        fontSize: 16.0),
+                        fontSize: Dimens.textTitleSize),
                   ),
                   InkWell(
                     child: Text(
@@ -90,7 +90,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
                           color: ColorBase.green,
                           fontWeight: FontWeight.w600,
                           fontFamily: FontsFamily.lato,
-                          fontSize: 12.0),
+                          fontSize: Dimens.textSubtitleSize),
                     ),
                     onTap: () {
                       Navigator.push(
@@ -114,7 +114,7 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: FontsFamily.lato,
-                fontSize: 12.0,
+                fontSize: Dimens.textSubtitleSize,
               ),
               textAlign: TextAlign.left,
             ),

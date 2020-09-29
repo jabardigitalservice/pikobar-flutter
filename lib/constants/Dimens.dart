@@ -7,7 +7,8 @@ class Dimens {
   static const double cardContentMargin = 15.0;
   static const double cardMargin = 15.0;
 
-  static const double textTitleSize = 18.0;
+  static const double textTitleSize = 16.0;
+  static const double textSubtitleSize = 12.0;
   static const double textBodySize = 15.0;
 
   static const double fieldSize = 40.0;
