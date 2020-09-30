@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -152,18 +153,25 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (context, state) {
             if (state is ReferralHospitalLoaded) {
-              List<ReferralHospitalModel> dataNomorDarurat;
+              Map<dynamic, List<ReferralHospitalModel>> dataNomorDarurat;
+              Map<dynamic, List<ReferralHospitalModel>> groupByCity =
+                  groupBy(state.referralHospitalList, (obj) => obj.city);
+              var tempListCityName;
 
               /// Checking search field
               if (widget.searchQuery != null) {
                 /// Filtering data by search
-                dataNomorDarurat = state.referralHospitalList
+                List<ReferralHospitalModel> tempList = state
+                    .referralHospitalList
                     .where((test) => test.name
                         .toLowerCase()
                         .contains(widget.searchQuery.toLowerCase()))
                     .toList();
+                dataNomorDarurat = groupBy(tempList, (obj) => obj.city);
+                tempListCityName = dataNomorDarurat.keys.toList();
               } else {
-                dataNomorDarurat = state.referralHospitalList;
+                dataNomorDarurat = groupByCity;
+                tempListCityName = dataNomorDarurat.keys.toList();
               }
               return dataNomorDarurat.isEmpty
                   ? isConnected
@@ -180,7 +188,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                           image: "${Environment.imageAssets}not_found.png",
                         )
                   : Column(
-                      children: getListRumahSakitRujukan(dataNomorDarurat),
+                      children: getListRumahSakitRujukan(
+                          dataNomorDarurat, tempListCityName),
                     );
             } else {
               return Column(
@@ -355,10 +364,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   }
 
   /// Build list of Refferal Hospital
-  List<Widget> getListRumahSakitRujukan(List<ReferralHospitalModel> listModel) {
+  List<Widget> getListRumahSakitRujukan(
+      Map<dynamic, List<ReferralHospitalModel>> listModel,
+      List<dynamic> listCityName) {
     List<Widget> list = List();
 
-    Column _cardTile(ReferralHospitalModel document) {
+    Column _cardTile(List<ReferralHospitalModel> document, String cityName) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -373,14 +384,14 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   SizedBox(
                     width: 20,
                   ),
-                  document.name == null
+                  cityName == null
                       ? Skeleton(
                           height: 5,
                           width: MediaQuery.of(context).size.width / 4,
                         )
                       : Container(
                           width: MediaQuery.of(context).size.width * 0.65,
-                          child: Text(document.name,
+                          child: Text(cityName,
                               style: TextStyle(
                                   color: Color(0xff333333),
                                   fontWeight: FontWeight.bold,
@@ -391,113 +402,49 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               ),
               IconButton(
                 icon: Icon(
-                  _detailExpandList[document.name]
+                  _detailExpandList[cityName]
                       ? Icons.keyboard_arrow_down
                       : Icons.arrow_forward_ios,
                   color: Color(0xff828282),
-                  size: _detailExpandList[document.name] ? 25 : 15,
+                  size: _detailExpandList[cityName] ? 25 : 15,
                 ),
                 onPressed: () {
-                  callback(document.name, _detailExpandList[document.name]);
-                  if (_detailExpandList[document.name]) {
+                  callback(cityName, _detailExpandList[cityName]);
+                  if (_detailExpandList[cityName]) {
                     AnalyticsHelper.setLogEvent(
                         Analytics.tappedphoneBookEmergencyDetail,
-                        <String, dynamic>{'title': document.name});
+                        <String, dynamic>{'title': cityName});
                   }
                 },
               )
             ],
           ),
-          _detailExpandList[document.name]
-              ? Padding(
-                  padding: EdgeInsets.only(left: 35, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      document.address != null
-                          ? Padding(
-                              padding: EdgeInsets.only(bottom: 15),
-                              child: Text(document.address,
-                                  style: TextStyle(
-                                      color: Color(0xff828282),
-                                      fontFamily: FontsFamily.lato,
-                                      fontSize: 12)),
-                            )
-                          : Container(),
-                      document.address != null
-                          ? SizedBox(
-                              height: 5,
-                              child: Container(
-                                color: ColorBase.grey,
-                              ),
-                            )
-                          : Container(),
-                      document.phones != null && document.phones.isNotEmpty
-                          ? Column(
-                              children: _buildListDetailPhone(
-                                  document.phones, 'phones'),
-                            )
-                          : Container(),
-                      document.web != null && document.web.isNotEmpty
-                          ? SizedBox(
-                              height: 5,
-                              child: Container(
-                                color: ColorBase.grey,
-                              ),
-                            )
-                          : Container(),
-                      document.web != null && document.web.isNotEmpty
-                          ? ListTile(
-                              contentPadding: EdgeInsets.all(0),
-                              trailing: Container(
-                                  height: 15,
-                                  child: Image.asset(
-                                      '${Environment.iconAssets}web_underline.png')),
-                              title: Text(
-                                document.web,
-                                style: TextStyle(
-                                    color: Color(0xff2D9CDB),
-                                    fontFamily: FontsFamily.lato,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 12),
-                              ),
-                              onTap: () {
-                                _launchURL(document.web, 'web');
-
-                                AnalyticsHelper.setLogEvent(
-                                    Analytics.tappedphoneBookEmergencyWeb,
-                                    <String, dynamic>{
-                                      'title': document.name,
-                                      'web': document.web
-                                    });
-                              })
-                          : Container()
-                    ],
-                  ),
+          _detailExpandList[cityName]
+              ? Column(
+                  children: buildListContentRefferealHospital(document),
                 )
               : Container()
         ],
       );
     }
 
-    Widget _card(ReferralHospitalModel document) {
+    Widget _card(List<ReferralHospitalModel> document, String cityName) {
       return Card(
           elevation: 0,
           margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-          child: _cardTile(document));
+          child: _cardTile(document, cityName));
     }
 
-    emergencyPhoneCount = listModel.length;
+    emergencyPhoneCount = listCityName.length;
     for (int i = 0; i < emergencyPhoneCount; i++) {
-      if (!_detailExpandList.containsKey(listModel[i].name)) {
+      if (!_detailExpandList.containsKey(listCityName[i])) {
         /// Add list of name and boolean for expanded container
-        _detailExpandList.addAll({listModel[i].name: false});
+        _detailExpandList.addAll({listCityName[i]: false});
       }
 
       Column column = Column(
         children: <Widget>[
-          _card(listModel[i]),
+          _card(listModel[listCityName[i]], listCityName[i]),
           _categoryExpansionStateMap["RumahSakitRujukan"]
               ? i == emergencyPhoneCount - 1
                   ? Container()
@@ -516,8 +463,91 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
+  List<Widget> buildListContentRefferealHospital(
+      List<ReferralHospitalModel> document) {
+    List<Widget> list = List();
+    for (var i = 0; i < document.length; i++) {
+      Column column = Column(children: <Widget>[
+        Padding(
+            padding: EdgeInsets.only(left: 35, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: SizedBox(
+                    height: 2,
+                    child: Container(
+                      color: ColorBase.grey,
+                    ),
+                  ),
+                ),
+                document[i].name != null
+                    ? Padding(
+                        padding: EdgeInsets.only(bottom: 8),
+                        child: Text(document[i].name,
+                            style: TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12)),
+                      )
+                    : Container(),
+                document[i].address != null
+                    ? Padding(
+                        padding: EdgeInsets.only(bottom: 8),
+                        child: Text(document[i].address,
+                            style: TextStyle(
+                                color: Color(0xff828282),
+                                fontFamily: FontsFamily.lato,
+                                fontSize: 12)),
+                      )
+                    : Container(),
+                document[i].phones != null && document[i].phones.isNotEmpty
+                    ? Column(
+                        children: _buildListDetailPhone(
+                            document[i].phones, 'phones',
+                            hasDivider: false),
+                      )
+                    : Container(),
+                document[i].web != null && document[i].web.isNotEmpty
+                    ? ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                        trailing: Container(
+                            height: 15,
+                            child: Image.asset(
+                                '${Environment.iconAssets}web_underline.png')),
+                        title: Text(
+                          document[i].web,
+                          style: TextStyle(
+                              color: Color(0xff2D9CDB),
+                              fontFamily: FontsFamily.lato,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              fontSize: 12),
+                        ),
+                        onTap: () {
+                          _launchURL(document[i].web, 'web');
+
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedphoneBookEmergencyWeb,
+                              <String, dynamic>{
+                                'title': document[i].name,
+                                'web': document[i].web
+                              });
+                        })
+                    : Container()
+              ],
+            ))
+      ]);
+
+      list.add(column);
+    }
+    return list;
+  }
+
   /// Build list of phone number
-  List<Widget> _buildListDetailPhone(List<dynamic> document, String name) {
+  List<Widget> _buildListDetailPhone(List<dynamic> document, String name,
+      {bool hasDivider = true}) {
     List<Widget> list = List();
 
     for (int i = 0; i < document.length; i++) {
@@ -545,14 +575,16 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                     Analytics.tappedphoneBookEmergencyTelp,
                     <String, dynamic>{'title': document, 'telp': document[i]});
               }),
-          i == document.length - 1
-              ? Container()
-              : SizedBox(
-                  height: 5,
-                  child: Container(
-                    color: ColorBase.grey,
-                  ),
-                )
+          hasDivider
+              ? i == document.length - 1
+                  ? Container()
+                  : SizedBox(
+                      height: 5,
+                      child: Container(
+                        color: ColorBase.grey,
+                      ),
+                    )
+              : Container()
         ],
       );
 
