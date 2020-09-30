@@ -13,6 +13,7 @@ class Analytics {
   static String document = 'Dokumen';
   static String selfReports = 'Lapor Mandiri';
   static String education = 'Konten Edukasi';
+  static String announcement = 'tapped_pengumuman_selengkapnya';
 
 
   // event home
