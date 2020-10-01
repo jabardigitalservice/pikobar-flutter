@@ -423,8 +423,8 @@ class _EditState extends State<Edit> {
                               var data = Firestore.instance
                                   .collection(kUsers)
                                   .where("phone_number",
-                                      isEqualTo:
-                                          Dictionary.inaCode + _phoneNumberController.text)
+                                      isEqualTo: Dictionary.inaCode +
+                                          _phoneNumberController.text)
                                   .getDocuments();
 
                               data.then((docs) {
@@ -648,7 +648,9 @@ class _EditState extends State<Edit> {
             labels: label,
             picked: _genderController.text == 'M'
                 ? 'Laki - Laki'
-                : _genderController.text == 'F' ? 'Perempuan' : null,
+                : _genderController.text == 'F'
+                    ? 'Perempuan'
+                    : null,
             itemBuilder: (Radio rb, Text txt, int i) {
               return Padding(
                 padding: EdgeInsets.only(right: 10),
@@ -1069,8 +1071,10 @@ class _EditState extends State<Edit> {
                 description: Dictionary.permissionLocationSpread,
                 onOkPressed: () async {
                   Navigator.of(context).pop();
-                  if (await permissionService.status.isDenied) {
-                    await AppSettings.openLocationSettings();
+                  if (await permissionService.status.isPermanentlyDenied) {
+                    Platform.isAndroid
+                        ? await AppSettings.openAppSettings()
+                        : await AppSettings.openLocationSettings();
                   } else {
                     permissionService.request().then((status) {
                       _onStatusRequested(context, status);

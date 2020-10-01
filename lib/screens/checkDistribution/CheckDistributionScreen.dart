@@ -400,7 +400,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
   Future<void> _handleLocation({bool isOther = false, String id}) async {
     var permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
-   // Check status permission
+    // Check status permission
     if (await permissionService.status.isGranted) {
       // Get user location by current location or pick in maps
       await _actionFindLocation(isOther, id);
@@ -417,8 +417,10 @@ class _CheckDistributionState extends State<CheckDistribution> {
                 description: Dictionary.permissionLocationSpread,
                 onOkPressed: () async {
                   Navigator.of(context).pop();
-                  if (await permissionService.status.isDenied) {
-                    await AppSettings.openLocationSettings();
+                  if (await permissionService.status.isPermanentlyDenied) {
+                    Platform.isAndroid
+                        ? await AppSettings.openAppSettings()
+                        : await AppSettings.openLocationSettings();
                   } else {
                     permissionService.request().then((status) {
                       _onStatusRequested(context, status,
@@ -435,14 +437,14 @@ class _CheckDistributionState extends State<CheckDistribution> {
     }
   }
 
- // Get distribution from api
+  // Get distribution from api
   _checkDistribution(latitude, longitude, bool isOther, {String id}) {
     _checkdistributionBloc.add(LoadCheckDistribution(
         lat: latitude, long: longitude, id: id, isOther: isOther));
   }
 
   _actionFindLocation(bool isOther, String id) async {
-    /// Checking [isOther] 
+    /// Checking [isOther]
     /// When true pick location in maps
     if (isOther) {
       LatLng result = await Navigator.push(
