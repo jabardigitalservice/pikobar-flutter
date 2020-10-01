@@ -62,7 +62,7 @@ dependencies:
   fluttertoast: ^3.1.3
   font_awesome_flutter: ^8.7.0
   cloud_firestore: ^0.13.4+2
-  flutter_html: ^0.11.1
+  flutter_html: ^1.0.2
   flutter_inappwebview: ^2.1.0+1
   flutter_local_notifications: ^1.2.2
   webview_flutter: ^0.3.19+9
@@ -84,15 +84,14 @@ dependencies:
   flutter_cupertino_date_picker:
     git:
       url: https://github.com/anandarh/flutter-cupertino-date-picker.git
-
-  google_maps_flutter: ^0.5.25+3
+  google_maps_flutter: ^0.5.33
   flutter_masked_text: ^0.8.0
-  app_settings: ^4.0.0
+  app_settings: ^4.0.4
   flutter_full_pdf_viewer: ^1.0.6
   chips_choice: ^1.2.0
   bubble_tab_indicator: ^0.1.4
-  percent_indicator: ^2.1.5
-  flutter_switch: ^0.1.1
+  percent_indicator: ^2.1.7+4
+  flutter_switch: ^0.1.3
   
 
 dev_dependencies:

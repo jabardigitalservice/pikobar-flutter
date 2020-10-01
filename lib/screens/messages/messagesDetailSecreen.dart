@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:html/dom.dart' as dom;
+import 'package:flutter_html/style.dart';
 import 'package:html/parser.dart';
 import 'package:pikobar_flutter/blocs/messages/messageDetil/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -148,26 +148,17 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.only(top: 6, bottom: Dimens.padding),
           child: Html(
-              data: data.content,
-              defaultTextStyle: TextStyle(
-                  color: Colors.grey[800],
-                  fontSize: 15.0,
-                  fontFamily: FontsFamily.productSans),
-              customTextAlign: (dom.Node node) {
-                return TextAlign.left;
-              },
-              onLinkTap: (url) {
-                _launchUrl(url);
-              },
-              customTextStyle: (dom.Node node, TextStyle baseStyle) {
-                if (node is dom.Element) {
-                  switch (node.localName) {
-                    case "p":
-                      return baseStyle.merge(TextStyle(height: 1.3));
-                  }
-                }
-                return baseStyle;
-              }),
+            data: data.content,
+            style: {
+              'body': Style(
+                  margin: EdgeInsets.zero,
+                  color: Colors.black,
+                  fontSize: FontSize(15.0))
+            },
+            onLinkTap: (url) {
+              _launchUrl(url);
+            },
+          ),
         ),
         SizedBox(
           height: Dimens.sbHeight,
