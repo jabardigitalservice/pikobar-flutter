@@ -33,13 +33,46 @@ class CustomBubbleTab extends StatefulWidget {
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
 }
 
-class _CustomBubbleTabState extends State<CustomBubbleTab> {
+class _CustomBubbleTabState extends State<CustomBubbleTab> with SingleTickerProviderStateMixin {
   List<Widget> listBubbleTabItem = [];
+  TabController _basetabController;
   String dataSelected = "";
   bool isExpand;
+  int pageIndex=0;
 
   @override
   void initState() {
+    _basetabController = TabController(vsync: this, length: widget.listItemTitleTab.length);
+    _basetabController.addListener(() {
+      if (_basetabController.indexIsChanging){
+        print('masuk sini?'+pageIndex.toString());
+        setState(() {
+          dataSelected = widget.listItemTitleTab[pageIndex];
+          listBubbleTabItem.clear();
+          for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+            listBubbleTabItem.add(bubbleTabItem(
+                widget.listItemTitleTab[i], dataSelected));
+          }
+        });
+        widget.onTap(pageIndex);// Tab Changed tapping on new tab
+      }
+
+      else if(_basetabController.index != _basetabController.previousIndex){
+        // Tab Changed swiping to a new tab
+        print('apa masuk sini?');
+        print('masuk sini?'+pageIndex.toString());
+        setState(() {
+          dataSelected = widget.listItemTitleTab[pageIndex];
+          listBubbleTabItem.clear();
+          for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+            listBubbleTabItem.add(bubbleTabItem(
+                widget.listItemTitleTab[i], dataSelected));
+          }
+        });
+        widget.onTap(pageIndex);//
+
+      }
+    });
     listBubbleTabItem.clear();
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
       if (widget.typeTabSelected != null) {
@@ -67,18 +100,19 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
         children: <Widget>[
           TabBar(
               controller:
-                  widget.tabController != null ? widget.tabController : null,
+                  widget.tabController != null ? widget.tabController : _basetabController,
               isScrollable: true,
               onTap: (index) {
                 setState(() {
-                  dataSelected = widget.listItemTitleTab[index];
-                  listBubbleTabItem.clear();
-                  for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-                    listBubbleTabItem.add(bubbleTabItem(
-                        widget.listItemTitleTab[i], dataSelected));
-                  }
+                  pageIndex = index;
+                  // dataSelected = widget.listItemTitleTab[index];
+                  // listBubbleTabItem.clear();
+                  // for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+                  //   listBubbleTabItem.add(bubbleTabItem(
+                  //       widget.listItemTitleTab[i], dataSelected));
+                  // }
                 });
-                widget.onTap(index);
+                // widget.onTap(index);
               },
               labelColor: widget.labelColor,
               unselectedLabelColor: widget.unselectedLabelColor,
@@ -96,7 +130,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
                   child: TabBarView(
                     controller: widget.tabController != null
                         ? widget.tabController
-                        : null,
+                        : _basetabController,
                     physics: NeverScrollableScrollPhysics(),
                     children: widget.tabBarView,
                   ),
@@ -110,8 +144,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
                   child: TabBarView(
                     controller: widget.tabController != null
                         ? widget.tabController
-                        : null,
-                    physics: NeverScrollableScrollPhysics(),
+                        : _basetabController,
+                    // physics: NeverScrollableScrollPhysics(),
                     children: widget.tabBarView,
                   ),
                 ),
