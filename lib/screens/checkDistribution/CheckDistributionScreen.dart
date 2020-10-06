@@ -171,7 +171,6 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                     Dimens.padding),
                                 child: BlocBuilder<CheckdistributionBloc,
                                     CheckdistributionState>(
-                                  bloc: _checkdistributionBloc,
                                   builder: (context, state) {
                                     return Column(
                                       children: <Widget>[

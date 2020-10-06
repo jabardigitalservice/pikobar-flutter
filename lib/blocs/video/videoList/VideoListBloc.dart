@@ -8,8 +8,7 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
   final VideoRepository _videoRepository = VideoRepository();
   StreamSubscription _videosSubscription;
 
-  @override
-  VideoListState get initialState => VideoListInitial();
+  VideoListBloc() : super(VideoListInitial());
 
   @override
   Stream<VideoListState> mapEventToState(

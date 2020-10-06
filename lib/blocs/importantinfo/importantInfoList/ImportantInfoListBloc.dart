@@ -9,8 +9,7 @@ class ImportantInfoListBloc
   final ImportantInfoRepository _repository = ImportantInfoRepository();
   StreamSubscription _subscription;
 
-  @override
-  ImportantInfoListState get initialState => InitialImportantInfoListState();
+  ImportantInfoListBloc() : super(InitialImportantInfoListState());
 
   @override
   Stream<ImportantInfoListState> mapEventToState(

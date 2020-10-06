@@ -226,7 +226,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         // Get health status visible from remote config
         BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-          bloc: _remoteConfigBloc,
           builder: (context, remoteState) {
             return remoteState is RemoteConfigLoaded
                 ? _buildHealthStatus(remoteState.remoteConfig, state.data)

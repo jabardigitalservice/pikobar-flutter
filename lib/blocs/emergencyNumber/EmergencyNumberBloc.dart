@@ -14,9 +14,8 @@ class EmergencyNumberBloc
 
   EmergencyNumberBloc({
     @required this.emergencyNumberRepository,
-  }) : assert(emergencyNumberRepository != null);
-  @override
-  EmergencyNumberState get initialState => InitialEmergencyNumberState();
+  }) : assert(emergencyNumberRepository != null), super(InitialEmergencyNumberState());
+
 
   @override
   Stream<EmergencyNumberState> mapEventToState(

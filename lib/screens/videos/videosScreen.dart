@@ -52,7 +52,6 @@ class _VideosListState extends State<VideosList> {
         title: Dictionary.videoUpToDate,
       ),
       body: BlocBuilder<VideoListBloc, VideoListState>(
-        bloc: _videoListBloc,
         builder: (context, state) {
           return state is VideosLoading
               ? _buildLoading()

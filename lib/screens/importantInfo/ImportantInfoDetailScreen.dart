@@ -62,7 +62,6 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
       create: (context) => _importantInfoDetailBloc = ImportantInfoDetailBloc()
         ..add(ImportantInfoDetailLoad(importantInfoId: widget.id)),
       child: BlocBuilder<ImportantInfoDetailBloc, importantInfoDetailState>(
-        bloc: _importantInfoDetailBloc,
         builder: (context, state) {
           return _buildScaffold(context, state);
         },

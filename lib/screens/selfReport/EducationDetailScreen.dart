@@ -48,7 +48,6 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
             educationCollection: widget.educationCollection,
             educationId: widget.id)),
       child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
-        bloc: _educationDetailBloc,
         builder: (context, state) {
           return _buildScaffold(context, state);
         },

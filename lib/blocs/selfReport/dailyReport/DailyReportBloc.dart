@@ -13,8 +13,8 @@ part 'DailyReportEvent.dart';
 part 'DailyReportState.dart';
 
 class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
-  @override
-  DailyReportState get initialState => DailyReportInitial();
+
+  DailyReportBloc() : super(DailyReportInitial());
 
   @override
   Stream<DailyReportState> mapEventToState(

@@ -7,8 +7,7 @@ class PcrTestBloc extends Bloc<PcrTestEvent, PcrTestState> {
   StatisticsRepository statisticsRepository = StatisticsRepository();
   StreamSubscription _subscription;
 
-  @override
-  PcrTestState get initialState => InitialPcrTestState();
+  PcrTestBloc() : super(InitialPcrTestState());
 
   @override
   Stream<PcrTestState> mapEventToState(

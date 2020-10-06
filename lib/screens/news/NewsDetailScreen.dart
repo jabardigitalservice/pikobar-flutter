@@ -77,7 +77,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       create: (context) => _newsDetailBloc = NewsDetailBloc()
         ..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
       child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
-        bloc: _newsDetailBloc,
         builder: (context, state) {
           return _buildScaffold(context, state);
         },

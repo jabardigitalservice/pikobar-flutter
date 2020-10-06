@@ -7,8 +7,7 @@ class RapidTestBloc extends Bloc<RapidTestEvent, RapidTestState> {
   StatisticsRepository statisticsRepository = StatisticsRepository();
   StreamSubscription _subscription;
 
-  @override
-  RapidTestState get initialState => InitialRapidTestState();
+  RapidTestBloc() : super(InitialRapidTestState());
 
   @override
   Stream<RapidTestState> mapEventToState(
