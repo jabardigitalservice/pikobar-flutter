@@ -14,4 +14,7 @@
   const String kUrlSelfDiagnose = 'http://dev.engine.prixa.ai/';
   const String kUrlGoogle = 'https://www.google.com';
   const String kUrlTracking = 'https://tracking.pikobar.jabarprov.go.id';
+  const String kUrlInstagramPikobar='https://instagram.com/pikobar_jabar';
+  const String kUrlTwitterPikobar='https://twitter.com/pikobar_jabar';
+
   

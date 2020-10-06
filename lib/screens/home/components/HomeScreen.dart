@@ -26,6 +26,7 @@ import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
+import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
 import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
@@ -228,6 +229,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: EdgeInsets.only(top: 16.0),
             child: Documents(),
+          ),
+           SizedBox(
+            height: Dimens.dividerHeight,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+           Container(
+            padding: EdgeInsets.only(top: 25.0),
+            child: SocialMedia(),
           ),
         ]),
         AlertUpdate()

@@ -120,6 +120,8 @@ class Dictionary {
   static String locationAddress = 'Lokasi Tempat Tinggal';
   static String center = "Pusat";
   static String who = "WHO";
+  static String sayThanks="Terimakasih sudah membaca";
+  static String followOurSosmed="Follow juga sosmed kami";
 
   // Button Text
   static String yes = 'Ya';
