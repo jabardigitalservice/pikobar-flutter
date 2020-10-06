@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -194,11 +195,11 @@ class _SurveysScreenState extends State<SurveysScreen> {
             /// Set up for show announcement widget
             child: Announcement(
               content: Dictionary.surveyInfo,
-              textStyleContent: TextStyle(
+              htmlStyle: Style(
+                  margin: EdgeInsets.zero,
                   fontFamily: FontsFamily.lato,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12.0,
-                  height: 1.5),
+                  fontSize: FontSize(12.0)),
             ),
           ),
           Container(

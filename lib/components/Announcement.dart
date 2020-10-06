@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/rich_text_parser.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:flutter_html/html_parser.dart';
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
@@ -15,11 +15,12 @@ class Announcement extends StatelessWidget {
   final String title;
   final String content;
   final BuildContext context;
-  final OnLinkTap onLinkTap;
+  final OnTap onLinkTap;
   final String actionUrl;
   final TextStyle textStyleTitle;
   final TextStyle textStyleContent;
   final TextStyle textStyleMoreDetail;
+  final Style htmlStyle;
 
   Announcement(
       {this.title,
@@ -29,7 +30,8 @@ class Announcement extends StatelessWidget {
       this.actionUrl,
       this.textStyleTitle,
       this.textStyleContent,
-      this.textStyleMoreDetail});
+      this.textStyleMoreDetail,
+      this.htmlStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -102,15 +104,13 @@ class Announcement extends StatelessWidget {
                       ///Set Text content if actionUrl is empty
                       : Html(
                           data: content,
-                          defaultTextStyle: textStyleContent != null
-                              ? textStyleContent
-                              : TextStyle(
-                                  color: Colors.grey[600],
-                                  height: 1.4,
-                                  fontSize: 12.0,
-                                  fontFamily: FontsFamily.lato),
-                          customTextAlign: (dom.Node node) {
-                            return TextAlign.justify;
+                          style: {
+                            'body': htmlStyle != null ? htmlStyle : Style(
+                                margin: EdgeInsets.zero,
+                                color: Colors.grey[600],
+                                fontSize: FontSize(12.0),
+                                fontFamily: FontsFamily.lato,
+                                textAlign: TextAlign.justify),
                           },
                           onLinkTap: onLinkTap)
                 ]),

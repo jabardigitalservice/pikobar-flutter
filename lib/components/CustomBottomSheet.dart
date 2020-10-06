@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -84,8 +85,7 @@ void showSuccessBottomSheet(
               /// If title null, by default it will use [Dictionary.ok]
               /// Converts all characters in this title to upper case
               RoundedButton(
-                  title:
-                      buttonText ?? Dictionary.ok.toUpperCase(),
+                  title: buttonText ?? Dictionary.ok.toUpperCase(),
                   textStyle: TextStyle(
                       fontFamily: FontsFamily.lato,
                       fontSize: 12.0,
@@ -101,9 +101,7 @@ void showSuccessBottomSheet(
 }
 
 void showTextBottomSheet(
-    {@required BuildContext context,
-      String title,
-      @required String message}) {
+    {@required BuildContext context, String title, @required String message}) {
   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -127,35 +125,39 @@ void showTextBottomSheet(
                   height: 4,
                   width: 80.0,
                   decoration: BoxDecoration(
-                    color: ColorBase.menuBorderColor,
-                    borderRadius: BorderRadius.circular(30.0)
-                  ),
+                      color: ColorBase.menuBorderColor,
+                      borderRadius: BorderRadius.circular(30.0)),
                 ),
               ),
 
               /// Title section
               ///
               /// If title null, the title section will be hidden
-              title != null ? Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ) : Container(),
+              title != null
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : Container(),
 
               /// Message section
               ///
               /// Message section is required, it can't be null
-              Html(data: message,
-                defaultTextStyle: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12.0,
-                    height: 1.5,
-                    color: ColorBase.veryDarkGrey),
+              Html(
+                data: message,
+                style: {
+                  'body': Style(
+                      margin: EdgeInsets.zero,
+                      fontFamily: FontsFamily.lato,
+                      fontSize: FontSize(12.0),
+                      color: ColorBase.veryDarkGrey)
+                },
               ),
               SizedBox(height: Dimens.sbHeight)
             ],

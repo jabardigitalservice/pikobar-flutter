@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/style.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportList/SelfReportListBloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
@@ -149,9 +150,10 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
           content: isHealthy
               ? Dictionary.announcementDescHealthy
               : Dictionary.announcementDescIndication,
-          textStyleContent: TextStyle(
+          htmlStyle: Style(
+              margin: EdgeInsets.zero,
               fontFamily: FontsFamily.lato,
-              fontSize: 12.0,
+              fontSize: FontSize(12.0),
               color: Colors.black),
         ),
         SizedBox(
