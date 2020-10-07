@@ -68,12 +68,19 @@ class BannerListSliderState extends State<BannerListSlider> {
       children: <Widget>[
         state.records.isNotEmpty
             ? CarouselSlider(
-                initialPage: 0,
-                enableInfiniteScroll: state.records.length > 1 ? true : false,
-                aspectRatio: 21 / 10,
-                viewportFraction: 0.95,
-                autoPlay: state.records.length > 1 ? true : false,
-                autoPlayInterval: Duration(seconds: 5),
+                options: CarouselOptions(
+                  initialPage: 0,
+                  enableInfiniteScroll: state.records.length > 1 ? true : false,
+                  aspectRatio: 21 / 10,
+                  viewportFraction: 0.95,
+                  autoPlay: state.records.length > 1 ? true : false,
+                  autoPlayInterval: Duration(seconds: 5),
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _current = index;
+                    });
+                  },
+                ),
                 items: state.records.map((BannerModel data) {
                   return Builder(builder: (BuildContext context) {
                     return GestureDetector(
@@ -120,11 +127,6 @@ class BannerListSliderState extends State<BannerListSlider> {
                     );
                   });
                 }).toList(),
-                onPageChanged: (index) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
               )
             : EmptyData(
                 message: Dictionary.emptyData,

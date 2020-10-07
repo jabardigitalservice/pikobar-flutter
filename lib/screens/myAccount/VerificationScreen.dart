@@ -218,7 +218,6 @@ class _VerificationState extends State<Verification> {
                                 height: 70,
                                 child: PinPut(
                                     textStyle: TextStyle(fontSize: 20),
-                                    clearButtonIcon: Icon(Icons.backspace),
                                     inputDecoration: InputDecoration(
                                         hintText: '-',
                                         fillColor: ColorBase.veryLightGrey,
@@ -234,10 +233,8 @@ class _VerificationState extends State<Verification> {
                                             borderRadius:
                                                 BorderRadius.circular(8)),
                                         counterText: ''),
-                                    onClear: (value) {},
-                                    actionButtonsEnabled: true,
                                     fieldsCount: 6,
-                                    keyboardAction: TextInputAction.go,
+                                    textInputAction: TextInputAction.go,
                                     onSubmit: (String pin) {
                                       setState(() {
                                         smsCode = pin;

@@ -4,6 +4,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -470,11 +471,9 @@ class _CheckDistributionState extends State<CheckDistribution> {
       }
     } else {
       // Pick location by current location
-      Position position = await Geolocator()
-          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await getLastKnownPosition();
       if (position != null && position.latitude != null) {
-        List<Placemark> placemarks = await Geolocator()
-            .placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];
@@ -493,8 +492,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
               id: id);
         }
       } else {
-        List<Placemark> placemarks = await Geolocator()
-            .placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];
