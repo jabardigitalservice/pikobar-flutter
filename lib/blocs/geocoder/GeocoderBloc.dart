@@ -9,10 +9,7 @@ class GeocoderBloc extends Bloc<GeocoderEvent, GeocoderState> {
   final GeocoderRepository geocoderRepository;
 
   GeocoderBloc({@required this.geocoderRepository})
-      : assert(geocoderRepository != null);
-
-  @override
-  GeocoderState get initialState => GeocoderStateInitial();
+      : assert(geocoderRepository != null), super(GeocoderStateInitial());
 
   @override
   Stream<GeocoderState> mapEventToState(

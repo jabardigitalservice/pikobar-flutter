@@ -17,10 +17,7 @@ class CheckdistributionBloc
   CheckdistributionBloc(
       {@required CheckDistributionReposity checkDistributionReposity})
       : assert(checkDistributionReposity != null),
-        _checkDistributionReposity = checkDistributionReposity;
-
-  @override
-  CheckdistributionState get initialState => CheckdistributionInitial();
+        _checkDistributionReposity = checkDistributionReposity, super(CheckdistributionInitial());
 
   @override
   Stream<CheckdistributionState> mapEventToState(

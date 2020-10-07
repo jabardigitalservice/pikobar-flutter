@@ -13,8 +13,8 @@ part 'SelfReportDetailState.dart';
 
 class SelfReportDetailBloc
     extends Bloc<SelfReportDetailEvent, SelfReportDetailState> {
-  @override
-  SelfReportDetailState get initialState => SelfReportDetailInitial();
+
+  SelfReportDetailBloc() : super(SelfReportDetailInitial());
 
   @override
   Stream<SelfReportDetailState> mapEventToState(

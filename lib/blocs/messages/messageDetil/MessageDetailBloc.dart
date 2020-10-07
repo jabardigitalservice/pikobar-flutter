@@ -10,8 +10,7 @@ import './Bloc.dart';
 class MessageDetailBloc extends Bloc<MessageDetailEvent, MessageDetailState> {
   final MessageRepository messageRepository = MessageRepository();
 
-  @override
-  MessageDetailState get initialState => InitialMessageDetailState();
+  MessageDetailBloc() : super(InitialMessageDetailState());
 
   @override
   Stream<MessageDetailState> mapEventToState(

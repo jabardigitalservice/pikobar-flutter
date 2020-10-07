@@ -100,7 +100,6 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       body: BlocProvider<DailyReportBloc>(
         create: (BuildContext context) => _dailyReportBloc = DailyReportBloc(),
         child: BlocListener(
-          bloc: _dailyReportBloc,
           listener: (context, state) {
             if (state is DailyReportSaved) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);

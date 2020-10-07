@@ -14,8 +14,8 @@ part 'ContactHistoryListState.dart';
 class ContactHistoryListBloc
     extends Bloc<ContactHistoryListEvent, ContactHistoryListState> {
   StreamSubscription _subscription;
-  @override
-  ContactHistoryListState get initialState => ContactHistoryListInitial();
+
+  ContactHistoryListBloc() : super(ContactHistoryListInitial());
 
   @override
   Stream<ContactHistoryListState> mapEventToState(

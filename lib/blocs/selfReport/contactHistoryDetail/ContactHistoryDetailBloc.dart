@@ -13,8 +13,8 @@ part 'ContactHistoryDetailState.dart';
 
 class ContactHistoryDetailBloc
     extends Bloc<ContactHistoryDetailEvent, ContactHistoryDetailState> {
-  @override
-  ContactHistoryDetailState get initialState => ContactHistoryDetailInitial();
+
+  ContactHistoryDetailBloc() : super(ContactHistoryDetailInitial());
 
   @override
   Stream<ContactHistoryDetailState> mapEventToState(

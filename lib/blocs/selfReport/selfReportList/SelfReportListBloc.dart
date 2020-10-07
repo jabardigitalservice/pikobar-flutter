@@ -14,8 +14,8 @@ part 'SelfReportListState.dart';
 class SelfReportListBloc
     extends Bloc<SelfReportListEvent, SelfReportListState> {
   StreamSubscription _subscription;
-  @override
-  SelfReportListState get initialState => SelfReportListInitial();
+
+  SelfReportListBloc() : super(SelfReportListInitial());
 
   @override
   Stream<SelfReportListState> mapEventToState(

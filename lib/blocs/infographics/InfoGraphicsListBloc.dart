@@ -8,8 +8,7 @@ class InfoGraphicsListBloc
   final InfoGraphicsRepository _repository = InfoGraphicsRepository();
   StreamSubscription _subscription;
 
-  @override
-  InfoGraphicsListState get initialState => InitialInfoGraphicsListState();
+  InfoGraphicsListBloc() : super(InitialInfoGraphicsListState());
 
   @override
   Stream<InfoGraphicsListState> mapEventToState(

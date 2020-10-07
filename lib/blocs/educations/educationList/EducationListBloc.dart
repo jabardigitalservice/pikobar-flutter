@@ -7,8 +7,7 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   final EducationRepository _repository = EducationRepository();
   StreamSubscription _subscription;
 
-  @override
-  EducationListState get initialState => InitialEducationListState();
+  EducationListBloc() : super(InitialEducationListState());
 
   @override
   Stream<EducationListState> mapEventToState(

@@ -7,8 +7,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
   DocumentsRepository _repository = DocumentsRepository();
   StreamSubscription _subscription;
 
-  @override
-  DocumentsState get initialState => InitialDocumentsState();
+  DocumentsBloc() : super(InitialDocumentsState());
 
   @override
   Stream<DocumentsState> mapEventToState(
