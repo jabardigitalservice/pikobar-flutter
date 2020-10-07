@@ -33,44 +33,24 @@ class CustomBubbleTab extends StatefulWidget {
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
 }
 
-class _CustomBubbleTabState extends State<CustomBubbleTab> with SingleTickerProviderStateMixin {
+class _CustomBubbleTabState extends State<CustomBubbleTab>
+    with SingleTickerProviderStateMixin {
   List<Widget> listBubbleTabItem = [];
   TabController _basetabController;
   String dataSelected = "";
   bool isExpand;
+  bool isSwipe = false;
+  int indexTab = 0;
 
   @override
   void initState() {
-    _basetabController = TabController(vsync: this, length: widget.listItemTitleTab.length);
-    _basetabController.addListener(() {
-      if (_basetabController.indexIsChanging){
-        print('masuk sini?'+_basetabController.index.toString());
-        setState(() {
-          dataSelected = widget.listItemTitleTab[_basetabController.index];
-          listBubbleTabItem.clear();
-          for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-            listBubbleTabItem.add(bubbleTabItem(
-                widget.listItemTitleTab[i], dataSelected));
-          }
-        });
-        widget.onTap(_basetabController.index);// Tab Changed tapping on new tab
-      }
-
-      else if(_basetabController.index != _basetabController.previousIndex){
-        // Tab Changed swiping to a new tab
-        print('apa masuk sini?');
-        setState(() {
-          dataSelected = widget.listItemTitleTab[_basetabController.index];
-          listBubbleTabItem.clear();
-          for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-            listBubbleTabItem.add(bubbleTabItem(
-                widget.listItemTitleTab[i], dataSelected));
-          }
-        });
-        widget.onTap(_basetabController.index);//
-
-      }
-    });
+    if (widget.tabController != null) {
+      _basetabController = widget.tabController;
+    } else {
+      _basetabController =
+          TabController(vsync: this, length: widget.listItemTitleTab.length);
+    }
+    _basetabController.addListener(_handleTabSelection);
     listBubbleTabItem.clear();
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
       if (widget.typeTabSelected != null) {
@@ -97,17 +77,18 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> with SingleTickerProv
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TabBar(
-              controller:
-                  widget.tabController != null ? widget.tabController : _basetabController,
+              controller: widget.tabController != null
+                  ? widget.tabController
+                  : _basetabController,
               isScrollable: true,
               onTap: (index) {
                 // setState(() {
-                  // dataSelected = widget.listItemTitleTab[index];
-                  // listBubbleTabItem.clear();
-                  // for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-                  //   listBubbleTabItem.add(bubbleTabItem(
-                  //       widget.listItemTitleTab[i], dataSelected));
-                  // }
+                //   dataSelected = widget.listItemTitleTab[index];
+                //   listBubbleTabItem.clear();
+                //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+                //     listBubbleTabItem.add(bubbleTabItem(
+                //         widget.listItemTitleTab[i], dataSelected));
+                //   }
                 // });
                 // widget.onTap(index);
               },
@@ -151,6 +132,15 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> with SingleTickerProv
     );
   }
 
+  _handleTabSelection() {
+    if (indexTab != _basetabController.index) {
+      setState(() {
+        widget.onTap(_basetabController.index);
+        indexTab = _basetabController.index;
+      });
+    }
+  }
+
   // ignore: non_constant_identifier_names
   Widget bubbleTabItem(String title, String dataSelected) {
     return Tab(
@@ -159,9 +149,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> with SingleTickerProv
         // decoration: BoxDecoration(
         //     borderRadius: BorderRadius.circular(50),
         //     border: Border.all(
-        //         color: dataSelected == title
-        //             ? widget.indicatorColor
-        //             : Color(0xffE0E0E0),
+        //         color: widget.indicatorColor,
         //         width: 1)),
         child: Text(
           title,
