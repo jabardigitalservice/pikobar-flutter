@@ -217,21 +217,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: ColorBase.veryDarkGrey,
                               fontSize: 14,
                               fontFamily: FontsFamily.lato)),
-                    )
+                    ),
+                    // Get health status visible from remote config
+                    BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                      builder: (context, remoteState) {
+                        return remoteState is RemoteConfigLoaded
+                            ? _buildHealthStatus(
+                                remoteState.remoteConfig, state.data)
+                            : Container();
+                      },
+                    ),
                   ],
                 ),
               )
             ],
           ),
         ),
-        // Get health status visible from remote config
-        BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-          builder: (context, remoteState) {
-            return remoteState is RemoteConfigLoaded
-                ? _buildHealthStatus(remoteState.remoteConfig, state.data)
-                : Container();
-          },
-        ),
+
         SizedBox(
           height: 15,
           child: Container(
@@ -535,46 +537,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Check if health status visible or not
     return visible && data['health_status_text'] != null
         ? Container(
-            margin: EdgeInsets.only(left: 20, right: 20, bottom: 15),
             decoration: BoxDecoration(
-                color: cardColor, borderRadius: BorderRadius.circular(8)),
+                color: cardColor, borderRadius: BorderRadius.circular(18)),
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      height: 32,
-                      margin: EdgeInsets.only(right: 16.0),
-                      child: Image.asset(uriImage),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            Dictionary.yourHealthStatus,
-                            style: TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 12,
-                                color: textColor),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            data['health_status_text'],
-                            style: TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: textColor),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-          )
+              padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+              child: Text(
+                data['health_status_text'],
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: textColor),
+              ),
+            ))
         : Container();
   }
 

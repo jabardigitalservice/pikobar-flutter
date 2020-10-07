@@ -266,7 +266,7 @@ class Dictionary {
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
-      'Bantu stop penyebaran COVID-19 dengan\nmelakukan login pada app PIKOBAR';
+      'Mari bersama - sama bantu stop \npenyebaran COVID-19';
   static String disclaimerOnBoardingLogin =
       'Data Anda akan aman dan tidak akan pernah diakses,\nkecuali jika Anda dekat dengan kasus positif COVID-19.';
 

@@ -57,26 +57,23 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
           Positioned(
             left: 0.0,
             right: 0.0,
-            top: 0.0,
+            top: MediaQuery.of(context).size.height*0.2,
             child: Column(
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: Image.asset(
-                    '${Environment.imageAssets}onboarding_login.png',
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                     top: 20,
                   ),
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset('${Environment.logoAssets}logo.png',
-                          width: 50.0, height: 50.0),
+                      Image.asset(
+                          '${Environment.logoAssets}pikobar_logo_flat.png',
+                          width: 80.0,
+                          height: 80.0),
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
@@ -98,6 +95,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     Dictionary.titleOnBoardingLogin,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                        color: ColorBase.netralGrey,
                         fontFamily: FontsFamily.lato,
                         fontWeight: FontWeight.bold,
                         fontSize: 14.0),
@@ -123,8 +121,8 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: 40.0,
-                  margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, Dimens.padding, Dimens.padding, Dimens.padding),
+                  margin: EdgeInsets.fromLTRB(Dimens.padding, Dimens.padding,
+                      Dimens.padding, Dimens.padding),
                   child: RaisedButton(
                       splashColor: Colors.lightGreenAccent,
                       padding: EdgeInsets.all(0.0),
@@ -160,10 +158,10 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   margin: EdgeInsets.fromLTRB(
                       Dimens.padding, 0.0, Dimens.padding, 20.0),
                   child: Text(
-                    '${Dictionary.versionText} '+_versionText,
+                    '${Dictionary.versionText} ' + _versionText,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: ColorBase.darkGrey,
+                        color: ColorBase.darkGrey,
                         fontFamily: FontsFamily.lato,
                         fontSize: 12.0),
                   ),
