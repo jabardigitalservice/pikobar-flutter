@@ -62,10 +62,12 @@ class _VideoListState extends State<VideoList> {
           ),
         ),
         CarouselSlider(
-            initialPage: 0,
-            enableInfiniteScroll: false,
-            height: 260.0,
-            viewportFraction: 0.9,
+            options: CarouselOptions(
+              initialPage: 0,
+              enableInfiniteScroll: false,
+              height: 260.0,
+              viewportFraction: 0.9,
+            ),
             items: [1, 2, 3].map((record) {
               return Builder(
                 builder: (BuildContext context) {

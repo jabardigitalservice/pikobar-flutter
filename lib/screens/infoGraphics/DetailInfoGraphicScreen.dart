@@ -59,12 +59,19 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 CarouselSlider(
-                  initialPage: 0,
-                  enableInfiniteScroll: dataUrl.length > 1 ? true : false,
-                  aspectRatio: 9 / 9,
-                  viewportFraction: 1.0,
-                  autoPlay: dataUrl.length > 1 ? true : false,
-                  autoPlayInterval: Duration(seconds: 5),
+                  options: CarouselOptions(
+                    initialPage: 0,
+                    enableInfiniteScroll: dataUrl.length > 1 ? true : false,
+                    aspectRatio: 9 / 9,
+                    viewportFraction: 1.0,
+                    autoPlay: dataUrl.length > 1 ? true : false,
+                    autoPlayInterval: Duration(seconds: 5),
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
                   items: dataUrl.map((String data) {
                     return Builder(builder: (BuildContext context) {
                       return GestureDetector(
@@ -110,11 +117,6 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                       );
                     });
                   }).toList(),
-                  onPageChanged: (index) {
-                    setState(() {
-                      _current = index;
-                    });
-                  },
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),

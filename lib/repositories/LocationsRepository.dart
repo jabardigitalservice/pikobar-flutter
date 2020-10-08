@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/Location.dart';
 import 'package:pikobar_flutter/constants/HttpHeaders.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
@@ -41,7 +41,7 @@ class LocationsRepository {
   Future<void> sendLocationToGeocreate(
       String userId, double lat, double lon) async {
     List<Placemark> placemarks =
-        await Geolocator().placemarkFromCoordinates(lat, lon);
+        await placemarkFromCoordinates(lat, lon);
 
     if (placemarks != null && placemarks.isNotEmpty) {
       final Placemark pos = placemarks[0];
