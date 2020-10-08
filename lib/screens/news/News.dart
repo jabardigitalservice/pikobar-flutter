@@ -147,7 +147,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   _handleTabSelection() {
     if (tabController.indexIsChanging) {
-      setState(() {});
       _newsListBloc.add(NewsListLoad(listCollectionData[tabController.index],
           statImportantInfo: statImportantInfo));
     }
