@@ -8,6 +8,8 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
@@ -24,8 +26,22 @@ class NewsScreen extends StatefulWidget {
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen> {
+class _NewsScreenState extends State<NewsScreen>
+    with AutomaticKeepAliveClientMixin<NewsScreen> {
+// ignore: close_sinks
+  NewsListBloc newsListBloc;
+  String collectionNews;
+
   @override
+  bool get wantKeepAlive => false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return BlocBuilder<NewsListBloc, NewsListState>(
       builder: (context, state) {
