@@ -109,7 +109,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     controller: widget.tabController != null
                         ? widget.tabController
                         : _basetabController,
-                    physics: NeverScrollableScrollPhysics(),
                     children: widget.tabBarView,
                   ),
                 )
@@ -123,7 +122,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     controller: widget.tabController != null
                         ? widget.tabController
                         : _basetabController,
-                    // physics: NeverScrollableScrollPhysics(),
                     children: widget.tabBarView,
                   ),
                 ),
