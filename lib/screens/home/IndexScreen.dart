@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
@@ -23,6 +24,8 @@ import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
@@ -89,7 +92,7 @@ class IndexScreenState extends State<IndexScreen> {
       },
     );
 
-//    _firebaseMessaging.getToken().then((token) => print(token));
+    // _firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
@@ -205,7 +208,8 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(id: data['id'].toString().trim())));
+            builder: (context) =>
+                MessageDetailScreen(id: data['id'].toString().trim())));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
@@ -221,6 +225,17 @@ class IndexScreenState extends State<IndexScreen> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 NewsListScreen(news: Dictionary.importantInfo)));
+      }
+    } else if (data['target'] == 'content_education') {
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EducationDetailScreen(
+                  id: data['id'].toString().trim(),
+                  educationCollection: kEducationContent,
+                )));
+      } else {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => SelfReportScreen()));
       }
     } else if (data['target'] == 'url') {
       if (data['url'] != null && data['url'] != 'null') {

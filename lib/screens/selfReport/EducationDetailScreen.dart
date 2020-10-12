@@ -6,6 +6,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/educations/educationDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -66,7 +67,14 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
             : state is EducationDetailLoaded
                 ? _buildContent(context, state.record)
                 : state is EducationDetailFailure
-                    ? _buildContent(context, widget.model)
+                    ? widget.model != null
+                        ? _buildContent(context, widget.model)
+                        : EmptyData(
+                            message: Dictionary.emptyData,
+                            desc: '',
+                            isFlare: false,
+                            image: "${Environment.imageAssets}not_found.png",
+                          )
                     : Container());
   }
 
