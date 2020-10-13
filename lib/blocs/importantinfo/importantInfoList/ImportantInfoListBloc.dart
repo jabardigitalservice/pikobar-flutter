@@ -29,7 +29,7 @@ class ImportantInfoListBloc
     _subscription = _repository
         .getInfoImportantList(improtantInfoCollection: collection)
         .listen((importantInfo) {
-      List<ImportantinfoModel> list = [];
+      List<ImportantInfoModel> list = [];
       for (int i = 0; i < importantInfo.length; i++) {
         if (importantInfo[i].published) {
           list.add(importantInfo[i]);

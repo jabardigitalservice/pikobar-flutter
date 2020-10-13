@@ -184,7 +184,7 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start, children: widgets);
   }
 
-  _buildContent(BuildContext context, ImportantinfoModel data) {
+  _buildContent(BuildContext context, ImportantInfoModel data) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
@@ -418,7 +418,7 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
     }
   }
 
-  void _shareMessage(ImportantinfoModel data) async {
+  void _shareMessage(ImportantInfoModel data) async {
     String content = await stringFromHtmlString(data.content);
     if (data.image != null) {
       try {
