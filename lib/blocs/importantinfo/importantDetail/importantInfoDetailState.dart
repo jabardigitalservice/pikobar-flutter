@@ -19,7 +19,7 @@ class ImportantInfoDetailLoading extends importantInfoDetailState {
 }
 
 class ImportantInfoDetailLoaded extends importantInfoDetailState {
-  final ImportantinfoModel record;
+  final ImportantInfoModel record;
 
   const ImportantInfoDetailLoaded(this.record);
 

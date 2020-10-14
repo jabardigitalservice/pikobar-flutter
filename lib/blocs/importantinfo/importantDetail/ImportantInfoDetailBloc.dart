@@ -15,7 +15,7 @@ class ImportantInfoDetailBloc extends Bloc<ImportantInfoDetailEvent, importantIn
     if (event is ImportantInfoDetailLoad) {
       yield ImportantInfoDetailLoading();
 
-      ImportantinfoModel record = await ImportantInfoRepository().getImportantInfoDetail(importantInfoid: event.importantInfoId);
+      ImportantInfoModel record = await ImportantInfoRepository().getImportantInfoDetail(importantInfoid: event.importantInfoId);
       yield ImportantInfoDetailLoaded(record);
     }
   }
