@@ -1,8 +1,8 @@
 
 # Pikobar Mobile App (Flutter)
-[![Quality gate](http://sonar-flutter.rover.digitalservice.id/api/project_badges/quality_gate?project=pikobar_flutter)](http://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)</br>
-[![Maintainability Rating](http://sonar-flutter.rover.digitalservice.id/api/project_badges/measure?project=pikobar_flutter&metric=sqale_rating)](http://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)
-[![Lines of Code](http://sonar-flutter.rover.digitalservice.id/api/project_badges/measure?project=pikobar_flutter&metric=ncloc)](http://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)
+[![Quality gate](https://sonar-flutter.rover.digitalservice.id/api/project_badges/quality_gate?project=pikobar_flutter)](https://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)</br>
+[![Maintainability Rating](https://sonar-flutter.rover.digitalservice.id/api/project_badges/measure?project=pikobar_flutter&metric=sqale_rating)](https://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)
+[![Lines of Code](https://sonar-flutter.rover.digitalservice.id/api/project_badges/measure?project=pikobar_flutter&metric=ncloc)](https://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)
 [![Codemagic build status](https://api.codemagic.io/apps/5f3bab9add10563324d17fbd/5f3bab9add10563324d17fbc/status_badge.svg)](https://codemagic.io/apps/5f3bab9add10563324d17fbd/5f3bab9add10563324d17fbc/latest_build)
 </br></br>
 
