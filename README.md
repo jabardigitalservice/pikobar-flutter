@@ -1,14 +1,12 @@
 
-# Pikobar Android (Flutter)
+# Pikobar Mobile App (Flutter)
 [![Quality gate](http://sonar-flutter.rover.digitalservice.id/api/project_badges/quality_gate?project=pikobar_flutter)](http://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)</br>
 [![Maintainability Rating](http://sonar-flutter.rover.digitalservice.id/api/project_badges/measure?project=pikobar_flutter&metric=sqale_rating)](http://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)
 [![Lines of Code](http://sonar-flutter.rover.digitalservice.id/api/project_badges/measure?project=pikobar_flutter&metric=ncloc)](http://sonar-flutter.rover.digitalservice.id/dashboard?id=pikobar_flutter)
 [![Codemagic build status](https://api.codemagic.io/apps/5f3bab9add10563324d17fbd/5f3bab9add10563324d17fbc/status_badge.svg)](https://codemagic.io/apps/5f3bab9add10563324d17fbd/5f3bab9add10563324d17fbc/latest_build)
 </br></br>
 
-> Pikobar Mobile App menggunakan Flutter saat ini sudah dirilis.
-<img src='https://user-images.githubusercontent.com/26994065/96281189-32e8dc80-1003-11eb-94af-b0cfb12da92d.png' width='100px'>
-<img src='https://user-images.githubusercontent.com/26994065/96281556-b0145180-1003-11eb-812b-c513928b90df.png' width='100px'>
+<a href='https://apps.apple.com/us/app/pikobar-jawa-barat/id1509760172' target='_blank'><img src='https://user-images.githubusercontent.com/26994065/96281189-32e8dc80-1003-11eb-94af-b0cfb12da92d.png' width='150px'></a> <a href='https://play.google.com/store/apps/details?id=id.go.jabarprov.pikobar' target='_blank'><img src='https://user-images.githubusercontent.com/26994065/96281556-b0145180-1003-11eb-812b-c513928b90df.png' width='150px'></a>
 
 ## Index
 
