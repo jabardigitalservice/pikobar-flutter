@@ -19,8 +19,9 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class SelfReportList extends StatefulWidget {
   final LatLng location;
+  final String otherUID;
 
-  SelfReportList(this.location);
+  SelfReportList(this.location, {this.otherUID});
 
   @override
   _SelfReportListState createState() => _SelfReportListState();
@@ -53,8 +54,8 @@ class _SelfReportListState extends State<SelfReportList> {
                   SelfReportReminderBloc()..add(SelfReportReminderListLoad()),
             ),
             BlocProvider<SelfReportListBloc>(
-              create: (BuildContext context) =>
-                  SelfReportListBloc()..add(SelfReportListLoad()),
+              create: (BuildContext context) => SelfReportListBloc()
+                ..add(SelfReportListLoad(otherUID: widget.otherUID)),
             ),
           ],
           child: Column(
@@ -187,11 +188,18 @@ class _SelfReportListState extends State<SelfReportList> {
         /// Get [documentID] to [listDocumentId]
         listDocumentId.add(snapshot.querySnapshot.documents[i].documentID);
       }
+      if (snapshot.querySnapshot.documents[0].data['quarantine_date'] == null) {
+        /// Save ['created_at'] as [firstDay] for main parameter
+        firstDay = DateTime.fromMillisecondsSinceEpoch(
+            snapshot.querySnapshot.documents[0].data['created_at'].seconds *
+                1000);
+      } else {
+        /// Save ['quarantine_date'] as [firstDay] for main parameter
+        firstDay = DateTime.fromMillisecondsSinceEpoch(snapshot
+                .querySnapshot.documents[0].data['quarantine_date'].seconds *
+            1000);
+      }
 
-      /// Save ['created_at'] as [firstDay] for main parameter
-      firstDay = DateTime.fromMillisecondsSinceEpoch(
-          snapshot.querySnapshot.documents[0].data['created_at'].seconds *
-              1000);
       currentDay = DateTime.now();
     }
     return Expanded(
@@ -240,12 +248,13 @@ class _SelfReportListState extends State<SelfReportList> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SelfReportDetailScreen('${i + 1}')),
+                                      SelfReportDetailScreen('${i + 1}',widget.otherUID)),
                             );
                           } else {
                             /// Move to form screen
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => SelfReportFormScreen(
+                                    otherUID: widget.otherUID,
                                     dailyId: '${i + 1}',
                                     location: widget.location)));
                           }
@@ -261,12 +270,13 @@ class _SelfReportListState extends State<SelfReportList> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        SelfReportDetailScreen('${i + 1}')),
+                                        SelfReportDetailScreen('${i + 1}',widget.otherUID)),
                               );
                             } else {
                               /// Move to form screen
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => SelfReportFormScreen(
+                                      otherUID: widget.otherUID,
                                       dailyId: '${i + 1}',
                                       location: widget.location)));
                             }
@@ -307,13 +317,14 @@ class _SelfReportListState extends State<SelfReportList> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  SelfReportDetailScreen('${i + 1}')),
+                                  SelfReportDetailScreen('${i + 1}',widget.otherUID)),
                         );
                       } else {
                         /// Move to form screen
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelfReportFormScreen(
                                 dailyId: '${i + 1}',
+                                otherUID: widget.otherUID,
                                 location: widget.location)));
                       }
                     }

@@ -120,8 +120,8 @@ class Dictionary {
   static String locationAddress = 'Lokasi Tempat Tinggal';
   static String center = "Pusat";
   static String who = "WHO";
-  static String sayThanks="Terimakasih sudah membaca";
-  static String followOurSosmed="Follow juga sosmed kami";
+  static String sayThanks = "Terimakasih sudah membaca";
+  static String followOurSosmed = "Follow juga sosmed kami";
 
   // Button Text
   static String yes = 'Ya';
@@ -223,6 +223,7 @@ class Dictionary {
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
   static String birthdayPlaceholder = 'Pilih Tanggal';
   static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
+  static String quarantineDatePlaceholder = 'Pilih Tanggal Awal Karantina';
   static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
@@ -369,6 +370,7 @@ class Dictionary {
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
+  static String quarantineDate = 'Tanggal Awal Karantina';
   static String contactDateCovid =
       'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
@@ -377,6 +379,7 @@ class Dictionary {
       'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
+      static String quarantineQuestion='Kapan hari pertama anda karantina?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
@@ -403,11 +406,11 @@ class Dictionary {
   static String contactName = 'Nama Kontak';
   static String phoneNumber = 'Nomor HP';
   static String relation = 'Hubungan';
+  static String relationOtherSelfReport = 'Hubungan Dengan Anda';
   static String otherRelation = 'Hubungan lainnya';
   static String lastContactDate = 'Tanggal Kontak Terakhir';
   static String monitoringIsComplete = 'Pemantauan Selesai!';
-  static String selfReportSummary =
-      'Dalam 14 hari terakhir, ';
+  static String selfReportSummary = 'Dalam 14 hari terakhir, ';
   static String selfReportHistory = 'Lihat Riwayat Kesehatan Saya';
   static String info = 'Info';
   static String announcementDescHealthy =
@@ -416,4 +419,13 @@ class Dictionary {
       '<p>Kondisi Anda bisa membaik jika Anda menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Lakukan isolasi mandiri untuk melindungi orang di sekitar Anda. Segera periksakan diri apabila gejala memburuk.</p>';
   static String readHealthTips = 'Baca Tips Kesehatan';
   static String callEmergencyNumber = 'Hubungi Nomor Darurat';
+  static String forMySelfTitle = 'Untuk Diri Sendiri';
+  static String forMySelfDesc = 'Lapor kesehatan diri Anda sendiri di sini';
+  static String forOtherTitle = 'Untuk Orang Lain';
+  static String forOtherDesc = 'Lapor kesehatan orang lain oleh Anda di sini';
+  static String countPeople = 'Orang Ke-';
+  static String addOtherReport = 'Tambah Orang Lain';
+  static String addUserForm = 'Form Pengisian Data';
+  static String otherReportAnnouncement =
+      '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
 }

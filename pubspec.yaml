@@ -78,6 +78,7 @@ dependencies:
   flutter_downloader: ^1.5.1
   grouped_buttons: ^1.0.4
   collection: ^1.14.13
+  uuid: ^2.2.2
 
   # Temporary fix for DiagnosticableMixin not found in the latest flutter version
   # The package on pub.dev hasn't been updated yet

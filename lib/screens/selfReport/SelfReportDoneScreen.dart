@@ -20,7 +20,8 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 
 class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;
-  SelfReportDoneScreen(this.location);
+  final String otherUID;
+  SelfReportDoneScreen(this.location, this.otherUID);
   @override
   _SelfReportDoneScreenState createState() => _SelfReportDoneScreenState();
 }
@@ -37,8 +38,8 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.dailySelfReport),
       body: BlocProvider<SelfReportListBloc>(
-        create: (BuildContext context) =>
-            SelfReportListBloc()..add(SelfReportListLoad()),
+        create: (BuildContext context) => SelfReportListBloc()
+          ..add(SelfReportListLoad(otherUID: widget.otherUID)),
         child: BlocBuilder<SelfReportListBloc, SelfReportListState>(
             builder: (context, state) {
           if (state is SelfReportListLoaded) {
@@ -67,7 +68,7 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
     // Checking user indications
     if (countNoIndications(listIndications, 'Tidak Ada Gejala') == 14) {
       isHealthy = true;
-    // Remove same string from list
+      // Remove same string from list
       listIndications = listIndications.toSet().toList();
       summary = 'tidak ada indikasi gejala.';
     } else {
@@ -82,7 +83,6 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
       summary =
           'terdapat ${countIndications.toString()} indikasi gejala, yaitu ${listIndications.toString().replaceAll('[', '').replaceAll(']', '')}.';
     }
-  
 
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
