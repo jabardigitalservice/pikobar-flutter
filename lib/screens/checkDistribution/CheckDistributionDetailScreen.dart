@@ -36,8 +36,8 @@ class CheckDistributionDetail extends StatefulWidget {
 }
 
 class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
-  String typeLocation = Dictionary.confirmed;
   Map<String, dynamic> getLabel;
+
   // ignore: unused_field, close_sinks
   RemoteConfigBloc _remoteConfigBloc;
   List<String> listItemTitleTab = [
@@ -46,6 +46,11 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
     Dictionary.suspect,
     Dictionary.probable
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,30 +207,15 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                     unselectedLabelColor: Colors.grey,
                     onTap: (index) {
                       if (index == 0) {
-                        setState(() {
-                          typeLocation = listItemTitleTab[index];
-                        });
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedConfirmedByDistricts);
                       } else if (index == 1) {
-                        setState(() {
-                          typeLocation = listItemTitleTab[index];
-                        });
-
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedCloseContactByDistricts);
                       } else if (index == 2) {
-                        setState(() {
-                          typeLocation = listItemTitleTab[index];
-                        });
-
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedSuspectByDistricts);
                       } else if (index == 3) {
-                        setState(() {
-                          typeLocation = listItemTitleTab[index];
-                        });
-
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedProbableByDistricts);
                       }
@@ -239,7 +229,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                         typeRegion: Dictionary.village,
                         listOtherVillage:
                             widget.state.record.detected.desaLainnya,
-                        statusType: typeLocation,
+                        statusType: listItemTitleTab[0],
                         getLabel: getLabel,
                       ),
 
@@ -253,7 +243,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           typeRegion: Dictionary.districts,
                           listOtherVillage:
                               widget.state.record.detected.desaLainnya,
-                          statusType: typeLocation,
+                          statusType: listItemTitleTab[1],
                           getLabel: getLabel),
 
                       CheckDistributionCardFilter(
@@ -264,7 +254,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                         typeRegion: Dictionary.village,
                         listOtherVillage:
                             widget.state.record.detected.desaLainnya,
-                        statusType: typeLocation,
+                        statusType: listItemTitleTab[2],
                         getLabel: getLabel,
                       ),
 
@@ -276,7 +266,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                         typeRegion: Dictionary.village,
                         listOtherVillage:
                             widget.state.record.detected.desaLainnya,
-                        statusType: typeLocation,
+                        statusType: listItemTitleTab[3],
                         getLabel: getLabel,
                       ),
                     ],
