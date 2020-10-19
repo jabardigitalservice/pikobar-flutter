@@ -7,8 +7,9 @@ abstract class DailyReportEvent extends Equatable {
 class DailyReportSave extends DailyReportEvent {
 
   final DailyReportModel dailyReportModel;
+  final String otherUID;
 
-  DailyReportSave(this.dailyReportModel):assert(dailyReportModel != null);
+  DailyReportSave(this.dailyReportModel,{this.otherUID}):assert(dailyReportModel != null);
 
   @override
   List<Object> get props => [dailyReportModel];

@@ -13,7 +13,6 @@ part 'DailyReportEvent.dart';
 part 'DailyReportState.dart';
 
 class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
-
   DailyReportBloc() : super(DailyReportInitial());
 
   @override
@@ -26,7 +25,9 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
       try {
         String userId = await AuthRepository().getToken();
         await SelfReportRepository().saveDailyReport(
-            userId: userId, dailyReport: event.dailyReportModel);
+            userId: userId,
+            dailyReport: event.dailyReportModel,
+            otherUID: event.otherUID);
         if (event.dailyReportModel.id == '14') {
           await SelfReportRepository()
               .updateToCollection(userId: userId, isReminder: false);

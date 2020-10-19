@@ -5,9 +5,9 @@ abstract class SelfReportDetailEvent extends Equatable {
 }
 
 class SelfReportDetailLoad extends SelfReportDetailEvent {
-  final String selfReportId;
+  final String selfReportId,otherUid;
 
-  SelfReportDetailLoad({@required this.selfReportId});
+  SelfReportDetailLoad({@required this.selfReportId,this.otherUid});
 
   @override
   List<Object> get props => [];

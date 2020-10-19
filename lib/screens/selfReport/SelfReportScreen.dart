@@ -27,6 +27,7 @@ import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/ContactHistoryScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class SelfReportScreen extends StatefulWidget {
@@ -256,7 +257,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       fontSize: 16.0);
                 } else {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SelfReportList(latLng)));
+                      builder: (context) => SelfReportOption(latLng)));
                 }
               },
                   // condition for check if user login and user complete fill that profile

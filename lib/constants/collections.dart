@@ -21,6 +21,7 @@ const String kNewsNational = 'articles_national';
 const String kNewsWorld = 'articles_world';
 const String kUserDevices = 'devices_info';
 const String kSelfReports = 'self_reports';
+const String kOtherSelfReports = 'other_report';
 const String kDailyReport = 'daily_report';
 const String kEducationContent = 'education_content';
 const String kContactHistory = 'contact_history';
