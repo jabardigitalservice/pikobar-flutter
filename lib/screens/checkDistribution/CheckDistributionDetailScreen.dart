@@ -48,11 +48,6 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.back),
