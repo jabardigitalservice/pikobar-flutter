@@ -138,7 +138,11 @@ class _SelfReportOptionState extends State<SelfReportOption> {
 
   Widget buildCreateOtherReport() {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+         // move to form screen
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AddUserFormScreen()));
+      },
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -159,7 +163,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                       left: 15,
                       top: 15,
                       child: Image.asset(
-                        '${Environment.imageAssets}male_icon.png',
+                        '${Environment.iconAssets}other_report_icon.png',
                         height: 20,
                       ),
                     )
