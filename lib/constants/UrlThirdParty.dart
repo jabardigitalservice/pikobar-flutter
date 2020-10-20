@@ -16,5 +16,5 @@
   const String kUrlTracking = 'https://tracking.pikobar.jabarprov.go.id';
   const String kUrlInstagramPikobar='https://instagram.com/pikobar_jabar';
   const String kUrlTwitterPikobar='https://twitter.com/pikobar_jabar';
-
+  const String kUrlFirebaseTracking = 'https://us-central1-jabarprov-covid19.cloudfunctions.net/locationTracking';
   

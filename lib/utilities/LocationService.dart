@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
@@ -11,19 +12,23 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LocationModel.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/LocationsRepository.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 import 'AnalyticsHelper.dart';
 
 class LocationService {
-  static Future<void> sendCurrentLocation(BuildContext context) async {
-    var permissionService =
-        Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+  static Future<void> initializeBackgroundLocation(BuildContext context) async {
 
-    if (await permissionService.status.isGranted) {
-      await actionSendLocation();
+    if (await Permission.locationAlways.status.isGranted) {
+      if (await AuthRepository().hasLocalUserInfo()) {
+        await configureBackgroundLocation();
+        //await actionSendLocation();
+      }
     } else {
       showModalBottomSheet(isScrollControlled: true,
           context: context,
@@ -96,14 +101,16 @@ class LocationService {
                                 elevation: 0.0,
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-                                  if (await permissionService
+                                  if (await Permission.locationAlways
                                       .status.isPermanentlyDenied) {
                                     Platform.isAndroid
                                         ? await AppSettings.openAppSettings()
                                         : await AppSettings
                                         .openLocationSettings();
                                   } else {
-                                    permissionService.request().then((status) {
+                                    [
+                                      Permission.locationAlways
+                                    ].request().then((status) {
                                       _onStatusRequested(context, status);
                                     });
                                   }
@@ -119,6 +126,7 @@ class LocationService {
     }
   }
 
+  // Old Method
   static Future<void> actionSendLocation() async {
     var permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
@@ -158,11 +166,110 @@ class LocationService {
     }
   }
 
-  static Future<void> _onStatusRequested(
-      BuildContext context, PermissionStatus statuses) async {
-    if (statuses.isGranted) {
-      await actionSendLocation();
-      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+  // New Method
+  static Future<void> configureBackgroundLocation() async {
+    if (await Permission.locationAlways.status.isGranted) {
+      String locationTemplate = '{'
+          '"latitude":<%= latitude %>, '
+          '"longitude":<%= longitude %>, '
+          '"speed":<%= speed %>, '
+          '"activity":"<%= activity.type %>", '
+          '"battery":{"isCharging":<%= battery.is_charging %>, '
+          '"level":<%= battery.level %>}, '
+          '"timestamp":"<%= timestamp %>"'
+          '}';
+
+      // 1.  Listen to events.
+      bg.BackgroundGeolocation.onLocation(_onLocation, _onLocationError);
+      bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
+      bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
+      bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
+      bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
+      bg.BackgroundGeolocation.onHttp(_onHttp);
+
+      // 2.  Get the user token
+      String userId = await AuthRepository().getToken();
+
+      // 3.  Configure the plugin
+      await bg.BackgroundGeolocation.ready(bg.Config(
+        url: kUrlFirebaseTracking,
+        headers: {"content-type": "application/json"},
+        httpRootProperty: 'data',
+        locationTemplate: locationTemplate,
+        params: {"userId": userId},
+        autoSync: true,
+        autoSyncThreshold: 5,
+        batchSync: true,
+        maxBatchSize: 50,
+        maxDaysToPersist: 7,
+        reset: true,
+        debug: false,
+        logLevel: bg.Config.LOG_LEVEL_VERBOSE,
+        desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 15.0,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        enableHeadless: true,
+        locationAuthorizationRequest: 'Always',
+          backgroundPermissionRationale: PermissionRationale(
+              title: "Izinkan PIKOBAR mengakses lokasi Anda",
+              message: "Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.",
+              positiveAction: "Ubah ke Allow All The Time",
+              negativeAction: "Cancel"
+          )
+      )).then((bg.State state) async {
+        print("[ready] ${state.toMap()}");
+
+        await bg.BackgroundGeolocation.start();
+
+        await bg.BackgroundGeolocation.changePace(true);
+      }).catchError((error) {
+        print('[ready] ERROR: $error');
+      });
+
+    }
+  }
+
+  static Future<void> stopBackgroundLocation() async {
+    await bg.BackgroundGeolocation.stop();
+  }
+
+  static void _onLocation(bg.Location location) {
+    print('[location] - $location');
+  }
+
+  static void _onLocationError(bg.LocationError error) {
+    print('[location] ERROR - $error');
+  }
+
+  static void _onMotionChange(bg.Location location) {
+    print('[motionchange] - $location');
+  }
+
+  static void _onActivityChange(bg.ActivityChangeEvent event) {
+    print('[activitychange] - $event');
+  }
+
+  static void _onProviderChange(bg.ProviderChangeEvent event) {
+    print('$event');
+  }
+
+  static void _onConnectivityChange(bg.ConnectivityChangeEvent event) {
+    print('$event');
+  }
+
+  static void _onHttp(bg.HttpEvent event) {
+    print('[http] success? ${event.success}, status? ${event.status}');
+  }
+
+  static Future<void> _onStatusRequested(BuildContext context,
+      Map<Permission, PermissionStatus> statuses) async {
+    if (statuses[Permission.locationAlways].isGranted) {
+      if (await AuthRepository().hasLocalUserInfo()) {
+        await configureBackgroundLocation();
+        //await actionSendLocation();
+        AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+      }
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }

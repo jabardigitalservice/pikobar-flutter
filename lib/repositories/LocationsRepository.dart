@@ -15,7 +15,7 @@ class LocationsRepository {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
-      final userDocument =
+      /*final userDocument =
           Firestore.instance.collection(kUsers).document(_user.uid);
 
       final locationsDocument =
@@ -29,7 +29,7 @@ class LocationsRepository {
             'timestamp': DateTime.fromMillisecondsSinceEpoch(data.timestamp),
           });
         }
-      });
+      });*/
 
       await sendLocationToGeocreate(_user.uid, data.latitude, data.longitude);
 
