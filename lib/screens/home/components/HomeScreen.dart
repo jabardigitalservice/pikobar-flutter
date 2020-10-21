@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
@@ -11,6 +12,7 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -32,13 +34,16 @@ import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.da
 import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 import 'BannerListSlider.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
+  FirebaseMessaging firebaseMessaging;
 
-  HomeScreen({this.indexScreenState});
+  HomeScreen({this.indexScreenState, this.firebaseMessaging});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -81,8 +86,23 @@ class _HomeScreenState extends State<HomeScreen> {
     isLoading = false;
   }
 
+  Future<void> getDataProfileFromServer() async {
+    String uid = await ProfileUidSharedPreference.getProfileUid();
+    if (uid != null) {
+      Firestore.instance
+          .collection(kUsers)
+          .where('id', isEqualTo: uid)
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        HealthCheck()
+            .isUserHealty(snapshot.documents[0]['health_status'].toString());
+      }).catchError((error) {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDataProfileFromServer();
     return MultiBlocProvider(
       providers: [
         BlocProvider<RemoteConfigBloc>(
@@ -230,13 +250,13 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.only(top: 16.0),
             child: Documents(),
           ),
-           SizedBox(
+          SizedBox(
             height: Dimens.dividerHeight,
             child: Container(
               color: ColorBase.grey,
             ),
           ),
-           Container(
+          Container(
             padding: EdgeInsets.only(top: 25.0),
             child: SocialMedia(),
           ),

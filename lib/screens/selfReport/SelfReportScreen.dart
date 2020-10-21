@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
@@ -29,6 +32,7 @@ import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 class SelfReportScreen extends StatefulWidget {
   @override
@@ -38,6 +42,7 @@ class SelfReportScreen extends StatefulWidget {
 class _SelfReportScreenState extends State<SelfReportScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   AuthenticationAuthenticated profileLoaded;
 
   // ignore: close_sinks
@@ -141,7 +146,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   state is AuthenticationLoading) {
                 return StreamBuilder<DocumentSnapshot>(
                     stream: Firestore.instance
-                        .collection('users')
+                        .collection(kUsers)
                         .document(profileLoaded != null
                             ? profileLoaded.record.uid
                             : null)
@@ -204,17 +209,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     }
   }
 
-  /// Function for check user health status
-  bool isUserHealty(AsyncSnapshot<DocumentSnapshot> state) {
-    //condition for check data is null or not
-    if (state != null && state.data['health_status'] != null) {
-      return state.data['health_status'].toString() == Dictionary.healthy;
-    } else {
-      //if health status is null that give indication that user is healthy
-      return true;
-    }
-  }
-
   /// Function for build widget content
   Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state) {
     return Padding(
@@ -225,7 +219,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             height: 10,
           ),
           hasLogin
-              ? !isUserHealty(state) && _isProfileUserNotComplete(state)
+              ? !HealthCheck().isUserHealty(state.data['health_status']) &&
+                      _isProfileUserNotComplete(state)
                   ? _buildAnnounceProfileNotComplete(state)
                   : Container()
               : Container(),
@@ -264,7 +259,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   // and health status is not healthy user can access for press the button in _buildContainer
                   hasLogin
                       ? !_isProfileUserNotComplete(state) &&
-                              !isUserHealty(state)
+                              !HealthCheck()
+                                  .isUserHealty(state.data['health_status'])
                           ? hasLogin
                           : false
                       : false),
@@ -272,9 +268,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   '${Environment.iconAssets}history_contact_disable.png',
                   '${Environment.iconAssets}history_contact_enable.png',
                   Dictionary.historyContact,
-                  2,
-                  () {
-                     if (latLng == null ||
+                  2, () {
+                if (latLng == null ||
                     addressMyLocation == '-' ||
                     addressMyLocation.isEmpty ||
                     addressMyLocation == null) {
@@ -287,10 +282,11 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ContactHistoryScreen()));
                 }
-                  },
-                    hasLogin
+              },
+                  hasLogin
                       ? !_isProfileUserNotComplete(state) &&
-                              !isUserHealty(state)
+                              !HealthCheck()
+                                  .isUserHealty(state.data['health_status'])
                           ? hasLogin
                           : false
                       : false),
@@ -456,7 +452,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       ),
       onTap: () {
         hasLogin
-            ? !_isProfileUserNotComplete(state) && !isUserHealty(state)
+            ? !_isProfileUserNotComplete(state) &&
+                    !HealthCheck().isUserHealty(state.data['health_status'])
                 ? _handleLocation()
                 // ignore: unnecessary_statements
                 : null
