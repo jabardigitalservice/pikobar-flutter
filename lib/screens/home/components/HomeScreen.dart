@@ -41,9 +41,8 @@ import 'BannerListSlider.dart';
 // ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
-  FirebaseMessaging firebaseMessaging;
 
-  HomeScreen({this.indexScreenState, this.firebaseMessaging});
+  HomeScreen({this.indexScreenState});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
