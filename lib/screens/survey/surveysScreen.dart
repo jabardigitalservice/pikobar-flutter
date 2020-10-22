@@ -104,6 +104,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
                   );
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
+                  AuthenticationAuthenticated _profileLoaded =
+                  state as AuthenticationAuthenticated;
+                  _profileLoaded.record.uid;
                   return StreamBuilder<QuerySnapshot>(
                     stream: Firestore.instance.collection(kSurveys).snapshots(),
                     builder: (BuildContext context,
