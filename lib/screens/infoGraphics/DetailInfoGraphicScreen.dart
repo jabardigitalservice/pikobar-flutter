@@ -42,8 +42,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
   List<String> getDataUrl() {
     List<String> dataUrl = [];
-    for (int i = 0; i < widget.dataInfoGraphic.data['images'].length; i++) {
-      dataUrl.add(widget.dataInfoGraphic.data['images'][i]);
+    for (int i = 0; i < widget.dataInfoGraphic.get('images').length; i++) {
+      dataUrl.add(widget.dataInfoGraphic.get('images')[i]);
     }
     return dataUrl;
   }

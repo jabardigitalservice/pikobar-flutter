@@ -3,7 +3,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 
 class VideoRepository {
-  final videoCollection = Firestore.instance.collection(kVideos);
+  final videoCollection = FirebaseFirestore.instance.collection(kVideos);
 
   Stream<List<VideoModel>> getVideo({int limit}) {
     Query videoQuery =
@@ -14,7 +14,7 @@ class VideoRepository {
     }
 
     return videoQuery.snapshots().map((QuerySnapshot snapshot) => snapshot
-        .documents
+        .docs
         .map((doc) => VideoModel.fromFirestore(doc))
         .toList());
   }

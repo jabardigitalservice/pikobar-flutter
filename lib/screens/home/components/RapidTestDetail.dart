@@ -96,7 +96,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           height: 20,
         ),
         // Last update section
-        widget.document.data['last_update'] == null
+        widget.document.get('last_update') == null
             ? Container()
             : Padding(
                 padding: EdgeInsets.only(bottom: 20, left: 10),
@@ -115,7 +115,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       height: 10,
                     ),
                     Text(
-                      '${unixTimeStampToDateTime(widget.document.data['last_update'].seconds)}',
+                      '${unixTimeStampToDateTime(widget.document.get('last_update').seconds)}',
                       style: TextStyle(
                           color: Color(0xff333333),
                           fontFamily: FontsFamily.lato,
@@ -125,7 +125,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 ),
               ),
         buildHeader(label['pcr_rdt']['rdt']['sum'], 'bloodTest@4x.png',
-            widget.document.data['total'], Color(0xffFAFAFA)),
+            widget.document.get('total'), Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
         ),
@@ -147,7 +147,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
-        widget.documentPCR.data['last_update'] == null
+        widget.documentPCR.get('last_update') == null
             ? Container()
             : Padding(
                 padding: EdgeInsets.only(bottom: 20, left: 10),
@@ -166,7 +166,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       height: 10,
                     ),
                     Text(
-                      '${unixTimeStampToDateTime(widget.documentPCR.data['last_update'].seconds)}',
+                      '${unixTimeStampToDateTime(widget.documentPCR.get('last_update').seconds)}',
                       style: TextStyle(
                           color: Color(0xff333333),
                           fontFamily: FontsFamily.lato,
@@ -176,7 +176,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 ),
               ),
         buildHeader(label['pcr_rdt']['pcr']['sum'], 'bloodTestBlue@4x.png',
-            widget.documentPCR.data['total'], Color(0xffFAFAFA)),
+            widget.documentPCR.get('total'), Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
         ),
@@ -263,11 +263,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
           '',
           label['pcr_rdt']['rdt']['positif'],
-          widget.document.data['positif'].toString(),
+          widget.document.get('positif').toString(),
           2,
           Colors.black,
           Colors.black,
-          widget.document.data['total'],
+          widget.document.get('total'),
           helpOnTap: () {
             showTextBottomSheet(
                 context: context,
@@ -279,11 +279,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
           '',
           label['pcr_rdt']['rdt']['negatif'],
-          widget.document.data['negatif'].toString(),
+          widget.document.get('negatif').toString(),
           2,
           Colors.black,
           Colors.black,
-          widget.document.data['total'],
+          widget.document.get('total'),
           helpOnTap: () {
             showTextBottomSheet(
                 context: context,
@@ -296,11 +296,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
           '',
           label['pcr_rdt']['rdt']['invalid'],
-          widget.document.data['invalid'].toString(),
+          widget.document.get('invalid').toString(),
           2,
           Colors.black,
           Colors.red,
-          widget.document.data['total'],
+          widget.document.get('total'),
           helpOnTap: () {
             showTextBottomSheet(
                 context: context,
@@ -319,11 +319,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
           '',
           label['pcr_rdt']['pcr']['positif'],
-          widget.documentPCR.data['positif'].toString(),
+          widget.documentPCR.get('positif').toString(),
           2,
           Colors.black,
           Colors.black,
-          widget.documentPCR.data['total'],
+          widget.documentPCR.get('total'),
           helpOnTap: () {
             showTextBottomSheet(
                 context: context,
@@ -335,11 +335,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
           '',
           label['pcr_rdt']['pcr']['negatif'],
-          widget.documentPCR.data['negatif'].toString(),
+          widget.documentPCR.get('negatif').toString(),
           2,
           Colors.black,
           Colors.black,
-          widget.documentPCR.data['total'],
+          widget.documentPCR.get('total'),
           helpOnTap: () {
             showTextBottomSheet(
                 context: context,
@@ -351,11 +351,11 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         buildContainer(
           '',
           label['pcr_rdt']['pcr']['invalid'],
-          widget.documentPCR.data['invalid'].toString(),
+          widget.documentPCR.get('invalid').toString(),
           2,
           Colors.black,
           Colors.red,
-          widget.documentPCR.data['total'],
+          widget.documentPCR.get('total'),
           helpOnTap: () {
             showTextBottomSheet(
                 context: context,

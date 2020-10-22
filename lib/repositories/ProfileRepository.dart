@@ -43,10 +43,10 @@ class ProfileRepository {
       DateTime birthdate,
       AuthCredential credential,
       LatLng latLng) async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final User user = FirebaseAuth.instance.currentUser;
     List<UserInfo> providerList = user.providerData;
     if (providerList.length > 2) {
-      await user.unlinkFromProvider(credential.providerId);
+      await user.unlink(credential.providerId);
     }
     await user.linkWithCredential(credential);
     await saveToCollection(id, phoneNumber, gender, address, cityId, provinceId,
@@ -56,7 +56,7 @@ class ProfileRepository {
   Future<void> saveToCollection(String id, phoneNumber, gender, address, cityId,
       provinceId, name, nik, DateTime birthdate, LatLng latLng) async {
     print(latLng);
-    Firestore.instance.collection(kUsers).document(id).updateData({
+    FirebaseFirestore.instance.collection(kUsers).doc(id).update({
       'phone_number': Dictionary.inaCode + phoneNumber,
       'gender': gender,
       'birthdate': birthdate,
@@ -83,7 +83,7 @@ class ProfileRepository {
       nik,
       DateTime birthdate,
       LatLng latLng) async {
-    final AuthCredential credential = PhoneAuthProvider.getCredential(
+    final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationID,
       smsCode: smsCode,
     );

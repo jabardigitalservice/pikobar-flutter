@@ -32,10 +32,10 @@ class NewsModel {
   });
 
   factory NewsModel.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> json = document.data;
+    Map<String, dynamic> json = document.data();
 
     return NewsModel(
-      id: document.documentID,
+      id: document.id,
       title: json["title"] ?? '',
       content: json["content"] ?? '',
       image: json["image"] ?? '',

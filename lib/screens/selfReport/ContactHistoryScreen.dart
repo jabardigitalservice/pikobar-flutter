@@ -41,7 +41,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
         child: BlocBuilder<ContactHistoryListBloc, ContactHistoryListState>(
             builder: (context, state) {
           if (state is ContactHistoryListLoaded) {
-            return buildContent(state.querySnapshot.documents);
+            return buildContent(state.querySnapshot.docs);
           } else if (state is ContactHistoryListFailure) {
             return ErrorContent(error: state.error);
           } else {
@@ -185,7 +185,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     ContactHistoryDetailScreen(
-                                        documents[i].documentID)),
+                                        documents[i].id)),
                           );
                         },
                         child: Padding(
@@ -210,7 +210,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                         left: 15,
                                         top: 15,
                                         child: Image.asset(
-                                          '${Environment.imageAssets}${documents[i].data['gender'] == 'M' ? 'male_icon' : 'female_icon'}.png',
+                                          '${Environment.imageAssets}${documents[i].get('gender') == 'M' ? 'male_icon' : 'female_icon'}.png',
                                           height: 20,
                                         ),
                                       )
@@ -224,7 +224,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        documents[i].data['name'],
+                                        documents[i].get('name'),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 12,
@@ -234,7 +234,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                         height: 10,
                                       ),
                                       Text(
-                                        documents[i].data['relation'],
+                                        documents[i].get('relation'),
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontFamily: FontsFamily.lato),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,7 @@ class SimpleBlocObserver extends BlocObserver {
   }
 }
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Set `enableInDevMode` to true to see reports while in debug mode
@@ -107,6 +108,8 @@ void main() {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
   Bloc.observer = SimpleBlocObserver();
+
+  await Firebase.initializeApp();
 
   runZonedGuarded(() {
     runApp(App());

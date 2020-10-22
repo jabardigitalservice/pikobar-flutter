@@ -69,17 +69,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getDataFromServer() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('broadcasts')
         .orderBy('published_at', descending: true)
-        .getDocuments()
+        .get()
         .then((QuerySnapshot snapshot) {
       insertIntoDatabase(snapshot);
     }).catchError((error) {});
   }
 
   Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
-    await MessageRepository().insertToDatabase(snapshot.documents);
+    await MessageRepository().insertToDatabase(snapshot.docs);
     widget.indexScreenState.getCountMessage();
     isLoading = false;
   }
@@ -87,13 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getDataProfileFromServer() async {
     String uid = await ProfileUidSharedPreference.getProfileUid();
     if (uid != null) {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection(kUsers)
           .where('id', isEqualTo: uid)
-          .getDocuments()
+          .get()
           .then((QuerySnapshot snapshot) {
         HealthCheck()
-            .isUserHealty(snapshot.documents[0]['health_status'].toString());
+            .isUserHealty(snapshot.docs[0].get('health_status').toString());
       }).catchError((error) {});
     }
   }

@@ -33,9 +33,9 @@ class CheckDistributionReposity {
   }
 
   Future<void> saveToCollection(String id, lat, long) async {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection(kUsers)
-        .document(id)
-        .updateData({'location': GeoPoint(lat, long)});
+        .doc(id)
+        .update({'location': GeoPoint(lat, long)});
   }
 }

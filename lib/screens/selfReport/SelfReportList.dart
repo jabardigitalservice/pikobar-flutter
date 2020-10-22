@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportDetailScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 class SelfReportList extends StatefulWidget {
   final LatLng location;
@@ -87,7 +88,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                           fontSize: 12),
                                     ),
                                     Text(
-                                      '${((state.querySnapshot.documents.length / 14) * 100).toStringAsPrecision(3)}%',
+                                      '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
                                       style: TextStyle(
                                           fontFamily: FontsFamily.lato,
                                           color: ColorBase.limeGreen,
@@ -111,7 +112,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                   lineHeight: 8.0,
                                   backgroundColor: ColorBase.menuBorderColor,
                                   percent:
-                                      (state.querySnapshot.documents.length /
+                                      (state.querySnapshot.docs.length /
                                           14),
                                   progressColor: ColorBase.limeGreen,
                                 );
@@ -136,7 +137,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                     builder: (context, state) {
                                   if (state is SelfReportIsReminderLoaded) {
                                     isReminder =
-                                        state.querySnapshot.data['remind_me'];
+                                        state.querySnapshot.get('remind_me');
                                     return FlutterSwitch(
                                       width: 50.0,
                                       height: 20.0,
@@ -183,20 +184,20 @@ class _SelfReportListState extends State<SelfReportList> {
 
   Widget _buildContent(SelfReportListLoaded snapshot) {
     // Checking document is not null
-    if (snapshot.querySnapshot.documents.length != 0) {
-      for (var i = 0; i < snapshot.querySnapshot.documents.length; i++) {
+    if (snapshot.querySnapshot.docs.length != 0) {
+      for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
         /// Get [documentID] to [listDocumentId]
-        listDocumentId.add(snapshot.querySnapshot.documents[i].documentID);
+        listDocumentId.add(snapshot.querySnapshot.docs[i].id);
       }
-      if (snapshot.querySnapshot.documents[0].data['quarantine_date'] == null) {
+      if (getField(snapshot.querySnapshot.docs[0], 'quarantine_date') == null) {
         /// Save ['created_at'] as [firstDay] for main parameter
         firstDay = DateTime.fromMillisecondsSinceEpoch(
-            snapshot.querySnapshot.documents[0].data['created_at'].seconds *
+            snapshot.querySnapshot.docs[0].get('created_at').seconds *
                 1000);
       } else {
         /// Save ['quarantine_date'] as [firstDay] for main parameter
         firstDay = DateTime.fromMillisecondsSinceEpoch(snapshot
-                .querySnapshot.documents[0].data['quarantine_date'].seconds *
+                .querySnapshot.docs[0].get('quarantine_date').seconds *
             1000);
       }
 

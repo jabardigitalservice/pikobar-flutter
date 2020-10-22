@@ -11,7 +11,7 @@ import 'package:pikobar_flutter/models/DailyReportModel.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 
 class SelfReportRepository {
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Reads the daily report document in the self reports collection referenced by the [DocumentReference].
   Future<DocumentSnapshot> getSelfReportDetail(
@@ -22,18 +22,18 @@ class SelfReportRepository {
     if (otherUID == null) {
       doc = await _firestore
           .collection(kSelfReports)
-          .document(userId)
+          .doc(userId)
           .collection(kDailyReport)
-          .document(dailyReportId)
+          .doc(dailyReportId)
           .get();
     } else {
       doc = await _firestore
           .collection(kSelfReports)
-          .document(userId)
+          .doc(userId)
           .collection(kOtherSelfReports)
-          .document(otherUID)
+          .doc(otherUID)
           .collection(kDailyReport)
-          .document(dailyReportId)
+          .doc(dailyReportId)
           .get();
     }
 
@@ -49,17 +49,17 @@ class SelfReportRepository {
       if (otherUID == null) {
         doc = _firestore
             .collection(kSelfReports)
-            .document(userId)
+            .doc(userId)
             .collection(kDailyReport)
-            .document(dailyReport.id);
+            .doc(dailyReport.id);
       } else {
         doc = _firestore
             .collection(kSelfReports)
-            .document(userId)
+            .doc(userId)
             .collection(kOtherSelfReports)
-            .document(otherUID)
+            .doc(otherUID)
             .collection(kDailyReport)
-            .document(dailyReport.id);
+            .doc(dailyReport.id);
       }
 
       await doc.get().then((snapshot) async {
@@ -81,12 +81,12 @@ class SelfReportRepository {
     try {
       var doc = _firestore
           .collection(kSelfReports)
-          .document(userId)
+          .doc(userId)
           .collection(kOtherSelfReports)
-          .document(dailyReport.userId);
+          .doc(dailyReport.userId);
 
       await doc.get().then((snapshot) async {
-        await doc.setData(dailyReport.toJson());
+        await doc.set(dailyReport.toJson());
       });
     } catch (e) {
       print(e.toString());
@@ -97,57 +97,57 @@ class SelfReportRepository {
   /// Reads the self report document referenced by the [CollectionReference].
   Stream<QuerySnapshot> getSelfReportList(
       {@required String userId, String otherUID}) {
-    final selfReport = _firestore.collection(kSelfReports).document(userId);
+    final selfReport = _firestore.collection(kSelfReports).doc(userId);
     selfReport.get().then((snapshot) {
       if (snapshot.exists) {
       } else {
-        selfReport.setData({'remind_me': false, 'user_id': userId});
+        selfReport.set({'remind_me': false, 'user_id': userId});
       }
     });
 
     return otherUID == null
         ? _firestore
             .collection(kSelfReports)
-            .document(userId)
+            .doc(userId)
             .collection(kDailyReport)
             .snapshots()
         : _firestore
             .collection(kSelfReports)
-            .document(userId)
+            .doc(userId)
             .collection(kOtherSelfReports)
-            .document(otherUID)
+            .doc(otherUID)
             .collection(kDailyReport)
             .snapshots();
   }
 
   Stream<QuerySnapshot> getContactHistoryList({@required String userId}) {
-    final selfReport = _firestore.collection(kSelfReports).document(userId);
+    final selfReport = _firestore.collection(kSelfReports).doc(userId);
     selfReport.get().then((snapshot) {
       if (snapshot.exists) {
       } else {
-        selfReport.setData({'remind_me': false, 'user_id': userId});
+        selfReport.set({'remind_me': false, 'user_id': userId});
       }
     });
 
     return _firestore
         .collection(kSelfReports)
-        .document(userId)
+        .doc(userId)
         .collection(kContactHistory)
         .snapshots();
   }
 
   Stream<QuerySnapshot> getOtherSelfReport({@required String userId}) {
-    final selfReport = _firestore.collection(kSelfReports).document(userId);
+    final selfReport = _firestore.collection(kSelfReports).doc(userId);
     selfReport.get().then((snapshot) {
       if (snapshot.exists) {
       } else {
-        selfReport.setData({'remind_me': false, 'user_id': userId});
+        selfReport.set({'remind_me': false, 'user_id': userId});
       }
     });
 
     return _firestore
         .collection(kSelfReports)
-        .document(userId)
+        .doc(userId)
         .collection(kOtherSelfReports)
         .snapshots();
   }
@@ -156,22 +156,22 @@ class SelfReportRepository {
       {@required String userId, @required String contactHistoryId}) async {
     DocumentSnapshot doc = await _firestore
         .collection(kSelfReports)
-        .document(userId)
+        .doc(userId)
         .collection(kContactHistory)
-        .document(contactHistoryId)
+        .doc(contactHistoryId)
         .get();
     return doc;
   }
 
   Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
-    return _firestore.collection(kSelfReports).document(userId).snapshots();
+    return _firestore.collection(kSelfReports).doc(userId).snapshots();
   }
 
   Future updateToCollection({@required String userId, bool isReminder}) async {
     return await _firestore
         .collection(kSelfReports)
-        .document(userId)
-        .updateData({
+        .doc(userId)
+        .update({
       'remind_me': isReminder,
     });
   }
@@ -184,11 +184,11 @@ class SelfReportRepository {
     if (await Connection().checkConnection(kUrlGoogle)) {
       CollectionReference ref = _firestore
           .collection(kSelfReports)
-          .document(userId)
+          .doc(userId)
           .collection(kContactHistory);
 
       await ref.add(data.toJson()).then((doc) async {
-        await doc.updateData({'id': doc.documentID});
+        await doc.update({'id': doc.id});
       });
     } else {
       throw SocketException(ErrorException.socketException);
