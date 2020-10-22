@@ -45,6 +45,7 @@ jobs:
     - name: "Setup Environments"
       run: |
         mv ${{ steps.write_keystore.outputs.filePath }} ./android/pikobar.keystore
+        sed -i -e 's/%GEOLOCATION_KEY%/${{ secrets.GEOLOCATION_KEY }}/g' ./android/app/src/main/AndroidManifest.xml
         sed -i -e 's/%GOOGLE_API_KEY%/${{ secrets.GOOGLE_API_KEY }}/g' ./android/app/src/main/AndroidManifest.xml
         echo 'storeFile=pikobar.keystore' > ./android/key.properties
         echo 'storePassword=${{ secrets.PIKOBAR_PASSWORD }}' >> ./android/key.properties
