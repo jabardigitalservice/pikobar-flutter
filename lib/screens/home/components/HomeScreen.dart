@@ -130,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
         BlocProvider<InfoGraphicsListBloc>(
             create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-              ..add(InfoGraphicsListLoad(limit: 3))),
+              ..add(InfoGraphicsListLoad(infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))

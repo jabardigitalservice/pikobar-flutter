@@ -56,6 +56,7 @@ class AuthRepository {
     });
     await deleteToken();
     await deleteLocalUserInfo();
+    await LocationService.stopBackgroundLocation();
   }
 
   /// Sign In with Apple
@@ -193,7 +194,8 @@ class AuthRepository {
 
         await persistUserInfo(authUserInfo);
         await registerFCMToken();
-        await LocationService.actionSendLocation();
+        //await LocationService.actionSendLocation();
+        await LocationService.configureBackgroundLocation(userInfo: authUserInfo);
       } else {
         authUserInfo = await readLocalUserInfo();
       }

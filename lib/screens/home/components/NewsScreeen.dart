@@ -203,11 +203,11 @@ class _NewsScreenState extends State<NewsScreen>
                                 child: Container(
                                   child: Row(
                                     children: <Widget>[
-                                      Image.network(
+                                      data.newsChannelIcon.isNotEmpty ? Image.network(
                                         data.newsChannelIcon,
                                         width: 25.0,
                                         height: 25.0,
-                                      ),
+                                      ): Container(),
                                       SizedBox(width: 3.0),
                                       Expanded(
                                         child: Text(
