@@ -11,7 +11,7 @@ import 'package:pikobar_flutter/models/LocationModel.dart';
 import 'package:http/http.dart' as http;
 
 class LocationsRepository {
-  Future<void> saveLocationToFirestore(LocationModel data) async {
+  Future<void> recordLocation(LocationModel data) async {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
 
     if (_user != null) {
@@ -70,11 +70,13 @@ class LocationsRepository {
 
       var requestBody = json.encode(parameterData);
 
-      await http
+      final response = await http
           .patch('$kUrlTracking/user/location',
               headers: await HttpHeaders.headers(token: null),
               body: requestBody)
           .timeout(Duration(seconds: 10));
+
+      print('[sendToGeocreate] status? ${response.statusCode}');
     }
   }
 }

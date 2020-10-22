@@ -195,7 +195,7 @@ class AuthRepository {
         await persistUserInfo(authUserInfo);
         await registerFCMToken();
         //await LocationService.actionSendLocation();
-        await LocationService.configureBackgroundLocation();
+        await LocationService.configureBackgroundLocation(userInfo: authUserInfo);
       } else {
         authUserInfo = await readLocalUserInfo();
       }

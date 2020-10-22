@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LocationModel.dart';
+import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/LocationsRepository.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
@@ -27,7 +28,7 @@ class LocationService {
     if (await Permission.locationAlways.status.isGranted) {
       if (await AuthRepository().hasLocalUserInfo()) {
         await configureBackgroundLocation();
-        //await actionSendLocation();
+        await actionSendLocation();
       }
     } else {
       showModalBottomSheet(isScrollControlled: true,
@@ -127,11 +128,9 @@ class LocationService {
   }
 
   // Old Method
+  // Send data to dashboard geolocation at least 5 minutes.
   static Future<void> actionSendLocation() async {
-    var permissionService =
-        Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
-
-    if (await permissionService.isGranted) {
+    if (await Permission.locationAlways.status.isGranted) {
       int oldTime =
           await LocationSharedPreference.getLastLocationRecordingTime();
 
@@ -156,7 +155,7 @@ class LocationService {
               longitude: position.longitude,
               timestamp: currentMillis);
 
-          await LocationsRepository().saveLocationToFirestore(data);
+          await LocationsRepository().recordLocation(data);
 
           // This call after all process done (Moved to LocationsRepository)
           /*await LocationSharedPreference.setLastLocationRecordingTime(
@@ -167,7 +166,7 @@ class LocationService {
   }
 
   // New Method
-  static Future<void> configureBackgroundLocation() async {
+  static Future<void> configureBackgroundLocation({UserModel userInfo}) async {
     if (await Permission.locationAlways.status.isGranted) {
       String locationTemplate = '{'
           '"latitude":<%= latitude %>, '
@@ -196,7 +195,7 @@ class LocationService {
         headers: {"content-type": "application/json"},
         httpRootProperty: 'data',
         locationTemplate: locationTemplate,
-        params: {"userId": userId},
+        params: {"userId": userId ?? userInfo.uid},
         autoSync: true,
         autoSyncThreshold: 5,
         batchSync: true,
@@ -258,8 +257,9 @@ class LocationService {
     print('$event');
   }
 
-  static void _onHttp(bg.HttpEvent event) {
+  static void _onHttp(bg.HttpEvent event) async {
     print('[http] success? ${event.success}, status? ${event.status}');
+    await actionSendLocation();
   }
 
   static Future<void> _onStatusRequested(BuildContext context,
@@ -267,7 +267,7 @@ class LocationService {
     if (statuses[Permission.locationAlways].isGranted) {
       if (await AuthRepository().hasLocalUserInfo()) {
         await configureBackgroundLocation();
-        //await actionSendLocation();
+        await actionSendLocation();
         AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
       }
     } else {
