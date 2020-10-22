@@ -94,7 +94,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
                             formattedStringNumber(state
-                                .record.detected.radius.confirmation
+                                .record.detected.desa.confirmation
                                 .toString()),
                             style: TextStyle(
                                 fontFamily: FontsFamily.lato,
@@ -117,19 +117,19 @@ class CheckDistributionCardRadius extends StatelessWidget {
                     image: '',
                     title: getLabel['check_distribution']['by_radius']
                         ['close_contact'],
-                    total: state.record.detected.radius.closecontactDikarantina,
+                    total: state.record.detected.desa.closecontactDikarantina,
                     textColor: Colors.black),
                 buildCard(context,
                     image: '',
                     title: getLabel['check_distribution']['by_radius']
                         ['suspect'],
-                    total: state.record.detected.radius.suspectDiisolasi,
+                    total: state.record.detected.desa.suspectDiisolasi,
                     textColor: Colors.black),
                 buildCard(context,
                     image: '',
                     title: getLabel['check_distribution']['by_radius']
                         ['probable'],
-                    total: state.record.detected.radius.probable,
+                    total: state.record.detected.desa.probable,
                     textColor: Colors.black),
               ],
             )
