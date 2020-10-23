@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 class LocationsRepository {
   Future<void> recordLocation(LocationModel data) async {
-    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+    User _user = FirebaseAuth.instance.currentUser;
 
     if (_user != null) {
       List<Placemark> placemarks =

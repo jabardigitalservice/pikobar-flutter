@@ -367,7 +367,7 @@ class _StatisticsState extends State<Statistics> {
     DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
 
     String count = formatter
-        .format(document.data['total'] + documentPCR.data['total'])
+        .format(document.get('total') + documentPCR.get('total'))
         .replaceAll(',', '.');
 
     return InkWell(

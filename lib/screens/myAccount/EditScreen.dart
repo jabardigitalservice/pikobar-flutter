@@ -370,7 +370,7 @@ class _EditState extends State<Edit> {
                                 height: 20,
                               ),
                               StreamBuilder<QuerySnapshot>(
-                                  stream: Firestore.instance
+                                  stream: FirebaseFirestore.instance
                                       .collection(kAreas)
                                       .orderBy('name')
                                       .snapshots(),
@@ -393,11 +393,11 @@ class _EditState extends State<Edit> {
                                             false);
                                       default:
                                         listCity =
-                                            snapshot.data.documents.toList();
+                                            snapshot.data.docs.toList();
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
                                             Dictionary.cityPlaceholder,
-                                            snapshot.data.documents.toList(),
+                                            snapshot.data.docs.toList(),
                                             _cityController,
                                             isCityFieldEmpty);
                                     }
@@ -420,15 +420,15 @@ class _EditState extends State<Edit> {
                                     .toString()
                                     .substring(3) !=
                                 _phoneNumberController.text) {
-                              var data = Firestore.instance
+                              var data = FirebaseFirestore.instance
                                   .collection(kUsers)
                                   .where("phone_number",
                                       isEqualTo: Dictionary.inaCode +
                                           _phoneNumberController.text)
-                                  .getDocuments();
+                                  .get();
 
                               data.then((docs) {
-                                if (docs.documents.isNotEmpty) {
+                                if (docs.docs.isNotEmpty) {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
@@ -574,7 +574,7 @@ class _EditState extends State<Edit> {
               // Change state to verified
               _profileBloc.add(VerifyConfirm());
             };
-            verificationFailed = (AuthException authException) {
+            verificationFailed = (FirebaseAuthException authException) {
               // Change state to verification failed
               _profileBloc.add(VerifyFailed());
             };

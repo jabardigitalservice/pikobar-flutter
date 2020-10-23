@@ -36,7 +36,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
         child: BlocBuilder<OtherSelfReportBloc, OtherSelfReportState>(
             builder: (context, state) {
           if (state is OtherSelfReportLoaded) {
-            return buildContent(state.querySnapshot.documents);
+            return buildContent(state.querySnapshot.docs);
           } else if (state is OtherSelfReportFailure) {
             return ErrorContent(error: state.error);
           } else {
@@ -216,7 +216,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelfReportList(
                               widget.location,
-                              otherUID: documents[i].data['user_id'],
+                              otherUID: documents[i].get('user_id'),
                             )));
                   },
                   child: Padding(
@@ -240,7 +240,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                                   left: 15,
                                   top: 15,
                                   child: Image.asset(
-                                    '${Environment.imageAssets}${documents[i].data['gender'] == 'M' ? 'male_icon' : 'female_icon'}.png',
+                                    '${Environment.imageAssets}${documents[i].get('gender') == 'M' ? 'male_icon' : 'female_icon'}.png',
                                     height: 20,
                                   ),
                                 )
@@ -263,7 +263,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                                   height: 10,
                                 ),
                                 Text(
-                                  documents[i].data['name'],
+                                  documents[i].get('name'),
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontFamily: FontsFamily.lato),

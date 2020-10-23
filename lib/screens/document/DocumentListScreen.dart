@@ -38,7 +38,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.document),
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection(kDocuments)
             .orderBy('published_at', descending: true)
             .snapshots(),
@@ -46,7 +46,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
           if (snapshot.hasData) {
             List<DocumentSnapshot> data = [];
 
-            snapshot.data.documents.forEach((record) {
+            snapshot.data.docs.forEach((record) {
               if (record['published']) {
                 data.add(record);
               }

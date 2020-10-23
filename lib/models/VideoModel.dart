@@ -14,10 +14,10 @@ class VideoModel {
   VideoModel({this.id, this.sequence, this.title, this.url, this.publishedAt});
 
   factory VideoModel.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data;
+    Map data = doc.data();
 
     return VideoModel(
-      id: doc.documentID,
+      id: doc.id,
       title: data['title'] ?? '',
       url: data['url'] ?? '',
       publishedAt:

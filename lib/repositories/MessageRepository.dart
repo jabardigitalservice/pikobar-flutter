@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/configs/DBProvider.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MessageRepository {
@@ -12,13 +13,13 @@ class MessageRepository {
 
     for (int i = 0; i < record.length; i++) {
       MessageModel messageModel = MessageModel(
-          id: record[i].documentID,
-          backLink: record[i]['backlink'].toString(),
-          content: record[i]['content'].toString(),
-          title: record[i]['title'].toString(),
-          actionTitle: record[i]['action_title'],
-          actionUrl: record[i]['action_url'],
-          publishedAt: record[i]['published_at'].seconds,
+          id: record[i].id,
+          backLink: getField(record[i], 'backlink'),
+          content: getField(record[i], 'content'),
+          title: getField(record[i], 'title'),
+          actionTitle: getField(record[i], 'action_title'),
+          actionUrl: getField(record[i], 'action_url'),
+          publishedAt: record[i].get('published_at').seconds,
           readAt: 0);
       try {
         bool dataCheck = await checkData(messageModel.id);
@@ -45,7 +46,7 @@ class MessageRepository {
 
   //get detail message from firestore
   Future<DocumentSnapshot> getDetail(String id) {
-    return Firestore.instance.collection('broadcasts').document(id).get();
+    return FirebaseFirestore.instance.collection('broadcasts').doc(id).get();
   }
 
   //get data list message from local db

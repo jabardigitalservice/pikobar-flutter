@@ -12,9 +12,9 @@ class ReferralHospitalModel {
       {this.id, this.address, this.city, this.web, this.name, this.phones});
 
   factory ReferralHospitalModel.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> json = document.data;
+    Map<String, dynamic> json = document.data();
     return ReferralHospitalModel(
-      id: document.documentID,
+      id: document.id,
       address: json["address"] ?? '',
       city: json["city"] ?? '',
       web: json["web"] ?? '',

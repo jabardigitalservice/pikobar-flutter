@@ -334,7 +334,7 @@ class _VerificationState extends State<Verification> {
           widget.latLng);
       _profileBloc.add(VerifyConfirm());
     };
-    verificationFailed = (AuthException authException) {
+    verificationFailed = (FirebaseAuthException authException) {
       _profileBloc.add(VerifyFailed());
     };
 

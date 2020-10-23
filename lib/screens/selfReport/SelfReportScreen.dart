@@ -141,9 +141,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               } else if (state is AuthenticationAuthenticated ||
                   state is AuthenticationLoading) {
                 return StreamBuilder<DocumentSnapshot>(
-                    stream: Firestore.instance
+                    stream: FirebaseFirestore.instance
                         .collection(kUsers)
-                        .document(profileLoaded != null
+                        .doc(profileLoaded != null
                             ? profileLoaded.record.uid
                             : null)
                         .snapshots(),

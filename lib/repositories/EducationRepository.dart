@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 
 class EducationRepository {
-  final Firestore firestore = Firestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<List<EducationModel>> getEducationList(
       {@required String educationCollection}) {
@@ -11,7 +11,7 @@ class EducationRepository {
         .collection(educationCollection)
         .orderBy('published_at', descending: true)
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents
+        .map((QuerySnapshot snapshot) => snapshot.docs
             .map((doc) => EducationModel.fromFirestore(doc))
             .toList());
   }
@@ -21,7 +21,7 @@ class EducationRepository {
       @required String educationId}) async {
     DocumentSnapshot doc = await firestore
         .collection(educationCollection)
-        .document(educationId)
+        .doc(educationId)
         .get();
     return EducationModel.fromFirestore(doc);
   }
