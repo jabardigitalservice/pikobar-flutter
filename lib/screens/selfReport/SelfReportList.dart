@@ -21,8 +21,9 @@ import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 class SelfReportList extends StatefulWidget {
   final LatLng location;
   final String otherUID;
+  final String analytics;
 
-  SelfReportList(this.location, {this.otherUID});
+  SelfReportList(this.location, this.analytics, {this.otherUID});
 
   @override
   _SelfReportListState createState() => _SelfReportListState();
@@ -38,7 +39,7 @@ class _SelfReportListState extends State<SelfReportList> {
   void initState() {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
-    AnalyticsHelper.setLogEvent(Analytics.tappedDailyReport);
+    AnalyticsHelper.setLogEvent(widget.analytics);
   }
 
   @override
@@ -248,14 +249,17 @@ class _SelfReportListState extends State<SelfReportList> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      SelfReportDetailScreen('${i + 1}',widget.otherUID)),
+                                  builder: (context) => SelfReportDetailScreen(
+                                      '${i + 1}',
+                                      widget.otherUID,
+                                      widget.analytics)),
                             );
                           } else {
                             /// Move to form screen
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => SelfReportFormScreen(
                                     otherUID: widget.otherUID,
+                                    analytics: widget.analytics,
                                     dailyId: '${i + 1}',
                                     location: widget.location)));
                           }
@@ -271,12 +275,14 @@ class _SelfReportListState extends State<SelfReportList> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        SelfReportDetailScreen('${i + 1}',widget.otherUID)),
+                                        SelfReportDetailScreen('${i + 1}',
+                                            widget.otherUID, widget.analytics)),
                               );
                             } else {
                               /// Move to form screen
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => SelfReportFormScreen(
+                                      analytics: widget.analytics,
                                       otherUID: widget.otherUID,
                                       dailyId: '${i + 1}',
                                       location: widget.location)));
@@ -317,13 +323,16 @@ class _SelfReportListState extends State<SelfReportList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  SelfReportDetailScreen('${i + 1}',widget.otherUID)),
+                              builder: (context) => SelfReportDetailScreen(
+                                  '${i + 1}',
+                                  widget.otherUID,
+                                  widget.analytics)),
                         );
                       } else {
                         /// Move to form screen
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelfReportFormScreen(
+                                analytics: widget.analytics,
                                 dailyId: '${i + 1}',
                                 otherUID: widget.otherUID,
                                 location: widget.location)));

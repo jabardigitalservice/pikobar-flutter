@@ -139,6 +139,7 @@ class Dictionary {
   static String termsConditions = ' Terms & Conditions';
   static String agree = 'Setuju';
   static String back = 'Kembali';
+  static String change = 'Ubah';
   static String signInWithGoogle = 'Masuk dengan Google';
   static String signInWithApple = 'Masuk dengan Apple';
 
@@ -275,6 +276,7 @@ class Dictionary {
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String titleInfoTextAnnouncement = 'Info';
+  static String titlePreviewDataAnnouncement = 'Cek Kembali Data Anda';
   static String moreDetail = ' Selengkapnya';
   static String moreDetailRapidTest = ' Daftar Test Masif';
   static String lastUpdate = 'Update Terakhir';
@@ -379,7 +381,7 @@ class Dictionary {
       'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
-      static String quarantineQuestion='Kapan hari pertama anda karantina?';
+  static String quarantineQuestion = 'Kapan hari pertama anda karantina?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
@@ -428,4 +430,7 @@ class Dictionary {
   static String addUserForm = 'Form Pengisian Data';
   static String otherReportAnnouncement =
       '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
+  static String previewAnnouncement =
+      '<p>Apakah data di bawah ini sudah benar?</p>';
+  static String previewData = 'Preview Data';
 }
