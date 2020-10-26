@@ -6,6 +6,7 @@ import 'package:pikobar_flutter/blocs/selfReport/otherSelfReport/OtherSelfReport
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -59,7 +60,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
             onTap: () {
               // move to self report list screen
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SelfReportList(widget.location)));
+                  builder: (context) => SelfReportList(
+                      widget.location, Analytics.tappedDailyReport)));
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -139,9 +141,9 @@ class _SelfReportOptionState extends State<SelfReportOption> {
   Widget buildCreateOtherReport() {
     return InkWell(
       onTap: () {
-         // move to form screen
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddUserFormScreen()));
+        // move to form screen
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => AddUserFormScreen()));
       },
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -216,6 +218,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelfReportList(
                               widget.location,
+                              Analytics.tappedDailyOtherReport,
                               otherUID: documents[i].data['user_id'],
                             )));
                   },

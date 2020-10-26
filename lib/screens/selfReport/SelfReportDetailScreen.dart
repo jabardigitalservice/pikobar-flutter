@@ -16,9 +16,9 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
-  final String reportId, otherUID;
+  final String reportId, otherUID, analytics;
 
-  SelfReportDetailScreen(this.reportId, this.otherUID);
+  SelfReportDetailScreen(this.reportId, this.otherUID, this.analytics);
 
   @override
   _SelfReportDetailScreenState createState() => _SelfReportDetailScreenState();
@@ -320,6 +320,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                                     dailyId: state.documentSnapshot['id'],
                                     otherUID: widget.otherUID,
                                     location: latLng,
+                                    analytics: widget.analytics,
                                     dailyReportModel: dailyReportModel,
                                   )));
 
