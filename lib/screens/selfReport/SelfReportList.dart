@@ -113,8 +113,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                   lineHeight: 8.0,
                                   backgroundColor: ColorBase.menuBorderColor,
                                   percent:
-                                      (state.querySnapshot.docs.length /
-                                          14),
+                                      (state.querySnapshot.docs.length / 14),
                                   progressColor: ColorBase.limeGreen,
                                 );
                               } else if (state is SelfReportListFailure) {
@@ -193,13 +192,12 @@ class _SelfReportListState extends State<SelfReportList> {
       if (getField(snapshot.querySnapshot.docs[0], 'quarantine_date') == null) {
         /// Save ['created_at'] as [firstDay] for main parameter
         firstDay = DateTime.fromMillisecondsSinceEpoch(
-            snapshot.querySnapshot.docs[0].get('created_at').seconds *
-                1000);
+            snapshot.querySnapshot.docs[0].get('created_at').seconds * 1000);
       } else {
         /// Save ['quarantine_date'] as [firstDay] for main parameter
-        firstDay = DateTime.fromMillisecondsSinceEpoch(snapshot
-                .querySnapshot.docs[0].get('quarantine_date').seconds *
-            1000);
+        firstDay = DateTime.fromMillisecondsSinceEpoch(
+            snapshot.querySnapshot.docs[0].get('quarantine_date').seconds *
+                1000);
       }
 
       currentDay = DateTime.now();
@@ -208,20 +206,15 @@ class _SelfReportListState extends State<SelfReportList> {
       child: ListView.builder(
           itemCount: 14,
           itemBuilder: (context, i) {
-            bool differenceMonth;
-            if (currentDay != null) {
-              if (currentDay.month == firstDay.add(Duration(days: i)).month) {
-                differenceMonth = false;
-              } else {
-                differenceMonth = true;
-              }
-            }
             if (i != 0) {
               if (currentDay != null) {
-                if (differenceMonth) {
+                if (currentDay.day == firstDay.add(Duration(days: i)).day) {
                   textColor = Colors.black;
                 } else {
-                  if (currentDay.day >= firstDay.add(Duration(days: i)).day) {
+                  if (firstDay
+                      .add(Duration(days: i))
+                      .difference(currentDay)
+                      .isNegative) {
                     textColor = Colors.black;
                   } else {
                     textColor = ColorBase.darkGrey;
@@ -241,7 +234,9 @@ class _SelfReportListState extends State<SelfReportList> {
                     if (i != 0) {
                       /// Checking data if [currentDay] not null
                       if (currentDay != null) {
-                        if (differenceMonth) {
+                        if (currentDay.day ==
+                            firstDay.add(Duration(days: i)).day) {
+                          /// [currentDay] same as the day user can fill the form
                           /// Checking data is already filled or not
                           if (listDocumentId.contains('${i + 1}')) {
                             /// Data is already filled
@@ -258,14 +253,16 @@ class _SelfReportListState extends State<SelfReportList> {
                             /// Move to form screen
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => SelfReportFormScreen(
-                                    otherUID: widget.otherUID,
                                     analytics: widget.analytics,
+                                    otherUID: widget.otherUID,
                                     dailyId: '${i + 1}',
                                     location: widget.location)));
                           }
                         } else {
-                          if (currentDay.day >=
-                              firstDay.add(Duration(days: i)).day) {
+                          if (firstDay
+                              .add(Duration(days: i))
+                              .difference(currentDay)
+                              .isNegative) {
                             /// [currentDay] same as the day user can fill the form
                             /// Checking data is already filled or not
                             if (listDocumentId.contains('${i + 1}')) {

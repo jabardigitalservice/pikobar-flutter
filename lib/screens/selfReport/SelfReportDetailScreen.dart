@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
@@ -152,9 +153,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           height: 8.0,
           color: ColorBase.grey,
         ),
-
-        state.documentSnapshot['quarantine_date'] != null &&
-                state.documentSnapshot['quarantine_date'].toString().isNotEmpty
+        getField(state.documentSnapshot, 'quarantine_date') != null &&
+                getField(state.documentSnapshot, 'quarantine_date').toString().isNotEmpty
             ? Column(
                 children: <Widget>[
                   /// Divider
