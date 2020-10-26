@@ -104,12 +104,15 @@ class _SurveysScreenState extends State<SurveysScreen> {
                   );
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
+                  AuthenticationAuthenticated _profileLoaded =
+                  state as AuthenticationAuthenticated;
+                  _profileLoaded.record.uid;
                   return StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection(kSurveys).snapshots(),
+                    stream: FirebaseFirestore.instance.collection(kSurveys).snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
-                        if (snapshot.data.documents.isNotEmpty) {
+                        if (snapshot.data.docs.isNotEmpty) {
                           return _buildContent(snapshot);
                         } else {
                           if (isConnected) {
@@ -204,12 +207,12 @@ class _SurveysScreenState extends State<SurveysScreen> {
           ),
           Container(
             child: ListView.builder(
-                itemCount: snapshot.data.documents.length,
+                itemCount: snapshot.data.docs.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final DocumentSnapshot document =
-                      snapshot.data.documents[index];
+                      snapshot.data.docs[index];
 
                   return Column(
                     children: <Widget>[

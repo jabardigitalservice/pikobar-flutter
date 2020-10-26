@@ -43,7 +43,7 @@ class _ContactHistoryDetailScreenState
         child: BlocBuilder<ContactHistoryDetailBloc, ContactHistoryDetailState>(
             builder: (context, state) {
           return state is ContactHistoryDetailLoaded
-              ? _buildContent(state.documentSnapshot.data)
+              ? _buildContent(state.documentSnapshot.data())
               : state is ContactHistoryDetailFailure
                   ? ErrorContent(error: state.error)
                   : Center(child: CircularProgressIndicator());

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 
 class InfoGraphicsRepository {
-  final firestore = Firestore.instance;
+  final firestore = FirebaseFirestore.instance;
 
   Stream<List<DocumentSnapshot>> getInfoGraphics(
       {@required String infoGraphicsCollection, int limit}) {
@@ -16,6 +16,6 @@ class InfoGraphicsRepository {
     }
 
     return infoGraphicsQuery.snapshots().map((QuerySnapshot snapshot) =>
-        snapshot.documents.map((doc) => doc).toList());
+        snapshot.docs.map((doc) => doc).toList());
   }
 }

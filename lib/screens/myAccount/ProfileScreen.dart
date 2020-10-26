@@ -16,11 +16,14 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/HealthCheck.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HexColor.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
@@ -119,10 +122,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // When user already login get data user from firestore
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
+                    HealthCheck().isUserHealty(_profileLoaded.record.uid);
                     return StreamBuilder<DocumentSnapshot>(
-                        stream: Firestore.instance
-                            .collection('users')
-                            .document(_profileLoaded.record.uid)
+                        stream: FirebaseFirestore.instance
+                            .collection(kUsers)
+                            .doc(_profileLoaded.record.uid)
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -566,10 +570,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             groupMenu = json.decode(
                 snapshot.data.getString(FirebaseConfig.groupMenuProfile));
             // Set default value to public if data [role] in collection users is null
-            if (data['role'] == null || data['role'] == '') {
+            if (getField(data, 'role') == null || getField(data, 'role') == '') {
               role = 'public';
             } else {
-              role = data['role'];
+              role = getField(data, 'role');
             }
             // Set default value to healthy if data [health_status] in collection users is null
             if (data['health_status'] == null || data['health_status'] == '') {

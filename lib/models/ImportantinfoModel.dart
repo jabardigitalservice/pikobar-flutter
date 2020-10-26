@@ -26,10 +26,10 @@ class ImportantInfoModel {
   });
 
   factory ImportantInfoModel.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> json = document.data;
+    Map<String, dynamic> json = document.data();
 
     return ImportantInfoModel(
-      id: document.documentID,
+      id: document.id,
       title: json["title"] ?? '',
       content: json["content"] ?? '',
       image: json["image"] ?? '',

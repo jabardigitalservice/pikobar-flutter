@@ -5,14 +5,14 @@ import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 
 class EmergencyNumberRepository {
-  final Firestore firestore = Firestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<List<ReferralHospitalModel>> getReferralHospitalModelList() {
     return firestore
         .collection(kEmergencyNumbers)
         .orderBy('city')
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents
+        .map((QuerySnapshot snapshot) => snapshot.docs
             .map((doc) => ReferralHospitalModel.fromFirestore(doc))
             .toList());
   }
@@ -22,14 +22,14 @@ class EmergencyNumberRepository {
         .collection(kCallCenters)
         .orderBy('nama_kotkab')
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents
+        .map((QuerySnapshot snapshot) => snapshot.docs
             .map((doc) => CallCenterModel.fromFirestore(doc))
             .toList());
   }
 
   Stream<List<GugusTugasWebModel>> getGugusTugasWebList() {
     return firestore.collection(kTaskForces).orderBy('name').snapshots().map(
-        (QuerySnapshot snapshot) => snapshot.documents
+        (QuerySnapshot snapshot) => snapshot.docs
             .map((doc) => GugusTugasWebModel.fromFirestore(doc))
             .toList());
   }

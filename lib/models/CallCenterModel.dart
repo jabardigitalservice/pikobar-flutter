@@ -12,9 +12,9 @@ class CallCenterModel {
       {this.id, this.nameCity, this.codeCity, this.hotline, this.callCenter});
 
   factory CallCenterModel.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> json = document.data;
+    Map<String, dynamic> json = document.data();
     return CallCenterModel(
-      id: document.documentID,
+      id: document.id,
       nameCity: json["nama_kotkab"] ?? '',
       codeCity: json["kode_kotkab"] ?? '',
       hotline: json["hotline"],

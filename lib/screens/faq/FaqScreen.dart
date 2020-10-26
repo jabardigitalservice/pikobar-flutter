@@ -58,7 +58,7 @@ class _FaqScreenState extends State<FaqScreen> {
           hintText: Dictionary.findFaq,
           onChanged: updateSearchQuery),
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection(kFaq)
             .orderBy('sequence_number')
             .snapshots(),
@@ -68,13 +68,13 @@ class _FaqScreenState extends State<FaqScreen> {
 
             // if search active
             if (searchQuery.isNotEmpty) {
-              dataFaq = snapshot.data.documents
+              dataFaq = snapshot.data.docs
                   .where((test) => test['title']
                       .toLowerCase()
                       .contains(searchQuery.toLowerCase()))
                   .toList();
             } else {
-              dataFaq = snapshot.data.documents;
+              dataFaq = snapshot.data.docs;
             }
 
             final int messageCount = dataFaq.length;

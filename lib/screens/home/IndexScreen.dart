@@ -50,6 +50,7 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   void initState() {
+    initializeBackgroundLocation();
     initializeFirebaseMessaging();
     initializeDateFormatting();
     initializePlatformState();
@@ -57,7 +58,6 @@ class IndexScreenState extends State<IndexScreen> {
     initializeBottomNavigationBar();
     initializeToken();
     getCountMessage();
-    updateCurrentLocation();
 
     super.initState();
   }
@@ -317,8 +317,8 @@ class IndexScreenState extends State<IndexScreen> {
     });
   }
 
-  updateCurrentLocation() async {
-    await LocationService.sendCurrentLocation(context);
+  initializeBackgroundLocation() async {
+    await LocationService.initializeBackgroundLocation(context);
   }
 
   @override

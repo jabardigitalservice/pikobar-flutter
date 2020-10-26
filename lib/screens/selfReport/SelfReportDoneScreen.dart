@@ -58,11 +58,11 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
 
   Widget _buildContent(SelfReportListLoaded snapshot) {
     // Checking document is not null
-    if (snapshot.querySnapshot.documents.length != 0) {
-      for (var i = 0; i < snapshot.querySnapshot.documents.length; i++) {
+    if (snapshot.querySnapshot.docs.length != 0) {
+      for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
         /// Get indications to [listIndications]
         listIndications.add(snapshot
-            .querySnapshot.documents[i].data['indications']
+            .querySnapshot.docs[i].get('indications')
             .replaceAll('[', '')
             .replaceAll(']', ''));
       }
