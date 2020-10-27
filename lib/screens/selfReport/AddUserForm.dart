@@ -497,14 +497,14 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
         }
       }
     });
+  }
 
-    @override
-    void dispose() {
-      super.dispose();
-      _addOtherSelfReportBloc.close();
-      _nikController.dispose();
-      _nameController.dispose();
-      _dateController.dispose();
-    }
+  @override
+  void dispose() {
+    super.dispose();
+    _addOtherSelfReportBloc.close();
+    _nikController.dispose();
+    _nameController.dispose();
+    _dateController.dispose();
   }
 }
