@@ -205,16 +205,16 @@ class LocationService {
         debug: false,
         logLevel: bg.Config.LOG_LEVEL_VERBOSE,
         desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 15.0,
+        distanceFilter: 30.0,       // 30 Meter
         stopOnTerminate: false,
         startOnBoot: true,
         enableHeadless: true,
         locationAuthorizationRequest: 'Always',
           backgroundPermissionRationale: PermissionRationale(
-              title: "Izinkan PIKOBAR mengakses lokasi Anda",
-              message: "Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.",
-              positiveAction: "Ubah ke Allow All The Time",
-              negativeAction: "Cancel"
+              title: Dictionary.permissionGeolocationTitle,
+              message: Dictionary.permissionGeolocationDesc,
+              positiveAction: Dictionary.positiveActionGeolocation,
+              negativeAction: Dictionary.cancel
           )
       )).then((bg.State state) async {
         print("[ready] ${state.toMap()}");
