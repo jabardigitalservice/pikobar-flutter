@@ -12,20 +12,19 @@ class NotificationHelper {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
     var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'pikobar_channel_id', 'pikobar_channel', 'pikobar_channel_description',
-        importance: Importance.Max,
-        priority: Priority.High,
+        importance: Importance.max,
+        priority: Priority.high,
         ticker: 'ticker',
-        visibility: NotificationVisibility.Public);
+        visibility: NotificationVisibility.public);
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = NotificationDetails(android:
+        androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin
         .show(0, title, body, platformChannelSpecifics, payload: payload);
   }

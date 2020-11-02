@@ -143,7 +143,7 @@ class LocationService {
       int minutes = DateTime.now()
           .difference(DateTime.fromMillisecondsSinceEpoch(oldTime))
           .inMinutes;
-      Position position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
       if (position != null && position.latitude != null) {
         if (minutes >= 5) {

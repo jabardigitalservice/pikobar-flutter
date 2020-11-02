@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import 'package:background_fetch/background_fetch.dart';
 
 import 'configs/Routes.dart';
@@ -19,7 +22,7 @@ import 'configs/Routes.dart';
 void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) async {
   print('📬 --> $headlessEvent');
 
-  switch(headlessEvent.name) {
+  switch (headlessEvent.name) {
     case bg.Event.TERMINATE:
       try {
         //bg.Location location = await bg.BackgroundGeolocation.getCurrentPosition(samples: 1);
@@ -98,25 +101,18 @@ class SimpleBlocObserver extends BlocObserver {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set `enableInDevMode` to true to see reports while in debug mode
-  // This is only to be used for confirming that reports are being
-  // submitted as expected. It is not intended to be used for everyday
-  // development.
-  // Crashlytics.instance.enableInDevMode = true;
-
-  // Pass all uncaught errors from the framework to Crashlytics.
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
   Bloc.observer = SimpleBlocObserver();
-
-  await Firebase.initializeApp();
 
   runZonedGuarded(() {
     runApp(App());
-  }, Crashlytics.instance.recordError);
+  }, (error, stackTrace) {
+    print('runZonedGuarded: Caught error in my root zone.');
+    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+  });
 
   /// Register BackgroundGeolocation headless-task.
-  bg.BackgroundGeolocation.registerHeadlessTask(backgroundGeolocationHeadlessTask);
+  bg.BackgroundGeolocation.registerHeadlessTask(
+      backgroundGeolocationHeadlessTask);
 
   /// Register to receive BackgroundFetch events after app is terminated.
   /// Requires {stopOnTerminate: false, enableHeadless: true}
@@ -129,6 +125,31 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  Future<void> _initializeFlutterFireFuture;
+
+  Future<void> _initializeFlutterFire() async {
+    /// Wait for Firebase to initialize
+    await Firebase.initializeApp();
+
+    /// Else only enable it in non-debug builds.
+    /// You could additionally extend this to allow users to opt-in.
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
+
+    /// Pass all uncaught errors to Crashlytics.
+    Function originalOnError = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails errorDetails) async {
+      await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+      /// Forward to original handler.
+      originalOnError(errorDetails);
+    };
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFlutterFireFuture = _initializeFlutterFire();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +174,36 @@ class _AppState extends State<App> {
           child: child,
         );
       },
-      home: IndexScreen(),
+      home: FutureBuilder(
+        future: _initializeFlutterFireFuture,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
+                );
+              }
+              return IndexScreen();
+              break;
+            default:
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('${Environment.logoAssets}pikobar_big.png', scale: 4.0,),
+                      SizedBox(height: Dimens.verticalPadding,),
+                      CircularProgressIndicator()
+                    ],
+                  ),
+                ),
+              );
+          }
+        },
+      ),
       onGenerateRoute: generateRoutes,
       navigatorKey: NavigationConstrants.navKey,
     );
