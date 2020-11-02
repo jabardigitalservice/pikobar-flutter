@@ -21,7 +21,9 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;
   final String otherUID;
-  SelfReportDoneScreen(this.location, this.otherUID);
+  final String analytics;
+
+  SelfReportDoneScreen(this.location, this.otherUID,this.analytics);
   @override
   _SelfReportDoneScreenState createState() => _SelfReportDoneScreenState();
 }
@@ -140,7 +142,7 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
                 color: Colors.white),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SelfReportList(widget.location)));
+                  builder: (context) => SelfReportList(widget.location,widget.analytics)));
             }),
         SizedBox(
           height: 20,

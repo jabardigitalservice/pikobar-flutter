@@ -124,10 +124,14 @@ class Analytics {
 
   //event self report
   static String tappedDailyReport = "tapped_lapor_kesehatan_harian";
+  static String tappedDailyOtherReport = "tapped_lapor_kesehatan_orang_lain_harian";
   static String tappedDailyReportDetail = "tapped_lapor_kesehatan_harian_detail";
   static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
+  static String tappedAddOtherUserReportForm = "tapped_tambah_orang_lain_form";
   static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
   static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
+  static String addOtherUserSaved = "tambah_orang_lain_tersimpan";
+  static String addOtherUserFailed = "tambah_orang_lain_gagal";
   static String tappedContactHistory = "tapped_riwayat_kontak";
   static String tappedContactHistoryDetail = "tapped_riwayat_kontak_detail";
   static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";

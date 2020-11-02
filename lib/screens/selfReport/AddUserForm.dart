@@ -1,15 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:intl/intl.dart';
-import 'package:pikobar_flutter/blocs/selfReport/addOtherSelfReport/AddOtherSelfReportBloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
-import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
-import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/GroupedRadioButton.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -18,10 +12,9 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/models/AddOtherSelfReportModel.dart';
+import 'package:pikobar_flutter/screens/selfReport/ConfirmUserForm.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
-import 'package:uuid/uuid.dart';
 
 class AddUserFormScreen extends StatefulWidget {
   @override
@@ -40,7 +33,6 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   bool isGenderEmpty = false;
   bool isRelationEmpty = false;
 
-  AddOtherSelfReportBloc _addOtherSelfReportBloc;
 
   String _format = 'dd-MMMM-yyyy';
   String minDate = '1900-01-01';
@@ -49,137 +41,102 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   void initState() {
     super.initState();
 
-    // AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
-    // AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportForm);
+    AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
+    AnalyticsHelper.setLogEvent(Analytics.tappedAddOtherUserReportForm);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.addUserForm),
-      body: BlocProvider<AddOtherSelfReportBloc>(
-        create: (BuildContext context) =>
-            _addOtherSelfReportBloc = AddOtherSelfReportBloc(),
-        child: BlocListener(
-          cubit: _addOtherSelfReportBloc,
-          listener: (context, state) {
-            if (state is AddOtherSelfReportSaved) {
-              AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);
-              Navigator.of(context).pop();
-              // Bottom sheet success message
-              _showBottomSheetForm(
-                  '${Environment.imageAssets}daily_success.png',
-                  Dictionary.savedSuccessfully,
-                  Dictionary.dailySuccess, () async {
-                Navigator.of(context).pop(true);
-                Navigator.of(context).pop(true);
-              });
-            } else if (state is AddOtherSelfReportFailed) {
-              AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);
-              Navigator.of(context).pop();
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: Dictionary.ok,
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
-            } else {
-              blockCircleLoading(context: context, dismissible: false);
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  SizedBox(height: Dimens.padding),
-                  buildAnnouncement(),
-                  SizedBox(height: Dimens.padding),
-                  buildTextField(
-                      controller: _nikController,
-                      hintText: Dictionary.placeholderYourNIK,
-                      isRequired: false,
-                      isEdit: true,
-                      title: Dictionary.nik,
-                      textInputType: TextInputType.number),
-                  SizedBox(height: Dimens.padding),
-                  buildTextField(
-                      controller: _nameController,
-                      hintText: Dictionary.placeholderYourName,
-                      isEdit: true,
-                      title: Dictionary.name,
-                      validation: Validations.nameValidation,
-                      textInputType: TextInputType.text),
-                  SizedBox(height: Dimens.padding),
-                  buildLabel(text: Dictionary.birthday, required: true),
-                  SizedBox(height: Dimens.padding),
-                  buildDateField(
-                      title: Dictionary.birthday,
-                      placeholder: _dateController.text == ''
-                          ? Dictionary.birthdayPlaceholder
-                          : DateFormat.yMMMMd('id')
-                              .format(DateTime.parse(_dateController.text)),
-                      isEmpty: isBirthdayEmpty),
-                  SizedBox(height: Dimens.padding),
-                  buildLabel(text: Dictionary.gender),
-                  _buildRadioButton(
-                      title: Dictionary.gender,
-                      itemList: <String>[
-                        "Laki - Laki",
-                        "Perempuan",
-                      ],
-                      onChanged: (label, index) {
-                        setState(() {
-                          _genderController.text = index == 0 ? 'M' : 'F';
-                          isGenderEmpty = _genderController.text.isEmpty;
-                        });
-                      },
-                      validator: (value) {
-                        return isGenderEmpty
-                            ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
-                            : null;
-                      }),
-                  buildLabel(text: Dictionary.relation),
-                  _buildRadioButton(
-                      title: Dictionary.relationOtherSelfReport,
-                      itemList: <String>[
-                        "Orangtua",
-                        "Suami/Istri",
-                        "Anak",
-                        "Kerabat Lainnya",
-                      ],
-                      onChanged: (label, index) {
-                        setState(() {
-                          _relationController.text = label;
-                          isRelationEmpty = _relationController.text.isEmpty;
-                        });
-                      },
-                      validator: (value) {
-                        return isRelationEmpty
-                            ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
-                            : null;
-                      }),
-                  SizedBox(height: 32.0),
-                  RoundedButton(
-                      title: Dictionary.save,
-                      elevation: 0.0,
-                      color: ColorBase.green,
-                      textStyle: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white),
-                      onPressed: () {
-                        _saveSelfReport();
-                      }),
-                  SizedBox(height: Dimens.padding),
-                ],
-              ),
-            ),
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              SizedBox(height: Dimens.padding),
+              buildAnnouncement(),
+              SizedBox(height: Dimens.padding),
+              buildTextField(
+                  controller: _nikController,
+                  hintText: Dictionary.placeholderYourNIK,
+                  isRequired: false,
+                  isEdit: true,
+                  title: Dictionary.nik,
+                  textInputType: TextInputType.number),
+              SizedBox(height: Dimens.padding),
+              buildTextField(
+                  controller: _nameController,
+                  hintText: Dictionary.placeholderYourName,
+                  isEdit: true,
+                  title: Dictionary.name,
+                  validation: Validations.nameValidation,
+                  textInputType: TextInputType.text),
+              SizedBox(height: Dimens.padding),
+              buildLabel(text: Dictionary.birthday, required: true),
+              SizedBox(height: Dimens.padding),
+              buildDateField(
+                  title: Dictionary.birthday,
+                  placeholder: _dateController.text == ''
+                      ? Dictionary.birthdayPlaceholder
+                      : DateFormat.yMMMMd('id')
+                          .format(DateTime.parse(_dateController.text)),
+                  isEmpty: isBirthdayEmpty),
+              SizedBox(height: Dimens.padding),
+              buildLabel(text: Dictionary.gender),
+              _buildRadioButton(
+                  title: Dictionary.gender,
+                  itemList: <String>[
+                    "Laki - Laki",
+                    "Perempuan",
+                  ],
+                  onChanged: (label, index) {
+                    setState(() {
+                      _genderController.text = index == 0 ? 'M' : 'F';
+                      isGenderEmpty = _genderController.text.isEmpty;
+                    });
+                  },
+                  validator: (value) {
+                    return isGenderEmpty
+                        ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
+                        : null;
+                  }),
+              buildLabel(text: Dictionary.relation),
+              _buildRadioButton(
+                  title: Dictionary.relationOtherSelfReport,
+                  itemList: <String>[
+                    "Orangtua",
+                    "Suami/Istri",
+                    "Anak",
+                    "Kerabat Lainnya",
+                  ],
+                  onChanged: (label, index) {
+                    setState(() {
+                      _relationController.text = label;
+                      isRelationEmpty = _relationController.text.isEmpty;
+                    });
+                  },
+                  validator: (value) {
+                    return isRelationEmpty
+                        ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
+                        : null;
+                  }),
+              SizedBox(height: 32.0),
+              RoundedButton(
+                  title: Dictionary.save,
+                  elevation: 0.0,
+                  color: ColorBase.green,
+                  textStyle: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white),
+                  onPressed: () {
+                    _saveSelfReport();
+                  }),
+              SizedBox(height: Dimens.padding),
+            ],
           ),
         ),
       ),
@@ -482,18 +439,14 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       if (_formKey.currentState.validate()) {
         FocusScope.of(context).unfocus();
         if (!isBirthdayEmpty && !isRelationEmpty && !isGenderEmpty) {
-          String otherUID = Uuid().v4();
-          final data = AddOtherSelfReportModel(
-              userId: otherUID,
-              createdAt: DateTime.now(),
-              birthday: _dateController.text.isNotEmpty
-                  ? DateTime.parse(_dateController.text)
-                  : null,
-              gender: _genderController.text,
-              name: _nameController.text,
-              nik: _nikController.text,
-              relation: _relationController.text);
-          _addOtherSelfReportBloc.add(AddOtherSelfReportSave(data));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ConfirmUserForm(
+                    nik: _nikController.text,
+                    name: _nameController.text,
+                    birthday: _dateController.text,
+                    gender: _genderController.text,
+                    relation: _relationController.text,
+                  )));
         }
       }
     });
@@ -502,7 +455,6 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   @override
   void dispose() {
     super.dispose();
-    _addOtherSelfReportBloc.close();
     _nikController.dispose();
     _nameController.dispose();
     _dateController.dispose();
