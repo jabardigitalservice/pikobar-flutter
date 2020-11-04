@@ -39,105 +39,94 @@ class _StatisticsState extends State<Statistics> {
       color: Colors.white,
       child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, remoteState) {
-            return remoteState is RemoteConfigLoaded ?
-            BlocBuilder<StatisticsBloc, StatisticsState>(
+        return remoteState is RemoteConfigLoaded
+            ? BlocBuilder<StatisticsBloc, StatisticsState>(
                 builder: (context, statisticState) {
-                  return statisticState is StatisticsLoaded ?
-                  Column(
-                    children: <Widget>[
-                      _buildContent(statisticState.snapshot, remoteState),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _buildRapidTest(remoteState),
-                     _buildMore(statisticState)
-                    ],
-                  ) : _buildLoading();
-                }
-            ) : _buildLoading();
-          }
-      ),
+                return statisticState is StatisticsLoaded
+                    ? Column(
+                        children: <Widget>[
+                          _buildContent(statisticState.snapshot, remoteState,
+                              statisticState),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _buildRapidTest(remoteState),
+                        ],
+                      )
+                    : _buildLoading();
+              })
+            : _buildLoading();
+      }),
     );
   }
 
   _buildMore(StatisticsLoaded statisticState) {
-    return Container(
-                      margin: EdgeInsets.symmetric(vertical: Dimens.padding),
-                      child: InkWell(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                Dictionary.moreDetail,
-                                style: TextStyle(
-                                    fontFamily: FontsFamily.roboto,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorBase.green),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.0),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 12,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => StatisticsDetailScreen(
-                                  remoteConfigLoaded: remoteConfigLoaded,
-                                  statisticsLoaded: statisticState,
-                                  rapidTestLoaded: rapidTestLoaded,
-                                  pcrTestLoaded: pcrTestLoaded)));
-                        },
-                      ),
-                    );
+    return InkWell(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              Dictionary.moreDetail,
+              style: TextStyle(
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: ColorBase.green),
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => StatisticsDetailScreen(
+                remoteConfigLoaded: remoteConfigLoaded,
+                statisticsLoaded: statisticState,
+                rapidTestLoaded: rapidTestLoaded,
+                pcrTestLoaded: pcrTestLoaded)));
+      },
+    );
   }
 
   _buildRapidTest(RemoteConfigLoaded remoteState) {
     return remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
         ? MultiBlocListener(
-      listeners: [
-        BlocListener<RapidTestBloc, RapidTestState>(listener: (context, rapidState) {
-          if (rapidState is RapidTestLoaded) {
-            setState(() {
-              this.rapidTestLoaded = rapidState;
-            });
-          }
-        }),
-        BlocListener<PcrTestBloc, PcrTestState>(listener: (context, pcrState) {
-          if (pcrState is PcrTestLoaded) {
-            setState(() {
-              this.pcrTestLoaded = pcrState;
-            });
-          }
-        })
-      ],
-      child: BlocBuilder<RapidTestBloc, RapidTestState>(
-        builder: (context, rapidState) {
-          urlStatistic = remoteState.remoteConfig
-              .getString(FirebaseConfig.pikobarUrl);
-          return rapidState is RapidTestLoaded
-              ? BlocBuilder<PcrTestBloc, PcrTestState>(
-            builder: (context, pcrState) {
-              return pcrState is PcrTestLoaded
-                  ? buildContentRapidTest(
-                  remoteState.remoteConfig,
-                  rapidState.snapshot,
-                  pcrState)
-                  : buildLoadingRapidTest();
-            },
+            listeners: [
+              BlocListener<RapidTestBloc, RapidTestState>(
+                  listener: (context, rapidState) {
+                if (rapidState is RapidTestLoaded) {
+                  setState(() {
+                    this.rapidTestLoaded = rapidState;
+                  });
+                }
+              }),
+              BlocListener<PcrTestBloc, PcrTestState>(
+                  listener: (context, pcrState) {
+                if (pcrState is PcrTestLoaded) {
+                  setState(() {
+                    this.pcrTestLoaded = pcrState;
+                  });
+                }
+              })
+            ],
+            child: BlocBuilder<RapidTestBloc, RapidTestState>(
+              builder: (context, rapidState) {
+                urlStatistic = remoteState.remoteConfig
+                    .getString(FirebaseConfig.pikobarUrl);
+                return rapidState is RapidTestLoaded
+                    ? BlocBuilder<PcrTestBloc, PcrTestState>(
+                        builder: (context, pcrState) {
+                          return pcrState is PcrTestLoaded
+                              ? buildContentRapidTest(remoteState.remoteConfig,
+                                  rapidState.snapshot, pcrState)
+                              : buildLoadingRapidTest();
+                        },
+                      )
+                    : buildLoadingRapidTest();
+              },
+            ),
           )
-              : buildLoadingRapidTest();
-        },
-      ),
-    )
         : Container();
   }
 
@@ -217,8 +206,8 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(
-      DocumentSnapshot data, RemoteConfigLoaded remoteConfigLoaded) {
+  Container _buildContent(DocumentSnapshot data,
+      RemoteConfigLoaded remoteConfigLoaded, StatisticsLoaded statisticState) {
     this.remoteConfigLoaded = remoteConfigLoaded;
     RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
     if (!data.exists)
@@ -238,13 +227,19 @@ class _StatisticsState extends State<Statistics> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            Dictionary.statistics,
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontWeight: FontWeight.w600,
-                fontFamily: FontsFamily.lato,
-                fontSize: Dimens.textTitleSize),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                Dictionary.statistics,
+                style: TextStyle(
+                    color: Color(0xff333333),
+                    fontWeight: FontWeight.w600,
+                    fontFamily: FontsFamily.lato,
+                    fontSize: Dimens.textTitleSize),
+              ),
+              _buildMore(statisticState)
+            ],
           ),
           SizedBox(height: 10),
           Text(
