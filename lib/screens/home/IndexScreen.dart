@@ -147,6 +147,18 @@ class IndexScreenState extends State<IndexScreen> {
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
+        icon: SizedBox(
+          width: 16.0,
+          height: 16.0,
+        ),
+        title: Column(
+          children: <Widget>[
+            SizedBox(height: 4),
+            Text('Menu'),
+          ],
+        ),
+      ),
+      BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
           title: Column(
             children: <Widget>[
@@ -245,9 +257,11 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    if (index != 2) {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
   }
 
   @override
@@ -257,11 +271,43 @@ class IndexScreenState extends State<IndexScreen> {
         child: _buildContent(_currentIndex),
         onWillPop: onWillPop,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          type: BottomNavigationBarType.fixed,
-          items: items),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+            onTap: onTabTapped,
+            currentIndex: _currentIndex,
+            type: BottomNavigationBarType.fixed,
+            items: items),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        width: 60,
+        height: 60,
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [
+                  Color(0xFF16A75C),
+                  Color(0xFF9BDBB3)
+                ],
+                transform: GradientRotation(45)
+            ),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                offset: Offset(0.0, 2.0), //(x,y)
+                blurRadius: 5.0,
+                spreadRadius: 0.0
+              ),
+            ],
+            border: Border.all(color: Colors.white, width: 4.0)
+        ),
+        child: Image.asset('${Environment.iconAssets}menu.png'),
+      ),
     );
   }
 
@@ -284,12 +330,11 @@ class IndexScreenState extends State<IndexScreen> {
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
         return Messages(indexScreenState: this);
-
-      case 2:
+        case 3:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen(isNewPage: false);
 
-      case 3:
+      case 4:
         return ProfileScreen();
       default:
         return HomeScreen();
