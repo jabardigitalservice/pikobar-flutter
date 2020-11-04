@@ -122,6 +122,8 @@ class Dictionary {
   static String who = "WHO";
   static String sayThanks = "Terimakasih sudah membaca";
   static String followOurSosmed = "Follow juga sosmed kami";
+  static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
+
 
   // Button Text
   static String yes = 'Ya';

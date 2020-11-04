@@ -136,7 +136,7 @@ class BannerListSliderState extends State<BannerListSlider> {
               ),
         Padding(
           padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
-          child: Row(
+          child: Row(mainAxisAlignment: MainAxisAlignment.center,
             children: state.records.map((BannerModel data) {
               int index = state.records.indexOf(data);
               return _current == index
