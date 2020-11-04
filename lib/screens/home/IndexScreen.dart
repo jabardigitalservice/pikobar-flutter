@@ -10,14 +10,18 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/BottomSheetMenu.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
@@ -31,6 +35,7 @@ import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
+import 'package:pikobar_flutter/utilities/SliverGrideDelegate.dart';
 
 class IndexScreen extends StatefulWidget {
   @override
@@ -47,6 +52,8 @@ class IndexScreenState extends State<IndexScreen> {
   List<BottomNavigationBarItem> items;
   int countMessage = 0;
   DateTime currentBackPressTime;
+
+  bool showAllMenus = true;
 
   @override
   void initState() {
@@ -70,13 +77,13 @@ class IndexScreenState extends State<IndexScreen> {
           NotificationHelper().showNotification(
               message['notification']['title'], message['notification']['body'],
               payload:
-                  jsonEncode(Platform.isAndroid ? message['data'] : message),
+              jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         } else {
           NotificationHelper().showNotification(
               message['aps']['alert']['title'], message['aps']['alert']['body'],
               payload:
-                  jsonEncode(Platform.isAndroid ? message['data'] : message),
+              jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         }
       },
@@ -209,7 +216,8 @@ class IndexScreenState extends State<IndexScreen> {
 
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NewsDetailScreen(
+            builder: (context) =>
+                NewsDetailScreen(
                   id: data['id'].toString().trim(),
                   news: newsType,
                 )));
@@ -229,7 +237,8 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NewsDetailScreen(
+            builder: (context) =>
+                NewsDetailScreen(
                   id: data['id'].toString().trim(),
                   news: Dictionary.importantInfo,
                 )));
@@ -241,7 +250,8 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'content_education') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => EducationDetailScreen(
+            builder: (context) =>
+                EducationDetailScreen(
                   id: data['id'].toString().trim(),
                   educationCollection: kEducationContent,
                 )));
@@ -283,30 +293,35 @@ class IndexScreenState extends State<IndexScreen> {
             items: items),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        width: 60,
-        height: 60,
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [
-                  Color(0xFF16A75C),
-                  Color(0xFF9BDBB3)
-                ],
-                transform: GradientRotation(45)
-            ),
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(0.0, 2.0), //(x,y)
-                blurRadius: 5.0,
-                spreadRadius: 0.0
+      floatingActionButton: GestureDetector(
+        child: Container(
+          width: 60,
+          height: 60,
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF16A75C),
+                    Color(0xFF9BDBB3)
+                  ],
+                  transform: GradientRotation(45)
               ),
-            ],
-            border: Border.all(color: Colors.white, width: 4.0)
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(0.0, 2.0), //(x,y)
+                  blurRadius: 5.0,
+                  spreadRadius: 0.0
+                ),
+              ],
+              border: Border.all(color: Colors.white, width: 4.0)
+          ),
+          child: Image.asset('${Environment.iconAssets}menu.png'),
         ),
-        child: Image.asset('${Environment.iconAssets}menu.png'),
+        onTap: () {
+          BottomSheetMenu.showBottomSheetMenu(context: context);
+        },
       ),
     );
   }
@@ -330,10 +345,9 @@ class IndexScreenState extends State<IndexScreen> {
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
         return Messages(indexScreenState: this);
-        case 3:
+      case 3:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen(isNewPage: false);
-
       case 4:
         return ProfileScreen();
       default:
