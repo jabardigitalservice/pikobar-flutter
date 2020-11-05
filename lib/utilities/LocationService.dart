@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
@@ -18,20 +17,21 @@ import 'package:pikobar_flutter/models/LocationModel.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/LocationsRepository.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 
 import 'AnalyticsHelper.dart';
 
 class LocationService {
   static Future<void> initializeBackgroundLocation(BuildContext context) async {
-
     if (await Permission.locationAlways.status.isGranted) {
       if (await AuthRepository().hasLocalUserInfo()) {
         await configureBackgroundLocation();
         await actionSendLocation();
       }
     } else {
-      showModalBottomSheet(isScrollControlled: true,
+      showModalBottomSheet(
+          isScrollControlled: true,
           context: context,
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
@@ -102,16 +102,16 @@ class LocationService {
                                 elevation: 0.0,
                                 onPressed: () async {
                                   Navigator.of(context).pop();
-                                  if (await Permission.locationAlways
-                                      .status.isPermanentlyDenied) {
+                                  if (await Permission.locationAlways.status
+                                      .isPermanentlyDenied) {
                                     Platform.isAndroid
                                         ? await AppSettings.openAppSettings()
                                         : await AppSettings
-                                        .openLocationSettings();
+                                            .openLocationSettings();
                                   } else {
-                                    [
-                                      Permission.locationAlways
-                                    ].request().then((status) {
+                                    [Permission.locationAlways]
+                                        .request()
+                                        .then((status) {
                                       _onStatusRequested(context, status);
                                     });
                                   }
@@ -143,7 +143,8 @@ class LocationService {
       int minutes = DateTime.now()
           .difference(DateTime.fromMillisecondsSinceEpoch(oldTime))
           .inMinutes;
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
 
       if (position != null && position.latitude != null) {
         if (minutes >= 5) {
@@ -210,12 +211,15 @@ class LocationService {
         startOnBoot: true,
         enableHeadless: true,
         locationAuthorizationRequest: 'Always',
-          backgroundPermissionRationale: PermissionRationale(
-              title: Dictionary.permissionGeolocationTitle,
-              message: Dictionary.permissionGeolocationDesc,
-              positiveAction: Dictionary.positiveActionGeolocation,
-              negativeAction: Dictionary.cancel
-          )
+        backgroundPermissionRationale: bg.PermissionRationale(
+            title: Dictionary.permissionGeolocationTitle,
+            message: Dictionary.permissionGeolocationDesc,
+            positiveAction: Dictionary.positiveActionGeolocation,
+            negativeAction: Dictionary.cancel),
+        notification: bg.Notification(
+          title: 'Pikobar',
+          text: 'Layanan Diaktifkan'
+        )
       )).then((bg.State state) async {
         print("[ready] ${state.toMap()}");
 
@@ -225,7 +229,6 @@ class LocationService {
       }).catchError((error) {
         print('[ready] ERROR: $error');
       });
-
     }
   }
 
@@ -262,8 +265,8 @@ class LocationService {
     await actionSendLocation();
   }
 
-  static Future<void> _onStatusRequested(BuildContext context,
-      Map<Permission, PermissionStatus> statuses) async {
+  static Future<void> _onStatusRequested(
+      BuildContext context, Map<Permission, PermissionStatus> statuses) async {
     if (statuses[Permission.locationAlways].isGranted) {
       if (await AuthRepository().hasLocalUserInfo()) {
         await configureBackgroundLocation();
