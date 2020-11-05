@@ -166,9 +166,9 @@ void showTextBottomSheet(
       });
 }
 
-void showWidgetBottomSheet(
-    {@required BuildContext context, Widget child, bool isScrollControlled = false}) {
-  showModalBottomSheet(
+Future<void> showWidgetBottomSheet(
+    {@required BuildContext context, Widget child, bool isScrollControlled = false}) async {
+  return await showModalBottomSheet(
       context: context,
       isScrollControlled: isScrollControlled,
       backgroundColor: Colors.white,
