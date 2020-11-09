@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +136,7 @@ class IndexScreenState extends State<IndexScreen> {
 
     items = [
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.home, size: 16),
+          icon: Icon(EvaIcons.homeOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -143,11 +144,23 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+        icon: Icon(EvaIcons.messageCircleOutline, size: 24),
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
+        icon: SizedBox(
+          width: 16.0,
+          height: 16.0,
+        ),
+        title: Column(
+          children: <Widget>[
+            SizedBox(height: 4),
+            Text('Menu'),
+          ],
+        ),
+      ),
+      BottomNavigationBarItem(
+         icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -155,7 +168,7 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.userAlt, size: 16),
+          icon: Icon(EvaIcons.personOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -245,9 +258,11 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    if (index != 2) {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
   }
 
   @override
@@ -257,11 +272,43 @@ class IndexScreenState extends State<IndexScreen> {
         child: _buildContent(_currentIndex),
         onWillPop: onWillPop,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          type: BottomNavigationBarType.fixed,
-          items: items),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+            onTap: onTabTapped,
+            currentIndex: _currentIndex,
+            type: BottomNavigationBarType.fixed,
+            items: items),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        width: 60,
+        height: 60,
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [
+                  Color(0xFF16A75C),
+                  Color(0xFF9BDBB3)
+                ],
+                transform: GradientRotation(45)
+            ),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                offset: Offset(0.0, 2.0), //(x,y)
+                blurRadius: 5.0,
+                spreadRadius: 0.0
+              ),
+            ],
+            border: Border.all(color: Colors.white, width: 4.0)
+        ),
+        child: Image.asset('${Environment.iconAssets}menu.png'),
+      ),
     );
   }
 
@@ -284,12 +331,11 @@ class IndexScreenState extends State<IndexScreen> {
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
         return Messages(indexScreenState: this);
-
-      case 2:
+        case 3:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen(isNewPage: false);
 
-      case 3:
+      case 4:
         return ProfileScreen();
       default:
         return HomeScreen();
@@ -303,7 +349,7 @@ class IndexScreenState extends State<IndexScreen> {
         // ignore: unnecessary_statements
         if (countMessage <= 0) {
           items[1] = BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+              icon: Icon(EvaIcons.messageCircleOutline, size: 24),
               title: Column(
                 children: <Widget>[
                   SizedBox(height: 4),
