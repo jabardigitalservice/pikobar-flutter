@@ -184,7 +184,9 @@ class _HomeScreenState extends State<HomeScreen> {
           listItemTitleTab: listItemTitleTab,
           indicatorColor: ColorBase.green,
           labelColor: Colors.white,
+          isScrollable: false,
           unselectedLabelColor: Colors.grey,
+          sizeLabel: 13.0,
           onTap: (index) {
             // AnalyticsHelper.setLogEvent(analyticsData[index]);
           },
