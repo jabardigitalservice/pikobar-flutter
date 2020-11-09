@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -31,19 +30,15 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  ListView(
+    return ListView(
       children: [
-
-       CustomAppBar.buildSearchField(_searchController, 'Cari Informasi di sini', (value) {
-
-       }),
-
-
+        CustomAppBar.buildSearchField(
+            _searchController, 'Cari Informasi di sini', (value) {}),
         Container(
           child: InfoGraphics(),
         ),
         Container(
-          child:  NewsScreen(news: Dictionary.allNews, maxLength: 5),
+          child: NewsScreen(news: Dictionary.allNews, maxLength: 5),
         ),
         Container(
           child: VideoList(),
@@ -51,7 +46,6 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
         Container(
           child: Documents(),
         ),
-
         Container(
           child: SocialMedia(),
         )
