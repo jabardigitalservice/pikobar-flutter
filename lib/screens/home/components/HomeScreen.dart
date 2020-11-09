@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -61,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
   DocumentsBloc _documentsBloc;
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
+  List<String> listItemTitleTab = [
+    'Jabar Hari Ini',
+    'Informasi COVID-19'
+  ];
 
   @override
   void initState() {
@@ -135,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
-                _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
+                _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 5)))
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -175,7 +180,21 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height * 0.15,
           color: Colors.white,
         ),
-        CovidInformationScreen(),
+        CustomBubbleTab(
+          listItemTitleTab: listItemTitleTab,
+          indicatorColor: ColorBase.green,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.grey,
+          onTap: (index) {
+            // AnalyticsHelper.setLogEvent(analyticsData[index]);
+          },
+          tabBarView: <Widget>[
+            CovidInformationScreen(),
+            CovidInformationScreen(),
+          ],
+          isExpand: true,
+        ),
+
 //         ListView(children: [
 //           /// Banners Section
 //           Container(

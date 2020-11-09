@@ -175,7 +175,7 @@ class _DocumentsState extends State<Documents> {
             padding: const EdgeInsets.all(16.0),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: 3,
+            itemCount: 5,
             itemBuilder: (context, index) {
               return Container(
                   child: Column(
@@ -232,10 +232,12 @@ class _DocumentsState extends State<Documents> {
   Widget _buildContent(List<DocumentSnapshot> documents) {
     dataDocuments.clear();
     documents.forEach((record) {
-      if (record['published'] && dataDocuments.length < 3) {
+      if (record['published'] && dataDocuments.length < 5) {
         dataDocuments.add(record);
       }
     });
+
+    print('cekk isinya dong '+dataDocuments.length.toString());
 
     return Container(
       height: 250,
