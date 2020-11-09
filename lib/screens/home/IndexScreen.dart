@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +136,7 @@ class IndexScreenState extends State<IndexScreen> {
 
     items = [
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.home, size: 16),
+          icon: Icon(EvaIcons.homeOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -143,7 +144,7 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+        icon: Icon(EvaIcons.messageCircleOutline, size: 24),
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
@@ -159,7 +160,7 @@ class IndexScreenState extends State<IndexScreen> {
         ),
       ),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
+         icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -167,7 +168,7 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.userAlt, size: 16),
+          icon: Icon(EvaIcons.personOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -348,7 +349,7 @@ class IndexScreenState extends State<IndexScreen> {
         // ignore: unnecessary_statements
         if (countMessage <= 0) {
           items[1] = BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+              icon: Icon(EvaIcons.messageCircleOutline, size: 24),
               title: Column(
                 children: <Widget>[
                   SizedBox(height: 4),
