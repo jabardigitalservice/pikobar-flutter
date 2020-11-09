@@ -28,6 +28,7 @@ import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.d
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
+import 'package:pikobar_flutter/screens/home/components/JabarToday.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
 import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
@@ -191,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // AnalyticsHelper.setLogEvent(analyticsData[index]);
           },
           tabBarView: <Widget>[
-            CovidInformationScreen(),
+            JabarTodayScreen(),
             CovidInformationScreen(),
           ],
           isExpand: true,

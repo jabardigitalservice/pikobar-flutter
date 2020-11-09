@@ -48,9 +48,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
 
   @override
   void initState() {
-    if (widget.isScrollable == null) {
-      widget.isScrollable = true;
-    }
     if(widget.sizeLabel == null){
       widget.sizeLabel = 10.0;
     }
@@ -90,7 +87,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
               controller: widget.tabController != null
                   ? widget.tabController
                   : _basetabController,
-              isScrollable: widget.isScrollable,
+              isScrollable: widget.isScrollable != null?widget.isScrollable:true,
               onTap: (index) {
                 // setState(() {
                 //   dataSelected = widget.listItemTitleTab[index];

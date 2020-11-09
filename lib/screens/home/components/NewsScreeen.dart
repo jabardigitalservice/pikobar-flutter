@@ -102,7 +102,7 @@ class _NewsScreenState extends State<NewsScreen>
 
     Map<String, dynamic> getLabel =
     RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
-
+    print('isinya bos '+list.length.toString());
     return Container(
       child: Column(
         children: [
@@ -168,6 +168,7 @@ class _NewsScreenState extends State<NewsScreen>
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.maxLength,
                     itemBuilder: (context, index) {
+                      print('cekkk isinya ada ngga '+list[index].image.toString());
                       return Container(
                         padding: EdgeInsets.only(left: 10),
                         width: 150,
