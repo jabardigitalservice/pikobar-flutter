@@ -9,6 +9,7 @@ const String kVideos = 'videos';
 const String kInfographics = 'infographics';
 const String kInfographicsCenter = 'infographics_center';
 const String kInfographicsWho = 'infographics_who';
+const String kAllInfographics = 'all_infographics';
 const String kDocuments = 'documents';
 const String kAreas = 'areas';
 const String kUsers = 'users';

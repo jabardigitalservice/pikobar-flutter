@@ -13,7 +13,7 @@ class CheckDistributions {
       var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
     if (await permissionService.status.isGranted) {
 
-      Position position = await Geolocator.getLastKnownPosition();
+      Position position = await GeolocatorPlatform.instance.getLastKnownPosition();
       if (position != null && position.latitude != null) {
         List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
         // print(position.toString());

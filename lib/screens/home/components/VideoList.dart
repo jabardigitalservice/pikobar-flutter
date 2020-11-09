@@ -106,7 +106,7 @@ class _VideoListState extends State<VideoList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 5.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,27 +138,27 @@ class _VideoListState extends State<VideoList> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 15),
-          child: Text(
-            getLabel['video']['description'],
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: Dimens.textSubtitleSize),
-            textAlign: TextAlign.left,
-          ),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          // child: Text(
+          //   getLabel['video']['description'],
+          //   style: TextStyle(
+          //       color: Colors.black,
+          //       fontFamily: FontsFamily.lato,
+          //       fontSize: Dimens.textSubtitleSize),
+          //   textAlign: TextAlign.left,
+          // ),
         ),
         Container(
-          height: 280.0,
+          height: 260.0,
           child: data.isNotEmpty
               ? ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
                   scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
+                  itemCount: 5,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.only(right: 15.0),
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.35,
                       // decoration: BoxDecoration(shape: BoxShape.circle),
                       child: Container(
                         child: Column(
@@ -168,7 +168,7 @@ class _VideoListState extends State<VideoList> {
                             GestureDetector(
                               child: Container(
                                 width: MediaQuery.of(context).size.width,
-                                height: 180.0,
+                                height: 150.0,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
@@ -217,7 +217,7 @@ class _VideoListState extends State<VideoList> {
                                     ),
                                     Image.asset(
                                       '${Environment.iconAssets}play_button.png',
-                                      scale: 1.5,
+                                      scale: 2.3,
                                     )
                                   ],
                                 ),
@@ -230,20 +230,7 @@ class _VideoListState extends State<VideoList> {
                                   'title': data[index].title
                                 });
                               },
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Text(
-                                unixTimeStampToDateTime(
-                                    data[index].publishedAt),
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
+                            ),Container(
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.only(top: 10),
                               child: Row(
@@ -263,17 +250,30 @@ class _VideoListState extends State<VideoList> {
                                       ),
                                     ),
                                   ),
-                                  ShareButton(
-                                    paddingLeft: 10,
-                                    height: 40.0,
-                                    onPressed: () {
-                                      _shareVideo(
-                                          data[index].title, data[index].url);
-                                    },
-                                  ),
+                                  // ShareButton(
+                                  //   paddingLeft: 10,
+                                  //   height: 40.0,
+                                  //   onPressed: () {
+                                  //     _shareVideo(
+                                  //         data[index].title, data[index].url);
+                                  //   },
+                                  // ),
                                 ],
                               ),
-                            )
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 1),
+                              child: Text(
+                                unixTimeStampToDateTime(
+                                    data[index].publishedAt),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+
                           ],
                         ),
                       ),

@@ -215,7 +215,7 @@ class Dictionary {
   static String titleNationalNews = 'Nasional';
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
-  static String more = 'Selengkapnya';
+  static String more = 'Lihat Semua';
   static String heroImageTag = 'preview';
   static String otherNews = 'Berita Lainnya';
   static String allNews = 'Semua Berita';

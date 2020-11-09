@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,12 +49,15 @@ class _DocumentsState extends State<Documents> {
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
-    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,14 +90,14 @@ class _DocumentsState extends State<Documents> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Text(
-            getLabel['documents']['description'],
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: 12.0),
-            textAlign: TextAlign.left,
-          ),
+          // child: Text(
+          //   getLabel['documents']['description'],
+          //   style: TextStyle(
+          //       color: Colors.black,
+          //       fontFamily: FontsFamily.lato,
+          //       fontSize: 12.0),
+          //   textAlign: TextAlign.left,
+          // ),
         ),
         BlocBuilder<DocumentsBloc, DocumentsState>(
           builder: (context, state) {
@@ -233,129 +237,247 @@ class _DocumentsState extends State<Documents> {
       }
     });
 
-    return SingleChildScrollView(
-      child: ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(8.0)),
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 10),
-                Container(
-                  width: 85,
-                  child: Text(
-                    Dictionary.date,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.0,
-                        fontFamily: FontsFamily.lato,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Text(
-                  Dictionary.titleDocument,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Container()
-              ],
-            ),
-          ),
-          dataDocuments.isNotEmpty
-              ? ListView.builder(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: dataDocuments.length,
-                  itemBuilder: (context, index) {
-                    final DocumentSnapshot document = dataDocuments[index];
-
-                    return Container(
-                        child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(width: 10),
-                            Container(
-                              width: 85,
-                              child: Text(
-                                unixTimeStampToDateDocs(
-                                    document['published_at'].seconds),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 13.0),
-                                textAlign: TextAlign.left,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+    return Container(
+      height: 250,
+      width: MediaQuery.of(context).size.width,
+      child: dataDocuments.isNotEmpty
+          ? ListView.builder(
+              padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: dataDocuments.length,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot document = dataDocuments[index];
+                return Container(
+                  padding: EdgeInsets.only(left: 10),
+                  width: 150,
+                  child: Column(
+                    children: <Widget>[
+                      InkWell(
+                        child: Container(
+                          height: 140,
+                          width: 150,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: CachedNetworkImage(
+                              imageUrl: document['images'] ?? '',
+                              alignment: Alignment.topCenter,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Center(
+                                  heightFactor: 4.2,
+                                  child: CupertinoActivityIndicator()),
+                              errorWidget: (context, url, error) => Container(
+                                height:
+                                    MediaQuery.of(context).size.height / 3.3,
+                                color: Colors.grey[200],
+                                child: Image.asset(
+                                    '${Environment.iconAssets}pikobar.png',
+                                    fit: BoxFit.fitWidth),
                               ),
                             ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Platform.isAndroid
-                                      ? _downloadAttachment(document['title'],
-                                          document['document_url'])
-                                      : _viewPdf(document['title'],
-                                          document['document_url']);
-                                },
-                                child: Text(
-                                  document['title'],
-                                  style: TextStyle(
-                                      fontFamily: FontsFamily.lato,
-                                      color: Colors.lightBlueAccent[700],
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 13.0),
-                                  textAlign: TextAlign.left,
+                          ),
+                        ),
+                        onTap: () {
+                          Platform.isAndroid
+                              ? _downloadAttachment(
+                                  document['title'], document['document_url'])
+                              : _viewPdf(
+                                  document['title'], document['document_url']);
+                        },
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Platform.isAndroid
+                                    ? _downloadAttachment(document['title'],
+                                        document['document_url'])
+                                    : _viewPdf(document['title'],
+                                        document['document_url']);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      document['title'],
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontFamily: FontsFamily.lato,
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.left,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            unixTimeStampToDateTime(
+                                                document['published_at']
+                                                    .seconds),
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontFamily: FontsFamily.lato,
+                                                fontSize: 10.0,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.left,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            ShareButton(
-                              onPressed: () {
-                                DocumentServices().shareDocument(
-                                    document['title'],
-                                    document['document_url']);
-                              },
-                            )
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          color: Colors.grey[200],
-                          width: MediaQuery.of(context).size.width,
-                          height: 1.5,
-                        )
-                      ],
-                    ));
-                  })
-              : EmptyData(
-                  message: Dictionary.emptyData,
-                  desc: '',
-                  isFlare: false,
-                  image: "${Environment.imageAssets}not_found.png",
-                )
-        ],
-      ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20)
+                    ],
+                  ),
+                );
+              })
+          : EmptyData(
+              message: Dictionary.emptyData,
+              desc: '',
+              isFlare: false,
+              image: "${Environment.imageAssets}not_found.png",
+            ),
     );
+
+    // return SingleChildScrollView(
+    //   child: ListView(
+    //     shrinkWrap: true,
+    //     physics: NeverScrollableScrollPhysics(),
+    //     children: <Widget>[
+    //       Container(
+    //         decoration: BoxDecoration(
+    //             color: Colors.grey[200],
+    //             border: Border.all(color: Colors.grey[200]),
+    //             borderRadius: BorderRadius.circular(8.0)),
+    //         padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+    //         margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+    //         child: Row(
+    //           children: <Widget>[
+    //             SizedBox(width: 10),
+    //             Container(
+    //               width: 85,
+    //               child: Text(
+    //                 Dictionary.date,
+    //                 style: TextStyle(
+    //                     color: Colors.black,
+    //                     fontSize: 14.0,
+    //                     fontFamily: FontsFamily.lato,
+    //                     fontWeight: FontWeight.w600),
+    //                 textAlign: TextAlign.left,
+    //                 maxLines: 2,
+    //                 overflow: TextOverflow.ellipsis,
+    //               ),
+    //             ),
+    //             Text(
+    //               Dictionary.titleDocument,
+    //               style: TextStyle(
+    //                   color: Colors.black,
+    //                   fontFamily: FontsFamily.lato,
+    //                   fontSize: 14.0,
+    //                   fontWeight: FontWeight.w600),
+    //               textAlign: TextAlign.left,
+    //               maxLines: 2,
+    //               overflow: TextOverflow.ellipsis,
+    //             ),
+    //             Container()
+    //           ],
+    //         ),
+    //       ),
+    //       dataDocuments.isNotEmpty
+    //           ? ListView.builder(
+    //               padding: const EdgeInsets.only(
+    //                   left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
+    //               shrinkWrap: true,
+    //               physics: NeverScrollableScrollPhysics(),
+    //               itemCount: dataDocuments.length,
+    //               itemBuilder: (context, index) {
+    //                 final DocumentSnapshot document = dataDocuments[index];
+    //
+    //                 return Container(
+    //                     child: Column(
+    //                   children: <Widget>[
+    //                     Row(
+    //                       mainAxisAlignment: MainAxisAlignment.start,
+    //                       crossAxisAlignment: CrossAxisAlignment.center,
+    //                       children: <Widget>[
+    //                         SizedBox(width: 10),
+    //                         Container(
+    //                           width: 85,
+    //                           child: Text(
+    //                             unixTimeStampToDateDocs(
+    //                                 document['published_at'].seconds),
+    //                             style: TextStyle(
+    //                                 color: Colors.black,
+    //                                 fontFamily: FontsFamily.lato,
+    //                                 fontSize: 13.0),
+    //                             textAlign: TextAlign.left,
+    //                             maxLines: 2,
+    //                             overflow: TextOverflow.ellipsis,
+    //                           ),
+    //                         ),
+    //                         Expanded(
+    //                           child: InkWell(
+    //                             onTap: () {
+    //                               Platform.isAndroid
+    //                                   ? _downloadAttachment(document['title'],
+    //                                       document['document_url'])
+    //                                   : _viewPdf(document['title'],
+    //                                       document['document_url']);
+    //                             },
+    //                             child: Text(
+    //                               document['title'],
+    //                               style: TextStyle(
+    //                                   fontFamily: FontsFamily.lato,
+    //                                   color: Colors.lightBlueAccent[700],
+    //                                   decoration: TextDecoration.underline,
+    //                                   fontSize: 13.0),
+    //                               textAlign: TextAlign.left,
+    //                             ),
+    //                           ),
+    //                         ),
+    //                         ShareButton(
+    //                           onPressed: () {
+    //                             DocumentServices().shareDocument(
+    //                                 document['title'],
+    //                                 document['document_url']);
+    //                           },
+    //                         )
+    //                       ],
+    //                     ),
+    //                     Container(
+    //                       margin: EdgeInsets.only(top: 10, bottom: 10),
+    //                       color: Colors.grey[200],
+    //                       width: MediaQuery.of(context).size.width,
+    //                       height: 1.5,
+    //                     )
+    //                   ],
+    //                 ));
+    //               })
+    //           : EmptyData(
+    //               message: Dictionary.emptyData,
+    //               desc: '',
+    //               isFlare: false,
+    //               image: "${Environment.imageAssets}not_found.png",
+    //             )
+    //     ],
+    //   ),
+    // );
   }
 
   void _viewPdf(String title, String url) async {

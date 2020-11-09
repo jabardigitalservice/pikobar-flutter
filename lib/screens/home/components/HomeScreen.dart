@@ -23,6 +23,7 @@ import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
@@ -130,7 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
         BlocProvider<InfoGraphicsListBloc>(
             create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-              ..add(InfoGraphicsListLoad(infoGraphicsCollection: kInfographics, limit: 3))),
+              ..add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
@@ -173,92 +175,94 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height * 0.15,
           color: Colors.white,
         ),
-        ListView(children: [
-          /// Banners Section
-          Container(
-              margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-              child: BannerListSlider()),
-
-          /// Statistics Announcement
-          AnnouncementScreen(),
-
-          /// Statistics Section
-          Container(
-              color: ColorBase.grey,
-              margin: EdgeInsets.only(top: 10.0),
-              padding: EdgeInsets.only(bottom: Dimens.dividerHeight),
-              child: Statistics()),
-
-          /// Menus & Spread Sections
-          Column(
-            children: <Widget>[
-              /// Menus Section
-              MenuList(),
-
-              // Group Home Banner Section
-              GroupHomeBanner(),
-
-              /// Spread Section
-              SpreadSection(),
-
-              /// Important Info
-//              Container(
-//                color: ColorBase.grey,
-//                child: ImportantInfoScreen(maxLength: 3),
-//              ),
-            ],
-          ),
-
-          /// News & Videos Sections
-          SizedBox(
-            height: Dimens.dividerHeight,
-            child: Container(
-              color: ColorBase.grey,
-            ),
-          ),
-          TabNewsScreen(),
-
-          SizedBox(
-            height: Dimens.dividerHeight,
-            child: Container(
-              color: ColorBase.grey,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 16.0),
-            child: VideoList(),
-          ),
-          SizedBox(
-            height: Dimens.dividerHeight,
-            child: Container(
-              color: ColorBase.grey,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 16.0),
-            child: InfoGraphics(),
-          ),
-          SizedBox(
-            height: Dimens.dividerHeight,
-            child: Container(
-              color: ColorBase.grey,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 16.0),
-            child: Documents(),
-          ),
-          SizedBox(
-            height: Dimens.dividerHeight,
-            child: Container(
-              color: ColorBase.grey,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 25.0),
-            child: SocialMedia(),
-          ),
-        ]),
+        CovidInformationScreen(),
+//         ListView(children: [
+//           /// Banners Section
+//           Container(
+//               margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+//               child: BannerListSlider()),
+//
+//           /// Statistics Announcement
+//           AnnouncementScreen(),
+//
+//           /// Statistics Section
+//           Container(
+//               color: ColorBase.grey,
+//               margin: EdgeInsets.only(top: 10.0),
+//               padding: EdgeInsets.only(bottom: Dimens.dividerHeight),
+//               child: Statistics()),
+//
+//           /// Menus & Spread Sections
+//           Column(
+//             children: <Widget>[
+//               /// Menus Section
+//               MenuList(),
+//
+//               // Group Home Banner Section
+//               GroupHomeBanner(),
+//
+//               /// Spread Section
+//               SpreadSection(),
+//
+//               /// Important Info
+// //              Container(
+// //                color: ColorBase.grey,
+// //                child: ImportantInfoScreen(maxLength: 3),
+// //              ),
+//             ],
+//           ),
+//
+//           /// News & Videos Sections
+//           SizedBox(
+//             height: Dimens.dividerHeight,
+//             child: Container(
+//               color: ColorBase.grey,
+//             ),
+//           ),
+//           TabNewsScreen(),
+//
+//           SizedBox(
+//             height: Dimens.dividerHeight,
+//             child: Container(
+//               color: ColorBase.grey,
+//             ),
+//           ),
+//           Container(
+//             padding: EdgeInsets.only(top: 16.0),
+//             child: VideoList(),
+//           ),
+//           SizedBox(
+//             height: Dimens.dividerHeight,
+//             child: Container(
+//               color: ColorBase.grey,
+//             ),
+//           ),
+//           Container(
+//             padding: EdgeInsets.only(top: 16.0),
+//             child: InfoGraphics(),
+//           ),
+//           SizedBox(
+//             height: Dimens.dividerHeight,
+//             child: Container(
+//               color: ColorBase.grey,
+//             ),
+//           ),
+//           Container(
+//             padding: EdgeInsets.only(top: 16.0),
+//             child: Documents(),
+//           ),
+//           SizedBox(
+//             height: Dimens.dividerHeight,
+//             child: Container(
+//               color: ColorBase.grey,
+//             ),
+//           ),
+//           Container(
+//             padding: EdgeInsets.only(top: 25.0),
+//             child: SocialMedia(),
+//           ),
+//         ]
+//         ),
         AlertUpdate()
       ],
     );
