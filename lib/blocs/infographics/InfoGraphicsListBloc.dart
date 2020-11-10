@@ -38,7 +38,6 @@ class InfoGraphicsListBloc
             });
             dataListAllinfographics.sort(
                 (b, a) => a.publishedDate.compareTo(b.publishedDate));
-            // add(InfoGraphicsListUpdate(dataListAllinfographics));
           })
         : _repository
             .getInfoGraphics(
