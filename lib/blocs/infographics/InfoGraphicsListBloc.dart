@@ -34,10 +34,8 @@ class InfoGraphicsListBloc
         ? _repository.getAllInfographicList().listen((event) {
             List<InfographicModel> dataListAllinfographics = [];
             event.forEach((iterable) {
-              // print('cekkk '+iterable.length.toString());
               dataListAllinfographics.addAll(iterable.toList());
             });
-            print('cekk ada isinya ngga? '+dataListAllinfographics.length.toString());
             dataListAllinfographics.sort(
                 (b, a) => a.publishedDate.compareTo(b.publishedDate));
             // add(InfoGraphicsListUpdate(dataListAllinfographics));
