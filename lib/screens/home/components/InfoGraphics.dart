@@ -260,17 +260,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          child: Skeleton(
-                            height: 20.0,
-                            width: 20.0,
-                            padding: 10.0,
-                          ),
-                        )
                       ],
                     ),
                   ],

@@ -162,70 +162,63 @@ class _DocumentsState extends State<Documents> {
   }
 
   Widget _buildLoading() {
-    return Column(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Skeleton(
-            height: 25.0,
-            width: MediaQuery.of(context).size.width,
-          ),
-        ),
-        ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container(
-                  child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Skeleton(
-                        height: 20.0,
-                        width: 40,
-                        padding: 10.0,
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Skeleton(
-                                height: 20.0,
-                                width: MediaQuery.of(context).size.width / 1.6,
-                                padding: 10.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
+    return Container(
+      height: 260,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          padding: const EdgeInsets.only(
+              left: 11.0, right: 16.0, top: 16.0, bottom: 16.0),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Container(
+                width: 150,
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 140,
+                      width: 150,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
                         child: Skeleton(
-                          height: 30.0,
-                          width: 30.0,
+                          width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
                         ),
                       ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20, bottom: 20),
-                    child: Skeleton(
-                      height: 1.5,
-                      width: MediaQuery.of(context).size.width,
-                      padding: 10.0,
                     ),
-                  )
-                ],
-              ));
-            })
-      ],
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Skeleton(
+                                  height: 20.0,
+                                  width:
+                                  MediaQuery.of(context).size.width / 1.8,
+                                  padding: 10.0,
+                                ),
+                                SizedBox(height: 8),
+                                Skeleton(
+                                  height: 20.0,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  padding: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          }),
     );
   }
 

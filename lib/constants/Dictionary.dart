@@ -439,4 +439,7 @@ class Dictionary {
   static String previewAnnouncement =
       '<p>Apakah data di bawah ini sudah benar?</p>';
   static String previewData = 'Preview Data';
+
+  //Covid information
+  static String searchInformation = 'Cari Informasi di sini';
 }

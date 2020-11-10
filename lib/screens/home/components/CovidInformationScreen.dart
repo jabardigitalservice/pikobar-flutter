@@ -33,7 +33,7 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
     return ListView(
       children: [
         CustomAppBar.buildSearchField(
-            _searchController, 'Cari Informasi di sini', (value) {}),
+            _searchController, Dictionary.searchInformation, (value) {}),
         Container(
           child: InfoGraphics(),
         ),
