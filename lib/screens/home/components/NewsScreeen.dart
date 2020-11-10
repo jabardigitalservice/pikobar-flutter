@@ -147,6 +147,7 @@ class _NewsScreenState extends State<NewsScreen>
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.maxLength,
                     itemBuilder: (context, index) {
+                      NewsModel newsmodel = list[index];
                       return Container(
                         padding: EdgeInsets.only(left: 10),
                         width: 150,
@@ -159,7 +160,7 @@ class _NewsScreenState extends State<NewsScreen>
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: CachedNetworkImage(
-                                    imageUrl: list[index].image ?? '',
+                                    imageUrl: newsmodel.image ?? '',
                                     alignment: Alignment.topCenter,
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) => Center(
@@ -183,7 +184,7 @@ class _NewsScreenState extends State<NewsScreen>
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => NewsDetailScreen(
-                                        id: list[index].id,
+                                        id: newsmodel.id,
                                         news: widget.news,
                                         model: list[index]),
                                   ),
@@ -191,7 +192,7 @@ class _NewsScreenState extends State<NewsScreen>
                                 AnalyticsHelper.setLogEvent(
                                     Analytics.tappedNewsDetail,
                                     <String, dynamic>{
-                                      'title': list[index].title
+                                      'title': newsmodel.title
                                     });
                               },
                             ),
@@ -205,7 +206,7 @@ class _NewsScreenState extends State<NewsScreen>
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               NewsDetailScreen(
-                                                  id: list[index].id,
+                                                  id: newsmodel.id,
                                                   news: widget.news,
                                                   model: list[index]),
                                         ),
@@ -213,7 +214,7 @@ class _NewsScreenState extends State<NewsScreen>
                                       AnalyticsHelper.setLogEvent(
                                           Analytics.tappedNewsDetail,
                                           <String, dynamic>{
-                                            'title': list[index].title
+                                            'title': newsmodel.title
                                           });
                                     },
                                     child: Container(
@@ -223,7 +224,7 @@ class _NewsScreenState extends State<NewsScreen>
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            list[index].title,
+                                            newsmodel.title,
                                             style: TextStyle(
                                                 fontSize: 14.0,
                                                 fontFamily: FontsFamily.lato,
@@ -242,7 +243,7 @@ class _NewsScreenState extends State<NewsScreen>
                                               Expanded(
                                                 child: Text(
                                                   unixTimeStampToDateTime(
-                                                      list[index].publishedAt),
+                                                      newsmodel.publishedAt),
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:
