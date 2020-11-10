@@ -64,7 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
   DocumentsBloc _documentsBloc;
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
-  List<String> listItemTitleTab = ['Jabar Hari Ini', 'Informasi COVID-19'];
+  List<String> listItemTitleTab = [
+    Dictionary.jabarToday,
+    Dictionary.covidInformation
+  ];
+  List<String> analyticsData = [
+    Analytics.tappedJabarToday,
+    Analytics.tappedCovidInformation,
+  ];
 
   @override
   void initState() {
@@ -125,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
             create: (context) => _newsListBloc = NewsListBloc()
-              ..add(NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
+              ..add(
+                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
                 _importantInfoListBloc = ImportantInfoListBloc()
@@ -187,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           unselectedLabelColor: Colors.grey,
           sizeLabel: 13.0,
           onTap: (index) {
-            // AnalyticsHelper.setLogEvent(analyticsData[index]);
+            AnalyticsHelper.setLogEvent(analyticsData[index]);
           },
           tabBarView: <Widget>[
             JabarTodayScreen(),

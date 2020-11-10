@@ -124,6 +124,9 @@ class Dictionary {
   static String followOurSosmed = "Follow juga sosmed kami";
   static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
 
+  static String jabarToday = "Jabar Hari Ini";
+  static String covidInformation = "Informasi COVID-19";
+
 
   // Button Text
   static String yes = 'Ya';
