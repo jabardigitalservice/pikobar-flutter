@@ -45,6 +45,7 @@ class FirebaseConfig {
   static String labels = 'labels';
   static String statisticsSwitch = 'statistics_switch';
   static String bottomSheetContent = 'bottom_sheet_content';
+  static String geolocationEnabled = 'geolocation_enabled';
 
   /// Remote config parameter key
   /// Access requires a login
