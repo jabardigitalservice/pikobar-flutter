@@ -21,20 +21,19 @@ class InfoGraphicsRepository {
         (QuerySnapshot snapshot) => snapshot.docs.map((doc) => doc).toList());
   }
 
-  Stream<List<Iterable<InfographicModel>>> getAllInfographicList() {
+  Stream<List<Iterable<DocumentSnapshot>>> getAllInfographicList() {
     var infographicCollection = firestore
         .collection(kInfographics)
-        .orderBy('published_at', descending: true)
+        .orderBy('published_date', descending: true)
         .snapshots();
     var infographicCenterCollection = firestore
         .collection(kInfographicsCenter)
-        .orderBy('published_at', descending: true)
+        .orderBy('published_date', descending: true)
         .snapshots();
     var infographicWhoCollection = firestore
         .collection(kInfographicsWho)
-        .orderBy('published_at', descending: true)
+        .orderBy('published_date', descending: true)
         .snapshots();
-
 
     var allData = StreamZip([
       infographicCollection,
@@ -42,9 +41,7 @@ class InfoGraphicsRepository {
       infographicWhoCollection
     ]).asBroadcastStream();
 
-    return allData.map((snapshot) => snapshot
-        .map((docList) =>
-            docList.docs.map((doc) => InfographicModel.fromFirestore(doc)))
-        .toList());
+    return allData.map((snapshot) =>
+        snapshot.map((docList) => docList.docs.map((doc) => doc)).toList());
   }
 }

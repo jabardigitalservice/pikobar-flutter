@@ -52,7 +52,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   void initState() {
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
     infoGraphicsListBloc.add(
-        InfoGraphicsListLoad(infoGraphicsCollection: kInfographics, limit: 5));
+        InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics, limit: 5));
     super.initState();
   }
 

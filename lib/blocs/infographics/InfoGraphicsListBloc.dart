@@ -32,12 +32,13 @@ class InfoGraphicsListBloc
     _subscription?.cancel();
     _subscription = infoGraphicsCollection == kAllInfographics
         ? _repository.getAllInfographicList().listen((event) {
-            List<InfographicModel> dataListAllinfographics = [];
+            List<DocumentSnapshot> dataListAllinfographics = [];
             event.forEach((iterable) {
               dataListAllinfographics.addAll(iterable.toList());
             });
             dataListAllinfographics.sort(
-                (b, a) => a.publishedDate.compareTo(b.publishedDate));
+                (b, a) => a['published_date'].compareTo(b['published_date']));
+            add(InfoGraphicsListUpdate(dataListAllinfographics));
           })
         : _repository
             .getInfoGraphics(
