@@ -145,7 +145,9 @@ class _NewsScreenState extends State<NewsScreen>
                     padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: widget.maxLength,
+                    itemCount: list.length < widget.maxLength
+                        ? list.length
+                        : widget.maxLength,
                     itemBuilder: (context, index) {
                       NewsModel newsmodel = list[index];
                       return Container(
@@ -726,7 +728,7 @@ class _NewsScreenState extends State<NewsScreen>
     );
   }
 
-   _buildLoadingNew() {
+  _buildLoadingNew() {
     return Container(
       height: 260,
       width: MediaQuery.of(context).size.width,
