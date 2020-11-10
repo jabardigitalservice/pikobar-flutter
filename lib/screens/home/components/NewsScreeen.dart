@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
@@ -35,13 +36,17 @@ class _NewsScreenState extends State<NewsScreen>
     with AutomaticKeepAliveClientMixin<NewsScreen> {
 // ignore: close_sinks
   NewsListBloc newsListBloc;
-  String collectionNews;
 
   @override
   bool get wantKeepAlive => false;
 
   @override
   void initState() {
+    if (widget.maxLength != null) {
+      newsListBloc = BlocProvider.of<NewsListBloc>(context);
+      newsListBloc
+          .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+    }
     super.initState();
   }
 
@@ -100,16 +105,18 @@ class _NewsScreenState extends State<NewsScreen>
     //   ),
     // );
 
-    Map<String, dynamic> getLabel =
-    RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
-    print('isinya bos '+list.length.toString());
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
     return Container(
       child: Column(
         children: [
           Container(
               padding: EdgeInsets.only(
                   left: Dimens.padding,
-                  right: Dimens.padding, bottom: Dimens.padding),
+                  right: Dimens.padding,
+                  bottom: Dimens.padding),
               alignment: Alignment.topLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,7 +175,6 @@ class _NewsScreenState extends State<NewsScreen>
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.maxLength,
                     itemBuilder: (context, index) {
-                      print('cekkk isinya ada ngga '+list[index].image.toString());
                       return Container(
                         padding: EdgeInsets.only(left: 10),
                         width: 150,

@@ -237,8 +237,6 @@ class _DocumentsState extends State<Documents> {
       }
     });
 
-    print('cekk isinya dong '+dataDocuments.length.toString());
-
     return Container(
       height: 250,
       width: MediaQuery.of(context).size.width,

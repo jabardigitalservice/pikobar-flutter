@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
@@ -63,10 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DocumentsBloc _documentsBloc;
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
-  List<String> listItemTitleTab = [
-    'Jabar Hari Ini',
-    'Informasi COVID-19'
-  ];
+  List<String> listItemTitleTab = ['Jabar Hari Ini', 'Informasi COVID-19'];
 
   @override
   void initState() {
@@ -126,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
             create: (context) =>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
-            create: (context) =>
-                _newsListBloc = NewsListBloc()..add(NewsListLoad(kNewsJabar))),
+            create: (context) => _newsListBloc = NewsListBloc()
+              ..add(NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
                 _importantInfoListBloc = ImportantInfoListBloc()
