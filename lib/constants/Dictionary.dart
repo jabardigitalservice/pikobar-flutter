@@ -293,7 +293,7 @@ class Dictionary {
       'Untuk mengetahui seberapa aman lokasi anda';
   static String checkDistributionSubTitle2 =
       'Silahkan gunakan fitur pencarian dibawah ini';
-  static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
+  static String currentLocationTitle = 'Posisi kamu sekarang berada di :';
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String findLocation = 'Cek Lokasi';
   static String confirmed = 'Terkonfirmasi';
