@@ -165,7 +165,7 @@ class _VideoListState extends State<VideoList> {
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.only(right: 15.0),
-                      width: MediaQuery.of(context).size.width * 0.35,
+                      width: MediaQuery.of(context).size.width * 0.38,
                       // decoration: BoxDecoration(shape: BoxShape.circle),
                       child: Container(
                         child: Column(
