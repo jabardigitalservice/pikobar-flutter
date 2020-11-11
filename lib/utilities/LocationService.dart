@@ -245,34 +245,34 @@ class LocationService {
   }
 
   static Future<bool> _isMonitoredUser() async {
-    /*final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.geolocationEnabled: true,
     });
 
     try {
-      await remoteConfig.fetch(expiration: Duration(minutes: 5));
+      await remoteConfig.fetch(expiration: Duration(minutes: 0));
       await remoteConfig.activateFetched();
     } catch (exception) {}
 
-    bool geolocationEnabled = remoteConfig.getBool(FirebaseConfig.geolocationEnabled) ?? true;*/
+    bool geolocationEnabled = remoteConfig.getBool(FirebaseConfig.geolocationEnabled) ?? true;
 
-    bool monitored = true;
+    if (geolocationEnabled) {
+      /// Get the currently signed-in [FirebaseUser]
+      User user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userDocument =
+        FirebaseFirestore.instance.collection(kUsers).doc(user.uid);
 
-    /// Get the currently signed-in [FirebaseUser]
-    User user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDocument =
-      FirebaseFirestore.instance.collection(kUsers).doc(user.uid);
-
-      await userDocument.get().then((snapshot) {
-        if (snapshot.exists) {
-          monitored = getField(snapshot, 'geolocation_enabled') ?? true;
-        }
-      });
+        await userDocument.get().then((snapshot) {
+          if (snapshot.exists) {
+            geolocationEnabled = getField(snapshot, 'geolocation_enabled') ?? true;
+          }
+        });
+      }
     }
 
-    return monitored;
+    return geolocationEnabled;
   }
 
   static void _onLocation(bg.Location location) {
