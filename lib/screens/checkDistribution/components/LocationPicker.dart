@@ -172,7 +172,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   void _initializeLocation() async {
     final GoogleMapController controller = await _controller.future;
-    Position position = await Geolocator.getCurrentPosition();
+    Position position = await GeolocatorPlatform.instance.getCurrentPosition();
 
     LatLng currentLocation = LatLng(position.latitude, position.longitude);
 

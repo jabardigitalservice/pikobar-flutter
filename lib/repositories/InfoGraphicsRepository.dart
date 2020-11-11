@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-
+import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:meta/meta.dart';
+import 'package:async/async.dart';
+import 'package:pikobar_flutter/models/InfographicModel.dart';
 
 class InfoGraphicsRepository {
   final firestore = FirebaseFirestore.instance;
@@ -15,7 +17,31 @@ class InfoGraphicsRepository {
       infoGraphicsQuery = infoGraphicsQuery.limit(limit);
     }
 
-    return infoGraphicsQuery.snapshots().map((QuerySnapshot snapshot) =>
-        snapshot.docs.map((doc) => doc).toList());
+    return infoGraphicsQuery.snapshots().map(
+        (QuerySnapshot snapshot) => snapshot.docs.map((doc) => doc).toList());
+  }
+
+  Stream<List<Iterable<DocumentSnapshot>>> getAllInfographicList() {
+    var infographicCollection = firestore
+        .collection(kInfographics)
+        .orderBy('published_date', descending: true)
+        .snapshots();
+    var infographicCenterCollection = firestore
+        .collection(kInfographicsCenter)
+        .orderBy('published_date', descending: true)
+        .snapshots();
+    var infographicWhoCollection = firestore
+        .collection(kInfographicsWho)
+        .orderBy('published_date', descending: true)
+        .snapshots();
+
+    var allData = StreamZip([
+      infographicCollection,
+      infographicCenterCollection,
+      infographicWhoCollection
+    ]).asBroadcastStream();
+
+    return allData.map((snapshot) =>
+        snapshot.map((docList) => docList.docs.map((doc) => doc)).toList());
   }
 }

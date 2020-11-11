@@ -47,56 +47,63 @@ class _VideoListState extends State<VideoList> {
   }
 
   Widget _buildLoading() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 10.0),
-          child: Text(
-            Dictionary.videoUpToDate,
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontFamily: FontsFamily.lato,
-                fontSize: Dimens.textTitleSize),
-          ),
-        ),
-        CarouselSlider(
-            options: CarouselOptions(
-              initialPage: 0,
-              enableInfiniteScroll: false,
-              height: 260.0,
-              viewportFraction: 0.9,
-            ),
-            items: [1, 2, 3].map((record) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Card(
-                        elevation: 5.0,
-                        margin: EdgeInsets.symmetric(vertical: 15.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Skeleton(
-                              height: 180.0,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            Skeleton(
-                              height: 20.0,
-                              margin: 10.0,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          ],
+    return Container(
+      height: 260,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          padding: const EdgeInsets.only(
+              left: 11.0, right: 16.0, top: 16.0, bottom: 16.0),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Container(
+                width: 150,
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 140,
+                      width: 150,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Skeleton(
+                          width: MediaQuery.of(context).size.width / 1.4,
+                          padding: 10.0,
                         ),
-                      ));
-                },
-              );
-            }).toList()),
-      ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Skeleton(
+                                  height: 20.0,
+                                  width:
+                                  MediaQuery.of(context).size.width / 1.8,
+                                  padding: 10.0,
+                                ),
+                                SizedBox(height: 8),
+                                Skeleton(
+                                  height: 20.0,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  padding: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          }),
     );
   }
 
@@ -106,7 +113,7 @@ class _VideoListState extends State<VideoList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 5.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,27 +145,27 @@ class _VideoListState extends State<VideoList> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 15),
-          child: Text(
-            getLabel['video']['description'],
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: Dimens.textSubtitleSize),
-            textAlign: TextAlign.left,
-          ),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          // child: Text(
+          //   getLabel['video']['description'],
+          //   style: TextStyle(
+          //       color: Colors.black,
+          //       fontFamily: FontsFamily.lato,
+          //       fontSize: Dimens.textSubtitleSize),
+          //   textAlign: TextAlign.left,
+          // ),
         ),
         Container(
-          height: 280.0,
+          height: 260.0,
           child: data.isNotEmpty
               ? ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
                   scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
+                  itemCount: 5,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.only(right: 15.0),
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.38,
                       // decoration: BoxDecoration(shape: BoxShape.circle),
                       child: Container(
                         child: Column(
@@ -168,7 +175,7 @@ class _VideoListState extends State<VideoList> {
                             GestureDetector(
                               child: Container(
                                 width: MediaQuery.of(context).size.width,
-                                height: 180.0,
+                                height: 150.0,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
@@ -217,7 +224,7 @@ class _VideoListState extends State<VideoList> {
                                     ),
                                     Image.asset(
                                       '${Environment.iconAssets}play_button.png',
-                                      scale: 1.5,
+                                      scale: 2.3,
                                     )
                                   ],
                                 ),
@@ -230,20 +237,7 @@ class _VideoListState extends State<VideoList> {
                                   'title': data[index].title
                                 });
                               },
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Text(
-                                unixTimeStampToDateTime(
-                                    data[index].publishedAt),
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Container(
+                            ),Container(
                               width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.only(top: 10),
                               child: Row(
@@ -263,17 +257,30 @@ class _VideoListState extends State<VideoList> {
                                       ),
                                     ),
                                   ),
-                                  ShareButton(
-                                    paddingLeft: 10,
-                                    height: 40.0,
-                                    onPressed: () {
-                                      _shareVideo(
-                                          data[index].title, data[index].url);
-                                    },
-                                  ),
+                                  // ShareButton(
+                                  //   paddingLeft: 10,
+                                  //   height: 40.0,
+                                  //   onPressed: () {
+                                  //     _shareVideo(
+                                  //         data[index].title, data[index].url);
+                                  //   },
+                                  // ),
                                 ],
                               ),
-                            )
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 1),
+                              child: Text(
+                                unixTimeStampToDateTime(
+                                    data[index].publishedAt),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+
                           ],
                         ),
                       ),
