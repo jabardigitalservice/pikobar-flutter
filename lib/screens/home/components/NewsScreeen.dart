@@ -25,8 +25,9 @@ import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 class NewsScreen extends StatefulWidget {
   final String news;
   final int maxLength;
+  final String searchQuery;
 
-  NewsScreen({@required this.news, this.maxLength});
+  NewsScreen({@required this.news, this.maxLength, this.searchQuery});
 
   @override
   _NewsScreenState createState() => _NewsScreenState();
@@ -81,6 +82,15 @@ class _NewsScreenState extends State<NewsScreen>
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.labels,
         defaultValue: FirebaseConfig.labelsDefaultValue);
+
+    if (widget.searchQuery != null) {
+      list = list
+          .where((test) => test.title
+          .toLowerCase()
+          .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return Container(
       child: Column(
         children: [

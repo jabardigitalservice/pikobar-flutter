@@ -26,6 +26,10 @@ import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 import 'package:share/share.dart';
 
 class VideoList extends StatefulWidget {
+  final String searchQuery;
+
+  VideoList({this.searchQuery});
+
   @override
   _VideoListState createState() => _VideoListState();
 }
@@ -109,6 +113,15 @@ class _VideoListState extends State<VideoList> {
 
   Widget _buildContent(List<VideoModel> data, RemoteConfig remoteConfig) {
     Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
+
+    if (widget.searchQuery != null) {
+      data = data
+          .where((test) => test.title
+          .toLowerCase()
+          .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -161,7 +174,7 @@ class _VideoListState extends State<VideoList> {
               ? ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: widget.searchQuery != null ? data.length : 5,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: EdgeInsets.only(right: 15.0),

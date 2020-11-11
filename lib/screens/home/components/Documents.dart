@@ -30,6 +30,10 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Documents extends StatefulWidget {
+  final String searchQuery;
+
+  Documents({this.searchQuery});
+
   @override
   _DocumentsState createState() => _DocumentsState();
 }
@@ -201,7 +205,7 @@ class _DocumentsState extends State<Documents> {
                                 Skeleton(
                                   height: 20.0,
                                   width:
-                                  MediaQuery.of(context).size.width / 1.8,
+                                      MediaQuery.of(context).size.width / 1.8,
                                   padding: 10.0,
                                 ),
                                 SizedBox(height: 8),
@@ -230,6 +234,14 @@ class _DocumentsState extends State<Documents> {
       }
     });
 
+    if (widget.searchQuery != null) {
+      dataDocuments = dataDocuments
+          .where((test) => test['title']
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return Container(
       height: 250,
       width: MediaQuery.of(context).size.width,
@@ -238,7 +250,7 @@ class _DocumentsState extends State<Documents> {
               padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: dataDocuments.length,
+              itemCount: widget.searchQuery != null ? dataDocuments.length : 5,
               itemBuilder: (context, index) {
                 final DocumentSnapshot document = dataDocuments[index];
                 return Container(

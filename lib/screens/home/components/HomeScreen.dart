@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
-                _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 5)))
+                _documentsBloc = DocumentsBloc()..add(DocumentsLoad()))
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
