@@ -15,6 +15,8 @@ class CustomBubbleTab extends StatefulWidget {
   final TabController tabController;
   final String typeTabSelected;
   bool isExpand;
+  bool isScrollable;
+  double sizeLabel;
 
   CustomBubbleTab(
       {this.listItemTitleTab,
@@ -27,7 +29,9 @@ class CustomBubbleTab extends StatefulWidget {
       this.paddingTopTabBarView,
       this.tabController,
       this.typeTabSelected,
-      this.isExpand});
+      this.isExpand,
+      this.isScrollable,
+      this.sizeLabel});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -44,12 +48,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
 
   @override
   void initState() {
-    if (widget.tabController != null) {
-      _basetabController = widget.tabController;
-    } else {
-      _basetabController =
-          TabController(vsync: this, length: widget.listItemTitleTab.length);
-    }
+    _basetabController = widget.tabController ??
+        TabController(vsync: this, length: widget.listItemTitleTab.length);
     _basetabController.addListener(_handleTabSelection);
     listBubbleTabItem.clear();
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
@@ -80,7 +80,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
               controller: widget.tabController != null
                   ? widget.tabController
                   : _basetabController,
-              isScrollable: true,
+              isScrollable:
+                  widget.isScrollable != null ? widget.isScrollable : true,
               onTap: (index) {
                 // setState(() {
                 //   dataSelected = widget.listItemTitleTab[index];
@@ -154,7 +155,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
           style: TextStyle(
               fontWeight: FontWeight.w600,
               fontFamily: FontsFamily.lato,
-              fontSize: 10.0),
+              fontSize: widget.sizeLabel ?? 10.0),
         ),
       ),
     );

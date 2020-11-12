@@ -52,7 +52,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   void initState() {
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
     infoGraphicsListBloc.add(
-        InfoGraphicsListLoad(infoGraphicsCollection: kInfographics, limit: 3));
+        InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics, limit: 5));
     super.initState();
   }
 
@@ -103,38 +103,42 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: Text(
-                getLabel['info_graphics']['description'],
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: Dimens.textSubtitleSize),
-                textAlign: TextAlign.left,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            //   child: Text(
+            //     getLabel['info_graphics']['description'],
+            //     style: TextStyle(
+            //         color: Colors.black,
+            //         fontFamily: FontsFamily.lato,
+            //         fontSize: Dimens.textSubtitleSize),
+            //     textAlign: TextAlign.left,
+            //   ),
+            // ),
             Container(
-                margin: EdgeInsets.only(left: 5),
-                child: CustomBubbleTab(
-                  listItemTitleTab: listItemTitleTab,
-                  indicatorColor: ColorBase.green,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.grey,
-                  onTap: (index) {
-                    setState(() {});
-                    infoGraphicsListBloc.add(InfoGraphicsListLoad(
-                        infoGraphicsCollection: listCollectionData[index],
-                        limit: 3));
-                    AnalyticsHelper.setLogEvent(analyticsData[index]);
-                  },
-                  tabBarView: <Widget>[
-                    _buildInfographic(),
-                    _buildInfographic(),
-                    _buildInfographic(),
-                  ],
-                  heightTabBarView: 260,
-                )),
+              height: 250,
+              child: _buildInfographic(),
+            )
+            // Container(
+            //     margin: EdgeInsets.only(left: 5),
+            //     child: CustomBubbleTab(
+            //       listItemTitleTab: listItemTitleTab,
+            //       indicatorColor: ColorBase.green,
+            //       labelColor: Colors.white,
+            //       unselectedLabelColor: Colors.grey,
+            //       onTap: (index) {
+            //         setState(() {});
+            //         infoGraphicsListBloc.add(InfoGraphicsListLoad(
+            //             infoGraphicsCollection: listCollectionData[index],
+            //             limit: 3));
+            //         AnalyticsHelper.setLogEvent(analyticsData[index]);
+            //       },
+            //       tabBarView: <Widget>[
+            //         _buildInfographic(),
+            //         _buildInfographic(),
+            //         _buildInfographic(),
+            //       ],
+            //       heightTabBarView: 260,
+            //     )),
           ],
         );
       } else {
@@ -256,17 +260,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          child: Skeleton(
-                            height: 20.0,
-                            width: 20.0,
-                            padding: 10.0,
-                          ),
-                        )
                       ],
                     ),
                   ],
@@ -283,7 +276,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: listData.length,
+              itemCount: 5,
               itemBuilder: (context, index) {
                 final DocumentSnapshot document = listData[index];
                 return Container(
@@ -346,6 +339,19 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
+                                    Text(
+                                      document['title'],
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontFamily: FontsFamily.lato,
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.left,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -366,19 +372,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                           ),
                                         )
                                       ],
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      document['title'],
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontFamily: FontsFamily.lato,
-                                          fontWeight: FontWeight.w600),
-                                      textAlign: TextAlign.left,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),

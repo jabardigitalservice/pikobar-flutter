@@ -124,6 +124,9 @@ class Dictionary {
   static String followOurSosmed = "Follow juga sosmed kami";
   static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
 
+  static String jabarToday = "Jabar Hari Ini";
+  static String covidInformation = "Informasi COVID-19";
+
 
   // Button Text
   static String yes = 'Ya';
@@ -217,7 +220,7 @@ class Dictionary {
   static String titleNationalNews = 'Nasional';
   static String persRilis = 'Pers Rilis';
   static String news = 'Berita';
-  static String more = 'Selengkapnya';
+  static String more = 'Lihat Semua';
   static String heroImageTag = 'preview';
   static String otherNews = 'Berita Lainnya';
   static String allNews = 'Semua Berita';
@@ -293,7 +296,7 @@ class Dictionary {
       'Untuk mengetahui seberapa aman lokasi anda';
   static String checkDistributionSubTitle2 =
       'Silahkan gunakan fitur pencarian dibawah ini';
-  static String currentLocationTitle = 'Lokasi Anda Saat Ini :';
+  static String currentLocationTitle = 'Posisi kamu sekarang berada di :';
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String findLocation = 'Cek Lokasi';
   static String confirmed = 'Terkonfirmasi';
@@ -439,4 +442,7 @@ class Dictionary {
   static String previewAnnouncement =
       '<p>Apakah data di bawah ini sudah benar?</p>';
   static String previewData = 'Preview Data';
+
+  //Covid information
+  static String searchInformation = 'Cari Informasi di sini';
 }

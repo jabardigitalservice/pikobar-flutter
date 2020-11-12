@@ -24,8 +24,10 @@ class CheckDistributionCardRadius extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get label from the remote config
-    Map<String, dynamic> labelUpdateTerkini =
-    RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
+    Map<String, dynamic> labelUpdateTerkini = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(
@@ -39,27 +41,6 @@ class CheckDistributionCardRadius extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              StringUtils.capitalizeWord(
-                  '${Dictionary.location} ${state.record.currentLocation.namaKel} , kec. ${state.record.currentLocation.namaKec}'),
-              style: TextStyle(
-                fontFamily: FontsFamily.lato,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
-                height: 1.2,
-              ),
-            ),
-            SizedBox(height: 5),
-            Text(
-              Dictionary.update24hourTitle,
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: 10.0,
-                height: 1.2,
-              ),
-            ),
-            SizedBox(height: Dimens.padding),
             Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
@@ -147,12 +128,12 @@ class CheckDistributionCardRadius extends StatelessWidget {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / 3),
-        padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
+        padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
             color: Color(0xffFAFAFA), borderRadius: BorderRadius.circular(8.0)),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             image.isNotEmpty
                 ? Container(height: 15, child: Image.asset(image))
@@ -162,16 +143,16 @@ class CheckDistributionCardRadius extends StatelessWidget {
               child: Text(title,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                       color: Colors.black,
-                      fontFamily: FontsFamily.lato)),
+                      fontFamily: FontsFamily.roboto)),
             ),
             Container(
               margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
               child: Text(total.toString(),
                   style: TextStyle(
                       color: textColor,
-                      fontSize: 22.0,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                       fontFamily: FontsFamily.roboto)),
             ),
