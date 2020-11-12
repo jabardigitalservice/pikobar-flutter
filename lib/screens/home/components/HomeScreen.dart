@@ -216,6 +216,10 @@ class _HomeScreenState extends State<HomeScreen>
           tabController: tabController,
           sizeLabel: 13.0,
           onTap: (index) async {
+            if (listItemTitleTab[index] == Dictionary.covidInformation) {
+              _newsListBloc.add(
+                  NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+            }
             AnalyticsHelper.setLogEvent(analyticsData[index]);
             await HistoryTabHomeSharedPreference.setHistoryTabHome(
                 listItemTitleTab[index]);
