@@ -18,7 +18,6 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
-  bool _isSearch = false;
 
   @override
   void initState() {
@@ -80,13 +79,6 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
     });
   }
 
-  void _stopSearching() {
-    _clearSearchQuery();
-
-    setState(() {
-      _isSearch = false;
-    });
-  }
 
   @override
   void dispose() {
