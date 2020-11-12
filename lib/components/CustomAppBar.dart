@@ -1,10 +1,14 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class CustomAppBar {
   static AppBar defaultAppBar(
-      {Widget leading, @required String title, List<Widget> actions, PreferredSizeWidget bottom}) {
+      {Widget leading,
+      @required String title,
+      List<Widget> actions,
+      PreferredSizeWidget bottom}) {
     return AppBar(
       backgroundColor: Colors.white,
       leading: leading,
@@ -52,7 +56,11 @@ class CustomAppBar {
     );
   }
 
-  static AppBar bottomSearchAppBar({@required TextEditingController searchController, @required String title, @required String hintText, ValueChanged<String> onChanged}) {
+  static AppBar bottomSearchAppBar(
+      {@required TextEditingController searchController,
+      @required String title,
+      @required String hintText,
+      ValueChanged<String> onChanged}) {
     return AppBar(
         backgroundColor: Colors.white,
         bottom: PreferredSize(
@@ -72,7 +80,8 @@ class CustomAppBar {
         overflow: TextOverflow.ellipsis);
   }
 
-  static Widget buildSearchField(TextEditingController searchController, String hintText, ValueChanged<String> onChanged) {
+  static Widget buildSearchField(TextEditingController searchController,
+      String hintText, ValueChanged<String> onChanged) {
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
@@ -88,6 +97,15 @@ class CustomAppBar {
               Icons.search,
               color: Color(0xff828282),
             ),
+            suffixIcon: searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: Icon(EvaIcons.closeCircle),
+                    color: Color(0xff828282),
+                    onPressed: () {
+                      searchController.text = '';
+                    },
+                  )
+                : null,
             hintText: hintText,
             border: InputBorder.none,
             hintStyle: TextStyle(
@@ -96,7 +114,7 @@ class CustomAppBar {
                 fontSize: 12,
                 height: 2.2),
             contentPadding:
-            EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
+                EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
         style: TextStyle(color: Colors.black, fontSize: 16.0),
         onChanged: onChanged,
       ),
