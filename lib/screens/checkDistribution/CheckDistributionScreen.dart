@@ -471,7 +471,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
       }
     } else {
       // Pick location by current location
-      Position position = await GeolocatorPlatform.instance.getLastKnownPosition();
+      Position position = await Geolocator.getLastKnownPosition();
       if (position != null && position.latitude != null) {
         List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
