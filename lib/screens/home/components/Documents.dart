@@ -243,7 +243,7 @@ class _DocumentsState extends State<Documents> {
     }
 
     return Container(
-      height: 250,
+      height: 260,
       width: MediaQuery.of(context).size.width,
       child: dataDocuments.isNotEmpty
           ? ListView.builder(

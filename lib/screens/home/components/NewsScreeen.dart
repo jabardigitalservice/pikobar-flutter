@@ -148,7 +148,7 @@ class _NewsScreenState extends State<NewsScreen>
           //   ),
           // ),
           Container(
-            height: 250,
+            height: 260,
             width: MediaQuery.of(context).size.width,
             child: list.isNotEmpty
                 ? ListView.builder(

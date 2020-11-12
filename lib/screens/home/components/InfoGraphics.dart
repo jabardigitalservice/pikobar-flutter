@@ -120,7 +120,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             //   ),
             // ),
             Container(
-              height: 250,
+              height: 260,
               child: _buildInfographic(),
             )
             // Container(
