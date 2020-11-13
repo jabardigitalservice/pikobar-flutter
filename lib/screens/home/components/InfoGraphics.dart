@@ -214,7 +214,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 
   Widget _buildLoading() {
     return Container(
-      height: 260,
+      height: 265,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           padding: const EdgeInsets.only(
@@ -400,7 +400,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               })
           : EmptyData(
               message: Dictionary.emptyData,
-              desc: '',
+              desc: Dictionary.descEmptyData,
               isFlare: false,
               image: "${Environment.imageAssets}not_found.png",
             ),

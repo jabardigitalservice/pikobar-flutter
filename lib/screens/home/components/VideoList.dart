@@ -169,7 +169,7 @@ class _VideoListState extends State<VideoList> {
           // ),
         ),
         Container(
-          height: 260.0,
+          height: 265.0,
           child: data.isNotEmpty
               ? ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
@@ -301,7 +301,7 @@ class _VideoListState extends State<VideoList> {
                   })
               : EmptyData(
                   message: Dictionary.emptyData,
-                  desc: '',
+                  desc: Dictionary.descEmptyData,
                   isFlare: false,
                   image: "${Environment.imageAssets}not_found.png",
                 ),

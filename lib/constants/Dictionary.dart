@@ -264,7 +264,8 @@ class Dictionary {
   static String onDevelopment = 'Dalam proses pengembangan';
   static String process = 'Proses';
   static String people = 'Orang';
-  static String emptyData = 'Tidak ada data';
+  static String emptyData = 'Informasi Tidak Ditemukan';
+  static String descEmptyData = 'Mohon maaf, sepertinya kami tidak memiliki informasi yang Anda cari';
   static String lastUpdateOn = 'Terakhir Diupdate Pada';
   static String updateProfile = 'Akun berhasil diperbarui';
   static String updateAppAvailable =

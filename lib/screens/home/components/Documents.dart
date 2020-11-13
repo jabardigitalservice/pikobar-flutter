@@ -243,7 +243,7 @@ class _DocumentsState extends State<Documents> {
     }
 
     return Container(
-      height: 260,
+      height: 265,
       width: MediaQuery.of(context).size.width,
       child: dataDocuments.isNotEmpty
           ? ListView.builder(
@@ -354,7 +354,7 @@ class _DocumentsState extends State<Documents> {
               })
           : EmptyData(
               message: Dictionary.emptyData,
-              desc: '',
+              desc: Dictionary.descEmptyData,
               isFlare: false,
               image: "${Environment.imageAssets}not_found.png",
             ),

@@ -47,6 +47,7 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
           child: Documents(searchQuery: searchQuery),
         ),
         Container(
+          margin: EdgeInsets.only(top: 10),
           child: SocialMedia(),
         )
       ],
