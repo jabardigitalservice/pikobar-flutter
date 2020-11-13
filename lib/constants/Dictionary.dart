@@ -25,6 +25,7 @@ class Dictionary {
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Bantu Kita';
   static String bansos = 'Bantuan Sosial';
+  static String aduanBansos = 'Aduan Bansos';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String selfTracing = 'Self Tracing';

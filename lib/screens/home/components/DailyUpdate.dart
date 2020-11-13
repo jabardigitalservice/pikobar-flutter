@@ -72,7 +72,7 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
                         Container(
                             height: 13,
                             child: Image.asset(
-                                '${Environment.iconAssets}/email_icon.png')),
+                                '${Environment.iconAssets}email_icon.png')),
                         SizedBox(
                           width: 20,
                         ),

@@ -41,7 +41,6 @@ import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 import 'BannerListSlider.dart';
 
-// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
 
