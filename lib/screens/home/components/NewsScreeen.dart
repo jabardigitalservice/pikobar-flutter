@@ -33,13 +33,8 @@ class NewsScreen extends StatefulWidget {
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen>
-    with AutomaticKeepAliveClientMixin<NewsScreen> {
-// ignore: close_sinks
+class _NewsScreenState extends State<NewsScreen> {
   NewsListBloc newsListBloc;
-
-  @override
-  bool get wantKeepAlive => false;
 
   @override
   void initState() {
@@ -86,8 +81,8 @@ class _NewsScreenState extends State<NewsScreen>
     if (widget.searchQuery != null) {
       list = list
           .where((test) => test.title
-          .toLowerCase()
-          .contains(widget.searchQuery.toLowerCase()))
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
           .toList();
     }
 
