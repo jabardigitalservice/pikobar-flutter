@@ -4,8 +4,6 @@ void main() {
   test('Simple test', () {
     String str = 'test';
 
-    str.toUpperCase();
-
-    expect(str, 'TEST');
+    expect(str.toUpperCase(), 'TEST');
   });
 }
