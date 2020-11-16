@@ -245,11 +245,11 @@ class Dictionary {
   static String permissionLocationMap =
       'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
   static String permissionLocationGeneral =
-      'Dengan membagikan lokasi, Anda akan turut membantu kami dalam menanggulangi kasus COVID-19 di Jawa Barat.';
+      'Bantu kami dengan membagikan lokasi Anda untuk menanggulangi kasus Covid-19';
   static String permissionLocationAgreement =
-      'Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
+      '* Akses lokasi digunakan untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.\n\n* Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau digunakan\n\n* Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
   static String permissionGeolocationTitle = 'Izinkan PIKOBAR mengakses lokasi Anda';
-  static String permissionGeolocationDesc = 'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.';
+  static String permissionGeolocationDesc = 'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
 
   // text
   static String fieldSurvey = 'Isi Survei';
