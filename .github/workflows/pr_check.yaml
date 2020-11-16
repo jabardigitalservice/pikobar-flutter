@@ -17,7 +17,7 @@ jobs:
     steps:
       # Use an existing action, you can look in the market place to find what you need and how to use it, to setup the sonar scanner
       - name: Setup sonar scanner
-        uses: warchant/setup-sonar-scanner@v1
+        uses: warchant/setup-sonar-scanner@v3
 
       # Another existing action, this one to checkout the repository
       - name: 'Checkout repository on branch: ${{ github.REF }}'
