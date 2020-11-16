@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
@@ -12,10 +13,9 @@ class CheckDistributions {
       var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
     if (await permissionService.status.isGranted) {
 
-      Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getLastKnownPosition();
       if (position != null && position.latitude != null) {
-        List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
         // print(position.toString());
       if (placemarks != null && placemarks.isNotEmpty) {
       final Placemark pos = placemarks[0];

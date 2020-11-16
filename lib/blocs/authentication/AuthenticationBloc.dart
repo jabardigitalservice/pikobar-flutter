@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
@@ -14,10 +15,8 @@ class AuthenticationBloc
 
   AuthenticationBloc({
     @required this.authRepository,
-  }) : assert(authRepository != null);
-
-  @override
-  AuthenticationState get initialState => AuthenticationUninitialized();
+  })  : assert(authRepository != null),
+        super(AuthenticationUninitialized());
 
   @override
   Stream<AuthenticationState> mapEventToState(
@@ -30,6 +29,7 @@ class AuthenticationBloc
       if (hasToken) {
         yield AuthenticationLoading();
         record = await authRepository.getUserInfo();
+        await ProfileUidSharedPreference.setProfileUid(record.uid);
         yield AuthenticationAuthenticated(record: record);
       } else {
         yield AuthenticationUnauthenticated();
@@ -45,9 +45,11 @@ class AuthenticationBloc
         await authRepository.persistToken(
           record.uid,
         );
+        await ProfileUidSharedPreference.setProfileUid(record.uid);
         yield AuthenticationAuthenticated(record: record);
       } catch (e) {
-        yield AuthenticationFailure(error: CustomException.onConnectionException(e.toString()));
+        yield AuthenticationFailure(
+            error: CustomException.onConnectionException(e.toString()));
       }
     }
 

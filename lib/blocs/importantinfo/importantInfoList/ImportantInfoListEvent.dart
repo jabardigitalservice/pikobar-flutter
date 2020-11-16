@@ -22,7 +22,7 @@ class ImportantInfoListLoad extends ImportantInfoListEvent {
 
 class ImportantInfoListUpdate extends ImportantInfoListEvent {
 
-  final List<ImportantinfoModel> importantInfoList;
+  final List<ImportantInfoModel> importantInfoList;
 
   ImportantInfoListUpdate(this.importantInfoList);
 

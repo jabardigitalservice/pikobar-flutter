@@ -18,6 +18,10 @@ class ColorBase {
   static final brightBlue=Color(0xff2D9CDB);
   static final veryLightGrey=Color(0xffF2F2F2);
   static final toggleOn=Color(0xff9FDFBA);
+  static final netralGrey = Color(0xFF757575);
+  static final greyContainer = Color(0xFFFAFAFA);
+
+
 
   static final gradientBlue = [Color(0xFF00AADE), Color(0xFF0669B1)];
   static final gradientGreen = [Color(0xFF0ad178), Color(0xFF009D57)];
@@ -30,6 +34,7 @@ class ColorBase {
     Color(0xFF000000).withOpacity(0.1),
     Color(0xFF000000).withOpacity(0.7)
   ];
+  static final gradientBlueStatistics = [Color(0xFF2C347C), Color(0xFF4E59C0)];
 
   static final yellow = Color(0xfffdcc3b);
   static final orange = Color(0xffe8b638);

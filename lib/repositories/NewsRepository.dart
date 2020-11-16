@@ -5,14 +5,14 @@ import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:async/async.dart';
 
 class NewsRepository {
-  final Firestore firestore = Firestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<List<NewsModel>> getNewsList({@required String newsCollection}) {
     return firestore
         .collection(newsCollection)
         .orderBy('published_at', descending: true)
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents
+        .map((QuerySnapshot snapshot) => snapshot.docs
             .map((doc) => NewsModel.fromFirestore(doc))
             .toList());
   }
@@ -20,7 +20,7 @@ class NewsRepository {
   Future<NewsModel> getNewsDetail(
       {@required String newsCollection, @required String newsId}) async {
     DocumentSnapshot doc =
-        await firestore.collection(newsCollection).document(newsId).get();
+        await firestore.collection(newsCollection).doc(newsId).get();
     return NewsModel.fromFirestore(doc);
   }
 
@@ -30,7 +30,7 @@ class NewsRepository {
         .collection(improtantInfoCollection)
         .orderBy('published_at', descending: true)
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.documents
+        .map((QuerySnapshot snapshot) => snapshot.docs
             .map((doc) => NewsModel.fromFirestore(doc))
             .toList());
   }
@@ -39,7 +39,7 @@ class NewsRepository {
       {@required String importantInfoid}) async {
     DocumentSnapshot doc = await firestore
         .collection(kImportantInfor)
-        .document(importantInfoid)
+        .doc(importantInfoid)
         .get();
     return NewsModel.fromFirestore(doc);
   }
@@ -71,7 +71,7 @@ class NewsRepository {
 
     return allData.map((snapshot) => snapshot
         .map((docList) =>
-            docList.documents.map((doc) => NewsModel.fromFirestore(doc)))
+            docList.docs.map((doc) => NewsModel.fromFirestore(doc)))
         .toList());
   }
 }

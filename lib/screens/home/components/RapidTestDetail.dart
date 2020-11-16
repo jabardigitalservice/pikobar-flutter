@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -18,7 +19,7 @@ import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class RapidTestDetail extends StatefulWidget {
@@ -36,13 +37,25 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   final formatter = new NumberFormat("#,###");
   List<String> listItemTitleTab = [Dictionary.rdt, Dictionary.pcr];
   Map<String, dynamic> label;
+  Map<String, dynamic> helpBottomSheet;
 
   @override
   Widget build(BuildContext context) {
     if (widget.remoteConfig != null) {
       dataAnnouncement = json
           .decode(widget.remoteConfig.getString(FirebaseConfig.rapidTestInfo));
-      label = GetLabelRemoteConfig.getLabel(widget.remoteConfig);
+
+      // Get label from the remote config
+      label = RemoteConfigHelper.decode(
+          remoteConfig: widget.remoteConfig,
+          firebaseConfig: FirebaseConfig.labels,
+          defaultValue: FirebaseConfig.labelsDefaultValue);
+
+      // Get bottom sheet config from the remote config
+      helpBottomSheet = RemoteConfigHelper.decode(
+          remoteConfig: widget.remoteConfig,
+          firebaseConfig: FirebaseConfig.bottomSheetContent,
+          defaultValue: FirebaseConfig.bottomSheetDefaultValue);
     }
     return Scaffold(
       backgroundColor: Colors.white,
@@ -83,7 +96,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           height: 20,
         ),
         // Last update section
-        widget.document.data['last_update'] == null
+        widget.document.get('last_update') == null
             ? Container()
             : Padding(
                 padding: EdgeInsets.only(bottom: 20, left: 10),
@@ -102,7 +115,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       height: 10,
                     ),
                     Text(
-                      '${unixTimeStampToDateTime(widget.document.data['last_update'].seconds)}',
+                      '${unixTimeStampToDateTime(widget.document.get('last_update').seconds)}',
                       style: TextStyle(
                           color: Color(0xff333333),
                           fontFamily: FontsFamily.lato,
@@ -112,7 +125,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 ),
               ),
         buildHeader(label['pcr_rdt']['rdt']['sum'], 'bloodTest@4x.png',
-            widget.document.data['total'], Color(0xffFAFAFA)),
+            widget.document.get('total'), Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
         ),
@@ -134,7 +147,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
-        widget.documentPCR.data['last_update'] == null
+        widget.documentPCR.get('last_update') == null
             ? Container()
             : Padding(
                 padding: EdgeInsets.only(bottom: 20, left: 10),
@@ -153,7 +166,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       height: 10,
                     ),
                     Text(
-                      '${unixTimeStampToDateTime(widget.documentPCR.data['last_update'].seconds)}',
+                      '${unixTimeStampToDateTime(widget.documentPCR.get('last_update').seconds)}',
                       style: TextStyle(
                           color: Color(0xff333333),
                           fontFamily: FontsFamily.lato,
@@ -163,7 +176,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 ),
               ),
         buildHeader(label['pcr_rdt']['pcr']['sum'], 'bloodTestBlue@4x.png',
-            widget.documentPCR.data['total'], Color(0xffFAFAFA)),
+            widget.documentPCR.get('total'), Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
         ),
@@ -218,7 +231,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: 12.0,
-                          color: Color(0xff828282),
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontFamily: FontsFamily.lato)),
                 ),
@@ -227,7 +240,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                   child: Text(count,
                       style: TextStyle(
                           fontSize: 24.0,
-                          color: Color(0xff828282),
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontFamily: FontsFamily.roboto)),
                 )
@@ -248,29 +261,54 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     return Row(
       children: <Widget>[
         buildContainer(
-            '',
-            label['pcr_rdt']['rdt']['positif'],
-            widget.document.data['positif'].toString(),
-            2,
-            Color(0xff828282),
-            Color(0xff27AE60),
-            widget.document.data['total']),
+          '',
+          label['pcr_rdt']['rdt']['positif'],
+          widget.document.get('positif').toString(),
+          2,
+          Colors.black,
+          Colors.black,
+          widget.document.get('total'),
+          helpOnTap: () {
+            showTextBottomSheet(
+                context: context,
+                title: helpBottomSheet['rdt_bottom_sheet']['reaktif']['title'],
+                message: helpBottomSheet['rdt_bottom_sheet']['reaktif']
+                    ['message']);
+          },
+        ),
         buildContainer(
-            '',
-           label['pcr_rdt']['rdt']['negatif'],
-            widget.document.data['negatif'].toString(),
-            2,
-            Color(0xff828282),
-            Color(0xffF2994A),
-            widget.document.data['total']),
+          '',
+          label['pcr_rdt']['rdt']['negatif'],
+          widget.document.get('negatif').toString(),
+          2,
+          Colors.black,
+          Colors.black,
+          widget.document.get('total'),
+          helpOnTap: () {
+            showTextBottomSheet(
+                context: context,
+                title: helpBottomSheet['rdt_bottom_sheet']['non-reaktif']
+                    ['title'],
+                message: helpBottomSheet['rdt_bottom_sheet']['non-reaktif']
+                    ['message']);
+          },
+        ),
         buildContainer(
-            '',
-            label['pcr_rdt']['rdt']['invalid'],
-            widget.document.data['invalid'].toString(),
-            2,
-            Color(0xff828282),
-            Color(0xffF2994A),
-            widget.document.data['total'])
+          '',
+          label['pcr_rdt']['rdt']['invalid'],
+          widget.document.get('invalid').toString(),
+          2,
+          Colors.black,
+          Colors.red,
+          widget.document.get('total'),
+          helpOnTap: () {
+            showTextBottomSheet(
+                context: context,
+                title: helpBottomSheet['rdt_bottom_sheet']['invalid']['title'],
+                message: helpBottomSheet['rdt_bottom_sheet']['invalid']
+                    ['message']);
+          },
+        )
       ],
     );
   }
@@ -279,35 +317,61 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     return Row(
       children: <Widget>[
         buildContainer(
-            '',
-            label['pcr_rdt']['pcr']['positif'],
-            widget.documentPCR.data['positif'].toString(),
-            2,
-            Color(0xff828282),
-            Color(0xffEB5757),
-            widget.documentPCR.data['total']),
+          '',
+          label['pcr_rdt']['pcr']['positif'],
+          widget.documentPCR.get('positif').toString(),
+          2,
+          Colors.black,
+          Colors.black,
+          widget.documentPCR.get('total'),
+          helpOnTap: () {
+            showTextBottomSheet(
+                context: context,
+                title: helpBottomSheet['pcr_bottom_sheet']['positif']['title'],
+                message: helpBottomSheet['pcr_bottom_sheet']['positif']
+                    ['message']);
+          },
+        ),
         buildContainer(
-            '',
-            label['pcr_rdt']['pcr']['negatif'],
-            widget.documentPCR.data['negatif'].toString(),
-            2,
-            Color(0xff828282),
-            Color(0xff27AE60),
-            widget.documentPCR.data['total']),
+          '',
+          label['pcr_rdt']['pcr']['negatif'],
+          widget.documentPCR.get('negatif').toString(),
+          2,
+          Colors.black,
+          Colors.black,
+          widget.documentPCR.get('total'),
+          helpOnTap: () {
+            showTextBottomSheet(
+                context: context,
+                title: helpBottomSheet['pcr_bottom_sheet']['negatif']['title'],
+                message: helpBottomSheet['pcr_bottom_sheet']['negatif']
+                    ['message']);
+          },
+        ),
         buildContainer(
-            '',
-            label['pcr_rdt']['pcr']['invalid'],
-            widget.documentPCR.data['invalid'].toString(),
-            2,
-            Color(0xff828282),
-            Color(0xffF2994A),
-            widget.documentPCR.data['total']),
+          '',
+          label['pcr_rdt']['pcr']['invalid'],
+          widget.documentPCR.get('invalid').toString(),
+          2,
+          Colors.black,
+          Colors.red,
+          widget.documentPCR.get('total'),
+          helpOnTap: () {
+            showTextBottomSheet(
+                context: context,
+                title: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
+                    ['title'],
+                message: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
+                    ['message']);
+          },
+        ),
       ],
     );
   }
 
   buildContainer(String image, String title, String count, int length,
-      Color colorTextTitle, Color colorNumber, int total) {
+      Color colorTextTitle, Color colorNumber, int total,
+      {GestureTapCallback helpOnTap}) {
     var countFormatted;
     if (count != null && count.isNotEmpty && count != '-') {
       try {
@@ -337,22 +401,35 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 Expanded(
                   child: Center(
                     child: Container(
-                      margin: EdgeInsets.only(left: 5.0),
-                      child: Text(title,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              color: colorTextTitle,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato)),
+                      child: Wrap(
+                        children: [
+                          Text(title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: colorTextTitle,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: FontsFamily.lato)),
+                          helpOnTap != null
+                              ? GestureDetector(
+                                  onTap: helpOnTap,
+                                  child: SizedBox(
+                                    width: 20,
+                                    child: Icon(Icons.help_outline,
+                                        size: 13.0, color: ColorBase.darkGrey),
+                                  ),
+                                )
+                              : SizedBox()
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
             Container(
-              margin: EdgeInsets.only(
-                  top: Dimens.padding, bottom: Dimens.padding, left: 5.0),
+              margin:
+                  EdgeInsets.only(top: Dimens.padding, bottom: Dimens.padding),
               child: Text(countFormatted,
                   style: TextStyle(
                       fontSize: 16.0,
@@ -365,7 +442,6 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 Expanded(
                   child: Center(
                     child: Container(
-                      margin: EdgeInsets.only(left: 5.0),
                       child: Text('(${percent.toStringAsFixed(2)})%',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

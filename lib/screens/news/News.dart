@@ -128,6 +128,8 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         tabController: tabController,
         typeTabSelected: widget.news,
         onTap: (index) {
+          _newsListBloc.add(NewsListLoad(listCollectionData[index],
+              statImportantInfo: statImportantInfo));
           AnalyticsHelper.setLogEvent(analyticsData[index]);
         },
         tabBarView: <Widget>[

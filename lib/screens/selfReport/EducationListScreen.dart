@@ -19,7 +19,7 @@ class EducationListScreen extends StatefulWidget {
 }
 
 class _EducationListScreenState extends State<EducationListScreen> {
-  // ignore: close_sinks
+  // ignore: close_sinks, unused_field
   EducationListBloc _educationListBloc;
 
   @override

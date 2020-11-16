@@ -21,4 +21,5 @@ class Environment {
   static String saberHoaxPhone = '+6282118670700';
   static String csPhone = '+6281212124023';
   static String laporPhone = '1708';
+  static String idDailyUpdate='BvBSkBV5pLWKoBjISaX0';
 }

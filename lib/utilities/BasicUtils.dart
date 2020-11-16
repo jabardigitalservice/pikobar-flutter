@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
+import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
@@ -138,4 +139,17 @@ Future<String> stringFromHtmlString(String htmlString) async {
   var document = parse(removedTag);
   String parsedString = parse(document.body.text).documentElement.text;
   return parsedString;
+}
+
+String formattedStringNumber(String number) {
+  final formatter = new NumberFormat("#,###");
+  String num = '';
+  if (number != null && number.isNotEmpty && number != '-') {
+    try {
+      num = formatter.format(int.parse(number)).replaceAll(',', '.');
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  return num;
 }

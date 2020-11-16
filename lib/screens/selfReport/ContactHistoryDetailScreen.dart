@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/contactHistoryDetail/ContactHistoryDetailBloc.dart';
@@ -44,7 +43,7 @@ class _ContactHistoryDetailScreenState
         child: BlocBuilder<ContactHistoryDetailBloc, ContactHistoryDetailState>(
             builder: (context, state) {
           return state is ContactHistoryDetailLoaded
-              ? _buildContent(state.documentSnapshot.data)
+              ? _buildContent(state.documentSnapshot.data())
               : state is ContactHistoryDetailFailure
                   ? ErrorContent(error: state.error)
                   : Center(child: CircularProgressIndicator());

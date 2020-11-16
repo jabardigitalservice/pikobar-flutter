@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bottom_navigation_badge/bottom_navigation_badge.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
@@ -23,6 +25,8 @@ import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
@@ -47,6 +51,7 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   void initState() {
+    initializeBackgroundLocation();
     initializeFirebaseMessaging();
     initializeDateFormatting();
     initializePlatformState();
@@ -54,7 +59,6 @@ class IndexScreenState extends State<IndexScreen> {
     initializeBottomNavigationBar();
     initializeToken();
     getCountMessage();
-    updateCurrentLocation();
 
     super.initState();
   }
@@ -89,7 +93,7 @@ class IndexScreenState extends State<IndexScreen> {
       },
     );
 
-//    _firebaseMessaging.getToken().then((token) => print(token));
+    // _firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
@@ -132,7 +136,7 @@ class IndexScreenState extends State<IndexScreen> {
 
     items = [
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.home, size: 16),
+          icon: Icon(EvaIcons.homeOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -140,11 +144,11 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-        icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+        icon: Icon(EvaIcons.messageCircleOutline, size: 24),
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.solidQuestionCircle, size: 16),
+          icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -152,7 +156,7 @@ class IndexScreenState extends State<IndexScreen> {
             ],
           )),
       BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.userAlt, size: 16),
+          icon: Icon(EvaIcons.personOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -205,7 +209,8 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MessageDetailScreen(id: data['id'].toString().trim())));
+            builder: (context) =>
+                MessageDetailScreen(id: data['id'].toString().trim())));
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
@@ -221,6 +226,17 @@ class IndexScreenState extends State<IndexScreen> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 NewsListScreen(news: Dictionary.importantInfo)));
+      }
+    } else if (data['target'] == 'content_education') {
+      if (data['id'] != null && data['id'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => EducationDetailScreen(
+                  id: data['id'].toString().trim(),
+                  educationCollection: kEducationContent,
+                )));
+      } else {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => SelfReportScreen()));
       }
     } else if (data['target'] == 'url') {
       if (data['url'] != null && data['url'] != 'null') {
@@ -288,7 +304,7 @@ class IndexScreenState extends State<IndexScreen> {
         // ignore: unnecessary_statements
         if (countMessage <= 0) {
           items[1] = BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.solidEnvelope, size: 16),
+              icon: Icon(EvaIcons.messageCircleOutline, size: 24),
               title: Column(
                 children: <Widget>[
                   SizedBox(height: 4),
@@ -302,8 +318,8 @@ class IndexScreenState extends State<IndexScreen> {
     });
   }
 
-  updateCurrentLocation() async {
-    await LocationService.sendCurrentLocation(context);
+  initializeBackgroundLocation() async {
+    await LocationService.initializeBackgroundLocation(context);
   }
 
   @override

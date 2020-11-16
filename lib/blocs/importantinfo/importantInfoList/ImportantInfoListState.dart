@@ -16,7 +16,7 @@ class ImportantInfoListLoading extends ImportantInfoListState {
 }
 
 class ImpoftantInfoListLoaded extends ImportantInfoListState {
-  final List<ImportantinfoModel> imporntantinfoList;
+  final List<ImportantInfoModel> imporntantinfoList;
 
   ImpoftantInfoListLoaded(this.imporntantinfoList);
 

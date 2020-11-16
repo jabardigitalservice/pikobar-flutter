@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -37,7 +38,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     return Scaffold(
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.document),
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection(kDocuments)
             .orderBy('published_at', descending: true)
             .snapshots(),
@@ -45,7 +46,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
           if (snapshot.hasData) {
             List<DocumentSnapshot> data = [];
 
-            snapshot.data.documents.forEach((record) {
+            snapshot.data.docs.forEach((record) {
               if (record['published']) {
                 data.add(record);
               }
@@ -54,7 +55,12 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             if (data.isNotEmpty) {
               return _buildContent(data);
             } else {
-              return EmptyData(message: Dictionary.emptyDataDocuments);
+              return EmptyData(
+                message: Dictionary.emptyData,
+                desc: '',
+                isFlare: false,
+                image: "${Environment.imageAssets}not_found.png",
+              );
             }
           } else {
             return _buildLoading();

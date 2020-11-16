@@ -13,8 +13,7 @@ part 'DailyReportEvent.dart';
 part 'DailyReportState.dart';
 
 class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
-  @override
-  DailyReportState get initialState => DailyReportInitial();
+  DailyReportBloc() : super(DailyReportInitial());
 
   @override
   Stream<DailyReportState> mapEventToState(
@@ -26,11 +25,17 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
       try {
         String userId = await AuthRepository().getToken();
         await SelfReportRepository().saveDailyReport(
-            userId: userId, dailyReport: event.dailyReportModel);
-
+            userId: userId,
+            dailyReport: event.dailyReportModel,
+            otherUID: event.otherUID);
+        if (event.dailyReportModel.id == '14') {
+          await SelfReportRepository()
+              .updateToCollection(userId: userId, isReminder: false);
+        }
         yield DailyReportSaved();
       } catch (e) {
-        yield DailyReportFailed(error: CustomException.onConnectionException(e.toString()));
+        yield DailyReportFailed(
+            error: CustomException.onConnectionException(e.toString()));
       }
     }
   }

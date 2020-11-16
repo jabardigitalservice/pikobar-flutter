@@ -7,8 +7,7 @@ class BannersBloc extends Bloc<BannersEvent, BannersState> {
   final BannersRepository _repository = BannersRepository();
   StreamSubscription _subscription;
 
-  @override
-  BannersState get initialState => InitialBannersState();
+  BannersBloc() : super(InitialBannersState());
 
   @override
   Stream<BannersState> mapEventToState(

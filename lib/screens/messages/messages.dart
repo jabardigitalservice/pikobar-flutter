@@ -39,10 +39,10 @@ class _MessagesState extends State<Messages> {
   }
 
   void getDataFromServer() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('broadcasts')
         .orderBy('published_at', descending: true)
-        .getDocuments()
+        .get()
         .then((QuerySnapshot snapshot) {
       insertIntoDatabase(snapshot);
     }).catchError((error) {});
@@ -146,7 +146,7 @@ class _MessagesState extends State<Messages> {
   }
 
   Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
-    await MessageRepository().insertToDatabase(snapshot.documents);
+    await MessageRepository().insertToDatabase(snapshot.docs);
     widget.indexScreenState.getCountMessage();
     listMessage.clear();
     listMessage = await MessageRepository().getRecords();

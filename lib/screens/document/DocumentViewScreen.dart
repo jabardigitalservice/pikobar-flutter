@@ -43,7 +43,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
     try {
       final url = widget.url;
       final filename =
-          widget.nameFile.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
+          widget.nameFile.replaceAll(RegExp(r"\|.*"), '').replaceAll('/', '').trim() + '.pdf';
       var request = await HttpClient().getUrl(Uri.parse(url));
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);

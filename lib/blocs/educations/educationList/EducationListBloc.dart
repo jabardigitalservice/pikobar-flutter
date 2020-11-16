@@ -7,22 +7,20 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   final EducationRepository _repository = EducationRepository();
   StreamSubscription _subscription;
 
-  @override
-  EducationListState get initialState => InitialEducationListState();
+  EducationListBloc() : super(InitialEducationListState());
 
   @override
   Stream<EducationListState> mapEventToState(
     EducationListEvent event,
   ) async* {
     if (event is EducationListLoad) {
-      yield* _mapLoadVideosToState(event.educationCollection);
+      yield* _mapLoadEducationsToState(event.educationCollection);
     } else if (event is EducationListUpdate) {
       yield* _mapVideosUpdateToState(event);
     }
   }
 
-  Stream<EducationListState> _mapLoadVideosToState(String collection,
-      {bool statImportantInfo = true}) async* {
+  Stream<EducationListState> _mapLoadEducationsToState(String collection) async* {
     yield EducationLisLoading();
     _subscription?.cancel();
     _subscription =  _repository

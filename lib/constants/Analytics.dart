@@ -13,6 +13,7 @@ class Analytics {
   static String document = 'Dokumen';
   static String selfReports = 'Lapor Mandiri';
   static String education = 'Konten Edukasi';
+  static String announcement = 'tapped_pengumuman_selengkapnya';
 
 
   // event home
@@ -65,7 +66,10 @@ class Analytics {
   static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
 
 
-
+  // event infographic
+  static String tappedInfographicJabar = 'tapped_info_praktikal_jabar';
+  static String tappedInfographicCenter = 'tapped_info_praktikal_pusat';
+  static String tappedInfographicWho = 'tapped_info_praktikal_who';
 
 
   //message
@@ -93,6 +97,10 @@ class Analytics {
   static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
   static String tappedFindByVillage = 'tapped_cari_berdasarkan_kelurahan';
   static String tappedFindByDistricts = 'tapped_cari_berdasarkan_kecamatan';
+  static String tappedConfirmedByDistricts = 'tapped_konfirmasi_berdasarkan_kecamatan';
+  static String tappedCloseContactByDistricts = 'tapped_kontak_erat_berdasarkan_kecamatan';
+  static String tappedSuspectByDistricts = 'tapped_suspek_berdasarkan_kecamatan';
+  static String tappedProbableByDistricts = 'tapped_probable_berdasarkan_kecamatan';
 
   //event document
   static String tappedShareDocuments = 'tapped_share_documents';
@@ -116,10 +124,14 @@ class Analytics {
 
   //event self report
   static String tappedDailyReport = "tapped_lapor_kesehatan_harian";
+  static String tappedDailyOtherReport = "tapped_lapor_kesehatan_orang_lain_harian";
   static String tappedDailyReportDetail = "tapped_lapor_kesehatan_harian_detail";
   static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
+  static String tappedAddOtherUserReportForm = "tapped_tambah_orang_lain_form";
   static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
   static String dailyReportFailed = "lapor_kesehatan_harian_gagal";
+  static String addOtherUserSaved = "tambah_orang_lain_tersimpan";
+  static String addOtherUserFailed = "tambah_orang_lain_gagal";
   static String tappedContactHistory = "tapped_riwayat_kontak";
   static String tappedContactHistoryDetail = "tapped_riwayat_kontak_detail";
   static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";

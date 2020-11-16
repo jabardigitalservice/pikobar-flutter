@@ -49,10 +49,12 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
                  child: InAppWebView(
                    initialUrl: widget.url,
                    initialHeaders: {},
-                   initialOptions: InAppWebViewWidgetOptions(
-                       inAppWebViewOptions: InAppWebViewOptions(
+                   initialOptions: InAppWebViewGroupOptions(
+                       crossPlatform: InAppWebViewOptions(
                          debuggingEnabled: true,
-                       )
+                         useShouldOverrideUrlLoading: true,
+                       ),
+                       android: AndroidInAppWebViewOptions()
                    ),
                    onWebViewCreated: (InAppWebViewController controller) {
                      webView = controller;

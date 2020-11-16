@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/educations/educationDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -14,7 +16,6 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:url_launcher/url_launcher.dart';
 
 class EducationDetailScreen extends StatefulWidget {
@@ -48,7 +49,6 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
             educationCollection: widget.educationCollection,
             educationId: widget.id)),
       child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
-        bloc: _educationDetailBloc,
         builder: (context, state) {
           return _buildScaffold(context, state);
         },
@@ -67,7 +67,14 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
             : state is EducationDetailLoaded
                 ? _buildContent(context, state.record)
                 : state is EducationDetailFailure
-                    ? _buildContent(context, widget.model)
+                    ? widget.model != null
+                        ? _buildContent(context, widget.model)
+                        : EmptyData(
+                            message: Dictionary.emptyData,
+                            desc: '',
+                            isFlare: false,
+                            image: "${Environment.imageAssets}not_found.png",
+                          )
                     : Container());
   }
 
@@ -241,10 +248,12 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                   //add content data from server to widget text
                   Html(
                       data: data.content,
-                      defaultTextStyle:
-                          TextStyle(color: Colors.black, fontSize: 15.0),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.left;
+                      style: {
+                        'body': Style(
+                            margin: EdgeInsets.zero,
+                            color: Colors.black,
+                            fontSize: FontSize(14.0),
+                            textAlign: TextAlign.start),
                       },
                       onLinkTap: (url) {
                         _launchURL(url);

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +8,17 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
+import 'package:pikobar_flutter/screens/home/components/statistics/StatisticsDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Statistics extends StatefulWidget {
   @override
@@ -29,67 +28,106 @@ class Statistics extends StatefulWidget {
 class _StatisticsState extends State<Statistics> {
   final formatter = new NumberFormat("#,###");
   String urlStatistic = "";
+  RemoteConfigLoaded remoteConfigLoaded;
+  RapidTestLoaded rapidTestLoaded;
+  PcrTestLoaded pcrTestLoaded;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.0),
       color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          _buildStatistics(),
-          SizedBox(
-            height: 20,
-          ),
-          _buildRapidTest()
-        ],
-      ),
-    );
-  }
-
-  _buildStatistics() {
-    return BlocBuilder<StatisticsBloc, StatisticsState>(
-      builder: (context, state) {
-        return state is StatisticsLoaded
-            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                builder: (context, remoteState) {
-                  return remoteState is RemoteConfigLoaded
-                      ? _buildContent(state.snapshot, remoteState.remoteConfig)
-                      : _buildLoading();
-                },
-              )
-            : _buildLoading();
-      },
-    );
-  }
-
-  _buildRapidTest() {
-    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-      builder: (context, remoteState) {
+      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+          builder: (context, remoteState) {
         return remoteState is RemoteConfigLoaded
-            ? remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
-                ? BlocBuilder<RapidTestBloc, RapidTestState>(
-                    builder: (context, rapidState) {
-                      urlStatistic = remoteState.remoteConfig
-                          .getString(FirebaseConfig.pikobarUrl);
-                      return rapidState is RapidTestLoaded
-                          ? BlocBuilder<PcrTestBloc, PcrTestState>(
-                              builder: (context, pcrState) {
-                                return pcrState is PcrTestLoaded
-                                    ? buildContentRapidTest(
-                                        remoteState.remoteConfig,
-                                        rapidState.snapshot,
-                                        pcrState.snapshot)
-                                    : buildLoadingRapidTest();
-                              },
-                            )
-                          : buildLoadingRapidTest();
-                    },
-                  )
-                : Container()
-            : buildLoadingRapidTest();
+            ? BlocBuilder<StatisticsBloc, StatisticsState>(
+                builder: (context, statisticState) {
+                return statisticState is StatisticsLoaded
+                    ? Column(
+                        children: <Widget>[
+                          _buildContent(statisticState.snapshot, remoteState,
+                              statisticState),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          _buildRapidTest(remoteState),
+                        ],
+                      )
+                    : _buildLoading();
+              })
+            : _buildLoading();
+      }),
+    );
+  }
+
+  _buildMore(StatisticsLoaded statisticState) {
+    return InkWell(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              Dictionary.moreDetail,
+              style: TextStyle(
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: ColorBase.green),
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => StatisticsDetailScreen(
+                remoteConfigLoaded: remoteConfigLoaded,
+                statisticsLoaded: statisticState,
+                rapidTestLoaded: rapidTestLoaded,
+                pcrTestLoaded: pcrTestLoaded)));
       },
     );
+  }
+
+  _buildRapidTest(RemoteConfigLoaded remoteState) {
+    return remoteState.remoteConfig.getBool(FirebaseConfig.rapidTestEnable)
+        ? MultiBlocListener(
+            listeners: [
+              BlocListener<RapidTestBloc, RapidTestState>(
+                  listener: (context, rapidState) {
+                if (rapidState is RapidTestLoaded) {
+                  setState(() {
+                    this.rapidTestLoaded = rapidState;
+                  });
+                }
+              }),
+              BlocListener<PcrTestBloc, PcrTestState>(
+                  listener: (context, pcrState) {
+                if (pcrState is PcrTestLoaded) {
+                  setState(() {
+                    this.pcrTestLoaded = pcrState;
+                  });
+                }
+              })
+            ],
+            child: BlocBuilder<RapidTestBloc, RapidTestState>(
+              builder: (context, rapidState) {
+                urlStatistic = remoteState.remoteConfig
+                    .getString(FirebaseConfig.pikobarUrl);
+                return rapidState is RapidTestLoaded
+                    ? BlocBuilder<PcrTestBloc, PcrTestState>(
+                        builder: (context, pcrState) {
+                          return pcrState is PcrTestLoaded
+                              ? buildContentRapidTest(remoteState.remoteConfig,
+                                  rapidState.snapshot, pcrState)
+                              : buildLoadingRapidTest();
+                        },
+                      )
+                    : buildLoadingRapidTest();
+              },
+            ),
+          )
+        : Container();
   }
 
   _buildLoading() {
@@ -105,23 +143,13 @@ class _StatisticsState extends State<Statistics> {
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
                   fontFamily: FontsFamily.lato,
-                  fontSize: 16.0),
+                  fontSize: Dimens.textTitleSize),
             ),
             SizedBox(height: Dimens.padding),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _buildContainer(
-                    '',
-                    Dictionary.caseTotal,
-                    Dictionary.caseTotal,
-                    '-',
-                    4,
-                    Dictionary.people,
-                    Colors.grey[600],
-                    Colors.grey[600],
-                    ''),
                 _buildContainer(
                     '',
                     Dictionary.positif,
@@ -178,7 +206,10 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Container _buildContent(DocumentSnapshot data, RemoteConfig remoteConfig) {
+  Container _buildContent(DocumentSnapshot data,
+      RemoteConfigLoaded remoteConfigLoaded, StatisticsLoaded statisticState) {
+    this.remoteConfigLoaded = remoteConfigLoaded;
+    RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
     if (!data.exists)
       return Container(
         child: Center(
@@ -187,10 +218,10 @@ class _StatisticsState extends State<Statistics> {
       );
 
     // Get label from the remote config
-    Map<String, dynamic> labelUpdateTerkini =
-        GetLabelRemoteConfig.getLabel(remoteConfig);
-
-    bool statisticsSwitch = getStatisticsSwitch(remoteConfig);
+    Map<String, dynamic> labelUpdateTerkini = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
 
     return Container(
       child: Column(
@@ -198,31 +229,16 @@ class _StatisticsState extends State<Statistics> {
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
+            children: [
               Text(
                 Dictionary.statistics,
                 style: TextStyle(
                     color: Color(0xff333333),
                     fontWeight: FontWeight.w600,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 16.0),
+                    fontSize: Dimens.textTitleSize),
               ),
-              InkWell(
-                onTap: () {
-                  openChromeSafariBrowser(
-                      url: urlStatistic.isNotEmpty
-                          ? urlStatistic
-                          : kUrlCoronaInfoData);
-                },
-                child: Text(
-                  Dictionary.moreDetail,
-                  style: TextStyle(
-                      color: Color(0xff27AE60),
-                      fontFamily: FontsFamily.lato,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0),
-                ),
-              ),
+              _buildMore(statisticState)
             ],
           ),
           SizedBox(height: 10),
@@ -231,24 +247,18 @@ class _StatisticsState extends State<Statistics> {
             style: TextStyle(
                 color: Color(0xff333333),
                 fontFamily: FontsFamily.lato,
-                fontSize: 12.0),
+                fontSize: Dimens.textSubtitleSize),
           ),
+          SizedBox(height: Dimens.padding),
+          _buildConfirmedBox(
+              label: labelUpdateTerkini['statistics']['confirmed'],
+              caseTotal: '${data['aktif']['jabar']}'),
           SizedBox(height: Dimens.padding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}virusPurple.png',
-                  labelUpdateTerkini['statistics']['confirmed'],
-                  labelUpdateTerkini['statistics']['confirmed'],
-                  '${data['aktif']['jabar']}',
-                  4,
-                  Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff2C347C),
-                  ''),
-              _buildContainer(
-                  '${Environment.iconAssets}virusRed.png',
+                  '${Environment.iconAssets}virus_yellow.png',
                   labelUpdateTerkini['statistics']['positif'],
                   labelUpdateTerkini['statistics']['positif'],
                   getDataActivePositive(data['aktif']['jabar'],
@@ -256,86 +266,37 @@ class _StatisticsState extends State<Statistics> {
                   4,
                   Dictionary.people,
                   Color(0xff333333),
-                  Color(0xffEB5757),
-                  ''),
+                  Color(0xff333333),
+                  getDataProcessPercent(
+                      data['aktif']['jabar'],
+                      int.parse(getDataActivePositive(
+                          data['aktif']['jabar'],
+                          data['sembuh']['jabar'],
+                          data['meninggal']['jabar'])))),
               _buildContainer(
-                  '${Environment.iconAssets}virusGreen.png',
+                  '${Environment.iconAssets}virus_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
                   labelUpdateTerkini['statistics']['recovered'],
                   '${data['sembuh']['jabar']}',
                   4,
                   Dictionary.people,
                   Color(0xff333333),
-                  Color(0xff27AE60),
-                  ''),
+                  Color(0xff333333),
+                  getDataProcessPercent(
+                      data['aktif']['jabar'], data['sembuh']['jabar'])),
               _buildContainer(
-                  '${Environment.iconAssets}virusYellow.png',
+                  '${Environment.iconAssets}virus_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
                   labelUpdateTerkini['statistics']['deaths'],
                   '${data['meninggal']['jabar']}',
                   4,
                   Dictionary.people,
                   Color(0xff333333),
-                  Color(0xffF2994A),
-                  ''),
+                  Color(0xff333333),
+                  getDataProcessPercent(
+                      data['aktif']['jabar'], data['meninggal']['jabar'])),
             ],
           ),
-          SizedBox(height: Dimens.padding),
-          statisticsSwitch ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _buildContainer(
-                  '',
-                  labelUpdateTerkini['statistics']['odp'],
-                  Dictionary.opdDesc,
-                  data['kontak_erat']['total'].toString(),
-                  2,
-                  Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xff2F80ED),
-                  data['kontak_erat']['karantina'].toString(),
-                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
-              _buildContainer(
-                  '',
-                  labelUpdateTerkini['statistics']['pdp'],
-                  Dictionary.pdpDesc,
-                  data['suspek']['total'].toString(),
-                  2,
-                  Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xffF2C94C),
-                  data['suspek']['isolasi'].toString(),
-                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
-            ],
-          ) : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _buildContainer(
-                  '',
-                  labelUpdateTerkini['statistics']['odp'],
-                  Dictionary.opdDesc,
-                  getDataProcess(data['odp']['total']['jabar'],
-                      data['odp']['selesai']['jabar']),
-                  2,
-                  Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xff2F80ED),
-                  data['odp']['total']['jabar'].toString(),
-                  detailText: labelUpdateTerkini['statistics']['odp_detail']),
-              _buildContainer(
-                  '',
-                  labelUpdateTerkini['statistics']['pdp'],
-                  Dictionary.pdpDesc,
-                  getDataProcess(data['pdp']['total']['jabar'],
-                      data['pdp']['selesai']['jabar']),
-                  2,
-                  Dictionary.people,
-                  Color(0xff828282),
-                  Color(0xffF2C94C),
-                  data['pdp']['total']['jabar'].toString(),
-                  detailText: labelUpdateTerkini['statistics']['pdp_detail']),
-            ],
-          )
         ],
       ),
     );
@@ -397,9 +358,11 @@ class _StatisticsState extends State<Statistics> {
   }
 
   Widget buildContentRapidTest(RemoteConfig remoteConfig,
-      DocumentSnapshot document, DocumentSnapshot documentPCR) {
+      DocumentSnapshot document, PcrTestLoaded pcrTestLoaded) {
+    DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+
     String count = formatter
-        .format(document.data['total'] + documentPCR.data['total'])
+        .format(document.get('total') + documentPCR.get('total'))
         .replaceAll(',', '.');
 
     return InkWell(
@@ -434,7 +397,7 @@ class _StatisticsState extends State<Statistics> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Color(0xff828282),
+                            color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.lato)),
                   ),
@@ -443,7 +406,7 @@ class _StatisticsState extends State<Statistics> {
                     child: Text(count,
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Color(0xff828282),
+                            color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   )
@@ -461,23 +424,6 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  String getDataProcess(int totalData, int dataDone) {
-    int processData = totalData - dataDone;
-    return processData.toString();
-  }
-
-  String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
-    int dataActivePositive = totalData - dataDone - dataRecover;
-    return dataActivePositive.toString();
-  }
-
-  String getDataProcessPercent(int totalData, int dataDone) {
-    double processData =
-        100 - num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
-
-    return '(' + processData.toString() + '%)';
-  }
-
   _buildContainer(
       String image,
       String title,
@@ -487,22 +433,8 @@ class _StatisticsState extends State<Statistics> {
       String label,
       Color colorTextTitle,
       Color colorNumber,
-      String total,
-      {String detailText}) {
-    if (count != null && count.isNotEmpty && count != '-') {
-      try {
-        count = formatter.format(int.parse(count)).replaceAll(',', '.');
-      } catch (e) {
-        print(e.toString());
-      }
-    }
-    if (total != null && total.isNotEmpty && total != '-') {
-      try {
-        total = formatter.format(int.parse(total)).replaceAll(',', '.');
-      } catch (e) {
-        print(e.toString());
-      }
-    }
+      String percentage) {
+    count = formattedStringNumber(count);
 
     return Expanded(
       child: InkWell(
@@ -514,19 +446,24 @@ class _StatisticsState extends State<Statistics> {
               color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              image == ""
-                  ? Container(
-                      margin: EdgeInsets.only(top: 10, left: 5.0),
-                      child: Text(title,
-                          style: TextStyle(
-                              fontSize: 13.0,
-                              color: colorTextTitle,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato)),
-                    )
-                  : Container(height: 15, child: Image.asset(image)),
+              Container(
+                  margin: EdgeInsets.only(left: 5.0),
+                  child: image != ''
+                      ? Image.asset(
+                          image,
+                          height: 15.0,
+                        )
+                      : null),
+              Container(
+                margin: EdgeInsets.only(top: 10, left: 5.0),
+                child: Text(title,
+                    style: TextStyle(
+                        fontSize: 12.0,
+                        color: colorTextTitle,
+                        fontFamily: FontsFamily.lato)),
+              ),
               Container(
                 margin: EdgeInsets.only(top: 10, left: 5.0),
                 child: Text(count,
@@ -537,23 +474,17 @@ class _StatisticsState extends State<Statistics> {
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
               ),
-              total == ''
-                  ? Container(
-                      margin: EdgeInsets.only(top: 10, left: 1.0),
-                      child: Text(title,
-                          style: TextStyle(
-                              fontSize: 9.0,
-                              color: colorTextTitle,
-                              fontFamily: FontsFamily.lato)),
-                    )
-                  : Container(
-                      margin: EdgeInsets.only(top: 10, left: 5.0),
-                      child: Text(detailText + total,
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              color: Color(0xff333333),
-                              fontFamily: FontsFamily.lato)),
-                    )
+              Container(
+                margin: EdgeInsets.only(top: 10, left: 5.0),
+                child: percentage != ''
+                    ? Text(percentage,
+                        style: TextStyle(
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff828282),
+                            fontFamily: FontsFamily.lato))
+                    : null,
+              )
             ],
           ),
         ),
@@ -562,11 +493,80 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
+  _buildConfirmedBox({@required String label, @required caseTotal}) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
+          borderRadius: BorderRadius.circular(8.0)),
+      child: Stack(
+        children: [
+          Positioned(
+              width: 60.0,
+              height: 60.0,
+              right: 0.0,
+              top: 0.0,
+              child: Image.asset(
+                '${Environment.iconAssets}virus_purple.png',
+                width: 60.0,
+                height: 60.0,
+              )),
+          Container(
+            margin: EdgeInsets.all(Dimens.padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    formattedStringNumber(caseTotal),
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   bool getStatisticsSwitch(RemoteConfig remoteConfig) {
-    if (remoteConfig != null && remoteConfig.getBool(FirebaseConfig.statisticsSwitch) != null) {
+    if (remoteConfig != null &&
+        remoteConfig.getBool(FirebaseConfig.statisticsSwitch) != null) {
       return remoteConfig.getBool(FirebaseConfig.statisticsSwitch);
     } else {
       return false;
     }
   }
+}
+
+String getDataProcess(int totalData, int dataDone) {
+  int processData = totalData - dataDone;
+  return processData.toString();
+}
+
+String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
+  int dataActivePositive = totalData - dataDone - dataRecover;
+  return dataActivePositive.toString();
+}
+
+String getDataProcessPercent(int totalData, int dataDone) {
+  double processData =
+      num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
+
+  return processData.toString() + '%';
 }

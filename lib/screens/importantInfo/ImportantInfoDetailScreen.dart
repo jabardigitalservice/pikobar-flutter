@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:path_provider/path_provider.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -62,7 +62,6 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
       create: (context) => _importantInfoDetailBloc = ImportantInfoDetailBloc()
         ..add(ImportantInfoDetailLoad(importantInfoId: widget.id)),
       child: BlocBuilder<ImportantInfoDetailBloc, importantInfoDetailState>(
-        bloc: _importantInfoDetailBloc,
         builder: (context, state) {
           return _buildScaffold(context, state);
         },
@@ -185,7 +184,7 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start, children: widgets);
   }
 
-  _buildContent(BuildContext context, ImportantinfoModel data) {
+  _buildContent(BuildContext context, ImportantInfoModel data) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
@@ -239,10 +238,12 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
                   SizedBox(height: 10.0),
                   Html(
                       data: data.content,
-                      defaultTextStyle:
-                          TextStyle(color: Colors.black, fontSize: 15.0),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.left;
+                      style: {
+                        'body': Style(
+                            margin: EdgeInsets.zero,
+                            color: Colors.black,
+                            fontSize: FontSize(14.0),
+                            textAlign: TextAlign.start),
                       },
                       onLinkTap: (url) {
                         _launchURL(url);
@@ -417,7 +418,7 @@ class _ImportantInfoDetailScreenState extends State<ImportantInfoDetailScreen> {
     }
   }
 
-  void _shareMessage(ImportantinfoModel data) async {
+  void _shareMessage(ImportantInfoModel data) async {
     String content = await stringFromHtmlString(data.content);
     if (data.image != null) {
       try {

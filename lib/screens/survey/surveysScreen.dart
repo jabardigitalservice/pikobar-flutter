@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -103,12 +104,15 @@ class _SurveysScreenState extends State<SurveysScreen> {
                   );
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
+                  AuthenticationAuthenticated _profileLoaded =
+                  state as AuthenticationAuthenticated;
+                  _profileLoaded.record.uid;
                   return StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection(kSurveys).snapshots(),
+                    stream: FirebaseFirestore.instance.collection(kSurveys).snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
-                        if (snapshot.data.documents.isNotEmpty) {
+                        if (snapshot.data.docs.isNotEmpty) {
                           return _buildContent(snapshot);
                         } else {
                           if (isConnected) {
@@ -194,21 +198,21 @@ class _SurveysScreenState extends State<SurveysScreen> {
             /// Set up for show announcement widget
             child: Announcement(
               content: Dictionary.surveyInfo,
-              textStyleContent: TextStyle(
+              htmlStyle: Style(
+                  margin: EdgeInsets.zero,
                   fontFamily: FontsFamily.lato,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12.0,
-                  height: 1.5),
+                  fontSize: FontSize(12.0)),
             ),
           ),
           Container(
             child: ListView.builder(
-                itemCount: snapshot.data.documents.length,
+                itemCount: snapshot.data.docs.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final DocumentSnapshot document =
-                      snapshot.data.documents[index];
+                      snapshot.data.docs[index];
 
                   return Column(
                     children: <Widget>[

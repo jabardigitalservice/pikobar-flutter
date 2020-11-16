@@ -11,7 +11,7 @@ final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
 Future<void> initializePlatformState() async {
   Map<String, dynamic> deviceData;
-  FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+  User _user = FirebaseAuth.instance.currentUser;
   PackageInfo _packageInfo = await PackageInfo.fromPlatform();
 
   if (_user != null) {
@@ -76,24 +76,24 @@ Map<String, dynamic> _readIosDeviceInfo(
 }
 
 Future<void> _sendDataToFirestore(
-    FirebaseUser user, String deviceId, Map<String, dynamic> data) async {
+    User user, String deviceId, Map<String, dynamic> data) async {
   if (user != null) {
     final userDocument =
-        Firestore.instance.collection(kUsers).document(user.uid);
+        FirebaseFirestore.instance.collection(kUsers).doc(user.uid);
 
     final devicesDocument =
-        userDocument.collection(kUserDevices).document(deviceId);
+        userDocument.collection(kUserDevices).doc(deviceId);
 
     devicesDocument.get().then((snapshot) {
       if (!snapshot.exists) {
-        devicesDocument.setData(data);
+        devicesDocument.set(data);
       }
     });
 
     userDocument.get().then((snapshot) {
       if (snapshot.exists) {
         userDocument
-            .updateData({'last_open_at': DateTime.now()}).catchError((onError) {
+            .update({'last_open_at': DateTime.now()}).catchError((onError) {
           print("Update last_open failed : ${onError.toString()}");
         });
       }

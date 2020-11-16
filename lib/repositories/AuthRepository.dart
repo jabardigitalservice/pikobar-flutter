@@ -25,17 +25,17 @@ class AuthRepository {
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
 
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
+    final UserCredential authResult = await _auth.signInWithCredential(credential);
+    final User user = authResult.user;
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
+    final User currentUser = _auth.currentUser;
     assert(user.uid == currentUser.uid);
 
     return UserModel(
@@ -43,7 +43,7 @@ class AuthRepository {
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
-        photoUrlFull: currentUser.photoUrl,
+        photoUrlFull: currentUser.photoURL,
         phoneNumber: currentUser.phoneNumber);
   }
 
@@ -56,6 +56,7 @@ class AuthRepository {
     });
     await deleteToken();
     await deleteLocalUserInfo();
+    await LocationService.stopBackgroundLocation();
   }
 
   /// Sign In with Apple
@@ -78,14 +79,14 @@ class AuthRepository {
     switch (result.status) {
       case AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
-        final oAuthProvider = OAuthProvider(providerId: 'apple.com');
-        final credential = oAuthProvider.getCredential(
+        final oAuthProvider = OAuthProvider('apple.com');
+        final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
           accessToken:
               String.fromCharCodes(appleIdCredential.authorizationCode),
         );
         final authResult = await _auth.signInWithCredential(credential);
-        final FirebaseUser user = authResult.user;
+        final User user = authResult.user;
 
         if (appleIdCredential.fullName.givenName != null) {
           /// Update the firebase display name
@@ -93,25 +94,23 @@ class AuthRepository {
           String displayName =
               "${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}";
 
-          final updateUser = UserUpdateInfo();
-          updateUser.displayName = displayName;
-          await user.updateProfile(updateUser);
+          await user.updateProfile(displayName: displayName);
 
           /// If the name on the user document firestore is null,
           /// update the name from the data provided by appleIdCredential.
           ///
           /// This is required to prevent errors due to a null value of name.
           final userDocument =
-              Firestore.instance.collection(kUsers).document(user.uid);
+              FirebaseFirestore.instance.collection(kUsers).doc(user.uid);
 
           await userDocument.get().then((snapshot) async {
-            if (snapshot.exists && snapshot.data['name'] == null) {
-              await userDocument.updateData({'name': displayName});
+            if (snapshot.exists && snapshot.get('name') == null) {
+              await userDocument.update({'name': displayName});
             }
           });
         }
 
-        final FirebaseUser currentUser = await _auth.currentUser();
+        final User currentUser = _auth.currentUser;
         assert(user.uid == currentUser.uid);
 
         return UserModel(
@@ -120,7 +119,7 @@ class AuthRepository {
             uid: currentUser.uid,
             email: currentUser.email,
             name: currentUser.displayName,
-            photoUrlFull: currentUser.photoUrl,
+            photoUrlFull: currentUser.photoURL,
             phoneNumber: currentUser.phoneNumber);
 
       case AuthorizationStatus.error:
@@ -193,7 +192,8 @@ class AuthRepository {
 
         await persistUserInfo(authUserInfo);
         await registerFCMToken();
-        await LocationService.actionSendLocation();
+        //await LocationService.actionSendLocation();
+        await LocationService.configureBackgroundLocation(userInfo: authUserInfo);
       } else {
         authUserInfo = await readLocalUserInfo();
       }
@@ -205,7 +205,7 @@ class AuthRepository {
   }
 
   Future<void> updateIdToken() async {
-    if (await _auth.currentUser() != null && await hasToken()) {
+    if (_auth.currentUser != null && await hasToken()) {
       UserModel currentUser = await getUserInfo();
       if (currentUser.googleIdToken == null) {
         GoogleSignInAuthentication signInAuthentication;
@@ -238,20 +238,20 @@ class AuthRepository {
   }
 
   Future<void> registerFCMToken() async {
-    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+    User _user = FirebaseAuth.instance.currentUser;
 
     if (_user != null) {
       final userDocument =
-          Firestore.instance.collection(kUsers).document(_user.uid);
+          FirebaseFirestore.instance.collection(kUsers).doc(_user.uid);
 
       _firebaseMessaging.getToken().then((token) {
         final tokensDocument =
-            userDocument.collection(kUserTokens).document(token);
+            userDocument.collection(kUserTokens).doc(token);
 
         tokensDocument.get().then((snapshot) {
           if (!snapshot.exists) {
             tokensDocument
-                .setData({'token': token, 'created_at': DateTime.now()});
+                .set({'token': token, 'created_at': DateTime.now()});
           }
         });
       });
@@ -259,9 +259,9 @@ class AuthRepository {
       FirebaseAnalytics().setUserId(_user.uid);
 
       userDocument.get().then((snapshot) {
-        if (snapshot.exists && snapshot.data['city_id'] != null) {
+        if (snapshot.exists && snapshot.get('city_id') != null) {
           FirebaseAnalytics().setUserProperty(
-              name: 'city_id', value: snapshot.data['city_id']);
+              name: 'city_id', value: snapshot.get('city_id'));
         }
       });
     }
@@ -271,11 +271,11 @@ class AuthRepository {
     UserModel authUserInfo = await getUserInfo();
 
     await _firebaseMessaging.getToken().then((token) async {
-      final tokensDocument = Firestore.instance
+      final tokensDocument = FirebaseFirestore.instance
           .collection(kUsers)
-          .document(authUserInfo.uid)
+          .doc(authUserInfo.uid)
           .collection(kUserTokens)
-          .document(token);
+          .doc(token);
 
       await tokensDocument.get().then((snapshot) async {
         if (snapshot.exists) {

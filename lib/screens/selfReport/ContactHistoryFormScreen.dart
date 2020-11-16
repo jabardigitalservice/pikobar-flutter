@@ -72,8 +72,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             create: (context) =>
                 _contactHistorySaveBloc = ContactHistorySaveBloc())
       ],
-      child: BlocListener(
-        bloc: _contactHistorySaveBloc,
+      child: BlocListener(cubit: _contactHistorySaveBloc,
         listener: (context, state) {
           if (state is ContactHistorySaved) {
 
