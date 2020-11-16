@@ -490,18 +490,20 @@ class _NewsScreenState extends State<NewsScreen> {
                         ),
                       ),
                       Container(
-                        color: Colors.black12.withOpacity(0.4),
                         width: MediaQuery.of(context).size.width - 45,
                         height: 300,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.black12.withOpacity(0.4),
+                          shape: BoxShape.rectangle,
+                          borderRadius:
+                          BorderRadius.circular(Dimens.dialogRadius),
                         ),
                       ),
                       Positioned(
                         left: 10,
                         right: 10,
                         bottom: 0,
-                        top: 220,
+                        top: 215,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
