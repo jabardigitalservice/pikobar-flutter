@@ -1,5 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
@@ -51,15 +52,18 @@ class EmptyData extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 14)),
+                    fontSize: 15)),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 10),
-              child: Text(desc==null ? '' : desc,
+              padding:EdgeInsets.only(left: 50, right: 50),
+              child: Text(desc == null ? '' : desc,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12)),
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 13,
+                      color: ColorBase.darkGrey)),
             )
           ],
         ),
@@ -95,8 +99,8 @@ class EmptyData extends StatelessWidget {
               height: 20,
             ),
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 10),
-              child: Text(desc==null ? '' : desc,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(desc == null ? '' : desc,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12)),
             )

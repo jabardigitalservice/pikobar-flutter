@@ -18,7 +18,6 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
-  bool _isSearch = false;
 
   @override
   void initState() {
@@ -33,20 +32,22 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
     return ListView(
       children: [
         CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, (value) {}),
+            _searchController, Dictionary.searchInformation, updateSearchQuery),
         Container(
-          child: InfoGraphics(),
+          child: InfoGraphics(searchQuery: searchQuery),
         ),
         Container(
-          child: NewsScreen(news: Dictionary.allNews, maxLength: 5),
+          child: NewsScreen(
+              news: Dictionary.allNews, maxLength: 5, searchQuery: searchQuery),
         ),
         Container(
-          child: VideoList(),
+          child: VideoList(searchQuery: searchQuery),
         ),
         Container(
-          child: Documents(),
+          child: Documents(searchQuery: searchQuery),
         ),
         Container(
+          margin: EdgeInsets.only(top: 10),
           child: SocialMedia(),
         )
       ],
@@ -79,13 +80,6 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
     });
   }
 
-  void _stopSearching() {
-    _clearSearchQuery();
-
-    setState(() {
-      _isSearch = false;
-    });
-  }
 
   @override
   void dispose() {

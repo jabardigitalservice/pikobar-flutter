@@ -22,7 +22,12 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
+
 class InfoGraphics extends StatefulWidget {
+  final String searchQuery;
+
+  InfoGraphics({this.searchQuery});
+
   @override
   _InfoGraphicsState createState() => _InfoGraphicsState();
 }
@@ -51,8 +56,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   @override
   void initState() {
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
-    infoGraphicsListBloc.add(
-        InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics, limit: 5));
+    infoGraphicsListBloc.add(InfoGraphicsListLoad(
+        infoGraphicsCollection: kAllInfographics, limit: 5));
     super.initState();
   }
 
@@ -115,7 +120,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             //   ),
             // ),
             Container(
-              height: 250,
+              height: 260,
               child: _buildInfographic(),
             )
             // Container(
@@ -209,7 +214,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 
   Widget _buildLoading() {
     return Container(
-      height: 260,
+      height: 265,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           padding: const EdgeInsets.only(
@@ -269,6 +274,14 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   }
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
+    if (widget.searchQuery != null) {
+      listData = listData
+          .where((test) => test['title']
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return Container(
       width: MediaQuery.of(context).size.width,
       child: listData.isNotEmpty
@@ -276,7 +289,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              itemCount: widget.searchQuery != null ? listData.length : 5,
               itemBuilder: (context, index) {
                 final DocumentSnapshot document = listData[index];
                 return Container(
@@ -387,7 +400,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               })
           : EmptyData(
               message: Dictionary.emptyData,
-              desc: '',
+              desc: Dictionary.descEmptyData,
               isFlare: false,
               image: "${Environment.imageAssets}not_found.png",
             ),

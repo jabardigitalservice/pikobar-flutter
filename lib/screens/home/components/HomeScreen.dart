@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/HistoryTabHome.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -51,7 +52,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   RemoteConfigBloc _remoteConfigBloc;
   BannersBloc _bannersBloc;
   StatisticsBloc _statisticsBloc;
@@ -72,11 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
     Analytics.tappedJabarToday,
     Analytics.tappedCovidInformation,
   ];
+  TabController tabController;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
     getDataFromServer();
+    setControllerTab();
     super.initState();
   }
 
@@ -88,6 +92,22 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((QuerySnapshot snapshot) {
       insertIntoDatabase(snapshot);
     }).catchError((error) {});
+  }
+
+  setControllerTab() async {
+    String historyTab =
+        await HistoryTabHomeSharedPreference.getHistoryTabHome();
+    tabController =
+        new TabController(vsync: this, length: listItemTitleTab.length);
+    for (int i = 0; i < listItemTitleTab.length; i++) {
+      if (historyTab != null) {
+        if (historyTab == listItemTitleTab[i]) {
+          setState(() {
+            tabController.animateTo(i);
+          });
+        }
+      }
+    }
   }
 
   Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
@@ -147,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
-                _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 5)))
+                _documentsBloc = DocumentsBloc()..add(DocumentsLoad()))
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -193,9 +213,16 @@ class _HomeScreenState extends State<HomeScreen> {
           labelColor: Colors.white,
           isScrollable: false,
           unselectedLabelColor: Colors.grey,
+          tabController: tabController,
           sizeLabel: 13.0,
-          onTap: (index) {
+          onTap: (index) async {
+            if (listItemTitleTab[index] == Dictionary.covidInformation) {
+              _newsListBloc.add(
+                  NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+            }
             AnalyticsHelper.setLogEvent(analyticsData[index]);
+            await HistoryTabHomeSharedPreference.setHistoryTabHome(
+                listItemTitleTab[index]);
           },
           tabBarView: <Widget>[
             JabarTodayScreen(),
@@ -298,6 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    tabController.dispose();
     _remoteConfigBloc.close();
     _bannersBloc.close();
     _statisticsBloc.close();

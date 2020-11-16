@@ -91,7 +91,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                 //         widget.listItemTitleTab[i], dataSelected));
                 //   }
                 // });
-                // widget.onTap(index);
+                widget.onTap(index);
               },
               labelColor: widget.labelColor,
               unselectedLabelColor: widget.unselectedLabelColor,

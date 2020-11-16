@@ -25,20 +25,16 @@ import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 class NewsScreen extends StatefulWidget {
   final String news;
   final int maxLength;
+  final String searchQuery;
 
-  NewsScreen({@required this.news, this.maxLength});
+  NewsScreen({@required this.news, this.maxLength, this.searchQuery});
 
   @override
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen>
-    with AutomaticKeepAliveClientMixin<NewsScreen> {
-// ignore: close_sinks
+class _NewsScreenState extends State<NewsScreen> {
   NewsListBloc newsListBloc;
-
-  @override
-  bool get wantKeepAlive => false;
 
   @override
   void initState() {
@@ -81,6 +77,15 @@ class _NewsScreenState extends State<NewsScreen>
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.labels,
         defaultValue: FirebaseConfig.labelsDefaultValue);
+
+    if (widget.searchQuery != null) {
+      list = list
+          .where((test) => test.title
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return Container(
       child: Column(
         children: [
@@ -138,7 +143,7 @@ class _NewsScreenState extends State<NewsScreen>
           //   ),
           // ),
           Container(
-            height: 250,
+            height: 265,
             width: MediaQuery.of(context).size.width,
             child: list.isNotEmpty
                 ? ListView.builder(
@@ -275,7 +280,7 @@ class _NewsScreenState extends State<NewsScreen>
                     })
                 : EmptyData(
                     message: Dictionary.emptyData,
-                    desc: '',
+                    desc: Dictionary.descEmptyData,
                     isFlare: false,
                     image: "${Environment.imageAssets}not_found.png",
                   ),
