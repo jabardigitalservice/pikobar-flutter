@@ -25,6 +25,21 @@ jobs:
         with:
           ref: ${{ github.REF }}
           fetch-depth: 0
+          
+      - name: "Execution Permission"
+        run: chmod -R +x ./.github/workflows/scripts
+
+      # Install Flutter
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable # or: beta
+
+      # Install Tools
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh 
+      
+      # Build APK
+      - name: "Run code coverage"
+        run: ./.github/workflows/scripts/flutter-test.sh
 
       # Conditional execution can be done, in this case the parameter to use with sonar scanner are different if we are analyzing master or a branch
       - name: 'Run an analysis of the ${{ github.REF }} branch'
