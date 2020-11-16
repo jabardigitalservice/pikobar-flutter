@@ -465,77 +465,69 @@ class _NewsScreenState extends State<NewsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width-45,
-                    height: 300,
-                    child: widget.news == Dictionary.importantInfo ||
-                            data.published
-                        ? Stack(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(left: 6),
-                                width: 70,
-                                height: 70,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl: data.image,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(
-                                        heightFactor: 4.2,
-                                        child: CupertinoActivityIndicator()),
-                                    errorWidget: (context, url, error) => Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                3.3,
-                                        color: Colors.grey[200],
-                                        child: Image.asset(
-                                            '${Environment.iconAssets}pikobar.png',
-                                            fit: BoxFit.fitWidth)),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 5),
+                  Stack(
+                    children: [
+                      Container(
+                        color: Colors.black12.withOpacity(0.1),
+                        width: MediaQuery.of(context).size.width - 45,
+                        height: 300,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: CachedNetworkImage(
+                            imageUrl: data.image,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                                heightFactor: 4.2,
+                                child: CupertinoActivityIndicator()),
+                            errorWidget: (context, url, error) => Container(
+                                height:
+                                    MediaQuery.of(context).size.height / 3.3,
+                                color: Colors.grey[200],
                                 child: Image.asset(
-                                    '${Environment.imageAssets}label.png',
-                                    fit: BoxFit.fill,
-                                    width: 65.0,
-                                    height: 32.0),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 9, left: 5),
-                                child: Text(
-                                  Dictionary.labelImportantInfo,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w600),
-                                  textAlign: TextAlign.left,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                            ],
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: CachedNetworkImage(
-                              imageUrl: data.image,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
-                                  heightFactor: 4.2,
-                                  child: CupertinoActivityIndicator()),
-                              errorWidget: (context, url, error) => Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 3.3,
-                                  color: Colors.grey[200],
-                                  child: Image.asset(
-                                      '${Environment.iconAssets}pikobar.png',
-                                      fit: BoxFit.fitWidth)),
-                            ),
+                                    '${Environment.iconAssets}pikobar.png',
+                                    fit: BoxFit.fitWidth)),
                           ),
-                  ),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.black12.withOpacity(0.4),
+                        width: MediaQuery.of(context).size.width - 45,
+                        height: 300,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      Positioned(
+                        left: 10,
+                        right: 10,
+                        bottom: 0,
+                        top: 220,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              unixTimeStampToDateTime(data.publishedAt),
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.white),
+                            ),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Text(
+                              data.title,
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                              textAlign: TextAlign.left,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
                   // Container(
                   //   padding: const EdgeInsets.only(left: 10.0),
                   //   width: MediaQuery.of(context).size.width - 120,
