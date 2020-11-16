@@ -460,7 +460,7 @@ class _NewsScreenState extends State<NewsScreen> {
             elevation: 0,
             color: Colors.white,
             child: Container(
-              padding: EdgeInsets.only(left: 5, right: 5, top: 12, bottom: 12),
+              padding: EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -469,7 +469,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     children: [
                       Container(
                         color: Colors.black12.withOpacity(0.1),
-                        width: MediaQuery.of(context).size.width - 45,
+                        width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
@@ -490,13 +490,13 @@ class _NewsScreenState extends State<NewsScreen> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width - 45,
+                        width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
                           color: Colors.black12.withOpacity(0.4),
                           shape: BoxShape.rectangle,
                           borderRadius:
-                          BorderRadius.circular(Dimens.dialogRadius),
+                              BorderRadius.circular(Dimens.dialogRadius),
                         ),
                       ),
                       Positioned(
@@ -631,92 +631,26 @@ class _NewsScreenState extends State<NewsScreen> {
         width: MediaQuery.of(context).size.width,
         child: Container(
           margin: EdgeInsets.only(bottom: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: widget.maxLength != null ? widget.maxLength : 6,
-                  padding: const EdgeInsets.all(10.0),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 80.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Skeleton(
-                                width: MediaQuery.of(context).size.width / 4),
-                          ),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(5.0),
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                      child: Skeleton(
-                                    height: 15.0,
-                                    width: MediaQuery.of(context).size.width,
-                                  )),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Container(
-                                      child: Skeleton(
-                                    height: 15.0,
-                                    width: MediaQuery.of(context).size.width,
-                                  )),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Skeleton(
-                                              height: 20.0,
-                                              width: 20.0,
-                                            ),
-                                            Skeleton(
-                                              height: 15.0,
-                                              width: 55.0,
-                                              margin: 10.0,
-                                            ),
-                                          ],
-                                        ),
-                                        Skeleton(
-                                          height: 15.0,
-                                          width: 55.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int dex) =>
-                      Divider()),
-//              widget.maxLength != null
-//                  ? Container(
-//                margin: EdgeInsets.only(bottom: 10),
-//                padding: EdgeInsets.all(10),
-//                child: ClipRRect(
-//                  borderRadius: BorderRadius.circular(5.0),
-//                  child: Skeleton(
-//                      height: 55.0,
-//                      width: MediaQuery.of(context).size.width),
-//                ),
-//              )
-//                  : Container()
-            ],
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: widget.maxLength != null ? widget.maxLength : 6,
+            padding: const EdgeInsets.all(10.0),
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                height: 300.0,
+                child: Row(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Skeleton(
+                          width: MediaQuery.of(context).size.width - 40),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
