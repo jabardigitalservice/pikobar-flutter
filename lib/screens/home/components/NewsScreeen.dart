@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -23,8 +24,22 @@ class NewsScreen extends StatefulWidget {
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen> {
+class _NewsScreenState extends State<NewsScreen>
+    with AutomaticKeepAliveClientMixin<NewsScreen> {
+// ignore: close_sinks
+  NewsListBloc newsListBloc;
+  String collectionNews;
+
   @override
+  bool get wantKeepAlive => false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return BlocBuilder<NewsListBloc, NewsListState>(
       builder: (context, state) {
@@ -46,15 +61,23 @@ class _NewsScreenState extends State<NewsScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: list.length > 3 ? 3 : list.length,
-                padding: const EdgeInsets.only(bottom: 10.0),
-                itemBuilder: (BuildContext context, int index) {
-                  return designNewsHome(list[index]);
-                },
-                separatorBuilder: (BuildContext context, int dex) => Divider()),
+            list.isNotEmpty
+                ? ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: list.length > 3 ? 3 : list.length,
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    itemBuilder: (BuildContext context, int index) {
+                      return designNewsHome(list[index]);
+                    },
+                    separatorBuilder: (BuildContext context, int dex) =>
+                        Divider())
+                : EmptyData(
+                    message: Dictionary.emptyData,
+                    desc: '',
+                    isFlare: false,
+                    image: "${Environment.imageAssets}not_found.png",
+                  ),
           ],
         ),
       ),
@@ -178,11 +201,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                 child: Container(
                                   child: Row(
                                     children: <Widget>[
-                                      Image.network(
+                                      data.newsChannelIcon.isNotEmpty ? Image.network(
                                         data.newsChannelIcon,
                                         width: 25.0,
                                         height: 25.0,
-                                      ),
+                                      ): Container(),
                                       SizedBox(width: 3.0),
                                       Expanded(
                                         child: Text(
@@ -388,13 +411,20 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildContentList(List<NewsModel> list) {
-    return ListView.builder(
-      itemCount: list.length,
-      padding: const EdgeInsets.only(bottom: 10.0),
-      itemBuilder: (BuildContext context, int index) {
-        return designListNews(list[index]);
-      },
-    );
+    return list.isNotEmpty
+        ? ListView.builder(
+            itemCount: list.length,
+            padding: const EdgeInsets.only(bottom: 10.0),
+            itemBuilder: (BuildContext context, int index) {
+              return designListNews(list[index]);
+            },
+          )
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: '',
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
+          );
   }
 
   _buildLoading() {

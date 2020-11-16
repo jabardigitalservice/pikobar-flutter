@@ -12,9 +12,9 @@ class GugusTugasWebModel {
       {this.id, this.code, this.name, this.website});
 
   factory GugusTugasWebModel.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> json = document.data;
+    Map<String, dynamic> json = document.data();
     return GugusTugasWebModel(
-      id: document.documentID,
+      id: document.id,
       code: json["code"] ?? '',
       name: json["name"] ?? '',
       website: json["website"]?? '',

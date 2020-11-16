@@ -3,12 +3,12 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/BannerModel.dart';
 
 class BannersRepository {
-  final _bannersCollection = Firestore.instance.collection(kBanners);
+  final _bannersCollection = FirebaseFirestore.instance.collection(kBanners);
 
   Stream<List<BannerModel>> getBanners() {
     return _bannersCollection.orderBy('sequence').snapshots().map(
-        (QuerySnapshot snapshot) => snapshot.documents
-            .map((doc) => BannerModel.fromJson(doc.data))
+        (QuerySnapshot snapshot) => snapshot.docs
+            .map((doc) => BannerModel.fromJson(doc.data()))
             .toList());
   }
 }

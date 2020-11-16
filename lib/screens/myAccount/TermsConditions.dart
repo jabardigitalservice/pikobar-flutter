@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -9,7 +10,6 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
-import 'package:html/dom.dart' as dom;
 
 class TermsConditionsPage extends StatefulWidget {
   final Map<String, dynamic> termsConfig;
@@ -75,10 +75,11 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                       left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
                   child: Html(
                       data: widget.termsConfig['description'],
-                      defaultTextStyle:
-                          TextStyle(color: Colors.black, fontSize: 15.0),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.justify;
+                      style: {
+                        'body': Style(
+                            color: Colors.black,
+                            fontSize: FontSize(14.0),
+                            textAlign: TextAlign.justify),
                       },
                       onLinkTap: (url) {
                         _launchURL(url);

@@ -11,9 +11,7 @@ class RapidTestBloc extends Bloc<RapidTestEvent, RapidTestState> {
 
   RapidTestBloc({@required RapidTestReposity rapidTestReposity})
       : assert(rapidTestReposity != null),
-        _rapidTestReposity = rapidTestReposity;
-  @override
-  RapidTestState get initialState => RapidTestInitial();
+        _rapidTestReposity = rapidTestReposity, super(RapidTestInitial());
 
   @override
   Stream<RapidTestState> mapEventToState(

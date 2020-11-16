@@ -14,43 +14,35 @@ part 'SelfReportListState.dart';
 class SelfReportListBloc
     extends Bloc<SelfReportListEvent, SelfReportListState> {
   StreamSubscription _subscription;
-  @override
-  SelfReportListState get initialState => SelfReportListInitial();
+
+  SelfReportListBloc() : super(SelfReportListInitial());
 
   @override
   Stream<SelfReportListState> mapEventToState(
     SelfReportListEvent event,
   ) async* {
     if (event is SelfReportListLoad) {
-      yield* _loadSelfReportListToState();
+      yield* _loadSelfReportListToState(event.otherUID);
     } else if (event is SelfReportListUpdated) {
       yield* _selfReportListToState(event);
     }
-
   }
 
- 
-
-  Stream<SelfReportListState> _loadSelfReportListToState() async* {
+  Stream<SelfReportListState> _loadSelfReportListToState(
+      String otherUID) async* {
     yield SelfReportListLoading();
     _subscription?.cancel();
     String userId = await AuthRepository().getToken();
 
     _subscription = SelfReportRepository()
-        .getSelfReportList(userId: userId)
+        .getSelfReportList(userId: userId, otherUID: otherUID)
         .listen((event) {
       add(SelfReportListUpdated(event));
     });
   }
 
-
-
   Stream<SelfReportListState> _selfReportListToState(
       SelfReportListUpdated event) async* {
-      yield SelfReportListLoaded(
-          querySnapshot: event.selfReportList);
-    
+    yield SelfReportListLoaded(querySnapshot: event.selfReportList);
   }
-
- 
 }

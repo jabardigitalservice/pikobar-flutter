@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:html/dom.dart' as dom;
+import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Expandable.dart';
@@ -58,7 +58,7 @@ class _FaqScreenState extends State<FaqScreen> {
           hintText: Dictionary.findFaq,
           onChanged: updateSearchQuery),
       body: StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection(kFaq)
             .orderBy('sequence_number')
             .snapshots(),
@@ -68,13 +68,13 @@ class _FaqScreenState extends State<FaqScreen> {
 
             // if search active
             if (searchQuery.isNotEmpty) {
-              dataFaq = snapshot.data.documents
+              dataFaq = snapshot.data.docs
                   .where((test) => test['title']
                       .toLowerCase()
                       .contains(searchQuery.toLowerCase()))
                   .toList();
             } else {
-              dataFaq = snapshot.data.documents;
+              dataFaq = snapshot.data.docs;
             }
 
             final int messageCount = dataFaq.length;
@@ -232,13 +232,18 @@ class _FaqScreenState extends State<FaqScreen> {
                     padding: EdgeInsets.only(bottom: 10),
                     child: Html(
                       data: dataHelp['content'].replaceAll('\n', '</br>'),
-                      defaultTextStyle:
-                          TextStyle(color: Colors.grey[600], fontSize: 14.0),
+                      style: {
+                        'body': Style(
+                            margin: EdgeInsets.zero,
+                            color: Colors.grey[600],
+                            fontSize: FontSize(14.0),
+                            textAlign: TextAlign.start),
+                        'li': Style(
+                          margin: EdgeInsets.only(bottom: 10.0)
+                        )
+                      },
                       onLinkTap: (url) {
                         launchExternal(url);
-                      },
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.left;
                       },
                     ),
                   ),

@@ -96,7 +96,7 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
         });
   }
 
-  _buildContent(List<ImportantinfoModel> list) {
+  _buildContent(List<ImportantInfoModel> list) {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       width: MediaQuery.of(context).size.width,
@@ -118,7 +118,7 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
     );
   }
 
-  Widget designImportantInfoHome(ImportantinfoModel data) {
+  Widget designImportantInfoHome(ImportantInfoModel data) {
     return GestureDetector(
       child: Container(
           height: 80.0,
@@ -155,7 +155,7 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
     );
   }
 
-  Widget designListImportantInfo(ImportantinfoModel data) {
+  Widget designListImportantInfo(ImportantInfoModel data) {
     return Card(
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -241,7 +241,7 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
     );
   }
 
-  _buildContentList(List<ImportantinfoModel> list) {
+  _buildContentList(List<ImportantInfoModel> list) {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,

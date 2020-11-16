@@ -4,6 +4,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -171,7 +172,6 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                     Dimens.padding),
                                 child: BlocBuilder<CheckdistributionBloc,
                                     CheckdistributionState>(
-                                  bloc: _checkdistributionBloc,
                                   builder: (context, state) {
                                     return Column(
                                       children: <Widget>[
@@ -400,7 +400,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
   Future<void> _handleLocation({bool isOther = false, String id}) async {
     var permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
-   // Check status permission
+    // Check status permission
     if (await permissionService.status.isGranted) {
       // Get user location by current location or pick in maps
       await _actionFindLocation(isOther, id);
@@ -417,8 +417,10 @@ class _CheckDistributionState extends State<CheckDistribution> {
                 description: Dictionary.permissionLocationSpread,
                 onOkPressed: () async {
                   Navigator.of(context).pop();
-                  if (await permissionService.status.isDenied) {
-                    await AppSettings.openLocationSettings();
+                  if (await permissionService.status.isPermanentlyDenied) {
+                    Platform.isAndroid
+                        ? await AppSettings.openAppSettings()
+                        : await AppSettings.openLocationSettings();
                   } else {
                     permissionService.request().then((status) {
                       _onStatusRequested(context, status,
@@ -435,14 +437,14 @@ class _CheckDistributionState extends State<CheckDistribution> {
     }
   }
 
- // Get distribution from api
+  // Get distribution from api
   _checkDistribution(latitude, longitude, bool isOther, {String id}) {
     _checkdistributionBloc.add(LoadCheckDistribution(
         lat: latitude, long: longitude, id: id, isOther: isOther));
   }
 
   _actionFindLocation(bool isOther, String id) async {
-    /// Checking [isOther] 
+    /// Checking [isOther]
     /// When true pick location in maps
     if (isOther) {
       LatLng result = await Navigator.push(
@@ -469,11 +471,9 @@ class _CheckDistributionState extends State<CheckDistribution> {
       }
     } else {
       // Pick location by current location
-      Position position = await Geolocator()
-          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getLastKnownPosition();
       if (position != null && position.latitude != null) {
-        List<Placemark> placemarks = await Geolocator()
-            .placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];
@@ -492,8 +492,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
               id: id);
         }
       } else {
-        List<Placemark> placemarks = await Geolocator()
-            .placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];

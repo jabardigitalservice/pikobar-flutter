@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,12 +13,13 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
-  final String reportId;
+  final String reportId, otherUID, analytics;
 
-  SelfReportDetailScreen(this.reportId);
+  SelfReportDetailScreen(this.reportId, this.otherUID, this.analytics);
 
   @override
   _SelfReportDetailScreenState createState() => _SelfReportDetailScreenState();
@@ -42,7 +42,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
       appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportDetail),
       body: BlocProvider<SelfReportDetailBloc>(
         create: (context) => _selfReportDetailBloc
-          ..add(SelfReportDetailLoad(selfReportId: widget.reportId)),
+          ..add(SelfReportDetailLoad(
+              selfReportId: widget.reportId, otherUid: widget.otherUID)),
         child: BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
             builder: (context, state) {
           return state is SelfReportDetailLoaded
@@ -133,10 +134,54 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                         Expanded(
                           child: _buildText(
                               text: Dictionary.contactDateCovid, isLabel: true),
-                        ),SizedBox(width: 40,),
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
                         _buildText(
                             text: unixTimeStampToDate(
                                 state.documentSnapshot['contact_date'].seconds))
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Container(),
+
+        /// Divider
+        Container(
+          height: 8.0,
+          color: ColorBase.grey,
+        ),
+        getField(state.documentSnapshot, 'quarantine_date') != null &&
+                getField(state.documentSnapshot, 'quarantine_date').toString().isNotEmpty
+            ? Column(
+                children: <Widget>[
+                  /// Divider
+                  Container(
+                    height: 8.0,
+                    color: ColorBase.grey,
+                  ),
+
+                  /// Quarantine date section
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Dimens.padding,
+                        vertical: Dimens.verticalPadding),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: _buildText(
+                              text: Dictionary.quarantineDate, isLabel: true),
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        _buildText(
+                            text: unixTimeStampToDate(state
+                                .documentSnapshot['quarantine_date'].seconds))
                       ],
                     ),
                   ),
@@ -220,8 +265,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 DateTime.fromMillisecondsSinceEpoch(
                     state.documentSnapshot['created_at'].seconds * 1000),
                 currentDay)
-            ?
-        Container(
+            ? Container(
                 height: 38.0,
                 margin: EdgeInsets.only(
                     left: Dimens.padding,
@@ -249,19 +293,24 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
                       var dailyReportModel = DailyReportModel(
                           id: state.documentSnapshot['id'],
-                          createdAt: DateTime.fromMillisecondsSinceEpoch(
-                              state.documentSnapshot['created_at'].seconds *
-                                  1000),
-                          contactDate:
-                              state.documentSnapshot['contact_date'] != null
+                          quarantineDate:
+                              state.documentSnapshot['quarantine_date'] != null
                                   ? DateTime.fromMillisecondsSinceEpoch(state
-                                          .documentSnapshot['contact_date']
+                                          .documentSnapshot['quarantine_date']
                                           .seconds *
                                       1000)
                                   : null,
+                          createdAt: DateTime.fromMillisecondsSinceEpoch(
+                              state.documentSnapshot['created_at'].seconds *
+                                  1000),
+                          contactDate: state.documentSnapshot['contact_date'] != null
+                              ? DateTime.fromMillisecondsSinceEpoch(state
+                                      .documentSnapshot['contact_date']
+                                      .seconds *
+                                  1000)
+                              : null,
                           indications: state.documentSnapshot['indications'],
-                          bodyTemperature:
-                              state.documentSnapshot['body_temperature'],
+                          bodyTemperature: state.documentSnapshot['body_temperature'],
                           location: latLng);
 
                       /// Move to form screen
@@ -269,7 +318,9 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                           await Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => SelfReportFormScreen(
                                     dailyId: state.documentSnapshot['id'],
+                                    otherUID: widget.otherUID,
                                     location: latLng,
+                                    analytics: widget.analytics,
                                     dailyReportModel: dailyReportModel,
                                   )));
 
@@ -277,7 +328,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                       if (isUpdateForm != null && isUpdateForm) {
                         _selfReportDetailBloc
                           ..add(SelfReportDetailLoad(
-                              selfReportId: widget.reportId));
+                              selfReportId: widget.reportId,
+                              otherUid: widget.otherUID));
                       }
                     }),
               )

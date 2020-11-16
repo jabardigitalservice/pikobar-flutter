@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ImportantinfoModel {
+class ImportantInfoModel {
   String id;
   String title;
   String content;
@@ -12,7 +12,7 @@ class ImportantinfoModel {
   bool published;
   int publishedAt;
 
-  ImportantinfoModel({
+  ImportantInfoModel({
     this.id,
     this.title,
     this.content,
@@ -25,11 +25,11 @@ class ImportantinfoModel {
     this.publishedAt,
   });
 
-  factory ImportantinfoModel.fromFirestore(DocumentSnapshot document) {
-    Map<String, dynamic> json = document.data;
+  factory ImportantInfoModel.fromFirestore(DocumentSnapshot document) {
+    Map<String, dynamic> json = document.data();
 
-    return ImportantinfoModel(
-      id: document.documentID,
+    return ImportantInfoModel(
+      id: document.id,
       title: json["title"] ?? '',
       content: json["content"] ?? '',
       image: json["image"] ?? '',

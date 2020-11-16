@@ -10,19 +10,23 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Documents extends StatefulWidget {
   @override
@@ -44,7 +48,7 @@ class _DocumentsState extends State<Documents> {
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
-    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -60,7 +64,7 @@ class _DocumentsState extends State<Documents> {
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontFamily: FontsFamily.lato,
-                    fontSize: 16.0),
+                    fontSize: Dimens.textTitleSize),
               ),
               InkWell(
                 child: Text(
@@ -69,7 +73,7 @@ class _DocumentsState extends State<Documents> {
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.Document);
@@ -83,7 +87,7 @@ class _DocumentsState extends State<Documents> {
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Text(
-           getLabel['documents']['description'],
+            getLabel['documents']['description'],
             style: TextStyle(
                 color: Colors.black,
                 fontFamily: FontsFamily.lato,
@@ -127,7 +131,7 @@ class _DocumentsState extends State<Documents> {
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () {
                   Navigator.pushNamed(context, NavigationConstrants.Document);
@@ -273,74 +277,82 @@ class _DocumentsState extends State<Documents> {
               ],
             ),
           ),
-          ListView.builder(
-              padding: const EdgeInsets.only(
-                  left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: dataDocuments.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot document = dataDocuments[index];
+          dataDocuments.isNotEmpty
+              ? ListView.builder(
+                  padding: const EdgeInsets.only(
+                      left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: dataDocuments.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot document = dataDocuments[index];
 
-                return Container(
-                    child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    return Container(
+                        child: Column(
                       children: <Widget>[
-                        SizedBox(width: 10),
-                        Container(
-                          width: 85,
-                          child: Text(
-                            unixTimeStampToDateDocs(
-                                document['published_at'].seconds),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 13.0),
-                            textAlign: TextAlign.left,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Platform.isAndroid
-                                  ? _downloadAttachment(document['title'],
-                                      document['document_url'])
-                                  : _viewPdf(document['title'],
-                                      document['document_url']);
-                            },
-                            child: Text(
-                              document['title'],
-                              style: TextStyle(
-                                  fontFamily: FontsFamily.lato,
-                                  color: Colors.lightBlueAccent[700],
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 13.0),
-                              textAlign: TextAlign.left,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(width: 10),
+                            Container(
+                              width: 85,
+                              child: Text(
+                                unixTimeStampToDateDocs(
+                                    document['published_at'].seconds),
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 13.0),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  Platform.isAndroid
+                                      ? _downloadAttachment(document['title'],
+                                          document['document_url'])
+                                      : _viewPdf(document['title'],
+                                          document['document_url']);
+                                },
+                                child: Text(
+                                  document['title'],
+                                  style: TextStyle(
+                                      fontFamily: FontsFamily.lato,
+                                      color: Colors.lightBlueAccent[700],
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 13.0),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ),
+                            ShareButton(
+                              onPressed: () {
+                                DocumentServices().shareDocument(
+                                    document['title'],
+                                    document['document_url']);
+                              },
+                            )
+                          ],
                         ),
-                        ShareButton(
-                          onPressed: () {
-                            DocumentServices().shareDocument(
-                                document['title'], document['document_url']);
-                          },
+                        Container(
+                          margin: EdgeInsets.only(top: 10, bottom: 10),
+                          color: Colors.grey[200],
+                          width: MediaQuery.of(context).size.width,
+                          height: 1.5,
                         )
                       ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      color: Colors.grey[200],
-                      width: MediaQuery.of(context).size.width,
-                      height: 1.5,
-                    )
-                  ],
-                ));
-              })
+                    ));
+                  })
+              : EmptyData(
+                  message: Dictionary.emptyData,
+                  desc: '',
+                  isFlare: false,
+                  image: "${Environment.imageAssets}not_found.png",
+                )
         ],
       ),
     );

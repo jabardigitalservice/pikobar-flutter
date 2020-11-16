@@ -7,8 +7,8 @@ import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 import './Bloc.dart';
 
 class NewsDetailBloc extends Bloc<NewsDetailEvent, NewsDetailState> {
-  @override
-  NewsDetailState get initialState => InitialNewsDetailState();
+
+  NewsDetailBloc() : super(InitialNewsDetailState());
 
   @override
   Stream<NewsDetailState> mapEventToState(

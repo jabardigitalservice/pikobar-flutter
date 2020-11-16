@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
@@ -19,6 +17,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/DailyReportModel.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportDoneScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/RegexInputFormatter.dart';
 
@@ -26,9 +25,15 @@ class SelfReportFormScreen extends StatefulWidget {
   final String dailyId;
   final LatLng location;
   final DailyReportModel dailyReportModel;
+  final String otherUID;
+  final String analytics;
 
   SelfReportFormScreen(
-      {@required this.dailyId, @required this.location, this.dailyReportModel})
+      {@required this.dailyId,
+      @required this.location,
+      this.dailyReportModel,
+      this.otherUID,
+      @required this.analytics})
       : assert(dailyId != null),
         assert(location != null);
 
@@ -39,6 +44,7 @@ class SelfReportFormScreen extends StatefulWidget {
 class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
+  final _quarantineDateController = TextEditingController();
   final _otherIndicationsController = TextEditingController();
   final _bodyTempController = MaskedTextController(mask: '00.0');
 
@@ -47,6 +53,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   String _format = 'dd-MMMM-yyyy';
   String _minDate = '2019-01-01';
   bool _isDateEmpty = false;
+  bool _isquarantineDateEmpty = false;
   bool _isIndicationEmpty = false;
   bool _isOtherIndicationEmpty = false;
   bool _isOtherIndication = false;
@@ -78,6 +85,10 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       _dateController.text = widget.dailyReportModel.contactDate != null
           ? widget.dailyReportModel.contactDate.toString()
           : '';
+      _quarantineDateController.text =
+          widget.dailyReportModel.quarantineDate != null
+              ? widget.dailyReportModel.quarantineDate.toString()
+              : '';
       _bodyTempController.text = widget.dailyReportModel.bodyTemperature;
       _checkedItemList = widget.dailyReportModel.indications
           .substring(1, widget.dailyReportModel.indications.length - 1)
@@ -101,12 +112,32 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       body: BlocProvider<DailyReportBloc>(
         create: (BuildContext context) => _dailyReportBloc = DailyReportBloc(),
         child: BlocListener(
-          bloc: _dailyReportBloc,
+          cubit: _dailyReportBloc,
           listener: (context, state) {
             if (state is DailyReportSaved) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);
               Navigator.of(context).pop();
-              _showSuccessBottomSheet();
+              // Bottom sheet success message
+              _showBottomSheetForm(
+                  '${Environment.imageAssets}daily_success.png',
+                  Dictionary.savedSuccessfully,
+                  Dictionary.dailySuccess, () async {
+                if (widget.dailyId == '14') {
+                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop(true);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SelfReportDoneScreen(
+                            widget.location,
+                            widget.otherUID,
+                            widget.analytics)),
+                  );
+                } else {
+                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop(true);
+                }
+              });
             } else if (state is DailyReportFailed) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);
               Navigator.of(context).pop();
@@ -141,7 +172,28 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                                     ? Dictionary.contactDatePlaceholder
                                     : DateFormat.yMMMMd('id').format(
                                         DateTime.parse(_dateController.text)),
-                                isEmpty: _isDateEmpty),
+                                isEmpty: _isDateEmpty,
+                                controller: _dateController),
+                            SizedBox(height: Dimens.padding),
+                          ],
+                        )
+                      : Container(),
+                  widget.dailyId == '1'
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            buildLabel(text: Dictionary.quarantineQuestion),
+                            SizedBox(height: Dimens.padding),
+                            buildDateField(
+                                title: Dictionary.quarantineDate,
+                                placeholder: _quarantineDateController.text ==
+                                        ''
+                                    ? Dictionary.quarantineDatePlaceholder
+                                    : DateFormat.yMMMMd('id').format(
+                                        DateTime.parse(
+                                            _quarantineDateController.text)),
+                                isEmpty: _isquarantineDateEmpty,
+                                controller: _quarantineDateController),
                             SizedBox(height: Dimens.padding),
                           ],
                         )
@@ -267,7 +319,20 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           fontSize: 12.0,
                           fontWeight: FontWeight.w900,
                           color: Colors.white),
-                      onPressed: _saveSelfReport),
+                      onPressed: () {
+                        if (_bodyTempController.text.isEmpty) {
+                          // Bottom sheet temperature message
+                          _showBottomSheetForm(
+                              '${Environment.imageAssets}temperature_info.png',
+                              Dictionary.additionalTemperatureInformation,
+                              Dictionary.descTemperatureInformation, () {
+                            Navigator.of(context).pop(true);
+                            _saveSelfReport();
+                          });
+                        } else {
+                          _saveSelfReport();
+                        }
+                      }),
                   SizedBox(height: Dimens.padding),
                 ],
               ),
@@ -303,13 +368,17 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   }
 
   // Funtion to build date field
-  Widget buildDateField({String title, placeholder, bool isEmpty}) {
+  Widget buildDateField(
+      {String title,
+      placeholder,
+      bool isEmpty,
+      TextEditingController controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         InkWell(
           onTap: () {
-            _showDatePicker();
+            _showDatePicker(controller, isEmpty);
           },
           child: Container(
             height: 40,
@@ -332,7 +401,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       fontFamily: FontsFamily.lato,
-                      color: placeholder == Dictionary.contactDatePlaceholder
+                      color: placeholder == Dictionary.contactDatePlaceholder ||
+                              placeholder ==
+                                  Dictionary.quarantineDatePlaceholder
                           ? ColorBase.darkGrey
                           : Colors.black),
                 ),
@@ -359,7 +430,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   }
 
   // Function to build Date Picker
-  void _showDatePicker() {
+  void _showDatePicker(TextEditingController controller, bool isEmpty) {
     DatePicker.showDatePicker(
       context,
       pickerTheme: DateTimePickerTheme(
@@ -369,22 +440,23 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       ),
       minDateTime: DateTime.parse(_minDate),
       maxDateTime: DateTime.now(),
-      initialDateTime: _dateController.text == ''
+      initialDateTime: controller.text == ''
           ? DateTime.now()
-          : DateTime.parse(_dateController.text),
+          : DateTime.parse(controller.text),
       dateFormat: _format,
       locale: DateTimePickerLocale.id,
       onConfirm: (dateTime, List<int> index) {
         setState(() {
-          _dateController.text = dateTime.toString();
-          _isDateEmpty = _dateController.text.isEmpty;
+          controller.text = dateTime.toString();
+          isEmpty = controller.text.isEmpty;
         });
       },
     );
   }
 
-  // Bottom sheet success message
-  void _showSuccessBottomSheet() {
+  // Bottom sheet message form
+  void _showBottomSheetForm(String image, String titleDialog, String descDialog,
+      GestureTapCallback onPressed) {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.white,
@@ -404,13 +476,13 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 44.0),
                   child: Image.asset(
-                    '${Environment.imageAssets}daily_success.png',
+                    image,
                     fit: BoxFit.fitWidth,
                   ),
                 ),
                 SizedBox(height: 24.0),
                 Text(
-                  Dictionary.savedSuccessfully,
+                  titleDialog,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: FontsFamily.lato,
@@ -419,7 +491,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  Dictionary.dailySuccess,
+                  descDialog,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: FontsFamily.lato,
@@ -436,10 +508,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         color: Colors.white),
                     color: ColorBase.green,
                     elevation: 0.0,
-                    onPressed: () async {
-                      Navigator.of(context).pop(true);
-                      Navigator.of(context).pop(true);
-                    })
+                    onPressed: onPressed)
               ],
             ),
           );
@@ -452,8 +521,10 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       _isIndicationEmpty = _checkedItemList.isEmpty;
       if (widget.dailyId == '1') {
         _isDateEmpty = _dateController.text.isEmpty;
+        _isquarantineDateEmpty = _quarantineDateController.text.isEmpty;
       } else {
         _isDateEmpty = false;
+        _isquarantineDateEmpty = false;
       }
       if (_isOtherIndication) {
         _isOtherIndicationEmpty = _otherIndicationsController.text.isEmpty;
@@ -473,10 +544,13 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             contactDate: _dateController.text.isNotEmpty
                 ? DateTime.parse(_dateController.text)
                 : null,
+            quarantineDate: _quarantineDateController.text.isNotEmpty
+                ? DateTime.parse(_quarantineDateController.text)
+                : null,
             indications: _checkedItemList.toString(),
             bodyTemperature: _bodyTempController.text,
             location: widget.location);
-        _dailyReportBloc.add(DailyReportSave(data));
+        _dailyReportBloc.add(DailyReportSave(data, otherUID: widget.otherUID));
       }
     }
   }
@@ -488,5 +562,6 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
     _otherIndicationsController.dispose();
     _bodyTempController.dispose();
     _dateController.dispose();
+    _quarantineDateController.dispose();
   }
 }

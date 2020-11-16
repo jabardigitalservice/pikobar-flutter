@@ -6,8 +6,8 @@ import './Bloc.dart';
 
 class RemoteConfigBloc extends Bloc<RemoteConfigEvent, RemoteConfigState> {
   final RemoteConfigRepository _repository = RemoteConfigRepository();
-  @override
-  RemoteConfigState get initialState => InitialRemoteConfigState();
+
+  RemoteConfigBloc() : super(InitialRemoteConfigState());
 
   @override
   Stream<RemoteConfigState> mapEventToState(

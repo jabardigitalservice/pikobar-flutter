@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
@@ -77,7 +77,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       create: (context) => _newsDetailBloc = NewsDetailBloc()
         ..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
       child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
-        bloc: _newsDetailBloc,
         builder: (context, state) {
           return _buildScaffold(context, state);
         },
@@ -291,10 +290,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   SizedBox(height: 10.0),
                   Html(
                       data: data.content,
-                      defaultTextStyle:
-                          TextStyle(color: Colors.black, fontSize: 15.0),
-                      customTextAlign: (dom.Node node) {
-                        return TextAlign.left;
+                      style: {
+                        'body': Style(
+                            color: Colors.black,
+                            fontSize: FontSize(14.0),
+                            textAlign: TextAlign.start),
                       },
                       onLinkTap: (url) {
                         _launchURL(url);

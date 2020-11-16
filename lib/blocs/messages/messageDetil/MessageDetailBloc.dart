@@ -4,14 +4,14 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 import './Bloc.dart';
 
 class MessageDetailBloc extends Bloc<MessageDetailEvent, MessageDetailState> {
   final MessageRepository messageRepository = MessageRepository();
 
-  @override
-  MessageDetailState get initialState => InitialMessageDetailState();
+  MessageDetailBloc() : super(InitialMessageDetailState());
 
   @override
   Stream<MessageDetailState> mapEventToState(
@@ -24,13 +24,13 @@ class MessageDetailBloc extends Bloc<MessageDetailEvent, MessageDetailState> {
           await messageRepository.getDetail(event.messageId);
 
       MessageModel data = MessageModel(
-          id: snapshot.documentID,
-          backLink: snapshot.data['backlink'],
-          content: snapshot.data['content'],
-          title: snapshot.data['title'],
-          actionTitle: snapshot.data['action_title'],
-          actionUrl: snapshot.data['action_url'],
-          publishedAt: snapshot.data['published_at'].seconds,
+          id: snapshot.id,
+          backLink: getField(snapshot,'backlink'),
+          content: getField(snapshot,'content'),
+          title: getField(snapshot,'title'),
+          actionTitle: getField(snapshot, 'action_title'),
+          actionUrl: getField(snapshot, 'action_url'),
+          publishedAt: snapshot.get('published_at').seconds,
           readAt: 100);
 
       await MessageRepository().updateData(data);

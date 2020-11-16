@@ -18,7 +18,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/GetLabelRemoteConfig.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class MenuList extends StatefulWidget {
@@ -42,7 +42,7 @@ class _MenuListState extends State<MenuList> {
 
   _buildContent(RemoteConfig remoteConfig) {
     _remoteConfig = remoteConfig;
-    Map<String, dynamic> getLabel = GetLabelRemoteConfig.getLabel(remoteConfig);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
     return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.fromLTRB(Dimens.padding, 10.0, Dimens.padding, 20.0),
@@ -59,7 +59,7 @@ class _MenuListState extends State<MenuList> {
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 16.0),
+                      fontSize: Dimens.textTitleSize),
                 ),
                 SizedBox(height: 8.0),
                 Text(
@@ -67,7 +67,7 @@ class _MenuListState extends State<MenuList> {
                   style: TextStyle(
                       color: Colors.black,
                       fontFamily: FontsFamily.lato,
-                      fontSize: 12.0),
+                      fontSize: Dimens.textSubtitleSize),
                 ),
               ],
             ),
@@ -116,13 +116,13 @@ class _MenuListState extends State<MenuList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonColumn('${Environment.iconAssets}report.png',
-              Dictionary.titleSelfReport, NavigationConstrants.SelfReports,
-              isNew: true),
+              Dictionary.titleSelfReport, NavigationConstrants.SelfReports,),
           _buildButtonColumn('${Environment.iconAssets}self_diagnose.png',
               Dictionary.selfDiagnose, NavigationConstrants.Browser,
               arguments: kUrlSelfDiagnose),
-          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
+          _buildButtonColumn('${Environment.iconAssets}help.png',
+              Dictionary.donation, NavigationConstrants.Browser,
+              arguments: kUrlDonation),
           _buildButtonColumnLayananLain(
               '${Environment.iconAssets}menu_other.png', Dictionary.otherMenus),
         ],
@@ -145,9 +145,8 @@ class _MenuListState extends State<MenuList> {
           _buildButtonColumn('${Environment.iconAssets}logistics.png',
               Dictionary.logistic, NavigationConstrants.Browser,
               arguments: kUrlLogisticsInfo),
-          _buildButtonColumn('${Environment.iconAssets}help.png',
-              Dictionary.donation, NavigationConstrants.Browser,
-              arguments: kUrlDonation),
+          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook),
         ],
       ),
     );
@@ -269,8 +268,7 @@ class _MenuListState extends State<MenuList> {
         children: [
           /// Menu Button Self Reports
           _buildButtonColumn('${Environment.iconAssets}report.png',
-              Dictionary.titleSelfReport, NavigationConstrants.SelfReports,
-              isNew: true),
+              Dictionary.titleSelfReport, NavigationConstrants.SelfReports),
 
           /// Menu Button Self Diagnose
           /// Remote Config : enabled, caption & url
@@ -301,10 +299,19 @@ class _MenuListState extends State<MenuList> {
                               .getString(FirebaseConfig.selfDiagnoseCaption)
                           : Dictionary.selfDiagnose),
 
-          /// Menu Button Emergency Numbers
-          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
-              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook,
-              remoteMenuLoginKey: FirebaseConfig.emergencyNumberMenu),
+          /// Menu Button Donation
+          /// Remote Config : caption & url
+          _buildButtonColumn(
+              '${Environment.iconAssets}help.png',
+              _remoteConfig.getString(FirebaseConfig.donationCaption) != null
+                  ? _remoteConfig.getString(FirebaseConfig.donationCaption)
+                  : Dictionary.donation,
+              NavigationConstrants.Browser,
+              arguments:
+              _remoteConfig.getString(FirebaseConfig.donationUrl) != null
+                  ? _remoteConfig.getString(FirebaseConfig.donationUrl)
+                  : kUrlDonation,
+              remoteMenuLoginKey: FirebaseConfig.donationMenu),
 
           /// Menu Button Others
           _buildButtonColumnLayananLain(
@@ -368,19 +375,10 @@ class _MenuListState extends State<MenuList> {
                   : kUrlLogisticsInfo,
               remoteMenuLoginKey: FirebaseConfig.logisticMenu),
 
-          /// Menu Button Donation
-          /// Remote Config : caption & url
-          _buildButtonColumn(
-              '${Environment.iconAssets}help.png',
-              _remoteConfig.getString(FirebaseConfig.donationCaption) != null
-                  ? _remoteConfig.getString(FirebaseConfig.donationCaption)
-                  : Dictionary.donation,
-              NavigationConstrants.Browser,
-              arguments:
-                  _remoteConfig.getString(FirebaseConfig.donationUrl) != null
-                      ? _remoteConfig.getString(FirebaseConfig.donationUrl)
-                      : kUrlDonation,
-              remoteMenuLoginKey: FirebaseConfig.donationMenu),
+          /// Menu Button Emergency Numbers
+          _buildButtonColumn('${Environment.iconAssets}emergency_numbers.png',
+              Dictionary.phoneBookEmergency, NavigationConstrants.Phonebook,
+              remoteMenuLoginKey: FirebaseConfig.emergencyNumberMenu),
         ],
       ),
     );
@@ -436,6 +434,13 @@ class _MenuListState extends State<MenuList> {
                   ? _remoteConfig.getString(FirebaseConfig.jshUrl)
                   : kUrlIGSaberHoax,
               remoteMenuLoginKey: FirebaseConfig.jshMenu),
+
+          /// Add Empty button to adjust the spacing between buttons
+          /// Remove if a new button is added
+          /// Hidden Menu
+          _buildButtonDisable(
+              '${Environment.iconAssets}report_case.png', Dictionary.volunteer,
+              visible: false),
 
           /// Hidden Menu
           _buildButtonDisable(
@@ -515,10 +520,12 @@ class _MenuListState extends State<MenuList> {
                 width: 70.0,
                 height: 70.0,
                 padding: EdgeInsets.all(18.0),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(color: ColorBase.menuBorderColor),
-                    color: Colors.white),
+                decoration: label.isNotEmpty
+                    ? BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: ColorBase.menuBorderColor),
+                        color: Colors.white)
+                    : null,
                 child: Image.asset(
                   iconPath,
                 ),
@@ -685,7 +692,7 @@ class _MenuListState extends State<MenuList> {
                 msg: Dictionary.onDevelopment,
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1);
+                timeInSecForIosWeb: 1);
           },
         ),
       ),

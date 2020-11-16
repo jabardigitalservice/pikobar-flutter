@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 
 class DocumentsRepository {
-  final documentsCollection = Firestore.instance.collection(kDocuments);
+  final documentsCollection = FirebaseFirestore.instance.collection(kDocuments);
 
   Stream<List<DocumentSnapshot>> getDocuments({int limit}) {
     Query documentsQuery =
@@ -13,6 +13,6 @@ class DocumentsRepository {
     }
 
     return documentsQuery.snapshots().map((QuerySnapshot snapshot) =>
-        snapshot.documents.map((doc) => doc).toList());
+        snapshot.docs.map((doc) => doc).toList());
   }
 }

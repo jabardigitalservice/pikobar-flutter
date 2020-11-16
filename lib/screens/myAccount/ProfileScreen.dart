@@ -16,11 +16,14 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/HealthCheck.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HexColor.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
@@ -119,10 +122,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // When user already login get data user from firestore
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
+                    HealthCheck().isUserHealty(_profileLoaded.record.uid);
                     return StreamBuilder<DocumentSnapshot>(
-                        stream: Firestore.instance
-                            .collection('users')
-                            .document(_profileLoaded.record.uid)
+                        stream: FirebaseFirestore.instance
+                            .collection(kUsers)
+                            .doc(_profileLoaded.record.uid)
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -217,22 +221,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: ColorBase.veryDarkGrey,
                               fontSize: 14,
                               fontFamily: FontsFamily.lato)),
-                    )
+                    ),
+                    // Get health status visible from remote config
+                    BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                      builder: (context, remoteState) {
+                        return remoteState is RemoteConfigLoaded
+                            ? _buildHealthStatus(
+                                remoteState.remoteConfig, state.data)
+                            : Container();
+                      },
+                    ),
                   ],
                 ),
               )
             ],
           ),
         ),
-        // Get health status visible from remote config
-        BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-          bloc: _remoteConfigBloc,
-          builder: (context, remoteState) {
-            return remoteState is RemoteConfigLoaded
-                ? _buildHealthStatus(remoteState.remoteConfig, state.data)
-                : Container();
-          },
-        ),
+
         SizedBox(
           height: 15,
           child: Container(
@@ -536,46 +541,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Check if health status visible or not
     return visible && data['health_status_text'] != null
         ? Container(
-            margin: EdgeInsets.only(left: 20, right: 20, bottom: 15),
             decoration: BoxDecoration(
-                color: cardColor, borderRadius: BorderRadius.circular(8)),
+                color: cardColor, borderRadius: BorderRadius.circular(18)),
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      height: 32,
-                      margin: EdgeInsets.only(right: 16.0),
-                      child: Image.asset(uriImage),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            Dictionary.yourHealthStatus,
-                            style: TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 12,
-                                color: textColor),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            data['health_status_text'],
-                            style: TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: textColor),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-          )
+              padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+              child: Text(
+                data['health_status_text'],
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: textColor),
+              ),
+            ))
         : Container();
   }
 
@@ -592,10 +570,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             groupMenu = json.decode(
                 snapshot.data.getString(FirebaseConfig.groupMenuProfile));
             // Set default value to public if data [role] in collection users is null
-            if (data['role'] == null || data['role'] == '') {
+            if (getField(data, 'role') == null || getField(data, 'role') == '') {
               role = 'public';
             } else {
-              role = data['role'];
+              role = getField(data, 'role');
             }
             // Set default value to healthy if data [health_status] in collection users is null
             if (data['health_status'] == null || data['health_status'] == '') {

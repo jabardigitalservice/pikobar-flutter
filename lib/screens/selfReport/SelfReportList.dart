@@ -16,11 +16,14 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportDetailScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 class SelfReportList extends StatefulWidget {
   final LatLng location;
+  final String otherUID;
+  final String analytics;
 
-  SelfReportList(this.location);
+  SelfReportList(this.location, this.analytics, {this.otherUID});
 
   @override
   _SelfReportListState createState() => _SelfReportListState();
@@ -36,7 +39,7 @@ class _SelfReportListState extends State<SelfReportList> {
   void initState() {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
-    AnalyticsHelper.setLogEvent(Analytics.tappedDailyReport);
+    AnalyticsHelper.setLogEvent(widget.analytics);
   }
 
   @override
@@ -53,8 +56,8 @@ class _SelfReportListState extends State<SelfReportList> {
                   SelfReportReminderBloc()..add(SelfReportReminderListLoad()),
             ),
             BlocProvider<SelfReportListBloc>(
-              create: (BuildContext context) =>
-                  SelfReportListBloc()..add(SelfReportListLoad()),
+              create: (BuildContext context) => SelfReportListBloc()
+                ..add(SelfReportListLoad(otherUID: widget.otherUID)),
             ),
           ],
           child: Column(
@@ -86,7 +89,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                           fontSize: 12),
                                     ),
                                     Text(
-                                      '${((state.querySnapshot.documents.length / 14) * 100).toStringAsPrecision(3)}%',
+                                      '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
                                       style: TextStyle(
                                           fontFamily: FontsFamily.lato,
                                           color: ColorBase.limeGreen,
@@ -110,8 +113,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                   lineHeight: 8.0,
                                   backgroundColor: ColorBase.menuBorderColor,
                                   percent:
-                                      (state.querySnapshot.documents.length /
-                                          14),
+                                      (state.querySnapshot.docs.length / 14),
                                   progressColor: ColorBase.limeGreen,
                                 );
                               } else if (state is SelfReportListFailure) {
@@ -135,7 +137,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                     builder: (context, state) {
                                   if (state is SelfReportIsReminderLoaded) {
                                     isReminder =
-                                        state.querySnapshot.data['remind_me'];
+                                        state.querySnapshot.get('remind_me');
                                     return FlutterSwitch(
                                       width: 50.0,
                                       height: 20.0,
@@ -182,40 +184,37 @@ class _SelfReportListState extends State<SelfReportList> {
 
   Widget _buildContent(SelfReportListLoaded snapshot) {
     // Checking document is not null
-    if (snapshot.querySnapshot.documents.length != 0) {
-      for (var i = 0; i < snapshot.querySnapshot.documents.length; i++) {
+    if (snapshot.querySnapshot.docs.length != 0) {
+      for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
         /// Get [documentID] to [listDocumentId]
-        listDocumentId.add(snapshot.querySnapshot.documents[i].documentID);
+        listDocumentId.add(snapshot.querySnapshot.docs[i].id);
+      }
+      if (getField(snapshot.querySnapshot.docs[0], 'quarantine_date') == null) {
+        /// Save ['created_at'] as [firstDay] for main parameter
+        firstDay = DateTime.fromMillisecondsSinceEpoch(
+            snapshot.querySnapshot.docs[0].get('created_at').seconds * 1000);
+      } else {
+        /// Save ['quarantine_date'] as [firstDay] for main parameter
+        firstDay = DateTime.fromMillisecondsSinceEpoch(
+            snapshot.querySnapshot.docs[0].get('quarantine_date').seconds *
+                1000);
       }
 
-      /// Save ['created_at'] as [firstDay] for main parameter
-      firstDay = DateTime.fromMillisecondsSinceEpoch(
-          snapshot.querySnapshot.documents[0].data['created_at'].seconds *
-              1000);
       currentDay = DateTime.now();
     }
     return Expanded(
       child: ListView.builder(
           itemCount: 14,
           itemBuilder: (context, i) {
-            bool differenceMonth;
-            if (currentDay != null) {
-              if (currentDay.month == firstDay.add(Duration(days: i)).month) {
-                differenceMonth = false;
-              } else {
-                differenceMonth = true;
-              }
-            }
             if (i != 0) {
               if (currentDay != null) {
-                if (differenceMonth) {
-                  if (currentDay.day <= firstDay.add(Duration(days: i)).day) {
-                    textColor = Colors.black;
-                  } else {
-                    textColor = ColorBase.darkGrey;
-                  }
+                if (currentDay.day == firstDay.add(Duration(days: i)).day) {
+                  textColor = Colors.black;
                 } else {
-                  if (currentDay.day >= firstDay.add(Duration(days: i)).day) {
+                  if (firstDay
+                      .add(Duration(days: i))
+                      .difference(currentDay)
+                      .isNegative) {
                     textColor = Colors.black;
                   } else {
                     textColor = ColorBase.darkGrey;
@@ -235,44 +234,35 @@ class _SelfReportListState extends State<SelfReportList> {
                     if (i != 0) {
                       /// Checking data if [currentDay] not null
                       if (currentDay != null) {
-                        if (differenceMonth) {
-                          /// Checking data if [currentDay] same as the day user can fill the form
-                          if (currentDay.day <=
-                              firstDay.add(Duration(days: i)).day) {
-                            /// [currentDay] same as the day user can fill the form
-                            /// Checking data is already filled or not
-                            if (listDocumentId.contains('${i + 1}')) {
-                              /// Data is already filled
-                              /// Move to detail screeen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelfReportDetailScreen('${i + 1}')),
-                              );
-                            } else {
-                              /// Move to form screen
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SelfReportFormScreen(
-                                      dailyId: '${i + 1}',
-                                      location: widget.location)));
-                            }
+                        if (currentDay.day ==
+                            firstDay.add(Duration(days: i)).day) {
+                          /// [currentDay] same as the day user can fill the form
+                          /// Checking data is already filled or not
+                          if (listDocumentId.contains('${i + 1}')) {
+                            /// Data is already filled
+                            /// Move to detail screeen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SelfReportDetailScreen(
+                                      '${i + 1}',
+                                      widget.otherUID,
+                                      widget.analytics)),
+                            );
                           } else {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    DialogTextOnly(
-                                      description:
-                                          '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
-                                      buttonText: Dictionary.ok,
-                                      onOkPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ));
+                            /// Move to form screen
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SelfReportFormScreen(
+                                    analytics: widget.analytics,
+                                    otherUID: widget.otherUID,
+                                    dailyId: '${i + 1}',
+                                    location: widget.location)));
                           }
                         } else {
-                          if (currentDay.day >=
-                              firstDay.add(Duration(days: i)).day) {
+                          if (firstDay
+                              .add(Duration(days: i))
+                              .difference(currentDay)
+                              .isNegative) {
                             /// [currentDay] same as the day user can fill the form
                             /// Checking data is already filled or not
                             if (listDocumentId.contains('${i + 1}')) {
@@ -282,12 +272,15 @@ class _SelfReportListState extends State<SelfReportList> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        SelfReportDetailScreen('${i + 1}')),
+                                        SelfReportDetailScreen('${i + 1}',
+                                            widget.otherUID, widget.analytics)),
                               );
                             } else {
                               /// Move to form screen
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => SelfReportFormScreen(
+                                      analytics: widget.analytics,
+                                      otherUID: widget.otherUID,
                                       dailyId: '${i + 1}',
                                       location: widget.location)));
                             }
@@ -327,14 +320,18 @@ class _SelfReportListState extends State<SelfReportList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  SelfReportDetailScreen('${i + 1}')),
+                              builder: (context) => SelfReportDetailScreen(
+                                  '${i + 1}',
+                                  widget.otherUID,
+                                  widget.analytics)),
                         );
                       } else {
                         /// Move to form screen
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelfReportFormScreen(
+                                analytics: widget.analytics,
                                 dailyId: '${i + 1}',
+                                otherUID: widget.otherUID,
                                 location: widget.location)));
                       }
                     }

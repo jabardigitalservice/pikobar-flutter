@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -26,14 +27,17 @@ import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
+import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
-import 'package:pikobar_flutter/screens/home/components/Statistics.dart';
+import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
 import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 import 'BannerListSlider.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
 
@@ -65,23 +69,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getDataFromServer() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('broadcasts')
         .orderBy('published_at', descending: true)
-        .getDocuments()
+        .get()
         .then((QuerySnapshot snapshot) {
       insertIntoDatabase(snapshot);
     }).catchError((error) {});
   }
 
   Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
-    await MessageRepository().insertToDatabase(snapshot.documents);
+    await MessageRepository().insertToDatabase(snapshot.docs);
     widget.indexScreenState.getCountMessage();
     isLoading = false;
   }
 
+  Future<void> getDataProfileFromServer() async {
+    String uid = await ProfileUidSharedPreference.getProfileUid();
+    if (uid != null) {
+      FirebaseFirestore.instance
+          .collection(kUsers)
+          .where('id', isEqualTo: uid)
+          .get()
+          .then((QuerySnapshot snapshot) {
+        HealthCheck()
+            .isUserHealty(snapshot.docs[0].get('health_status').toString());
+      }).catchError((error) {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDataProfileFromServer();
     return MultiBlocProvider(
       providers: [
         BlocProvider<RemoteConfigBloc>(
@@ -111,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
         BlocProvider<InfoGraphicsListBloc>(
             create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-              ..add(InfoGraphicsListLoad(limit: 3))),
+              ..add(InfoGraphicsListLoad(infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad(limit: 3)))
@@ -228,6 +247,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: EdgeInsets.only(top: 16.0),
             child: Documents(),
+          ),
+          SizedBox(
+            height: Dimens.dividerHeight,
+            child: Container(
+              color: ColorBase.grey,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 25.0),
+            child: SocialMedia(),
           ),
         ]),
         AlertUpdate()

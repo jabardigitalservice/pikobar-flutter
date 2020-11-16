@@ -33,12 +33,24 @@ class CustomBubbleTab extends StatefulWidget {
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
 }
 
-class _CustomBubbleTabState extends State<CustomBubbleTab> {
+class _CustomBubbleTabState extends State<CustomBubbleTab>
+    with SingleTickerProviderStateMixin {
   List<Widget> listBubbleTabItem = [];
+  TabController _basetabController;
   String dataSelected = "";
   bool isExpand;
+  bool isSwipe = false;
+  int indexTab = 0;
+
   @override
   void initState() {
+    if (widget.tabController != null) {
+      _basetabController = widget.tabController;
+    } else {
+      _basetabController =
+          TabController(vsync: this, length: widget.listItemTitleTab.length);
+    }
+    _basetabController.addListener(_handleTabSelection);
     listBubbleTabItem.clear();
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
       if (widget.typeTabSelected != null) {
@@ -65,19 +77,20 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TabBar(
-              controller:
-                  widget.tabController != null ? widget.tabController : null,
+              controller: widget.tabController != null
+                  ? widget.tabController
+                  : _basetabController,
               isScrollable: true,
               onTap: (index) {
-                setState(() {
-                  dataSelected = widget.listItemTitleTab[index];
-                  listBubbleTabItem.clear();
-                  for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-                    listBubbleTabItem.add(bubbleTabItem(
-                        widget.listItemTitleTab[i], dataSelected));
-                  }
-                });
-                widget.onTap(index);
+                // setState(() {
+                //   dataSelected = widget.listItemTitleTab[index];
+                //   listBubbleTabItem.clear();
+                //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+                //     listBubbleTabItem.add(bubbleTabItem(
+                //         widget.listItemTitleTab[i], dataSelected));
+                //   }
+                // });
+                // widget.onTap(index);
               },
               labelColor: widget.labelColor,
               unselectedLabelColor: widget.unselectedLabelColor,
@@ -90,24 +103,25 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
               indicatorWeight: 0.1,
               labelPadding: EdgeInsets.all(10),
               tabs: listBubbleTabItem),
-         isExpand
+          isExpand
               ? Expanded(
                   child: TabBarView(
                     controller: widget.tabController != null
                         ? widget.tabController
-                        : null,
-                    physics: NeverScrollableScrollPhysics(),
+                        : _basetabController,
                     children: widget.tabBarView,
                   ),
                 )
               : Container(
                   height: widget.heightTabBarView,
-                  padding: EdgeInsets.only(top: widget.paddingTopTabBarView),
+                  padding: EdgeInsets.only(
+                      top: widget.paddingTopTabBarView != null
+                          ? widget.paddingTopTabBarView
+                          : 0.0),
                   child: TabBarView(
                     controller: widget.tabController != null
                         ? widget.tabController
-                        : null,
-                    physics: NeverScrollableScrollPhysics(),
+                        : _basetabController,
                     children: widget.tabBarView,
                   ),
                 ),
@@ -116,18 +130,25 @@ class _CustomBubbleTabState extends State<CustomBubbleTab> {
     );
   }
 
+  _handleTabSelection() {
+    if (indexTab != _basetabController.index) {
+      setState(() {
+        widget.onTap(_basetabController.index);
+        indexTab = _basetabController.index;
+      });
+    }
+  }
+
   // ignore: non_constant_identifier_names
   Widget bubbleTabItem(String title, String dataSelected) {
     return Tab(
       child: Container(
         padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-                color: dataSelected == title
-                    ? widget.indicatorColor
-                    : Color(0xffE0E0E0),
-                width: 1)),
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(50),
+        //     border: Border.all(
+        //         color: widget.indicatorColor,
+        //         width: 1)),
         child: Text(
           title,
           style: TextStyle(

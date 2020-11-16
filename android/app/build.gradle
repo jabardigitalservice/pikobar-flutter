@@ -25,6 +25,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+// flutter_background_geolocation (must be placed after the lines above)
+Project background_geolocation = project(':flutter_background_geolocation')
+apply from: "${background_geolocation.projectDir}/background_geolocation.gradle"
+
 android {
     compileSdkVersion 29
 
@@ -34,6 +38,7 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 
     defaultConfig {
@@ -56,7 +61,10 @@ android {
 
             // Enables resource shrinking, which is performed by the
             // Android Gradle plugin.1
-            shrinkResources true
+            shrinkResources false
+
+            // background_geolocation requires custom Proguard Rules with minifyEnabled
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', "${background_geolocation.projectDir}/proguard-rules.pro"
 
 
             // TODO: Add your own signing config for the release build.flut
@@ -72,10 +80,10 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.firebase:firebase-messaging:20.1.5'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
 apply plugin: 'io.fabric'

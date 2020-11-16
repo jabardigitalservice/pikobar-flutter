@@ -5,10 +5,10 @@ String getYtThumbnail({@required String youtubeUrl, @required bool error}) {
   String thumbnailUrl = "";
   if (!error) {
     thumbnailUrl =
-        'https://img.youtube.com/vi/${uri.queryParameters['v']}/maxresdefault.jpg';
+    'https://img.youtube.com/vi/${uri.queryParameters['v']}/hqdefault.jpg';
   } else {
     thumbnailUrl =
-        'https://img.youtube.com/vi/${uri.queryParameters['v']}/hqdefault.jpg';
+    'https://img.youtube.com/vi/${uri.queryParameters['v']}/maxresdefault.jpg';
   }
   return thumbnailUrl;
 }

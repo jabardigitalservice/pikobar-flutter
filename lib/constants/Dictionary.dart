@@ -46,7 +46,7 @@ class Dictionary {
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
-  static String caseTotal = 'Terkonfirmasi';
+  static String caseTotal = 'Total Kasus Terkonfirmasi';
   static String positif = 'Positif Aktif';
   static String positifText = 'Positif';
   static String negatifText = 'Negatif';
@@ -82,9 +82,8 @@ class Dictionary {
   static String textSum = 'Dari Total ';
   static String checkLocationSpread = 'Cek Sebaran Lokasi Anda';
   static String checkLocationSpreadDesc =
-      'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol ‘Cek Lokasi Saat Ini';
-  static String phoneNumberHasBeenUsed =
-      'No telepon sudah digunakan';
+      'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol Cek Lokasi Saat Ini';
+  static String phoneNumberHasBeenUsed = 'No telepon sudah digunakan';
 
   static String waNumberDinasKesehatan = '+628112093306';
   static String phoneBookEmergencyInformationCaption =
@@ -119,6 +118,12 @@ class Dictionary {
 
   static String rapidTestAppBar = 'Jumlah RDT';
   static String locationAddress = 'Lokasi Tempat Tinggal';
+  static String center = "Pusat";
+  static String who = "WHO";
+  static String sayThanks = "Terimakasih sudah membaca";
+  static String followOurSosmed = "Follow juga sosmed kami";
+  static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
+
 
   // Button Text
   static String yes = 'Ya';
@@ -136,8 +141,11 @@ class Dictionary {
   static String termsConditions = ' Terms & Conditions';
   static String agree = 'Setuju';
   static String back = 'Kembali';
+  static String change = 'Ubah';
   static String signInWithGoogle = 'Masuk dengan Google';
   static String signInWithApple = 'Masuk dengan Apple';
+  static String positiveActionGeolocation = 'Ubah ke Allow All The Time';
+
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -220,6 +228,7 @@ class Dictionary {
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
   static String birthdayPlaceholder = 'Pilih Tanggal';
   static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
+  static String quarantineDatePlaceholder = 'Pilih Tanggal Awal Karantina';
   static String nationalityPlaceholder = 'Pilih Kewarganegaraan';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
@@ -236,9 +245,11 @@ class Dictionary {
   static String permissionLocationMap =
       'Untuk menampilkan map, izinkan PIKOBAR untuk mengakses lokasi Anda.';
   static String permissionLocationGeneral =
-      'Dengan membagikan lokasi, Anda akan turut membantu kami dalam menanggulangi kasus COVID-19 di Jawa Barat.';
+      'Bantu kami dengan membagikan lokasi Anda untuk menanggulangi kasus Covid-19';
   static String permissionLocationAgreement =
-      'Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
+      '* Akses lokasi digunakan untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.\n\n* Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau digunakan\n\n* Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
+  static String permissionGeolocationTitle = 'Izinkan PIKOBAR mengakses lokasi Anda';
+  static String permissionGeolocationDesc = 'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -251,6 +262,7 @@ class Dictionary {
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Tidak ada data';
+  static String lastUpdateOn = 'Terakhir Diupdate Pada';
   static String updateProfile = 'Akun berhasil diperbarui';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
@@ -262,7 +274,7 @@ class Dictionary {
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
-      'Bantu stop penyebaran COVID-19 dengan\nmelakukan login pada app PIKOBAR';
+      'Mari bersama - sama bantu stop \npenyebaran COVID-19';
   static String disclaimerOnBoardingLogin =
       'Data Anda akan aman dan tidak akan pernah diakses,\nkecuali jika Anda dekat dengan kasus positif COVID-19.';
 
@@ -270,6 +282,7 @@ class Dictionary {
   static String infoTextAnnouncement =
       'Untuk memenuhi program pemerintah agar tetap dirumah denda bagi yang tetap keluar rumah. ';
   static String titleInfoTextAnnouncement = 'Info';
+  static String titlePreviewDataAnnouncement = 'Cek Kembali Data Anda';
   static String moreDetail = ' Selengkapnya';
   static String moreDetailRapidTest = ' Daftar Test Masif';
   static String lastUpdate = 'Update Terakhir';
@@ -284,6 +297,9 @@ class Dictionary {
   static String checkCurrentLocation = 'Cek Lokasi Saat Ini';
   static String findLocation = 'Cek Lokasi';
   static String confirmed = 'Terkonfirmasi';
+  static String closeContact = 'Kontak Erat';
+  static String suspect = 'Suspek';
+  static String probable = 'Probable';
   static String checkOtherLocation = 'Cek Berdasarkan Lokasi Lain';
   static String checkByLocation = 'Cari Berdasarkan Lokasi';
   static String positifString = 'Total Pasien Terkonfirmasi COVID-19';
@@ -294,7 +310,8 @@ class Dictionary {
   static String unreachableLocation = 'Lokasi Tidak Terjangkau';
   static String hintFindLocation = 'Cari Kota / Kecamatan / Desa';
   static String locationRadiusTitle = 'Lokasi Dalam Radius';
-  static String locationKecamatanTitle = 'Lokasi Dalam Kelurahan & Kecamatan';
+  static String location = 'Lokasi';
+  static String locationKecamatanTitle = 'Kelurahan lain dalam Kec. ';
   static String locationKecamatanDesc =
       'Data di bawah ini merupakan jumlah kasus aktif';
   static String village = 'Kelurahan';
@@ -303,7 +320,7 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      '<p>Titik lokasi merupakan titik acak (random by system) wilayah yang tertera pada identitas kasus dan tidak menunjuk pada alamat persis masing-masing kasus.</p> <p>Data yang ditampilkan adalah data 24 jam terakhir. Jika terdapat perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi atau Dinas Kesehatan masing-masing Kabupaten/Kota.</p>';
+      '<p>Data yang ditampilkan adalah data 24 jam terakhir. Jika ada perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi Jawa Barat atau Dinas Kesehatan masing-masing Kabupaten/Kota di Jawa Barat.</p> <p>Sumber Data:<br>Terkonfirmasi: Pusdatin Kemenkes<br>Kontak Erat, Suspek dan Probable: Aplikasi Pelaporan Covid-19 Jawa Barat</p>';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String regionInfo = 'Data dibawah ini merupakan jumlah kasus aktif di';
   static String update24hourTitle = 'Diperbarui 24 jam terakhir.';
@@ -361,20 +378,27 @@ class Dictionary {
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
-  static String contactDateCovid = 'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
+  static String quarantineDate = 'Tanggal Awal Karantina';
+  static String contactDateCovid =
+      'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
+  static String additionalTemperatureInformation = 'Informasi Tambahan';
+  static String descTemperatureInformation =
+      'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
+  static String quarantineQuestion = 'Kapan hari pertama anda karantina?';
   static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
-  static String inputBodyTemperature = 'Masukan Suhu Tubuh';
+  static String inputBodyTemperature = 'Isi jika memiliki termometer';
   static String dailyMonitoring = 'Lapor Kesehatan \nHarian';
   static String dailyMonitoringProgress = 'Lapor Kesehatan Harian Terisi';
   static String rememberMe = 'Ingatkan Saya';
   static String countDay = 'Hari ke -';
   static String dailyMonitoringFilled = 'Proses pelaporan sudah terisi';
   static String dailyMonitoringUnfilled = 'Proses pelaporan belum terisi';
+  static String dailySelfReport = 'Lapor Kesehatan Harian';
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
@@ -390,6 +414,29 @@ class Dictionary {
   static String contactName = 'Nama Kontak';
   static String phoneNumber = 'Nomor HP';
   static String relation = 'Hubungan';
+  static String relationOtherSelfReport = 'Hubungan Dengan Anda';
   static String otherRelation = 'Hubungan lainnya';
   static String lastContactDate = 'Tanggal Kontak Terakhir';
+  static String monitoringIsComplete = 'Pemantauan Selesai!';
+  static String selfReportSummary = 'Dalam 14 hari terakhir, ';
+  static String selfReportHistory = 'Lihat Riwayat Kesehatan Saya';
+  static String info = 'Info';
+  static String announcementDescHealthy =
+      '<p>Tetap waspada dengan menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Jaga jarak dan gunakan masker ketika beraktivitas.</p>';
+  static String announcementDescIndication =
+      '<p>Kondisi Anda bisa membaik jika Anda menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Lakukan isolasi mandiri untuk melindungi orang di sekitar Anda. Segera periksakan diri apabila gejala memburuk.</p>';
+  static String readHealthTips = 'Baca Tips Kesehatan';
+  static String callEmergencyNumber = 'Hubungi Nomor Darurat';
+  static String forMySelfTitle = 'Untuk Diri Sendiri';
+  static String forMySelfDesc = 'Lapor kesehatan diri Anda sendiri di sini';
+  static String forOtherTitle = 'Untuk Orang Lain';
+  static String forOtherDesc = 'Lapor kesehatan orang lain oleh Anda di sini';
+  static String countPeople = 'Orang Ke-';
+  static String addOtherReport = 'Tambah Orang Lain';
+  static String addUserForm = 'Form Pengisian Data';
+  static String otherReportAnnouncement =
+      '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
+  static String previewAnnouncement =
+      '<p>Apakah data di bawah ini sudah benar?</p>';
+  static String previewData = 'Preview Data';
 }

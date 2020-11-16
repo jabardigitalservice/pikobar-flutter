@@ -10,8 +10,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
   StreamSubscription _subscription;
 
-  @override
-  NewsListState get initialState => InitialNewsListState();
+  NewsListBloc() : super(InitialNewsListState());
 
   @override
   Stream<NewsListState> mapEventToState(

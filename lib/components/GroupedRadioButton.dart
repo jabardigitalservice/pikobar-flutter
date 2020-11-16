@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 

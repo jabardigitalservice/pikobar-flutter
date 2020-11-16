@@ -14,8 +14,8 @@ part 'SelfReportReminderState.dart';
 class SelfReportReminderBloc
     extends Bloc<SelfReportReminderEvent, SelfReportReminderState> {
   StreamSubscription _subscription;
-  @override
-  SelfReportReminderState get initialState => SelfReportReminderInitial();
+
+  SelfReportReminderBloc() : super(SelfReportReminderInitial());
 
   @override
   Stream<SelfReportReminderState> mapEventToState(

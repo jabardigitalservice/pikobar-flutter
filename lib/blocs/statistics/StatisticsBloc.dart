@@ -7,8 +7,7 @@ class StatisticsBloc extends Bloc<StatisticsEvent, StatisticsState> {
   StatisticsRepository statisticsRepository = StatisticsRepository();
   StreamSubscription _subscription;
 
-  @override
-  StatisticsState get initialState => InitialStatisticsState();
+  StatisticsBloc() : super(InitialStatisticsState());
 
   @override
   Stream<StatisticsState> mapEventToState(
