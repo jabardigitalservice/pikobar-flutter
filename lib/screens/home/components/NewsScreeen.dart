@@ -609,6 +609,14 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildContentList(List<NewsModel> list) {
+    if (widget.searchQuery != null) {
+      list = list
+          .where((test) => test.title
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return list.isNotEmpty
         ? ListView.builder(
             itemCount: list.length,

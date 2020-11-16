@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
@@ -44,6 +46,9 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   TabController tabController;
+  TextEditingController _searchController = TextEditingController();
+  Timer _debounce;
+  String searchQuery;
   NewsListBloc _newsListBloc;
   bool statImportantInfo = true;
   bool checkStatImportantInfo = true;
@@ -75,6 +80,9 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   void initState() {
     _newsListBloc = BlocProvider.of<NewsListBloc>(context);
     AnalyticsHelper.setCurrentScreen(Analytics.news);
+    _searchController.addListener((() {
+      _onSearchChanged();
+    }));
     super.initState();
   }
 
@@ -120,29 +128,69 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       checkStatImportantInfo = false;
     }
     return Container(
-      child: CustomBubbleTab(
-        listItemTitleTab: listItemTitleTab,
-        indicatorColor: ColorBase.green,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.grey,
-        tabController: tabController,
-        typeTabSelected: widget.news,
-        onTap: (index) {
-          _newsListBloc.add(NewsListLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        },
-        tabBarView: <Widget>[
-          NewsScreen(news: Dictionary.allNews),
-          if (statImportantInfo) NewsScreen(news: Dictionary.importantInfo),
-          NewsScreen(news: Dictionary.latestNews),
-          NewsScreen(news: Dictionary.nationalNews),
-          NewsScreen(news: Dictionary.worldNews),
-        ],
-        heightTabBarView: MediaQuery.of(context).size.height - 148,
-        paddingTopTabBarView: 0,
-      ),
-    );
+        color: Colors.white,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            CustomAppBar.buildSearchField(_searchController,
+                Dictionary.searchInformation, updateSearchQuery),
+            CustomBubbleTab(
+              listItemTitleTab: listItemTitleTab,
+              indicatorColor: ColorBase.green,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
+              tabController: tabController,
+              typeTabSelected: widget.news,
+              onTap: (index) {
+                _newsListBloc.add(NewsListLoad(listCollectionData[index],
+                    statImportantInfo: statImportantInfo));
+                AnalyticsHelper.setLogEvent(analyticsData[index]);
+              },
+              tabBarView: <Widget>[
+                NewsScreen(news: Dictionary.allNews, searchQuery: searchQuery),
+                if (statImportantInfo)
+                  NewsScreen(
+                      news: Dictionary.importantInfo, searchQuery: searchQuery),
+                NewsScreen(
+                    news: Dictionary.latestNews, searchQuery: searchQuery),
+                NewsScreen(
+                    news: Dictionary.nationalNews, searchQuery: searchQuery),
+                NewsScreen(
+                    news: Dictionary.worldNews, searchQuery: searchQuery),
+              ],
+              heightTabBarView: MediaQuery.of(context).size.height - 230,
+              paddingTopTabBarView: 0,
+            ),
+          ],
+        ));
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.trim().isNotEmpty) {
+        setState(() {
+          searchQuery = _searchController.text;
+        });
+      } else {
+        _clearSearchQuery();
+      }
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      updateSearchQuery(null);
+    });
   }
 
   _handleTabSelection() {
@@ -154,6 +202,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _searchController.dispose();
     tabController.dispose();
     _newsListBloc.close();
     super.dispose();
