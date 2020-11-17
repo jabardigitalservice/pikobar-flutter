@@ -128,6 +128,20 @@ class _NewsScreenState extends State<NewsScreen> {
                   ),
                 ],
               )),
+          // Container(
+          //   padding: EdgeInsets.only(
+          //       left: Dimens.padding, right: Dimens.padding, top: 5),
+          //   alignment: Alignment.centerLeft,
+          //   child: Text(
+          //     getLabel['news']['description'],
+          //     style: TextStyle(
+          //       color: Colors.black,
+          //       fontFamily: FontsFamily.lato,
+          //       fontSize: Dimens.textSubtitleSize,
+          //     ),
+          //     textAlign: TextAlign.left,
+          //   ),
+          // ),
           Container(
             height: 265,
             width: MediaQuery.of(context).size.width,
