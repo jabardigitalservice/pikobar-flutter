@@ -54,7 +54,7 @@ class EmptyData extends StatelessWidget {
                     fontFamily: FontsFamily.lato,
                     fontSize: 15)),
             SizedBox(
-              height: 10,
+              height: 5,
             ),
             Padding(
               padding:EdgeInsets.only(left: 50, right: 50),
@@ -96,7 +96,7 @@ class EmptyData extends StatelessWidget {
                     fontFamily: FontsFamily.lato,
                     fontSize: 14)),
             SizedBox(
-              height: 20,
+              height: 5,
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),

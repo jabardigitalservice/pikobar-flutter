@@ -629,7 +629,7 @@ class _NewsScreenState extends State<NewsScreen> {
           )
         : EmptyData(
             message: Dictionary.emptyData,
-            desc: '',
+            desc: Dictionary.descEmptyData,
             isFlare: false,
             image: "${Environment.imageAssets}not_found.png",
           );
