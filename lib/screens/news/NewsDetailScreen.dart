@@ -86,26 +86,65 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: CustomAppBar.setTitleAppBar(Dictionary.news),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.share,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                widget.news == Dictionary.importantInfo
-                    ? _shareMessage(widget.model)
-                    : Share.share(
-                        '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                    <String, dynamic>{'title': widget.model.title});
-              },
-            )
-          ],
-        ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   title: CustomAppBar.setTitleAppBar(Dictionary.news),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(
+      //         Icons.share,
+      //         color: Colors.black,
+      //       ),
+      //       onPressed: () {
+      //         widget.news == Dictionary.importantInfo
+      //             ? _shareMessage(widget.model)
+      //             : Share.share(
+      //                 '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+      //         AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+      //             <String, dynamic>{'title': widget.model.title});
+      //       },
+      //     )
+      //   ],
+      // ),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.share,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    widget.news == Dictionary.importantInfo
+                        ? _shareMessage(widget.model)
+                        : Share.share(
+                            '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                    AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                        <String, dynamic>{'title': widget.model.title});
+                  },
+                )
+              ],
+              iconTheme: IconThemeData(color: Colors.white),
+              expandedHeight: 300.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(Dictionary.news,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      )),
+                  background: Image.network(
+                    widget.model.image,
+                    fit: BoxFit.cover,
+                  )),
+            ),
+          ];
+        },
         body: widget.model == null
             ? state is NewsDetailLoading
                 ? _buildLoading(context)
@@ -114,7 +153,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     : state is NewsDetailFailure
                         ? ErrorContent(error: state.error)
                         : Container()
-            : _buildContent(context, widget.model));
+            : _buildContent(context, widget.model),
+      ),
+    );
   }
 
   _buildLoading(BuildContext context) {
@@ -215,36 +256,36 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            GestureDetector(
-              child: Hero(
-                tag: Dictionary.heroImageTag,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.grey,
-                  child: CachedNetworkImage(
-                    imageUrl: data.image,
-                    placeholder: (context, url) => Center(
-                        heightFactor: 10.2,
-                        child: CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Container(
-                        height: MediaQuery.of(context).size.height / 3.3,
-                        color: Colors.grey[200],
-                        child: Image.asset(
-                            '${Environment.iconAssets}pikobar.png',
-                            fit: BoxFit.fitWidth)),
-                  ),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => HeroImagePreview(
-                              Dictionary.heroImageTag,
-                              imageUrl: data.image,
-                            )));
-              },
-            ),
+            // GestureDetector(
+            //   child: Hero(
+            //     tag: Dictionary.heroImageTag,
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width,
+            //       color: Colors.grey,
+            //       child: CachedNetworkImage(
+            //         imageUrl: data.image,
+            //         placeholder: (context, url) => Center(
+            //             heightFactor: 10.2,
+            //             child: CupertinoActivityIndicator()),
+            //         errorWidget: (context, url, error) => Container(
+            //             height: MediaQuery.of(context).size.height / 3.3,
+            //             color: Colors.grey[200],
+            //             child: Image.asset(
+            //                 '${Environment.iconAssets}pikobar.png',
+            //                 fit: BoxFit.fitWidth)),
+            //       ),
+            //     ),
+            //   ),
+            //   onTap: () {
+            //     Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (_) => HeroImagePreview(
+            //                   Dictionary.heroImageTag,
+            //                   imageUrl: data.image,
+            //                 )));
+            //   },
+            // ),
             Padding(
               padding: const EdgeInsets.only(
                   left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
