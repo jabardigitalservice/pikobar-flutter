@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/emergencyNumber/Bloc.dart';
 import 'package:pikobar_flutter/blocs/emergencyNumber/EmergencyNumberBloc.dart';
 import 'package:pikobar_flutter/blocs/emergencyNumber/EmergencyNumberEvent.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -32,7 +33,11 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class ListViewPhoneBooks extends StatefulWidget {
   String searchQuery;
-  ListViewPhoneBooks({Key key, this.searchQuery}) : super(key: key);
+  TextEditingController searchController = TextEditingController();
+  ValueChanged<String> onChanged;
+  ListViewPhoneBooks(
+      {Key key, this.searchQuery, this.searchController, this.onChanged})
+      : super(key: key);
 
   @override
   _ListViewPhoneBooksState createState() => _ListViewPhoneBooksState();
@@ -46,6 +51,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   int callCenterPhoneCount, emergencyPhoneCount, dataWebGugustugasCount;
   int tag = 0;
   EmergencyNumberBloc _emergencyNumberBloc;
+  ScrollController _scrollController;
+
   final EmergencyNumberRepository _emergencyNumberRepository =
       EmergencyNumberRepository();
   List<String> options = [
@@ -69,6 +76,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       "CallCenter": true,
     };
     checkConnection();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
   }
 
   checkConnection() async {
@@ -82,6 +90,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     });
   }
 
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EmergencyNumberBloc>(
@@ -91,6 +105,12 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       child: BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
         builder: (context, state) {
           return CustomBubbleTab(
+            isStickyHeader: true,
+            titleHeader: Dictionary.phoneBookEmergency,
+            scrollController: _scrollController,
+            showTitle: _showTitle,
+            searchBar: CustomAppBar.buildSearchField(widget.searchController,
+                Dictionary.findEmergencyPhone, widget.onChanged),
             indicatorColor: ColorBase.green,
             labelColor: Colors.white,
             listItemTitleTab: listItemTitleTab,
@@ -138,7 +158,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
   /// Function to build Emergency Number Screen
   Widget buildEmergencyNumberTab() {
-    return Column(
+    return ListView(
+      padding: EdgeInsets.all(0),
       children: <Widget>[
         _buildDaruratNumber(context),
       ],
@@ -148,6 +169,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   /// Function to build Referral Hospital Screen
   Widget buildReferralHospitalTab() {
     return ListView(
+      padding: EdgeInsets.all(0),
       children: <Widget>[
         BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (context, state) {
@@ -204,6 +226,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   /// Function to build Call Center Screen
   Widget buildCallCenterTab() {
     return ListView(
+      padding: EdgeInsets.all(0),
       children: <Widget>[
         BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (context, state) {
@@ -252,6 +275,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   /// Function to build Web Gugus Tugas Screen
   Widget buildWebGugusTugasTab() {
     return ListView(
+      padding: EdgeInsets.all(0),
       children: <Widget>[
         BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (context, state) {
@@ -993,7 +1017,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                         )
                       ],
                     ),
-                   
                   ],
                 ),
               ),
@@ -1003,7 +1026,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             ],
           ),
         ),
-       
       ]);
       list.add(column);
     }
