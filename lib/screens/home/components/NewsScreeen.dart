@@ -128,20 +128,6 @@ class _NewsScreenState extends State<NewsScreen> {
                   ),
                 ],
               )),
-          // Container(
-          //   padding: EdgeInsets.only(
-          //       left: Dimens.padding, right: Dimens.padding, top: 5),
-          //   alignment: Alignment.centerLeft,
-          //   child: Text(
-          //     getLabel['news']['description'],
-          //     style: TextStyle(
-          //       color: Colors.black,
-          //       fontFamily: FontsFamily.lato,
-          //       fontSize: Dimens.textSubtitleSize,
-          //     ),
-          //     textAlign: TextAlign.left,
-          //   ),
-          // ),
           Container(
             height: 265,
             width: MediaQuery.of(context).size.width,
@@ -562,8 +548,6 @@ class _NewsScreenState extends State<NewsScreen> {
     return list.isNotEmpty
         ? ListView.builder(
             itemCount: list.length,
-            // shrinkWrap: true,
-            // physics: NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 10.0),
             itemBuilder: (BuildContext context, int index) {
               return designListNews(list[index]);
