@@ -34,20 +34,24 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
         CustomAppBar.buildSearchField(
             _searchController, Dictionary.searchInformation, updateSearchQuery),
         Container(
+          padding: EdgeInsets.only(top: 10),
           child: InfoGraphics(searchQuery: searchQuery),
         ),
         Container(
+          padding: EdgeInsets.only(top: 10),
           child: NewsScreen(
               news: Dictionary.allNews, maxLength: 5, searchQuery: searchQuery),
         ),
         Container(
+          padding: EdgeInsets.only(top: 10),
           child: VideoList(searchQuery: searchQuery),
         ),
         Container(
+          padding: EdgeInsets.only(top: 10),
           child: Documents(searchQuery: searchQuery),
         ),
         Container(
-          margin: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.only(top: 10),
           child: SocialMedia(),
         )
       ],
@@ -79,7 +83,6 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
       searchQuery = newQuery;
     });
   }
-
 
   @override
   void dispose() {
