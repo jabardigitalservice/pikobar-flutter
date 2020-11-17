@@ -530,64 +530,6 @@ class _NewsScreenState extends State<NewsScreen> {
                       )
                     ],
                   )
-                  // Container(
-                  //   padding: const EdgeInsets.only(left: 10.0),
-                  //   width: MediaQuery.of(context).size.width - 120,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: <Widget>[
-                  //       Text(
-                  //         data.title,
-                  //         style: TextStyle(
-                  //             fontSize: 16.0, fontWeight: FontWeight.w600),
-                  //         textAlign: TextAlign.left,
-                  //         maxLines: 2,
-                  //         overflow: TextOverflow.ellipsis,
-                  //       ),
-                  //       Container(
-                  //           padding: EdgeInsets.only(top: 5.0),
-                  //           child: Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             children: <Widget>[
-                  //               Expanded(
-                  //                 child: Container(
-                  //                   child: Row(
-                  //                     children: <Widget>[
-                  //                       Image.network(
-                  //                         data.newsChannelIcon,
-                  //                         width: 25.0,
-                  //                         height: 25.0,
-                  //                       ),
-                  //                       SizedBox(width: 3.0),
-                  //                       Expanded(
-                  //                         child: Text(
-                  //                           data.newsChannel,
-                  //                           overflow: TextOverflow.ellipsis,
-                  //                           maxLines: 2,
-                  //                           style: TextStyle(
-                  //                               fontSize: 10.0,
-                  //                               color: Colors.grey),
-                  //                         ),
-                  //                       )
-                  //                     ],
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //               widget.news != Dictionary.importantInfo &&
-                  //                       data.newsChannel.isNotEmpty
-                  //                   ? Text(
-                  //                       unixTimeStampToDateTime(
-                  //                           data.publishedAt),
-                  //                       style: TextStyle(
-                  //                           fontSize: 10.0, color: Colors.grey),
-                  //                     )
-                  //                   : Container(),
-                  //             ],
-                  //           )),
-                  //     ],
-                  //   ),
-                  // ),
                 ],
               ),
             ),
