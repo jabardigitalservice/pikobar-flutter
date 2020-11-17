@@ -620,6 +620,8 @@ class _NewsScreenState extends State<NewsScreen> {
     return list.isNotEmpty
         ? ListView.builder(
             itemCount: list.length,
+            // shrinkWrap: true,
+            // physics: NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.only(bottom: 10.0),
             itemBuilder: (BuildContext context, int index) {
               return designListNews(list[index]);
