@@ -131,17 +131,44 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Text(Dictionary.news,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                      )),
-                  background: Image.network(
-                    widget.model.image,
-                    fit: BoxFit.cover,
-                  )),
+                centerTitle: true,
+                title: Text(Dictionary.news,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    )),
+                background: GestureDetector(
+                  child: Hero(
+                    tag: Dictionary.heroImageTag,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.grey,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.model.image,
+                        placeholder: (context, url) => Center(
+                            heightFactor: 10.2,
+                            child: CupertinoActivityIndicator()),
+                        errorWidget: (context, url, error) => Container(
+                            height: MediaQuery.of(context).size.height / 3.3,
+                            color: Colors.grey[200],
+                            child: Image.asset(
+                                '${Environment.iconAssets}pikobar.png',
+                                fit: BoxFit.fitWidth)),
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => HeroImagePreview(
+                                  Dictionary.heroImageTag,
+                                  imageUrl: widget.model.image,
+                                )));
+                  },
+                ),
+              ),
             ),
           ];
         },
