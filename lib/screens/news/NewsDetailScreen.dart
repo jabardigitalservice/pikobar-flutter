@@ -89,14 +89,32 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: CustomAppBar.setTitleAppBar(Dictionary.news),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.share,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                widget.news == Dictionary.importantInfo
+                    ? _shareMessage(widget.model)
+                    : Share.share(
+                        '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                    <String, dynamic>{'title': widget.model.title});
+              },
+            )
+          ],
         ),
-        body: widget.model == null ? state is NewsDetailLoading
-            ? _buildLoading(context)
-            : state is NewsDetailLoaded
-                ? _buildContent(context, state.record)
-                : state is NewsDetailFailure
-                    ? ErrorContent(error: state.error)
-                    : Container() : _buildContent(context, widget.model));
+        body: widget.model == null
+            ? state is NewsDetailLoading
+                ? _buildLoading(context)
+                : state is NewsDetailLoaded
+                    ? _buildContent(context, state.record)
+                    : state is NewsDetailFailure
+                        ? ErrorContent(error: state.error)
+                        : Container()
+            : _buildContent(context, widget.model));
   }
 
   _buildLoading(BuildContext context) {
@@ -233,40 +251,34 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    data.title,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontFamily: FontsFamily.lato,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Image.network(
-                            data.newsChannelIcon,
-                            width: 25.0,
-                            height: 25.0,
-                          ),
+                          // Image.network(
+                          //   data.newsChannelIcon,
+                          //   width: 25.0,
+                          //   height: 25.0,
+                          // ),
                           Container(
                             margin: EdgeInsets.only(left: 5.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                    data.newsChannel,
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontFamily: FontsFamily.lato),
-                                  ),
-                                  _newsType != NewsType.articlesImportantInfo && data.newsChannel.isNotEmpty
+                                  // Text(
+                                  //   data.newsChannel,
+                                  //   style: TextStyle(
+                                  //       fontSize: 12.0,
+                                  //       fontFamily: FontsFamily.lato),
+                                  // ),
+                                  _newsType != NewsType.articlesImportantInfo &&
+                                          data.newsChannel.isNotEmpty
                                       ? Text(
                                           unixTimeStampToDateTime(
-                                              data.publishedAt),
+                                                  data.publishedAt) +
+                                              ' • ' +
+                                              data.newsChannel,
                                           style: TextStyle(
                                               fontSize: 12.0,
                                               fontFamily: FontsFamily.lato))
@@ -275,17 +287,29 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           )
                         ],
                       ),
-                      ShareButton(
-                        onPressed: () {
-                          widget.news == Dictionary.importantInfo
-                              ? _shareMessage(data)
-                              : Share.share(
-                                  '${data.title}\n\n${data.backlink != null ? 'Baca berita lengkapnya:\n' + data.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                          AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                              <String, dynamic>{'title': data.title});
-                        },
-                      )
+                      // ShareButton(
+                      //   onPressed: () {
+                      //     widget.news == Dictionary.importantInfo
+                      //         ? _shareMessage(data)
+                      //         : Share.share(
+                      //         '${data.title}\n\n${data.backlink != null ? 'Baca berita lengkapnya:\n' + data.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                      //     AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                      //         <String, dynamic>{'title': data.title});
+                      //   },
+                      // )
                     ],
+                  ),
+                  SizedBox(height: 10.0),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Text(
+                      data.title,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontFamily: FontsFamily.lato,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(height: 10.0),
                   Html(
