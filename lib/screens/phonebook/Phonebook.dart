@@ -33,26 +33,35 @@ class _PhonebookState extends State<Phonebook> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: CustomAppBar.animatedAppBar(
-            showTitle: false, title: Dictionary.phoneBookEmergency),
-        // CustomAppBar.bottomSearchAppBar(
-        //     searchController: _searchController,
-        //     title: Dictionary.phoneBookEmergency,
-        //     hintText: Dictionary.findEmergencyPhone,
-        //     onChanged: updateSearchQuery),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildHeader(),
-            Expanded(
-              child: ListViewPhoneBooks(
-                searchQuery: searchQuery,
-              ),
-            ),
-          ],
-        ));
+    return  ListViewPhoneBooks(
+        searchQuery: searchQuery,
+        searchController: _searchController,
+        onChanged: updateSearchQuery,
+      );
+    // Scaffold(
+    //   backgroundColor: Colors.white,
+      // appBar: CustomAppBar.animatedAppBar(
+      //     showTitle: false, title: Dictionary.phoneBookEmergency),
+      // CustomAppBar.bottomSearchAppBar(
+      //     searchController: _searchController,
+      //     title: Dictionary.phoneBookEmergency,
+      //     hintText: Dictionary.findEmergencyPhone,
+      //     onChanged: updateSearchQuery),
+      // body:
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     buildHeader(),
+      //     Expanded(
+      //       child: ListViewPhoneBooks(
+      //         searchQuery: searchQuery,
+      //         searchController: _searchController,
+      //         onChanged: updateSearchQuery,
+      //       ),
+      //     ),
+      //   ],
+      // )
+    // );
   }
 
   Widget buildHeader() {
