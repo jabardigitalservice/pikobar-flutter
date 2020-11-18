@@ -53,10 +53,28 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   // ignore: close_sinks
   NewsDetailBloc _newsDetailBloc;
   String _newsType;
+  ScrollController _scrollController;
+  bool lastStatus = true;
+
+  _scrollListener() {
+    if (isShrink != lastStatus) {
+      setState(() {
+        lastStatus = isShrink;
+      });
+    }
+  }
+
+  bool get isShrink {
+    return _scrollController.hasClients &&
+        _scrollController.offset > (200 - kToolbarHeight);
+  }
+
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.news);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
 
     if (widget.news == Dictionary.importantInfo) {
       _newsType = NewsType.articlesImportantInfo;
@@ -107,14 +125,16 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       //   ],
       // ),
       body: NestedScrollView(
+        controller: _scrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
+              backgroundColor: Colors.white,
               actions: [
                 IconButton(
                   icon: Icon(
                     Icons.share,
-                    color: Colors.white,
+                    color: isShrink ? Colors.black : Colors.white,
                   ),
                   onPressed: () {
                     widget.news == Dictionary.importantInfo
@@ -126,13 +146,13 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   },
                 )
               ],
-              iconTheme: IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: isShrink ? Colors.black : Colors.white),
               expandedHeight: 300.0,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
-                title: Text(Dictionary.news,
+                title: Text('',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.white,
@@ -613,5 +633,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 }
