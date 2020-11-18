@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/screens/phonebook/ListViewPhoneBooks.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
@@ -32,16 +33,55 @@ class _PhonebookState extends State<Phonebook> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: CustomAppBar.bottomSearchAppBar(
-            searchController: _searchController,
-            title: Dictionary.phoneBookEmergency,
-            hintText: Dictionary.findEmergencyPhone,
-            onChanged: updateSearchQuery),
-        body: ListViewPhoneBooks(
-          searchQuery: searchQuery,
-        ));
+    return  ListViewPhoneBooks(
+        searchQuery: searchQuery,
+        searchController: _searchController,
+        onChanged: updateSearchQuery,
+      );
+    // Scaffold(
+    //   backgroundColor: Colors.white,
+      // appBar: CustomAppBar.animatedAppBar(
+      //     showTitle: false, title: Dictionary.phoneBookEmergency),
+      // CustomAppBar.bottomSearchAppBar(
+      //     searchController: _searchController,
+      //     title: Dictionary.phoneBookEmergency,
+      //     hintText: Dictionary.findEmergencyPhone,
+      //     onChanged: updateSearchQuery),
+      // body:
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     buildHeader(),
+      //     Expanded(
+      //       child: ListViewPhoneBooks(
+      //         searchQuery: searchQuery,
+      //         searchController: _searchController,
+      //         onChanged: updateSearchQuery,
+      //       ),
+      //     ),
+      //   ],
+      // )
+    // );
+  }
+
+  Widget buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Text(
+            Dictionary.phoneBookEmergency,
+            style: TextStyle(
+                fontFamily: FontsFamily.lato,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w900),
+          ),
+        ),
+        CustomAppBar.buildSearchField(
+            _searchController, Dictionary.findEmergencyPhone, updateSearchQuery)
+      ],
+    );
   }
 
   List<Widget> _buildActions() {
