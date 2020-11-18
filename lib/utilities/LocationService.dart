@@ -51,14 +51,14 @@ class LocationService {
             builder: (context) {
               return SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: Dimens.padding),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Image.asset(
-                        '${Environment.imageAssets}permission_location.png',
-                        fit: BoxFit.fitWidth,
-                      ),
+                      Container(width: 60, height: 6, decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3.0),
+                          color: Color(0xFFE0E0E0)
+                      ),),
                       SizedBox(height: Dimens.padding),
                       Text(
                         Dictionary.permissionLocationGeneral,
@@ -68,10 +68,10 @@ class LocationService {
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 8.0),
+                      SizedBox(height: Dimens.padding),
                       Text(
                         Dictionary.permissionLocationAgreement,
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         style: TextStyle(
                             fontFamily: FontsFamily.lato,
                             fontSize: 12.0,
