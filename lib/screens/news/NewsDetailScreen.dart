@@ -129,6 +129,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           return <Widget>[
             SliverAppBar(
               backgroundColor: Colors.white,
+              elevation: 0,
               actions: [
                 IconButton(
                   icon: Icon(
@@ -152,18 +153,31 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
-                title: Text('',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    )),
+                title: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 70, bottom: 2),
+                      child: Text(isShrink ? Dictionary.news : '',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.productSans,
+                          )),
+                    ),
+                  ],
+                ),
                 background: GestureDetector(
                   child: Hero(
                       tag: Dictionary.heroImageTag,
                       child: Stack(
                         children: [
-                          Image.network(widget.model.image,  fit: BoxFit.cover, height: MediaQuery.of(context).size.height,),
+                          Image.network(
+                            widget.model.image,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.height,
+                          ),
                           Container(
                             color: Colors.black12.withOpacity(0.3),
                           )

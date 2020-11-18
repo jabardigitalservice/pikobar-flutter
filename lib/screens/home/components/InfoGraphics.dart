@@ -98,8 +98,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           fontSize: Dimens.textSubtitleSize),
                     ),
                     onTap: () {
+                      // Navigator.pushNamed(
+                      //     context, NavigationConstrants.InfoGraphics);
                       Navigator.pushNamed(
-                          context, NavigationConstrants.InfoGraphics);
+                          context, NavigationConstrants.Phonebook);
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsMore);
