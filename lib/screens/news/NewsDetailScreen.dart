@@ -69,7 +69,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         _scrollController.offset > (200 - kToolbarHeight);
   }
 
-
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.news);
@@ -146,7 +145,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   },
                 )
               ],
-              iconTheme: IconThemeData(color: isShrink ? Colors.black : Colors.white),
+              iconTheme:
+                  IconThemeData(color: isShrink ? Colors.black : Colors.white),
               expandedHeight: 300.0,
               floating: false,
               pinned: true,
@@ -160,24 +160,15 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     )),
                 background: GestureDetector(
                   child: Hero(
-                    tag: Dictionary.heroImageTag,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.grey,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.model.image,
-                        placeholder: (context, url) => Center(
-                            heightFactor: 10.2,
-                            child: CupertinoActivityIndicator()),
-                        errorWidget: (context, url, error) => Container(
-                            height: MediaQuery.of(context).size.height / 3.3,
-                            color: Colors.grey[200],
-                            child: Image.asset(
-                                '${Environment.iconAssets}pikobar.png',
-                                fit: BoxFit.fitWidth)),
-                      ),
-                    ),
-                  ),
+                      tag: Dictionary.heroImageTag,
+                      child: Stack(
+                        children: [
+                          Image.network(widget.model.image,  fit: BoxFit.cover, height: MediaQuery.of(context).size.height,),
+                          Container(
+                            color: Colors.black12.withOpacity(0.3),
+                          )
+                        ],
+                      )),
                   onTap: () {
                     Navigator.push(
                         context,
