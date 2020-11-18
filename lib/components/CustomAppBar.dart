@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
@@ -86,8 +87,9 @@ class CustomAppBar {
       margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
       decoration: BoxDecoration(
-          color: Color(0xffFAFAFA),
+          color: ColorBase.greyContainer,
           shape: BoxShape.rectangle,
+          border: Border.all(color: ColorBase.greyBorder),
           borderRadius: BorderRadius.circular(8.0)),
       child: TextField(
         controller: searchController,
@@ -95,12 +97,12 @@ class CustomAppBar {
         decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.search,
-              color: Color(0xff828282),
+              color: ColorBase.darkGrey,
             ),
             suffixIcon: searchController.text.isNotEmpty
                 ? IconButton(
                     icon: Icon(EvaIcons.closeCircle),
-                    color: Color(0xff828282),
+                    color: ColorBase.darkGrey,
                     onPressed: () {
                       searchController.text = '';
                     },
@@ -109,7 +111,7 @@ class CustomAppBar {
             hintText: hintText,
             border: InputBorder.none,
             hintStyle: TextStyle(
-                color: Color(0xff828282),
+                color: ColorBase.darkGrey,
                 fontFamily: FontsFamily.lato,
                 fontSize: 12,
                 height: 2.2),
@@ -118,6 +120,27 @@ class CustomAppBar {
         style: TextStyle(color: Colors.black, fontSize: 16.0),
         onChanged: onChanged,
       ),
+    );
+  }
+
+  static AppBar animatedAppBar(
+      {@required bool showTitle, @required String title}) {
+    return AppBar(
+      title: AnimatedOpacity(
+        opacity: showTitle ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 250),
+        child: Text(
+          showTitle ? title : '',
+          style: TextStyle(
+              fontFamily: FontsFamily.lato,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      backgroundColor: Colors.white,
+      elevation: 0,
     );
   }
 }

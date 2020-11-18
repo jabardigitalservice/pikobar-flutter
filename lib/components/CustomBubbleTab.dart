@@ -1,5 +1,6 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 // ignore: must_be_immutable
@@ -17,6 +18,11 @@ class CustomBubbleTab extends StatefulWidget {
   bool isExpand;
   bool isScrollable;
   double sizeLabel;
+  bool isStickyHeader;
+  bool showTitle;
+  ScrollController scrollController;
+  Widget searchBar;
+  String titleHeader;
 
   CustomBubbleTab(
       {this.listItemTitleTab,
@@ -31,7 +37,12 @@ class CustomBubbleTab extends StatefulWidget {
       this.typeTabSelected,
       this.isExpand,
       this.isScrollable,
-      this.sizeLabel});
+      this.sizeLabel,
+      this.isStickyHeader = false,
+      this.showTitle,
+      this.scrollController,
+      this.searchBar,
+      this.titleHeader});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -71,64 +82,85 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: listBubbleTabItem.length,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TabBar(
-              controller: widget.tabController != null
-                  ? widget.tabController
-                  : _basetabController,
-              isScrollable:
-                  widget.isScrollable != null ? widget.isScrollable : true,
-              onTap: (index) {
-                // setState(() {
-                //   dataSelected = widget.listItemTitleTab[index];
-                //   listBubbleTabItem.clear();
-                //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-                //     listBubbleTabItem.add(bubbleTabItem(
-                //         widget.listItemTitleTab[i], dataSelected));
-                //   }
-                // });
-                widget.onTap(index);
-              },
-              labelColor: widget.labelColor,
-              unselectedLabelColor: widget.unselectedLabelColor,
-              indicator: BubbleTabIndicator(
-                indicatorHeight: 37.0,
-                indicatorColor: widget.indicatorColor,
-                tabBarIndicatorSize: TabBarIndicatorSize.tab,
-              ),
-              indicatorColor: widget.indicatorColor,
-              indicatorWeight: 0.1,
-              labelPadding: EdgeInsets.all(10),
-              tabs: listBubbleTabItem),
-          isExpand
-              ? Expanded(
-                  child: TabBarView(
+    return widget.isStickyHeader
+        ? DefaultTabController(
+            length: listBubbleTabItem.length,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: NestedScrollView(
+                  controller: widget.scrollController,
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return <Widget>[
+                      _buildSliverAppBar(context)
+                    ];
+                  },
+                  body: TabBarView(
                     controller: widget.tabController != null
                         ? widget.tabController
                         : _basetabController,
                     children: widget.tabBarView,
-                  ),
-                )
-              : Container(
-                  height: widget.heightTabBarView,
-                  padding: EdgeInsets.only(
-                      top: widget.paddingTopTabBarView != null
-                          ? widget.paddingTopTabBarView
-                          : 0.0),
-                  child: TabBarView(
+                  )),
+            ),
+          )
+        : DefaultTabController(
+            length: listBubbleTabItem.length,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TabBar(
                     controller: widget.tabController != null
                         ? widget.tabController
                         : _basetabController,
-                    children: widget.tabBarView,
-                  ),
-                ),
-        ],
-      ),
-    );
+                    isScrollable: widget.isScrollable != null
+                        ? widget.isScrollable
+                        : true,
+                    onTap: (index) {
+                      // setState(() {
+                      //   dataSelected = widget.listItemTitleTab[index];
+                      //   listBubbleTabItem.clear();
+                      //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+                      //     listBubbleTabItem.add(bubbleTabItem(
+                      //         widget.listItemTitleTab[i], dataSelected));
+                      //   }
+                      // });
+                      widget.onTap(index);
+                    },
+                    labelColor: widget.labelColor,
+                    unselectedLabelColor: widget.unselectedLabelColor,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 37.0,
+                      indicatorColor: widget.indicatorColor,
+                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                    ),
+                    indicatorColor: widget.indicatorColor,
+                    indicatorWeight: 0.1,
+                    labelPadding: EdgeInsets.all(10),
+                    tabs: listBubbleTabItem),
+                isExpand
+                    ? Expanded(
+                        child: TabBarView(
+                          controller: widget.tabController != null
+                              ? widget.tabController
+                              : _basetabController,
+                          children: widget.tabBarView,
+                        ),
+                      )
+                    : Container(
+                        height: widget.heightTabBarView,
+                        padding: EdgeInsets.only(
+                            top: widget.paddingTopTabBarView != null
+                                ? widget.paddingTopTabBarView
+                                : 0.0),
+                        child: TabBarView(
+                          controller: widget.tabController != null
+                              ? widget.tabController
+                              : _basetabController,
+                          children: widget.tabBarView,
+                        ),
+                      ),
+              ],
+            ),
+          );
   }
 
   _handleTabSelection() {
@@ -159,5 +191,107 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         ),
       ),
     );
+  }
+
+  Widget _buildSliverAppBar(BuildContext context) {
+    return SliverAppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        pinned: true,
+        expandedHeight: widget.showTitle ? 150 : 250.0,
+        title: AnimatedOpacity(
+          opacity: widget.showTitle ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 250),
+          child: Text(
+            widget.showTitle ? widget.titleHeader : '',
+            style: TextStyle(
+                fontFamily: FontsFamily.lato,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+        bottom: widget.showTitle
+            ? TabBar(
+                controller: widget.tabController != null
+                    ? widget.tabController
+                    : _basetabController,
+                isScrollable:
+                    widget.isScrollable != null ? widget.isScrollable : true,
+                onTap: (index) {
+                  // setState(() {
+                  //   dataSelected = widget.listItemTitleTab[index];
+                  //   listBubbleTabItem.clear();
+                  //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+                  //     listBubbleTabItem.add(bubbleTabItem(
+                  //         widget.listItemTitleTab[i], dataSelected));
+                  //   }
+                  // });
+                  widget.onTap(index);
+                },
+                labelColor: widget.labelColor,
+                unselectedLabelColor: widget.unselectedLabelColor,
+                indicator: BubbleTabIndicator(
+                  indicatorHeight: 37.0,
+                  indicatorColor: widget.indicatorColor,
+                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                ),
+                indicatorColor: widget.indicatorColor,
+                indicatorWeight: 0.1,
+                labelPadding: EdgeInsets.all(10),
+                tabs: listBubbleTabItem)
+            : PreferredSize(
+                preferredSize: Size.fromHeight(widget.showTitle ? 0 : 130.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AnimatedOpacity(
+                      opacity: widget.showTitle ? 0.0 : 1.0,
+                      duration: Duration(milliseconds: 250),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          widget.titleHeader,
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                    ),
+                    widget.showTitle ? Container() : widget.searchBar,
+                    TabBar(
+                        controller: widget.tabController != null
+                            ? widget.tabController
+                            : _basetabController,
+                        isScrollable: widget.isScrollable != null
+                            ? widget.isScrollable
+                            : true,
+                        onTap: (index) {
+                          // setState(() {
+                          //   dataSelected = widget.listItemTitleTab[index];
+                          //   listBubbleTabItem.clear();
+                          //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+                          //     listBubbleTabItem.add(bubbleTabItem(
+                          //         widget.listItemTitleTab[i], dataSelected));
+                          //   }
+                          // });
+                          widget.onTap(index);
+                        },
+                        labelColor: widget.labelColor,
+                        unselectedLabelColor: widget.unselectedLabelColor,
+                        indicator: BubbleTabIndicator(
+                          indicatorHeight: 37.0,
+                          indicatorColor: widget.indicatorColor,
+                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                        ),
+                        indicatorColor: widget.indicatorColor,
+                        indicatorWeight: 0.1,
+                        labelPadding: EdgeInsets.all(10),
+                        tabs: listBubbleTabItem),
+                  ],
+                ),
+              ));
   }
 }

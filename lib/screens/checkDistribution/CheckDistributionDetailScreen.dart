@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Announcement.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -61,21 +62,8 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: AnimatedOpacity(
-          opacity: _showTitle ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 250),
-          child: Text(
-            _showTitle ? Dictionary.checkDistribution : '',
-            style: TextStyle(
-                fontFamily: FontsFamily.lato,
-                fontSize: 14.0,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
+      appBar: CustomAppBar.animatedAppBar(
+          showTitle: _showTitle, title: Dictionary.checkDistribution),
       backgroundColor: Colors.white,
       body: BlocProvider<RemoteConfigBloc>(
         create: (BuildContext context) =>
