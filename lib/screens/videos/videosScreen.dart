@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
+import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/ShareButton.dart';
@@ -36,29 +37,43 @@ class VideosList extends StatefulWidget {
 class _VideosListState extends State<VideosList> {
   // ignore: close_sinks
   VideoListBloc _videoListBloc;
+  ScrollController _scrollController;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.video);
-
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _videoListBloc = BlocProvider.of<VideoListBloc>(context);
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(
-        title: Dictionary.videoUpToDate,
-      ),
-      body: BlocBuilder<VideoListBloc, VideoListState>(
-        builder: (context, state) {
-          return state is VideosLoading
-              ? _buildLoading()
-              : state is VideosLoaded ? _buildContent(state) : Container();
-        },
-      ),
-    );
+        // appBar: CustomAppBar.defaultAppBar(
+        //   title: Dictionary.videoUpToDate,
+        // ),
+        body: CollapsingAppbar(
+          showTitle: _showTitle,
+          isBottomAppbar: true,
+          titleAppbar: Dictionary.videoUpToDate,
+          scrollController: _scrollController,
+          body: BlocBuilder<VideoListBloc, VideoListState>(
+            builder: (context, state) {
+              return state is VideosLoading
+                  ? _buildLoading()
+                  : state is VideosLoaded
+                      ? _buildContent(state)
+                      : Container();
+            },
+          ),
+        ));
   }
 
   _buildLoading() {

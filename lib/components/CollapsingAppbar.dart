@@ -4,22 +4,24 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 // ignore: must_be_immutable
 class CollapsingAppbar extends StatefulWidget {
   ScrollController scrollController;
-  bool isShrink;
+  bool showTitle;
   List<Widget> actionsAppBar;
   double heightAppbar;
   String titleAppbar;
   Widget backgroundAppBar;
   Widget body;
+  Widget searchBar;
   bool isBottomAppbar;
 
   CollapsingAppbar(
       {this.scrollController,
-      this.isShrink,
+      this.showTitle,
       this.heightAppbar,
       this.actionsAppBar,
       this.titleAppbar,
       this.backgroundAppBar,
       this.body,
+      this.searchBar,
       this.isBottomAppbar});
 
   @override
@@ -39,12 +41,12 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
             actions: widget.actionsAppBar,
             bottom: widget.isBottomAppbar
                 ? PreferredSize(
-                    preferredSize: Size.fromHeight(widget.isShrink ? 0 : 130.0),
+                    preferredSize: Size.fromHeight(widget.showTitle ? 0 : 130.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnimatedOpacity(
-                          opacity: widget.isShrink ? 0.0 : 1.0,
+                          opacity: widget.showTitle ? 0.0 : 1.0,
                           duration: Duration(milliseconds: 250),
                           child: Padding(
                             padding: EdgeInsets.all(20.0),
@@ -57,12 +59,13 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                             ),
                           ),
                         ),
+                        widget.showTitle ? Container() : widget.searchBar,
                       ],
                     ),
                   )
                 : null,
             iconTheme: IconThemeData(
-                color: widget.isShrink ? Colors.black : Colors.white),
+                color: widget.showTitle ? Colors.black : Colors.white),
             expandedHeight: widget.heightAppbar ?? 150,
             floating: false,
             pinned: true,
@@ -73,10 +76,10 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                     Container(
                       margin: EdgeInsets.only(left: 70),
                       child: AnimatedOpacity(
-                        opacity: widget.isShrink ? 1.0 : 0.0,
+                        opacity: widget.showTitle ? 1.0 : 0.0,
                         duration: Duration(milliseconds: 250),
                         child: Text(
-                          widget.isShrink ? widget.titleAppbar : '',
+                          widget.showTitle ? widget.titleAppbar : '',
                           style: TextStyle(
                               fontFamily: FontsFamily.lato,
                               fontSize: 16.0,
