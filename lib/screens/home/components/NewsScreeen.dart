@@ -468,7 +468,6 @@ class _NewsScreenState extends State<NewsScreen> {
                   Stack(
                     children: [
                       Container(
-                        color: Colors.black12.withOpacity(0.1),
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         child: ClipRRect(
@@ -493,7 +492,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
-                          color: Colors.black12.withOpacity(0.4),
+                          color: Colors.black12.withOpacity(0.2),
                           shape: BoxShape.rectangle,
                           borderRadius:
                               BorderRadius.circular(Dimens.dialogRadius),
@@ -567,11 +566,15 @@ class _NewsScreenState extends State<NewsScreen> {
               return designListNews(list[index]);
             },
           )
-        : EmptyData(
-            message: Dictionary.emptyData,
-            desc: Dictionary.descEmptyData,
-            isFlare: false,
-            image: "${Environment.imageAssets}not_found.png",
+        : ListView(
+            children: [
+              EmptyData(
+                message: Dictionary.emptyData,
+                desc: Dictionary.descEmptyData,
+                isFlare: false,
+                image: "${Environment.imageAssets}not_found.png",
+              )
+            ],
           );
   }
 

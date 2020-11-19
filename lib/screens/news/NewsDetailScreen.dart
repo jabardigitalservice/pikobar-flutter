@@ -179,7 +179,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                             height: MediaQuery.of(context).size.height,
                           ),
                           Container(
-                            color: Colors.black12.withOpacity(0.3),
+                            color: Colors.black12.withOpacity(0.2),
                           )
                         ],
                       )),
