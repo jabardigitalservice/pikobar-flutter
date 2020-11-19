@@ -291,6 +291,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                         tabs: listBubbleTabItem),
                   ],
                 ),
-              ));
+              )
+    );
   }
 }

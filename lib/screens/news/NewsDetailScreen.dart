@@ -14,13 +14,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
+import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -103,131 +103,63 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.white,
-      //   title: CustomAppBar.setTitleAppBar(Dictionary.news),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(
-      //         Icons.share,
-      //         color: Colors.black,
-      //       ),
-      //       onPressed: () {
-      //         widget.news == Dictionary.importantInfo
-      //             ? _shareMessage(widget.model)
-      //             : Share.share(
-      //                 '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-      //         AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-      //             <String, dynamic>{'title': widget.model.title});
-      //       },
-      //     )
-      //   ],
-      // ),
-      body: NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.share,
-                    color: isShrink ? Colors.black : Colors.white,
-                  ),
-                  onPressed: () {
-                    widget.news == Dictionary.importantInfo
-                        ? _shareMessage(widget.model)
-                        : Share.share(
-                            '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                    AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                        <String, dynamic>{'title': widget.model.title});
-                  },
+        body: CollapsingAppbar(
+      scrollController: _scrollController,
+      heightAppbar: 300.0,
+      isShrink: isShrink,
+      isBottomAppbar: false,
+      actionsAppBar: [
+        IconButton(
+          icon: Icon(
+            Icons.share,
+            color: isShrink ? Colors.black : Colors.white,
+          ),
+          onPressed: () {
+            widget.news == Dictionary.importantInfo
+                ? _shareMessage(widget.model)
+                : Share.share(
+                    '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+            AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                <String, dynamic>{'title': widget.model.title});
+          },
+        )
+      ],
+      titleAppbar: Dictionary.news,
+      backgroundAppBar: GestureDetector(
+        child: Hero(
+            tag: Dictionary.heroImageTag,
+            child: Stack(
+              children: [
+                Image.network(
+                  widget.model.image,
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height,
+                ),
+                Container(
+                  color: Colors.black12.withOpacity(0.2),
                 )
               ],
-              iconTheme:
-                  IconThemeData(color: isShrink ? Colors.black : Colors.white),
-              expandedHeight: 300.0,
-              floating: false,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 70),
-                      child: AnimatedOpacity(
-                        opacity: isShrink ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 250),
-                        child: Text(
-                          isShrink ? Dictionary.news : '',
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                // Row(
-                //   children: [
-                //     Container(
-                //       margin: EdgeInsets.only(left: 70, bottom: 2),
-                //       child: Text(isShrink ? Dictionary.news : '',
-                //           textAlign: TextAlign.left,
-                //           style: TextStyle(
-                //             color: Colors.black,
-                //             fontSize: 16.0,
-                //             fontWeight: FontWeight.w600,
-                //             fontFamily: FontsFamily.productSans,
-                //           )),
-                //     ),
-                //   ],
-                // ),
-                background: GestureDetector(
-                  child: Hero(
-                      tag: Dictionary.heroImageTag,
-                      child: Stack(
-                        children: [
-                          Image.network(
-                            widget.model.image,
-                            fit: BoxFit.cover,
-                            height: MediaQuery.of(context).size.height,
-                          ),
-                          Container(
-                            color: Colors.black12.withOpacity(0.2),
-                          )
-                        ],
-                      )),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => HeroImagePreview(
-                                  Dictionary.heroImageTag,
-                                  imageUrl: widget.model.image,
-                                )));
-                  },
-                ),
-              ),
-            ),
-          ];
+            )),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => HeroImagePreview(
+                        Dictionary.heroImageTag,
+                        imageUrl: widget.model.image,
+                      )));
         },
-        body: widget.model == null
-            ? state is NewsDetailLoading
-                ? _buildLoading(context)
-                : state is NewsDetailLoaded
-                    ? _buildContent(context, state.record)
-                    : state is NewsDetailFailure
-                        ? ErrorContent(error: state.error)
-                        : Container()
-            : _buildContent(context, widget.model),
       ),
-    );
+      body: widget.model == null
+          ? state is NewsDetailLoading
+              ? _buildLoading(context)
+              : state is NewsDetailLoaded
+                  ? _buildContent(context, state.record)
+                  : state is NewsDetailFailure
+                      ? ErrorContent(error: state.error)
+                      : Container()
+          : _buildContent(context, widget.model),
+    ));
   }
 
   _buildLoading(BuildContext context) {
