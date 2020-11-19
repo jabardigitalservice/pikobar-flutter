@@ -93,7 +93,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   bool get _showTitle {
     return _scrollController.hasClients &&
         _scrollController.offset >
-            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   @override
