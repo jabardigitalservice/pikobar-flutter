@@ -134,7 +134,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       listItemTitleTab: listItemTitleTab,
       indicatorColor: ColorBase.green,
       searchBar: CustomAppBar.buildSearchField(
-          _searchController, Dictionary.findEmergencyPhone, updateSearchQuery),
+          _searchController, Dictionary.searchInformation, updateSearchQuery),
       labelColor: Colors.white,
       showTitle: _showTitle,
       scrollController: _scrollController,
