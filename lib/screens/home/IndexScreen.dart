@@ -73,13 +73,13 @@ class IndexScreenState extends State<IndexScreen> {
           NotificationHelper().showNotification(
               message['notification']['title'], message['notification']['body'],
               payload:
-              jsonEncode(Platform.isAndroid ? message['data'] : message),
+                  jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         } else {
           NotificationHelper().showNotification(
               message['aps']['alert']['title'], message['aps']['alert']['body'],
               payload:
-              jsonEncode(Platform.isAndroid ? message['data'] : message),
+                  jsonEncode(Platform.isAndroid ? message['data'] : message),
               onSelectNotification: onSelectNotification);
         }
       },
@@ -162,7 +162,7 @@ class IndexScreenState extends State<IndexScreen> {
         ),
       ),
       BottomNavigationBarItem(
-         icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -212,8 +212,7 @@ class IndexScreenState extends State<IndexScreen> {
 
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                NewsDetailScreen(
+            builder: (context) => NewsDetailScreen(
                   id: data['id'].toString().trim(),
                   news: newsType,
                 )));
@@ -233,8 +232,7 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                NewsDetailScreen(
+            builder: (context) => NewsDetailScreen(
                   id: data['id'].toString().trim(),
                   news: Dictionary.importantInfo,
                 )));
@@ -246,8 +244,7 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'content_education') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                EducationDetailScreen(
+            builder: (context) => EducationDetailScreen(
                   id: data['id'].toString().trim(),
                   educationCollection: kEducationContent,
                 )));
@@ -272,53 +269,61 @@ class IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        child: _buildContent(_currentIndex),
-        onWillPop: onWillPop,
-      ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: BottomNavigationBar(
-            onTap: onTabTapped,
-            currentIndex: _currentIndex,
-            type: BottomNavigationBarType.fixed,
-            items: items),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: GestureDetector(
-        child: Container(
-          width: 60,
-          height: 60,
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF16A75C),
-                    Color(0xFF9BDBB3)
-                  ],
-                  transform: GradientRotation(45)
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(0.0, 2.0), //(x,y)
-                  blurRadius: 5.0,
-                  spreadRadius: 0.0
-                ),
-              ],
-              border: Border.all(color: Colors.white, width: 4.0)
+    return Stack(
+      children: [
+        Scaffold(
+          body: WillPopScope(
+            child: _buildContent(_currentIndex),
+            onWillPop: onWillPop,
           ),
-          child: Image.asset('${Environment.iconAssets}menu.png'),
+          bottomNavigationBar: Theme(
+            data: Theme.of(context).copyWith(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
+                onTap: onTabTapped,
+                currentIndex: _currentIndex,
+                type: BottomNavigationBarType.fixed,
+                items: items),
+          ),
         ),
-        onTap: () {
-          BottomSheetMenu.showBottomSheetMenu(context: context);
-        },
-      ),
+        Positioned(
+          bottom: 30,
+          left: 0,
+          right: 0,
+          child: GestureDetector(
+            child: Container(
+              width: 60,
+              height: 60,
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF16A75C),
+                        Color(0xFF9BDBB3)
+                      ],
+                      transform: GradientRotation(45)
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey.shade200,
+                        offset: Offset(0.0, 2.0), //(x,y)
+                        blurRadius: 5.0,
+                        spreadRadius: 0.0
+                    ),
+                  ],
+                  border: Border.all(color: Colors.white, width: 4.0)
+              ),
+              child: Image.asset('${Environment.iconAssets}menu.png'),
+            ),
+            onTap: () {
+              BottomSheetMenu.showBottomSheetMenu(context: context);
+            },
+          ),
+        )
+      ],
     );
   }
 
