@@ -109,13 +109,10 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-            builder: (context, state) {
-          return state is RemoteConfigLoaded
-              ? buildContent(state)
-              : Container();
-        }));
+    return Scaffold(body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+        builder: (context, state) {
+      return state is RemoteConfigLoaded ? buildContent(state) : Container();
+    }));
   }
 
   buildContent(RemoteConfigLoaded state) {

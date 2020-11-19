@@ -156,18 +156,38 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 title: Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 70, bottom: 2),
-                      child: Text(isShrink ? Dictionary.news : '',
-                          textAlign: TextAlign.left,
+                      margin: EdgeInsets.only(left: 70),
+                      child: AnimatedOpacity(
+                        opacity: isShrink ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 250),
+                        child: Text(
+                          isShrink ? Dictionary.news : '',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.productSans,
-                          )),
-                    ),
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    )
                   ],
                 ),
+                // Row(
+                //   children: [
+                //     Container(
+                //       margin: EdgeInsets.only(left: 70, bottom: 2),
+                //       child: Text(isShrink ? Dictionary.news : '',
+                //           textAlign: TextAlign.left,
+                //           style: TextStyle(
+                //             color: Colors.black,
+                //             fontSize: 16.0,
+                //             fontWeight: FontWeight.w600,
+                //             fontFamily: FontsFamily.productSans,
+                //           )),
+                //     ),
+                //   ],
+                // ),
                 background: GestureDetector(
                   child: Hero(
                       tag: Dictionary.heroImageTag,
@@ -308,63 +328,36 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // GestureDetector(
-            //   child: Hero(
-            //     tag: Dictionary.heroImageTag,
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width,
-            //       color: Colors.grey,
-            //       child: CachedNetworkImage(
-            //         imageUrl: data.image,
-            //         placeholder: (context, url) => Center(
-            //             heightFactor: 10.2,
-            //             child: CupertinoActivityIndicator()),
-            //         errorWidget: (context, url, error) => Container(
-            //             height: MediaQuery.of(context).size.height / 3.3,
-            //             color: Colors.grey[200],
-            //             child: Image.asset(
-            //                 '${Environment.iconAssets}pikobar.png',
-            //                 fit: BoxFit.fitWidth)),
-            //       ),
-            //     ),
-            //   ),
-            //   onTap: () {
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (_) => HeroImagePreview(
-            //                   Dictionary.heroImageTag,
-            //                   imageUrl: data.image,
-            //                 )));
-            //   },
-            // ),
             Padding(
               padding: const EdgeInsets.only(
                   left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  AnimatedOpacity(
+                    opacity: isShrink ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 250),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10, left: 3),
+                      child: Text(
+                        Dictionary.news,
+                        style: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          // Image.network(
-                          //   data.newsChannelIcon,
-                          //   width: 25.0,
-                          //   height: 25.0,
-                          // ),
                           Container(
                             margin: EdgeInsets.only(left: 5.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  // Text(
-                                  //   data.newsChannel,
-                                  //   style: TextStyle(
-                                  //       fontSize: 12.0,
-                                  //       fontFamily: FontsFamily.lato),
-                                  // ),
                                   _newsType != NewsType.articlesImportantInfo &&
                                           data.newsChannel.isNotEmpty
                                       ? Text(
@@ -380,16 +373,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           )
                         ],
                       ),
-                      // ShareButton(
-                      //   onPressed: () {
-                      //     widget.news == Dictionary.importantInfo
-                      //         ? _shareMessage(data)
-                      //         : Share.share(
-                      //         '${data.title}\n\n${data.backlink != null ? 'Baca berita lengkapnya:\n' + data.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                      //     AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                      //         <String, dynamic>{'title': data.title});
-                      //   },
-                      // )
                     ],
                   ),
                   SizedBox(height: 10.0),

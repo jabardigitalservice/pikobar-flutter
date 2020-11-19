@@ -22,7 +22,6 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
-
 class InfoGraphics extends StatefulWidget {
   final String searchQuery;
 
@@ -98,10 +97,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           fontSize: Dimens.textSubtitleSize),
                     ),
                     onTap: () {
-                      // Navigator.pushNamed(
-                      //     context, NavigationConstrants.InfoGraphics);
                       Navigator.pushNamed(
-                          context, NavigationConstrants.Phonebook);
+                          context, NavigationConstrants.InfoGraphics);
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsMore);
