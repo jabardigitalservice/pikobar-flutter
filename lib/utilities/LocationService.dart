@@ -77,56 +77,50 @@ class LocationService {
                             fontSize: 12.0,
                             color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 24.0),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: RoundedButton(
-                                  title: Dictionary.later,
-                                  textStyle: TextStyle(
-                                      fontFamily: FontsFamily.lato,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorBase.green),
-                                  color: Colors.white,
-                                  borderSide: BorderSide(
-                                      color: ColorBase.green),
-                                  elevation: 0.0,
-                                  onPressed: () {
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.permissionDismissLocation);
-                                    Navigator.of(context).pop();
-                                  })),
-                          SizedBox(width: Dimens.padding),
-                          Expanded(
-                              child: RoundedButton(
-                                  title: Dictionary.agree,
-                                  textStyle: TextStyle(
-                                      fontFamily: FontsFamily.lato,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  color: ColorBase.green,
-                                  elevation: 0.0,
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    if (await Permission.locationAlways
-                                        .status.isPermanentlyDenied) {
-                                      Platform.isAndroid
-                                          ? await AppSettings.openAppSettings()
-                                          : await AppSettings
-                                          .openLocationSettings();
-                                    } else {
-                                      [
-                                        Permission.locationAlways
-                                      ].request().then((status) {
-                                        _onStatusRequested(context, status);
-                                      });
-                                    }
-                                  }))
-                        ],
-                      ),
-                      SizedBox(height: 22),
+                      SizedBox(height: Dimens.verticalPadding),
+                      RoundedButton(
+                          title: Dictionary.agree,
+                          textStyle: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                          color: ColorBase.green,
+                          elevation: 0.0,
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                            if (await Permission.locationAlways
+                                .status.isPermanentlyDenied) {
+                              Platform.isAndroid
+                                  ? await AppSettings.openAppSettings()
+                                  : await AppSettings
+                                  .openLocationSettings();
+                            } else {
+                              [
+                                Permission.locationAlways
+                              ].request().then((status) {
+                                _onStatusRequested(context, status);
+                              });
+                            }
+                          }),
+                      SizedBox(height: Dimens.fieldMarginTop),
+                      RoundedButton(
+                          title: Dictionary.later,
+                          textStyle: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: ColorBase.darkGrey),
+                          color: Colors.white,
+                          borderSide: BorderSide(
+                              color: ColorBase.darkGrey),
+                          elevation: 0.0,
+                          onPressed: () {
+                            AnalyticsHelper.setLogEvent(
+                                Analytics.permissionDismissLocation);
+                            Navigator.of(context).pop();
+                          }),
+                      SizedBox(height: Dimens.verticalPadding),
                     ],
                   ),
                 ),

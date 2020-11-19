@@ -250,7 +250,7 @@ class Dictionary {
   static String permissionLocationGeneral =
       'Bantu kami dengan membagikan lokasi Anda untuk menanggulangi kasus Covid-19';
   static String permissionLocationAgreement =
-      '* Akses lokasi digunakan untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.\n\n* Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau digunakan\n\n* Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
+      '* Akses lokasi digunakan untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal\n\n* Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau digunakan\n\n* Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
   static String permissionGeolocationTitle = 'Izinkan PIKOBAR mengakses lokasi Anda';
   static String permissionGeolocationDesc = 'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
 
