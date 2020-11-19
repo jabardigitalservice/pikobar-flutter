@@ -34,6 +34,8 @@ class FirebaseConfig {
   static String selfDiagnoseEnabled = 'selfdiagnose_enabled';
   static String selfDiagnoseUrl = 'selfdiagnose_url';
   static String selfDiagnoseCaption = 'selfdiagnose_caption';
+  static String massiveTestUrl = 'massive_test_url';
+  static String massiveTestCaption = 'massive_test_caption';
   static String spreadCheckLocation = 'ceksebaran_location';
   static String healthStatusColors = 'health_status_colors';
   static String emergencyCall = 'emergency_call';
@@ -57,6 +59,7 @@ class FirebaseConfig {
   static String donationMenu = 'donasi_menu';
   static String surveyMenu = 'survey_menu';
   static String selfDiagnoseMenu = 'selfdiagnose_menu';
+  static String massiveTestMenu = 'massive_test_menu';
   static String logisticMenu = 'logistic_menu';
   static String jshMenu = 'saber_hoax_menu';
   static String volunteerMenu = 'volunteer_menu';
@@ -71,6 +74,7 @@ class FirebaseConfig {
       '"$donationMenu":false,'
       '"$surveyMenu":true,'
       '"$selfDiagnoseMenu":false,'
+      '"$massiveTestMenu":false,'
       '"$logisticMenu":false,'
       '"$jshMenu":false,'
       '"$volunteerMenu":false,'
