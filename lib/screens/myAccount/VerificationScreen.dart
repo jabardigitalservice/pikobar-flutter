@@ -48,6 +48,8 @@ class _VerificationState extends State<Verification> {
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
+  final TextEditingController _pinPutController = TextEditingController();
+  final FocusNode _pinPutFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -56,8 +58,13 @@ class _VerificationState extends State<Verification> {
 
   @override
   Widget build(BuildContext context) {
+    final BoxDecoration pinPutDecoration = BoxDecoration(
+      color: ColorBase.greyBorder,
+      borderRadius: BorderRadius.circular(14.0),
+    );
     return Scaffold(
         key: _scaffoldState,
+        backgroundColor: Colors.white,
         appBar: CustomAppBar.defaultAppBar(title: Dictionary.verification),
         body: BlocProvider<ProfileBloc>(
             create: (BuildContext context) => _profileBloc =
@@ -214,33 +221,34 @@ class _VerificationState extends State<Verification> {
                               SizedBox(
                                 height: 40,
                               ),
-                              Container(
-                                height: 70,
-                                child: PinPut(
-                                    textStyle: TextStyle(fontSize: 20),
-                                    inputDecoration: InputDecoration(
-                                        hintText: '-',
-                                        fillColor: ColorBase.veryLightGrey,
-                                        filled: true,
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: ColorBase.veryLightGrey),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: ColorBase.veryLightGrey),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        counterText: ''),
-                                    fieldsCount: 6,
-                                    textInputAction: TextInputAction.go,
-                                    onSubmit: (String pin) {
-                                      setState(() {
-                                        smsCode = pin;
-                                      });
-                                    }),
-                              ),
+                              PinPut(
+                                  textStyle: TextStyle(fontSize: 20),
+                                  submittedFieldDecoration: pinPutDecoration,
+                                  selectedFieldDecoration:
+                                      pinPutDecoration.copyWith(
+                                    border: Border.all(
+                                      width: 2,
+                                      color: ColorBase.green,
+                                    ),
+                                  ),
+                                  inputDecoration: InputDecoration(
+                                      contentPadding: EdgeInsets.zero,
+                                      border: InputBorder.none,
+                                      counterText: '',
+                                      hintText: '-',
+                                      hintStyle: TextStyle(
+                                          color: Colors.black, fontSize: 14)),
+                                  followingFieldDecoration: pinPutDecoration,
+                                  fieldsCount: 6,
+                                  focusNode: _pinPutFocusNode,
+                                  eachFieldWidth: 55.0,
+                                  eachFieldHeight: 55.0,
+                                  textInputAction: TextInputAction.go,
+                                  onSubmit: (String pin) {
+                                    setState(() {
+                                      smsCode = pin;
+                                    });
+                                  }),
                               SizedBox(height: 20.0),
                               Container(
                                 padding: EdgeInsets.only(
@@ -301,6 +309,7 @@ class _VerificationState extends State<Verification> {
 
 // Function for check otp is valid or not
   onVerifyButtonPressed() {
+    FocusScope.of(context).unfocus();
     _profileBloc.add(ConfirmOTP(
         smsCode: smsCode,
         verificationID:

@@ -70,13 +70,14 @@ class _EditState extends State<Edit> {
   bool isGenderEmpty = false;
   LatLng latLng;
   List<dynamic> listCity;
+  ScrollController _scrollController;
 
   @override
   void initState() {
     _nameController.text = widget.state.data['name'];
     _emailController.text = widget.state.data['email'];
     _phoneNumberController.text = widget.state.data['phone_number'] != null
-        ? widget.state.data['phone_number'].toString().substring(3)
+        ? '0' + widget.state.data['phone_number'].toString().substring(3)
         : null;
     _addressController.text = widget.state.data['address'];
     _birthDayController.text = widget.state.data['birthdate'] == null
@@ -92,7 +93,15 @@ class _EditState extends State<Edit> {
         : new LatLng(widget.state.data['location'].latitude,
             widget.state.data['location'].longitude);
     print(latLng);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
@@ -102,9 +111,8 @@ class _EditState extends State<Edit> {
       child: Scaffold(
         backgroundColor: Colors.white,
         key: _scaffoldState,
-        appBar: CustomAppBar.defaultAppBar(
-          title: Dictionary.edit,
-        ),
+        appBar: CustomAppBar.animatedAppBar(
+            showTitle: _showTitle, title: Dictionary.edit),
         body: FutureBuilder<RemoteConfig>(
             future: setupRemoteConfig(),
             builder:
@@ -167,7 +175,7 @@ class _EditState extends State<Edit> {
                             builder: (BuildContext context) => DialogTextOnly(
                                   description: Dictionary.codeSend +
                                       Dictionary.inaCode +
-                                      _phoneNumberController.text,
+                                      _phoneNumberController.text.substring(1),
                                   buttonText: Dictionary.ok,
                                   onOkPressed: () {
                                     // Close dialog
@@ -178,7 +186,8 @@ class _EditState extends State<Edit> {
                                       MaterialPageRoute(
                                           builder: (context) => Verification(
                                                 phoneNumber:
-                                                    _phoneNumberController.text,
+                                                    _phoneNumberController.text
+                                                        .substring(1),
                                                 uid: widget.state.data['id'],
                                                 verificationID:
                                                     state.verificationID,
@@ -232,12 +241,32 @@ class _EditState extends State<Edit> {
                       }
                     },
                     child: ListView(
+                      controller: _scrollController,
                       padding: EdgeInsets.all(10),
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 0),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              AnimatedOpacity(
+                                opacity: _showTitle ? 0.0 : 1.0,
+                                duration: Duration(milliseconds: 250),
+                                child: Padding(
+                                  padding: EdgeInsets.all(15.0),
+                                  child: Text(
+                                    Dictionary.edit,
+                                    style: TextStyle(
+                                        fontFamily: FontsFamily.lato,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               buildTextField(
                                   title: Dictionary.name,
                                   hintText: Dictionary.placeholderYourName,
@@ -308,7 +337,7 @@ class _EditState extends State<Edit> {
                                           style: TextStyle(
                                               fontSize: 12.0,
                                               color: ColorBase.veryDarkGrey,
-                                              fontFamily: FontsFamily.lato,
+                                              fontFamily: FontsFamily.roboto,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ],
@@ -320,34 +349,35 @@ class _EditState extends State<Edit> {
                                       minWidth:
                                           MediaQuery.of(context).size.width,
                                       height: 45.0,
-                                      child: OutlineButton(
+                                      child: RaisedButton(
+                                        elevation: 0,
+                                        color: ColorBase.greyContainer,
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
+                                            Text(
+                                              Dictionary.setLocation,
+                                              style: TextStyle(
+                                                  color: ColorBase.netralGrey,
+                                                  fontSize: 14,
+                                                  fontFamily:
+                                                      FontsFamily.roboto),
+                                            ),
                                             Image.asset(
                                               '${Environment.iconAssets}pin_location.png',
                                               width: 15.0,
                                               height: 15.0,
                                             ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 10.0),
-                                              child: Text(
-                                                Dictionary.setLocation,
-                                                style: TextStyle(
-                                                    color: ColorBase.darkGrey,
-                                                    fontSize: 12,
-                                                    fontFamily:
-                                                        FontsFamily.lato),
-                                              ),
-                                            ),
                                           ],
                                         ),
                                         shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        borderSide: BorderSide(
-                                            color: ColorBase.menuBorderColor,
-                                            width: 1.5),
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          side: BorderSide(
+                                              color: ColorBase.greyBorder,
+                                              width: 1.5),
+                                        ),
                                         onPressed: () async {
                                           await _handleLocation();
                                         },
@@ -392,8 +422,7 @@ class _EditState extends State<Edit> {
                                             _cityController,
                                             false);
                                       default:
-                                        listCity =
-                                            snapshot.data.docs.toList();
+                                        listCity = snapshot.data.docs.toList();
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
                                             Dictionary.cityPlaceholder,
@@ -409,53 +438,57 @@ class _EditState extends State<Edit> {
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
-                        RaisedButton(
-                          color: ColorBase.limeGreen,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          onPressed: () {
-                            if (widget.state.data['phone_number']
-                                    .toString()
-                                    .substring(3) !=
-                                _phoneNumberController.text) {
-                              var data = FirebaseFirestore.instance
-                                  .collection(kUsers)
-                                  .where("phone_number",
-                                      isEqualTo: Dictionary.inaCode +
-                                          _phoneNumberController.text)
-                                  .get();
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: RaisedButton(
+                            color: ColorBase.limeGreen,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            onPressed: () {
+                              if (widget.state.data['phone_number']
+                                      .toString()
+                                      .substring(3) !=
+                                  _phoneNumberController.text.substring(1)) {
+                                var data = FirebaseFirestore.instance
+                                    .collection(kUsers)
+                                    .where("phone_number",
+                                        isEqualTo: Dictionary.inaCode +
+                                            _phoneNumberController.text
+                                                .substring(1))
+                                    .get();
 
-                              data.then((docs) {
-                                if (docs.docs.isNotEmpty) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          DialogTextOnly(
-                                            description: Dictionary
-                                                .phoneNumberHasBeenUsed,
-                                            buttonText: Dictionary.ok,
-                                            onOkPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // To close the dialog
-                                            },
-                                          ));
-                                } else {
-                                  _onSaveProfileButtonPressed(otpEnabled);
-                                }
-                              });
-                            } else {
-                              _onSaveProfileButtonPressed(otpEnabled);
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 13),
-                            child: Text(
-                              Dictionary.save,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                data.then((docs) {
+                                  if (docs.docs.isNotEmpty) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            DialogTextOnly(
+                                              description: Dictionary
+                                                  .phoneNumberHasBeenUsed,
+                                              buttonText: Dictionary.ok,
+                                              onOkPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // To close the dialog
+                                              },
+                                            ));
+                                  } else {
+                                    _onSaveProfileButtonPressed(otpEnabled);
+                                  }
+                                });
+                              } else {
+                                _onSaveProfileButtonPressed(otpEnabled);
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 13),
+                              child: Text(
+                                Dictionary.save,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         )
@@ -537,11 +570,11 @@ class _EditState extends State<Edit> {
         // If the field is empty doing nothing and validator will be shown
 
       } else if (widget.state.data['phone_number'] ==
-          Dictionary.inaCode + _phoneNumberController.text) {
+          Dictionary.inaCode + _phoneNumberController.text.substring(1)) {
         // If phone number field not change by user it will be save to firebase and skip otp
         _profileBloc.add(Save(
             id: widget.state.data['id'],
-            phoneNumber: _phoneNumberController.text,
+            phoneNumber: _phoneNumberController.text.substring(1),
             gender: _genderController.text,
             address: _addressController.text,
             cityId: _cityController.text,
@@ -561,7 +594,7 @@ class _EditState extends State<Edit> {
             verificationCompleted = (AuthCredential credential) async {
               await _profileRepository.linkCredential(
                   widget.state.data['id'],
-                  _phoneNumberController.text,
+                  _phoneNumberController.text.substring(1),
                   _genderController.text,
                   _addressController.text,
                   _cityController.text,
@@ -587,7 +620,7 @@ class _EditState extends State<Edit> {
             // Execute otp process
             _profileBloc.add(Verify(
                 id: widget.state.data['id'],
-                phoneNumber: _phoneNumberController.text,
+                phoneNumber: _phoneNumberController.text.substring(1),
                 verificationCompleted: verificationCompleted,
                 verificationFailed: verificationFailed,
                 codeSent: codeSent));
@@ -597,7 +630,7 @@ class _EditState extends State<Edit> {
           // Save change directly to firestore
           _profileBloc.add(Save(
               id: widget.state.data['id'],
-              phoneNumber: _phoneNumberController.text,
+              phoneNumber: _phoneNumberController.text.substring(1),
               name: _nameController.text,
               nik: _nikController.text,
               gender: _genderController.text,
@@ -613,79 +646,73 @@ class _EditState extends State<Edit> {
 
   // Function to build radio button
   Widget buildRadioButton({String title, List<String> label, bool isEmpty}) {
-    return Padding(
-      padding: EdgeInsets.only(left: 16.0, right: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Row(
             children: <Widget>[
               Text(
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.red,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          RadioButtonGroup(
-            activeColor: ColorBase.limeGreen,
-            labelStyle: TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
-            orientation: GroupedButtonsOrientation.HORIZONTAL,
-            onSelected: (String selected) => setState(() {
-              // Set value to M or F
-              _genderController.text = selected.contains('Laki') ? 'M' : 'F';
-            }),
-            labels: label,
-            picked: _genderController.text == 'M'
-                ? 'Laki - Laki'
-                : _genderController.text == 'F'
-                    ? 'Perempuan'
-                    : null,
-            itemBuilder: (Radio rb, Text txt, int i) {
-              return Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width / 2.8,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: ColorBase.menuBorderColor, width: 1.5)),
-                    child: Row(
-                      children: <Widget>[
-                        rb,
-                        txt,
-                      ],
-                    )),
-              );
-            },
-          ),
-          isEmpty
-              ? SizedBox(
-                  height: 10,
-                )
-              : Container(),
-          isEmpty
-              ? Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    title + Dictionary.pleaseCompleteAllField,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                )
-              : Container()
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        RadioButtonGroup(
+          activeColor: ColorBase.limeGreen,
+          labelStyle: TextStyle(fontSize: 14, fontFamily: FontsFamily.roboto),
+          orientation: GroupedButtonsOrientation.VERTICAL,
+          onSelected: (String selected) => setState(() {
+            // Set value to M or F
+            _genderController.text = selected.contains('Laki') ? 'M' : 'F';
+          }),
+          labels: label,
+          picked: _genderController.text == 'M'
+              ? 'Laki - Laki'
+              : _genderController.text == 'F'
+                  ? 'Perempuan'
+                  : null,
+          itemBuilder: (Radio rb, Text txt, int i) {
+            return Row(
+              children: <Widget>[
+                rb,
+                txt,
+              ],
+            );
+          },
+        ),
+        isEmpty
+            ? SizedBox(
+                height: 10,
+              )
+            : Container(),
+        isEmpty
+            ? Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Text(
+                  title + Dictionary.pleaseCompleteAllField,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              )
+            : Container()
+      ],
     );
   }
 
@@ -703,12 +730,16 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.red,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -723,28 +754,33 @@ class _EditState extends State<Edit> {
               height: 60,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
+                  color: ColorBase.greyContainer,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
+                      color: isEmpty ? Colors.red : ColorBase.greyBorder,
                       width: 1.5)),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      placeholder,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: FontsFamily.roboto,
+                          color: placeholder == Dictionary.birthdayPlaceholder
+                              ? ColorBase.netralGrey
+                              : Colors.black),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Container(
-                        height: 20,
+                        height: 15,
                         child: Image.asset(
                             '${Environment.iconAssets}calendar.png')),
-                  ),
-                  Text(
-                    placeholder,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: FontsFamily.lato,
-                        color: placeholder == Dictionary.birthdayPlaceholder
-                            ? ColorBase.darkGrey
-                            : Colors.black),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -790,12 +826,16 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.red,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -807,37 +847,39 @@ class _EditState extends State<Edit> {
             style: isEdit
                 ? TextStyle(
                     color: Colors.black,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12)
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14)
                 : TextStyle(
                     color: ColorBase.disableText,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12),
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14),
             enabled: isEdit,
             validator: validation,
             textCapitalization: TextCapitalization.words,
             controller: controller,
             decoration: InputDecoration(
+                fillColor: ColorBase.greyContainer,
+                filled: true,
                 hintText: hintText,
                 hintStyle: TextStyle(
-                    color: ColorBase.darkGrey,
-                    fontFamily: FontsFamily.lato,
+                    color: ColorBase.netralGrey,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12),
                 errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.red, width: 1.5)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
                 disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5))),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5))),
             keyboardType:
                 textInputType != null ? textInputType : TextInputType.text,
           )
@@ -862,12 +904,16 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.red,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -878,28 +924,36 @@ class _EditState extends State<Edit> {
             height: 60,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
+                color: ColorBase.greyContainer,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
+                    color: isEmpty ? Colors.red : ColorBase.greyBorder,
                     width: 1.5)),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: custom.DropdownButton<dynamic>(
                 underline: SizedBox(),
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: ColorBase.netralGrey,
+                  size: 30,
+                ),
                 isExpanded: true,
                 hint: Text(
                   hintText,
                   style: TextStyle(
-                      color: ColorBase.darkGrey,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12),
+                      color: ColorBase.netralGrey,
+                      fontFamily: FontsFamily.roboto,
+                      fontSize: 14),
                 ),
                 items: items.map((item) {
                   return custom.DropdownMenuItem(
                     child: Text(
                       item['name'],
-                      style:
-                          TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+                      style: TextStyle(
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 14,
+                      ),
                     ),
                     value: item['code'].toString(),
                   );
@@ -953,80 +1007,59 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.red,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
           SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                height: 55,
-                width: MediaQuery.of(context).size.width / 7,
-                decoration: BoxDecoration(
+          TextFormField(
+            style: isEdit
+                ? TextStyle(
+                    color: Colors.black,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14)
+                : TextStyle(
+                    color: ColorBase.disableText,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14),
+            enabled: isEdit,
+            validator: validation,
+            controller: controller,
+            decoration: InputDecoration(
+                hintText: hintText,
+                filled: true,
+                fillColor: ColorBase.greyContainer,
+                hintStyle: TextStyle(
+                    color: ColorBase.netralGrey,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 12),
+                errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
-                child: Center(
-                    child: Text(
-                  Dictionary.inaCode,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: FontsFamily.lato,
-                      color: ColorBase.darkGrey),
-                )),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: TextFormField(
-                  style: isEdit
-                      ? TextStyle(
-                          color: Colors.black,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12)
-                      : TextStyle(
-                          color: ColorBase.disableText,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12),
-                  enabled: isEdit,
-                  validator: validation,
-                  controller: controller,
-                  decoration: InputDecoration(
-                      hintText: hintText,
-                      hintStyle: TextStyle(
-                          color: ColorBase.darkGrey,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: Colors.red, width: 1.5)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: ColorBase.menuBorderColor, width: 1.5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: ColorBase.menuBorderColor, width: 1)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: ColorBase.menuBorderColor, width: 2))),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-            ],
+                    borderSide: BorderSide(color: Colors.red, width: 1.5)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 2))),
+            keyboardType: TextInputType.number,
           )
         ],
       ),
