@@ -17,7 +17,6 @@ import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -25,24 +24,12 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
-import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
-import 'package:pikobar_flutter/screens/home/components/Documents.dart';
-import 'package:pikobar_flutter/screens/home/components/GroupHomeBanner.dart';
-import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/JabarToday.dart';
-import 'package:pikobar_flutter/screens/home/components/MenuList.dart';
-import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
-import 'package:pikobar_flutter/screens/home/components/SpreadSection.dart';
-import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
-import 'package:pikobar_flutter/screens/home/components/TabNewsScreen.dart';
-import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
-import 'BannerListSlider.dart';
 
-// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
 

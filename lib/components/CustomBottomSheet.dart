@@ -165,3 +165,47 @@ void showTextBottomSheet(
         );
       });
 }
+
+Future<void> showWidgetBottomSheet(
+    {@required BuildContext context, Widget child, bool isScrollControlled = false}) async {
+  return await showModalBottomSheet(
+      context: context,
+      isScrollControlled: isScrollControlled,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.all(Dimens.padding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              /// Divider section
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: Dimens.padding),
+                  height: 4,
+                  width: 80.0,
+                  decoration: BoxDecoration(
+                      color: ColorBase.menuBorderColor,
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+              ),
+
+              /// Title section
+              ///
+              /// If title null, the title section will be hidden
+              child ?? Container(),
+
+
+              SizedBox(height: Dimens.sbHeight)
+            ],
+          ),
+        );
+      });
+}
