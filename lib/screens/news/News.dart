@@ -46,6 +46,7 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   TabController tabController;
+  ScrollController _scrollController;
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
@@ -80,10 +81,17 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   void initState() {
     _newsListBloc = BlocProvider.of<NewsListBloc>(context);
     AnalyticsHelper.setCurrentScreen(Analytics.news);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _searchController.addListener((() {
       _onSearchChanged();
     }));
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   setControllerTab(bool statImportantInfo) {
@@ -101,17 +109,10 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: CustomAppBar.setTitleAppBar(Dictionary.news),
-        ),
-        body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-            builder: (context, state) {
-          return state is RemoteConfigLoaded
-              ? buildContent(state)
-              : Container();
-        }));
+    return Scaffold(body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+        builder: (context, state) {
+      return state is RemoteConfigLoaded ? buildContent(state) : Container();
+    }));
   }
 
   buildContent(RemoteConfigLoaded state) {
@@ -127,47 +128,33 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       }
       checkStatImportantInfo = false;
     }
-    return SingleChildScrollView(
-      child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              CustomAppBar.buildSearchField(_searchController,
-                  Dictionary.searchInformation, updateSearchQuery),
-              CustomBubbleTab(
-                listItemTitleTab: listItemTitleTab,
-                indicatorColor: ColorBase.green,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
-                tabController: tabController,
-                typeTabSelected: widget.news,
-                onTap: (index) {
-                  _newsListBloc.add(NewsListLoad(listCollectionData[index],
-                      statImportantInfo: statImportantInfo));
-                  AnalyticsHelper.setLogEvent(analyticsData[index]);
-                },
-                tabBarView: <Widget>[
-                  NewsScreen(
-                      news: Dictionary.allNews, searchQuery: searchQuery),
-                  if (statImportantInfo)
-                    NewsScreen(
-                        news: Dictionary.importantInfo,
-                        searchQuery: searchQuery),
-                  NewsScreen(
-                      news: Dictionary.latestNews, searchQuery: searchQuery),
-                  NewsScreen(
-                      news: Dictionary.nationalNews, searchQuery: searchQuery),
-                  NewsScreen(
-                      news: Dictionary.worldNews, searchQuery: searchQuery),
-                ],
-                heightTabBarView: MediaQuery.of(context).size.height - 230,
-                paddingTopTabBarView: 0,
-              ),
-            ],
-          )),
+    return CustomBubbleTab(
+      isStickyHeader: true,
+      titleHeader: Dictionary.news,
+      listItemTitleTab: listItemTitleTab,
+      indicatorColor: ColorBase.green,
+      searchBar: CustomAppBar.buildSearchField(
+          _searchController, Dictionary.searchInformation, updateSearchQuery),
+      labelColor: Colors.white,
+      showTitle: _showTitle,
+      scrollController: _scrollController,
+      unselectedLabelColor: ColorBase.netralGrey,
+      tabController: tabController,
+      typeTabSelected: widget.news,
+      onTap: (index) {
+        _newsListBloc.add(NewsListLoad(listCollectionData[index],
+            statImportantInfo: statImportantInfo));
+        AnalyticsHelper.setLogEvent(analyticsData[index]);
+      },
+      tabBarView: <Widget>[
+        NewsScreen(news: Dictionary.allNews, searchQuery: searchQuery),
+        if (statImportantInfo)
+          NewsScreen(news: Dictionary.importantInfo, searchQuery: searchQuery),
+        NewsScreen(news: Dictionary.latestNews, searchQuery: searchQuery),
+        NewsScreen(news: Dictionary.nationalNews, searchQuery: searchQuery),
+        NewsScreen(news: Dictionary.worldNews, searchQuery: searchQuery),
+      ],
+      isExpand: true,
     );
   }
 

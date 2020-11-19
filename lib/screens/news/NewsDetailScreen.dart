@@ -14,13 +14,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
+import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -53,10 +53,27 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   // ignore: close_sinks
   NewsDetailBloc _newsDetailBloc;
   String _newsType;
+  ScrollController _scrollController;
+  bool lastStatus = true;
+
+  _scrollListener() {
+    if (isShrink != lastStatus) {
+      setState(() {
+        lastStatus = isShrink;
+      });
+    }
+  }
+
+  bool get isShrink {
+    return _scrollController.hasClients &&
+        _scrollController.offset > (200 - kToolbarHeight);
+  }
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.news);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
 
     if (widget.news == Dictionary.importantInfo) {
       _newsType = NewsType.articlesImportantInfo;
@@ -86,17 +103,63 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: CustomAppBar.setTitleAppBar(Dictionary.news),
-        ),
-        body: widget.model == null ? state is NewsDetailLoading
-            ? _buildLoading(context)
-            : state is NewsDetailLoaded
-                ? _buildContent(context, state.record)
-                : state is NewsDetailFailure
-                    ? ErrorContent(error: state.error)
-                    : Container() : _buildContent(context, widget.model));
+        body: CollapsingAppbar(
+      scrollController: _scrollController,
+      heightAppbar: 300.0,
+      isShrink: isShrink,
+      isBottomAppbar: false,
+      actionsAppBar: [
+        IconButton(
+          icon: Icon(
+            Icons.share,
+            color: isShrink ? Colors.black : Colors.white,
+          ),
+          onPressed: () {
+            widget.news == Dictionary.importantInfo
+                ? _shareMessage(widget.model)
+                : Share.share(
+                    '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+            AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                <String, dynamic>{'title': widget.model.title});
+          },
+        )
+      ],
+      titleAppbar: Dictionary.news,
+      backgroundAppBar: GestureDetector(
+        child: Hero(
+            tag: Dictionary.heroImageTag,
+            child: Stack(
+              children: [
+                Image.network(
+                  widget.model.image,
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height,
+                ),
+                Container(
+                  color: Colors.black12.withOpacity(0.2),
+                )
+              ],
+            )),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => HeroImagePreview(
+                        Dictionary.heroImageTag,
+                        imageUrl: widget.model.image,
+                      )));
+        },
+      ),
+      body: widget.model == null
+          ? state is NewsDetailLoading
+              ? _buildLoading(context)
+              : state is NewsDetailLoaded
+                  ? _buildContent(context, state.record)
+                  : state is NewsDetailFailure
+                      ? ErrorContent(error: state.error)
+                      : Container()
+          : _buildContent(context, widget.model),
+    ));
   }
 
   _buildLoading(BuildContext context) {
@@ -197,76 +260,43 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            GestureDetector(
-              child: Hero(
-                tag: Dictionary.heroImageTag,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.grey,
-                  child: CachedNetworkImage(
-                    imageUrl: data.image,
-                    placeholder: (context, url) => Center(
-                        heightFactor: 10.2,
-                        child: CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Container(
-                        height: MediaQuery.of(context).size.height / 3.3,
-                        color: Colors.grey[200],
-                        child: Image.asset(
-                            '${Environment.iconAssets}pikobar.png',
-                            fit: BoxFit.fitWidth)),
-                  ),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => HeroImagePreview(
-                              Dictionary.heroImageTag,
-                              imageUrl: data.image,
-                            )));
-              },
-            ),
             Padding(
               padding: const EdgeInsets.only(
                   left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    data.title,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontFamily: FontsFamily.lato,
-                        fontWeight: FontWeight.bold),
+                  AnimatedOpacity(
+                    opacity: isShrink ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 250),
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 10, left: 3),
+                      child: Text(
+                        Dictionary.news,
+                        style: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Image.network(
-                            data.newsChannelIcon,
-                            width: 25.0,
-                            height: 25.0,
-                          ),
                           Container(
                             margin: EdgeInsets.only(left: 5.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                    data.newsChannel,
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontFamily: FontsFamily.lato),
-                                  ),
-                                  _newsType != NewsType.articlesImportantInfo && data.newsChannel.isNotEmpty
+                                  _newsType != NewsType.articlesImportantInfo &&
+                                          data.newsChannel.isNotEmpty
                                       ? Text(
                                           unixTimeStampToDateTime(
-                                              data.publishedAt),
+                                                  data.publishedAt) +
+                                              ' • ' +
+                                              data.newsChannel,
                                           style: TextStyle(
                                               fontSize: 12.0,
                                               fontFamily: FontsFamily.lato))
@@ -275,17 +305,19 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           )
                         ],
                       ),
-                      ShareButton(
-                        onPressed: () {
-                          widget.news == Dictionary.importantInfo
-                              ? _shareMessage(data)
-                              : Share.share(
-                                  '${data.title}\n\n${data.backlink != null ? 'Baca berita lengkapnya:\n' + data.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                          AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                              <String, dynamic>{'title': data.title});
-                        },
-                      )
                     ],
+                  ),
+                  SizedBox(height: 10.0),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Text(
+                      data.title,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                          fontFamily: FontsFamily.lato,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   SizedBox(height: 10.0),
                   Html(
@@ -521,5 +553,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 }

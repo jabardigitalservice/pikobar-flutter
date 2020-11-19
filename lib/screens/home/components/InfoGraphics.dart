@@ -22,7 +22,6 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
-
 class InfoGraphics extends StatefulWidget {
   final String searchQuery;
 
