@@ -114,11 +114,11 @@ class _MenuListState extends State<MenuList> {
         remoteConfig: remoteConfig,
         iconPath: '${Environment.iconAssets}menu_test_masif.png',
         defaultLabel: Dictionary.massiveTestRegistration,
-        firebaseConfigLabel: FirebaseConfig.selfDiagnoseCaption,
+        firebaseConfigLabel: FirebaseConfig.massiveTestCaption,
         route: NavigationConstrants.Browser,
-        defaultArguments: kUrlSelfDiagnose,
-        firebaseConfigArguments: FirebaseConfig.selfDiagnoseUrl,
-        remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu,
+        defaultArguments: kUrlMassiveTest,
+        firebaseConfigArguments: FirebaseConfig.massiveTestUrl,
+        remoteMenuLoginKey: FirebaseConfig.massiveTestMenu,
       ),
 
       // Daftar Relawan (Added automatically)
@@ -342,7 +342,7 @@ class BuildButtonMenu extends StatelessWidget {
             child: Image.asset(iconPath),
           ),
           Text(
-            label.replaceAll(' ', '\n'),
+            label.replaceFirst(' ', '\n'),
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: FontsFamily.roboto, fontSize: 12.0),
           )
