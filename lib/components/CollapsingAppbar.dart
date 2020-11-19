@@ -33,15 +33,17 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
   Widget build(BuildContext context) {
     return NestedScrollView(
       controller: widget.scrollController,
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
         return <Widget>[
           SliverAppBar(
             backgroundColor: Colors.white,
             elevation: 0,
+            pinned: true,
             actions: widget.actionsAppBar,
             bottom: widget.isBottomAppbar
                 ? PreferredSize(
-                    preferredSize: Size.fromHeight(widget.showTitle ? 0 : 130.0),
+                    preferredSize:
+                        Size.fromHeight(widget.showTitle ? 0 : 130.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -65,10 +67,13 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                   )
                 : null,
             iconTheme: IconThemeData(
-                color: widget.showTitle ? Colors.black : Colors.white),
+                color: widget.isBottomAppbar
+                    ? Colors.black
+                    : widget.showTitle
+                        ? Colors.black
+                        : Colors.white),
             expandedHeight: widget.heightAppbar ?? 150,
             floating: false,
-            pinned: true,
             flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Row(

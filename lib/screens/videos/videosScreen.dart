@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
@@ -38,10 +41,17 @@ class _VideosListState extends State<VideosList> {
   // ignore: close_sinks
   VideoListBloc _videoListBloc;
   ScrollController _scrollController;
+  TextEditingController _searchController = TextEditingController();
+  Timer _debounce;
+  List<VideoModel> listVideos;
+  String searchQuery;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.video);
+    _searchController.addListener((() {
+      _onSearchChanged();
+    }));
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _videoListBloc = BlocProvider.of<VideoListBloc>(context);
     super.initState();
@@ -53,27 +63,52 @@ class _VideosListState extends State<VideosList> {
             0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.trim().isNotEmpty) {
+        setState(() {
+          searchQuery = _searchController.text;
+        });
+      } else {
+        _clearSearchQuery();
+      }
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      updateSearchQuery(null);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: CustomAppBar.defaultAppBar(
-        //   title: Dictionary.videoUpToDate,
-        // ),
         body: CollapsingAppbar(
-          showTitle: _showTitle,
-          isBottomAppbar: true,
-          titleAppbar: Dictionary.videoUpToDate,
-          scrollController: _scrollController,
-          body: BlocBuilder<VideoListBloc, VideoListState>(
-            builder: (context, state) {
-              return state is VideosLoading
-                  ? _buildLoading()
-                  : state is VideosLoaded
-                      ? _buildContent(state)
-                      : Container();
-            },
-          ),
-        ));
+      searchBar: CustomAppBar.buildSearchField(
+          _searchController, Dictionary.searchInformation, updateSearchQuery),
+      showTitle: _showTitle,
+      isBottomAppbar: true,
+      titleAppbar: Dictionary.videoUpToDate,
+      scrollController: _scrollController,
+      body: BlocBuilder<VideoListBloc, VideoListState>(
+        builder: (context, state) {
+          return state is VideosLoading
+              ? _buildLoading()
+              : state is VideosLoaded
+                  ? _buildContent(state)
+                  : Container();
+        },
+      ),
+    ));
   }
 
   _buildLoading() {
@@ -118,10 +153,19 @@ class _VideosListState extends State<VideosList> {
   }
 
   _buildContent(VideosLoaded state) {
+    if (searchQuery != null) {
+      listVideos = state.videos
+          .where((test) =>
+              test.title.toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    } else {
+      listVideos = state.videos;
+    }
+
     return Container(
-      child: state.videos.isNotEmpty
+      child: listVideos.isNotEmpty
           ? ListView.builder(
-              itemCount: state.videos.length,
+              itemCount: listVideos.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return Column(
@@ -134,7 +178,7 @@ class _VideosListState extends State<VideosList> {
                           children: <Widget>[
                             CachedNetworkImage(
                               imageUrl: getYtThumbnail(
-                                  youtubeUrl: state.videos[index].url,
+                                  youtubeUrl: listVideos[index].url,
                                   error: false),
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Center(
@@ -152,11 +196,11 @@ class _VideosListState extends State<VideosList> {
                         ),
                       ),
                       onTap: () {
-                        launchExternal(state.videos[index].url);
+                        launchExternal(listVideos[index].url);
 
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedVideo, <String, dynamic>{
-                          'title': state.videos[index].title
+                          'title': listVideos[index].title
                         });
                       },
                     ),
@@ -165,7 +209,7 @@ class _VideosListState extends State<VideosList> {
                           Dimens.padding, 10.0, Dimens.padding, 0),
                       child: Text(
                         unixTimeStampToDateTime(
-                            state.videos[index].publishedAt),
+                            listVideos[index].publishedAt),
                         style: TextStyle(
                             color: Colors.grey,
                             fontFamily: FontsFamily.lato,
@@ -180,7 +224,7 @@ class _VideosListState extends State<VideosList> {
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                state.videos[index].title,
+                                listVideos[index].title,
                                 style: TextStyle(
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.w600,
@@ -195,8 +239,8 @@ class _VideosListState extends State<VideosList> {
                               paddingLeft: 20,
                               paddingRight: 10,
                               onPressed: () {
-                                _shareApp(state.videos[index].title,
-                                    state.videos[index].url);
+                                _shareApp(listVideos[index].title,
+                                    listVideos[index].url);
                               },
                             ),
                           ],
@@ -223,6 +267,7 @@ class _VideosListState extends State<VideosList> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     super.dispose();
   }
 }
