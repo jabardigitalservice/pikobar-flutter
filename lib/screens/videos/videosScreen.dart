@@ -163,98 +163,150 @@ class _VideosListState extends State<VideosList> {
     }
 
     return Container(
-      child: listVideos.isNotEmpty
-          ? ListView.builder(
-              itemCount: listVideos.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    GestureDetector(
-                      child: Container(
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            CachedNetworkImage(
-                              imageUrl: getYtThumbnail(
-                                  youtubeUrl: listVideos[index].url,
-                                  error: false),
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
-                                heightFactor: 4.2,
-                                child: CupertinoActivityIndicator(),
+        child: listVideos.isNotEmpty
+            ? ListView.builder(
+                itemCount: listVideos.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GestureDetector(
+                        child: Container(
+                          padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: Dimens.padding),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 300,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: CachedNetworkImage(
+                                    imageUrl: getYtThumbnail(
+                                        youtubeUrl: listVideos[index].url,
+                                        error: false),
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => Center(
+                                      heightFactor: 4.2,
+                                      child: CupertinoActivityIndicator(),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                            height: 200,
+                                            color: Colors.grey[200]),
+                                  ),
+                                ),
                               ),
-                              errorWidget: (context, url, error) => Container(
-                                  height: 200, color: Colors.grey[200]),
-                            ),
-                            Image.asset(
-                              '${Environment.iconAssets}play_button.png',
-                              scale: 1.5,
-                            )
-                          ],
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 300,
+                                decoration: BoxDecoration(
+                                  color: Colors.black12.withOpacity(0.2),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(
+                                      Dimens.dialogRadius),
+                                ),
+                              ),
+                              Image.asset(
+                                '${Environment.iconAssets}play_button_black.png',
+                                scale: 3,
+                              ),
+                              Positioned(
+                                left: 10,
+                                right: 10,
+                                bottom: 0,
+                                top: 215,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      unixTimeStampToDateTime(
+                                          listVideos[index].publishedAt),
+                                      style: TextStyle(
+                                          fontSize: 16.0, color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Text(
+                                      listVideos[index].title,
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                      textAlign: TextAlign.left,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      onTap: () {
-                        launchExternal(listVideos[index].url);
+                        onTap: () {
+                          launchExternal(listVideos[index].url);
 
-                        AnalyticsHelper.setLogEvent(
-                            Analytics.tappedVideo, <String, dynamic>{
-                          'title': listVideos[index].title
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          Dimens.padding, 10.0, Dimens.padding, 0),
-                      child: Text(
-                        unixTimeStampToDateTime(
-                            listVideos[index].publishedAt),
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: FontsFamily.lato,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12.0),
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedVideo, <String, dynamic>{
+                            'title': listVideos[index].title
+                          });
+                        },
                       ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.fromLTRB(
-                            Dimens.padding, 10.0, Dimens.padding, 30.0),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                listVideos[index].title,
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: FontsFamily.lato),
-                                textAlign: TextAlign.left,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            ShareButton(
-                              height: 40.0,
-                              paddingLeft: 20,
-                              paddingRight: 10,
-                              onPressed: () {
-                                _shareApp(listVideos[index].title,
-                                    listVideos[index].url);
-                              },
-                            ),
-                          ],
-                        )),
-                  ],
-                );
-              })
-          : EmptyData(
-              message: Dictionary.emptyData,
-              desc: '',
-              isFlare: false,
-              image: "${Environment.imageAssets}not_found.png",
-            ),
-    );
+                      // Padding(
+                      //   padding: EdgeInsets.fromLTRB(
+                      //       Dimens.padding, 10.0, Dimens.padding, 0),
+                      //   child: Text(
+                      //     unixTimeStampToDateTime(listVideos[index].publishedAt),
+                      //     style: TextStyle(
+                      //         color: Colors.grey,
+                      //         fontFamily: FontsFamily.lato,
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize: 12.0),
+                      //   ),
+                      // ),
+                      // Container(
+                      //     margin: EdgeInsets.fromLTRB(
+                      //         Dimens.padding, 10.0, Dimens.padding, 30.0),
+                      //     child: Row(
+                      //       children: <Widget>[
+                      //         Expanded(
+                      //           child: Text(
+                      //             listVideos[index].title,
+                      //             style: TextStyle(
+                      //                 fontSize: 15.0,
+                      //                 fontWeight: FontWeight.w600,
+                      //                 fontFamily: FontsFamily.lato),
+                      //             textAlign: TextAlign.left,
+                      //             maxLines: 2,
+                      //             overflow: TextOverflow.ellipsis,
+                      //           ),
+                      //         ),
+                      //         ShareButton(
+                      //           height: 40.0,
+                      //           paddingLeft: 20,
+                      //           paddingRight: 10,
+                      //           onPressed: () {
+                      //             _shareApp(listVideos[index].title,
+                      //                 listVideos[index].url);
+                      //           },
+                      //         ),
+                      //       ],
+                      //     )),
+                    ],
+                  );
+                })
+            : ListView(
+                children: [
+                  EmptyData(
+                    message: Dictionary.emptyData,
+                    desc: Dictionary.descEmptyData,
+                    isFlare: false,
+                    image: "${Environment.imageAssets}not_found.png",
+                  ),
+                ],
+              ));
   }
 
   _shareApp(String title, String sourceUrl) {
