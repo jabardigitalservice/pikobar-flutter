@@ -29,6 +29,16 @@ class CollapsingAppbar extends StatefulWidget {
 }
 
 class _CollapsingAppbarState extends State<CollapsingAppbar> {
+  double heightAppbar;
+  bool isBottomAppbar;
+
+  @override
+  void initState() {
+    heightAppbar = widget.heightAppbar ?? 150;
+    isBottomAppbar = widget.isBottomAppbar ?? true;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -40,7 +50,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
             elevation: 0,
             pinned: true,
             actions: widget.actionsAppBar,
-            bottom: widget.isBottomAppbar
+            bottom: isBottomAppbar
                 ? !widget.showTitle
                     ? PreferredSize(
                         preferredSize:
@@ -74,20 +84,20 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                         child: Container(), preferredSize: Size.fromHeight(0))
                 : null,
             iconTheme: IconThemeData(
-                color: widget.isBottomAppbar
+                color: isBottomAppbar
                     ? Colors.black
                     : widget.showTitle
                         ? Colors.black
                         : Colors.white),
             expandedHeight: widget.showTitle
-                ? widget.isBottomAppbar
-                    ? widget.heightAppbar
+                ? isBottomAppbar
+                    ? heightAppbar
                     : 250
-                : widget.isBottomAppbar
+                : isBottomAppbar
                     ? 180
                     : 300,
             floating: false,
-            flexibleSpace: !widget.isBottomAppbar
+            flexibleSpace: !isBottomAppbar
                 ? FlexibleSpaceBar(
                     centerTitle: true,
                     title: Row(
@@ -112,7 +122,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                     ),
                     background: widget.backgroundAppBar)
                 : null,
-            title: widget.isBottomAppbar
+            title: isBottomAppbar
                 ? AnimatedOpacity(
                     opacity: widget.showTitle ? 1.0 : 0.0,
                     duration: Duration(milliseconds: 250),

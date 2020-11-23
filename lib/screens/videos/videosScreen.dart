@@ -96,8 +96,6 @@ class _VideosListState extends State<VideosList> {
       searchBar: CustomAppBar.buildSearchField(
           _searchController, Dictionary.searchInformation, updateSearchQuery),
       showTitle: _showTitle,
-      heightAppbar: 150,
-      isBottomAppbar: true,
       titleAppbar: Dictionary.videoUpToDate,
       scrollController: _scrollController,
       body: BlocBuilder<VideoListBloc, VideoListState>(
