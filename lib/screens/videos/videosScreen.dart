@@ -8,18 +8,15 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
-import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
-import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 
 class VideosScreen extends StatelessWidget {
@@ -253,46 +250,6 @@ class _VideosListState extends State<VideosList> {
                           });
                         },
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.fromLTRB(
-                      //       Dimens.padding, 10.0, Dimens.padding, 0),
-                      //   child: Text(
-                      //     unixTimeStampToDateTime(listVideos[index].publishedAt),
-                      //     style: TextStyle(
-                      //         color: Colors.grey,
-                      //         fontFamily: FontsFamily.lato,
-                      //         fontWeight: FontWeight.bold,
-                      //         fontSize: 12.0),
-                      //   ),
-                      // ),
-                      // Container(
-                      //     margin: EdgeInsets.fromLTRB(
-                      //         Dimens.padding, 10.0, Dimens.padding, 30.0),
-                      //     child: Row(
-                      //       children: <Widget>[
-                      //         Expanded(
-                      //           child: Text(
-                      //             listVideos[index].title,
-                      //             style: TextStyle(
-                      //                 fontSize: 15.0,
-                      //                 fontWeight: FontWeight.w600,
-                      //                 fontFamily: FontsFamily.lato),
-                      //             textAlign: TextAlign.left,
-                      //             maxLines: 2,
-                      //             overflow: TextOverflow.ellipsis,
-                      //           ),
-                      //         ),
-                      //         ShareButton(
-                      //           height: 40.0,
-                      //           paddingLeft: 20,
-                      //           paddingRight: 10,
-                      //           onPressed: () {
-                      //             _shareApp(listVideos[index].title,
-                      //                 listVideos[index].url);
-                      //           },
-                      //         ),
-                      //       ],
-                      //     )),
                     ],
                   );
                 })
@@ -308,13 +265,6 @@ class _VideosListState extends State<VideosList> {
               ));
   }
 
-  _shareApp(String title, String sourceUrl) {
-    Share.share(
-        '$title \n\nTonton video lengkapnya:\n$sourceUrl \n\n${Dictionary.sharedFrom}');
-
-    AnalyticsHelper.setLogEvent(
-        Analytics.tappedVideoShare, <String, dynamic>{'title': title});
-  }
 
   @override
   void dispose() {
