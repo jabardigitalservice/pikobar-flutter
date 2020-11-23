@@ -341,10 +341,12 @@ class BuildButtonMenu extends StatelessWidget {
                 color: Colors.grey[50]),
             child: Image.asset(iconPath),
           ),
-          Text(
-            label.replaceFirst(' ', '\n'),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: FontsFamily.roboto, fontSize: 12.0),
+          Expanded(
+            child: Text(
+              label.replaceFirst(' ', '\n'),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: FontsFamily.roboto, fontSize: 12.0),
+            ),
           )
         ],
       ),

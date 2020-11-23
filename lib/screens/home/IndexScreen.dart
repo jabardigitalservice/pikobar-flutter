@@ -150,17 +150,13 @@ class IndexScreenState extends State<IndexScreen> {
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
-        icon: SizedBox(
-          width: 16.0,
-          height: 16.0,
-        ),
-        title: Column(
-          children: <Widget>[
-            SizedBox(height: 4),
-            Text('Menu'),
-          ],
-        ),
-      ),
+          icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          title: Column(
+            children: <Widget>[
+              SizedBox(height: 4),
+              Text('Menu'),
+            ],
+          )),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
           title: Column(
@@ -288,39 +284,40 @@ class IndexScreenState extends State<IndexScreen> {
                 items: items),
           ),
         ),
-        Positioned(
-          bottom: 30,
-          left: 0,
-          right: 0,
-          child: GestureDetector(
-            child: Container(
-              width: 60,
-              height: 60,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF16A75C),
-                        Color(0xFF9BDBB3)
-                      ],
-                      transform: GradientRotation(45)
-                  ),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade200,
-                        offset: Offset(0.0, 2.0), //(x,y)
-                        blurRadius: 5.0,
-                        spreadRadius: 0.0
+        SafeArea(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: GestureDetector(
+              child: Container(
+                width: 60,
+                height: 60,
+                margin: EdgeInsets.only(bottom: 30.0),
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF16A75C),
+                          Color(0xFF9BDBB3)
+                        ],
+                        transform: GradientRotation(45)
                     ),
-                  ],
-                  border: Border.all(color: Colors.white, width: 4.0)
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade200,
+                          offset: Offset(0.0, 2.0), //(x,y)
+                          blurRadius: 5.0,
+                          spreadRadius: 0.0
+                      ),
+                    ],
+                    border: Border.all(color: Colors.white, width: 4.0)
+                ),
+                child: Image.asset('${Environment.iconAssets}menu.png'),
               ),
-              child: Image.asset('${Environment.iconAssets}menu.png'),
+              onTap: () {
+                BottomSheetMenu.showBottomSheetMenu(context: context);
+              },
             ),
-            onTap: () {
-              BottomSheetMenu.showBottomSheetMenu(context: context);
-            },
           ),
         )
       ],
