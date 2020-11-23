@@ -3,6 +3,16 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 // ignore: must_be_immutable
 class CollapsingAppbar extends StatefulWidget {
+  /// [scrollController] cannot be null, required for set controller NestedScrollView
+  /// [showTitle] cannot be null, for set hide & show title in appbar
+  /// [actionsAppBar] for set icon or widget inside action Appbar
+  /// [heightAppbar] for set height Appbar
+  /// [titleAppbar] cannot be null, for set title Appbar
+  /// [backgroundAppBar] for set widget in background Appbar
+  /// [body] cannot be null, for set widget inside body Appbar
+  /// [searchBar] for set widget search inside Appbar
+  /// [isBottomAppbar] for set widget search inside Appbar
+
   ScrollController scrollController;
   bool showTitle;
   List<Widget> actionsAppBar;
@@ -14,13 +24,13 @@ class CollapsingAppbar extends StatefulWidget {
   bool isBottomAppbar;
 
   CollapsingAppbar(
-      {this.scrollController,
-      this.showTitle,
+      {@required this.scrollController,
+      @required this.showTitle,
       this.heightAppbar,
       this.actionsAppBar,
-      this.titleAppbar,
+      @required this.titleAppbar,
       this.backgroundAppBar,
-      this.body,
+      @required this.body,
       this.searchBar,
       this.isBottomAppbar});
 
@@ -34,6 +44,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
 
   @override
   void initState() {
+    /// for set default value for height appbar & bottom Appbar
     heightAppbar = widget.heightAppbar ?? 150;
     isBottomAppbar = widget.isBottomAppbar ?? true;
     super.initState();
