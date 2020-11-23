@@ -286,11 +286,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (context) {
                   return DialogQrCode(idUser: state.data['id']);
                 });
-            // showDialog(
-            //     context: context,
-            //     builder: (BuildContext context) {
-            //       return DialogQrCode(idUser: state.data['id']);
-            //     });
           },
           child: Padding(
             padding: EdgeInsets.all(15.0),
