@@ -41,30 +41,37 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
             pinned: true,
             actions: widget.actionsAppBar,
             bottom: widget.isBottomAppbar
-                ? PreferredSize(
-                    preferredSize:
-                        Size.fromHeight(widget.showTitle ? 0 : 130.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AnimatedOpacity(
-                          opacity: widget.showTitle ? 0.0 : 1.0,
-                          duration: Duration(milliseconds: 250),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Text(
-                              widget.titleAppbar,
-                              style: TextStyle(
-                                  fontFamily: FontsFamily.lato,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w900),
+                ? !widget.showTitle
+                    ? PreferredSize(
+                        preferredSize:
+                            Size.fromHeight(widget.showTitle ? 0 : 130.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AnimatedOpacity(
+                              opacity: widget.showTitle ? 0.0 : 1.0,
+                              duration: Duration(milliseconds: 250),
+                              child: Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Text(
+                                  widget.titleAppbar,
+                                  style: TextStyle(
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                              ),
                             ),
-                          ),
+                            widget.searchBar != null
+                                ? widget.showTitle
+                                    ? Container()
+                                    : widget.searchBar
+                                : Container(),
+                          ],
                         ),
-                        widget.showTitle ? Container() : widget.searchBar,
-                      ],
-                    ),
-                  )
+                      )
+                    : PreferredSize(
+                        child: Container(), preferredSize: Size.fromHeight(0))
                 : null,
             iconTheme: IconThemeData(
                 color: widget.isBottomAppbar
@@ -72,31 +79,54 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                     : widget.showTitle
                         ? Colors.black
                         : Colors.white),
-            expandedHeight: widget.heightAppbar ?? 150,
+            expandedHeight: widget.showTitle
+                ? widget.isBottomAppbar
+                    ? widget.heightAppbar
+                    : 250
+                : widget.isBottomAppbar
+                    ? 180
+                    : 300,
             floating: false,
-            flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 70),
-                      child: AnimatedOpacity(
-                        opacity: widget.showTitle ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 250),
-                        child: Text(
-                          widget.showTitle ? widget.titleAppbar : '',
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                background: widget.backgroundAppBar),
+            flexibleSpace: !widget.isBottomAppbar
+                ? FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: Row(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(left: 70),
+                          child: AnimatedOpacity(
+                            opacity: widget.showTitle ? 1.0 : 0.0,
+                            duration: Duration(milliseconds: 250),
+                            child: Text(
+                              widget.showTitle ? widget.titleAppbar : '',
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    background: widget.backgroundAppBar)
+                : null,
+            title: widget.isBottomAppbar
+                ? AnimatedOpacity(
+                    opacity: widget.showTitle ? 1.0 : 0.0,
+                    duration: Duration(milliseconds: 250),
+                    child: Text(
+                      widget.showTitle ? widget.titleAppbar : '',
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  )
+                : null,
           ),
         ];
       },

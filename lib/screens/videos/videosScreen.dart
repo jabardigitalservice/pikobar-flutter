@@ -96,6 +96,7 @@ class _VideosListState extends State<VideosList> {
       searchBar: CustomAppBar.buildSearchField(
           _searchController, Dictionary.searchInformation, updateSearchQuery),
       showTitle: _showTitle,
+      heightAppbar: 150,
       isBottomAppbar: true,
       titleAppbar: Dictionary.videoUpToDate,
       scrollController: _scrollController,
@@ -173,7 +174,7 @@ class _VideosListState extends State<VideosList> {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: Dimens.padding),
+                          padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, bottom: Dimens.padding),
                           child: Stack(
                             alignment: Alignment.center,
                             children: <Widget>[
