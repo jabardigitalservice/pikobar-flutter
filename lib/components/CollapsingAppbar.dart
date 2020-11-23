@@ -11,7 +11,7 @@ class CollapsingAppbar extends StatefulWidget {
   /// [backgroundAppBar] for set widget in background Appbar
   /// [body] cannot be null, for set widget inside body Appbar
   /// [searchBar] for set widget search inside Appbar
-  /// [isBottomAppbar] for set widget search inside Appbar
+  /// [isBottomAppbar] for set bottom inside Appbar
 
   ScrollController scrollController;
   bool showTitle;
