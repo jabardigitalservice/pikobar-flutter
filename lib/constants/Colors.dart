@@ -15,6 +15,7 @@ class ColorBase {
   static final disableText=Color(0xffBDBDBD);
   static final lightLimeGreen=Color(0xffD5F6E3);
   static final softRed=Color(0xffEB5757);
+  static final red400=Color(0xffEF5350);
   static final brightBlue=Color(0xff2D9CDB);
   static final veryLightGrey=Color(0xffF2F2F2);
   static final toggleOn=Color(0xff9FDFBA);
