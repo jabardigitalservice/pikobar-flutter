@@ -67,7 +67,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   bool get isShrink {
     return _scrollController.hasClients &&
         _scrollController.offset > (200 - kToolbarHeight);
-  }
+}
 
   @override
   void initState() {
@@ -106,7 +106,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         body: CollapsingAppbar(
       scrollController: _scrollController,
       heightAppbar: 300.0,
-      isShrink: isShrink,
+      showTitle: isShrink,
       isBottomAppbar: false,
       actionsAppBar: [
         IconButton(
