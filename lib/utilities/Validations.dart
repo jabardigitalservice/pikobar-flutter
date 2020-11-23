@@ -2,7 +2,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 
 class Validations {
   static String telephoneValidation(String val) {
-    Pattern pattern = r"^(^62\s?|^8)(\d{5,13})$";
+    Pattern pattern = r"^(^0\s?|^8)(\d{5,13})$";
 
     RegExp regex = RegExp(pattern);
 

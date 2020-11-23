@@ -74,7 +74,7 @@ dependencies:
   share: ^0.6.5+3
   geolocator: ^6.1.4+1
   geocoding: ^1.0.5
-  pinput: ^0.2.5
+  pinput: ^0.2.6
   pretty_qr_code: ^1.0.1
   esys_flutter_share: ^1.0.2
   flutter_web_browser: ^0.12.0

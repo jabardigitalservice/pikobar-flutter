@@ -65,7 +65,7 @@ class Dictionary {
   static String callCenterTitle = 'Call Center Kota/Kab. \nLainnya';
   static String callCenterCaption =
       'Segera hubungi nomor dibawah \nini untuk call center terdekat';
-  static String edit = 'Edit Akun';
+  static String edit = 'Edit Profil';
   static String name = 'Nama';
   static String nik = 'NIK';
   static String email = 'Email';
@@ -128,6 +128,7 @@ class Dictionary {
 
   static String jabarToday = "Jabar Hari Ini";
   static String covidInformation = "Informasi COVID-19";
+  static String requiredForm=' • Harus Diisi';
 
 
   // Button Text
