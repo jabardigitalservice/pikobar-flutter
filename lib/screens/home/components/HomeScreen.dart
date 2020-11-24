@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
+import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
@@ -21,6 +22,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
@@ -28,7 +30,6 @@ import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.d
 import 'package:pikobar_flutter/screens/home/components/JabarToday.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
-
 
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
@@ -154,7 +155,10 @@ class _HomeScreenState extends State<HomeScreen>
                   infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
-                _documentsBloc = DocumentsBloc()..add(DocumentsLoad()))
+                _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
+        BlocProvider<CheckDistributionBloc>(
+            create: (context) => CheckDistributionBloc(
+                checkDistributionRepository: CheckDistributionReposity()))
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -217,94 +221,6 @@ class _HomeScreenState extends State<HomeScreen>
           ],
           isExpand: true,
         ),
-
-//         ListView(children: [
-//           /// Banners Section
-//           Container(
-//               margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-//               child: BannerListSlider()),
-//
-//           /// Statistics Announcement
-//           AnnouncementScreen(),
-//
-//           /// Statistics Section
-//           Container(
-//               color: ColorBase.grey,
-//               margin: EdgeInsets.only(top: 10.0),
-//               padding: EdgeInsets.only(bottom: Dimens.dividerHeight),
-//               child: Statistics()),
-//
-//           /// Menus & Spread Sections
-//           Column(
-//             children: <Widget>[
-//               /// Menus Section
-//               MenuList(),
-//
-//               // Group Home Banner Section
-//               GroupHomeBanner(),
-//
-//               /// Spread Section
-//               SpreadSection(),
-//
-//               /// Important Info
-// //              Container(
-// //                color: ColorBase.grey,
-// //                child: ImportantInfoScreen(maxLength: 3),
-// //              ),
-//             ],
-//           ),
-//
-//           /// News & Videos Sections
-//           SizedBox(
-//             height: Dimens.dividerHeight,
-//             child: Container(
-//               color: ColorBase.grey,
-//             ),
-//           ),
-//           TabNewsScreen(),
-//
-//           SizedBox(
-//             height: Dimens.dividerHeight,
-//             child: Container(
-//               color: ColorBase.grey,
-//             ),
-//           ),
-//           Container(
-//             padding: EdgeInsets.only(top: 16.0),
-//             child: VideoList(),
-//           ),
-//           SizedBox(
-//             height: Dimens.dividerHeight,
-//             child: Container(
-//               color: ColorBase.grey,
-//             ),
-//           ),
-//           Container(
-//             padding: EdgeInsets.only(top: 16.0),
-//             child: InfoGraphics(),
-//           ),
-//           SizedBox(
-//             height: Dimens.dividerHeight,
-//             child: Container(
-//               color: ColorBase.grey,
-//             ),
-//           ),
-//           Container(
-//             padding: EdgeInsets.only(top: 16.0),
-//             child: Documents(),
-//           ),
-//           SizedBox(
-//             height: Dimens.dividerHeight,
-//             child: Container(
-//               color: ColorBase.grey,
-//             ),
-//           ),
-//           Container(
-//             padding: EdgeInsets.only(top: 25.0),
-//             child: SocialMedia(),
-//           ),
-//         ]
-//         ),
         AlertUpdate()
       ],
     );

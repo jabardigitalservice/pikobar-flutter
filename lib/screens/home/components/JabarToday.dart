@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart'
 import 'package:pikobar_flutter/screens/home/components/BannerListSlider.dart';
 import 'package:pikobar_flutter/screens/home/components/DailyUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
+import 'package:pikobar_flutter/screens/home/components/Zonation.dart';
 import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
 
 class JabarTodayScreen extends StatefulWidget {
@@ -29,6 +30,9 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
 
           /// Statistics Announcement
           AnnouncementScreen(),
+
+          /// Zonation
+          Zonation(),
 
           /// Daily Update Section
           DailyUpdateScreen(),

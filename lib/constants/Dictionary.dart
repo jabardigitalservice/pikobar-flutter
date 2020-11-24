@@ -281,6 +281,8 @@ class Dictionary {
   static String subTitleMenus = 'Saatnya berbagi informasi dan lawan COVID-19';
   static String surveyInfo =
       'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
+  static String checkAroundYou = 'Cek Sekitar Anda';
+  static String youAreIn = 'Anda berada di';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -310,7 +312,7 @@ class Dictionary {
   static String closeContact = 'Kontak Erat';
   static String suspect = 'Suspek';
   static String probable = 'Probable';
-  static String checkOtherLocation = 'Cek Berdasarkan Lokasi Lain';
+  static String checkOtherLocation = 'Cek Lokasi Lain';
   static String checkByLocation = 'Cari Berdasarkan Lokasi';
   static String positifString = 'Total Pasien Terkonfirmasi COVID-19';
   static String pdpString = 'PDP (Pasien Dalam Pengawasan)';
@@ -452,4 +454,19 @@ class Dictionary {
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';
+
+  // Zonation
+  static const String zoneHighRisk = 'RESIKO TINGGI';
+  static const String zoneMediumRisk = 'RESIKO SEDANG';
+  static const String zoneLowRisk = 'RESIKO RENDAH';
+  static const String zoneNotAffected = 'TIDAK TERDAMPAK';
+  static const String zoneColorRed = 'Zona Merah';
+  static const String zoneColorOrange = 'Zona Orange';
+  static const String zoneColorYellow = 'Zona Kuning';
+  static const String zoneColorGreen = 'Zona Hijau';
+  static const String zoneRedDescription = 'Anda berada di Zona Resiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
+  static const String zoneOrangeDescription = 'Anda berada di Zona Resiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
+  static const String zoneYellowDescription = 'Anda berada di Zona Resiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
+  static const String zoneGreenDescription = 'Anda berada di Zona Tidak Terdampak yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
+  static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
 }
