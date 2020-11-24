@@ -58,7 +58,7 @@ class Dictionary {
   static String pdpDesc = 'Pasien Dalam Pengawasan';
   static String infected = 'Pasien Positif Covid-19';
   static String faq = 'Frequently Asked Question (FAQ)';
-  static String profile = 'Akun Saya';
+  static String profile = 'Akun';
   static String login = 'Login';
   static String checkDistribution = 'Cek Sebaran';
   static String phoneBookEmergencyInformation = 'Informasi Nomor \nDarurat';
@@ -98,6 +98,7 @@ class Dictionary {
       'Segera hubungi nomor dibawah \nini untuk rumah sakit rujukan';
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String qrCode = 'QR Code';
+  static String qrCodeDesc = 'Pindai QR Code di bawah untuk melakukan validasi';
   static String activitie = 'Aktifitas';
   static String accountManage = 'Akun';
   static String healthStatus = 'Status Kesehatan';
@@ -151,6 +152,8 @@ class Dictionary {
   static String signInWithGoogle = 'Masuk dengan Google';
   static String signInWithApple = 'Masuk dengan Apple';
   static String positiveActionGeolocation = 'Ubah ke Allow All The Time';
+  static String done = 'Selesai';
+
 
 
 // Error messages
@@ -263,7 +266,7 @@ class Dictionary {
   static String loading = 'Tunggu Sebentar...';
   static String textLoginButton = 'Masuk Melalui Google';
   static String textLogin = 'Anda belum login';
-  static String textLogoutButton = 'Keluar';
+  static String textLogoutButton = 'Logout';
   static String onDevelopment = 'Dalam proses pengembangan';
   static String process = 'Proses';
   static String people = 'Orang';

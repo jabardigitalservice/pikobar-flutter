@@ -39,6 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
   RemoteConfigBloc _remoteConfigBloc;
+  ScrollController _scrollController;
 
   @override
   void initState() {
@@ -49,7 +50,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : Dictionary.version;
       });
     });
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
@@ -105,7 +114,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
           child: Scaffold(
               backgroundColor: Colors.white,
-              appBar: CustomAppBar.defaultAppBar(title: Dictionary.profile),
+              appBar: CustomAppBar.animatedAppBar(
+                  showTitle: _showTitle, title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,
@@ -173,9 +183,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
       AuthenticationAuthenticated _profileLoaded) {
     return ListView(
+      controller: _scrollController,
       children: <Widget>[
+        AnimatedOpacity(
+          opacity: _showTitle ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 250),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+            child: Text(
+              Dictionary.profile,
+              style: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
         SizedBox(
-          height: 10,
+          height: 20,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -183,8 +208,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: 50,
-                height: 50,
+                width: 80,
+                height: 80,
                 child: CircleAvatar(
                   minRadius: 90,
                   maxRadius: 150,
@@ -208,19 +233,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                         state.data['name'],
                         style: TextStyle(
-                            color: ColorBase.veryDarkGrey,
-                            fontSize: 18,
+                            color: ColorBase.grey800,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.lato),
+                            fontFamily: FontsFamily.roboto),
                       ),
                     ),
                     Container(
                       height: 30.0,
                       child: Text(_profileLoaded.record.email,
                           style: TextStyle(
-                              color: ColorBase.veryDarkGrey,
-                              fontSize: 14,
-                              fontFamily: FontsFamily.lato)),
+                              color: ColorBase.grey800,
+                              fontSize: 12,
+                              fontFamily: FontsFamily.roboto)),
                     ),
                     // Get health status visible from remote config
                     BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
@@ -238,26 +263,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
-        SizedBox(
-          height: 15,
-          child: Container(
-            color: ColorBase.grey,
-          ),
-        ),
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 10),
+          padding: EdgeInsets.only(left: 20, top: 40),
           child: Text(Dictionary.qrCode,
               style: TextStyle(
-                  color: ColorBase.veryDarkGrey,
+                  color: ColorBase.grey800,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  fontFamily: FontsFamily.lato)),
+                  fontSize: 16,
+                  fontFamily: FontsFamily.roboto)),
         ),
         InkWell(
           onTap: () {
-            showDialog(
+            showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) {
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8.0),
+                    topRight: Radius.circular(8.0),
+                  ),
+                ),
+                builder: (context) {
                   return DialogQrCode(idUser: state.data['id']);
                 });
           },
@@ -285,10 +311,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             Dictionary.qrCodeMenu,
                             style: TextStyle(
-                                color: ColorBase.veryDarkGrey,
+                                color: ColorBase.grey800,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: FontsFamily.lato),
+                                fontFamily: FontsFamily.roboto),
                           ),
                         ],
                       ),
@@ -302,20 +328,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        SizedBox(
-          height: 15,
-          child: Container(
-            color: ColorBase.grey,
-          ),
-        ),
+
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 10),
+          padding: EdgeInsets.only(left: 20, top: 20),
           child: Text(Dictionary.accountManage,
               style: TextStyle(
-                  color: ColorBase.veryDarkGrey,
+                  color: ColorBase.grey800,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  fontFamily: FontsFamily.lato)),
+                  fontSize: 16,
+                  fontFamily: FontsFamily.roboto)),
         ),
         Card(
           elevation: 0,
@@ -345,16 +366,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Text(
                             Dictionary.edit,
                             style: TextStyle(
-                                color: ColorBase.veryDarkGrey,
+                                color: ColorBase.grey800,
+                                fontWeight: FontWeight.bold,
                                 fontSize: 12,
-                                fontFamily: FontsFamily.lato),
+                                fontFamily: FontsFamily.roboto),
                           ),
                         ],
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
-                        color: ColorBase.darkGrey,
-                        size: 15,
+                        color: ColorBase.grey800,
+                        size: 18,
                       )
                     ],
                   ),
@@ -383,7 +405,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Text(
                           Dictionary.versionText,
-                          style: TextStyle(color: ColorBase.veryDarkGrey),
+                          style: TextStyle(
+                              color: ColorBase.grey800,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              fontFamily: FontsFamily.roboto),
                         ),
                       ],
                     ),
@@ -432,9 +458,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                     Dictionary.textLogoutButton,
                     style: TextStyle(
-                        color: ColorBase.softRed,
+                        color: ColorBase.red400,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.lato),
+                        fontFamily: FontsFamily.roboto),
                   ))),
             ),
           ),
@@ -454,9 +481,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           text: TextSpan(
               text: termsConditions['agreement'],
               style: TextStyle(
-                  fontFamily: FontsFamily.lato,
+                  fontFamily: FontsFamily.roboto,
                   fontWeight: FontWeight.bold,
-                  color: ColorBase.darkGrey,
+                  color: ColorBase.netralGrey,
+                  height: 1.7,
                   fontSize: 11.0),
               children: <TextSpan>[
                 TextSpan(
@@ -544,11 +572,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: BoxDecoration(
                 color: cardColor, borderRadius: BorderRadius.circular(18)),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Text(
                 data['health_status_text'],
                 style: TextStyle(
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: textColor),
@@ -570,7 +598,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             groupMenu = json.decode(
                 snapshot.data.getString(FirebaseConfig.groupMenuProfile));
             // Set default value to public if data [role] in collection users is null
-            if (getField(data, 'role') == null || getField(data, 'role') == '') {
+            if (getField(data, 'role') == null ||
+                getField(data, 'role') == '') {
               role = 'public';
             } else {
               role = getField(data, 'role');
@@ -626,16 +655,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           groupMenu[i]['caption'],
                           style: TextStyle(
-                              color: ColorBase.veryDarkGrey,
+                              color: ColorBase.grey800,
+                              fontWeight: FontWeight.bold,
                               fontSize: 12,
-                              fontFamily: FontsFamily.lato),
+                              fontFamily: FontsFamily.roboto),
                         ),
                       ],
                     ),
                     Icon(
                       Icons.arrow_forward_ios,
-                      color: ColorBase.darkGrey,
-                      size: 15,
+                      color: ColorBase.grey800,
+                      size: 18,
                     )
                   ],
                 ),

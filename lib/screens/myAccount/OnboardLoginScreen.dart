@@ -57,7 +57,22 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
           Positioned(
             left: 0.0,
             right: 0.0,
-            top: MediaQuery.of(context).size.height*0.2,
+            top: 0.0,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              child: Text(
+                Dictionary.profile,
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            top: MediaQuery.of(context).size.height * 0.2,
             child: Column(
               children: <Widget>[
                 Padding(
@@ -96,7 +111,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: ColorBase.netralGrey,
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontWeight: FontWeight.bold,
                         fontSize: 14.0),
                   ),
@@ -133,7 +148,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                       child: Text(
                         Dictionary.acceptLogin,
                         style: TextStyle(
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontWeight: FontWeight.bold,
                             fontSize: 12.0,
                             color: Colors.white),
@@ -156,7 +171,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, 0.0, Dimens.padding, 20.0),
+                      Dimens.padding, 0.0, Dimens.padding, 50.0),
                   child: Text(
                     '${Dictionary.versionText} ' + _versionText,
                     textAlign: TextAlign.center,
@@ -199,9 +214,10 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 text: TextSpan(
                     text: termsConditions['agreement'],
                     style: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
+                        height: 1.6,
                         color: ColorBase.darkGrey,
-                        fontSize: 11.0),
+                        fontSize: 10.0),
                     children: <TextSpan>[
                       TextSpan(
                           text: Dictionary.termsConditions,
