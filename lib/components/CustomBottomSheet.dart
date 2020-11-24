@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 /// Shows a success modal material design bottom sheet.
 void showSuccessBottomSheet(
@@ -205,6 +207,90 @@ Future<void> showWidgetBottomSheet(
 
               SizedBox(height: Dimens.sbHeight)
             ],
+          ),
+        );
+      });
+}
+
+
+void showLocationRequestPermission({@required BuildContext context, GestureTapCallback onAgreePressed, GestureTapCallback onCancelPressed}) {
+  showModalBottomSheet(isScrollControlled: true,
+      enableDrag: false,
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        ),
+      ),
+      isDismissible: false,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: Dimens.padding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(width: 60, height: 6, decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3.0),
+                    color: Color(0xFFE0E0E0)
+                ),),
+                SizedBox(height: Dimens.padding),
+                Text(
+                  Dictionary.permissionLocationGeneral,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: Dimens.padding),
+                Text(
+                  Dictionary.permissionLocationAgreement,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0,
+                      color: Colors.grey[600]),
+                ),
+                SizedBox(height: Dimens.verticalPadding),
+                RoundedButton(
+                    title: Dictionary.agree,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    color: ColorBase.green,
+                    elevation: 0.0,
+                    onPressed: () {
+
+                      Navigator.of(context).pop();
+                      onAgreePressed();
+                    }),
+                SizedBox(height: Dimens.fieldMarginTop),
+                RoundedButton(
+                    title: Dictionary.later,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        color: ColorBase.darkGrey),
+                    color: Colors.white,
+                    borderSide: BorderSide(
+                        color: ColorBase.darkGrey),
+                    elevation: 0.0,
+                    onPressed: () {
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.permissionDismissLocation);
+
+                      Navigator.of(context).pop();
+                      onCancelPressed();
+                    }),
+                SizedBox(height: Dimens.verticalPadding),
+              ],
+            ),
           ),
         );
       });

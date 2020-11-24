@@ -30,9 +30,9 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 class CheckDistributionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CheckdistributionBloc>(
-      create: (context) => CheckdistributionBloc(
-          checkDistributionReposity: CheckDistributionReposity()),
+    return BlocProvider<CheckDistributionBloc>(
+      create: (context) => CheckDistributionBloc(
+          checkDistributionRepository: CheckDistributionReposity()),
       child: CheckDistribution(),
     );
   }
@@ -44,7 +44,7 @@ class CheckDistribution extends StatefulWidget {
 }
 
 class _CheckDistributionState extends State<CheckDistribution> {
-  CheckdistributionBloc _checkdistributionBloc;
+  CheckDistributionBloc _checkdistributionBloc;
 
   String _address = '-';
   bool isFindOtherLocation;
@@ -55,7 +55,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.checkDistribution);
 
-    _checkdistributionBloc = BlocProvider.of<CheckdistributionBloc>(context);
+    _checkdistributionBloc = BlocProvider.of<CheckDistributionBloc>(context);
 
     isFindOtherLocation = false;
 
@@ -67,7 +67,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
     return Scaffold(
         appBar: CustomAppBar.defaultAppBar(title: Dictionary.checkDistribution),
         backgroundColor: Colors.white,
-        body: BlocListener<CheckdistributionBloc, CheckdistributionState>(
+        body: BlocListener<CheckDistributionBloc, CheckdistributionState>(
           listener: (context, state) {
             // Show dialog error message
             // When check distribution failed to load
@@ -170,7 +170,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                     8.0,
                                     Dimens.padding,
                                     Dimens.padding),
-                                child: BlocBuilder<CheckdistributionBloc,
+                                child: BlocBuilder<CheckDistributionBloc,
                                     CheckdistributionState>(
                                   builder: (context, state) {
                                     return Column(

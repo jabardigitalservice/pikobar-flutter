@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -186,7 +187,8 @@ class _AppState extends State<App> {
                   ),
                 );
               }
-              return IndexScreen();
+              return BlocProvider<LocationPermissionBloc>(
+                  create: (context) => LocationPermissionBloc(), child: IndexScreen());
               break;
             default:
               return Scaffold(
