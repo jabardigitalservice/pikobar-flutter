@@ -28,6 +28,7 @@ import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPic
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
@@ -74,25 +75,25 @@ class _EditState extends State<Edit> {
 
   @override
   void initState() {
-    _nameController.text = widget.state.data['name'];
-    _emailController.text = widget.state.data['email'];
-    _phoneNumberController.text = widget.state.data['phone_number'] != null
-        ? '0' + widget.state.data['phone_number'].toString().substring(3)
-        : null;
-    _addressController.text = widget.state.data['address'];
-    _birthDayController.text = widget.state.data['birthdate'] == null
+    _nameController.text = getField(widget.state.data, 'name');
+    _emailController.text = getField(widget.state.data, 'email');
+    _phoneNumberController.text =
+        getField(widget.state.data, 'phone_number') != null
+            ? '0' + widget.state.data['phone_number'].toString().substring(3)
+            : null;
+    _addressController.text = getField(widget.state.data, 'address');
+    _birthDayController.text = getField(widget.state.data, 'birthdate') == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(
                 widget.state.data['birthdate'].seconds * 1000)
             .toString();
-    _genderController.text = widget.state.data['gender'];
-    _cityController.text = widget.state.data['city_id'];
-    _nikController.text = widget.state.data['nik'];
-    latLng = widget.state.data['location'] == null
+    _genderController.text = getField(widget.state.data, 'gender');
+    _cityController.text = getField(widget.state.data, 'city_id');
+    _nikController.text = getField(widget.state.data, 'nik');
+    latLng = getField(widget.state.data, 'location') == null
         ? null
         : new LatLng(widget.state.data['location'].latitude,
             widget.state.data['location'].longitude);
-    print(latLng);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     super.initState();
