@@ -6,7 +6,7 @@ name: BUILD
 # events but only for the master branch
 on:
   push:
-    branches: [ project-migration ]
+    branches: [ develop ]
   # pull_request:
   #   branches: [ feature/Feature-github-workflow ]
 
