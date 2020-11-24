@@ -19,6 +19,8 @@
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true">
 
+<!--        android:name=".Application"-->
+
         <service android:name="com.transistorsoft.locationmanager.service.TrackingService" android:foregroundServiceType="location" />
         <service android:name="com.transistorsoft.locationmanager.service.LocationRequestService" android:foregroundServiceType="location" />
 
@@ -40,8 +42,8 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data
-                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
-                android:value="true" />
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:resource="@drawable/launch_background" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -60,5 +62,8 @@
         <!-- google API -->
         <meta-data android:name="com.google.android.geo.API_KEY"
                 android:value="%GOOGLE_API_KEY%"/>
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
     </application>
 </manifest>
