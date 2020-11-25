@@ -102,6 +102,7 @@ dependencies:
   flutter_background_geolocation:
     git:
       url: https://github.com/transistorsoft/flutter_background_geolocation.git
+  flushbar: ^1.10.4
   
 
 dev_dependencies:

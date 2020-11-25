@@ -12,10 +12,10 @@ part 'CheckdistributionState.dart';
 
 class CheckDistributionBloc
     extends Bloc<CheckdistributionEvent, CheckdistributionState> {
-  final CheckDistributionReposity _checkDistributionRepository;
+  final CheckDistributionRepository _checkDistributionRepository;
 
   CheckDistributionBloc(
-      {@required CheckDistributionReposity checkDistributionRepository})
+      {@required CheckDistributionRepository checkDistributionRepository})
       : assert(checkDistributionRepository != null),
         _checkDistributionRepository = checkDistributionRepository, super(CheckdistributionInitial());
 
