@@ -32,7 +32,7 @@ class CheckDistributionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<CheckDistributionBloc>(
       create: (context) => CheckDistributionBloc(
-          checkDistributionRepository: CheckDistributionReposity()),
+          checkDistributionRepository: CheckDistributionRepository()),
       child: CheckDistribution(),
     );
   }

@@ -4,8 +4,6 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 
 class GeocoderRepository {
   Future getAddress(LatLng coordinate) async {
-    await Future.delayed(Duration(seconds: 1));
-
     if (coordinate != null) {
       List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
 
@@ -25,8 +23,6 @@ class GeocoderRepository {
   }
 
   Future getCity(LatLng coordinate) async {
-    await Future.delayed(Duration(seconds: 1));
-
     if (coordinate != null) {
       List<Placemark> placemarks = await placemarkFromCoordinates(coordinate.latitude, coordinate.longitude);
 

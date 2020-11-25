@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
         BlocProvider<CheckDistributionBloc>(
             create: (context) => CheckDistributionBloc(
-                checkDistributionRepository: CheckDistributionReposity()))
+                checkDistributionRepository: CheckDistributionRepository()))
       ],
       child: Scaffold(
         backgroundColor: Colors.white,

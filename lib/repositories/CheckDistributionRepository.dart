@@ -8,9 +8,8 @@ import 'package:pikobar_flutter/constants/HttpHeaders.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
 
-class CheckDistributionReposity {
+class CheckDistributionRepository {
   Future<CheckDistributionModel> fetchRecord(lat, long) async {
-    await Future.delayed(Duration(seconds: 1));
 
     final response = await http
         .get('${EndPointPath.checkDistribution}?long=$long&lat=$lat',
