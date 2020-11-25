@@ -94,14 +94,6 @@ class _DocumentsState extends State<Documents> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          // child: Text(
-          //   getLabel['documents']['description'],
-          //   style: TextStyle(
-          //       color: Colors.black,
-          //       fontFamily: FontsFamily.lato,
-          //       fontSize: 12.0),
-          //   textAlign: TextAlign.left,
-          // ),
         ),
         BlocBuilder<DocumentsBloc, DocumentsState>(
           builder: (context, state) {
@@ -259,28 +251,43 @@ class _DocumentsState extends State<Documents> {
                   child: Column(
                     children: <Widget>[
                       InkWell(
-                        child: Container(
-                          height: 140,
-                          width: 150,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: CachedNetworkImage(
-                              imageUrl: document['images'] ?? '',
-                              alignment: Alignment.topCenter,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
-                                  heightFactor: 4.2,
-                                  child: CupertinoActivityIndicator()),
-                              errorWidget: (context, url, error) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 3.3,
-                                color: Colors.grey[200],
-                                child: Image.asset(
-                                    '${Environment.iconAssets}pikobar.png',
-                                    fit: BoxFit.fitWidth),
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: 140,
+                              width: 150,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: CachedNetworkImage(
+                                  imageUrl: document['images'] ?? '',
+                                  alignment: Alignment.topCenter,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Center(
+                                      heightFactor: 4.2,
+                                      child: CupertinoActivityIndicator()),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    height: MediaQuery.of(context).size.height /
+                                        3.3,
+                                    color: Colors.grey[200],
+                                    child: Image.asset(
+                                        '${Environment.iconAssets}pikobar.png',
+                                        fit: BoxFit.fitWidth),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              top: 0,
+                              child: Image.asset(
+                                '${Environment.iconAssets}pdf_icon.png',
+                                scale: 2,
+                              ),
+                            )
+                          ],
                         ),
                         onTap: () {
                           Platform.isAndroid
@@ -359,130 +366,6 @@ class _DocumentsState extends State<Documents> {
               image: "${Environment.imageAssets}not_found.png",
             ),
     );
-
-    // return SingleChildScrollView(
-    //   child: ListView(
-    //     shrinkWrap: true,
-    //     physics: NeverScrollableScrollPhysics(),
-    //     children: <Widget>[
-    //       Container(
-    //         decoration: BoxDecoration(
-    //             color: Colors.grey[200],
-    //             border: Border.all(color: Colors.grey[200]),
-    //             borderRadius: BorderRadius.circular(8.0)),
-    //         padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-    //         margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-    //         child: Row(
-    //           children: <Widget>[
-    //             SizedBox(width: 10),
-    //             Container(
-    //               width: 85,
-    //               child: Text(
-    //                 Dictionary.date,
-    //                 style: TextStyle(
-    //                     color: Colors.black,
-    //                     fontSize: 14.0,
-    //                     fontFamily: FontsFamily.lato,
-    //                     fontWeight: FontWeight.w600),
-    //                 textAlign: TextAlign.left,
-    //                 maxLines: 2,
-    //                 overflow: TextOverflow.ellipsis,
-    //               ),
-    //             ),
-    //             Text(
-    //               Dictionary.titleDocument,
-    //               style: TextStyle(
-    //                   color: Colors.black,
-    //                   fontFamily: FontsFamily.lato,
-    //                   fontSize: 14.0,
-    //                   fontWeight: FontWeight.w600),
-    //               textAlign: TextAlign.left,
-    //               maxLines: 2,
-    //               overflow: TextOverflow.ellipsis,
-    //             ),
-    //             Container()
-    //           ],
-    //         ),
-    //       ),
-    //       dataDocuments.isNotEmpty
-    //           ? ListView.builder(
-    //               padding: const EdgeInsets.only(
-    //                   left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-    //               shrinkWrap: true,
-    //               physics: NeverScrollableScrollPhysics(),
-    //               itemCount: dataDocuments.length,
-    //               itemBuilder: (context, index) {
-    //                 final DocumentSnapshot document = dataDocuments[index];
-    //
-    //                 return Container(
-    //                     child: Column(
-    //                   children: <Widget>[
-    //                     Row(
-    //                       mainAxisAlignment: MainAxisAlignment.start,
-    //                       crossAxisAlignment: CrossAxisAlignment.center,
-    //                       children: <Widget>[
-    //                         SizedBox(width: 10),
-    //                         Container(
-    //                           width: 85,
-    //                           child: Text(
-    //                             unixTimeStampToDateDocs(
-    //                                 document['published_at'].seconds),
-    //                             style: TextStyle(
-    //                                 color: Colors.black,
-    //                                 fontFamily: FontsFamily.lato,
-    //                                 fontSize: 13.0),
-    //                             textAlign: TextAlign.left,
-    //                             maxLines: 2,
-    //                             overflow: TextOverflow.ellipsis,
-    //                           ),
-    //                         ),
-    //                         Expanded(
-    //                           child: InkWell(
-    //                             onTap: () {
-    //                               Platform.isAndroid
-    //                                   ? _downloadAttachment(document['title'],
-    //                                       document['document_url'])
-    //                                   : _viewPdf(document['title'],
-    //                                       document['document_url']);
-    //                             },
-    //                             child: Text(
-    //                               document['title'],
-    //                               style: TextStyle(
-    //                                   fontFamily: FontsFamily.lato,
-    //                                   color: Colors.lightBlueAccent[700],
-    //                                   decoration: TextDecoration.underline,
-    //                                   fontSize: 13.0),
-    //                               textAlign: TextAlign.left,
-    //                             ),
-    //                           ),
-    //                         ),
-    //                         ShareButton(
-    //                           onPressed: () {
-    //                             DocumentServices().shareDocument(
-    //                                 document['title'],
-    //                                 document['document_url']);
-    //                           },
-    //                         )
-    //                       ],
-    //                     ),
-    //                     Container(
-    //                       margin: EdgeInsets.only(top: 10, bottom: 10),
-    //                       color: Colors.grey[200],
-    //                       width: MediaQuery.of(context).size.width,
-    //                       height: 1.5,
-    //                     )
-    //                   ],
-    //                 ));
-    //               })
-    //           : EmptyData(
-    //               message: Dictionary.emptyData,
-    //               desc: '',
-    //               isFlare: false,
-    //               image: "${Environment.imageAssets}not_found.png",
-    //             )
-    //     ],
-    //   ),
-    // );
   }
 
   void _viewPdf(String title, String url) async {
@@ -513,37 +396,6 @@ class _DocumentsState extends State<Documents> {
                 },
               )));
     } else {
-//      Fluttertoast.showToast(
-//          msg: Dictionary.downloadingFile,
-//          toastLength: Toast.LENGTH_LONG,
-//          gravity: ToastGravity.BOTTOM,
-//          fontSize: 16.0);
-//
-//      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
-//
-//      try {
-//        await FlutterDownloader.enqueue(
-//          url: url,
-//          savedDir: Environment.downloadStorage,
-//          fileName: name,
-//          showNotification: true,
-//          // show download progress in status bar (for Android)
-//          openFileFromNotification:
-//              true, // click on notification to open downloaded file (for Android)
-//        );
-//      } catch (e) {
-//        String dir = (await getExternalStorageDirectory()).path + '/download';
-//        await FlutterDownloader.enqueue(
-//          url: url,
-//          savedDir: dir,
-//          fileName: name,
-//          showNotification: true,
-//          // show download progress in status bar (for Android)
-//          openFileFromNotification:
-//              true, // click on notification to open downloaded file (for Android)
-//        );
-//      }
-
       Navigator.push(
         context,
         MaterialPageRoute(
