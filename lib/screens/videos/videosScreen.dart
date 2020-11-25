@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -108,42 +109,33 @@ class _VideosListState extends State<VideosList> {
   }
 
   _buildLoading() {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) => Column(
-        children: <Widget>[
-          Shimmer.fromColors(
-            baseColor: Colors.grey[300],
-            highlightColor: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-                    color: Colors.grey[300]),
-                Container(
-                  padding: EdgeInsets.all(17),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 20.0,
-                          color: Colors.grey[300]),
-                      SizedBox(height: 5.0),
-                      Container(
-                          width: MediaQuery.of(context).size.width - 160,
-                          height: 20.0,
-                          color: Colors.grey[300]),
-                    ],
-                  ),
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10.0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 6,
+            padding: const EdgeInsets.all(10.0),
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                height: 300.0,
+                child: Row(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Skeleton(
+                          width: MediaQuery.of(context).size.width - 40),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10.0),
-              ],
-            ),
-          )
-        ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -169,7 +161,10 @@ class _VideosListState extends State<VideosList> {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          padding: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, bottom: Dimens.padding),
+                          padding: EdgeInsets.only(
+                              left: Dimens.padding,
+                              right: Dimens.padding,
+                              bottom: Dimens.padding),
                           child: Stack(
                             alignment: Alignment.center,
                             children: <Widget>[
@@ -264,7 +259,6 @@ class _VideosListState extends State<VideosList> {
                 ],
               ));
   }
-
 
   @override
   void dispose() {

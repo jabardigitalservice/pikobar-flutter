@@ -1,21 +1,23 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
@@ -27,229 +29,224 @@ class DocumentListScreen extends StatefulWidget {
 }
 
 class _DocumentListScreenState extends State<DocumentListScreen> {
+  ScrollController _scrollController;
+  TextEditingController _searchController = TextEditingController();
+  Timer _debounce;
+  String searchQuery;
+
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.document);
+    _searchController.addListener((() {
+      _onSearchChanged();
+    }));
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.document),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection(kDocuments)
-            .orderBy('published_at', descending: true)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
-            List<DocumentSnapshot> data = [];
+      body: CollapsingAppbar(
+        searchBar: CustomAppBar.buildSearchField(
+            _searchController, Dictionary.searchInformation, updateSearchQuery),
+        showTitle: _showTitle,
+        titleAppbar: Dictionary.document,
+        scrollController: _scrollController,
+        body: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection(kDocuments)
+              .orderBy('published_at', descending: true)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              List<DocumentSnapshot> data = [];
 
-            snapshot.data.docs.forEach((record) {
-              if (record['published']) {
-                data.add(record);
+              snapshot.data.docs.forEach((record) {
+                if (record['published']) {
+                  data.add(record);
+                }
+              });
+
+              if (data.isNotEmpty) {
+                return _buildContent(data);
+              } else {
+                return EmptyData(
+                  message: Dictionary.emptyData,
+                  desc: '',
+                  isFlare: false,
+                  image: "${Environment.imageAssets}not_found.png",
+                );
               }
-            });
-
-            if (data.isNotEmpty) {
-              return _buildContent(data);
             } else {
-              return EmptyData(
-                message: Dictionary.emptyData,
-                desc: '',
-                isFlare: false,
-                image: "${Environment.imageAssets}not_found.png",
-              );
+              return _buildLoading();
             }
-          } else {
-            return _buildLoading();
-          }
-        },
+          },
+        ),
       ),
     );
     //   body:
   }
 
   Widget _buildContent(List<DocumentSnapshot> dataDocuments) {
-    return SingleChildScrollView(
-      child: ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          Container(
-            color: Colors.grey[200],
-            padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 22),
-                Container(
-                  width: 85,
-                  child: Text(
-                    Dictionary.date,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0),
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Text(
-                  Dictionary.titleDocument,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Container()
-              ],
-            ),
-          ),
-          ListView.builder(
-              padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: dataDocuments.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot document = dataDocuments[index];
+    if (searchQuery != null && searchQuery.isNotEmpty) {
+      dataDocuments = dataDocuments
+          .where((test) =>
+              test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    }
 
-                return Container(
-                    child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 16, right: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+    return dataDocuments.length > 0
+        ? ListView.builder(
+            padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
+            shrinkWrap: true,
+            itemCount: dataDocuments.length,
+            itemBuilder: (context, index) {
+              final DocumentSnapshot document = dataDocuments[index];
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  GestureDetector(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: Dimens.padding,
+                          right: Dimens.padding,
+                          bottom: Dimens.padding),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: <Widget>[
-                          SizedBox(width: 10),
                           Container(
-                            width: 85,
-                            child: Text(
-                              unixTimeStampToDateDocs(
-                                  document['published_at'].seconds),
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 14.0),
-                              textAlign: TextAlign.left,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                Platform.isAndroid
-                                    ? _downloadAttachment(document['title'],
-                                        document['document_url'])
-                                    : _viewPdf(document['title'],
-                                        document['document_url']);
-                              },
-                              child: Text(
-                                document['title'],
-                                style: TextStyle(
-                                    color: Colors.lightBlueAccent[700],
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 14.0),
-                                textAlign: TextAlign.left,
+                            width: MediaQuery.of(context).size.width,
+                            height: 300,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: CachedNetworkImage(
+                                imageUrl: document['images'],
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Center(
+                                  heightFactor: 4.2,
+                                  child: CupertinoActivityIndicator(),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 3.3,
+                                  color: Colors.grey[200],
+                                  child: Image.asset(
+                                    '${Environment.iconAssets}pikobar.png',
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          ShareButton(
-                            onPressed: () {
-                              DocumentServices().shareDocument(
-                                  document['title'], document['document_url']);
-                            },
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 300,
+                            decoration: BoxDecoration(
+                              color: Colors.black12.withOpacity(0.2),
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.dialogRadius),
+                            ),
+                          ),
+                          Image.asset(
+                            '${Environment.iconAssets}pdf_icon.png',
+                            height: 80,
+                            width: 80,
+                          ),
+                          Positioned(
+                            left: 10,
+                            right: 10,
+                            bottom: 0,
+                            top: 215,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  unixTimeStampToDateTime(
+                                      document['published_at'].seconds),
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text(
+                                  document['title'],
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20, bottom: 20),
-                      child: SizedBox(
-                        height: 10,
-                        child: Container(
-                          color: Colors.grey[200],
-                        ),
-                      ),
-                    )
-                  ],
-                ));
-              })
-        ],
-      ),
-    );
+                    onTap: () {
+                      Platform.isAndroid
+                          ? _downloadAttachment(
+                              document['title'], document['document_url'])
+                          : _viewPdf(
+                              document['title'], document['document_url']);
+                    },
+                  ),
+                ],
+              );
+            })
+        : ListView(
+            children: [
+              EmptyData(
+                message: Dictionary.emptyData,
+                desc: Dictionary.descEmptyData,
+                isFlare: false,
+                image: "${Environment.imageAssets}not_found.png",
+              ),
+            ],
+          );
   }
 
   Widget _buildLoading() {
-    return ListView(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-          child: Skeleton(
-            height: 25.0,
-            width: MediaQuery.of(context).size.width,
-          ),
-        ),
-        ListView.builder(
-            padding: const EdgeInsets.all(16.0),
+    return SingleChildScrollView(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10.0),
+          child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: 9,
-            itemBuilder: (context, index) {
+            itemCount: 6,
+            padding: const EdgeInsets.all(10.0),
+            itemBuilder: (BuildContext context, int index) {
               return Container(
-                  child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Skeleton(
-                        height: 20.0,
-                        width: 40,
-                        padding: 10.0,
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Skeleton(
-                                height: 20.0,
-                                width: MediaQuery.of(context).size.width / 1.6,
-                                padding: 10.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Skeleton(
-                          height: 30.0,
-                          width: 30.0,
-                          padding: 10.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20, bottom: 20),
-                    child: Skeleton(
-                      height: 1.5,
-                      width: MediaQuery.of(context).size.width,
-                      padding: 10.0,
+                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                height: 300.0,
+                child: Row(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Skeleton(
+                          width: MediaQuery.of(context).size.width - 40),
                     ),
-                  )
-                ],
-              ));
-            })
-      ],
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -329,9 +326,41 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     }
   }
 
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.trim().isNotEmpty) {
+        setState(() {
+          searchQuery = _searchController.text;
+        });
+      } else {
+        _clearSearchQuery();
+      }
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      updateSearchQuery(null);
+    });
+  }
+
   void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }
