@@ -38,6 +38,20 @@ class MessageDetailScreen extends StatefulWidget {
 
 class _MessageDetailScreenState extends State<MessageDetailScreen> {
   MessageDetailBloc _messageDetailBloc;
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +61,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       child: BlocBuilder<MessageDetailBloc, MessageDetailState>(
           builder: (context, state) {
         return Scaffold(
-            appBar: CustomAppBar.defaultAppBar(
-                title: Dictionary.message,
+            backgroundColor: Colors.white,
+            appBar: CustomAppBar.animatedAppBar(
+                showTitle: _showTitle,
+                title: state is MessageDetailLoaded ? state.data.title : '',
                 actions: <Widget>[
                   state is MessageDetailLoaded
                       ? ShareButton(
@@ -125,54 +141,78 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   }
 
   _buildContent(BuildContext context, MessageModel data) {
-    return ListView(
-      padding: EdgeInsets.all(Dimens.padding),
-      children: <Widget>[
-        _buildText(
-            Text(
-              data.title,
-              style: TextStyle(
-                  fontFamily: FontsFamily.lato,
-                  fontSize: 18.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+    return Stack(
+      children: [
+        ListView(
+          controller: _scrollController,
+          padding: EdgeInsets.all(Dimens.padding),
+          children: <Widget>[
+            AnimatedOpacity(
+              opacity: _showTitle ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 250),
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: _buildText(
+                    Text(
+                      data.title,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    context),
+              ),
             ),
-            context),
-        _buildText(
-            Text(
-              unixTimeStampToDateTime(data.publishedAt),
-              style: TextStyle(fontSize: 15.0, color: Colors.grey),
+            _buildText(
+                Text(
+                  unixTimeStampToDateTime(data.publishedAt),
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: ColorBase.netralGrey,
+                    fontFamily: FontsFamily.roboto,
+                  ),
+                ),
+                context),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(top: 6, bottom: Dimens.padding),
+              child: Html(
+                data: data.content,
+                style: {
+                  'body': Style(
+                      margin: EdgeInsets.zero,
+                      color: Colors.black,
+                      fontFamily: FontsFamily.roboto,
+                      fontSize: FontSize(14.0))
+                },
+                onLinkTap: (url) {
+                  _launchUrl(url);
+                },
+              ),
             ),
-            context),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 6, bottom: Dimens.padding),
-          child: Html(
-            data: data.content,
-            style: {
-              'body': Style(
-                  margin: EdgeInsets.zero,
-                  color: Colors.black,
-                  fontSize: FontSize(15.0))
-            },
-            onLinkTap: (url) {
-              _launchUrl(url);
-            },
-          ),
+            SizedBox(
+              height: Dimens.sbHeight,
+            ),
+          ],
         ),
-        SizedBox(
-          height: Dimens.sbHeight,
-        ),
-        data.actionTitle != null && data.actionUrl != null
-            ? RoundedButton(
-                title: data.actionTitle,
-                color: ColorBase.green,
-                textStyle:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                onPressed: () {
-                  _launchUrl(data.actionUrl);
-                })
-            : Container()
+        Positioned(
+            left: 0.0,
+            right: 0.0,
+            bottom: 0.0,
+            child: data.actionTitle != null && data.actionUrl != null
+                ? Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: RoundedButton(
+                        title: data.actionTitle,
+                        color: ColorBase.green,
+                        textStyle: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                        onPressed: () {
+                          _launchUrl(data.actionUrl);
+                        }),
+                  )
+                : Container()),
       ],
     );
   }
