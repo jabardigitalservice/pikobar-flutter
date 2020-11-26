@@ -38,7 +38,7 @@ class ShareButton extends StatelessWidget {
                 top: paddingTop != null ? paddingTop : 0)
             : EdgeInsets.all(padding != null ? padding : 10),
         alignment: alignmentIcon != null ? alignmentIcon : Alignment.center,
-        icon: Icon(FontAwesomeIcons.share, size: 17, color: ColorBase.green),
+        icon: Icon(FontAwesomeIcons.shareAlt, size: 17, color: Colors.black),
         onPressed: onPressed,
       ),
     );

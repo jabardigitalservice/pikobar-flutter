@@ -124,7 +124,10 @@ class CustomAppBar {
   }
 
   static AppBar animatedAppBar(
-      {@required bool showTitle, @required String title}) {
+      {@required bool showTitle,
+      @required String title,
+      double fontSize,
+      List<Widget> actions}) {
     return AppBar(
       title: AnimatedOpacity(
         opacity: showTitle ? 1.0 : 0.0,
@@ -133,7 +136,7 @@ class CustomAppBar {
           showTitle ? title : '',
           style: TextStyle(
               fontFamily: FontsFamily.lato,
-              fontSize: 16.0,
+              fontSize: fontSize ?? 16.0,
               fontWeight: FontWeight.bold),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
@@ -141,6 +144,7 @@ class CustomAppBar {
       ),
       backgroundColor: Colors.white,
       elevation: 0,
+      actions: actions,
     );
   }
 }

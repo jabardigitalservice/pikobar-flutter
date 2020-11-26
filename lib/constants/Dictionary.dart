@@ -343,7 +343,7 @@ class Dictionary {
   static String downloadImage = 'Unduh Gambar';
 
   //message
-  static String markAsRead = "Tandai Semua Sudah Dibaca";
+  static String markAsRead = "Tandai Semua Dibaca";
 
   //survey
   static String surveyEmpty = 'Tidak ada data survei';
