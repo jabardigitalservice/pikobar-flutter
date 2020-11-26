@@ -21,29 +21,18 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    
-    # Setup Java JDK
-    - name: Setup Java JDK
-      uses: actions/setup-java@v1.4.3
-      with:
-        java-version: '12.x'
-    
-    # Flutter Action
-    - name: Flutter Action
-      uses: subosito/flutter-action@v1.4.0
-      with:
-        channel: 'stable'
-    
+
+    # Change Permissions
     - name: "Execution Permission"
       run: chmod -R +x ./.github/workflows/scripts
 
     # Install Flutter
-    #- name: "Install Flutter"
-    #  run: ./.github/workflows/scripts/install-flutter.sh stable # or: beta
+    - name: "Install Flutter"
+      run: ./.github/workflows/scripts/install-flutter.sh stable # or: beta
 
     # Install Tools
-    #- name: "Install Tools"
-    #  run: ./.github/workflows/scripts/install-tools.sh
+    - name: "Install Tools"
+      run: ./.github/workflows/scripts/install-tools.sh
     
     # Write a pikobar.keystore file from a base64-encoded string
     - name: "Write Keystore"
