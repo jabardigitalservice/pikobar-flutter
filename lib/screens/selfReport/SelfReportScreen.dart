@@ -29,6 +29,7 @@ import 'package:pikobar_flutter/screens/selfReport/ContactHistoryScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 class SelfReportScreen extends StatefulWidget {
@@ -181,24 +182,24 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function for check if profile not complete user must fill profile in menu edit profile
   bool _isProfileUserNotComplete(AsyncSnapshot<DocumentSnapshot> state) {
     if (state != null &&
-        state.data['name'].toString().isNotEmpty &&
-        state.data['nik'].toString().isNotEmpty &&
-        state.data['email'].toString().isNotEmpty &&
-        state.data['phone_number'].toString().isNotEmpty &&
-        state.data['address'].toString().isNotEmpty &&
-        state.data['birthdate'].toString().isNotEmpty &&
-        state.data['gender'].toString().isNotEmpty &&
-        state.data['city_id'].toString().isNotEmpty &&
-        state.data['location'].toString().isNotEmpty &&
-        state.data['name'] != null &&
-        state.data['nik'] != null &&
-        state.data['email'] != null &&
-        state.data['phone_number'] != null &&
-        state.data['address'] != null &&
-        state.data['birthdate'] != null &&
-        state.data['gender'] != null &&
-        state.data['city_id'] != null &&
-        state.data['location'] != null) {
+        getField(state.data, 'name').toString().isNotEmpty &&
+        getField(state.data, 'nik').toString().isNotEmpty &&
+        getField(state.data, 'email').toString().isNotEmpty &&
+        getField(state.data, 'phone_number').toString().isNotEmpty &&
+        getField(state.data, 'address').toString().isNotEmpty &&
+        getField(state.data, 'birthdate').toString().isNotEmpty &&
+        getField(state.data, 'gender').toString().isNotEmpty &&
+        getField(state.data, 'city_id').toString().isNotEmpty &&
+        getField(state.data, 'location').toString().isNotEmpty &&
+        getField(state.data, 'name') != null &&
+        getField(state.data, 'nik') != null &&
+        getField(state.data, 'email') != null &&
+        getField(state.data, 'phone_number') != null &&
+        getField(state.data, 'address') != null &&
+        getField(state.data, 'birthdate') != null &&
+        getField(state.data, 'gender') != null &&
+        getField(state.data, 'city_id') != null &&
+        getField(state.data, 'location') != null) {
       return false;
     } else {
       return true;
@@ -215,7 +216,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             height: 10,
           ),
           hasLogin
-              ? !HealthCheck().isUserHealty(state.data['health_status']) &&
+              ? !HealthCheck().isUserHealty(
+                          getField(state.data, 'health_status')) &&
                       _isProfileUserNotComplete(state)
                   ? _buildAnnounceProfileNotComplete(state)
                   : Container()
@@ -255,8 +257,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   // and health status is not healthy user can access for press the button in _buildContainer
                   hasLogin
                       ? !_isProfileUserNotComplete(state) &&
-                              !HealthCheck()
-                                  .isUserHealty(state.data['health_status'])
+                              !HealthCheck().isUserHealty(
+                                  getField(state.data, 'health_status'))
                           ? hasLogin
                           : false
                       : false),
@@ -281,8 +283,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               },
                   hasLogin
                       ? !_isProfileUserNotComplete(state) &&
-                              !HealthCheck()
-                                  .isUserHealty(state.data['health_status'])
+                              !HealthCheck().isUserHealty(
+                                  getField(state.data, 'health_status'))
                           ? hasLogin
                           : false
                       : false),
@@ -378,10 +380,10 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   Widget _buildLocation(AsyncSnapshot<DocumentSnapshot> state) {
     if (!isLocationChange) {
       if (state != null) {
-        if (state.data['address'] != null) {
-          addressMyLocation = state.data['address'].toString();
+        if (getField(state.data, 'address') != null) {
+          addressMyLocation = getField(state.data, 'address').toString();
         }
-        if (state.data['location'] != null) {
+        if (getField(state.data, 'location') != null) {
           latLng = LatLng(state.data['location'].latitude,
               state.data['location'].longitude);
         }
@@ -449,7 +451,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       onTap: () {
         hasLogin
             ? !_isProfileUserNotComplete(state) &&
-                    !HealthCheck().isUserHealty(state.data['health_status'])
+                    !HealthCheck()
+                        .isUserHealty(getField(state.data, 'health_status'))
                 ? _handleLocation()
                 // ignore: unnecessary_statements
                 : null
