@@ -115,7 +115,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       height: 10,
                     ),
                     Text(
-                      '${unixTimeStampToDateTime(widget.document.get('last_update').seconds)}',
+                      '${unixTimeStampToDate(widget.document.get('last_update').seconds)}',
                       style: TextStyle(
                           color: Color(0xff333333),
                           fontFamily: FontsFamily.lato,
@@ -166,7 +166,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       height: 10,
                     ),
                     Text(
-                      '${unixTimeStampToDateTime(widget.documentPCR.get('last_update').seconds)}',
+                      '${unixTimeStampToDate(widget.documentPCR.get('last_update').seconds)}',
                       style: TextStyle(
                           color: Color(0xff333333),
                           fontFamily: FontsFamily.lato,
