@@ -55,7 +55,7 @@ class _MessagesState extends State<Messages> {
         floatingActionButton: Padding(
           padding: EdgeInsets.only(bottom: 30),
           child: RaisedButton(
-            color: ColorBase.primerGreen,
+            color: ColorBase.primaryLightGreen,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(color: ColorBase.primaryGreen)),

@@ -24,7 +24,7 @@ class ColorBase {
   static final grey800=Color(0xff424242);
   static final greyBorder=Color(0xffEEEEEE);
   static final dodgerBlue=Color(0xff1E88E5);
-  static final primerGreen=Color(0xffE6F6EC);
+  static final primaryLightGreen=Color(0xffE6F6EC);
   static final primaryGreen=Color(0xff16A75C);
 
 
