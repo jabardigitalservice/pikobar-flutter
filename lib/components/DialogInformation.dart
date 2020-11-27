@@ -77,7 +77,7 @@ class DialogInformation extends StatelessWidget {
                               topRight: Radius.circular(5.0)),
                         ),
                         child: Image.asset(
-                            '${Environment.imageAssets}placeholder.png',
+                            '${Environment.imageAssets}pikobar.png',
                             fit: BoxFit.fitWidth))),
               ),
               Positioned(
@@ -182,7 +182,7 @@ class DialogInformation extends StatelessWidget {
                             topRight: Radius.circular(5.0)),
                       ),
                       child: Image.asset(
-                          '${Environment.imageAssets}placeholder.png',
+                          '${Environment.imageAssets}pikobar.png',
                           fit: BoxFit.fitWidth))),
             ),
           ),
