@@ -33,18 +33,21 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   String searchQuery;
 
   List<String> listItemTitleTab = [
+    Dictionary.all,
     Dictionary.titleLatestNews,
     Dictionary.center,
     Dictionary.who,
   ];
 
   List<String> listCollectionData = [
+    kAllInfographics,
     kInfographics,
     kInfographicsCenter,
     kInfographicsWho,
   ];
 
   List<String> analyticsData = [
+    Analytics.tappedInfographicall,
     Analytics.tappedInfographicJabar,
     Analytics.tappedInfographicCenter,
     Analytics.tappedInfographicWho,
@@ -84,6 +87,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         indicatorColor: ColorBase.green,
         labelColor: Colors.white,
         showTitle: _showTitle,
+        sizeLabel: 13.0,
+        isScrollable: false,
         searchBar: CustomAppBar.buildSearchField(
             _searchController, Dictionary.searchInformation, updateSearchQuery),
         unselectedLabelColor: Colors.grey,
@@ -95,6 +100,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           AnalyticsHelper.setLogEvent(analyticsData[index]);
         },
         tabBarView: <Widget>[
+          _buildInfoGraphic(),
           _buildInfoGraphic(),
           _buildInfoGraphic(),
           _buildInfoGraphic(),
