@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -31,6 +33,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   ScrollController _scrollController;
   Timer _debounce;
   String searchQuery;
+  List<int> _current = [];
+  bool isSetDataCurrent = false;
 
   List<String> listItemTitleTab = [
     Dictionary.all,
@@ -127,6 +131,13 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
     }
+    if (!isSetDataCurrent) {
+      _current.clear();
+      listData.forEach((element) {
+        _current.add(0);
+      });
+      isSetDataCurrent = true;
+    }
 
     return listData.isNotEmpty
         ? ListView.builder(
@@ -134,7 +145,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             itemCount: listData.length,
             padding: EdgeInsets.only(bottom: 20.0),
             itemBuilder: (_, int index) {
-              return _cardContent(listData[index]);
+              return _cardContent(listData[index], index);
             },
           )
         : ListView(
@@ -181,12 +192,13 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
     );
   }
 
-  Widget _cardContent(DocumentSnapshot data) {
+  Widget _cardContent(DocumentSnapshot data, int indexListData) {
+    var dataListImage =
+        (data['images'] as List)?.map((item) => item as String)?.toList();
     return Container(
         child: Column(
       children: <Widget>[
         SizedBox(
-          width: MediaQuery.of(context).size.width,
           child: RaisedButton(
             elevation: 0,
             color: Colors.white,
@@ -201,22 +213,56 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                       Container(
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: CachedNetworkImage(
-                            imageUrl: data['images'][0] ?? '',
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
-                                heightFactor: 4.2,
-                                child: CupertinoActivityIndicator()),
-                            errorWidget: (context, url, error) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 3.3,
-                                color: Colors.grey[200],
-                                child: Image.asset(
-                                    '${Environment.iconAssets}pikobar.png',
-                                    fit: BoxFit.fitWidth)),
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            initialPage: 0,
+                            enableInfiniteScroll:
+                                dataListImage.length > 1 ? true : false,
+                            aspectRatio: 9 / 9,
+                            viewportFraction: 1.0,
+                            autoPlay: dataListImage.length > 1 ? true : false,
+                            autoPlayInterval: Duration(seconds: 5),
+                            onPageChanged: (index, reason) {
+                              setState(() {
+                                _current[indexListData] = index;
+                              });
+                            },
                           ),
+                          items: dataListImage.map((dynamic data) {
+                            return Builder(builder: (BuildContext context) {
+                              return Container(
+                                decoration:
+                                    BoxDecoration(shape: BoxShape.circle),
+                                child: ClipRRect(
+                                  child: CachedNetworkImage(
+                                      imageUrl: data.toString() ?? '',
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                      placeholder: (context, url) => Center(
+                                          heightFactor: 10.2,
+                                          child: CupertinoActivityIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(5.0),
+                                                    topRight:
+                                                        Radius.circular(5.0)),
+                                              ),
+                                              child: PikobarPlaceholder())),
+                                ),
+                              );
+                            });
+                          }).toList(),
                         ),
                       ),
                       Container(
@@ -233,9 +279,10 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         left: 10,
                         right: 10,
                         bottom: 0,
-                        top: 215,
+                        top: 190,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
                               unixTimeStampToDateTime(
@@ -255,6 +302,48 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                               textAlign: TextAlign.left,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 5.0, 0, 0.0),
+                              child: Row(
+                                children: dataListImage.map((String data) {
+                                  int index = dataListImage.indexOf(data);
+                                  return _current[indexListData] == index
+                                      ? Expanded(
+                                          child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  dataListImage.length,
+                                              height: 6.0,
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 10.0,
+                                                  horizontal: 2.0),
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.rectangle,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.0),
+                                                  color: Colors.white)),
+                                        )
+                                      : Expanded(
+                                          child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              dataListImage.length,
+                                          height: 6.0,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 2.0),
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0),
+                                              color:
+                                                  Color.fromRGBO(0, 0, 0, 0.4)),
+                                        ));
+                                }).toList(),
+                              ),
                             ),
                           ],
                         ),
