@@ -69,6 +69,7 @@ class Analytics {
 
 
   // event infographic
+  static String tappedInfographicall = 'tapped_semua_info_praktikal';
   static String tappedInfographicJabar = 'tapped_info_praktikal_jabar';
   static String tappedInfographicCenter = 'tapped_info_praktikal_pusat';
   static String tappedInfographicWho = 'tapped_info_praktikal_who';

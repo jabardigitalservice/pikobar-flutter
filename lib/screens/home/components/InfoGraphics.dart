@@ -107,42 +107,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 ],
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            //   child: Text(
-            //     getLabel['info_graphics']['description'],
-            //     style: TextStyle(
-            //         color: Colors.black,
-            //         fontFamily: FontsFamily.lato,
-            //         fontSize: Dimens.textSubtitleSize),
-            //     textAlign: TextAlign.left,
-            //   ),
-            // ),
             Container(
               height: 260,
               child: _buildInfographic(),
             )
-            // Container(
-            //     margin: EdgeInsets.only(left: 5),
-            //     child: CustomBubbleTab(
-            //       listItemTitleTab: listItemTitleTab,
-            //       indicatorColor: ColorBase.green,
-            //       labelColor: Colors.white,
-            //       unselectedLabelColor: Colors.grey,
-            //       onTap: (index) {
-            //         setState(() {});
-            //         infoGraphicsListBloc.add(InfoGraphicsListLoad(
-            //             infoGraphicsCollection: listCollectionData[index],
-            //             limit: 3));
-            //         AnalyticsHelper.setLogEvent(analyticsData[index]);
-            //       },
-            //       tabBarView: <Widget>[
-            //         _buildInfographic(),
-            //         _buildInfographic(),
-            //         _buildInfographic(),
-            //       ],
-            //       heightTabBarView: 260,
-            //     )),
           ],
         );
       } else {

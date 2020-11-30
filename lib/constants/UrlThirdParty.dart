@@ -8,7 +8,7 @@
   const String kUrlIGSaberHoax = 'https://www.instagram.com/jabarsaberhoaks/';
   const String kUrlCaseReport = 'https://lapor.pikobar.jabarprov.go.id';
   const String kUrlQNA = 'https://forum.pikobar.jabarprov.go.id';
-  const String kUrlBansos = 'https://bansos.pikobar.jabarprov.go.id';
+  const String kUrlBansos = 'https://solidaritas.jabarprov.go.id/';
   const String kUrlSelfTracing = '';
   const String kUrlVolunteer = 'https://indorelawan.org/p/pikobar';
   const String kUrlSelfDiagnose = 'https://covid19.prixa.ai/partner/80b47a20-1353-49e9-af91-a0a5995ca89f/app/52b7d983-3e5d-49cc-9c99-508dc779aad3';
