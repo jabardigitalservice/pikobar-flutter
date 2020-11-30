@@ -209,6 +209,7 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.start,
             children: widgetList,
             spacing: widget.wrapSpacing,
             runSpacing: widget.wrapRunSpacing,
@@ -228,13 +229,6 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
               ? MediaQuery.of(context).size.width / 2.5
               : null,
       height: widget.itemHeight ?? 40.0,
-      decoration: BoxDecoration(
-          borderRadius: widget.borderRadius,
-          border: Border.all(
-            color: selectedItems.contains(widget.itemValueList[index])
-                ? widget.activeColor
-                : widget.color,
-          )),
       child: InkWell(
         borderRadius: widget.borderRadius,
         onTap: () {
@@ -265,54 +259,57 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
           setState(() {});
           widget.onChanged(selectedItems);
         },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: 16,
-                height: 16,
-                margin: EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                    border: Border.all(
-                        color:
-                            selectedItems.contains(widget.itemValueList[index])
-                                ? widget.activeColor
-                                : widget.color)),
-                child: selectedItems.contains(widget.itemValueList[index])
-                    ? Icon(FontAwesomeIcons.check,
-                        size: 10,
-                        color:
-                            selectedItems.contains(widget.itemValueList[index])
-                                ? widget.activeColor
-                                : widget.color)
-                    : null,
-              ),
-              Expanded(
-                child: Text(widget.itemLabelList[index],
-                    style: !selectedItems.contains(widget
-                                .itemValueList[widget.indexAllDisabled]) &&
-                            selectedItems.isNotEmpty
-                        ? index == widget.indexAllDisabled
-                            ? TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                color: ColorBase.menuBorderColor,
-                                fontSize: 12)
-                            : widget.textStyle
-                        : selectedItems.contains(
-                                widget.itemValueList[widget.indexAllDisabled])
-                            ? index == widget.indexAllDisabled
-                                ? widget.textStyle
-                                : TextStyle(
-                                    fontFamily: FontsFamily.lato,
-                                    color: ColorBase.menuBorderColor,
-                                    fontSize: 12)
-                            : widget.textStyle ??
-                                TextStyle(fontFamily: FontsFamily.lato)),
-              ),
-            ],
-          ),
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 25,
+              height: 25,
+              margin: EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                  color: selectedItems.contains(widget.itemValueList[index])
+                      ? widget.activeColor
+                      : Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  border: Border.all(
+                      width: 2,
+                      color:
+                          selectedItems.contains(widget.itemValueList[index])
+                              ? widget.activeColor
+                              : widget.color)),
+              child: selectedItems.contains(widget.itemValueList[index])
+                  ? Icon(FontAwesomeIcons.check,
+                      size: 13,
+                      color:
+                          selectedItems.contains(widget.itemValueList[index])
+                              ? Colors.white
+                              : widget.color)
+                  : null,
+            ),
+            Expanded(
+              child: Text(widget.itemLabelList[index],
+                  style: !selectedItems.contains(widget
+                              .itemValueList[widget.indexAllDisabled]) &&
+                          selectedItems.isNotEmpty
+                      ? index == widget.indexAllDisabled
+                          ? TextStyle(
+                              fontFamily: FontsFamily.roboto,
+                              color: ColorBase.menuBorderColor,
+                              fontSize: 14)
+                          : widget.textStyle
+                      : selectedItems.contains(
+                              widget.itemValueList[widget.indexAllDisabled])
+                          ? index == widget.indexAllDisabled
+                              ? widget.textStyle
+                              : TextStyle(
+                                  fontFamily: FontsFamily.roboto,
+                                  color: ColorBase.menuBorderColor,
+                                  fontSize: 14)
+                          : widget.textStyle ??
+                              TextStyle(
+                                  fontFamily: FontsFamily.roboto,
+                                  fontSize: 14)),
+            ),
+          ],
         ),
       ),
     );
