@@ -368,7 +368,11 @@ class BuildButtonMenu extends StatelessWidget {
                         builder: (context) => LoginScreen(title: label)));
 
                 if (isLoggedIn != null && isLoggedIn) {
-                  combinedArguments = await userDataUrlAppend(defaultArguments);
+                  combinedArguments = await userDataUrlAppend(
+                      RemoteConfigHelper.getString(
+                          remoteConfig: remoteConfig,
+                          firebaseConfig: firebaseConfigArguments,
+                          defaultValue: defaultArguments));
 
                   if (route == NavigationConstrants.Browser) {
                     openChromeSafariBrowser(url: combinedArguments);
@@ -378,7 +382,11 @@ class BuildButtonMenu extends StatelessWidget {
                   }
                 }
               } else {
-                combinedArguments = await userDataUrlAppend(defaultArguments);
+                combinedArguments = await userDataUrlAppend(
+                    RemoteConfigHelper.getString(
+                        remoteConfig: remoteConfig,
+                        firebaseConfig: firebaseConfigArguments,
+                        defaultValue: defaultArguments));
 
                 if (route == NavigationConstrants.Browser) {
                   openChromeSafariBrowser(url: combinedArguments);
@@ -388,7 +396,11 @@ class BuildButtonMenu extends StatelessWidget {
                 }
               }
             } else {
-              combinedArguments = await userDataUrlAppend(defaultArguments);
+              combinedArguments = await userDataUrlAppend(
+                  RemoteConfigHelper.getString(
+                      remoteConfig: remoteConfig,
+                      firebaseConfig: firebaseConfigArguments,
+                      defaultValue: defaultArguments));
 
               if (route == NavigationConstrants.Browser) {
                 openChromeSafariBrowser(url: combinedArguments);
@@ -398,7 +410,11 @@ class BuildButtonMenu extends StatelessWidget {
               }
             }
           } else {
-            combinedArguments = await userDataUrlAppend(defaultArguments);
+            combinedArguments = await userDataUrlAppend(
+                RemoteConfigHelper.getString(
+                    remoteConfig: remoteConfig,
+                    firebaseConfig: firebaseConfigArguments,
+                    defaultValue: defaultArguments));
 
             if (route == NavigationConstrants.Browser) {
               openChromeSafariBrowser(url: combinedArguments);
