@@ -47,6 +47,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
     /// for set default value for height appbar & bottom Appbar
     heightAppbar = widget.heightAppbar ?? 150;
     isBottomAppbar = widget.isBottomAppbar ?? true;
+    print('tingginya berapa? '+heightAppbar.toString());
     super.initState();
   }
 
@@ -106,7 +107,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                     : 250
                 : isBottomAppbar
                     ? 180
-                    : 300,
+                    : heightAppbar,
             floating: false,
             flexibleSpace: !isBottomAppbar
                 ? FlexibleSpaceBar(

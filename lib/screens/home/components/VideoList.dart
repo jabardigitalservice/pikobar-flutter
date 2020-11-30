@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -23,7 +21,6 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
-import 'package:share/share.dart';
 
 class VideoList extends StatefulWidget {
   final String searchQuery;
@@ -308,13 +305,5 @@ class _VideoListState extends State<VideoList> {
         ),
       ],
     );
-  }
-
-  _shareVideo(String title, String url) {
-    Share.share(
-        '$title \n\nTonton video lengkapnya:\n$url \n\n${Dictionary.sharedFrom}');
-
-    AnalyticsHelper.setLogEvent(
-        Analytics.tappedVideoShare, <String, dynamic>{'title': title});
   }
 }

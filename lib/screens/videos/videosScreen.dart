@@ -18,7 +18,6 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
-import 'package:shimmer/shimmer.dart';
 
 class VideosScreen extends StatelessWidget {
   @override
@@ -37,7 +36,6 @@ class VideosList extends StatefulWidget {
 
 class _VideosListState extends State<VideosList> {
   // ignore: close_sinks
-  VideoListBloc _videoListBloc;
   ScrollController _scrollController;
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
@@ -51,7 +49,6 @@ class _VideosListState extends State<VideosList> {
       _onSearchChanged();
     }));
     _scrollController = ScrollController()..addListener(() => setState(() {}));
-    _videoListBloc = BlocProvider.of<VideoListBloc>(context);
     super.initState();
   }
 
