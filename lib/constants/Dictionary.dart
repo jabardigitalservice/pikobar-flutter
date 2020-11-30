@@ -361,7 +361,10 @@ class Dictionary {
 
   static String descInfoGraphic =
       'Info yang memuat infograpis terkait COVID-19';
-  static String all = 'Semua';
+
+  static String all =
+      'Semua';
+
 
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 
