@@ -361,6 +361,7 @@ class Dictionary {
 
   static String descInfoGraphic =
       'Info yang memuat infograpis terkait COVID-19';
+  static String all = 'Semua';
 
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 
@@ -418,9 +419,10 @@ class Dictionary {
   static String contactHistory = 'Riwayat Kontak';
   static String reportNewContact = 'Lapor Kontak Baru';
   static String emptyContactTitle = 'Belum Ada Kontak Selama Pemantauan';
-  static String emptyContactDesc =
-      'Terima kasih sudah membantu mempercepat pelacakan kasus dengan mengisi laporan kontak Anda secara jujur. Mari hentikan rantai penularan COVID-19 dengan melakukan isolasi mandiri dengan tertib.';
   static String sumContactHistory = 'Total Riwayat Kontak';
+  static String emptyContact = 'Belum Ada Kontak';
+  static String emptyContactDesc =
+      'Terima kasih sudah membantu \nmempercepat pelacakan kasus dengan \nmengisi laporan ini secara jujur.';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
@@ -444,7 +446,7 @@ class Dictionary {
   static String forOtherTitle = 'Untuk Orang Lain';
   static String forOtherDesc = 'Lapor kesehatan orang lain oleh Anda di sini';
   static String countPeople = 'Orang Ke-';
-  static String addOtherReport = 'Tambah Orang Lain';
+  static String addOtherReport = 'Tambah Kontak';
   static String addUserForm = 'Form Pengisian Data';
   static String otherReportAnnouncement =
       '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
@@ -452,6 +454,7 @@ class Dictionary {
       '<p>Apakah data di bawah ini sudah benar?</p>';
   static String previewData = 'Preview Data';
   static String reportForMySelf = 'Lapor Untuk Diri Sendiri';
+  static String reportForOther = 'Lapor Untuk Orang Lain';
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';

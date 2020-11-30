@@ -55,7 +55,9 @@ class _SelfReportListState extends State<SelfReportList> {
     return Scaffold(
       appBar: CustomAppBar.animatedAppBar(
         showTitle: _showTitle,
-        title: Dictionary.reportForMySelf,
+        title: widget.otherUID != null
+            ? Dictionary.reportForOther
+            : Dictionary.reportForMySelf,
       ),
       backgroundColor: Colors.white,
       body: MultiBlocProvider(
@@ -78,7 +80,9 @@ class _SelfReportListState extends State<SelfReportList> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
                   child: Text(
-                    Dictionary.reportForMySelf,
+                    widget.otherUID != null
+                        ? Dictionary.reportForOther
+                        : Dictionary.reportForMySelf,
                     style: TextStyle(
                         fontFamily: FontsFamily.lato,
                         fontSize: 20.0,
