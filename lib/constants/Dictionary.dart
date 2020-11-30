@@ -129,8 +129,7 @@ class Dictionary {
 
   static String jabarToday = "Jabar Hari Ini";
   static String covidInformation = "Informasi COVID-19";
-  static String requiredForm=' • Harus Diisi';
-
+  static String requiredForm = ' • Harus Diisi';
 
   // Button Text
   static String yes = 'Ya';
@@ -153,8 +152,6 @@ class Dictionary {
   static String signInWithApple = 'Masuk dengan Apple';
   static String positiveActionGeolocation = 'Ubah ke Allow All The Time';
   static String done = 'Selesai';
-
-
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -257,8 +254,10 @@ class Dictionary {
       'Bantu kami dengan membagikan lokasi Anda untuk menanggulangi kasus Covid-19';
   static String permissionLocationAgreement =
       '* Akses lokasi digunakan untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal\n\n* Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau digunakan\n\n* Jangan khawatir, data Anda akan kami jaga. Anda setuju untuk membagikan lokasi Anda?';
-  static String permissionGeolocationTitle = 'Izinkan PIKOBAR mengakses lokasi Anda';
-  static String permissionGeolocationDesc = 'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
+  static String permissionGeolocationTitle =
+      'Izinkan PIKOBAR mengakses lokasi Anda';
+  static String permissionGeolocationDesc =
+      'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
 
   // text
   static String fieldSurvey = 'Isi Survei';
@@ -271,7 +270,8 @@ class Dictionary {
   static String process = 'Proses';
   static String people = 'Orang';
   static String emptyData = 'Informasi Tidak Ditemukan';
-  static String descEmptyData = 'Mohon maaf, sepertinya kami tidak memiliki informasi yang Anda cari';
+  static String descEmptyData =
+      'Mohon maaf, sepertinya kami tidak memiliki informasi yang Anda cari';
   static String lastUpdateOn = 'Terakhir Diupdate Pada';
   static String updateProfile = 'Akun berhasil diperbarui';
   static String updateAppAvailable =
@@ -396,7 +396,7 @@ class Dictionary {
   static String selfReportForm = 'Form Lapor  Kesehatan Harian';
   static String additionalTemperatureInformation = 'Informasi Tambahan';
   static String descTemperatureInformation =
-      'Penting bagi Anda yang sedang melakukan isolasi mandiri, untuk mengukur suhu tubuh secara berkala dengan termometer pribadi.';
+      'Agar dapat memantau suhu tubuh secara akurat, penting bagi Anda untuk memiliki thermometer selama isolasi mandiri.';
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String quarantineQuestion = 'Kapan hari pertama anda karantina?';
@@ -407,7 +407,7 @@ class Dictionary {
   static String dailyMonitoring = 'Lapor Kesehatan \nHarian';
   static String dailyMonitoringProgress = 'Lapor Kesehatan Harian Terisi';
   static String rememberMe = 'Ingatkan Saya';
-  static String countDay = 'Hari ke -';
+  static String countDay = 'Hari ke-';
   static String dailyMonitoringFilled = 'Proses pelaporan sudah terisi';
   static String dailyMonitoringUnfilled = 'Proses pelaporan belum terisi';
   static String dailySelfReport = 'Lapor Kesehatan Harian';
@@ -451,6 +451,7 @@ class Dictionary {
   static String previewAnnouncement =
       '<p>Apakah data di bawah ini sudah benar?</p>';
   static String previewData = 'Preview Data';
+  static String reportForMySelf = 'Lapor Untuk Diri Sendiri';
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';
@@ -464,9 +465,13 @@ class Dictionary {
   static const String zoneColorOrange = 'Zona Orange';
   static const String zoneColorYellow = 'Zona Kuning';
   static const String zoneColorGreen = 'Zona Hijau';
-  static const String zoneRedDescription = 'Anda berada di Zona Resiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
-  static const String zoneOrangeDescription = 'Anda berada di Zona Resiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
-  static const String zoneYellowDescription = 'Anda berada di Zona Resiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
-  static const String zoneGreenDescription = 'Anda berada di Zona Tidak Terdampak yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
+  static const String zoneRedDescription =
+      'Anda berada di Zona Resiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
+  static const String zoneOrangeDescription =
+      'Anda berada di Zona Resiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
+  static const String zoneYellowDescription =
+      'Anda berada di Zona Resiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
+  static const String zoneGreenDescription =
+      'Anda berada di Zona Tidak Terdampak yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
 }

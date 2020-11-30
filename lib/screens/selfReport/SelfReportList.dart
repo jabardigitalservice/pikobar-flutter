@@ -34,19 +34,28 @@ class _SelfReportListState extends State<SelfReportList> {
   var listDocumentId = [];
   DateTime firstDay, currentDay;
   Color textColor;
+  ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(widget.analytics);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(
-        title: Dictionary.dailyMonitoring,
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: _showTitle,
+        title: Dictionary.reportForMySelf,
       ),
       backgroundColor: Colors.white,
       body: MultiBlocProvider(
@@ -60,117 +69,142 @@ class _SelfReportListState extends State<SelfReportList> {
                 ..add(SelfReportListLoad(otherUID: widget.otherUID)),
             ),
           ],
-          child: Column(
+          child: ListView(
+            controller: _scrollController,
             children: <Widget>[
-              Container(
-                  margin: EdgeInsets.all(Dimens.contentPadding),
-                  decoration: BoxDecoration(
-                      color: ColorBase.grey,
-                      borderRadius: BorderRadius.circular(8)),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: Padding(
-                      padding: EdgeInsets.all(Dimens.contentPadding),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            BlocBuilder<SelfReportListBloc,
-                                SelfReportListState>(builder: (context, state) {
-                              if (state is SelfReportListLoaded) {
-                                return Row(
+              AnimatedOpacity(
+                opacity: _showTitle ? 0.0 : 1.0,
+                duration: Duration(milliseconds: 250),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                  child: Text(
+                    Dictionary.reportForMySelf,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              _showTitle
+                  ? Container()
+                  : Container(
+                      margin: EdgeInsets.all(Dimens.contentPadding),
+                      decoration: BoxDecoration(
+                          color: ColorBase.grey,
+                          borderRadius: BorderRadius.circular(8)),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: Padding(
+                          padding: EdgeInsets.all(Dimens.contentPadding),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                BlocBuilder<SelfReportListBloc,
+                                        SelfReportListState>(
+                                    builder: (context, state) {
+                                  if (state is SelfReportListLoaded) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          Dictionary.dailyMonitoringProgress,
+                                          style: TextStyle(
+                                              fontFamily: FontsFamily.roboto,
+                                              fontWeight: FontWeight.bold,
+                                              color: ColorBase.netralGrey,
+                                              fontSize: 12),
+                                        ),
+                                        Text(
+                                          '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
+                                          style: TextStyle(
+                                              fontFamily: FontsFamily.roboto,
+                                              color: ColorBase.primaryGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        )
+                                      ],
+                                    );
+                                  } else if (state is SelfReportListFailure) {
+                                    return ErrorContent(error: state.error);
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                                BlocBuilder<SelfReportListBloc,
+                                        SelfReportListState>(
+                                    builder: (context, state) {
+                                  if (state is SelfReportListLoaded) {
+                                    return LinearPercentIndicator(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.8,
+                                      lineHeight: 8.0,
+                                      backgroundColor:
+                                          ColorBase.menuBorderColor,
+                                      percent:
+                                          (state.querySnapshot.docs.length /
+                                              14),
+                                      progressColor: ColorBase.primaryGreen,
+                                    );
+                                  } else if (state is SelfReportListFailure) {
+                                    return ErrorContent(error: state.error);
+                                  } else {
+                                    return Container();
+                                  }
+                                }),
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
-                                      Dictionary.dailyMonitoringProgress,
+                                      Dictionary.rememberMe,
                                       style: TextStyle(
-                                          fontFamily: FontsFamily.lato,
-                                          fontWeight: FontWeight.bold,
+                                          color: ColorBase.darkGrey,
+                                          fontFamily: FontsFamily.roboto,
                                           fontSize: 12),
                                     ),
-                                    Text(
-                                      '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
-                                      style: TextStyle(
-                                          fontFamily: FontsFamily.lato,
-                                          color: ColorBase.limeGreen,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    )
+                                    BlocBuilder<SelfReportReminderBloc,
+                                            SelfReportReminderState>(
+                                        builder: (context, state) {
+                                      if (state is SelfReportIsReminderLoaded) {
+                                        isReminder = state.querySnapshot
+                                            .get('remind_me');
+                                        return FlutterSwitch(
+                                          width: 50.0,
+                                          height: 20.0,
+                                          toggleColor: Colors.white,
+                                          valueFontSize: 12.0,
+                                          activeColor: ColorBase.primaryGreen,
+                                          inactiveColor: ColorBase.disableText,
+                                          toggleSize: 18.0,
+                                          value: isReminder,
+                                          onToggle: (val) {
+                                            setState(() {
+                                              isReminder = val;
+                                              SelfReportReminderBloc().add(
+                                                  SelfReportListUpdateReminder(
+                                                      isReminder));
+                                            });
+                                          },
+                                        );
+                                      } else if (state
+                                          is SelfReportReminderFailure) {
+                                        return ErrorContent(error: state.error);
+                                      } else {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    }),
                                   ],
-                                );
-                              } else if (state is SelfReportListFailure) {
-                                return ErrorContent(error: state.error);
-                              } else {
-                                return Container();
-                              }
-                            }),
-                            BlocBuilder<SelfReportListBloc,
-                                SelfReportListState>(builder: (context, state) {
-                              if (state is SelfReportListLoaded) {
-                                return LinearPercentIndicator(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  lineHeight: 8.0,
-                                  backgroundColor: ColorBase.menuBorderColor,
-                                  percent:
-                                      (state.querySnapshot.docs.length / 14),
-                                  progressColor: ColorBase.limeGreen,
-                                );
-                              } else if (state is SelfReportListFailure) {
-                                return ErrorContent(error: state.error);
-                              } else {
-                                return Container();
-                              }
-                            }),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  Dictionary.rememberMe,
-                                  style: TextStyle(
-                                      color: ColorBase.darkGrey,
-                                      fontFamily: FontsFamily.lato,
-                                      fontSize: 12),
                                 ),
-                                BlocBuilder<SelfReportReminderBloc,
-                                        SelfReportReminderState>(
-                                    builder: (context, state) {
-                                  if (state is SelfReportIsReminderLoaded) {
-                                    isReminder =
-                                        state.querySnapshot.get('remind_me');
-                                    return FlutterSwitch(
-                                      width: 50.0,
-                                      height: 20.0,
-                                      toggleColor: ColorBase.darkGrey,
-                                      valueFontSize: 12.0,
-                                      activeColor: ColorBase.toggleOn,
-                                      inactiveColor: ColorBase.menuBorderColor,
-                                      toggleSize: 18.0,
-                                      value: isReminder,
-                                      onToggle: (val) {
-                                        setState(() {
-                                          isReminder = val;
-                                          SelfReportReminderBloc().add(
-                                              SelfReportListUpdateReminder(
-                                                  isReminder));
-                                        });
-                                      },
-                                    );
-                                  } else if (state
-                                      is SelfReportReminderFailure) {
-                                    return ErrorContent(error: state.error);
-                                  } else {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                }),
-                              ],
-                            ),
-                          ]))),
+                              ]))),
               BlocBuilder<SelfReportListBloc, SelfReportListState>(
                   builder: (context, state) {
                 if (state is SelfReportListLoaded) {
-                  return _buildContent(state);
+                  return Column(
+                    children: _buildContent(state),
+                  );
                 } else if (state is SelfReportListFailure) {
                   return ErrorContent(error: state.error);
                 } else {
@@ -182,8 +216,8 @@ class _SelfReportListState extends State<SelfReportList> {
     );
   }
 
-  Widget _buildContent(SelfReportListLoaded snapshot) {
-    // Checking document is not null
+  List<Widget> _buildContent(SelfReportListLoaded snapshot) {
+    List<Widget> list = List();
     if (snapshot.querySnapshot.docs.length != 0) {
       for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
         /// Get [documentID] to [listDocumentId]
@@ -202,117 +236,63 @@ class _SelfReportListState extends State<SelfReportList> {
 
       currentDay = DateTime.now();
     }
-    return Expanded(
-      child: ListView.builder(
-          itemCount: 14,
-          itemBuilder: (context, i) {
-            if (i != 0) {
-              if (currentDay != null) {
-                if (currentDay.day == firstDay.add(Duration(days: i)).day) {
-                  textColor = Colors.black;
-                } else {
-                  if (firstDay
-                      .add(Duration(days: i))
-                      .difference(currentDay)
-                      .isNegative) {
-                    textColor = Colors.black;
-                  } else {
-                    textColor = ColorBase.darkGrey;
-                  }
-                }
-              } else {
-                textColor = ColorBase.darkGrey;
-              }
+
+    for (int i = 0; i < 14; i++) {
+      if (i != 0) {
+        if (currentDay != null) {
+          if (currentDay.day == firstDay.add(Duration(days: i)).day) {
+            textColor = ColorBase.grey800;
+          } else {
+            if (firstDay
+                .add(Duration(days: i))
+                .difference(currentDay)
+                .isNegative) {
+              textColor = ColorBase.grey800;
             } else {
-              textColor = Colors.black;
+              textColor = ColorBase.darkGrey;
             }
-            return Column(
-              children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    /// Checking data is not first array
-                    if (i != 0) {
-                      /// Checking data if [currentDay] not null
-                      if (currentDay != null) {
-                        if (currentDay.day ==
-                            firstDay.add(Duration(days: i)).day) {
-                          /// [currentDay] same as the day user can fill the form
-                          /// Checking data is already filled or not
-                          if (listDocumentId.contains('${i + 1}')) {
-                            /// Data is already filled
-                            /// Move to detail screeen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SelfReportDetailScreen(
-                                      '${i + 1}',
-                                      widget.otherUID,
-                                      widget.analytics)),
-                            );
-                          } else {
-                            /// Move to form screen
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => SelfReportFormScreen(
-                                    analytics: widget.analytics,
-                                    otherUID: widget.otherUID,
-                                    dailyId: '${i + 1}',
-                                    location: widget.location)));
-                          }
-                        } else {
-                          if (firstDay
-                              .add(Duration(days: i))
-                              .difference(currentDay)
-                              .isNegative) {
-                            /// [currentDay] same as the day user can fill the form
-                            /// Checking data is already filled or not
-                            if (listDocumentId.contains('${i + 1}')) {
-                              /// Data is already filled
-                              /// Move to detail screeen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelfReportDetailScreen('${i + 1}',
-                                            widget.otherUID, widget.analytics)),
-                              );
-                            } else {
-                              /// Move to form screen
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SelfReportFormScreen(
-                                      analytics: widget.analytics,
-                                      otherUID: widget.otherUID,
-                                      dailyId: '${i + 1}',
-                                      location: widget.location)));
-                            }
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    DialogTextOnly(
-                                      description:
-                                          '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
-                                      buttonText: Dictionary.ok,
-                                      onOkPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ));
-                          }
-                        }
-                      } else {
-                        /// Show dialog users cant input form
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description:
-                                      '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ));
-                      }
+          }
+        } else {
+          textColor = ColorBase.darkGrey;
+        }
+      } else {
+        textColor = ColorBase.grey800;
+      }
+      Column column = Column(
+        children: <Widget>[
+          InkWell(
+            onTap: () {
+              /// Checking data is not first array
+              if (i != 0) {
+                /// Checking data if [currentDay] not null
+                if (currentDay != null) {
+                  if (currentDay.day == firstDay.add(Duration(days: i)).day) {
+                    /// [currentDay] same as the day user can fill the form
+                    /// Checking data is already filled or not
+                    if (listDocumentId.contains('${i + 1}')) {
+                      /// Data is already filled
+                      /// Move to detail screeen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SelfReportDetailScreen(
+                                '${i + 1}', widget.otherUID, widget.analytics)),
+                      );
                     } else {
-                      /// Data is first array
+                      /// Move to form screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SelfReportFormScreen(
+                              analytics: widget.analytics,
+                              otherUID: widget.otherUID,
+                              dailyId: '${i + 1}',
+                              location: widget.location)));
+                    }
+                  } else {
+                    if (firstDay
+                        .add(Duration(days: i))
+                        .difference(currentDay)
+                        .isNegative) {
+                      /// [currentDay] same as the day user can fill the form
                       /// Checking data is already filled or not
                       if (listDocumentId.contains('${i + 1}')) {
                         /// Data is already filled
@@ -330,82 +310,123 @@ class _SelfReportListState extends State<SelfReportList> {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelfReportFormScreen(
                                 analytics: widget.analytics,
-                                dailyId: '${i + 1}',
                                 otherUID: widget.otherUID,
+                                dailyId: '${i + 1}',
                                 location: widget.location)));
                       }
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DialogTextOnly(
+                                description:
+                                    '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ));
                     }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              height: 30,
-                              width: 30,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: ColorBase.menuBorderColor),
+                  }
+                } else {
+                  /// Show dialog users cant input form
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => DialogTextOnly(
+                            description:
+                                '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
+                            buttonText: Dictionary.ok,
+                            onOkPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ));
+                }
+              } else {
+                /// Data is first array
+                /// Checking data is already filled or not
+                if (listDocumentId.contains('${i + 1}')) {
+                  /// Data is already filled
+                  /// Move to detail screeen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SelfReportDetailScreen(
+                            '${i + 1}', widget.otherUID, widget.analytics)),
+                  );
+                } else {
+                  /// Move to form screen
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SelfReportFormScreen(
+                          analytics: widget.analytics,
+                          dailyId: '${i + 1}',
+                          otherUID: widget.otherUID,
+                          location: widget.location)));
+                }
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Text(
+                                listDocumentId.contains('${i + 1}')
+                                    ? "✅" + '  ${Dictionary.countDay}${i + 1}'
+                                    : '' + '${Dictionary.countDay}${i + 1}',
+                                style: TextStyle(
+                                    color: textColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    fontFamily: FontsFamily.roboto),
                               ),
-                              child: listDocumentId.contains('${i + 1}')
-                                  ? Icon(
-                                      Icons.check,
-                                      color: ColorBase.limeGreen,
-                                    )
-                                  : null,
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  '${Dictionary.countDay}${i + 1}',
-                                  style: TextStyle(
-                                      color: textColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      fontFamily: FontsFamily.lato),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  listDocumentId.contains('${i + 1}')
-                                      ? Dictionary.dailyMonitoringFilled
-                                      : Dictionary.dailyMonitoringUnfilled,
-                                  style: TextStyle(
-                                      color: textColor,
-                                      fontSize: 12,
-                                      fontFamily: FontsFamily.lato),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                        )
-                      ],
-                    ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            listDocumentId.contains('${i + 1}')
+                                ? Dictionary.dailyMonitoringFilled
+                                : Dictionary.dailyMonitoringUnfilled,
+                            style: TextStyle(
+                                color: textColor,
+                                fontSize: 12,
+                                fontFamily: FontsFamily.roboto),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Divider(
-                  color: ColorBase.grey,
-                  thickness: 10,
-                ),
-              ],
-            );
-          }),
-    );
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: ColorBase.grey800,
+                    size: 18,
+                  )
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(
+              color: ColorBase.grey,
+              thickness: 1,
+            ),
+          ),
+        ],
+      );
+
+      list.add(column);
+    }
+    return list;
   }
 }
