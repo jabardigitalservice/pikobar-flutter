@@ -80,7 +80,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       providers: [
         BlocProvider<InfoGraphicsListBloc>(
           create: (context) => _infoGraphicsListBloc
-            ..add(InfoGraphicsListLoad(infoGraphicsCollection: kInfographics)),
+            ..add(InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics)),
         ),
       ],
       child: Container(
@@ -99,6 +99,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         scrollController: _scrollController,
         onTap: (index) {
           setState(() {});
+          isSetDataCurrent = false;
           _infoGraphicsListBloc.add(InfoGraphicsListLoad(
               infoGraphicsCollection: listCollectionData[index]));
           AnalyticsHelper.setLogEvent(analyticsData[index]);
