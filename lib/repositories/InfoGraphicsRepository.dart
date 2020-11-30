@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:meta/meta.dart';
 import 'package:async/async.dart';
-import 'package:pikobar_flutter/models/InfographicModel.dart';
 
 class InfoGraphicsRepository {
   final firestore = FirebaseFirestore.instance;
