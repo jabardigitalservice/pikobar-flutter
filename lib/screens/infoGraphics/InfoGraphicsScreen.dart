@@ -80,7 +80,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       providers: [
         BlocProvider<InfoGraphicsListBloc>(
           create: (context) => _infoGraphicsListBloc
-            ..add(InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics)),
+            ..add(
+                InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics)),
         ),
       ],
       child: Container(
@@ -232,8 +233,11 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           items: dataListImage.map((dynamic data) {
                             return Builder(builder: (BuildContext context) {
                               return Container(
-                                decoration:
-                                    BoxDecoration(shape: BoxShape.circle),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(
+                                      Dimens.dialogRadius),
+                                ),
                                 child: ClipRRect(
                                   child: CachedNetworkImage(
                                       imageUrl: data.toString() ?? '',

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/news/newsDetail/Bloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
-import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
@@ -50,7 +48,7 @@ class NewsDetailScreen extends StatefulWidget {
 }
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
-  // ignore: close_sinks
+  // ignore: close_sinks, unused_field
   NewsDetailBloc _newsDetailBloc;
   String _newsType;
   ScrollController _scrollController;

@@ -106,7 +106,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                     : 250
                 : isBottomAppbar
                     ? 180
-                    : 300,
+                    : heightAppbar,
             floating: false,
             flexibleSpace: !isBottomAppbar
                 ? FlexibleSpaceBar(
