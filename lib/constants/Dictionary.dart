@@ -123,7 +123,7 @@ class Dictionary {
   static String locationAddress = 'Lokasi Tempat Tinggal';
   static String center = "Pusat";
   static String who = "WHO";
-  static String sayThanks = "Terimakasih sudah membaca";
+  static String sayThanks = "Terima kasih sudah membaca";
   static String followOurSosmed = "Follow juga sosmed kami";
   static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
 
@@ -471,13 +471,9 @@ class Dictionary {
   static const String zoneColorOrange = 'Zona Orange';
   static const String zoneColorYellow = 'Zona Kuning';
   static const String zoneColorGreen = 'Zona Hijau';
-  static const String zoneRedDescription =
-      'Anda berada di Zona Resiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
-  static const String zoneOrangeDescription =
-      'Anda berada di Zona Resiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
-  static const String zoneYellowDescription =
-      'Anda berada di Zona Resiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
-  static const String zoneGreenDescription =
-      'Anda berada di Zona Tidak Terdampak yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
+  static const String zoneRedDescription = 'Anda berada di Zona Risiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
+  static const String zoneOrangeDescription = 'Anda berada di Zona Risiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
+  static const String zoneYellowDescription = 'Anda berada di Zona Risiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
+  static const String zoneGreenDescription = 'Anda berada di Zona Tidak Terdampak, yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
 }
