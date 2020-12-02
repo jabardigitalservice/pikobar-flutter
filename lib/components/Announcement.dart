@@ -6,6 +6,7 @@ import 'package:flutter_html/html_parser.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -37,7 +38,7 @@ class Announcement extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 5, right: 5),
+      margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
       decoration: BoxDecoration(
           color: ColorBase.announcementBackgroundColor,
           borderRadius: BorderRadius.circular(8.0)),

@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/blocs/locationPermission/location_permission_blo
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -19,6 +20,7 @@ import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 
 class Zonation extends StatefulWidget {
@@ -45,9 +47,62 @@ class _ZonationState extends State<Zonation> {
       return state is LocationPermissionLoaded
           ? state.isGranted
               ? _buildZonationBloc(context)
-              : Container()
+              : _buildDeniedContent()
           : Container();
     });
+  }
+
+  _buildDeniedContent() {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      width: size.width,
+      margin: EdgeInsets.only(
+          left: Dimens.padding,
+          right: Dimens.padding,
+          top: Dimens.homeCardMargin),
+      decoration: BoxDecoration(
+          color: ColorBase.greyContainer,
+          borderRadius: BorderRadius.circular(8.0)),
+      child: Padding(
+        padding: EdgeInsets.all(Dimens.homeCardMargin),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Dictionary.zonation,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: FontsFamily.roboto,
+                  fontWeight: FontWeight.w700),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: Dimens.padding),
+              child: Text(
+                Dictionary.shareZonationInfo,
+                style: TextStyle(
+                    fontSize: 12,
+                    fontFamily: FontsFamily.roboto,
+                    color: ColorBase.netralGrey),
+              ),
+            ),
+            RoundedButton(
+                title: Dictionary.shareLocation,
+                textStyle: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                color: ColorBase.green,
+                elevation: 0.0,
+                onPressed: () async {
+                  await LocationService.initializeBackgroundLocation(context);
+                })
+          ],
+        ),
+      ),
+    );
   }
 
   _buildZonationBloc(BuildContext context) {
@@ -63,15 +118,34 @@ class _ZonationState extends State<Zonation> {
             create: (_) => ZonationCubit()..loadZonation(snapshot.data),
             child: BlocBuilder<ZonationCubit, ZonationState>(
                 builder: (context, state) {
-              return state is ZonationLoaded
-                  ? _buildContent(state, snapshot.data)
-                  : Container();
+              return state is ZonationLoading
+                  ? _buildLoading()
+                  : state is ZonationLoaded
+                      ? _buildContent(state, snapshot.data)
+                      : Container();
             }),
           );
         } else {
           return Container();
         }
       },
+    );
+  }
+
+  _buildLoading() {
+    Size size = MediaQuery.of(context).size;
+    return Skeleton(
+      child: Container(
+        width: size.width,
+        height: 150.0,
+        margin: EdgeInsets.only(
+            left: Dimens.padding,
+            right: Dimens.padding,
+            top: Dimens.homeCardMargin),
+        decoration: BoxDecoration(
+            color: ColorBase.greyContainer,
+            borderRadius: BorderRadius.circular(8.0)),
+      ),
     );
   }
 
@@ -107,7 +181,8 @@ class _ZonationState extends State<Zonation> {
 
     return BlocListener<CheckDistributionBloc, CheckdistributionState>(
       listener: (context, state) async {
-        if (state is CheckDistributionLoading || state is CheckDistributionLoadingIsOther) {
+        if (state is CheckDistributionLoading ||
+            state is CheckDistributionLoadingIsOther) {
           _flushbar = FlushHelper.loading()..show(context);
         } else if (state is CheckDistributionFailure) {
           await _flushbar.dismiss();
@@ -115,12 +190,12 @@ class _ZonationState extends State<Zonation> {
           showDialog(
               context: context,
               builder: (BuildContext context) => DialogTextOnly(
-                description: state.error.toString(),
-                buttonText: "OK",
-                onOkPressed: () {
-                  Navigator.of(context).pop(); // To close the dialog
-                },
-              ));
+                    description: state.error.toString(),
+                    buttonText: Dictionary.ok.toUpperCase(),
+                    onOkPressed: () {
+                      Navigator.of(context).pop(); // To close the dialog
+                    },
+                  ));
         } else if (state is CheckDistributionLoaded) {
           await _flushbar.dismiss();
 
@@ -134,113 +209,115 @@ class _ZonationState extends State<Zonation> {
         }
       },
       child: Container(
-          margin: EdgeInsets.only(left: 10, right: 10, top: 20),
-          child: Container(
-            width: size.width,
-            margin: EdgeInsets.only(left: 5, right: 5),
-            decoration: BoxDecoration(
-                color: ColorBase.greyContainer,
-                borderRadius: BorderRadius.circular(8.0)),
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+        width: size.width,
+        margin: EdgeInsets.only(
+            left: Dimens.padding,
+            right: Dimens.padding,
+            top: Dimens.homeCardMargin),
+        decoration: BoxDecoration(
+            color: ColorBase.greyContainer,
+            borderRadius: BorderRadius.circular(8.0)),
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
+                  Icon(
+                    Icons.circle,
+                    size: 16,
+                    color: dotColor,
+                  ),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${Dictionary.youAreIn} $zone',
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: FontsFamily.roboto,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  )
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: Dimens.padding),
+                child: RichText(
+                  text: TextSpan(
+                    text: description,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: FontsFamily.roboto,
+                        color: ColorBase.netralGrey),
                     children: [
-                      Icon(
-                        Icons.circle,
-                        size: 16,
-                        color: dotColor,
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        child: Text(
-                          '${Dictionary.youAreIn} $zone',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: FontsFamily.roboto,
-                              fontWeight: FontWeight.w700),
+                      TextSpan(
+                        text: Dictionary.zoneOther,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: FontsFamily.roboto,
+                          fontWeight: FontWeight.w700,
                         ),
                       )
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: Dimens.padding),
-                    child: RichText(
-                      text: TextSpan(
-                        text: description,
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: FontsFamily.roboto,
-                            color: ColorBase.netralGrey),
-                        children: [
-                          TextSpan(
-                            text: Dictionary.zoneOther,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontFamily: FontsFamily.roboto,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          )
-                        ],
+                ),
+              ),
+              BlocBuilder<CheckDistributionBloc, CheckdistributionState>(
+                  builder: (context, state) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: RoundedButton(
+                        title: state is CheckDistributionLoading
+                            ? Dictionary.loading
+                            : Dictionary.checkAroundYou,
+                        textStyle: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                        color: ColorBase.green,
+                        elevation: 0.0,
+                        onPressed: state is CheckDistributionLoading
+                            ? null
+                            : () async {
+                                _checkDistributionBloc.add(
+                                    LoadCheckDistribution(
+                                        lat: position.latitude,
+                                        long: position.longitude,
+                                        isOther: false));
+                              },
                       ),
                     ),
-                  ),
-                  BlocBuilder<CheckDistributionBloc, CheckdistributionState>(
-                      builder: (context, state) {
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: RoundedButton(
-                            title: state is CheckDistributionLoading
-                                ? Dictionary.loading
-                                : Dictionary.checkAroundYou,
-                            textStyle: TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                            color: ColorBase.green,
-                            elevation: 0.0,
-                            onPressed: state is CheckDistributionLoading
-                                ? null
-                                : () async {
-                                    _checkDistributionBloc.add(
-                                        LoadCheckDistribution(
-                                            lat: position.latitude,
-                                            long: position.longitude,
-                                            isOther: false));
-                                  },
-                          ),
-                        ),
-                        SizedBox(width: Dimens.padding),
-                        Expanded(
-                          child: RoundedButton(
-                              title: state is CheckDistributionLoadingIsOther
-                              ? Dictionary.loading : Dictionary.checkOtherLocation,
-                              textStyle: TextStyle(
-                                  fontFamily: FontsFamily.lato,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorBase.netralGrey),
-                              color: Colors.white,
-                              borderSide:
-                                  BorderSide(color: ColorBase.disableText),
-                              elevation: 0.0,
-                              onPressed: state is CheckDistributionLoadingIsOther
-                              ? null : _otherLocation),
-                        ),
-                      ],
-                    );
-                  })
-                ],
-              ),
-            ),
-          )),
+                    SizedBox(width: Dimens.padding),
+                    Expanded(
+                      child: RoundedButton(
+                          title: state is CheckDistributionLoadingIsOther
+                              ? Dictionary.loading
+                              : Dictionary.checkOtherLocation,
+                          textStyle: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: ColorBase.netralGrey),
+                          color: Colors.white,
+                          borderSide: BorderSide(color: ColorBase.disableText),
+                          elevation: 0.0,
+                          onPressed: state is CheckDistributionLoadingIsOther
+                              ? null
+                              : _otherLocation),
+                    ),
+                  ],
+                );
+              })
+            ],
+          ),
+        ),
+      ),
     );
   }
 

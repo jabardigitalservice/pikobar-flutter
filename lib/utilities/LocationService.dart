@@ -49,12 +49,12 @@ class LocationService {
           context: context,
           onCancelPressed: () async {
             isGranted = false;
-            locationBloc..add(LocationPermissionLoad(isGranted))..close();
+            locationBloc.add(LocationPermissionLoad(isGranted));
           },
           onAgreePressed: () async {
             if (await Permission.locationAlways.status.isPermanentlyDenied) {
               isGranted = false;
-              locationBloc..add(LocationPermissionLoad(isGranted))..close();
+              locationBloc.add(LocationPermissionLoad(isGranted));
 
               Platform.isAndroid
                   ? await AppSettings.openAppSettings()
@@ -62,7 +62,10 @@ class LocationService {
             } else {
               [Permission.locationAlways].request().then((status) async {
                 isGranted = status[Permission.locationAlways].isGranted;
-                locationBloc..add(LocationPermissionLoad(isGranted))..close();
+                locationBloc.add(LocationPermissionLoad(isGranted));
+                if (isGranted) {
+                  locationBloc.close();
+                }
 
                 _onStatusRequested(context, status);
               });
