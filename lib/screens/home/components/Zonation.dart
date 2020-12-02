@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -233,15 +234,31 @@ class _ZonationState extends State<Zonation> {
                   SizedBox(
                     width: 12,
                   ),
-                  Expanded(
-                    child: Text(
-                      '${Dictionary.youAreIn} $zone',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: FontsFamily.roboto,
-                          fontWeight: FontWeight.w700),
+                  Text(
+                    '${Dictionary.youAreIn} $zone',
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: FontsFamily.roboto,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                      child: Icon(
+                        Icons.help_outline_outlined,
+                        size: 16,
+                        color: ColorBase.netralGrey,
+                      ),
                     ),
-                  )
+                    onTap: () {
+                      showTextBottomSheet(
+                          context: context,
+                          title: Dictionary.zonationSource,
+                          message:
+                              Dictionary.sourceZonationInfo);
+                    },
+                  ),
                 ],
               ),
               Container(

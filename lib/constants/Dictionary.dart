@@ -465,6 +465,7 @@ class Dictionary {
 
   // Zonation
   static const String zonation = 'Zonasi';
+  static const String zonationSource = 'Sumber Zonasi';
   static const String zoneHighRisk = 'RESIKO TINGGI';
   static const String zoneMediumRisk = 'RESIKO SEDANG';
   static const String zoneLowRisk = 'RESIKO RENDAH';
@@ -479,4 +480,5 @@ class Dictionary {
   static const String zoneGreenDescription = 'Anda berada di Zona Tidak Terdampak, yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
   static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
+  static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
 }

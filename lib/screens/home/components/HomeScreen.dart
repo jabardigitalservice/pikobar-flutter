@@ -240,7 +240,9 @@ class _HomeScreenState extends State<HomeScreen>
     if (_importantInfoListBloc != null) {
       _importantInfoListBloc.close();
     }
-    _videoListBloc.close();
+    if (_videoListBloc != null) {
+      _videoListBloc.close();
+    }
     if (_infoGraphicsListBloc != null) {
       _infoGraphicsListBloc.close();
     }
