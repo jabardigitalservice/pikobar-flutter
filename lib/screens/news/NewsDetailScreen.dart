@@ -415,11 +415,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    NewsListScreen(news: widget.news)));
+                        Navigator.of(context).pop(true);
                       },
                     ),
                   ),
