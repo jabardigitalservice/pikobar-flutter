@@ -36,19 +36,16 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
     /// Set up for show announcement widget
     return remoteConfig != null && dataAnnouncement['enabled'] == true
-        ? Container(
-            margin: EdgeInsets.only(left: 10, right: 10),
-            child: Announcement(
-              title: dataAnnouncement['title'] != null
-                  ? dataAnnouncement['title']
-                  : Dictionary.titleInfoTextAnnouncement,
-              content: dataAnnouncement['content'] != null
-                  ? dataAnnouncement['content']
-                  : Dictionary.infoTextAnnouncement,
-              context: context,
-              actionUrl: dataAnnouncement['action_url'],
-            ),
-          )
+        ? Announcement(
+          title: dataAnnouncement['title'] != null
+              ? dataAnnouncement['title']
+              : Dictionary.titleInfoTextAnnouncement,
+          content: dataAnnouncement['content'] != null
+              ? dataAnnouncement['content']
+              : Dictionary.infoTextAnnouncement,
+          context: context,
+          actionUrl: dataAnnouncement['action_url'],
+        )
         : Container();
   }
 }

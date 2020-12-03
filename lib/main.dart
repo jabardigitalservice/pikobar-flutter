@@ -126,8 +126,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  Future<void> _initializeFlutterFireFuture;
-
   Future<void> _initializeFlutterFire() async {
     /// Wait for Firebase to initialize
     await Firebase.initializeApp();
@@ -144,12 +142,8 @@ class _AppState extends State<App> {
       /// Forward to original handler.
       originalOnError(errorDetails);
     };
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeFlutterFireFuture = _initializeFlutterFire();
+    await Future.delayed(Duration(seconds: 1));
   }
 
   @override
@@ -176,7 +170,7 @@ class _AppState extends State<App> {
         );
       },
       home: FutureBuilder(
-        future: _initializeFlutterFireFuture,
+        future: _initializeFlutterFire(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:

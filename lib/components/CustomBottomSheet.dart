@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 /// Shows a success modal material design bottom sheet.
 void showSuccessBottomSheet(
@@ -159,6 +160,10 @@ void showTextBottomSheet(
                       fontFamily: FontsFamily.lato,
                       fontSize: FontSize(12.0),
                       color: ColorBase.veryDarkGrey)
+                },
+                onLinkTap: (url) {
+                  Navigator.of(context).pop();
+                  openChromeSafariBrowser(url: url);
                 },
               ),
               SizedBox(height: Dimens.sbHeight)
