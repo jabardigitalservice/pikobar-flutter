@@ -16,9 +16,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
-// ignore: must_be_immutable
 class FaqScreen extends StatefulWidget {
-  bool isNewPage;
+  final bool isNewPage;
 
   FaqScreen({this.isNewPage = true});
 
@@ -205,69 +204,72 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   Widget _cardContent(dataHelp) {
-    return Column(
-      children: <Widget>[
-        ExpandableNotifier(
-          child: ScrollOnExpand(
-            scrollOnExpand: false,
-            scrollOnCollapse: true,
-            child: Container(
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              child: ScrollOnExpand(
-                scrollOnExpand: true,
-                scrollOnCollapse: false,
-                child: ExpandablePanel(
-                  tapHeaderToExpand: true,
-                  tapBodyToCollapse: true,
-                  headerAlignment: ExpandablePanelHeaderAlignment.center,
-                  header: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      dataHelp['title'],
-                      style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  expanded: Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Html(
-                      data: dataHelp['content'].replaceAll('\n', '</br>'),
-                      style: {
-                        'body': Style(
-                            margin: EdgeInsets.zero,
-                            color: Colors.grey[600],
-                            fontSize: FontSize(14.0),
-                            textAlign: TextAlign.start),
-                        'li': Style(
-                          margin: EdgeInsets.only(bottom: 10.0)
-                        )
-                      },
-                      onLinkTap: (url) {
-                        launchExternal(url);
-                      },
-                    ),
-                  ),
-                  builder: (_, collapsed, expanded) {
-                    return Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      child: Expandable(
-                        collapsed: collapsed,
-                        expanded: expanded,
-                        crossFadePoint: 0,
+    return Container(
+      color:Colors.white,
+      child: Column(
+        children: <Widget>[
+          ExpandableNotifier(
+            child: ScrollOnExpand(
+              scrollOnExpand: false,
+              scrollOnCollapse: true,
+              child: Container(
+                margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                child: ScrollOnExpand(
+                  scrollOnExpand: true,
+                  scrollOnCollapse: false,
+                  child: ExpandablePanel(
+                    tapHeaderToExpand: true,
+                    tapBodyToCollapse: true,
+                    headerAlignment: ExpandablePanelHeaderAlignment.center,
+                    header: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        dataHelp['title'],
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.bold),
                       ),
-                    );
-                  },
+                    ),
+                    expanded: Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Html(
+                        data: dataHelp['content'].replaceAll('\n', '</br>'),
+                        style: {
+                          'body': Style(
+                              margin: EdgeInsets.zero,
+                              color: Colors.grey[600],
+                              fontSize: FontSize(14.0),
+                              textAlign: TextAlign.start),
+                          'li': Style(
+                            margin: EdgeInsets.only(bottom: 10.0)
+                          )
+                        },
+                        onLinkTap: (url) {
+                          launchExternal(url);
+                        },
+                      ),
+                    ),
+                    builder: (_, collapsed, expanded) {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        child: Expandable(
+                          collapsed: collapsed,
+                          expanded: expanded,
+                          crossFadePoint: 0,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 16, right: 16),
-          color: Colors.grey[300],
-          height: 1,
-        )
-      ],
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            color: Colors.grey[300],
+            height: 1,
+          )
+        ],
+      ),
     );
   }
 
