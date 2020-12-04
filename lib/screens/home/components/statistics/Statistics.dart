@@ -258,7 +258,7 @@ class _StatisticsState extends State<Statistics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}virus_yellow.png',
+                  '${Environment.iconAssets}circle_plus_yellow.png',
                   labelUpdateTerkini['statistics']['positif'],
                   labelUpdateTerkini['statistics']['positif'],
                   getDataActivePositive(data['aktif']['jabar'],
@@ -274,7 +274,7 @@ class _StatisticsState extends State<Statistics> {
                           data['sembuh']['jabar'],
                           data['meninggal']['jabar'])))),
               _buildContainer(
-                  '${Environment.iconAssets}virus_green.png',
+                  '${Environment.iconAssets}circle_check_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
                   labelUpdateTerkini['statistics']['recovered'],
                   '${data['sembuh']['jabar']}',
@@ -285,7 +285,7 @@ class _StatisticsState extends State<Statistics> {
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['sembuh']['jabar'])),
               _buildContainer(
-                  '${Environment.iconAssets}virus_red.png',
+                  '${Environment.iconAssets}circle_cross_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
                   labelUpdateTerkini['statistics']['deaths'],
                   '${data['meninggal']['jabar']}',

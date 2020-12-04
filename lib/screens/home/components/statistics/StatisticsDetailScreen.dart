@@ -41,6 +41,8 @@ class StatisticsDetailScreen extends StatefulWidget {
 }
 
 class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
+  ScrollController _scrollController;
+
   RemoteConfig get remoteConfig => widget.remoteConfigLoaded.remoteConfig;
 
   DocumentSnapshot get statisticsDoc => widget.statisticsLoaded.snapshot;
@@ -50,11 +52,25 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
   DocumentSnapshot get pcrDoc => widget.pcrTestLoaded.snapshot;
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.statistics),
-      body: SingleChildScrollView(child: _buildContent()),
+      appBar: CustomAppBar.animatedAppBar(
+          title: Dictionary.statistics, showTitle: _showTitle),
+      body: SingleChildScrollView(
+          controller: _scrollController, child: _buildContent()),
     );
   }
 
@@ -76,7 +92,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     Map<String, dynamic> statisticBottomSheet = RemoteConfigHelper.decode(
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.bottomSheetContent,
-        defaultValue: FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
+        defaultValue:
+            FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: Dimens.padding),
@@ -85,17 +102,25 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            child: AnimatedOpacity(
+              opacity: _showTitle ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 250),
+              child: Text(
+                Dictionary.statistics,
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  labels['last_updated_on'],
-                  style: TextStyle(
-                      color: ColorBase.veryDarkGrey,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0),
-                ),
                 SizedBox(height: 8.0),
                 Text(
                   unixTimeStampToDateTimeWithoutDay(
@@ -122,7 +147,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildContainerOne(
-                    '${Environment.iconAssets}virus_yellow.png',
+                    '${Environment.iconAssets}circle_plus_yellow.png',
                     labels['statistics']['positif'],
                     getDataActivePositive(
                         statisticsDoc['aktif']['jabar'],
@@ -135,13 +160,13 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             statisticsDoc['sembuh']['jabar'],
                             statisticsDoc['meninggal']['jabar'])))),
                 _buildContainerOne(
-                    '${Environment.iconAssets}virus_green.png',
+                    '${Environment.iconAssets}circle_check_green.png',
                     labels['statistics']['recovered'],
                     '${statisticsDoc['sembuh']['jabar']}',
                     getDataProcessPercent(statisticsDoc['aktif']['jabar'],
                         statisticsDoc['sembuh']['jabar'])),
                 _buildContainerOne(
-                    '${Environment.iconAssets}virus_red.png',
+                    '${Environment.iconAssets}circle_cross_red.png',
                     labels['statistics']['deaths'],
                     '${statisticsDoc['meninggal']['jabar']}',
                     getDataProcessPercent(statisticsDoc['aktif']['jabar'],
@@ -387,12 +412,13 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       color: ColorBase.veryDarkGrey,
                       fontFamily: FontsFamily.lato)),
               GestureDetector(
-                  onTap: mainTitleHelpOnTap,
-                  child: SizedBox(
-                    width: 20,
-                    child: Icon(Icons.help_outline,
-                        size: 13.0, color: ColorBase.darkGrey),
-                  ),)
+                onTap: mainTitleHelpOnTap,
+                child: SizedBox(
+                  width: 20,
+                  child: Icon(Icons.help_outline,
+                      size: 13.0, color: ColorBase.darkGrey),
+                ),
+              )
             ],
           ),
           Container(
@@ -508,7 +534,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                       child: SizedBox(
                                         width: 20,
                                         child: Icon(Icons.help_outline,
-                                            size: 13.0, color: ColorBase.darkGrey),
+                                            size: 13.0,
+                                            color: ColorBase.darkGrey),
                                       ),
                                     )
                                   : Container()
@@ -612,5 +639,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 }
