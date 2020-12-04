@@ -61,6 +61,7 @@ class CustomAppBar {
       {@required TextEditingController searchController,
       @required String title,
       @required String hintText,
+        double elevation,
       ValueChanged<String> onChanged}) {
     return AppBar(
         backgroundColor: Colors.white,
@@ -68,6 +69,7 @@ class CustomAppBar {
           preferredSize: Size.fromHeight(60.0),
           child: buildSearchField(searchController, hintText, onChanged),
         ),
+        elevation: elevation ?? 0.0,
         title: CustomAppBar.setTitleAppBar(title));
   }
 
@@ -75,8 +77,8 @@ class CustomAppBar {
     return Text(title,
         style: TextStyle(
             fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            fontFamily: FontsFamily.productSans),
+            fontWeight: FontWeight.bold,
+            fontFamily: FontsFamily.lato),
         maxLines: 1,
         overflow: TextOverflow.ellipsis);
   }
