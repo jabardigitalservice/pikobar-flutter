@@ -246,7 +246,7 @@ class _StatisticsState extends State<Statistics> {
             unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
             style: TextStyle(
                 color: Color(0xff333333),
-                fontFamily: FontsFamily.lato,
+                fontFamily: FontsFamily.roboto,
                 fontSize: Dimens.textSubtitleSize),
           ),
           SizedBox(height: Dimens.padding),
@@ -312,9 +312,6 @@ class _StatisticsState extends State<Statistics> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Container(
-                height: 60,
-                child: Image.asset('${Environment.imageAssets}bloodTest.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -328,7 +325,7 @@ class _StatisticsState extends State<Statistics> {
                             fontSize: 12.0,
                             color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.lato)),
+                            fontFamily: FontsFamily.roboto)),
                   ),
                 ),
                 Skeleton(
@@ -379,14 +376,10 @@ class _StatisticsState extends State<Statistics> {
         color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.only(left: 5.0, right: 20.0, top: 15, bottom: 15),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
-                  height: 60,
-                  child: Image.asset(
-                      '${Environment.imageAssets}bloodTest@4x.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -398,14 +391,13 @@ class _StatisticsState extends State<Statistics> {
                         style: TextStyle(
                             fontSize: 12.0,
                             color: Color(0xff333333),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.lato)),
+                            fontFamily: FontsFamily.roboto)),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
-                            fontSize: 22.0,
+                            fontSize: 20.0,
                             color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -414,8 +406,8 @@ class _StatisticsState extends State<Statistics> {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                size: 20,
-                color: Color(0xff27AE60),
+                size: 14,
+                color: Colors.black,
               )
             ],
           ),
@@ -462,7 +454,7 @@ class _StatisticsState extends State<Statistics> {
                     style: TextStyle(
                         fontSize: 12.0,
                         color: colorTextTitle,
-                        fontFamily: FontsFamily.lato)),
+                        fontFamily: FontsFamily.roboto)),
               ),
               Container(
                 margin: EdgeInsets.only(top: 10, left: 5.0),
@@ -482,7 +474,7 @@ class _StatisticsState extends State<Statistics> {
                             fontSize: 10.0,
                             fontWeight: FontWeight.bold,
                             color: Color(0xff828282),
-                            fontFamily: FontsFamily.lato))
+                            fontFamily: FontsFamily.roboto))
                     : null,
               )
             ],
@@ -520,7 +512,7 @@ class _StatisticsState extends State<Statistics> {
                 Text(
                   label,
                   style: TextStyle(
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
@@ -530,7 +522,7 @@ class _StatisticsState extends State<Statistics> {
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),

@@ -127,7 +127,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       statisticsDoc['updated_at'].seconds),
                   style: TextStyle(
                       color: ColorBase.veryDarkGrey,
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 10.0),
                 ),
                 SizedBox(height: Dimens.padding),
@@ -294,7 +294,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                 Text(
                   label,
                   style: TextStyle(
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
@@ -304,7 +304,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -346,7 +346,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   style: TextStyle(
                       fontSize: 12.0,
                       color: ColorBase.veryDarkGrey,
-                      fontFamily: FontsFamily.lato)),
+                      fontFamily: FontsFamily.roboto)),
             ),
             Container(
               margin: EdgeInsets.only(top: 10, left: 5.0),
@@ -366,7 +366,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                           fontSize: 10.0,
                           fontWeight: FontWeight.bold,
                           color: Color(0xff828282),
-                          fontFamily: FontsFamily.lato))
+                          fontFamily: FontsFamily.roboto))
                   : null,
             )
           ],
@@ -410,7 +410,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   style: TextStyle(
                       fontSize: 12.0,
                       color: ColorBase.veryDarkGrey,
-                      fontFamily: FontsFamily.lato)),
+                      fontFamily: FontsFamily.roboto)),
               GestureDetector(
                 onTap: mainTitleHelpOnTap,
                 child: SizedBox(
@@ -447,7 +447,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                         style: TextStyle(
                             fontSize: 12.0,
                             color: ColorBase.darkGrey,
-                            fontFamily: FontsFamily.lato)),
+                            fontFamily: FontsFamily.roboto)),
                     Container(
                       margin: EdgeInsets.only(top: 10),
                       child: Text(secondCount,
@@ -465,7 +465,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                               fontSize: 10.0,
                               fontWeight: FontWeight.bold,
                               color: ColorBase.darkGrey,
-                              fontFamily: FontsFamily.lato)),
+                              fontFamily: FontsFamily.roboto)),
                     )
                   ],
                 ),
@@ -480,7 +480,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             style: TextStyle(
                                 fontSize: 12.0,
                                 color: ColorBase.darkGrey,
-                                fontFamily: FontsFamily.lato)),
+                                fontFamily: FontsFamily.roboto)),
                         thirdTitleHelpOnTap != null
                             ? GestureDetector(
                                 onTap: thirdTitleHelpOnTap,
@@ -510,7 +510,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                               fontSize: 10.0,
                               fontWeight: FontWeight.bold,
                               color: ColorBase.darkGrey,
-                              fontFamily: FontsFamily.lato)),
+                              fontFamily: FontsFamily.roboto)),
                     )
                   ],
                 ),
@@ -526,7 +526,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                   style: TextStyle(
                                       fontSize: 12.0,
                                       color: ColorBase.darkGrey,
-                                      fontFamily: FontsFamily.lato)),
+                                      fontFamily: FontsFamily.roboto)),
                               SizedBox(width: 5.0),
                               fourthTitleHelpOnTap != null
                                   ? GestureDetector(
@@ -558,7 +558,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                     fontSize: 10.0,
                                     fontWeight: FontWeight.bold,
                                     color: ColorBase.darkGrey,
-                                    fontFamily: FontsFamily.lato)),
+                                    fontFamily: FontsFamily.roboto)),
                           )
                         ],
                       ),
@@ -595,44 +595,31 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                        height: 41,
-                        child: Image.asset(
-                            '${Environment.imageAssets}bloodTest@4x.png')),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(left: Dimens.verticalPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(Dictionary.testSummaryTitle,
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    color: ColorBase.veryDarkGrey,
-                                    fontFamily: FontsFamily.lato)),
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.0),
-                              child: Text(count,
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: ColorBase.veryDarkGrey,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: FontsFamily.roboto)),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(Dictionary.testSummaryTitle,
+                        style: TextStyle(
+                            fontSize: 12.0,
+                            color: ColorBase.veryDarkGrey,
+                            fontFamily: FontsFamily.roboto)),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(count,
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: ColorBase.veryDarkGrey,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.roboto)),
+                    )
                   ],
                 ),
               ),
               Icon(
                 Icons.arrow_forward_ios,
                 size: 20,
-                color: Color(0xff27AE60),
+                color: ColorBase.netralGrey,
               )
             ],
           ),
