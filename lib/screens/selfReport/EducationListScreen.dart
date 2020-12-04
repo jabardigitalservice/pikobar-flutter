@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -47,27 +49,13 @@ class _EducationListScreenState extends State<EducationListScreen> {
                 child: Text(
                   Dictionary.educationContent,
                   style: TextStyle(
-                      color: Colors.black,
+                      color: ColorBase.grey800,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0),
+                      fontFamily: FontsFamily.roboto,
+                      fontSize: 16.0),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  Dictionary.educationContentdesc,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12.0,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
+              
               SizedBox(
                 height: 15,
               ),
@@ -113,80 +101,95 @@ class _EducationListScreenState extends State<EducationListScreen> {
 
   /// Widget for create item education list
   Widget _educationItem(EducationModel educationModel) {
-    return Container(
-      child: InkWell(
-        child: Container(
-          padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Show data image from server
-              Container(
-                width: 70,
-                height: 70,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: CachedNetworkImage(
-                    imageUrl: educationModel.image,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Center(
-                        heightFactor: 4.2, child: CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Container(
-                        height: MediaQuery.of(context).size.height / 3.3,
-                        color: Colors.grey[200],
-                        child: Image.asset(
-                            '${Environment.iconAssets}pikobar.png',
-                            fit: BoxFit.fitWidth)),
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 10.0),
-                width: MediaQuery.of(context).size.width - 130,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // Add data title from server to widget text
-                    Text(
-                      educationModel.title,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.lato,
+    return Column(
+      children: <Widget>[
+        RaisedButton(
+          elevation: 0,
+          color: Colors.white,
+          child: Container(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Stack(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width - 60,
+                      height: 300,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: CachedNetworkImage(
+                          imageUrl: educationModel.image,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                              heightFactor: 4.2,
+                              child: CupertinoActivityIndicator()),
+                          errorWidget: (context, url, error) => Container(
+                              height: MediaQuery.of(context).size.height / 3.3,
+                              color: Colors.grey[200],
+                              child: Image.asset(
+                                  '${Environment.iconAssets}pikobar.png',
+                                  fit: BoxFit.fitWidth)),
+                        ),
                       ),
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(
-                      height: 10,
+                    Container(
+                      width: MediaQuery.of(context).size.width - 60,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.black12.withOpacity(0.2),
+                        shape: BoxShape.rectangle,
+                        borderRadius:
+                            BorderRadius.circular(Dimens.dialogRadius),
+                      ),
                     ),
-                    // Add data timestamp from server to widget text
-                    Text(
-                      unixTimeStampToDateTime(educationModel.publishedAt),
-                      style: TextStyle(
-                          fontSize: 10.0,
-                          color: Colors.grey[600],
-                          fontFamily: FontsFamily.lato),
-                    ),
+                    Positioned(
+                      left: 10,
+                      right: 10,
+                      bottom: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            unixTimeStampToDateTime(educationModel.publishedAt),
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.white,
+                                fontFamily: FontsFamily.roboto),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            educationModel.title,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: FontsFamily.roboto,
+                                color: Colors.white),
+                            textAlign: TextAlign.left,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    )
                   ],
-                ),
-              ),
-            ],
+                )
+              ],
+            ),
           ),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EducationDetailScreen(
+                      id: educationModel.id,
+                      educationCollection: kEducationContent,
+                      model: educationModel,
+                    )));
+          },
         ),
-        // Function for direct page to screen detail education
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => EducationDetailScreen(
-                    id: educationModel.id,
-                    educationCollection: kEducationContent,
-                    model: educationModel,
-                  )));
-        },
-      ),
+      ],
     );
   }
 }
