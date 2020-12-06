@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -55,52 +54,12 @@ class _DocumentsState extends State<Documents> {
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.labels,
         defaultValue: FirebaseConfig.labelsDefaultValue);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                getLabel['documents']['title'],
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: Dimens.textTitleSize),
-              ),
-              InkWell(
-                child: Text(
-                  Dictionary.more,
-                  style: TextStyle(
-                      color: ColorBase.green,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: Dimens.textSubtitleSize),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.Document);
-
-                  AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
-                },
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-        ),
-        BlocBuilder<DocumentsBloc, DocumentsState>(
-          builder: (context, state) {
-            return state is DocumentsLoaded
-                ? _buildContent(state.documents)
-                : _buildLoading();
-          },
-        )
-      ],
+    return BlocBuilder<DocumentsBloc, DocumentsState>(
+      builder: (context, state) {
+        return state is DocumentsLoaded
+            ? _buildContent(state.documents, getLabel)
+            : _buildLoading();
+      },
     );
   }
 
@@ -216,7 +175,8 @@ class _DocumentsState extends State<Documents> {
     );
   }
 
-  Widget _buildContent(List<DocumentSnapshot> documents) {
+  Widget _buildContent(
+      List<DocumentSnapshot> documents, Map<String, dynamic> getLabel) {
     dataDocuments.clear();
     documents.forEach((record) {
       if (record['published'] && dataDocuments.length < 5) {
@@ -232,73 +192,103 @@ class _DocumentsState extends State<Documents> {
           .toList();
     }
 
-    return Container(
-      height: 265,
-      width: MediaQuery.of(context).size.width,
-      child: dataDocuments.isNotEmpty
-          ? ListView.builder(
-              padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.searchQuery != null ? dataDocuments.length : 5,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot document = dataDocuments[index];
-                return Container(
-                  padding: EdgeInsets.only(left: 10),
-                  width: 150,
-                  child: Column(
-                    children: <Widget>[
-                      InkWell(
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 140,
-                              width: 150,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: CachedNetworkImage(
-                                  imageUrl: document['images'] ?? '',
-                                  alignment: Alignment.topCenter,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Center(
-                                      heightFactor: 4.2,
-                                      child: CupertinoActivityIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                    height: MediaQuery.of(context).size.height /
-                                        3.3,
-                                    color: Colors.grey[200],
-                                    child: Image.asset(
-                                        '${Environment.iconAssets}pikobar.png',
-                                        fit: BoxFit.fitWidth),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              top: 0,
-                              child: Image.asset(
-                                '${Environment.iconAssets}pdf_icon.png',
-                                scale: 2,
-                              ),
-                            )
-                          ],
-                        ),
-                        onTap: () {
-                          Platform.isAndroid
-                              ? _downloadAttachment(
-                                  document['title'], document['document_url'])
-                              : _viewPdf(
-                                  document['title'], document['document_url']);
-                        },
+    return dataDocuments.isNotEmpty
+        ? Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 16.0, bottom: 16.0),
+                child:  Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      getLabel['documents']['title'],
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontsFamily.lato,
+                          fontSize: Dimens.textTitleSize),
+                    ),
+                    InkWell(
+                      child: Text(
+                        Dictionary.more,
+                        style: TextStyle(
+                            color: ColorBase.green,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.lato,
+                            fontSize: Dimens.textSubtitleSize),
                       ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, NavigationConstrants.Document);
+
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedDocumentsMore);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 265,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                    padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount:
+                        widget.searchQuery != null ? dataDocuments.length : 5,
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot document = dataDocuments[index];
+                      return Container(
+                        padding: EdgeInsets.only(left: 10),
+                        width: 150,
+                        child: Column(
+                          children: <Widget>[
+                            InkWell(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 140,
+                                    width: 150,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: document['images'] ?? '',
+                                        alignment: Alignment.topCenter,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => Center(
+                                            heightFactor: 4.2,
+                                            child:
+                                                CupertinoActivityIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              3.3,
+                                          color: Colors.grey[200],
+                                          child: Image.asset(
+                                              '${Environment.iconAssets}pikobar.png',
+                                              fit: BoxFit.fitWidth),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    top: 0,
+                                    child: Image.asset(
+                                      '${Environment.iconAssets}pdf_icon.png',
+                                      scale: 2,
+                                    ),
+                                  )
+                                ],
+                              ),
                               onTap: () {
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
@@ -306,64 +296,78 @@ class _DocumentsState extends State<Documents> {
                                     : _viewPdf(document['title'],
                                         document['document_url']);
                               },
-                              child: Container(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      document['title'],
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontFamily: FontsFamily.lato,
-                                          fontWeight: FontWeight.w600),
-                                      textAlign: TextAlign.left,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            unixTimeStampToDateTime(
-                                                document['published_at']
-                                                    .seconds),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Platform.isAndroid
+                                          ? _downloadAttachment(
+                                              document['title'],
+                                              document['document_url'])
+                                          : _viewPdf(document['title'],
+                                              document['document_url']);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            document['title'],
                                             style: TextStyle(
-                                                color: Colors.grey,
+                                                fontSize: 14.0,
                                                 fontFamily: FontsFamily.lato,
-                                                fontSize: 10.0,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                        )
-                                      ],
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text(
+                                                  unixTimeStampToDateTime(
+                                                      document['published_at']
+                                                          .seconds),
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontFamily:
+                                                          FontsFamily.lato,
+                                                      fontSize: 10.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                  textAlign: TextAlign.left,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20)
-                    ],
-                  ),
-                );
-              })
-          : EmptyData(
-              message: Dictionary.emptyData,
-              desc: Dictionary.descEmptyData,
-              isFlare: false,
-              image: "${Environment.imageAssets}not_found.png",
-            ),
-    );
+                            SizedBox(height: 20)
+                          ],
+                        ),
+                      );
+                    }),
+              )
+            ],
+          )
+        : Container();
   }
 
   void _viewPdf(String title, String url) async {
