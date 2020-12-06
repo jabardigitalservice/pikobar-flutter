@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -16,16 +15,19 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
+// ignore: must_be_immutable
 class VideoList extends StatefulWidget {
   final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
 
-  VideoList({this.searchQuery});
+  VideoList({this.searchQuery, this.covidInformationScreenState});
 
   @override
   _VideoListState createState() => _VideoListState();
@@ -120,6 +122,11 @@ class _VideoListState extends State<VideoList> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
+
+      if(data.isEmpty){
+          widget.covidInformationScreenState.isEmptyDataVideoList = true;
+
+      }
     }
 
     return data.isNotEmpty

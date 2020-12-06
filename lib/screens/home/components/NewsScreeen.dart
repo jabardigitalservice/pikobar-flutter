@@ -16,18 +16,25 @@ import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
+// ignore: must_be_immutable
 class NewsScreen extends StatefulWidget {
   final String news;
   final int maxLength;
   final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
 
-  NewsScreen({@required this.news, this.maxLength, this.searchQuery});
+  NewsScreen(
+      {@required this.news,
+      this.maxLength,
+      this.searchQuery,
+      this.covidInformationScreenState});
 
   @override
   _NewsScreenState createState() => _NewsScreenState();
@@ -84,6 +91,10 @@ class _NewsScreenState extends State<NewsScreen> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
+
+      if (list.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataNews = true;
+      }
     }
 
     return list.isNotEmpty

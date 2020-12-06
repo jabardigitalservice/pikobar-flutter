@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -16,15 +15,18 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
+// ignore: must_be_immutable
 class InfoGraphics extends StatefulWidget {
   final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
 
-  InfoGraphics({this.searchQuery});
+  InfoGraphics({this.searchQuery, this.covidInformationScreenState});
 
   @override
   _InfoGraphicsState createState() => _InfoGraphicsState();
@@ -204,6 +206,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
+      if (listData.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
+      }
     }
 
     return listData.isNotEmpty
@@ -376,124 +381,5 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ],
           )
         : Container();
-
-    // Container(
-    //   width: MediaQuery.of(context).size.width,
-    //   child: listData.isNotEmpty
-    //       ? ListView.builder(
-    //           padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
-    //           shrinkWrap: true,
-    //           scrollDirection: Axis.horizontal,
-    //           itemCount: widget.searchQuery != null ? listData.length : 5,
-    //           itemBuilder: (context, index) {
-    //             final DocumentSnapshot document = listData[index];
-    //             return Container(
-    //               padding: EdgeInsets.only(left: 10),
-    //               width: 150,
-    //               child: Column(
-    //                 children: <Widget>[
-    //                   InkWell(
-    //                     child: Container(
-    //                       height: 140,
-    //                       width: 150,
-    //                       child: ClipRRect(
-    //                         borderRadius: BorderRadius.circular(8.0),
-    //                         child: CachedNetworkImage(
-    //                           imageUrl: document['images'][0] ?? '',
-    //                           alignment: Alignment.topCenter,
-    //                           fit: BoxFit.cover,
-    //                           placeholder: (context, url) => Center(
-    //                               heightFactor: 4.2,
-    //                               child: CupertinoActivityIndicator()),
-    //                           errorWidget: (context, url, error) => Container(
-    //                             height:
-    //                                 MediaQuery.of(context).size.height / 3.3,
-    //                             color: Colors.grey[200],
-    //                             child: Image.asset(
-    //                                 '${Environment.iconAssets}pikobar.png',
-    //                                 fit: BoxFit.fitWidth),
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     onTap: () {
-    //                       Navigator.of(context).push(MaterialPageRoute(
-    //                           builder: (context) => DetailInfoGraphicScreen(
-    //                               dataInfoGraphic: document)));
-    //
-    //                       AnalyticsHelper.setLogEvent(
-    //                           Analytics.tappedInfoGraphicsDetail,
-    //                           <String, dynamic>{'title': document['title']});
-    //                     },
-    //                   ),
-    //                   Row(
-    //                     children: <Widget>[
-    //                       Expanded(
-    //                         child: InkWell(
-    //                           onTap: () {
-    //                             Navigator.of(context).push(MaterialPageRoute(
-    //                                 builder: (context) =>
-    //                                     DetailInfoGraphicScreen(
-    //                                         dataInfoGraphic: document)));
-    //
-    //                             AnalyticsHelper.setLogEvent(
-    //                                 Analytics.tappedInfoGraphicsDetail,
-    //                                 <String, dynamic>{
-    //                                   'title': document['title']
-    //                                 });
-    //                           },
-    //                           child: Container(
-    //                             padding: EdgeInsets.only(top: 10),
-    //                             child: Column(
-    //                               crossAxisAlignment: CrossAxisAlignment.start,
-    //                               children: <Widget>[
-    //                                 Text(
-    //                                   document['title'],
-    //                                   style: TextStyle(
-    //                                       fontSize: 14.0,
-    //                                       fontFamily: FontsFamily.lato,
-    //                                       fontWeight: FontWeight.w600),
-    //                                   textAlign: TextAlign.left,
-    //                                   maxLines: 2,
-    //                                   overflow: TextOverflow.ellipsis,
-    //                                 ),
-    //                                 SizedBox(
-    //                                   height: 5,
-    //                                 ),
-    //                                 Row(
-    //                                   mainAxisAlignment:
-    //                                       MainAxisAlignment.spaceBetween,
-    //                                   children: <Widget>[
-    //                                     Expanded(
-    //                                       child: Text(
-    //                                         unixTimeStampToDateTime(
-    //                                             document['published_date']
-    //                                                 .seconds),
-    //                                         style: TextStyle(
-    //                                             color: Colors.grey,
-    //                                             fontFamily: FontsFamily.lato,
-    //                                             fontSize: 10.0,
-    //                                             fontWeight: FontWeight.w600),
-    //                                         textAlign: TextAlign.left,
-    //                                         maxLines: 2,
-    //                                         overflow: TextOverflow.ellipsis,
-    //                                       ),
-    //                                     )
-    //                                   ],
-    //                                 ),
-    //                               ],
-    //                             ),
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                   SizedBox(height: 20)
-    //                 ],
-    //               ),
-    //             );
-    //           })
-    //       : Container(),
-    // );
   }
 }

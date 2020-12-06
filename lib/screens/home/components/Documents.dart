@@ -22,14 +22,17 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
+// ignore: must_be_immutable
 class Documents extends StatefulWidget {
   final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
 
-  Documents({this.searchQuery});
+  Documents({this.searchQuery, this.covidInformationScreenState});
 
   @override
   _DocumentsState createState() => _DocumentsState();
@@ -190,16 +193,19 @@ class _DocumentsState extends State<Documents> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
+      if (dataDocuments.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataDocument = true;
+      }
     }
 
     return dataDocuments.isNotEmpty
         ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(
                     left: 16.0, right: 16.0, bottom: 16.0),
-                child:  Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
