@@ -28,23 +28,156 @@ class SelfReportDetailScreen extends StatefulWidget {
 class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
   DateTime currentDay = DateTime.now();
   SelfReportDetailBloc _selfReportDetailBloc = SelfReportDetailBloc();
+  ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportDetail);
+  
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
   }
 
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportDetail),
-      body: BlocProvider<SelfReportDetailBloc>(
-        create: (context) => _selfReportDetailBloc
-          ..add(SelfReportDetailLoad(
-              selfReportId: widget.reportId, otherUid: widget.otherUID)),
-        child: BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
+    return BlocProvider<SelfReportDetailBloc>(
+      create: (context) => _selfReportDetailBloc
+        ..add(SelfReportDetailLoad(
+            selfReportId: widget.reportId, otherUid: widget.otherUID)),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar.animatedAppBar(
+          showTitle: _showTitle,
+          title: Dictionary.selfReportDetail,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
+                builder: (context, state) {
+              return state is SelfReportDetailLoaded
+                  ?
+
+                  /// Edit button section
+                  isSameDate(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              state.documentSnapshot['created_at'].seconds *
+                                  1000),
+                          currentDay)
+                      ? Container(
+                          height: 38.0,
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(
+                              left: Dimens.padding, right: Dimens.padding),
+                          child: RaisedButton(
+                              splashColor: Colors.lightGreenAccent,
+                              color: ColorBase.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Text(
+                                Dictionary.editDailyMonitoring,
+                                style: TextStyle(
+                                    fontFamily: FontsFamily.lato,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12.0,
+                                    color: Colors.white),
+                              ),
+                              onPressed: () async {
+                                /// Add data to DailyReportModel that will be used for edit data
+                                LatLng latLng = LatLng(
+                                    state.documentSnapshot['location'].latitude,
+                                    state.documentSnapshot['location']
+                                        .longitude);
+
+                                var dailyReportModel = DailyReportModel(
+                                    id: state.documentSnapshot['id'],
+                                    quarantineDate:
+                                        state.documentSnapshot['quarantine_date'] !=
+                                                null
+                                            ? DateTime.fromMillisecondsSinceEpoch(
+                                                state.documentSnapshot['quarantine_date'].seconds *
+                                                    1000)
+                                            : null,
+                                    createdAt:
+                                        DateTime.fromMillisecondsSinceEpoch(state
+                                                .documentSnapshot['created_at']
+                                                .seconds *
+                                            1000),
+                                    contactDate: state.documentSnapshot['contact_date'] !=
+                                            null
+                                        ? DateTime.fromMillisecondsSinceEpoch(
+                                            state.documentSnapshot['contact_date'].seconds * 1000)
+                                        : null,
+                                    indications: state.documentSnapshot['indications'],
+                                    bodyTemperature: state.documentSnapshot['body_temperature'],
+                                    location: latLng);
+
+                                /// Move to form screen
+                                bool isUpdateForm = await Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            SelfReportFormScreen(
+                                              dailyId:
+                                                  state.documentSnapshot['id'],
+                                              otherUID: widget.otherUID,
+                                              location: latLng,
+                                              analytics: widget.analytics,
+                                              dailyReportModel:
+                                                  dailyReportModel,
+                                            )));
+
+                                /// If data form updates, will get the newest data detail
+                                if (isUpdateForm != null && isUpdateForm) {
+                                  _selfReportDetailBloc
+                                    ..add(SelfReportDetailLoad(
+                                        selfReportId: widget.reportId,
+                                        otherUid: widget.otherUID));
+                                }
+                              }),
+                        )
+                      : Container()
+                  : state is SelfReportDetailFailure
+                      ? Container()
+                      : Center(
+                          child: CircularProgressIndicator(),
+                        );
+            }),
+
+            /// Back button section
+            Container(
+              height: 38.0,
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.all(Dimens.padding),
+              child: RaisedButton(
+                  splashColor: Colors.lightGreenAccent,
+                  color: ColorBase.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    Dictionary.back,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        color: Colors.white),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ),
+          ],
+        ),
+        body: BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
             builder: (context, state) {
           return state is SelfReportDetailLoaded
               ? _buildContent(state)
@@ -57,13 +190,27 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
   }
 
   Widget _buildContent(SelfReportDetailLoaded state) {
-    return ListView(
+    return ListView(controller: _scrollController,
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+               AnimatedOpacity(
+                    opacity: _showTitle ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 250),
+                    child: Text(
+                      Dictionary.selfReportDetail,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+              SizedBox(height: 30.0),
+
               Container(
                 child: Row(
                   children: <Widget>[
@@ -76,14 +223,16 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                         Text(
                           '${Dictionary.monitoringDays}${state.documentSnapshot['id']}',
                           style: TextStyle(
-                              fontFamily: FontsFamily.lato,
+                              fontFamily: FontsFamily.roboto,
                               fontWeight: FontWeight.bold,
+                              color: ColorBase.grey800,
                               fontSize: 14.0,
                               height: 1.214),
                         ),
                         SizedBox(height: 8.0),
                         _buildText(
                             text: Dictionary.monitoringCompleted,
+                            color: ColorBase.netralGrey,
                             isLabel: true),
                       ],
                     )
@@ -97,11 +246,14 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
               /// Input date section
               Container(
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     _buildText(text: Dictionary.inputDate, isLabel: true),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     _buildText(
                         text: unixTimeStampToDate(
                             state.documentSnapshot['created_at'].seconds))
@@ -115,11 +267,13 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
         state.documentSnapshot['contact_date'] != null &&
                 state.documentSnapshot['contact_date'].toString().isNotEmpty
             ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   /// Divider
                   Container(
-                    height: 8.0,
-                    color: ColorBase.grey,
+                    margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+                    height: 1.0,
+                    color: ColorBase.greyBorder,
                   ),
 
                   /// Contact date section
@@ -127,16 +281,14 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Dimens.padding,
                         vertical: Dimens.verticalPadding),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Expanded(
-                          child: _buildText(
-                              text: Dictionary.contactDateCovid, isLabel: true),
-                        ),
+                        _buildText(
+                            text: Dictionary.contactDateCovid, isLabel: true),
                         SizedBox(
-                          width: 40,
+                          height: 10.0,
                         ),
                         _buildText(
                             text: unixTimeStampToDate(
@@ -148,19 +300,18 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
               )
             : Container(),
 
-        /// Divider
-        Container(
-          height: 8.0,
-          color: ColorBase.grey,
-        ),
         getField(state.documentSnapshot, 'quarantine_date') != null &&
-                getField(state.documentSnapshot, 'quarantine_date').toString().isNotEmpty
+                getField(state.documentSnapshot, 'quarantine_date')
+                    .toString()
+                    .isNotEmpty
             ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   /// Divider
                   Container(
-                    height: 8.0,
-                    color: ColorBase.grey,
+                    margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+                    height: 1.0,
+                    color: ColorBase.greyBorder,
                   ),
 
                   /// Quarantine date section
@@ -168,16 +319,14 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: Dimens.padding,
                         vertical: Dimens.verticalPadding),
-                    child: Row(
+                    child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Expanded(
-                          child: _buildText(
-                              text: Dictionary.quarantineDate, isLabel: true),
-                        ),
+                        _buildText(
+                            text: Dictionary.quarantineDate, isLabel: true),
                         SizedBox(
-                          width: 40,
+                          height: 10.0,
                         ),
                         _buildText(
                             text: unixTimeStampToDate(state
@@ -191,19 +340,23 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          height: 8.0,
-          color: ColorBase.grey,
+          margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          height: 1.0,
+          color: ColorBase.greyBorder,
         ),
 
         /// Temperature section
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
-          child: Row(
+          child: Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildText(text: Dictionary.bodyTemperature, isLabel: true),
+              SizedBox(
+                height: 10.0,
+              ),
               _buildText(
                   text: '${state.documentSnapshot['body_temperature']}° C')
             ],
@@ -212,128 +365,33 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          height: 8.0,
-          color: ColorBase.grey,
+          margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          height: 1.0,
+          color: ColorBase.greyBorder,
         ),
 
         /// The symptoms section
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
-          child: Row(
+          child: Column(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
                   width: MediaQuery.of(context).size.width / 2,
                   child:
                       _buildText(text: Dictionary.indications, isLabel: true)),
-              Expanded(
-                child: _buildText(
-                    text: state.documentSnapshot['indications'],
-                    textAlign: TextAlign.end),
-              )
+              SizedBox(
+                height: 10.0,
+              ),
+              _buildText(
+                  text: state.documentSnapshot['indications'],
+                  textAlign: TextAlign.start)
             ],
           ),
         ),
-
-        /// Back button section
-        Container(
-          height: 38.0,
-          margin: EdgeInsets.all(Dimens.padding),
-          child: RaisedButton(
-              splashColor: Colors.lightGreenAccent,
-              color: ColorBase.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Text(
-                Dictionary.back,
-                style: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                    color: Colors.white),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-        ),
-
-        /// Edit button section
-        isSameDate(
-                DateTime.fromMillisecondsSinceEpoch(
-                    state.documentSnapshot['created_at'].seconds * 1000),
-                currentDay)
-            ? Container(
-                height: 38.0,
-                margin: EdgeInsets.only(
-                    left: Dimens.padding,
-                    right: Dimens.padding,
-                    bottom: Dimens.padding),
-                child: RaisedButton(
-                    splashColor: Colors.lightGreenAccent,
-                    color: ColorBase.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      Dictionary.editDailyMonitoring,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                          color: Colors.white),
-                    ),
-                    onPressed: () async {
-                      /// Add data to DailyReportModel that will be used for edit data
-                      LatLng latLng = LatLng(
-                          state.documentSnapshot['location'].latitude,
-                          state.documentSnapshot['location'].longitude);
-
-                      var dailyReportModel = DailyReportModel(
-                          id: state.documentSnapshot['id'],
-                          quarantineDate:
-                              state.documentSnapshot['quarantine_date'] != null
-                                  ? DateTime.fromMillisecondsSinceEpoch(state
-                                          .documentSnapshot['quarantine_date']
-                                          .seconds *
-                                      1000)
-                                  : null,
-                          createdAt: DateTime.fromMillisecondsSinceEpoch(
-                              state.documentSnapshot['created_at'].seconds *
-                                  1000),
-                          contactDate: state.documentSnapshot['contact_date'] != null
-                              ? DateTime.fromMillisecondsSinceEpoch(state
-                                      .documentSnapshot['contact_date']
-                                      .seconds *
-                                  1000)
-                              : null,
-                          indications: state.documentSnapshot['indications'],
-                          bodyTemperature: state.documentSnapshot['body_temperature'],
-                          location: latLng);
-
-                      /// Move to form screen
-                      bool isUpdateForm =
-                          await Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SelfReportFormScreen(
-                                    dailyId: state.documentSnapshot['id'],
-                                    otherUID: widget.otherUID,
-                                    location: latLng,
-                                    analytics: widget.analytics,
-                                    dailyReportModel: dailyReportModel,
-                                  )));
-
-                      /// If data form updates, will get the newest data detail
-                      if (isUpdateForm != null && isUpdateForm) {
-                        _selfReportDetailBloc
-                          ..add(SelfReportDetailLoad(
-                              selfReportId: widget.reportId,
-                              otherUid: widget.otherUID));
-                      }
-                    }),
-              )
-            : Container()
+        SizedBox(height: MediaQuery.of(context).size.height*0.2,)
       ],
     );
   }
@@ -350,13 +408,17 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
   /// If the [isLabel] parameter is true, it will make the text bold.
   /// The [text] parameter must not be null.
   Text _buildText(
-      {@required String text, bool isLabel = false, TextAlign textAlign}) {
+      {@required String text,
+      bool isLabel = false,
+      TextAlign textAlign,
+      Color color}) {
     return Text(
       text,
       style: TextStyle(
-          fontFamily: FontsFamily.lato,
-          fontWeight: isLabel ? FontWeight.normal : FontWeight.bold,
-          fontSize: 12.0,
+          fontFamily: FontsFamily.roboto,
+          color: color ?? ColorBase.grey800,
+          fontWeight: isLabel ? FontWeight.bold : FontWeight.normal,
+          fontSize: isLabel ? 12.0 : 14.0,
           height: 1.1667),
       textAlign: textAlign,
     );

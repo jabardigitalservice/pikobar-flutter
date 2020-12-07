@@ -372,7 +372,7 @@ class Dictionary {
   static String labelImportantInfo = "PENTING";
 
   // Self Report
-  static String selfReportDetail = 'Detail Pemantauan Harian';
+  static String selfReportDetail = 'Detail Kesehatan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
   static String titleSelfReport = 'Lapor Mandiri';
   static String historyContact = 'Riwayat \nKontak';
