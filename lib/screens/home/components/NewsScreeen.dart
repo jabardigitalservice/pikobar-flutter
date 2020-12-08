@@ -16,18 +16,25 @@ import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
+// ignore: must_be_immutable
 class NewsScreen extends StatefulWidget {
   final String news;
   final int maxLength;
   final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
 
-  NewsScreen({@required this.news, this.maxLength, this.searchQuery});
+  NewsScreen(
+      {@required this.news,
+      this.maxLength,
+      this.searchQuery,
+      this.covidInformationScreenState});
 
   @override
   _NewsScreenState createState() => _NewsScreenState();
@@ -84,210 +91,196 @@ class _NewsScreenState extends State<NewsScreen> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
+
+      if (list.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataNews = true;
+      }
     }
 
-    return Container(
-      child: Column(
-        children: [
-          Container(
-              padding: EdgeInsets.only(
-                  left: Dimens.padding,
-                  right: Dimens.padding,
-                  bottom: Dimens.padding),
-              alignment: Alignment.topLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    getLabel['news']['title'],
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.lato,
-                        fontSize: Dimens.textTitleSize),
-                  ),
-                  InkWell(
-                    child: Text(
-                      Dictionary.more,
-                      style: TextStyle(
-                          color: ColorBase.green,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: Dimens.textSubtitleSize),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              NewsListScreen(news: Dictionary.allNews),
+    return list.isNotEmpty
+        ? Container(
+            child: Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.only(
+                        left: Dimens.padding,
+                        right: Dimens.padding,
+                        bottom: Dimens.padding),
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          getLabel['news']['title'],
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: FontsFamily.lato,
+                              fontSize: Dimens.textTitleSize),
                         ),
-                      );
-                      AnalyticsHelper.setLogEvent(Analytics.tappedMore);
-                    },
-                  ),
-                ],
-              )),
-          // Container(
-          //   padding: EdgeInsets.only(
-          //       left: Dimens.padding, right: Dimens.padding, top: 5),
-          //   alignment: Alignment.centerLeft,
-          //   child: Text(
-          //     getLabel['news']['description'],
-          //     style: TextStyle(
-          //       color: Colors.black,
-          //       fontFamily: FontsFamily.lato,
-          //       fontSize: Dimens.textSubtitleSize,
-          //     ),
-          //     textAlign: TextAlign.left,
-          //   ),
-          // ),
-          Container(
-            height: 265,
-            width: MediaQuery.of(context).size.width,
-            child: list.isNotEmpty
-                ? ListView.builder(
-                    padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: list.length < widget.maxLength
-                        ? list.length
-                        : widget.maxLength,
-                    itemBuilder: (context, index) {
-                      NewsModel newsmodel = list[index];
-                      return Container(
-                        padding: EdgeInsets.only(left: 10),
-                        width: 150,
-                        child: Column(
-                          children: <Widget>[
-                            InkWell(
-                              child: Container(
-                                height: 140,
-                                width: 150,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl: newsmodel.image ?? '',
-                                    alignment: Alignment.topCenter,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(
-                                        heightFactor: 4.2,
-                                        child: CupertinoActivityIndicator()),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3.3,
-                                      color: Colors.grey[200],
-                                      child: Image.asset(
-                                          '${Environment.iconAssets}pikobar.png',
-                                          fit: BoxFit.fitWidth),
-                                    ),
-                                  ),
-                                ),
+                        InkWell(
+                          child: Text(
+                            Dictionary.more,
+                            style: TextStyle(
+                                color: ColorBase.green,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: FontsFamily.lato,
+                                fontSize: Dimens.textSubtitleSize),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NewsListScreen(news: Dictionary.allNews),
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => NewsDetailScreen(
-                                        id: newsmodel.id,
-                                        news: widget.news,
-                                        model: list[index]),
-                                  ),
-                                );
-                                AnalyticsHelper.setLogEvent(
-                                    Analytics.tappedNewsDetail,
-                                    <String, dynamic>{
-                                      'title': newsmodel.title
-                                    });
-                              },
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              NewsDetailScreen(
-                                                  id: newsmodel.id,
-                                                  news: widget.news,
-                                                  model: list[index]),
-                                        ),
-                                      );
-                                      AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedNewsDetail,
-                                          <String, dynamic>{
-                                            'title': newsmodel.title
-                                          });
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            newsmodel.title,
-                                            style: TextStyle(
-                                                fontSize: 14.0,
-                                                fontFamily: FontsFamily.lato,
-                                                fontWeight: FontWeight.w600),
-                                            textAlign: TextAlign.left,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Text(
-                                                  unixTimeStampToDateTime(
-                                                      newsmodel.publishedAt),
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontFamily:
-                                                          FontsFamily.lato,
-                                                      fontSize: 10.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                  textAlign: TextAlign.left,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
+                            );
+                            AnalyticsHelper.setLogEvent(Analytics.tappedMore);
+                          },
+                        ),
+                      ],
+                    )),
+                Container(
+                  height: 265,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                      padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: list.length < widget.maxLength
+                          ? list.length
+                          : widget.maxLength,
+                      itemBuilder: (context, index) {
+                        NewsModel newsmodel = list[index];
+                        return Container(
+                          padding: EdgeInsets.only(left: 10),
+                          width: 150,
+                          child: Column(
+                            children: <Widget>[
+                              InkWell(
+                                child: Container(
+                                  height: 140,
+                                  width: 150,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: newsmodel.image ?? '',
+                                      alignment: Alignment.topCenter,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Center(
+                                          heightFactor: 4.2,
+                                          child: CupertinoActivityIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3.3,
+                                        color: Colors.grey[200],
+                                        child: Image.asset(
+                                            '${Environment.iconAssets}pikobar.png',
+                                            fit: BoxFit.fitWidth),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 20)
-                          ],
-                        ),
-                      );
-                    })
-                : EmptyData(
-                    message: Dictionary.emptyData,
-                    desc: Dictionary.descEmptyData,
-                    isFlare: false,
-                    image: "${Environment.imageAssets}not_found.png",
-                  ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NewsDetailScreen(
+                                          id: newsmodel.id,
+                                          news: widget.news,
+                                          model: list[index]),
+                                    ),
+                                  );
+                                  AnalyticsHelper.setLogEvent(
+                                      Analytics.tappedNewsDetail,
+                                      <String, dynamic>{
+                                        'title': newsmodel.title
+                                      });
+                                },
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                NewsDetailScreen(
+                                                    id: newsmodel.id,
+                                                    news: widget.news,
+                                                    model: list[index]),
+                                          ),
+                                        );
+                                        AnalyticsHelper.setLogEvent(
+                                            Analytics.tappedNewsDetail,
+                                            <String, dynamic>{
+                                              'title': newsmodel.title
+                                            });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              newsmodel.title,
+                                              style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontFamily: FontsFamily.lato,
+                                                  fontWeight: FontWeight.w600),
+                                              textAlign: TextAlign.left,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Text(
+                                                    unixTimeStampToDateTime(
+                                                        newsmodel.publishedAt),
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontFamily:
+                                                            FontsFamily.lato,
+                                                        fontSize: 10.0,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    textAlign: TextAlign.left,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20)
+                            ],
+                          ),
+                        );
+                      }),
+                )
+              ],
+            ),
           )
-        ],
-      ),
-    );
+        : Container();
   }
 
   Widget designNewsHome(NewsModel data) {
