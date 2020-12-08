@@ -255,7 +255,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                       height: 10.0,
                     ),
                     _buildText(
-                        text: unixTimeStampToDate(
+                        text: unixTimeStampToDateWithoutDay(
                             state.documentSnapshot['created_at'].seconds))
                   ],
                 ),
@@ -291,7 +291,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                           height: 10.0,
                         ),
                         _buildText(
-                            text: unixTimeStampToDate(
+                            text: unixTimeStampToDateWithoutDay(
                                 state.documentSnapshot['contact_date'].seconds))
                       ],
                     ),
@@ -329,7 +329,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                           height: 10.0,
                         ),
                         _buildText(
-                            text: unixTimeStampToDate(state
+                            text: unixTimeStampToDateWithoutDay(state
                                 .documentSnapshot['quarantine_date'].seconds))
                       ],
                     ),
@@ -358,7 +358,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 height: 10.0,
               ),
               _buildText(
-                  text: '${state.documentSnapshot['body_temperature']}° C')
+                  text: '${state.documentSnapshot['body_temperature']} °c')
             ],
           ),
         ),
@@ -386,7 +386,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 height: 10.0,
               ),
               _buildText(
-                  text: state.documentSnapshot['indications'],
+                  text: state.documentSnapshot['indications'].replaceAll('[', '').replaceAll(']', ''),
                   textAlign: TextAlign.start)
             ],
           ),

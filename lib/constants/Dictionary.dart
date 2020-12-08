@@ -390,7 +390,7 @@ class Dictionary {
       'Untuk dapat mengakses menu silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
   static String healthy = 'HEALTHY';
   static String detailSelfReport = 'Detail Pemantauan Harian';
-  static String monitoringCompleted = 'Proses pemantauan sudah terisi';
+  static String monitoringCompleted = 'Proses pelaporan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
