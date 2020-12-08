@@ -150,19 +150,16 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             AnimatedOpacity(
               opacity: _showTitle ? 0.0 : 1.0,
               duration: Duration(milliseconds: 250),
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: _buildText(
-                    Text(
-                      data.title,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 20.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    context),
-              ),
+              child: _buildText(
+                  Text(
+                    data.title,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  context),
             ),
             _buildText(
                 Text(
