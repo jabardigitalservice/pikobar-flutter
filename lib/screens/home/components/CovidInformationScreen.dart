@@ -75,6 +75,10 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
                         searchQuery: searchQuery,
                         covidInformationScreenState: this),
                   ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: SocialMedia(),
+                  )
                 ],
               )
             : EmptyData(
@@ -83,10 +87,6 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
                 isFlare: false,
                 image: "${Environment.imageAssets}not_found.png",
               ),
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: SocialMedia(),
-        )
       ],
     );
   }
