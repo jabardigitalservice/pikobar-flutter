@@ -22,6 +22,7 @@ class Announcement extends StatelessWidget {
   final TextStyle textStyleContent;
   final TextStyle textStyleMoreDetail;
   final Style htmlStyle;
+  final double padding;
 
   Announcement(
       {this.title,
@@ -32,13 +33,14 @@ class Announcement extends StatelessWidget {
       this.textStyleTitle,
       this.textStyleContent,
       this.textStyleMoreDetail,
-      this.htmlStyle});
+      this.htmlStyle,
+      this.padding});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+      margin: EdgeInsets.symmetric(horizontal: padding ?? Dimens.padding),
       decoration: BoxDecoration(
           color: ColorBase.announcementBackgroundColor,
           borderRadius: BorderRadius.circular(8.0)),
@@ -96,7 +98,8 @@ class Announcement extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    AnalyticsHelper.setLogEvent(Analytics.announcement);
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.announcement);
                                     openChromeSafariBrowser(url: actionUrl);
                                   })
                           ]),
@@ -106,12 +109,14 @@ class Announcement extends StatelessWidget {
                       : Html(
                           data: content,
                           style: {
-                            'body': htmlStyle != null ? htmlStyle : Style(
-                                margin: EdgeInsets.zero,
-                                color: Colors.grey[600],
-                                fontSize: FontSize(12.0),
-                                fontFamily: FontsFamily.lato,
-                                textAlign: TextAlign.justify),
+                            'body': htmlStyle != null
+                                ? htmlStyle
+                                : Style(
+                                    margin: EdgeInsets.zero,
+                                    color: Colors.grey[600],
+                                    fontSize: FontSize(12.0),
+                                    fontFamily: FontsFamily.lato,
+                                    textAlign: TextAlign.justify),
                           },
                           onLinkTap: onLinkTap)
                 ]),
