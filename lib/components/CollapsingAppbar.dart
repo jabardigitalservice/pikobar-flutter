@@ -45,7 +45,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
   @override
   void initState() {
     /// for set default value for height appbar & bottom Appbar
-    heightAppbar = widget.heightAppbar ?? 120;
+    heightAppbar = widget.heightAppbar ?? (widget.searchBar != null ? 120 : 60);
     isBottomAppbar = widget.isBottomAppbar ?? true;
     super.initState();
   }

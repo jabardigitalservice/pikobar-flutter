@@ -41,7 +41,6 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
         body: CollapsingAppbar(
       scrollController: _scrollController,
       showTitle: _showTitle,
-      heightAppbar: 60,
       titleAppbar: Dictionary.termsConditions,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
