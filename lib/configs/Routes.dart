@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionScreen.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/document/DocumentListScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/ComplaintsMenuScreen.dart';
 import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoListScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
@@ -29,7 +30,7 @@ Route generateRoutes(RouteSettings settings) {
           ));
     case NavigationConstrants.News:
       return buildRoute(settings, News());
-      case NavigationConstrants.ImportantInfoList:
+    case NavigationConstrants.ImportantInfoList:
       return buildRoute(settings, ImportantInfoListScreen());
     case NavigationConstrants.Phonebook:
       return buildRoute(settings, Phonebook());
@@ -55,7 +56,6 @@ Route generateRoutes(RouteSettings settings) {
             state: args,
           ));
 
-
     case NavigationConstrants.Verification:
       UserModel argumentsModel = args;
       return buildRoute(
@@ -78,6 +78,13 @@ Route generateRoutes(RouteSettings settings) {
     // screen FAQ
     case NavigationConstrants.Faq:
       return buildRoute(settings, FaqScreen());
+
+    case NavigationConstrants.PikobarComplaints:
+      return buildRoute(
+          settings,
+          ComplaintsMenuScreen(
+            complaintsUrl: args,
+          ));
 
     default:
       return null;
