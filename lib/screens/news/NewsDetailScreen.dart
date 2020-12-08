@@ -65,7 +65,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   bool get isShrink {
     return _scrollController.hasClients &&
         _scrollController.offset > (200 - kToolbarHeight);
-}
+  }
 
   @override
   void initState() {
