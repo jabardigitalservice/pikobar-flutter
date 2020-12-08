@@ -437,7 +437,7 @@ class Dictionary {
   static String lastContactDate = 'Tanggal Kontak Terakhir';
   static String monitoringIsComplete = 'Pemantauan Selesai!';
   static String selfReportSummary = 'Dalam 14 hari terakhir, ';
-  static String selfReportHistory = 'Lihat Riwayat Kesehatan Saya';
+  static String selfReportHistory = 'Lihat Riwayat Kesehatan';
   static String info = 'Info';
   static String announcementDescHealthy =
       '<p>Tetap waspada dengan menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Jaga jarak dan gunakan masker ketika beraktivitas.</p>';
