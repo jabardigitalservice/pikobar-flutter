@@ -78,6 +78,15 @@ class _MenuListState extends State<MenuList> {
       ),
 
       // Aduan Bansos (Added automatically)
+      BuildButtonMenu(
+        remoteConfig: remoteConfig,
+        iconPath: '${Environment.iconAssets}menu_aduan_bansos.png',
+        defaultLabel: Dictionary.pikobarComplaints,
+        route: NavigationConstrants.PikobarComplaints,
+        defaultArguments: kUrlCaseReport,
+        firebaseConfigArguments: FirebaseConfig.reportUrl,
+        remoteMenuLoginKey: FirebaseConfig.reportMenu,
+      ),
 
       // Nomor Darurat
       BuildButtonMenu(
@@ -168,21 +177,6 @@ class _MenuListState extends State<MenuList> {
         remoteMenuLoginKey: FirebaseConfig.jshMenu,
       ),
     ];
-
-    if (remoteConfig.getBool(FirebaseConfig.reportEnabled)) {
-      menus.insert(
-          3,
-          BuildButtonMenu(
-            remoteConfig: remoteConfig,
-            iconPath: '${Environment.iconAssets}menu_aduan_bansos.png',
-            defaultLabel: Dictionary.aduanBansos,
-            firebaseConfigLabel: FirebaseConfig.reportCaption,
-            route: NavigationConstrants.Browser,
-            defaultArguments: kUrlCaseReport,
-            firebaseConfigArguments: FirebaseConfig.reportUrl,
-            remoteMenuLoginKey: FirebaseConfig.reportMenu,
-          ));
-    }
 
     if (remoteConfig.getBool(FirebaseConfig.selfDiagnoseEnabled)) {
       menus.add(BuildButtonMenu(

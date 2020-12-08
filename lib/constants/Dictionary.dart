@@ -25,7 +25,7 @@ class Dictionary {
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Donasi Covid-19';
   static String bansos = 'Bantuan Sosial';
-  static String aduanBansos = 'Aduan Bansos';
+  static String pikobarComplaints = 'Aduan Pikobar';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String massiveTestRegistration = 'Daftar Test Masif';
@@ -44,6 +44,8 @@ class Dictionary {
   static String emptyDataPhoneBookDesc =
       'Nomor atau kota yang Anda cari sepertinya tidak ada dalam data kami, silahkan hubungi nomor atau kota lainnya.';
   static String nomorDarurat = 'Detail Nomor Darurat';
+  static String generalComplaints = 'Pengaduan Umum Via Hotline';
+  static String crowdComplaints = 'Aduan Kerumunan Pikobar';
   static String odp = 'ODP';
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
