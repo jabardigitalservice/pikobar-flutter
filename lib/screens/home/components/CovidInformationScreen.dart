@@ -34,14 +34,10 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
   }
 
   bool getIsEmptyData() {
-    if (isEmptyDataDocument &&
+    return isEmptyDataDocument &&
         isEmptyDataInfoGraphic &&
         isEmptyDataNews &&
-        isEmptyDataVideoList) {
-      return true;
-    } else {
-      return false;
-    }
+        isEmptyDataVideoList;
   }
 
   @override

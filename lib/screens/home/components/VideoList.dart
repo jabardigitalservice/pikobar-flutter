@@ -169,14 +169,6 @@ class _VideoListState extends State<VideoList> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                // child: Text(
-                //   getLabel['video']['description'],
-                //   style: TextStyle(
-                //       color: Colors.black,
-                //       fontFamily: FontsFamily.lato,
-                //       fontSize: Dimens.textSubtitleSize),
-                //   textAlign: TextAlign.left,
-                // ),
               ),
               Container(
                 height: 265.0,
