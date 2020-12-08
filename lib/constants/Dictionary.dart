@@ -283,7 +283,7 @@ class Dictionary {
   static String surveyInfo =
       'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
   static String checkAroundYou = 'Cek Sekitar Anda';
-  static String youAreIn = 'Anda berada di';
+  static String youAreIn = 'Anda berada di Zona';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -474,10 +474,10 @@ class Dictionary {
   static const String zoneColorOrange = 'Zona Orange';
   static const String zoneColorYellow = 'Zona Kuning';
   static const String zoneColorGreen = 'Zona Hijau';
-  static const String zoneRedDescription = 'Anda berada di Zona Risiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
-  static const String zoneOrangeDescription = 'Anda berada di Zona Risiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
-  static const String zoneYellowDescription = 'Anda berada di Zona Risiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
-  static const String zoneGreenDescription = 'Anda berada di Zona Tidak Terdampak, yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
+  static const String zoneRedDescription = 'Adalah wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
+  static const String zoneOrangeDescription = 'Adalah wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
+  static const String zoneYellowDescription = 'Adalah wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
+  static const String zoneGreenDescription = 'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
   static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
   static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';

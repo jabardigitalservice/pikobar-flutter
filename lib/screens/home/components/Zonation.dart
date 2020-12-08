@@ -21,6 +21,7 @@ import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 
@@ -160,22 +161,22 @@ class _ZonationState extends State<Zonation> {
     switch (data.zonaResiko.toUpperCase()) {
       case Dictionary.zoneHighRisk:
         dotColor = Colors.red;
-        zone = Dictionary.zoneColorRed;
+        zone = StringUtils.capitalizeWord(Dictionary.zoneHighRisk);
         description = Dictionary.zoneRedDescription;
         break;
       case Dictionary.zoneMediumRisk:
         dotColor = Colors.orange;
-        zone = Dictionary.zoneColorOrange;
+        zone = StringUtils.capitalizeWord(Dictionary.zoneMediumRisk);
         description = Dictionary.zoneOrangeDescription;
         break;
       case Dictionary.zoneLowRisk:
         dotColor = Colors.yellow;
-        zone = Dictionary.zoneColorYellow;
+        zone = StringUtils.capitalizeWord(Dictionary.zoneLowRisk);
         description = Dictionary.zoneYellowDescription;
         break;
       case Dictionary.zoneNotAffected:
         dotColor = Colors.green;
-        zone = Dictionary.zoneColorGreen;
+        zone = StringUtils.capitalizeWord(Dictionary.zoneNotAffected);
         description = Dictionary.zoneGreenDescription;
         break;
     }
@@ -224,7 +225,7 @@ class _ZonationState extends State<Zonation> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Wrap(
                 children: [
                   Icon(
                     Icons.circle,
@@ -234,31 +235,36 @@ class _ZonationState extends State<Zonation> {
                   SizedBox(
                     width: 12,
                   ),
-                  Text(
-                    '${Dictionary.youAreIn} $zone',
-                    overflow: TextOverflow.clip,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: FontsFamily.roboto,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  GestureDetector(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                      child: Icon(
-                        Icons.help_outline_outlined,
-                        size: 16,
-                        color: ColorBase.netralGrey,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${Dictionary.youAreIn} $zone',
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: FontsFamily.roboto,
+                            fontWeight: FontWeight.w700),
                       ),
-                    ),
-                    onTap: () {
-                      showTextBottomSheet(
-                          context: context,
-                          title: Dictionary.zonationSource,
-                          message:
+                      GestureDetector(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Icon(
+                            Icons.help_outline_outlined,
+                            size: 16,
+                            color: ColorBase.netralGrey,
+                          ),
+                        ),
+                        onTap: () {
+                          showTextBottomSheet(
+                              context: context,
+                              title: Dictionary.zonationSource,
+                              message:
                               Dictionary.sourceZonationInfo);
-                    },
-                  ),
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
               Container(
