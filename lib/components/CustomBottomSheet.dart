@@ -188,14 +188,15 @@ Future<void> showWidgetBottomSheet(
       builder: (context) {
         return Container(
           margin: EdgeInsets.all(Dimens.padding),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+          constraints: BoxConstraints(minHeight: 100, maxHeight: MediaQuery.of(context).size.height - 200),
+          child: Stack(
+            children: [
               /// Divider section
-              Center(
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 8,
+                alignment: Alignment.center,
                 child: Container(
-                  margin: EdgeInsets.only(bottom: Dimens.padding),
                   height: 4,
                   width: 80.0,
                   decoration: BoxDecoration(
@@ -203,14 +204,24 @@ Future<void> showWidgetBottomSheet(
                       borderRadius: BorderRadius.circular(30.0)),
                 ),
               ),
+              Container(
+                margin: EdgeInsets.only(top: 30.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      /// Title section
+                      ///
+                      /// If title null, the title section will be hidden
+                      child ?? Container(),
 
-              /// Title section
-              ///
-              /// If title null, the title section will be hidden
-              child ?? Container(),
 
-
-              SizedBox(height: Dimens.sbHeight)
+                      SizedBox(height: Dimens.sbHeight)
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         );
