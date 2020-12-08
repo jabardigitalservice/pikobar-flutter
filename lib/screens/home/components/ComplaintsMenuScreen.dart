@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
@@ -41,12 +43,14 @@ class ComplaintsMenuScreen extends StatelessWidget {
                     '${Environment.iconAssets}whatsapp.png',
                     Dictionary.generalComplaints, () async {
                     await launchExternal(kUrlPikobarHotline);
+                    await AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencyWa);
                 }),
                 _buildButtonMenu(
                     context,
                     '${Environment.iconAssets}menu_logistik.png',
                     Dictionary.crowdComplaints, () async {
                   await openChromeSafariBrowser(url: complaintsUrl);
+                  await AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
                 })
               ],
             )
