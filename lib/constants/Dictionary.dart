@@ -25,7 +25,7 @@ class Dictionary {
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Donasi Covid-19';
   static String bansos = 'Bantuan Sosial';
-  static String aduanBansos = 'Aduan Bansos';
+  static String pikobarComplaints = 'Aduan Pikobar';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String massiveTestRegistration = 'Daftar Test Masif';
@@ -44,6 +44,8 @@ class Dictionary {
   static String emptyDataPhoneBookDesc =
       'Nomor atau kota yang Anda cari sepertinya tidak ada dalam data kami, silahkan hubungi nomor atau kota lainnya.';
   static String nomorDarurat = 'Detail Nomor Darurat';
+  static String generalComplaints = 'Pengaduan Umum Via Hotline';
+  static String crowdComplaints = 'Aduan Kerumunan Pikobar';
   static String odp = 'ODP';
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
@@ -390,7 +392,7 @@ class Dictionary {
       'Untuk dapat mengakses menu silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
   static String healthy = 'HEALTHY';
   static String detailSelfReport = 'Detail Pemantauan Harian';
-  static String monitoringCompleted = 'Proses pemantauan sudah terisi';
+  static String monitoringCompleted = 'Proses pelaporan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
@@ -437,7 +439,7 @@ class Dictionary {
   static String lastContactDate = 'Tanggal Kontak Terakhir';
   static String monitoringIsComplete = 'Pemantauan Selesai!';
   static String selfReportSummary = 'Dalam 14 hari terakhir, ';
-  static String selfReportHistory = 'Lihat Riwayat Kesehatan Saya';
+  static String selfReportHistory = 'Lihat Riwayat Kesehatan';
   static String info = 'Info';
   static String announcementDescHealthy =
       '<p>Tetap waspada dengan menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Jaga jarak dan gunakan masker ketika beraktivitas.</p>';
