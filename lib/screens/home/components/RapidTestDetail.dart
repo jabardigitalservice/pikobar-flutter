@@ -33,11 +33,24 @@ class RapidTestDetail extends StatefulWidget {
 }
 
 class _RapidTestDetailState extends State<RapidTestDetail> {
+  ScrollController _scrollController;
   List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
   List<String> listItemTitleTab = [Dictionary.rdt, Dictionary.pcr];
   Map<String, dynamic> label;
   Map<String, dynamic> helpBottomSheet;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +72,15 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     }
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar.defaultAppBar(
-        title: Dictionary.testSummaryTitleAppbar,
-      ),
       body: Padding(
         padding: EdgeInsets.all(10),
         // Tab section
         child: CustomBubbleTab(
+          isStickyHeader: true,
+          titleHeader: Dictionary.testSummaryTitleAppbar,
+          subTitle: unixTimeStampToDate(widget.document.get('last_update').seconds),
+          showTitle: _showTitle,
+          scrollController: _scrollController,
           indicatorColor: ColorBase.green,
           labelColor: Colors.white,
           listItemTitleTab: listItemTitleTab,
@@ -95,36 +110,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
-        // Last update section
-        widget.document.get('last_update') == null
-            ? Container()
-            : Padding(
-                padding: EdgeInsets.only(bottom: 20, left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      Dictionary.lastUpdate,
-                      style: TextStyle(
-                          color: Color(0xff333333),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '${unixTimeStampToDate(widget.document.get('last_update').seconds)}',
-                      style: TextStyle(
-                          color: Color(0xff333333),
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-        buildHeader(label['pcr_rdt']['rdt']['sum'], 'bloodTest@4x.png',
+        buildHeader(label['pcr_rdt']['rdt']['sum'],
             widget.document.get('total'), Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
@@ -147,35 +133,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         SizedBox(
           height: 20,
         ),
-        widget.documentPCR.get('last_update') == null
-            ? Container()
-            : Padding(
-                padding: EdgeInsets.only(bottom: 20, left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      Dictionary.lastUpdate,
-                      style: TextStyle(
-                          color: Color(0xff333333),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '${unixTimeStampToDate(widget.documentPCR.get('last_update').seconds)}',
-                      style: TextStyle(
-                          color: Color(0xff333333),
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-        buildHeader(label['pcr_rdt']['pcr']['sum'], 'bloodTestBlue@4x.png',
+        buildHeader(label['pcr_rdt']['pcr']['sum'],
             widget.documentPCR.get('total'), Color(0xffFAFAFA)),
         SizedBox(
           height: 15,
@@ -191,6 +149,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
     return Announcement(
+      margin: EdgeInsets.symmetric(horizontal: 5.0),
       title: dataAnnouncement[i]['title'] != null
           ? dataAnnouncement[i]['title']
           : Dictionary.titleInfoTextAnnouncement,
@@ -206,7 +165,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
-  Widget buildHeader(String title, image, int total, Color color) {
+  Widget buildHeader(String title, int total, Color color) {
     String count =
         formatter.format(int.parse(total.toString())).replaceAll(',', '.');
     return Card(
@@ -214,42 +173,25 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       color: color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        padding: EdgeInsets.all(Dimens.padding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.black,
+                    fontFamily: FontsFamily.roboto)),
             Container(
-                height: 60,
-                child: Image.asset('${Environment.imageAssets}$image')),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 5.0),
-                  child: Text(title,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.lato)),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-                  child: Text(count,
-                      style: TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.roboto)),
-                )
-              ],
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 20,
-              color: color,
+              margin: EdgeInsets.only(top: Dimens.padding),
+              child: Text(count,
+                  style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.roboto)),
             )
           ],
         ),
@@ -408,8 +350,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                               style: TextStyle(
                                   fontSize: 12.0,
                                   color: colorTextTitle,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.lato)),
+                                  fontFamily: FontsFamily.roboto)),
                           helpOnTap != null
                               ? GestureDetector(
                                   onTap: helpOnTap,
@@ -435,7 +376,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       fontSize: 16.0,
                       color: colorNumber,
                       fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato)),
+                      fontFamily: FontsFamily.roboto)),
             ),
             Row(
               children: <Widget>[
@@ -446,9 +387,9 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 10.0,
-                              color: Colors.black,
+                              color: ColorBase.netralGrey,
                               fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato)),
+                              fontFamily: FontsFamily.roboto)),
                     ),
                   ),
                 ),

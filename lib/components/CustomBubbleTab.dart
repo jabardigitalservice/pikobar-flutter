@@ -22,6 +22,7 @@ class CustomBubbleTab extends StatefulWidget {
   ScrollController scrollController;
   Widget searchBar;
   String titleHeader;
+  String subTitle;
 
   CustomBubbleTab(
       {this.listItemTitleTab,
@@ -41,7 +42,8 @@ class CustomBubbleTab extends StatefulWidget {
       this.showTitle,
       this.scrollController,
       this.searchBar,
-      this.titleHeader});
+      this.titleHeader,
+      this.subTitle});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -89,9 +91,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
               body: NestedScrollView(
                   controller: widget.scrollController,
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
-                    return <Widget>[
-                      _buildSliverAppBar(context)
-                    ];
+                    return <Widget>[_buildSliverAppBar(context)];
                   },
                   body: TabBarView(
                     controller: widget.tabController != null
@@ -114,14 +114,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                         ? widget.isScrollable
                         : true,
                     onTap: (index) {
-                      // setState(() {
-                      //   dataSelected = widget.listItemTitleTab[index];
-                      //   listBubbleTabItem.clear();
-                      //   for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-                      //     listBubbleTabItem.add(bubbleTabItem(
-                      //         widget.listItemTitleTab[i], dataSelected));
-                      //   }
-                      // });
                       widget.onTap(index);
                     },
                     labelColor: widget.labelColor,
@@ -197,7 +189,11 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         backgroundColor: Colors.white,
         elevation: 0,
         pinned: true,
-        expandedHeight: widget.showTitle ? 150 : 250.0,
+        expandedHeight: widget.showTitle
+            ? 150
+            : widget.searchBar != null
+                ? 250.0
+                : widget.subTitle != null ? 200 : 150,
         title: AnimatedOpacity(
           opacity: widget.showTitle ? 1.0 : 0.0,
           duration: Duration(milliseconds: 250),
@@ -250,16 +246,33 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       duration: Duration(milliseconds: 250),
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          widget.titleHeader,
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w900),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.titleHeader,
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                            widget.subTitle != null ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                widget.subTitle,
+                                style: TextStyle(
+                                  fontFamily: FontsFamily.roboto,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ) : Container(),
+                          ],
                         ),
                       ),
                     ),
-                    widget.showTitle ? Container() : widget.searchBar,
+                    widget.showTitle
+                        ? Container()
+                        : widget.searchBar ?? Container(),
                     TabBar(
                         controller: widget.tabController != null
                             ? widget.tabController
@@ -291,7 +304,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                         tabs: listBubbleTabItem),
                   ],
                 ),
-              )
-    );
+              ));
   }
 }
