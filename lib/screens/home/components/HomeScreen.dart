@@ -163,27 +163,10 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(40.0),
+          preferredSize: Size.fromHeight(20.0),
           child: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.white,
-            title: Row(
-              children: <Widget>[
-                Image.asset('${Environment.logoAssets}logo.png',
-                    width: 24.0, height: 24.0),
-                Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      Dictionary.appName,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.intro,
-                      ),
-                    ))
-              ],
-            ),
           ),
         ),
         body: buildContent(),
