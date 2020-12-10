@@ -78,11 +78,15 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   bool isSwipe = false;
   int indexTab = 0;
   double paddingBubleTab;
+  bool isScrollable;
+  double paddingTopTabBarView;
 
   @override
   void initState() {
     ///for set default each variable if get value null
     paddingBubleTab = widget.paddingBubbleTab ?? 0;
+    paddingTopTabBarView = widget.paddingTopTabBarView ?? 0;
+    isScrollable = widget.isScrollable ?? true;
     _basetabController = widget.tabController ??
         TabController(vsync: this, length: widget.listItemTitleTab.length);
     _basetabController.addListener(_handleTabSelection);
@@ -118,10 +122,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     return <Widget>[_buildSliverAppBar(context)];
                   },
                   body: TabBarView(
-                    ///condition for check tabcontroller is null or not, if null will get value from _baseController
-                    controller: widget.tabController != null
-                        ? widget.tabController
-                        : _basetabController,
+                    controller: _basetabController,
                     children: widget.tabBarView,
                   )),
             ),
@@ -135,16 +136,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                   padding: EdgeInsets.only(
                       left: paddingBubleTab, right: paddingBubleTab),
                   child: TabBar(
-
-                      ///condition for check tabcontroller is null or not, if null will get value from _baseController
-                      controller: widget.tabController != null
-                          ? widget.tabController
-                          : _basetabController,
-
-                      /// default scroll tab is true if value from widget.isScrollable is null
-                      isScrollable: widget.isScrollable != null
-                          ? widget.isScrollable
-                          : true,
+                      controller: _basetabController,
+                      isScrollable: isScrollable,
                       onTap: (index) {
                         widget.onTap(index);
                       },
@@ -165,22 +158,16 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                 isExpand
                     ? Expanded(
                         child: TabBarView(
-                          controller: widget.tabController != null
-                              ? widget.tabController
-                              : _basetabController,
+                          controller: _basetabController,
                           children: widget.tabBarView,
                         ),
                       )
                     : Container(
                         height: widget.heightTabBarView,
                         padding: EdgeInsets.only(
-                            top: widget.paddingTopTabBarView != null
-                                ? widget.paddingTopTabBarView
-                                : 0.0),
+                            top: paddingTopTabBarView),
                         child: TabBarView(
-                          controller: widget.tabController != null
-                              ? widget.tabController
-                              : _basetabController,
+                          controller: _basetabController,
                           children: widget.tabBarView,
                         ),
                       ),
@@ -239,11 +226,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         ///condition for set title when collapsing
         bottom: widget.showTitle
             ? TabBar(
-                controller: widget.tabController != null
-                    ? widget.tabController
-                    : _basetabController,
-                isScrollable:
-                    widget.isScrollable != null ? widget.isScrollable : true,
+                controller: _basetabController,
+                isScrollable: isScrollable,
                 onTap: (index) {
                   widget.onTap(index);
                 },
@@ -279,12 +263,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     ),
                     widget.showTitle ? Container() : widget.searchBar,
                     TabBar(
-                        controller: widget.tabController != null
-                            ? widget.tabController
-                            : _basetabController,
-                        isScrollable: widget.isScrollable != null
-                            ? widget.isScrollable
-                            : true,
+                        controller: _basetabController,
+                        isScrollable: isScrollable,
                         onTap: (index) {
                           widget.onTap(index);
                         },
