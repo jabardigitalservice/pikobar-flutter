@@ -205,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen>
           isScrollable: false,
           unselectedLabelColor: Colors.grey,
           tabController: tabController,
+          paddingBubbleTab: 10,
           sizeLabel: 13.0,
           onTap: (index) async {
             if (listItemTitleTab[index] == Dictionary.covidInformation) {
