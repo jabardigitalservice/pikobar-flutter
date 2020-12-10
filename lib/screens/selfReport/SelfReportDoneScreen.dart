@@ -212,7 +212,7 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
           content: isHealthy
               ? Dictionary.announcementDescHealthy
               : Dictionary.announcementDescIndication,
-          padding: 0,
+          margin: EdgeInsets.zero,
           htmlStyle: Style(
               margin: EdgeInsets.zero,
               fontFamily: FontsFamily.roboto,

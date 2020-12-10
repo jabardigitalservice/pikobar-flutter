@@ -22,7 +22,7 @@ class Announcement extends StatelessWidget {
   final TextStyle textStyleContent;
   final TextStyle textStyleMoreDetail;
   final Style htmlStyle;
-  final double padding;
+  final EdgeInsetsGeometry margin;
 
   Announcement(
       {this.title,
@@ -34,13 +34,13 @@ class Announcement extends StatelessWidget {
       this.textStyleContent,
       this.textStyleMoreDetail,
       this.htmlStyle,
-      this.padding});
+      this.margin});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.symmetric(horizontal: padding ?? Dimens.padding),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimens.padding),
       decoration: BoxDecoration(
           color: ColorBase.announcementBackgroundColor,
           borderRadius: BorderRadius.circular(8.0)),

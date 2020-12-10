@@ -43,6 +43,7 @@ class CustomBubbleTab extends StatefulWidget {
   ScrollController scrollController;
   Widget searchBar;
   String titleHeader;
+  String subTitle;
 
   CustomBubbleTab(
       {this.listItemTitleTab,
@@ -63,6 +64,7 @@ class CustomBubbleTab extends StatefulWidget {
       this.scrollController,
       this.searchBar,
       this.titleHeader,
+      this.subTitle,
       this.paddingBubbleTab});
 
   @override
@@ -208,7 +210,11 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         backgroundColor: Colors.white,
         elevation: 0,
         pinned: true,
-        expandedHeight: widget.showTitle ? 150 : 250.0,
+        expandedHeight: widget.showTitle
+            ? 150
+            : widget.searchBar != null
+                ? 250.0
+                : widget.subTitle != null ? 200 : 150,
         title: AnimatedOpacity(
           opacity: widget.showTitle ? 1.0 : 0.0,
           duration: Duration(milliseconds: 250),
@@ -252,16 +258,33 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       duration: Duration(milliseconds: 250),
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          widget.titleHeader,
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w900),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.titleHeader,
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                            widget.subTitle != null ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                widget.subTitle,
+                                style: TextStyle(
+                                  fontFamily: FontsFamily.roboto,
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ) : Container(),
+                          ],
                         ),
                       ),
                     ),
-                    widget.showTitle ? Container() : widget.searchBar,
+                    widget.showTitle
+                        ? Container()
+                        : widget.searchBar ?? Container(),
                     TabBar(
                         controller: _basetabController,
                         isScrollable: isScrollable,
