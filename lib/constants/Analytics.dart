@@ -141,4 +141,9 @@ class Analytics {
   static String contactHistorySaved = "riwayat_kontak_baru_tersimpan";
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
 
+
+  static String crowdReport = "tapped_lapor_kerumunan";
+
+
+
 }

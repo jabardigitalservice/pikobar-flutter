@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -5,15 +6,19 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/repositories/RemoteConfigRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class ComplaintsMenuScreen extends StatelessWidget {
   final String complaintsUrl;
 
-  const ComplaintsMenuScreen({Key key, @required this.complaintsUrl}) : super(key: key);
+  const ComplaintsMenuScreen({Key key, @required this.complaintsUrl})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,38 +28,53 @@ class ComplaintsMenuScreen extends StatelessWidget {
           title: Dictionary.pikobarComplaints,
         ),
         backgroundColor: Colors.white,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-              child: Text(
-                Dictionary.pikobarComplaints,
-                style: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            Row(
+        body: FutureBuilder<RemoteConfig>(
+          future: RemoteConfigRepository().setupRemoteConfig(),
+          builder: (context, snapshot) {
+            bool isReady = snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildButtonMenu(
-                    context,
-                    '${Environment.iconAssets}whatsapp.png',
-                    Dictionary.generalComplaints, () async {
-                    await launchExternal(kUrlPikobarHotline);
-                    await AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencyWa);
-                }),
-                _buildButtonMenu(
-                    context,
-                    '${Environment.iconAssets}menu_logistik.png',
-                    Dictionary.crowdComplaints, () async {
-                  await openChromeSafariBrowser(url: complaintsUrl);
-                  await AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
-                })
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                  child: Text(
+                    Dictionary.pikobarComplaints,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Row(
+                  children: [
+                    _buildButtonMenu(
+                        context,
+                        '${Environment.iconAssets}whatsapp.png',
+                        Dictionary.crowdComplaints, () async {
+                      await launchExternal(kUrlPikobarHotline);
+                      await AnalyticsHelper.setLogEvent(
+                          Analytics.crowdReport);
+                    }),
+                    _buildButtonMenu(
+                        context,
+                        '${Environment.iconAssets}menu_logistik.png',
+                        isReady
+                            ? RemoteConfigHelper.getString(
+                            remoteConfig: snapshot.data,
+                            firebaseConfig: FirebaseConfig.reportCaption,
+                            defaultValue: Dictionary.bansosComplaints)
+                            : Dictionary.bansosComplaints, isReady && !snapshot.data.getBool(FirebaseConfig.reportEnabled) ? null : () async {
+                      await openChromeSafariBrowser(url: complaintsUrl);
+                      await AnalyticsHelper.setLogEvent(
+                          Analytics.tappedCaseReport);
+                    })
+                  ],
+                )
               ],
-            )
-          ],
+            );
+          },
         ));
   }
 
