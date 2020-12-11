@@ -48,7 +48,6 @@ class _VerificationState extends State<Verification> {
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
-  final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
 
   @override

@@ -106,6 +106,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                     state is AuthenticationLoading) {
                   AuthenticationAuthenticated _profileLoaded =
                   state as AuthenticationAuthenticated;
+                  // ignore: unnecessary_statements
                   _profileLoaded.record.uid;
                   return StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance.collection(kSurveys).snapshots(),
