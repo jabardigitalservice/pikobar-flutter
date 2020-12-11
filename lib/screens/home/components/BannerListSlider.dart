@@ -85,7 +85,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                   return Builder(builder: (BuildContext context) {
                     return GestureDetector(
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 8.0),
+                        margin: EdgeInsets.symmetric(horizontal: 4.0),
                         decoration: BoxDecoration(shape: BoxShape.circle),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
