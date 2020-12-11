@@ -158,7 +158,7 @@ class _ZonationState extends State<Zonation> {
     String zone = '';
     String description;
 
-    switch (data.zonaResiko.toUpperCase()) {
+    switch (data.zonaResiko.toUpperCase().replaceAll('RESIKO', 'RISIKO')) {
       case Dictionary.zoneHighRisk:
         dotColor = Colors.red;
         zone = StringUtils.capitalizeWord(Dictionary.zoneHighRisk);
