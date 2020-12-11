@@ -14,9 +14,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
-import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
-import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 
 class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;

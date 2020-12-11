@@ -14,7 +14,6 @@ class Phonebook extends StatefulWidget {
 }
 
 class _PhonebookState extends State<Phonebook> {
-  bool _isSearch = false;
   var containerWidth = 40.0;
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
@@ -84,49 +83,10 @@ class _PhonebookState extends State<Phonebook> {
     );
   }
 
-  List<Widget> _buildActions() {
-    if (_isSearch) {
-      return <Widget>[
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            if (_searchController == null || _searchController.text.isEmpty) {
-              _stopSearching();
-              return;
-            }
-            _clearSearchQuery();
-          },
-        ),
-      ];
-    }
-
-    return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: _startSearch,
-      ),
-    ];
-  }
-
-  void _startSearch() {
-    setState(() {
-      _isSearch = true;
-    });
-
-    AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencySearch);
-  }
-
   void updateSearchQuery(String newQuery) {
+    AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencySearch);
     setState(() {
       searchQuery = newQuery;
-    });
-  }
-
-  void _stopSearching() {
-    _clearSearchQuery();
-
-    setState(() {
-      _isSearch = false;
     });
   }
 

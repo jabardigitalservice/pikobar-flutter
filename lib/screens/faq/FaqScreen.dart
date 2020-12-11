@@ -30,7 +30,6 @@ class _FaqScreenState extends State<FaqScreen> {
   String searchQuery = '';
   Timer _debounce;
   bool isConnected = false;
-  bool _isSearch = false;
   final containerWidth = 40.0;
 
   @override
@@ -103,49 +102,10 @@ class _FaqScreenState extends State<FaqScreen> {
     );
   }
 
-  List<Widget> _buildActions() {
-    if (_isSearch) {
-      return <Widget>[
-        IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            if (_searchController == null || _searchController.text.isEmpty) {
-              _stopSearching();
-              return;
-            }
-            _clearSearchQuery();
-          },
-        ),
-      ];
-    }
-
-    return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: _startSearch,
-      ),
-    ];
-  }
-
-  void _startSearch() {
-    setState(() {
-      _isSearch = true;
-    });
-
-    AnalyticsHelper.setLogEvent(Analytics.tappedFaqSearch);
-  }
-
   void updateSearchQuery(String newQuery) {
+    AnalyticsHelper.setLogEvent(Analytics.tappedFaqSearch);
     setState(() {
       searchQuery = newQuery;
-    });
-  }
-
-  void _stopSearching() {
-    _clearSearchQuery();
-
-    setState(() {
-      _isSearch = false;
     });
   }
 
