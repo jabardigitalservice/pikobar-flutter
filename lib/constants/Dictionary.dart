@@ -141,6 +141,7 @@ class Dictionary {
   static String ok = 'Ok';
   static String later = 'Nanti';
   static String next = 'Lanjut';
+  static String nextStep = 'Selanjutnya';
   static String update = 'Perbarui';
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
@@ -458,7 +459,7 @@ class Dictionary {
       '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
   static String previewAnnouncement =
       '<p>Apakah data di bawah ini sudah benar?</p>';
-  static String previewData = 'Preview Data';
+  static String previewData = 'Cek Kembali Data Anda';
   static String reportForMySelf = 'Lapor Untuk Diri Sendiri';
   static String reportForOther = 'Lapor Untuk Orang Lain';
 
