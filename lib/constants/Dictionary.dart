@@ -44,7 +44,7 @@ class Dictionary {
   static String emptyDataPhoneBookDesc =
       'Nomor atau kota yang Anda cari sepertinya tidak ada dalam data kami, silahkan hubungi nomor atau kota lainnya.';
   static String nomorDarurat = 'Detail Nomor Darurat';
-  static String generalComplaints = 'Pengaduan Umum Via Hotline';
+  static String bansosComplaints = 'Aduan Bansos Pikobar';
   static String crowdComplaints = 'Aduan Kerumunan Pikobar';
   static String odp = 'ODP';
   static String pdp = 'PDP';
