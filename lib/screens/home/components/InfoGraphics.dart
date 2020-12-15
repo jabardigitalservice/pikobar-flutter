@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/LabelNew.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -15,6 +18,7 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -35,6 +39,15 @@ class InfoGraphics extends StatefulWidget {
 class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
 
+  // DateTime currentDay = DateTime.now();
+  // DateTime yesterday = DateTime(
+  //     DateTime.now().year, DateTime.now().month, DateTime.now().day - 1);
+
+  DateTime currentDay = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day - 3);
+  DateTime yesterday = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day - 4);
+
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
     Dictionary.center,
@@ -53,12 +66,26 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     Analytics.tappedInfographicWho,
   ];
 
+  List<LabelNewModel> dataLabel;
+
   @override
   void initState() {
+    getDataLabel();
+    print('hari ini tanggal ' +
+        currentDay.toString() +
+        ' kemarin ' +
+        yesterday.toString());
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
     infoGraphicsListBloc.add(InfoGraphicsListLoad(
         infoGraphicsCollection: kAllInfographics, limit: 5));
     super.initState();
+  }
+
+  Future<Null> getDataLabel() async {
+    String label = await LabelNewSharedPreference.getLabelNewInfoGraphics();
+    setState(() {
+      dataLabel = LabelNewModel.decode(label);
+    });
   }
 
   @override
@@ -198,6 +225,39 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     );
   }
 
+  _insertDataLabel(List<DocumentSnapshot> listData) async {
+    listData.forEach((dataInfographic) {
+      var dataDate = DateTime.fromMillisecondsSinceEpoch(
+          dataInfographic['published_date'].seconds * 1000);
+      if (dataDate.day == currentDay.day &&
+              dataDate.month == currentDay.month ||
+          dataDate.day == yesterday.day && dataDate.month == yesterday.month) {
+        print('print masuk sini  ' +
+            DateTime.fromMillisecondsSinceEpoch(
+                    dataInfographic['published_date'].seconds * 1000)
+                .toString() +
+            "hari " +
+            DateTime.fromMillisecondsSinceEpoch(
+                    dataInfographic['published_date'].seconds * 1000)
+                .day
+                .toString() +
+            'judul ' +
+            dataInfographic['title'].toString());
+        LabelNewModel labelNewModel =
+            LabelNewModel(id: dataInfographic.id.toString(), isRead: '0');
+
+        if (dataLabel.isNotEmpty && !dataLabel.contains(labelNewModel)) {
+          dataLabel.add(labelNewModel);
+        } else if (dataLabel.isEmpty) {
+          dataLabel.add(labelNewModel);
+        }
+      }
+    });
+
+    String encodeData = LabelNewModel.encode(dataLabel);
+    await LabelNewSharedPreference.setLabelNewInfoGraphics(encodeData);
+  }
+
   Widget _buildContent(
       List<DocumentSnapshot> listData, Map<String, dynamic> getLabel) {
     if (widget.searchQuery != null) {
@@ -209,6 +269,11 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       if (listData.isEmpty) {
         widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
       }
+    }
+    print('cekk isinya bos ' + dataLabel.length.toString());
+
+    if (dataLabel != null) {
+      _insertDataLabel(listData);
     }
 
     return listData.isNotEmpty
@@ -332,7 +397,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             document['title'],
                                             style: TextStyle(
                                                 fontSize: 14.0,
-                                                fontFamily: FontsFamily.lato,
+                                                fontFamily: FontsFamily.roboto,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
@@ -345,6 +410,39 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
+                                              dataLabel.isNotEmpty &&
+                                                      dataLabel.contains(
+                                                          document.id
+                                                              .toString())
+                                                  ? Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5,
+                                                          bottom: 5,
+                                                          left: 7,
+                                                          right: 7),
+                                                      margin: EdgeInsets.only(
+                                                          right: 5),
+                                                      decoration: BoxDecoration(
+                                                        color: ColorBase.red400,
+                                                        shape:
+                                                            BoxShape.rectangle,
+                                                        borderRadius: BorderRadius
+                                                            .circular(Dimens
+                                                                .dialogRadius),
+                                                      ),
+                                                      child: Text('Baru',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontFamily:
+                                                                  FontsFamily
+                                                                      .roboto,
+                                                              fontSize: 10.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600)),
+                                                    )
+                                                  : Container(),
                                               Expanded(
                                                 child: Text(
                                                   unixTimeStampToDateTime(
@@ -353,7 +451,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:
-                                                          FontsFamily.lato,
+                                                          FontsFamily.roboto,
                                                       fontSize: 10.0,
                                                       fontWeight:
                                                           FontWeight.w600),
