@@ -102,7 +102,7 @@ class _EditState extends State<Edit> {
   bool get _showTitle {
     return _scrollController.hasClients &&
         _scrollController.offset >
-            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
@@ -666,7 +666,7 @@ class _EditState extends State<Edit> {
                 Dictionary.requiredForm,
                 style: TextStyle(
                     fontSize: 10.0,
-                    color: Colors.red,
+                    color: Colors.green,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
@@ -738,7 +738,7 @@ class _EditState extends State<Edit> {
                 Dictionary.requiredForm,
                 style: TextStyle(
                     fontSize: 10.0,
-                    color: Colors.red,
+                    color: Colors.green,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
@@ -834,12 +834,13 @@ class _EditState extends State<Edit> {
                 Dictionary.requiredForm,
                 style: TextStyle(
                     fontSize: 10.0,
-                    color: Colors.red,
+                    color: Colors.green,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
             ],
           ),
+          
           SizedBox(
             height: 10,
           ),
@@ -912,7 +913,7 @@ class _EditState extends State<Edit> {
                 Dictionary.requiredForm,
                 style: TextStyle(
                     fontSize: 10.0,
-                    color: Colors.red,
+                    color: Colors.green,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
@@ -1015,7 +1016,7 @@ class _EditState extends State<Edit> {
                 Dictionary.requiredForm,
                 style: TextStyle(
                     fontSize: 10.0,
-                    color: Colors.red,
+                    color: Colors.green,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
