@@ -430,6 +430,8 @@ class Dictionary {
   static String emptyContact = 'Belum Ada Kontak';
   static String emptyContactDesc =
       'Terima kasih sudah membantu \nmempercepat pelacakan kasus dengan \nmengisi laporan ini secara jujur.';
+  static String nikNotRegistered = 'NIK Tidak Terdaftar';
+  static String nikNotRegisteredDesc = 'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
