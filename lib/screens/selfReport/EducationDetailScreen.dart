@@ -30,8 +30,6 @@ class EducationDetailScreen extends StatefulWidget {
 }
 
 class _EducationDetailScreenState extends State<EducationDetailScreen> {
-  // ignore: close_sinks
-  EducationDetailBloc _educationDetailBloc;
 
   @override
   void initState() {
@@ -44,7 +42,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EducationDetailBloc>(
-      create: (context) => _educationDetailBloc = EducationDetailBloc()
+      create: (context) =>  EducationDetailBloc()
         ..add(EducationDetailLoad(
             educationCollection: widget.educationCollection,
             educationId: widget.id)),

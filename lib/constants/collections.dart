@@ -13,6 +13,7 @@ const String kAllInfographics = 'all_infographics';
 const String kDocuments = 'documents';
 const String kAreas = 'areas';
 const String kUsers = 'users';
+const String kUsersQuarantined = 'users_quarantined';
 const String kUserTokens = 'tokens';
 const String kUserLocations = 'locations';
 const String kStatistics = 'statistics';

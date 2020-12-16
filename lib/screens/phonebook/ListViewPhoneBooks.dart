@@ -1090,18 +1090,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     );
   }
 
-  // void _onTapItem(BuildContext context, DocumentSnapshot document) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => PhoneBookDetailScreen(document: document),
-  //     ),
-  //   );
-
-  //   AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencyDetail,
-  //       <String, dynamic>{'title': document['name']});
-  // }
-
   void _onTapCallCenter(BuildContext context, DocumentSnapshot document) {
     Navigator.push(
       context,

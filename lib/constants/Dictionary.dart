@@ -25,7 +25,7 @@ class Dictionary {
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Donasi Covid-19';
   static String bansos = 'Bantuan Sosial';
-  static String aduanBansos = 'Aduan Bansos';
+  static String pikobarComplaints = 'Aduan Pikobar';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String massiveTestRegistration = 'Daftar Test Masif';
@@ -44,6 +44,8 @@ class Dictionary {
   static String emptyDataPhoneBookDesc =
       'Nomor atau kota yang Anda cari sepertinya tidak ada dalam data kami, silahkan hubungi nomor atau kota lainnya.';
   static String nomorDarurat = 'Detail Nomor Darurat';
+  static String bansosComplaints = 'Aduan Bansos Pikobar';
+  static String crowdComplaints = 'Aduan Kerumunan Pikobar';
   static String odp = 'ODP';
   static String pdp = 'PDP';
   static String underSupervision = 'Dalam Pengawasan';
@@ -139,6 +141,7 @@ class Dictionary {
   static String ok = 'Ok';
   static String later = 'Nanti';
   static String next = 'Lanjut';
+  static String nextStep = 'Selanjutnya';
   static String update = 'Perbarui';
   static String save = 'Simpan';
   static String verification = 'Verifikasi Nomor';
@@ -283,7 +286,7 @@ class Dictionary {
   static String surveyInfo =
       'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
   static String checkAroundYou = 'Cek Sekitar Anda';
-  static String youAreIn = 'Anda berada di';
+  static String youAreIn = 'Anda berada di Zona';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -372,7 +375,7 @@ class Dictionary {
   static String labelImportantInfo = "PENTING";
 
   // Self Report
-  static String selfReportDetail = 'Detail Pemantauan Harian';
+  static String selfReportDetail = 'Detail Kesehatan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
   static String titleSelfReport = 'Lapor Mandiri';
   static String historyContact = 'Riwayat \nKontak';
@@ -390,7 +393,7 @@ class Dictionary {
       'Untuk dapat mengakses menu silahkan pilih lokasi Isolasi anda saat ini terlebih dahulu';
   static String healthy = 'HEALTHY';
   static String detailSelfReport = 'Detail Pemantauan Harian';
-  static String monitoringCompleted = 'Proses pemantauan sudah terisi';
+  static String monitoringCompleted = 'Proses pelaporan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
   static String indications = 'Gejala yang Dirasakan';
@@ -427,6 +430,8 @@ class Dictionary {
   static String emptyContact = 'Belum Ada Kontak';
   static String emptyContactDesc =
       'Terima kasih sudah membantu \nmempercepat pelacakan kasus dengan \nmengisi laporan ini secara jujur.';
+  static String nikNotRegistered = 'NIK Tidak Terdaftar';
+  static String nikNotRegisteredDesc = 'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
@@ -437,7 +442,7 @@ class Dictionary {
   static String lastContactDate = 'Tanggal Kontak Terakhir';
   static String monitoringIsComplete = 'Pemantauan Selesai!';
   static String selfReportSummary = 'Dalam 14 hari terakhir, ';
-  static String selfReportHistory = 'Lihat Riwayat Kesehatan Saya';
+  static String selfReportHistory = 'Lihat Riwayat Kesehatan';
   static String info = 'Info';
   static String announcementDescHealthy =
       '<p>Tetap waspada dengan menjaga kebugaran dan konsumsi vitamin untuk meningkatkan imunitas tubuh.</p> <p>Jaga jarak dan gunakan masker ketika beraktivitas.</p>';
@@ -456,7 +461,7 @@ class Dictionary {
       '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
   static String previewAnnouncement =
       '<p>Apakah data di bawah ini sudah benar?</p>';
-  static String previewData = 'Preview Data';
+  static String previewData = 'Cek Kembali Data Anda';
   static String reportForMySelf = 'Lapor Untuk Diri Sendiri';
   static String reportForOther = 'Lapor Untuk Orang Lain';
 
@@ -466,18 +471,14 @@ class Dictionary {
   // Zonation
   static const String zonation = 'Zonasi';
   static const String zonationSource = 'Sumber Zonasi';
-  static const String zoneHighRisk = 'RESIKO TINGGI';
-  static const String zoneMediumRisk = 'RESIKO SEDANG';
-  static const String zoneLowRisk = 'RESIKO RENDAH';
+  static const String zoneHighRisk = 'RISIKO TINGGI';
+  static const String zoneMediumRisk = 'RISIKO SEDANG';
+  static const String zoneLowRisk = 'RISIKO RENDAH';
   static const String zoneNotAffected = 'TIDAK TERDAMPAK';
-  static const String zoneColorRed = 'Zona Merah';
-  static const String zoneColorOrange = 'Zona Orange';
-  static const String zoneColorYellow = 'Zona Kuning';
-  static const String zoneColorGreen = 'Zona Hijau';
-  static const String zoneRedDescription = 'Anda berada di Zona Risiko Tinggi, yaitu wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
-  static const String zoneOrangeDescription = 'Anda berada di Zona Risiko Sedang, yaitu wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
-  static const String zoneYellowDescription = 'Anda berada di Zona Risiko Rendah, yaitu wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
-  static const String zoneGreenDescription = 'Anda berada di Zona Tidak Terdampak, yaitu wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki resiko penyebaran.';
+  static const String zoneRedDescription = 'Adalah wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
+  static const String zoneOrangeDescription = 'Adalah wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
+  static const String zoneYellowDescription = 'Adalah wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
+  static const String zoneGreenDescription = 'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
   static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
   static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';

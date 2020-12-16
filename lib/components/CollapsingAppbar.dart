@@ -45,7 +45,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
   @override
   void initState() {
     /// for set default value for height appbar & bottom Appbar
-    heightAppbar = widget.heightAppbar ?? 150;
+    heightAppbar = widget.heightAppbar ?? (widget.searchBar != null ? 120 : 60);
     isBottomAppbar = widget.isBottomAppbar ?? true;
     super.initState();
   }
@@ -64,8 +64,8 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
             bottom: isBottomAppbar
                 ? !widget.showTitle
                     ? PreferredSize(
-                        preferredSize:
-                            Size.fromHeight(widget.showTitle ? 0 : 130.0),
+                        preferredSize: Size.fromHeight(
+                            widget.showTitle ? 0 : heightAppbar),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -104,9 +104,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                 ? isBottomAppbar
                     ? heightAppbar
                     : 250
-                : isBottomAppbar
-                    ? 180
-                    : heightAppbar,
+                : heightAppbar,
             floating: false,
             flexibleSpace: !isBottomAppbar
                 ? FlexibleSpaceBar(

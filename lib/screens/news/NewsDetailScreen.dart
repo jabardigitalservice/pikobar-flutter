@@ -27,7 +27,6 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
-import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
@@ -65,7 +64,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   bool get isShrink {
     return _scrollController.hasClients &&
         _scrollController.offset > (200 - kToolbarHeight);
-}
+  }
 
   @override
   void initState() {
@@ -415,11 +414,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0)),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    NewsListScreen(news: widget.news)));
+                        Navigator.of(context).pop(true);
                       },
                     ),
                   ),

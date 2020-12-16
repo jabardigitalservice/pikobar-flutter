@@ -139,6 +139,7 @@ class IndexScreenState extends State<IndexScreen> {
     items = [
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.homeOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -147,10 +148,12 @@ class IndexScreenState extends State<IndexScreen> {
           )),
       BottomNavigationBarItem(
         icon: Icon(EvaIcons.messageCircleOutline, size: 24),
+        // ignore: deprecated_member_use
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -159,6 +162,7 @@ class IndexScreenState extends State<IndexScreen> {
           )),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -167,6 +171,7 @@ class IndexScreenState extends State<IndexScreen> {
           )),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.personOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -361,6 +366,7 @@ class IndexScreenState extends State<IndexScreen> {
         if (countMessage <= 0) {
           items[1] = BottomNavigationBarItem(
               icon: Icon(EvaIcons.messageCircleOutline, size: 24),
+              // ignore: deprecated_member_use
               title: Column(
                 children: <Widget>[
                   SizedBox(height: 4),

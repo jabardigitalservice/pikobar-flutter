@@ -7,6 +7,7 @@
   const String kUrlWorldCoronaInfo = 'https://coronavirus.thebaselab.com/';
   const String kUrlIGSaberHoax = 'https://www.instagram.com/jabarsaberhoaks/';
   const String kUrlCaseReport = 'https://lapor.pikobar.jabarprov.go.id';
+  const String kUrlPikobarHotline = 'https://s.id/ChatbotPikobar';
   const String kUrlQNA = 'https://forum.pikobar.jabarprov.go.id';
   const String kUrlBansos = 'https://solidaritas.jabarprov.go.id/';
   const String kUrlSelfTracing = '';

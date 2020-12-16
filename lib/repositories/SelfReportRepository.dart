@@ -194,4 +194,17 @@ class SelfReportRepository {
       throw SocketException(ErrorException.socketException);
     }
   }
+
+  Future<bool> checkNIK({@required String nik}) async {
+    bool result = false;
+    await _firestore
+        .collection(kUsersQuarantined)
+        .doc(nik)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      result = documentSnapshot.exists;
+    });
+
+    return result;
+  }
 }

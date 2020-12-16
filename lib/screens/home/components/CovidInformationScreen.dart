@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
@@ -11,13 +13,17 @@ import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 
 class CovidInformationScreen extends StatefulWidget {
   @override
-  _CovidInformationScreenState createState() => _CovidInformationScreenState();
+  CovidInformationScreenState createState() => CovidInformationScreenState();
 }
 
-class _CovidInformationScreenState extends State<CovidInformationScreen> {
+class CovidInformationScreenState extends State<CovidInformationScreen> {
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
+  bool isEmptyDataInfoGraphic = false;
+  bool isEmptyDataNews = false;
+  bool isEmptyDataVideoList = false;
+  bool isEmptyDataDocument = false;
 
   @override
   void initState() {
@@ -27,33 +33,60 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
     super.initState();
   }
 
+  bool getIsEmptyData() {
+    return isEmptyDataDocument &&
+        isEmptyDataInfoGraphic &&
+        isEmptyDataNews &&
+        isEmptyDataVideoList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         CustomAppBar.buildSearchField(
             _searchController, Dictionary.searchInformation, updateSearchQuery),
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: InfoGraphics(searchQuery: searchQuery),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: NewsScreen(
-              news: Dictionary.allNews, maxLength: 5, searchQuery: searchQuery),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: VideoList(searchQuery: searchQuery),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: Documents(searchQuery: searchQuery),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 10),
-          child: SocialMedia(),
-        )
+        !getIsEmptyData()
+            ? Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: InfoGraphics(
+                        searchQuery: searchQuery,
+                        covidInformationScreenState: this),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: NewsScreen(
+                        news: Dictionary.allNews,
+                        maxLength: 5,
+                        searchQuery: searchQuery,
+                        covidInformationScreenState: this),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: VideoList(
+                        searchQuery: searchQuery,
+                        covidInformationScreenState: this),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Documents(
+                        searchQuery: searchQuery,
+                        covidInformationScreenState: this),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: SocialMedia(),
+                  )
+                ],
+              )
+            : EmptyData(
+                message: Dictionary.emptyData,
+                desc: Dictionary.descEmptyData,
+                isFlare: false,
+                image: "${Environment.imageAssets}not_found.png",
+              ),
       ],
     );
   }
@@ -73,6 +106,10 @@ class _CovidInformationScreenState extends State<CovidInformationScreen> {
 
   void _clearSearchQuery() {
     setState(() {
+      isEmptyDataInfoGraphic = false;
+      isEmptyDataNews = false;
+      isEmptyDataVideoList = false;
+      isEmptyDataDocument = false;
       _searchController.clear();
       updateSearchQuery(null);
     });

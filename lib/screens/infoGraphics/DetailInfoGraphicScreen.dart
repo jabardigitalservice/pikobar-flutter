@@ -348,4 +348,10 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
       _downloadAttachment(name, url);
     }
   }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
+  }
 }

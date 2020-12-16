@@ -18,10 +18,8 @@ import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
@@ -163,27 +161,10 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(40.0),
+          preferredSize: Size.fromHeight(20.0),
           child: AppBar(
             elevation: 0.0,
             backgroundColor: Colors.white,
-            title: Row(
-              children: <Widget>[
-                Image.asset('${Environment.logoAssets}logo.png',
-                    width: 24.0, height: 24.0),
-                Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      Dictionary.appName,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.intro,
-                      ),
-                    ))
-              ],
-            ),
           ),
         ),
         body: buildContent(),
@@ -205,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen>
           isScrollable: false,
           unselectedLabelColor: Colors.grey,
           tabController: tabController,
+          paddingBubbleTab: 10,
           sizeLabel: 13.0,
           onTap: (index) async {
             if (listItemTitleTab[index] == Dictionary.covidInformation) {

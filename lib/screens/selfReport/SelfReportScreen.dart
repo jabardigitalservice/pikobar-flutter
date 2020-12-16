@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -29,6 +30,7 @@ import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/ContactHistoryScreen.dart';
@@ -108,43 +110,37 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 hasLogin = false;
               });
             }
-            if (state is AuthenticationLoading) {
-              // Show dialog when loading
-              _scaffoldKey.currentState.showSnackBar(
-                SnackBar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  content: Row(
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Container(
-                        margin: EdgeInsets.only(left: 15.0),
-                        child: Text(Dictionary.loading),
-                      )
-                    ],
-                  ),
-                  duration: Duration(seconds: 15),
+if (state is AuthenticationLoading) {
+            // Show dialog when loading
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                content: Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Container(
+                      margin: EdgeInsets.only(left: 15.0),
+                      child: Text(Dictionary.loading),
+                    )
+                  ],
                 ),
-              );
-              setState(() {
-                hasLogin = false;
-              });
-            }
-            if (state is AuthenticationUnauthenticated) {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
-              setState(() {
-                hasLogin = false;
-              });
-            }
+                duration: Duration(seconds: 15),
+              ),
+            );
+            hasLogin = false;
+          }
+          if (state is AuthenticationUnauthenticated) {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+            hasLogin = false;
+          }
 
-            if (state is AuthenticationAuthenticated) {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
-              setState(() {
-                profileLoaded = state;
-                hasLogin = true;
-              });
-            }
-          },
-          child: Scaffold(
+          if (state is AuthenticationAuthenticated) {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+            profileLoaded = state;
+            hasLogin = true;
+          }
+        },
+        child: Scaffold(
             key: _scaffoldKey,
             appBar: CustomAppBar.animatedAppBar(
               showTitle: _showTitle,
@@ -249,94 +245,144 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   }
 
   /// Function for build widget content
-  Widget _buildContent(DocumentSnapshot state) {
-    return Column(
+  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state) {
+    return  Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        !HealthCheck().isUserHealty(getField(state, 'health_status')) &&
-                _isProfileUserNotComplete(state)
-            ? SizedBox(
-                height: 20,
-              )
-            : Container(),
-        hasLogin
-            ? !HealthCheck().isUserHealty(getField(state, 'health_status')) &&
-                    _isProfileUserNotComplete(state)
-                ? _buildAnnounceProfileNotComplete(state)
-                : Container()
-            : Container(),
-        SizedBox(
-          height: 10,
-        ),
-        _buildLocation(state),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            _buildContainer(
-                '${Environment.iconAssets}daily_self_report_disable.png',
-                '${Environment.iconAssets}daily_self_report_enable.png',
-                Dictionary.dailyMonitoring,
-                2,
-                //for give condition onPressed in widget _buildContainer
-                () {
-              if (latLng == null ||
-                  addressMyLocation == '-' ||
-                  addressMyLocation.isEmpty ||
-                  addressMyLocation == null) {
-                Fluttertoast.showToast(
-                    backgroundColor: ColorBase.grey500,
-                    msg: Dictionary.alertLocationSelfReport,
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    fontSize: 16.0);
-              } else {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SelfReportOption(latLng)));
-              }
+        children: <Widget>[
+          hasLogin
+              ? !HealthCheck().isUserHealty(
+                          getField(state.data, 'health_status')) &&
+                      _isProfileUserNotComplete(state)
+                  ? _buildAnnounceProfileNotComplete(state)
+                  : Container()
+              : Container(),
+          SizedBox(
+            height: 10,
+          ),
+          _buildLocation(state),
+          SizedBox(
+            height: 10,
+          ),
+          FutureBuilder<bool>(
+            future: SelfReportRepository()
+                .checkNIK(nik: getField(state.data, 'nik')),
+            builder: (context, snapshot) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  _buildContainer(
+                    imageDisable:
+                        '${Environment.iconAssets}daily_self_report_disable.png',
+                    imageEnable: '${Environment.iconAssets}daily_self_report_enable.png',
+                    title: Dictionary.dailyMonitoring,
+                    length: 2,
+                    //for give condition onPressed in widget _buildContainer
+                    onPressedEnable: () {
+                      if (latLng == null ||
+                          addressMyLocation == '-' ||
+                          addressMyLocation.isEmpty ||
+                          addressMyLocation == null) {
+                        Fluttertoast.showToast(
+                            backgroundColor: ColorBase.grey500,
+                            msg: Dictionary.alertLocationSelfReport,
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            fontSize: 16.0);
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportOption(latLng)));
+                      }
+                    },
+                    onPressedDisable: () {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData &&
+                          !_isProfileUserNotComplete(state) &&
+                          !snapshot.data) {
+                        showTextBottomSheet(
+                            context: context,
+                            title: Dictionary.nikNotRegistered,
+                            message: Dictionary.nikNotRegisteredDesc);
+                      } else {
+                        showTextBottomSheet(
+                            context: context,
+                            title: Dictionary.profileNotComplete,
+                            message: Dictionary.descProfile1);
+                      }
+                    },
+                    // condition for check if user login and user complete fill that profile
+                    // and health status is not healthy user can access for press the button in _buildContainer
+                    isShowMenu: hasLogin &&
+                        !_isProfileUserNotComplete(state) &&
+                        (snapshot.connectionState == ConnectionState.done &&
+                                snapshot.hasData
+                            ? (snapshot.data ||
+                                !HealthCheck().isUserHealty(
+                                  getField(state.data, 'health_status'),
+                                ))
+                            : !HealthCheck().isUserHealty(
+                                getField(state.data, 'health_status'),
+                              )),
+                  ),
+                  _buildContainer(
+                    imageDisable:
+                        '${Environment.iconAssets}history_contact_disable.png',
+                    imageEnable:
+                        '${Environment.iconAssets}history_contact_enable.png',
+                    title: Dictionary.historyContact,
+                    length: 2,
+                    onPressedEnable: () {
+                      if (latLng == null ||
+                          addressMyLocation == '-' ||
+                          addressMyLocation.isEmpty ||
+                          addressMyLocation == null) {
+                        Fluttertoast.showToast(
+                            backgroundColor: ColorBase.grey500,
+                            msg: Dictionary.alertLocationSelfReport,
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            fontSize: 16.0);
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ContactHistoryScreen()));
+                      }
+                    },
+                    onPressedDisable: () {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData &&
+                          !_isProfileUserNotComplete(state) &&
+                          !snapshot.data) {
+                        showTextBottomSheet(
+                            context: context,
+                            title: Dictionary.nikNotRegistered,
+                            message: Dictionary.nikNotRegisteredDesc);
+                      } else {
+                        showTextBottomSheet(
+                            context: context,
+                            title: Dictionary.profileNotComplete,
+                            message: Dictionary.descProfile1);
+                      }
+                    },
+                    isShowMenu: hasLogin &&
+                        !_isProfileUserNotComplete(state) &&
+                        (snapshot.connectionState == ConnectionState.done &&
+                                snapshot.hasData
+                            ? (snapshot.data ||
+                                !HealthCheck().isUserHealty(
+                                  getField(state.data, 'health_status'),
+                                ))
+                            : !HealthCheck().isUserHealty(
+                                getField(state.data, 'health_status'),
+                              )),
+                  ),
+                ],
+              );
             },
-                // condition for check if user login and user complete fill that profile
-                // and health status is not healthy user can access for press the button in _buildContainer
-                hasLogin
-                    ? !_isProfileUserNotComplete(state) &&
-                            !HealthCheck()
-                                .isUserHealty(getField(state, 'health_status'))
-                        ? hasLogin
-                        : false
-                    : false),
-            _buildContainer(
-                '${Environment.iconAssets}history_contact_disable.png',
-                '${Environment.iconAssets}history_contact_enable.png',
-                Dictionary.historyContact,
-                2, () {
-              if (latLng == null ||
-                  addressMyLocation == '-' ||
-                  addressMyLocation.isEmpty ||
-                  addressMyLocation == null) {
-                Fluttertoast.showToast(
-                    backgroundColor: ColorBase.grey500,
-                    msg: Dictionary.alertLocationSelfReport,
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    fontSize: 16.0);
-              } else {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ContactHistoryScreen()));
-              }
-            },
-                hasLogin
-                    ? !_isProfileUserNotComplete(state) &&
-                            !HealthCheck()
-                                .isUserHealty(getField(state, 'health_status'))
-                        ? hasLogin
-                        : false
-                    : false),
-          ],
-        ),
-        SizedBox(
-          height: 30,
-        ),
-        EducationListScreen()
-      ],
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          EducationListScreen()
+        ],
     );
   }
 
@@ -482,8 +528,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   }
 
   /// Function for build widget button self report
-  _buildContainer(String imageDisable, String imageEnable, String title,
-      int length, GestureTapCallback onPressed, bool isShowMenu) {
+  _buildContainer(
+      {String imageDisable,
+      String imageEnable,
+      String title,
+      int length,
+      GestureTapCallback onPressedEnable,
+      GestureTapCallback onPressedDisable,
+      bool isShowMenu}) {
     return Expanded(
         child: Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -518,7 +570,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             ],
           ),
         ),
-        onPressed: onPressed,
+        onPressed: isShowMenu ? onPressedEnable : onPressedDisable ?? null,
       ),
     ));
   }
