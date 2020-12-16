@@ -35,7 +35,7 @@ import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Edit extends StatefulWidget {
-  final AsyncSnapshot<DocumentSnapshot> state;
+  final DocumentSnapshot state;
 
   Edit({this.state});
 
@@ -75,25 +75,25 @@ class _EditState extends State<Edit> {
 
   @override
   void initState() {
-    _nameController.text = getField(widget.state.data, 'name');
-    _emailController.text = getField(widget.state.data, 'email');
+    _nameController.text = getField(widget.state, 'name');
+    _emailController.text = getField(widget.state, 'email');
     _phoneNumberController.text =
-        getField(widget.state.data, 'phone_number') != null
-            ? '0' + widget.state.data['phone_number'].toString().substring(3)
+        getField(widget.state, 'phone_number') != null
+            ? '0' + widget.state['phone_number'].toString().substring(3)
             : null;
-    _addressController.text = getField(widget.state.data, 'address');
-    _birthDayController.text = getField(widget.state.data, 'birthdate') == null
+    _addressController.text = getField(widget.state, 'address');
+    _birthDayController.text = getField(widget.state, 'birthdate') == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(
-                widget.state.data['birthdate'].seconds * 1000)
+                widget.state['birthdate'].seconds * 1000)
             .toString();
-    _genderController.text = getField(widget.state.data, 'gender');
-    _cityController.text = getField(widget.state.data, 'city_id');
-    _nikController.text = getField(widget.state.data, 'nik');
-    latLng = getField(widget.state.data, 'location') == null
+    _genderController.text = getField(widget.state, 'gender');
+    _cityController.text = getField(widget.state, 'city_id');
+    _nikController.text = getField(widget.state, 'nik');
+    latLng = getField(widget.state, 'location') == null
         ? null
-        : new LatLng(widget.state.data['location'].latitude,
-            widget.state.data['location'].longitude);
+        : new LatLng(widget.state['location'].latitude,
+            widget.state['location'].longitude);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     super.initState();
@@ -189,7 +189,7 @@ class _EditState extends State<Edit> {
                                                 phoneNumber:
                                                     _phoneNumberController.text
                                                         .substring(1),
-                                                uid: widget.state.data['id'],
+                                                uid: widget.state['id'],
                                                 verificationID:
                                                     state.verificationID,
                                                 gender: _genderController.text,
@@ -448,7 +448,7 @@ class _EditState extends State<Edit> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             onPressed: () {
-                              if (widget.state.data['phone_number']
+                              if (widget.state['phone_number']
                                       .toString()
                                       .substring(3) !=
                                   _phoneNumberController.text.substring(1)) {
@@ -570,11 +570,11 @@ class _EditState extends State<Edit> {
       if (isGenderEmpty || isBirthdayEmpty || isCityFieldEmpty) {
         // If the field is empty doing nothing and validator will be shown
 
-      } else if (widget.state.data['phone_number'] ==
+      } else if (widget.state['phone_number'] ==
           Dictionary.inaCode + _phoneNumberController.text.substring(1)) {
         // If phone number field not change by user it will be save to firebase and skip otp
         _profileBloc.add(Save(
-            id: widget.state.data['id'],
+            id: widget.state['id'],
             phoneNumber: _phoneNumberController.text.substring(1),
             gender: _genderController.text,
             address: _addressController.text,
@@ -594,7 +594,7 @@ class _EditState extends State<Edit> {
             // Process for auto verification
             verificationCompleted = (AuthCredential credential) async {
               await _profileRepository.linkCredential(
-                  widget.state.data['id'],
+                  widget.state['id'],
                   _phoneNumberController.text.substring(1),
                   _genderController.text,
                   _addressController.text,
@@ -620,7 +620,7 @@ class _EditState extends State<Edit> {
             };
             // Execute otp process
             _profileBloc.add(Verify(
-                id: widget.state.data['id'],
+                id: widget.state['id'],
                 phoneNumber: _phoneNumberController.text.substring(1),
                 verificationCompleted: verificationCompleted,
                 verificationFailed: verificationFailed,
@@ -630,7 +630,7 @@ class _EditState extends State<Edit> {
           // Otp is disable
           // Save change directly to firestore
           _profileBloc.add(Save(
-              id: widget.state.data['id'],
+              id: widget.state['id'],
               phoneNumber: _phoneNumberController.text.substring(1),
               name: _nameController.text,
               nik: _nikController.text,
