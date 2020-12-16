@@ -39,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
   RemoteConfigBloc _remoteConfigBloc;
-  ScrollController _scrollController;
 
   @override
   void initState() {
@@ -50,15 +49,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : Dictionary.version;
       });
     });
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     super.initState();
-  }
-
-  bool get _showTitle {
-    return _scrollController.hasClients &&
-        _scrollController.offset >
-            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
@@ -115,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: CustomAppBar.animatedAppBar(
-                  showTitle: _showTitle, title: Dictionary.profile),
+                  showTitle: true, title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,
@@ -126,6 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // When user is not login show login screen
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
+                      showTitle: false,
                     );
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
@@ -170,6 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       state is AuthenticationLoading) {
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
+                      showTitle: false,
                     );
                   } else {
                     return Container();
@@ -183,25 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
       AuthenticationAuthenticated _profileLoaded) {
     return ListView(
-      controller: _scrollController,
       children: <Widget>[
-        AnimatedOpacity(
-          opacity: _showTitle ? 0.0 : 1.0,
-          duration: Duration(milliseconds: 250),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-            child: Text(
-              Dictionary.profile,
-              style: TextStyle(
-                  fontFamily: FontsFamily.lato,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
