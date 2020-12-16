@@ -24,7 +24,7 @@ class OnBoardingLoginScreen extends StatefulWidget {
   final double positionBottom;
   final bool showTitle;
 
-  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom, this.showTitle = true});
+  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom, this.showTitle = false});
 
   @override
   _OnBoardingLoginScreenState createState() => _OnBoardingLoginScreenState();
@@ -51,7 +51,6 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print('Size is ${size.height}');
     return BlocProvider<RemoteConfigBloc>(
       create: (BuildContext context) =>
           _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
