@@ -1,18 +1,15 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
-import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
@@ -21,12 +18,9 @@ import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
@@ -34,12 +28,10 @@ import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/ContactHistoryScreen.dart';
-import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
-import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 class SelfReportScreen extends StatefulWidget {
