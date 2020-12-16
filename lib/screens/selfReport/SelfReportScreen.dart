@@ -110,109 +110,88 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 hasLogin = false;
               });
             }
-if (state is AuthenticationLoading) {
-            // Show dialog when loading
-            _scaffoldKey.currentState.showSnackBar(
-              SnackBar(
-                backgroundColor: Theme.of(context).primaryColor,
-                content: Row(
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Container(
-                      margin: EdgeInsets.only(left: 15.0),
-                      child: Text(Dictionary.loading),
-                    )
-                  ],
+            if (state is AuthenticationLoading) {
+              // Show dialog when loading
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  content: Row(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      Container(
+                        margin: EdgeInsets.only(left: 15.0),
+                        child: Text(Dictionary.loading),
+                      )
+                    ],
+                  ),
+                  duration: Duration(seconds: 15),
                 ),
-                duration: Duration(seconds: 15),
-              ),
-            );
-            hasLogin = false;
-          }
-          if (state is AuthenticationUnauthenticated) {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
-            hasLogin = false;
-          }
+              );
+              hasLogin = false;
+            }
+            if (state is AuthenticationUnauthenticated) {
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+              hasLogin = false;
+            }
 
-          if (state is AuthenticationAuthenticated) {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
-            profileLoaded = state;
-            hasLogin = true;
-          }
-        },
-        child: Scaffold(
+            if (state is AuthenticationAuthenticated) {
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+              profileLoaded = state;
+              hasLogin = true;
+            }
+          },
+          child: Scaffold(
             key: _scaffoldKey,
             appBar: CustomAppBar.animatedAppBar(
               showTitle: _showTitle,
               title: Dictionary.titleSelfReport,
             ),
             backgroundColor: Colors.white,
-            body: Padding(
-                padding: EdgeInsets.all(10),
-                child: ListView(
-                  controller: _scrollController,
-                  children: <Widget>[
-                    AnimatedOpacity(
-                      opacity: _showTitle ? 0.0 : 1.0,
-                      duration: Duration(milliseconds: 250),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          Dictionary.titleSelfReport,
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                        builder: (
-                      BuildContext context,
-                      AuthenticationState state,
-                    ) {
-                      if (state is AuthenticationUnauthenticated ||
-                          state is AuthenticationLoading) {
-                        // When user is not login show login screen
-                        return OnBoardingLoginScreen(
-                          authenticationBloc: _authenticationBloc,
-                        );
-                      } else if (state is AuthenticationAuthenticated ||
-                          state is AuthenticationLoading) {
-                        return BlocBuilder<ProfileBloc, ProfileState>(builder: (
-                          BuildContext context,
-                          ProfileState state,
-                        ) {
-                          if (state is ProfileLoading) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (state is ProfileLoaded) {
-                            ProfileLoaded _getProfile = state as ProfileLoaded;
-                            return _getProfile.profile.exists
-                                ? _buildContent(_getProfile.profile)
-                                : _buildContent(null);
-                          } else {
-                            _profileBloc.add(ProfileLoad(
-                                uid: profileLoaded != null
-                                    ? profileLoaded.record.uid
-                                    : null));
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        });
-                      } else if (state is AuthenticationFailure ||
-                          state is AuthenticationLoading) {
-                        return OnBoardingLoginScreen(
-                          authenticationBloc: _authenticationBloc,
-                        );
-                      } else {
-                        return Container();
-                      }
-                    }),
-                  ],
-                )),
+            body:
+                BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: (
+              BuildContext context,
+              AuthenticationState state,
+            ) {
+              if (state is AuthenticationUnauthenticated ||
+                  state is AuthenticationLoading) {
+                // When user is not login show login screen
+                return OnBoardingLoginScreen(
+                  authenticationBloc: _authenticationBloc,
+                );
+              } else if (state is AuthenticationAuthenticated ||
+                  state is AuthenticationLoading) {
+                return BlocBuilder<ProfileBloc, ProfileState>(builder: (
+                  BuildContext context,
+                  ProfileState state,
+                ) {
+                  if (state is ProfileLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is ProfileLoaded) {
+                    ProfileLoaded _getProfile = state as ProfileLoaded;
+                    return _getProfile.profile.exists
+                        ? _buildContent(_getProfile.profile)
+                        : _buildContent(null);
+                  } else {
+                    _profileBloc.add(ProfileLoad(
+                        uid: profileLoaded != null
+                            ? profileLoaded.record.uid
+                            : null));
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                });
+              } else if (state is AuthenticationFailure ||
+                  state is AuthenticationLoading) {
+                return OnBoardingLoginScreen(
+                  authenticationBloc: _authenticationBloc,
+                );
+              } else {
+                return Container();
+              }
+            }),
           ),
         ));
   }
@@ -245,145 +224,171 @@ if (state is AuthenticationLoading) {
   }
 
   /// Function for build widget content
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state) {
-    return  Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          hasLogin
-              ? !HealthCheck().isUserHealty(
-                          getField(state.data, 'health_status')) &&
-                      _isProfileUserNotComplete(state)
-                  ? _buildAnnounceProfileNotComplete(state)
-                  : Container()
-              : Container(),
-          SizedBox(
-            height: 10,
-          ),
-          _buildLocation(state),
-          SizedBox(
-            height: 10,
-          ),
-          FutureBuilder<bool>(
-            future: SelfReportRepository()
-                .checkNIK(nik: getField(state.data, 'nik')),
-            builder: (context, snapshot) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  _buildContainer(
-                    imageDisable:
-                        '${Environment.iconAssets}daily_self_report_disable.png',
-                    imageEnable: '${Environment.iconAssets}daily_self_report_enable.png',
-                    title: Dictionary.dailyMonitoring,
-                    length: 2,
-                    //for give condition onPressed in widget _buildContainer
-                    onPressedEnable: () {
-                      if (latLng == null ||
-                          addressMyLocation == '-' ||
-                          addressMyLocation.isEmpty ||
-                          addressMyLocation == null) {
-                        Fluttertoast.showToast(
-                            backgroundColor: ColorBase.grey500,
-                            msg: Dictionary.alertLocationSelfReport,
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.BOTTOM,
-                            fontSize: 16.0);
-                      } else {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SelfReportOption(latLng)));
-                      }
-                    },
-                    onPressedDisable: () {
-                      if (snapshot.connectionState == ConnectionState.done &&
-                          snapshot.hasData &&
+  Widget _buildContent(DocumentSnapshot state) {
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: ListView(
+          controller: _scrollController,
+          children: <Widget>[
+            AnimatedOpacity(
+              opacity: _showTitle ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 250),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  Dictionary.titleSelfReport,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            hasLogin
+                ? !HealthCheck()
+                            .isUserHealty(getField(state, 'health_status')) &&
+                        _isProfileUserNotComplete(state)
+                    ? SizedBox(
+                        height: 20,
+                      )
+                    : Container()
+                : Container(),
+            hasLogin
+                ? !HealthCheck()
+                            .isUserHealty(getField(state, 'health_status')) &&
+                        _isProfileUserNotComplete(state)
+                    ? _buildAnnounceProfileNotComplete(state)
+                    : Container()
+                : Container(),
+            SizedBox(
+              height: 10,
+            ),
+            _buildLocation(state),
+            SizedBox(
+              height: 10,
+            ),
+            FutureBuilder<bool>(
+              future:
+                  SelfReportRepository().checkNIK(nik: getField(state, 'nik')),
+              builder: (context, snapshot) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _buildContainer(
+                      imageDisable:
+                          '${Environment.iconAssets}daily_self_report_disable.png',
+                      imageEnable:
+                          '${Environment.iconAssets}daily_self_report_enable.png',
+                      title: Dictionary.dailyMonitoring,
+                      length: 2,
+                      //for give condition onPressed in widget _buildContainer
+                      onPressedEnable: () {
+                        if (latLng == null ||
+                            addressMyLocation == '-' ||
+                            addressMyLocation.isEmpty ||
+                            addressMyLocation == null) {
+                          Fluttertoast.showToast(
+                              backgroundColor: ColorBase.grey500,
+                              msg: Dictionary.alertLocationSelfReport,
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              fontSize: 16.0);
+                        } else {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SelfReportOption(latLng)));
+                        }
+                      },
+                      onPressedDisable: () {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData &&
+                            !_isProfileUserNotComplete(state) &&
+                            !snapshot.data) {
+                          showTextBottomSheet(
+                              context: context,
+                              title: Dictionary.nikNotRegistered,
+                              message: Dictionary.nikNotRegisteredDesc);
+                        } else {
+                          showTextBottomSheet(
+                              context: context,
+                              title: Dictionary.profileNotComplete,
+                              message: Dictionary.descProfile1);
+                        }
+                      },
+                      // condition for check if user login and user complete fill that profile
+                      // and health status is not healthy user can access for press the button in _buildContainer
+                      isShowMenu: hasLogin &&
                           !_isProfileUserNotComplete(state) &&
-                          !snapshot.data) {
-                        showTextBottomSheet(
-                            context: context,
-                            title: Dictionary.nikNotRegistered,
-                            message: Dictionary.nikNotRegisteredDesc);
-                      } else {
-                        showTextBottomSheet(
-                            context: context,
-                            title: Dictionary.profileNotComplete,
-                            message: Dictionary.descProfile1);
-                      }
-                    },
-                    // condition for check if user login and user complete fill that profile
-                    // and health status is not healthy user can access for press the button in _buildContainer
-                    isShowMenu: hasLogin &&
-                        !_isProfileUserNotComplete(state) &&
-                        (snapshot.connectionState == ConnectionState.done &&
-                                snapshot.hasData
-                            ? (snapshot.data ||
-                                !HealthCheck().isUserHealty(
-                                  getField(state.data, 'health_status'),
-                                ))
-                            : !HealthCheck().isUserHealty(
-                                getField(state.data, 'health_status'),
-                              )),
-                  ),
-                  _buildContainer(
-                    imageDisable:
-                        '${Environment.iconAssets}history_contact_disable.png',
-                    imageEnable:
-                        '${Environment.iconAssets}history_contact_enable.png',
-                    title: Dictionary.historyContact,
-                    length: 2,
-                    onPressedEnable: () {
-                      if (latLng == null ||
-                          addressMyLocation == '-' ||
-                          addressMyLocation.isEmpty ||
-                          addressMyLocation == null) {
-                        Fluttertoast.showToast(
-                            backgroundColor: ColorBase.grey500,
-                            msg: Dictionary.alertLocationSelfReport,
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.BOTTOM,
-                            fontSize: 16.0);
-                      } else {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ContactHistoryScreen()));
-                      }
-                    },
-                    onPressedDisable: () {
-                      if (snapshot.connectionState == ConnectionState.done &&
-                          snapshot.hasData &&
+                          (snapshot.connectionState == ConnectionState.done &&
+                                  snapshot.hasData
+                              ? (snapshot.data ||
+                                  !HealthCheck().isUserHealty(
+                                    getField(state, 'health_status'),
+                                  ))
+                              : !HealthCheck().isUserHealty(
+                                  getField(state, 'health_status'),
+                                )),
+                    ),
+                    _buildContainer(
+                      imageDisable:
+                          '${Environment.iconAssets}history_contact_disable.png',
+                      imageEnable:
+                          '${Environment.iconAssets}history_contact_enable.png',
+                      title: Dictionary.historyContact,
+                      length: 2,
+                      onPressedEnable: () {
+                        if (latLng == null ||
+                            addressMyLocation == '-' ||
+                            addressMyLocation.isEmpty ||
+                            addressMyLocation == null) {
+                          Fluttertoast.showToast(
+                              backgroundColor: ColorBase.grey500,
+                              msg: Dictionary.alertLocationSelfReport,
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              fontSize: 16.0);
+                        } else {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => ContactHistoryScreen()));
+                        }
+                      },
+                      onPressedDisable: () {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData &&
+                            !_isProfileUserNotComplete(state) &&
+                            !snapshot.data) {
+                          showTextBottomSheet(
+                              context: context,
+                              title: Dictionary.nikNotRegistered,
+                              message: Dictionary.nikNotRegisteredDesc);
+                        } else {
+                          showTextBottomSheet(
+                              context: context,
+                              title: Dictionary.profileNotComplete,
+                              message: Dictionary.descProfile1);
+                        }
+                      },
+                      isShowMenu: hasLogin &&
                           !_isProfileUserNotComplete(state) &&
-                          !snapshot.data) {
-                        showTextBottomSheet(
-                            context: context,
-                            title: Dictionary.nikNotRegistered,
-                            message: Dictionary.nikNotRegisteredDesc);
-                      } else {
-                        showTextBottomSheet(
-                            context: context,
-                            title: Dictionary.profileNotComplete,
-                            message: Dictionary.descProfile1);
-                      }
-                    },
-                    isShowMenu: hasLogin &&
-                        !_isProfileUserNotComplete(state) &&
-                        (snapshot.connectionState == ConnectionState.done &&
-                                snapshot.hasData
-                            ? (snapshot.data ||
-                                !HealthCheck().isUserHealty(
-                                  getField(state.data, 'health_status'),
-                                ))
-                            : !HealthCheck().isUserHealty(
-                                getField(state.data, 'health_status'),
-                              )),
-                  ),
-                ],
-              );
-            },
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          EducationListScreen()
-        ],
-    );
+                          (snapshot.connectionState == ConnectionState.done &&
+                                  snapshot.hasData
+                              ? (snapshot.data ||
+                                  !HealthCheck().isUserHealty(
+                                    getField(state, 'health_status'),
+                                  ))
+                              : !HealthCheck().isUserHealty(
+                                  getField(state, 'health_status'),
+                                )),
+                    ),
+                  ],
+                );
+              },
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            EducationListScreen()
+          ],
+        ));
   }
 
   ///Function for build widget announcement if profile user not complete
