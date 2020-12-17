@@ -11,7 +11,7 @@ class Dictionary {
   static String message = 'Pesan';
   static String pikobar = 'Data Jabar';
   static String phoneBookEmergency = 'Nomor Darurat';
-  static String statistics = 'Update Terkini Jawa Barat';
+  static String statistics = 'Data Kasus Jabar';
   static String menus = 'Pusat Layanan & Informasi';
   static String newsUpdate = 'Berita Terkini';
   static String help = 'FAQ';
