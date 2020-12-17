@@ -124,6 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // When user is not login show login screen
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
+                      showTitle: false,
                     );
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
@@ -140,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: CircularProgressIndicator(),
                         );
                       } else if (state is ProfileLoaded) {
-                        ProfileLoaded _getProfile = state as ProfileLoaded;
+                        ProfileLoaded _getProfile = state;
                         return _buildContent(
                             _getProfile.profile, _profileLoaded);
                       } else {
@@ -155,6 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       state is AuthenticationLoading) {
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
+                      showTitle: false,
                     );
                   } else {
                     return Container();

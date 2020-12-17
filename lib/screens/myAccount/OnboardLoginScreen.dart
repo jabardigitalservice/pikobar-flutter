@@ -22,8 +22,9 @@ import 'TermsConditions.dart';
 class OnBoardingLoginScreen extends StatefulWidget {
   final AuthenticationBloc authenticationBloc;
   final double positionBottom;
+  final bool showTitle;
 
-  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom});
+  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom, this.showTitle = false});
 
   @override
   _OnBoardingLoginScreenState createState() => _OnBoardingLoginScreenState();
@@ -49,17 +50,18 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocProvider<RemoteConfigBloc>(
       create: (BuildContext context) =>
           _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
       child: Stack(
         children: <Widget>[
-          Positioned(
+          widget.showTitle ? Positioned(
             left: 0.0,
             right: 0.0,
             top: 0.0,
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 Dictionary.profile,
                 style: TextStyle(
@@ -68,11 +70,11 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-          ),
+          ) : Container(),
           Positioned(
             left: 0.0,
             right: 0.0,
-            top: MediaQuery.of(context).size.height * 0.2,
+            top: size.height * (size.height < 600 ? 0 : 0.15),
             child: Column(
               children: <Widget>[
                 Padding(
@@ -134,7 +136,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   },
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   height: 40.0,
                   margin: EdgeInsets.fromLTRB(Dimens.padding, Dimens.padding,
                       Dimens.padding, Dimens.padding),
