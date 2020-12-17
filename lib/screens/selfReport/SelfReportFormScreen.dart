@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/selfReport/dailyReport/DailyReportBloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/GroupedCheckBox.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -130,26 +131,29 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);
               Navigator.of(context).pop();
               // Bottom sheet success message
-              _showBottomSheetForm(
-                  '${Environment.imageAssets}daily_success.png',
-                  Dictionary.savedSuccessfully,
-                  Dictionary.dailySuccess, () async {
-                if (widget.dailyId == '14') {
-                  Navigator.of(context).pop(true);
-                  Navigator.of(context).pop(true);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SelfReportDoneScreen(
-                            widget.location,
-                            widget.otherUID,
-                            widget.analytics)),
-                  );
-                } else {
-                  Navigator.of(context).pop(true);
-                  Navigator.of(context).pop(true);
-                }
-              });
+              showSuccessBottomSheet(
+                  context: context,
+                  image: Image.asset(
+                      '${Environment.imageAssets}daily_success.png'),
+                  title: Dictionary.savedSuccessfully,
+                  message: Dictionary.dailySuccess,
+                  onPressed: () async {
+                    if (widget.dailyId == '14') {
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SelfReportDoneScreen(
+                                widget.location,
+                                widget.otherUID,
+                                widget.analytics)),
+                      );
+                    } else {
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
+                    }
+                  });
             } else if (state is DailyReportFailed) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);
               Navigator.of(context).pop();
@@ -352,13 +356,17 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       onPressed: () {
                         if (_bodyTempController.text.isEmpty) {
                           // Bottom sheet temperature message
-                          _showBottomSheetForm(
-                              '${Environment.imageAssets}temperature_info.png',
-                              Dictionary.additionalTemperatureInformation,
-                              Dictionary.descTemperatureInformation, () {
-                            Navigator.of(context).pop(true);
-                            _saveSelfReport();
-                          });
+                          showSuccessBottomSheet(
+                              context: context,
+                              image: Image.asset(
+                                  '${Environment.imageAssets}temperature_info.png'),
+                              title:
+                                  Dictionary.additionalTemperatureInformation,
+                              message: Dictionary.descTemperatureInformation,
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                                _saveSelfReport();
+                              });
                         } else {
                           _saveSelfReport();
                         }
@@ -488,78 +496,6 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         });
       },
     );
-  }
-
-  // Bottom sheet message form
-  void _showBottomSheetForm(String image, String titleDialog, String descDialog,
-      GestureTapCallback onPressed) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(8.0),
-          ),
-        ),
-        isDismissible: false,
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.all(Dimens.padding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Center(
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: Dimens.padding),
-                    height: 4,
-                    width: 80.0,
-                    decoration: BoxDecoration(
-                        color: ColorBase.menuBorderColor,
-                        borderRadius: BorderRadius.circular(30.0)),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 44.0),
-                  child: Image.asset(
-                    image,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                SizedBox(height: 24.0),
-                Text(
-                  titleDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.roboto,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  descDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.roboto,
-                      fontSize: 12.0,
-                      height: 1.8,
-                      color: Colors.grey[600]),
-                ),
-                SizedBox(height: 24.0),
-                RoundedButton(
-                    title: Dictionary.ok.toUpperCase(),
-                    textStyle: TextStyle(
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    color: ColorBase.green,
-                    elevation: 0.0,
-                    onPressed: onPressed)
-              ],
-            ),
-          );
-        });
   }
 
   // Validate and Record data to firestore
