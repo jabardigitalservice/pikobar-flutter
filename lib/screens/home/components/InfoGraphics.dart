@@ -39,15 +39,6 @@ class InfoGraphics extends StatefulWidget {
 class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
 
-  // DateTime currentDay = DateTime.now();
-  // DateTime yesterday = DateTime(
-  //     DateTime.now().year, DateTime.now().month, DateTime.now().day - 1);
-
-  DateTime currentDay = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day - 3);
-  DateTime yesterday = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day - 4);
-
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
     Dictionary.center,
@@ -66,15 +57,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     Analytics.tappedInfographicWho,
   ];
 
-  List<LabelNewModel> dataLabel;
+  List<LabelNewModel> dataLabel = [];
 
   @override
   void initState() {
-    getDataLabel();
-    print('hari ini tanggal ' +
-        currentDay.toString() +
-        ' kemarin ' +
-        yesterday.toString());
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
     infoGraphicsListBloc.add(InfoGraphicsListLoad(
         infoGraphicsCollection: kAllInfographics, limit: 5));
@@ -83,9 +69,12 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 
   Future<Null> getDataLabel() async {
     String label = await LabelNewSharedPreference.getLabelNewInfoGraphics();
-    setState(() {
-      dataLabel = LabelNewModel.decode(label);
-    });
+    if (label != null) {
+      if (!mounted) return;
+      setState(() {
+        dataLabel = LabelNewModel.decode(label);
+      });
+    }
   }
 
   @override
@@ -225,39 +214,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     );
   }
 
-  _insertDataLabel(List<DocumentSnapshot> listData) async {
-    listData.forEach((dataInfographic) {
-      var dataDate = DateTime.fromMillisecondsSinceEpoch(
-          dataInfographic['published_date'].seconds * 1000);
-      if (dataDate.day == currentDay.day &&
-              dataDate.month == currentDay.month ||
-          dataDate.day == yesterday.day && dataDate.month == yesterday.month) {
-        print('print masuk sini  ' +
-            DateTime.fromMillisecondsSinceEpoch(
-                    dataInfographic['published_date'].seconds * 1000)
-                .toString() +
-            "hari " +
-            DateTime.fromMillisecondsSinceEpoch(
-                    dataInfographic['published_date'].seconds * 1000)
-                .day
-                .toString() +
-            'judul ' +
-            dataInfographic['title'].toString());
-        LabelNewModel labelNewModel =
-            LabelNewModel(id: dataInfographic.id.toString(), isRead: '0');
-
-        if (dataLabel.isNotEmpty && !dataLabel.contains(labelNewModel)) {
-          dataLabel.add(labelNewModel);
-        } else if (dataLabel.isEmpty) {
-          dataLabel.add(labelNewModel);
-        }
-      }
-    });
-
-    String encodeData = LabelNewModel.encode(dataLabel);
-    await LabelNewSharedPreference.setLabelNewInfoGraphics(encodeData);
-  }
-
   Widget _buildContent(
       List<DocumentSnapshot> listData, Map<String, dynamic> getLabel) {
     if (widget.searchQuery != null) {
@@ -270,11 +226,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
       }
     }
-    print('cekk isinya bos ' + dataLabel.length.toString());
-
-    if (dataLabel != null) {
-      _insertDataLabel(listData);
-    }
+    getDataLabel();
 
     return listData.isNotEmpty
         ? Column(
@@ -410,10 +362,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              dataLabel.isNotEmpty &&
-                                                      dataLabel.contains(
-                                                          document.id
-                                                              .toString())
+                                              isLabelNew(document.id.toString())
                                                   ? Container(
                                                       padding: EdgeInsets.only(
                                                           top: 5,
@@ -479,5 +428,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ],
           )
         : Container();
+  }
+
+  bool isLabelNew(String id) {
+    var data = dataLabel.where((test) => test.id.toLowerCase().contains(id));
+    return data.isNotEmpty;
   }
 }
