@@ -400,7 +400,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   fontSize: 10.0,
                   fontWeight: FontWeight.bold,
                   height: 18.0 / 12.0,
-                  color: Colors.red))
+                  color: Colors.green))
           : TextSpan()
     ]));
   }
