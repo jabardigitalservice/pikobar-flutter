@@ -248,7 +248,11 @@ class _SelfReportListState extends State<SelfReportList> {
     for (int i = 0; i < 14; i++) {
       if (i != 0) {
         if (currentDay != null) {
-          if (currentDay.day == firstDay.add(Duration(days: i)).day) {
+          if (currentDay.day == firstDay.add(Duration(days: i)).day ||
+              firstDay
+                  .add(Duration(days: i))
+                  .difference(currentDay)
+                  .isNegative) {
             if (listDocumentId.contains('${i + 1}')) {
               textColor = ColorBase.grey800;
             } else {
@@ -259,22 +263,7 @@ class _SelfReportListState extends State<SelfReportList> {
               }
             }
           } else {
-            if (firstDay
-                .add(Duration(days: i))
-                .difference(currentDay)
-                .isNegative) {
-              if (listDocumentId.contains('${i + 1}')) {
-                textColor = ColorBase.grey800;
-              } else {
-                if (listDocumentId.contains('$i')) {
-                  textColor = ColorBase.grey800;
-                } else {
-                  textColor = ColorBase.darkGrey;
-                }
-              }
-            } else {
-              textColor = ColorBase.darkGrey;
-            }
+            textColor = ColorBase.darkGrey;
           }
         } else {
           textColor = ColorBase.darkGrey;
@@ -290,7 +279,11 @@ class _SelfReportListState extends State<SelfReportList> {
               if (i != 0) {
                 /// Checking data if [currentDay] not null
                 if (currentDay != null) {
-                  if (currentDay.day == firstDay.add(Duration(days: i)).day) {
+                  if (currentDay.day == firstDay.add(Duration(days: i)).day ||
+                      firstDay
+                          .add(Duration(days: i))
+                          .difference(currentDay)
+                          .isNegative) {
                     /// [currentDay] same as the day user can fill the form
                     /// Checking data is already filled or not
                     if (listDocumentId.contains('${i + 1}')) {
@@ -325,57 +318,16 @@ class _SelfReportListState extends State<SelfReportList> {
                       }
                     }
                   } else {
-                    if (firstDay
-                        .add(Duration(days: i))
-                        .difference(currentDay)
-                        .isNegative) {
-                      /// [currentDay] same as the day user can fill the form
-                      /// Checking data is already filled or not
-                      if (listDocumentId.contains('${i + 1}')) {
-                        /// Data is already filled
-                        /// Move to detail screeen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SelfReportDetailScreen(
-                                  '${i + 1}',
-                                  widget.otherUID,
-                                  widget.analytics)),
-                        );
-                      } else {
-                        if (listDocumentId.contains('$i')) {
-                          /// Move to form screen
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SelfReportFormScreen(
-                                  analytics: widget.analytics,
-                                  otherUID: widget.otherUID,
-                                  dailyId: '${i + 1}',
-                                  location: widget.location)));
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => DialogTextOnly(
-                                    description:
-                                        '${Dictionary.errorMessageDailyMonitoringOrder}$i',
-                                    buttonText: Dictionary.ok,
-                                    onOkPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ));
-                        }
-                      }
-                    } else {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => DialogTextOnly(
-                                description:
-                                    '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
-                                buttonText: Dictionary.ok,
-                                onOkPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ));
-                    }
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => DialogTextOnly(
+                              description:
+                                  '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
+                              buttonText: Dictionary.ok,
+                              onOkPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ));
                   }
                 } else {
                   /// Show dialog users cant input form
