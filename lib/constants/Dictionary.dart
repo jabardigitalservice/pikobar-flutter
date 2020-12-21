@@ -482,4 +482,8 @@ class Dictionary {
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
   static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
   static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
+
+  //Shared Preference Label Name
+  static const String labelInfoGraphic = 'labelnewinfographic';
+
 }

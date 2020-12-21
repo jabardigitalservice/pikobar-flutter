@@ -23,6 +23,7 @@ import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.d
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
@@ -67,14 +68,13 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     super.initState();
   }
 
-  Future<Null> getDataLabel() async {
-    String label = await LabelNewSharedPreference.getLabelNewInfoGraphics();
-    if (label != null) {
+  getDataLabel() {
+    LabelNew().getDataLabel(Dictionary.labelInfoGraphic).then((value) {
       if (!mounted) return;
       setState(() {
-        dataLabel = LabelNewModel.decode(label);
+        dataLabel = value;
       });
-    }
+    });
   }
 
   @override
@@ -309,6 +309,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 ),
                               ),
                               onTap: () {
+                                LabelNew().readNewInfo(document.id, dataLabel);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         DetailInfoGraphicScreen(
@@ -326,6 +327,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
+                                      LabelNew()
+                                          .readNewInfo(document.id, dataLabel);
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
@@ -362,7 +365,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              isLabelNew(document.id.toString())
+                                              LabelNew().isLabelNew(
+                                                      document.id.toString(),
+                                                      dataLabel)
                                                   ? Container(
                                                       padding: EdgeInsets.only(
                                                           top: 5,
@@ -428,10 +433,5 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ],
           )
         : Container();
-  }
-
-  bool isLabelNew(String id) {
-    var data = dataLabel.where((test) => test.id.toLowerCase().contains(id));
-    return data.isNotEmpty;
   }
 }
