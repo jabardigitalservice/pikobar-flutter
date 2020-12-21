@@ -366,9 +366,7 @@ class Dictionary {
   static String descInfoGraphic =
       'Info yang memuat infograpis terkait COVID-19';
 
-  static String all =
-      'Semua';
-
+  static String all = 'Semua';
 
   static String descNews = 'Anti-hoax dengan berita terpercaya';
 
@@ -421,6 +419,8 @@ class Dictionary {
   static String dailySelfReport = 'Lapor Kesehatan Harian';
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
+  static String errorMessageDailyMonitoringOrder =
+      'Mohon maaf anda harus mengisi untuk hari ke -';
   static String infoTapBack = 'Tap sekali lagi untuk keluar dari aplikasi';
   static String editDailyMonitoring = 'Edit';
   static String contactHistory = 'Riwayat Kontak';
@@ -431,7 +431,8 @@ class Dictionary {
   static String emptyContactDesc =
       'Terima kasih sudah membantu \nmempercepat pelacakan kasus dengan \nmengisi laporan ini secara jujur.';
   static String nikNotRegistered = 'NIK Tidak Terdaftar';
-  static String nikNotRegisteredDesc = 'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
+  static String nikNotRegisteredDesc =
+      'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
@@ -475,11 +476,17 @@ class Dictionary {
   static const String zoneMediumRisk = 'RISIKO SEDANG';
   static const String zoneLowRisk = 'RISIKO RENDAH';
   static const String zoneNotAffected = 'TIDAK TERDAMPAK';
-  static const String zoneRedDescription = 'Adalah wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
-  static const String zoneOrangeDescription = 'Adalah wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
-  static const String zoneYellowDescription = 'Adalah wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
-  static const String zoneGreenDescription = 'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
+  static const String zoneRedDescription =
+      'Adalah wilayah yang memiliki jumlah kasus terkonfirmasi cukup tinggi dan masih terjadi penyebaran secara cepat.';
+  static const String zoneOrangeDescription =
+      'Adalah wilayah yang memiliki klaster penyebaran kecil namun kemungkinan penyebaran cepat.';
+  static const String zoneYellowDescription =
+      'Adalah wilayah yang memiliki beberapa kasus penularan lokal namun penyebaran cenderung terkendali.';
+  static const String zoneGreenDescription =
+      'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
-  static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
-  static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
+  static const String shareZonationInfo =
+      'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
+  static const String sourceZonationInfo =
+      'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
 }

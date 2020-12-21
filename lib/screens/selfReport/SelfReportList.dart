@@ -226,7 +226,11 @@ class _SelfReportListState extends State<SelfReportList> {
       for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
         /// Get [documentID] to [listDocumentId]
         listDocumentId.add(snapshot.querySnapshot.docs[i].id);
+
+        /// Delete duplicates number in list
+        listDocumentId = listDocumentId.toSet().toList();
       }
+
       if (getField(snapshot.querySnapshot.docs[0], 'quarantine_date') == null) {
         /// Save ['created_at'] as [firstDay] for main parameter
         firstDay = DateTime.fromMillisecondsSinceEpoch(
@@ -245,13 +249,29 @@ class _SelfReportListState extends State<SelfReportList> {
       if (i != 0) {
         if (currentDay != null) {
           if (currentDay.day == firstDay.add(Duration(days: i)).day) {
-            textColor = ColorBase.grey800;
+            if (listDocumentId.contains('${i + 1}')) {
+              textColor = ColorBase.grey800;
+            } else {
+              if (listDocumentId.contains('$i')) {
+                textColor = ColorBase.grey800;
+              } else {
+                textColor = ColorBase.darkGrey;
+              }
+            }
           } else {
             if (firstDay
                 .add(Duration(days: i))
                 .difference(currentDay)
                 .isNegative) {
-              textColor = ColorBase.grey800;
+              if (listDocumentId.contains('${i + 1}')) {
+                textColor = ColorBase.grey800;
+              } else {
+                if (listDocumentId.contains('$i')) {
+                  textColor = ColorBase.grey800;
+                } else {
+                  textColor = ColorBase.darkGrey;
+                }
+              }
             } else {
               textColor = ColorBase.darkGrey;
             }
@@ -283,13 +303,26 @@ class _SelfReportListState extends State<SelfReportList> {
                                 '${i + 1}', widget.otherUID, widget.analytics)),
                       );
                     } else {
-                      /// Move to form screen
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SelfReportFormScreen(
-                              analytics: widget.analytics,
-                              otherUID: widget.otherUID,
-                              dailyId: '${i + 1}',
-                              location: widget.location)));
+                      if (listDocumentId.contains('$i')) {
+                        /// Move to form screen
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportFormScreen(
+                                analytics: widget.analytics,
+                                otherUID: widget.otherUID,
+                                dailyId: '${i + 1}',
+                                location: widget.location)));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => DialogTextOnly(
+                                  description:
+                                      '${Dictionary.errorMessageDailyMonitoringOrder}$i',
+                                  buttonText: Dictionary.ok,
+                                  onOkPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ));
+                      }
                     }
                   } else {
                     if (firstDay
@@ -310,13 +343,26 @@ class _SelfReportListState extends State<SelfReportList> {
                                   widget.analytics)),
                         );
                       } else {
-                        /// Move to form screen
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SelfReportFormScreen(
-                                analytics: widget.analytics,
-                                otherUID: widget.otherUID,
-                                dailyId: '${i + 1}',
-                                location: widget.location)));
+                        if (listDocumentId.contains('$i')) {
+                          /// Move to form screen
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SelfReportFormScreen(
+                                  analytics: widget.analytics,
+                                  otherUID: widget.otherUID,
+                                  dailyId: '${i + 1}',
+                                  location: widget.location)));
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => DialogTextOnly(
+                                    description:
+                                        '${Dictionary.errorMessageDailyMonitoringOrder}$i',
+                                    buttonText: Dictionary.ok,
+                                    onOkPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ));
+                        }
                       }
                     } else {
                       showDialog(
