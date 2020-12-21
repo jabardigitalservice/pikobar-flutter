@@ -84,9 +84,9 @@ class CustomAppBar {
   }
 
   static Widget buildSearchField(TextEditingController searchController,
-      String hintText, ValueChanged<String> onChanged) {
+      String hintText, ValueChanged<String> onChanged, {EdgeInsetsGeometry margin}) {
     return Container(
-      margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
+      margin: margin ?? EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
       decoration: BoxDecoration(
           color: ColorBase.greyContainer,

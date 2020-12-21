@@ -167,42 +167,56 @@ class _VideoListState extends State<VideoList> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              ),
               Container(
                 height: 265.0,
                 child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+                    padding: const EdgeInsets.only(left: 6.0, right: 16.0, bottom: 16.0),
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.searchQuery != null ? data.length : 5,
                     itemBuilder: (context, index) {
                       return Container(
-                        margin: EdgeInsets.only(right: 15.0),
-                        width: MediaQuery.of(context).size.width * 0.38,
-                        // decoration: BoxDecoration(shape: BoxShape.circle),
-                        child: Container(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              GestureDetector(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 150.0,
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: <Widget>[
-                                      CachedNetworkImage(
+                        padding: EdgeInsets.only(left: 10),
+                        width: 150,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            GestureDetector(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 150.0,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: <Widget>[
+                                    CachedNetworkImage(
+                                      imageUrl: getYtThumbnail(
+                                          youtubeUrl: data[index].url,
+                                          error: false),
+                                      imageBuilder:
+                                          (context, imageProvider) =>
+                                              Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                      placeholder: (context, url) => Center(
+                                          heightFactor: 10.2,
+                                          child:
+                                              CupertinoActivityIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          CachedNetworkImage(
                                         imageUrl: getYtThumbnail(
                                             youtubeUrl: data[index].url,
-                                            error: false),
+                                            error: true),
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
                                             image: DecorationImage(
                                               image: imageProvider,
                                               fit: BoxFit.fill,
@@ -214,83 +228,63 @@ class _VideoListState extends State<VideoList> {
                                             child:
                                                 CupertinoActivityIndicator()),
                                         errorWidget: (context, url, error) =>
-                                            CachedNetworkImage(
-                                          imageUrl: getYtThumbnail(
-                                              youtubeUrl: data[index].url,
-                                              error: true),
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) => Center(
-                                              heightFactor: 10.2,
-                                              child:
-                                                  CupertinoActivityIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              Center(
-                                                  heightFactor: 10.2,
-                                                  child: Icon(Icons.error)),
-                                        ),
-                                      ),
-                                      Image.asset(
-                                        '${Environment.iconAssets}play_button.png',
-                                        scale: 2.3,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  launchExternal(data[index].url);
-
-                                  AnalyticsHelper.setLogEvent(
-                                      Analytics.tappedVideo, <String, dynamic>{
-                                    'title': data[index].title
-                                  });
-                                },
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.only(top: 10),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        height: 40.0,
-                                        margin: EdgeInsets.only(right: 5.0),
-                                        child: Text(
-                                          data[index].title,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontFamily: FontsFamily.lato,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                            Center(
+                                                heightFactor: 10.2,
+                                                child: Icon(Icons.error)),
                                       ),
                                     ),
+                                    Image.asset(
+                                      '${Environment.iconAssets}play_button.png',
+                                      scale: 2.3,
+                                    )
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 1),
-                                child: Text(
-                                  unixTimeStampToDateTime(
-                                      data[index].publishedAt),
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: FontsFamily.lato,
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.w600),
-                                ),
+                              onTap: () {
+                                launchExternal(data[index].url);
+
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedVideo, <String, dynamic>{
+                                  'title': data[index].title
+                                });
+                              },
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(top: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      height: 40.0,
+                                      margin: EdgeInsets.only(right: 5.0),
+                                      child: Text(
+                                        data[index].title,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            fontFamily: FontsFamily.lato,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 1),
+                              child: Text(
+                                unixTimeStampToDateTime(
+                                    data[index].publishedAt),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 10.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     }),
