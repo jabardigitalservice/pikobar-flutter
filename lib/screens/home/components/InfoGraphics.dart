@@ -309,7 +309,12 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 ),
                               ),
                               onTap: () {
-                                LabelNew().readNewInfo(document.id, dataLabel);
+                                LabelNew().readNewInfo(
+                                    document.id,
+                                    document['published_date']
+                                        .seconds
+                                        .toString(),
+                                    dataLabel);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         DetailInfoGraphicScreen(
@@ -327,8 +332,12 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      LabelNew()
-                                          .readNewInfo(document.id, dataLabel);
+                                      LabelNew().readNewInfo(
+                                          document.id,
+                                          document['published_date']
+                                              .seconds
+                                              .toString(),
+                                          dataLabel);
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
