@@ -18,6 +18,6 @@ class Dimens {
 
   static const double buttonTopMargin = 24.0;
 
-  static const double sbHeight = 10.0;
+  static const double sizedBoxHeight = 10.0;
   static const double dividerHeight = 10.0;
 }

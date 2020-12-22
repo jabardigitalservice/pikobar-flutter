@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
+import 'package:pikobar_flutter/components/DialogNPS.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -177,7 +178,7 @@ void showTextBottomSheet(
                   openChromeSafariBrowser(url: url);
                 },
               ),
-              SizedBox(height: Dimens.sbHeight)
+              SizedBox(height: Dimens.sizedBoxHeight)
             ],
           ),
         );
@@ -228,7 +229,7 @@ Future<void> showWidgetBottomSheet(
                       child ?? Container(),
 
 
-                      SizedBox(height: Dimens.sbHeight)
+                      SizedBox(height: Dimens.sizedBoxHeight)
                     ],
                   ),
                 ),
@@ -322,3 +323,10 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
         );
       });
 }
+
+Future<void> showDialogNPS(BuildContext context) async =>
+    showWidgetBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      child: DialogNPS()
+    );

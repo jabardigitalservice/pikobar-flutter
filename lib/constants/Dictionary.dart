@@ -156,6 +156,8 @@ class Dictionary {
   static String positiveActionGeolocation = 'Ubah ke Allow All The Time';
   static String done = 'Selesai';
   static String shareLocation = 'Bagikan Lokasi';
+  static String send = 'Kirim';
+  static String skip = 'Skip';
 
 // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -482,4 +484,10 @@ class Dictionary {
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
   static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
   static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
+
+  static const String npsTitle = 'Seberapa besar kemungkinan Anda ingin merekomendasikan Pikobar sebagai aplikasi informasi dan layanan Covid-19 di Jawa Barat ke teman dan keluargamu?';
+  static const String impossible = 'Tidak Mungkin';
+  static const String veryPossible = 'Sangat Mungkin';
+  static const String badRateDesc = 'Apa yang menurutmu bisa kami lakukan untuk meningkatkan aplikasi Pikobar?';
+  static const String goodRateDesc = 'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
 }

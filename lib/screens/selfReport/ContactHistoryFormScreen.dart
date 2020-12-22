@@ -274,7 +274,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           height: Dimens.fieldSize,
           margin: EdgeInsets.only(
               top: Dimens.fieldMarginTop,
-              bottom: error != null ? Dimens.sbHeight : Dimens.fieldMarginBottom),
+              bottom: error != null ? Dimens.sizedBoxHeight : Dimens.fieldMarginBottom),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
@@ -384,7 +384,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         isEmpty
             ? Padding(
                 padding: EdgeInsets.only(
-                    left: Dimens.contentPadding, top: Dimens.sbHeight),
+                    left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),

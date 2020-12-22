@@ -221,7 +221,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
           validatorValue != null
               ? Padding(
                   padding: EdgeInsets.only(
-                      left: Dimens.contentPadding, top: Dimens.sbHeight),
+                      left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                   child: Text(
                     validatorValue,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -253,7 +253,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
           validatorValue != null
               ? Padding(
                   padding: EdgeInsets.only(
-                      left: Dimens.contentPadding, top: Dimens.sbHeight),
+                      left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                   child: Text(
                     validatorValue,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -287,7 +287,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             validatorValue != null
                 ? Padding(
                     padding: EdgeInsets.only(
-                        left: Dimens.contentPadding, top: Dimens.sbHeight),
+                        left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                     child: Text(
                       validatorValue,
                       style: TextStyle(color: Colors.red, fontSize: 12),
