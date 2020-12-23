@@ -324,9 +324,10 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
       });
 }
 
-Future<void> showDialogNPS(BuildContext context) async =>
-    showWidgetBottomSheet(
+void showDialogNPS(BuildContext context) {
+  showWidgetBottomSheet(
       context: context,
       isScrollControlled: true,
       child: DialogNPS()
-    );
+  );
+}

@@ -490,4 +490,5 @@ class Dictionary {
   static const String veryPossible = 'Sangat Mungkin';
   static const String badRateDesc = 'Apa yang menurutmu bisa kami lakukan untuk meningkatkan aplikasi Pikobar?';
   static const String goodRateDesc = 'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
+  static const String hintFeedbackField = 'Kirimkan tanggapan Anda di sini...';
 }
