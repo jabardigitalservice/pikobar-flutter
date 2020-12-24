@@ -485,5 +485,8 @@ class Dictionary {
 
   //Shared Preference Label Name
   static const String labelInfoGraphic = 'labelnewinfographic';
+  static const String labelNews = 'labellatestnews';
+  static const String labelVideos = 'labelnewvideos';
+  static const String labelDocuments = 'labelnewdocuments';
 
 }

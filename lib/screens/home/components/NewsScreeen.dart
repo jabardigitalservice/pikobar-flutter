@@ -15,12 +15,14 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
@@ -42,6 +44,7 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   NewsListBloc newsListBloc;
+  List<LabelNewModel> dataLabel = [];
 
   @override
   void initState() {
@@ -51,6 +54,15 @@ class _NewsScreenState extends State<NewsScreen> {
           .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
     }
     super.initState();
+  }
+
+  getDataLabel() {
+    LabelNew().getDataLabel(Dictionary.labelNews).then((value) {
+      if (!mounted) return;
+      setState(() {
+        dataLabel = value;
+      });
+    });
   }
 
   @override
@@ -96,6 +108,8 @@ class _NewsScreenState extends State<NewsScreen> {
         widget.covidInformationScreenState.isEmptyDataNews = true;
       }
     }
+
+    getDataLabel();
 
     return list.isNotEmpty
         ? Container(
@@ -184,6 +198,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ),
                                 ),
                                 onTap: () {
+                                  LabelNew().readNewInfo(
+                                      newsmodel.id,
+                                      newsmodel.publishedAt.toString(),
+                                      dataLabel,
+                                      Dictionary.labelNews);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -205,6 +224,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
+                                        LabelNew().readNewInfo(
+                                            newsmodel.id,
+                                            newsmodel.publishedAt.toString(),
+                                            dataLabel,
+                                            Dictionary.labelNews);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -245,6 +269,42 @@ class _NewsScreenState extends State<NewsScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: <Widget>[
+                                                LabelNew().isLabelNew(
+                                                        newsmodel.id.toString(),
+                                                        dataLabel)
+                                                    ?
+                                                Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 5,
+                                                                bottom: 5,
+                                                                left: 7,
+                                                                right: 7),
+                                                        margin: EdgeInsets.only(
+                                                            right: 5),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              ColorBase.red400,
+                                                          shape: BoxShape
+                                                              .rectangle,
+                                                          borderRadius: BorderRadius
+                                                              .circular(Dimens
+                                                                  .dialogRadius),
+                                                        ),
+                                                        child: Text('Baru',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontFamily:
+                                                                    FontsFamily
+                                                                        .roboto,
+                                                                fontSize: 10.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600)),
+                                                      )
+                                                    : Container(),
                                                 Expanded(
                                                   child: Text(
                                                     unixTimeStampToDateTime(
@@ -290,6 +350,11 @@ class _NewsScreenState extends State<NewsScreen> {
           elevation: 0,
           color: Colors.white,
           onPressed: () {
+            LabelNew().readNewInfo(
+                data.id,
+                data.publishedAt.toString(),
+                dataLabel,
+                Dictionary.labelNews);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -526,6 +591,11 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ),
             onPressed: () {
+              LabelNew().readNewInfo(
+                  data.id,
+                  data.publishedAt.toString(),
+                  dataLabel,
+                  Dictionary.labelNews);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -543,6 +613,7 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildContentList(List<NewsModel> list) {
+    print('masuk kemana kamu teh');
     if (widget.searchQuery != null) {
       list = list
           .where((test) => test.title
@@ -550,6 +621,8 @@ class _NewsScreenState extends State<NewsScreen> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
     }
+
+    getDataLabel();
 
     return list.isNotEmpty
         ? ListView.builder(

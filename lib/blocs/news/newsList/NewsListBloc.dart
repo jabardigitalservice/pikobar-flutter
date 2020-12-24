@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/repositories/NewsRepository.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'Bloc.dart';
 
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
@@ -32,8 +34,11 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
         ? _repository
             .getInfoImportantList(improtantInfoCollection: collection)
             .listen(
-              (news) => add(NewsListUpdate(news)),
-            )
+            (news) {
+              LabelNew().insertDataLabel(news, Dictionary.labelNews);
+              add(NewsListUpdate(news));
+            },
+          )
         : collection == NewsType.allArticles
             ? _repository.getAllNewsList(statImportantInfo).listen((event) {
                 List<NewsModel> dataListAllNews = [];
@@ -42,11 +47,16 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 });
                 dataListAllNews
                     .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
+                LabelNew()
+                    .insertDataLabel(dataListAllNews, Dictionary.labelNews);
                 add(NewsListUpdate(dataListAllNews));
               })
             : _repository
                 .getNewsList(newsCollection: collection)
-                .listen((news) => add(NewsListUpdate(news)));
+                .listen((news) {
+                LabelNew().insertDataLabel(news, Dictionary.labelNews);
+                add(NewsListUpdate(news));
+              });
   }
 
   Stream<NewsListState> _mapVideosUpdateToState(NewsListUpdate event) async* {

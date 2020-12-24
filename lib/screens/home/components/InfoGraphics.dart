@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
-import 'package:pikobar_flutter/configs/SharedPreferences/LabelNew.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -314,7 +313,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                     document['published_date']
                                         .seconds
                                         .toString(),
-                                    dataLabel);
+                                    dataLabel,
+                                    Dictionary.labelInfoGraphic);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         DetailInfoGraphicScreen(
@@ -337,7 +337,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                           document['published_date']
                                               .seconds
                                               .toString(),
-                                          dataLabel);
+                                          dataLabel,
+                                          Dictionary.labelInfoGraphic);
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
