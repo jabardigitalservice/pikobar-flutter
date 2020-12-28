@@ -312,9 +312,7 @@ class _DocumentsState extends State<Documents> {
                               onTap: () {
                                 LabelNew().readNewInfo(
                                     document.id,
-                                    document['published_date']
-                                        .seconds
-                                        .toString(),
+                                    document['published_at'].seconds.toString(),
                                     dataLabel,
                                     Dictionary.labelDocuments);
                                 Platform.isAndroid
@@ -331,7 +329,7 @@ class _DocumentsState extends State<Documents> {
                                     onTap: () {
                                       LabelNew().readNewInfo(
                                           document.id,
-                                          document['published_date']
+                                          document['published_at']
                                               .seconds
                                               .toString(),
                                           dataLabel,

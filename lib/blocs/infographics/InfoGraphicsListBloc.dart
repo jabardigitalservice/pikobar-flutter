@@ -50,7 +50,6 @@ class InfoGraphicsListBloc
                 limit: limit, infoGraphicsCollection: infoGraphicsCollection)
             .listen(
             (data) {
-              LabelNew().insertDataLabel(data, Dictionary.labelInfoGraphic);
               add(InfoGraphicsListUpdate(data));
             },
           );

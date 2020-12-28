@@ -17,9 +17,11 @@ class LabelNew {
       dataLabel = LabelNewModel.decode(label);
     }
     listData.forEach((dataLabelNew) {
-      var dataDate = DateTime.fromMillisecondsSinceEpoch(
-          dataLabelNew is DocumentSnapshot
-              ? dataLabelNew['published_date'].seconds * 1000
+      var dataDate =
+          DateTime.fromMillisecondsSinceEpoch(dataLabelNew is DocumentSnapshot
+              ? dataLabelNew.data().containsKey('published_at')
+                  ? dataLabelNew['published_at'].seconds * 1000
+                  : dataLabelNew['published_date'].seconds * 1000
               : dataLabelNew.publishedAt * 1000);
       if (unixTimeStampToDateWithoutMultiplication(
                   dataDate.millisecondsSinceEpoch) ==
@@ -33,7 +35,9 @@ class LabelNew {
             id: dataLabelNew.id.toString(),
             isRead: '0',
             date: dataLabelNew is DocumentSnapshot
-                ? dataLabelNew['published_date'].seconds.toString()
+                ? dataLabelNew.data().containsKey('published_at')
+                    ? dataLabelNew['published_at'].seconds.toString()
+                    : dataLabelNew['published_date'].seconds.toString()
                 : dataLabelNew.publishedAt.toString());
 
         var data = dataLabel

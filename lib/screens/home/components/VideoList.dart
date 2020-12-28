@@ -265,7 +265,7 @@ class _VideoListState extends State<VideoList> {
                                       data[index].id,
                                       data[index].publishedAt.toString(),
                                       dataLabel,
-                                      Dictionary.labelInfoGraphic);
+                                      Dictionary.labelVideos);
                                   launchExternal(data[index].url);
 
                                   AnalyticsHelper.setLogEvent(
