@@ -133,6 +133,8 @@ class IndexScreenState extends State<IndexScreen> {
   removeOutDateLabelNew() {
     LabelNew().removeData(Dictionary.labelInfoGraphic);
     LabelNew().removeData(Dictionary.labelNews);
+    LabelNew().removeData(Dictionary.labelVideos);
+    LabelNew().removeData(Dictionary.labelDocuments);
   }
 
   initializeBottomNavigationBar() {

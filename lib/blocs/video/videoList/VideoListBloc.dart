@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/repositories/VideoRepository.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
   final VideoRepository _videoRepository = VideoRepository();
@@ -25,8 +27,11 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
     yield VideosLoading();
     _videosSubscription?.cancel();
     _videosSubscription = _videoRepository.getVideo(limit: limit).listen(
-          (videos) => add(VideosUpdated(videos)),
-        );
+      (videos) {
+        LabelNew().insertDataLabel(videos, Dictionary.labelVideos);
+        add(VideosUpdated(videos));
+      },
+    );
   }
 
   Stream<VideoListState> _mapVideosUpdateToState(VideosUpdated event) async* {

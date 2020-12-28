@@ -52,7 +52,6 @@ class LabelNew {
   ///Function for get data from shared preference
   Future<List<LabelNewModel>> getDataLabel(String nameLabel) async {
     String label = await LabelNewSharedPreference.getLabelNew(nameLabel);
-    print('masukk labell euyy '+labe.toString());
     if (label != null) {
       dataLabel = LabelNewModel.decode(label);
     }
@@ -64,7 +63,6 @@ class LabelNew {
   bool isLabelNew(String id, List<LabelNewModel> dataLabel) {
     var data = dataLabel.where((test) => test.id.toLowerCase().contains(id));
     data = data.where((test) => test.isRead.toLowerCase().contains('0'));
-    print('mana euyyy'+data.isNotEmpty.toString());
     return data.isNotEmpty;
   }
 

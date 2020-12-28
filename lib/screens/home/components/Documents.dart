@@ -21,10 +21,12 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
@@ -40,6 +42,7 @@ class Documents extends StatefulWidget {
 
 class _DocumentsState extends State<Documents> {
   List<DocumentSnapshot> dataDocuments = [];
+  List<LabelNewModel> dataLabel = [];
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,15 @@ class _DocumentsState extends State<Documents> {
             : _buildLoading();
       },
     );
+  }
+
+  getDataLabel() {
+    LabelNew().getDataLabel(Dictionary.labelDocuments).then((value) {
+      if (!mounted) return;
+      setState(() {
+        dataLabel = value;
+      });
+    });
   }
 
   Widget _buildHeaderLoading() {
@@ -198,6 +210,8 @@ class _DocumentsState extends State<Documents> {
       }
     }
 
+    getDataLabel();
+
     return dataDocuments.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,6 +310,13 @@ class _DocumentsState extends State<Documents> {
                                 ],
                               ),
                               onTap: () {
+                                LabelNew().readNewInfo(
+                                    document.id,
+                                    document['published_date']
+                                        .seconds
+                                        .toString(),
+                                    dataLabel,
+                                    Dictionary.labelDocuments);
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
                                         document['document_url'])
@@ -308,6 +329,13 @@ class _DocumentsState extends State<Documents> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
+                                      LabelNew().readNewInfo(
+                                          document.id,
+                                          document['published_date']
+                                              .seconds
+                                              .toString(),
+                                          dataLabel,
+                                          Dictionary.labelDocuments);
                                       Platform.isAndroid
                                           ? _downloadAttachment(
                                               document['title'],
@@ -338,6 +366,38 @@ class _DocumentsState extends State<Documents> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
+                                              LabelNew().isLabelNew(
+                                                      document.id.toString(),
+                                                      dataLabel)
+                                                  ? Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5,
+                                                          bottom: 5,
+                                                          left: 7,
+                                                          right: 7),
+                                                      margin: EdgeInsets.only(
+                                                          right: 5),
+                                                      decoration: BoxDecoration(
+                                                        color: ColorBase.red400,
+                                                        shape:
+                                                            BoxShape.rectangle,
+                                                        borderRadius: BorderRadius
+                                                            .circular(Dimens
+                                                                .dialogRadius),
+                                                      ),
+                                                      child: Text('Baru',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontFamily:
+                                                                  FontsFamily
+                                                                      .roboto,
+                                                              fontSize: 10.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600)),
+                                                    )
+                                                  : Container(),
                                               Expanded(
                                                 child: Text(
                                                   unixTimeStampToDateTime(

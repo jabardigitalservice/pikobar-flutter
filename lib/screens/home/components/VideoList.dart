@@ -8,16 +8,19 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
@@ -34,6 +37,8 @@ class VideoList extends StatefulWidget {
 }
 
 class _VideoListState extends State<VideoList> {
+  List<LabelNewModel> dataLabel = [];
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VideoListBloc, VideoListState>(
@@ -46,6 +51,15 @@ class _VideoListState extends State<VideoList> {
                   : _buildLoading();
             })
           : _buildLoading();
+    });
+  }
+
+  getDataLabel() {
+    LabelNew().getDataLabel(Dictionary.labelVideos).then((value) {
+      if (!mounted) return;
+      setState(() {
+        dataLabel = value;
+      });
     });
   }
 
@@ -123,11 +137,12 @@ class _VideoListState extends State<VideoList> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-      if(data.isEmpty){
-          widget.covidInformationScreenState.isEmptyDataVideoList = true;
-
+      if (data.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataVideoList = true;
       }
     }
+
+    getDataLabel();
 
     return data.isNotEmpty
         ? Column(
@@ -246,6 +261,11 @@ class _VideoListState extends State<VideoList> {
                                   ),
                                 ),
                                 onTap: () {
+                                  LabelNew().readNewInfo(
+                                      data[index].id,
+                                      data[index].publishedAt.toString(),
+                                      dataLabel,
+                                      Dictionary.labelInfoGraphic);
                                   launchExternal(data[index].url);
 
                                   AnalyticsHelper.setLogEvent(
@@ -277,17 +297,44 @@ class _VideoListState extends State<VideoList> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 1),
-                                child: Text(
-                                  unixTimeStampToDateTime(
-                                      data[index].publishedAt),
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: FontsFamily.lato,
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.w600),
-                                ),
+                              Row(
+                                children: [
+                                  LabelNew().isLabelNew(
+                                          data[index].id.toString(), dataLabel)
+                                      ? Container(
+                                          padding: EdgeInsets.only(
+                                              top: 5,
+                                              bottom: 5,
+                                              left: 7,
+                                              right: 7),
+                                          margin: EdgeInsets.only(right: 5),
+                                          decoration: BoxDecoration(
+                                            color: ColorBase.red400,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(
+                                                Dimens.dialogRadius),
+                                          ),
+                                          child: Text('Baru',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily:
+                                                      FontsFamily.roboto,
+                                                  fontSize: 10.0,
+                                                  fontWeight: FontWeight.w600)),
+                                        )
+                                      : Container(),
+                                  Expanded(
+                                    child: Text(
+                                      unixTimeStampToDateTime(
+                                          data[index].publishedAt),
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontFamily: FontsFamily.lato,
+                                          fontSize: 10.0,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

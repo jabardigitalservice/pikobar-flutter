@@ -613,7 +613,6 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildContentList(List<NewsModel> list) {
-    print('masuk kemana kamu teh');
     if (widget.searchQuery != null) {
       list = list
           .where((test) => test.title
