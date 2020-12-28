@@ -35,7 +35,9 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
             .getInfoImportantList(improtantInfoCollection: collection)
             .listen(
             (news) {
-              add(NewsListUpdate(news));
+              // LabelNew()
+              //     .insertDataLabel(news, Dictionary.labelNews);
+              // add(NewsListUpdate(news));
             },
           )
         : collection == NewsType.allArticles

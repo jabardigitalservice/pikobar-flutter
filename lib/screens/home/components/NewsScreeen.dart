@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,6 +47,7 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   NewsListBloc newsListBloc;
   List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
 
   @override
   void initState() {
@@ -57,12 +60,15 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   getDataLabel() {
-    LabelNew().getDataLabel(Dictionary.labelNews).then((value) {
-      if (!mounted) return;
-      setState(() {
-        dataLabel = value;
+    if (isGetDataLabel) {
+      LabelNew().getDataLabel(Dictionary.labelNews).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
       });
-    });
+      isGetDataLabel = false;
+    }
   }
 
   @override
@@ -272,8 +278,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                 LabelNew().isLabelNew(
                                                         newsmodel.id.toString(),
                                                         dataLabel)
-                                                    ?
-                                                Container(
+                                                    ? Container(
                                                         padding:
                                                             EdgeInsets.only(
                                                                 top: 5,
@@ -350,11 +355,8 @@ class _NewsScreenState extends State<NewsScreen> {
           elevation: 0,
           color: Colors.white,
           onPressed: () {
-            LabelNew().readNewInfo(
-                data.id,
-                data.publishedAt.toString(),
-                dataLabel,
-                Dictionary.labelNews);
+            LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
+                dataLabel, Dictionary.labelNews);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -591,11 +593,8 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ),
             onPressed: () {
-              LabelNew().readNewInfo(
-                  data.id,
-                  data.publishedAt.toString(),
-                  dataLabel,
-                  Dictionary.labelNews);
+              LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
+                  dataLabel, Dictionary.labelNews);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -621,7 +620,7 @@ class _NewsScreenState extends State<NewsScreen> {
           .toList();
     }
 
-    getDataLabel();
+    // getDataLabel();
 
     return list.isNotEmpty
         ? ListView.builder(

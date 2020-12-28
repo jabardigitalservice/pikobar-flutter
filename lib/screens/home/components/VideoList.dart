@@ -38,6 +38,7 @@ class VideoList extends StatefulWidget {
 
 class _VideoListState extends State<VideoList> {
   List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +56,15 @@ class _VideoListState extends State<VideoList> {
   }
 
   getDataLabel() {
-    LabelNew().getDataLabel(Dictionary.labelVideos).then((value) {
-      if (!mounted) return;
-      setState(() {
-        dataLabel = value;
+    if (isGetDataLabel) {
+      LabelNew().getDataLabel(Dictionary.labelVideos).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
       });
-    });
+      isGetDataLabel = false;
+    }
   }
 
   Widget _buildLoading() {

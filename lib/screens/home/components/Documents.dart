@@ -43,6 +43,7 @@ class Documents extends StatefulWidget {
 class _DocumentsState extends State<Documents> {
   List<DocumentSnapshot> dataDocuments = [];
   List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +71,15 @@ class _DocumentsState extends State<Documents> {
   }
 
   getDataLabel() {
-    LabelNew().getDataLabel(Dictionary.labelDocuments).then((value) {
-      if (!mounted) return;
-      setState(() {
-        dataLabel = value;
+    if (isGetDataLabel) {
+      LabelNew().getDataLabel(Dictionary.labelDocuments).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
       });
-    });
+      isGetDataLabel = false;
+    }
   }
 
   Widget _buildHeaderLoading() {

@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pikobar_flutter/configs/SharedPreferences/LabelNew.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/repositories/InfoGraphicsRepository.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import './Bloc.dart';

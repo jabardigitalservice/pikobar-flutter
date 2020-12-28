@@ -38,6 +38,7 @@ class InfoGraphics extends StatefulWidget {
 
 class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
+  bool isGetDataLabel = true;
 
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
@@ -68,12 +69,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   }
 
   getDataLabel() {
-    LabelNew().getDataLabel(Dictionary.labelInfoGraphic).then((value) {
-      if (!mounted) return;
-      setState(() {
-        dataLabel = value;
+    if (isGetDataLabel) {
+      LabelNew().getDataLabel(Dictionary.labelInfoGraphic).then((value) {
+        // if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
       });
-    });
+      isGetDataLabel = false;
+    }
   }
 
   @override

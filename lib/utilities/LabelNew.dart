@@ -41,7 +41,7 @@ class LabelNew {
                 : dataLabelNew.publishedAt.toString());
 
         var data = dataLabel
-            .where((test) => test.id.toLowerCase().contains(labelNewModel.id));
+            .where((test) => test.id.contains(labelNewModel.id));
 
         if (data.isEmpty) {
           dataLabel.add(labelNewModel);
@@ -65,7 +65,7 @@ class LabelNew {
 
   ///Function for check data is new or not
   bool isLabelNew(String id, List<LabelNewModel> dataLabel) {
-    var data = dataLabel.where((test) => test.id.toLowerCase().contains(id));
+    var data = dataLabel.where((test) => test.id.contains(id));
     data = data.where((test) => test.isRead.toLowerCase().contains('0'));
     return data.isNotEmpty;
   }
