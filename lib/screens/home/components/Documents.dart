@@ -314,11 +314,13 @@ class _DocumentsState extends State<Documents> {
                                 ],
                               ),
                               onTap: () {
-                                LabelNew().readNewInfo(
-                                    document.id,
-                                    document['published_at'].seconds.toString(),
-                                    dataLabel,
-                                    Dictionary.labelDocuments);
+                                setState(() {
+                                  LabelNew().readNewInfo(
+                                      document.id,
+                                      document['published_at'].seconds.toString(),
+                                      dataLabel,
+                                      Dictionary.labelDocuments);
+                                });
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
                                         document['document_url'])
@@ -331,13 +333,15 @@ class _DocumentsState extends State<Documents> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      LabelNew().readNewInfo(
-                                          document.id,
-                                          document['published_at']
-                                              .seconds
-                                              .toString(),
-                                          dataLabel,
-                                          Dictionary.labelDocuments);
+                                      setState(() {
+                                        LabelNew().readNewInfo(
+                                            document.id,
+                                            document['published_at']
+                                                .seconds
+                                                .toString(),
+                                            dataLabel,
+                                            Dictionary.labelDocuments);
+                                      });
                                       Platform.isAndroid
                                           ? _downloadAttachment(
                                               document['title'],

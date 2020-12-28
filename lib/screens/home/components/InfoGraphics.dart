@@ -312,13 +312,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 ),
                               ),
                               onTap: () {
-                                LabelNew().readNewInfo(
-                                    document.id,
-                                    document['published_date']
-                                        .seconds
-                                        .toString(),
-                                    dataLabel,
-                                    Dictionary.labelInfoGraphic);
+                                setState(() {
+                                  LabelNew().readNewInfo(
+                                      document.id,
+                                      document['published_date']
+                                          .seconds
+                                          .toString(),
+                                      dataLabel,
+                                      Dictionary.labelInfoGraphic);
+                                });
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         DetailInfoGraphicScreen(
@@ -336,13 +338,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      LabelNew().readNewInfo(
-                                          document.id,
-                                          document['published_date']
-                                              .seconds
-                                              .toString(),
-                                          dataLabel,
-                                          Dictionary.labelInfoGraphic);
+                                      setState(() {
+                                        LabelNew().readNewInfo(
+                                            document.id,
+                                            document['published_date']
+                                                .seconds
+                                                .toString(),
+                                            dataLabel,
+                                            Dictionary.labelInfoGraphic);
+                                      });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>

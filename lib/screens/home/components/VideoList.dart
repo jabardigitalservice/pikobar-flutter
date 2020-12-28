@@ -265,11 +265,13 @@ class _VideoListState extends State<VideoList> {
                                   ),
                                 ),
                                 onTap: () {
-                                  LabelNew().readNewInfo(
-                                      data[index].id,
-                                      data[index].publishedAt.toString(),
-                                      dataLabel,
-                                      Dictionary.labelVideos);
+                                  setState(() {
+                                    LabelNew().readNewInfo(
+                                        data[index].id,
+                                        data[index].publishedAt.toString(),
+                                        dataLabel,
+                                        Dictionary.labelVideos);
+                                  });
                                   launchExternal(data[index].url);
 
                                   AnalyticsHelper.setLogEvent(

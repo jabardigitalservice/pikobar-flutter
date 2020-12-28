@@ -204,11 +204,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ),
                                 ),
                                 onTap: () {
-                                  LabelNew().readNewInfo(
-                                      newsmodel.id,
-                                      newsmodel.publishedAt.toString(),
-                                      dataLabel,
-                                      Dictionary.labelNews);
+                                  setState(() {
+                                    LabelNew().readNewInfo(
+                                        newsmodel.id,
+                                        newsmodel.publishedAt.toString(),
+                                        dataLabel,
+                                        Dictionary.labelNews);
+                                  });
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -230,11 +232,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
-                                        LabelNew().readNewInfo(
-                                            newsmodel.id,
-                                            newsmodel.publishedAt.toString(),
-                                            dataLabel,
-                                            Dictionary.labelNews);
+                                        setState(() {
+                                          LabelNew().readNewInfo(
+                                              newsmodel.id,
+                                              newsmodel.publishedAt.toString(),
+                                              dataLabel,
+                                              Dictionary.labelNews);
+                                        });
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -355,8 +359,10 @@ class _NewsScreenState extends State<NewsScreen> {
           elevation: 0,
           color: Colors.white,
           onPressed: () {
-            LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
-                dataLabel, Dictionary.labelNews);
+            setState(() {
+              LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
+                  dataLabel, Dictionary.labelNews);
+            });
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -593,8 +599,10 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ),
             onPressed: () {
-              LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
-                  dataLabel, Dictionary.labelNews);
+              setState(() {
+                LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
+                    dataLabel, Dictionary.labelNews);
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
