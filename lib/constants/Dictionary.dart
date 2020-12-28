@@ -491,4 +491,6 @@ class Dictionary {
   static const String badRateDesc = 'Apa yang menurutmu bisa kami lakukan untuk meningkatkan aplikasi Pikobar?';
   static const String goodRateDesc = 'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
   static const String hintFeedbackField = 'Kirimkan tanggapan Anda di sini...';
+  static const String nspSuccessTitle = 'Terima Kasih Atas Tanggapannya';
+  static const String nspSuccessDesc = 'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
 }

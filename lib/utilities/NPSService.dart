@@ -4,26 +4,23 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/NPSRepository.dart';
 
 class NPSService {
-
-  //TODO: Implementasi remote config untuk pengaturan waktu kemunculan NPS
   static Future<void> loadNetPromoterScore(BuildContext context) async {
-
     String userId = await AuthRepository().getToken();
+    int oldTime = await NPSRepository.getNPSTimeLater();
+    bool hasRated = await NPSRepository.hasNPS();
+
+    if (oldTime == null) {
+      oldTime = DateTime.now().millisecondsSinceEpoch;
+      await NPSRepository.setNPSTimeLater(oldTime);
+    }
 
     if (userId != null) {
-
-      int oldTime = await NPSRepository.getNPSTimeLater();
-      bool hasRated = await NPSRepository.hasNPS();
-
-      if (oldTime == null) {
-        oldTime = DateTime.now().millisecondsSinceEpoch;
-        await NPSRepository.setNPSTimeLater(oldTime);
-      }
-
-      int rangeDays = DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(oldTime)).inMinutes;
+      int rangeDays = DateTime.now()
+          .difference(DateTime.fromMillisecondsSinceEpoch(oldTime))
+          .inDays;
 
       if (!hasRated) {
-        if (rangeDays >= 3) {
+        if (rangeDays >= 2) {
           showDialogNPS(context);
         }
       }
