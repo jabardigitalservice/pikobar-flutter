@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
@@ -45,36 +46,25 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
     return ListView(
       children: [
         CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
+            _searchController, Dictionary.searchInformation, updateSearchQuery, margin: EdgeInsets.symmetric(horizontal: Dimens.padding)),
+        SizedBox(height: Dimens.verticalPadding * 1.5),
         !getIsEmptyData()
             ? Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: InfoGraphics(
-                        searchQuery: searchQuery,
-                        covidInformationScreenState: this),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: NewsScreen(
-                        news: Dictionary.allNews,
-                        maxLength: 5,
-                        searchQuery: searchQuery,
-                        covidInformationScreenState: this),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: VideoList(
-                        searchQuery: searchQuery,
-                        covidInformationScreenState: this),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Documents(
-                        searchQuery: searchQuery,
-                        covidInformationScreenState: this),
-                  ),
+                  InfoGraphics(
+                      searchQuery: searchQuery,
+                      covidInformationScreenState: this),
+                  NewsScreen(
+                      news: Dictionary.allNews,
+                      maxLength: 5,
+                      searchQuery: searchQuery,
+                      covidInformationScreenState: this),
+                  VideoList(
+                      searchQuery: searchQuery,
+                      covidInformationScreenState: this),
+                  Documents(
+                      searchQuery: searchQuery,
+                      covidInformationScreenState: this),
                   Container(
                     padding: EdgeInsets.only(top: 10),
                     child: SocialMedia(),
