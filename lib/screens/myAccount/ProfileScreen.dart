@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
+import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
@@ -20,6 +21,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
+import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
@@ -39,7 +41,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   AuthenticationBloc _authenticationBloc;
   String _versionText = Dictionary.version;
   RemoteConfigBloc _remoteConfigBloc;
-  ScrollController _scrollController;
+  final ProfileRepository _profileRepository = ProfileRepository();
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
@@ -50,21 +53,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : Dictionary.version;
       });
     });
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
-
     super.initState();
-  }
-
-  bool get _showTitle {
-    return _scrollController.hasClients &&
-        _scrollController.offset >
-            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
+          BlocProvider<ProfileBloc>(
+              create: (BuildContext context) => _profileBloc =
+                  ProfileBloc(profileRepository: _profileRepository)),
           BlocProvider<RemoteConfigBloc>(
               create: (BuildContext context) => _remoteConfigBloc =
                   RemoteConfigBloc()..add(RemoteConfigLoad())),
@@ -115,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: CustomAppBar.animatedAppBar(
-                  showTitle: _showTitle, title: Dictionary.profile),
+                  showTitle: true, title: Dictionary.profile),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,
@@ -126,6 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // When user is not login show login screen
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
+                      showTitle: false,
                     );
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
@@ -133,43 +132,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     HealthCheck().isUserHealty(_profileLoaded.record.uid);
-                    return StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection(kUsers)
-                            .doc(_profileLoaded.record.uid)
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (snapshot.hasError)
-                            // Show error ui when unable to get data
-                            return ErrorContent(error: snapshot.error);
-
-                          // Logout when data doesn't exist
-                          if (snapshot.connectionState !=
-                                  ConnectionState.waiting &&
-                              !snapshot.data.exists) {
-                            _authenticationBloc.add(LoggedOut());
-                          }
-
-                          switch (snapshot.connectionState) {
-                            // Show loading while get data
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            default:
-                              // Show content when data is ready
-                              return snapshot.data.exists
-                                  ? _buildContent(snapshot, _profileLoaded)
-                                  : Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                          }
-                        });
+                    return BlocBuilder<ProfileBloc, ProfileState>(builder: (
+                      BuildContext context,
+                      ProfileState state,
+                    ) {
+                      if (state is ProfileLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is ProfileLoaded) {
+                        ProfileLoaded _getProfile = state;
+                        return _buildContent(
+                            _getProfile.profile, _profileLoaded);
+                      } else {
+                        _profileBloc
+                            .add(ProfileLoad(uid: _profileLoaded.record.uid));
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    });
                   } else if (state is AuthenticationFailure ||
                       state is AuthenticationLoading) {
                     return OnBoardingLoginScreen(
                       authenticationBloc: _authenticationBloc,
+                      showTitle: false,
                     );
                   } else {
                     return Container();
@@ -180,25 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Function to build content
-  Widget _buildContent(AsyncSnapshot<DocumentSnapshot> state,
-      AuthenticationAuthenticated _profileLoaded) {
+  Widget _buildContent(
+      DocumentSnapshot state, AuthenticationAuthenticated _profileLoaded) {
     return ListView(
-      controller: _scrollController,
       children: <Widget>[
-        AnimatedOpacity(
-          opacity: _showTitle ? 0.0 : 1.0,
-          duration: Duration(milliseconds: 250),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-            child: Text(
-              Dictionary.profile,
-              style: TextStyle(
-                  fontFamily: FontsFamily.lato,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
         SizedBox(
           height: 20,
         ),
@@ -231,7 +203,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: 30.0,
                       child: Text(
-                        state.data['name'],
+                        state['name'],
                         style: TextStyle(
                             color: ColorBase.grey800,
                             fontSize: 16,
@@ -252,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       builder: (context, remoteState) {
                         return remoteState is RemoteConfigLoaded
                             ? _buildHealthStatus(
-                                remoteState.remoteConfig, state.data)
+                                remoteState.remoteConfig, state)
                             : Container();
                       },
                     ),
@@ -284,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 builder: (context) {
-                  return DialogQrCode(idUser: state.data['id']);
+                  return DialogQrCode(idUser: state['id']);
                 });
           },
           child: Padding(
@@ -345,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: EdgeInsets.all(15.0),
             child: Column(
               children: <Widget>[
-                _buildGroupMenu(state.data),
+                _buildGroupMenu(state),
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, NavigationConstrants.Edit,
@@ -465,6 +437,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ))),
             ),
           ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.17,
         )
       ],
     );

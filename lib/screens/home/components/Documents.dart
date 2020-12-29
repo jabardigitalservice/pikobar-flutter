@@ -260,7 +260,7 @@ class _DocumentsState extends State<Documents> {
                 height: 265,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                    padding: const EdgeInsets.only(left: 6.0, right: 16.0, bottom: 16.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount:

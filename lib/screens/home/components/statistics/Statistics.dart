@@ -160,6 +160,7 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
+                SizedBox(width: 16),
                 _buildContainer(
                     '',
                     Dictionary.positif,
@@ -170,6 +171,7 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
+                SizedBox(width: 16),
                 _buildContainer('', Dictionary.die, Dictionary.die, '-', 4,
                     Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
@@ -273,6 +275,7 @@ class _StatisticsState extends State<Statistics> {
                           data['aktif']['jabar'],
                           data['sembuh']['jabar'],
                           data['meninggal']['jabar'])))),
+              SizedBox(width: 16),
               _buildContainer(
                   '${Environment.iconAssets}circle_check_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
@@ -284,6 +287,7 @@ class _StatisticsState extends State<Statistics> {
                   Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['sembuh']['jabar'])),
+              SizedBox(width: 16),
               _buildContainer(
                   '${Environment.iconAssets}circle_cross_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
@@ -372,6 +376,7 @@ class _StatisticsState extends State<Statistics> {
         );
       },
       child: Card(
+        margin: EdgeInsets.all(0),
         elevation: 0,
         color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -433,7 +438,6 @@ class _StatisticsState extends State<Statistics> {
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
           padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
               color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
@@ -488,7 +492,6 @@ class _StatisticsState extends State<Statistics> {
   _buildConfirmedBox({@required String label, @required caseTotal}) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
           borderRadius: BorderRadius.circular(8.0)),

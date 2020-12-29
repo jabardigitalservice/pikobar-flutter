@@ -198,7 +198,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                 isRequired ? Dictionary.requiredForm : '',
                 style: TextStyle(
                     fontSize: 10.0,
-                    color: Colors.red,
+                    color: Colors.green,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
@@ -272,7 +272,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   fontSize: 10.0,
                   fontWeight: FontWeight.bold,
                   height: 18.0 / 12.0,
-                  color: Colors.red))
+                  color: Colors.green))
           : TextSpan()
     ]));
   }

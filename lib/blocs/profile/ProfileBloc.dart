@@ -10,10 +10,12 @@ import './Bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;
+  StreamSubscription _subscription;
 
   ProfileBloc({
     @required this.profileRepository,
-  }) : assert(profileRepository != null), super(ProfileUninitialized());
+  })  : assert(profileRepository != null),
+        super(ProfileUninitialized());
 
   @override
   Stream<ProfileState> mapEventToState(
@@ -98,5 +100,24 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     if (event is CodeSend) {
       yield ProfileOTPSent(verificationID: event.verificationID);
     }
+
+    if (event is ProfileLoad) {
+      yield* _loadSelfReportListToState(event.uid);
+    } else if (event is ProfileUpdated) {
+      yield* _selfReportListToState(event);
+    }
+  }
+
+  Stream<ProfileState> _loadSelfReportListToState(String otherUID) async* {
+    yield ProfileLoading();
+    _subscription?.cancel();
+
+    _subscription = profileRepository.getProfile(otherUID).listen((event) {
+      add(ProfileUpdated(event));
+    });
+  }
+
+  Stream<ProfileState> _selfReportListToState(ProfileUpdated event) async* {
+    yield ProfileLoaded(event.profile);
   }
 }

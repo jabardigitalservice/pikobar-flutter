@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
+import 'package:pikobar_flutter/components/DialogNPS.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -22,6 +23,7 @@ void showSuccessBottomSheet(
     bool isDismissible = true}) {
   showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -36,6 +38,17 @@ void showSuccessBottomSheet(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              /// Divider section
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: Dimens.padding),
+                  height: 6,
+                  width: 60.0,
+                  decoration: BoxDecoration(
+                      color: ColorBase.menuBorderColor,
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+              ),
               /// Image section
               ///
               /// If image null, by default it will use image:
@@ -46,8 +59,7 @@ void showSuccessBottomSheet(
               /// )
               /// ```
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 44.0),
-                margin: EdgeInsets.only(bottom: 24.0),
+                padding: EdgeInsets.symmetric(horizontal: 44.0, vertical: Dimens.verticalPadding),
                 child: image ??
                     Image.asset(
                       '${Environment.imageAssets}daily_success.png',
@@ -125,8 +137,8 @@ void showTextBottomSheet(
               Center(
                 child: Container(
                   margin: EdgeInsets.only(bottom: Dimens.padding),
-                  height: 4,
-                  width: 80.0,
+                  height: 6,
+                  width: 60.0,
                   decoration: BoxDecoration(
                       color: ColorBase.menuBorderColor,
                       borderRadius: BorderRadius.circular(30.0)),
@@ -166,7 +178,7 @@ void showTextBottomSheet(
                   openChromeSafariBrowser(url: url);
                 },
               ),
-              SizedBox(height: Dimens.sbHeight)
+              SizedBox(height: Dimens.sizedBoxHeight)
             ],
           ),
         );
@@ -197,8 +209,8 @@ Future<void> showWidgetBottomSheet(
                 height: 8,
                 alignment: Alignment.center,
                 child: Container(
-                  height: 4,
-                  width: 80.0,
+                  height: 6,
+                  width: 60.0,
                   decoration: BoxDecoration(
                       color: ColorBase.menuBorderColor,
                       borderRadius: BorderRadius.circular(30.0)),
@@ -217,7 +229,7 @@ Future<void> showWidgetBottomSheet(
                       child ?? Container(),
 
 
-                      SizedBox(height: Dimens.sbHeight)
+                      SizedBox(height: Dimens.sizedBoxHeight)
                     ],
                   ),
                 ),
@@ -310,4 +322,12 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
           ),
         );
       });
+}
+
+void showDialogNPS(BuildContext context) {
+  showWidgetBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      child: DialogNPS()
+  );
 }

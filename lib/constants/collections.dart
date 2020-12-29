@@ -27,4 +27,5 @@ const String kOtherSelfReports = 'other_report';
 const String kDailyReport = 'daily_report';
 const String kEducationContent = 'education_content';
 const String kContactHistory = 'contact_history';
+const String kScores = 'scores';
 
