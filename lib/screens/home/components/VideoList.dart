@@ -321,7 +321,7 @@ class _VideoListState extends State<VideoList> {
                                             borderRadius: BorderRadius.circular(
                                                 Dimens.dialogRadius),
                                           ),
-                                          child: Text('Baru',
+                                          child: Text(Dictionary.newLabel,
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontFamily:

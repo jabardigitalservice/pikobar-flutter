@@ -207,7 +207,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                   labelNew.readNewInfo(
+                                    labelNew.readNewInfo(
                                         newsmodel.id,
                                         newsmodel.publishedAt.toString(),
                                         dataLabel,
@@ -281,7 +281,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: <Widget>[
-                                               labelNew.isLabelNew(
+                                                labelNew.isLabelNew(
                                                         newsmodel.id.toString(),
                                                         dataLabel)
                                                     ? Container(
@@ -303,7 +303,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                                               .circular(Dimens
                                                                   .dialogRadius),
                                                         ),
-                                                        child: Text('Baru',
+                                                        child: Text(
+                                                            Dictionary.newLabel,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white,
@@ -362,7 +363,7 @@ class _NewsScreenState extends State<NewsScreen> {
           color: Colors.white,
           onPressed: () {
             setState(() {
-             labelNew.readNewInfo(data.id, data.publishedAt.toString(),
+              labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                   dataLabel, Dictionary.labelNews);
             });
             Navigator.push(
@@ -602,7 +603,7 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
             onPressed: () {
               setState(() {
-               labelNew.readNewInfo(data.id, data.publishedAt.toString(),
+                labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                     dataLabel, Dictionary.labelNews);
               });
               Navigator.push(

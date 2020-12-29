@@ -404,7 +404,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                             .circular(Dimens
                                                                 .dialogRadius),
                                                       ),
-                                                      child: Text('Baru',
+                                                      child: Text(Dictionary.newLabel,
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white,

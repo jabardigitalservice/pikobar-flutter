@@ -394,7 +394,7 @@ class _DocumentsState extends State<Documents> {
                                                             .circular(Dimens
                                                                 .dialogRadius),
                                                       ),
-                                                      child: Text('Baru',
+                                                      child: Text(Dictionary.newLabel,
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white,

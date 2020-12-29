@@ -133,6 +133,8 @@ class Dictionary {
   static String covidInformation = "Informasi COVID-19";
   static String requiredForm = ' • Harus Diisi';
 
+  static String newLabel = 'Baru';
+
   // Button Text
   static String yes = 'Ya';
   static String no = 'Tidak';
