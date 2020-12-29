@@ -2,7 +2,6 @@
   const String kUrlDonation = 'https://kitabisa.com/campaign/jabarlawancorona';
   const String kUrlLogisticsInfo = 'https://logistik.pikobar.jabarprov.go.id/#/landing-page';
   const String kUrlCoronaInfo = 'https://pikobar.jabarprov.go.id/';
-  const String kUrlCoronaInfoData = 'https://pikobar.jabarprov.go.id/data';
   const String kUrlCoronaEscort = 'https://kawalcovid19.id/';
   const String kUrlWorldCoronaInfo = 'https://coronavirus.thebaselab.com/';
   const String kUrlIGSaberHoax = 'https://www.instagram.com/jabarsaberhoaks/';

@@ -32,6 +32,7 @@ import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
+import 'package:pikobar_flutter/utilities/NPSService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -63,6 +64,7 @@ class IndexScreenState extends State<IndexScreen> {
     initializeToken();
     getCountMessage();
     removeOutDateLabelNew();
+    loadNetPromoterScore();
 
     super.initState();
   }
@@ -385,6 +387,10 @@ class IndexScreenState extends State<IndexScreen> {
 
   initializeBackgroundLocation() async {
     await LocationService.initializeBackgroundLocation(context);
+  }
+
+  loadNetPromoterScore() async {
+    await NPSService.loadNetPromoterScore(context);
   }
 
   @override

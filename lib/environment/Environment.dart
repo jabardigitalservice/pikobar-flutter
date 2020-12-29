@@ -11,15 +11,8 @@ class Environment {
 
   static String databaseNameProd = 'PikobarDB.db';
 
-  // mock
-  static String apiMock = 'http://52.74.74.33:3000/v1';
-
   // android download storage
   static String downloadStorage = '/storage/emulated/0/Download';
 
-  static String defaultPassword = '123456';
-  static String saberHoaxPhone = '+6282118670700';
-  static String csPhone = '+6281212124023';
-  static String laporPhone = '1708';
   static String idDailyUpdate='BvBSkBV5pLWKoBjISaX0';
 }
