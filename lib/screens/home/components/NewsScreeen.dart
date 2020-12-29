@@ -48,9 +48,11 @@ class _NewsScreenState extends State<NewsScreen> {
   NewsListBloc newsListBloc;
   List<LabelNewModel> dataLabel = [];
   bool isGetDataLabel = true;
+  LabelNew labelNew;
 
   @override
   void initState() {
+    labelNew = LabelNew();
     if (widget.maxLength != null) {
       newsListBloc = BlocProvider.of<NewsListBloc>(context);
       newsListBloc
@@ -61,7 +63,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
   getDataLabel() {
     if (isGetDataLabel) {
-      LabelNew().getDataLabel(Dictionary.labelNews).then((value) {
+      labelNew.getDataLabel(Dictionary.labelNews).then((value) {
         if (!mounted) return;
         setState(() {
           dataLabel = value;
@@ -205,7 +207,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                    LabelNew().readNewInfo(
+                                   labelNew.readNewInfo(
                                         newsmodel.id,
                                         newsmodel.publishedAt.toString(),
                                         dataLabel,
@@ -233,7 +235,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
-                                          LabelNew().readNewInfo(
+                                          labelNew.readNewInfo(
                                               newsmodel.id,
                                               newsmodel.publishedAt.toString(),
                                               dataLabel,
@@ -279,7 +281,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: <Widget>[
-                                                LabelNew().isLabelNew(
+                                               labelNew.isLabelNew(
                                                         newsmodel.id.toString(),
                                                         dataLabel)
                                                     ? Container(
@@ -360,7 +362,7 @@ class _NewsScreenState extends State<NewsScreen> {
           color: Colors.white,
           onPressed: () {
             setState(() {
-              LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
+             labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                   dataLabel, Dictionary.labelNews);
             });
             Navigator.push(
@@ -600,7 +602,7 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
             onPressed: () {
               setState(() {
-                LabelNew().readNewInfo(data.id, data.publishedAt.toString(),
+               labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                     dataLabel, Dictionary.labelNews);
               });
               Navigator.push(

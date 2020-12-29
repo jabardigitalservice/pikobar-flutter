@@ -9,6 +9,7 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
   final VideoRepository _videoRepository = VideoRepository();
   StreamSubscription _videosSubscription;
+  LabelNew labelNew = LabelNew();
 
   VideoListBloc() : super(VideoListInitial());
 
@@ -28,7 +29,7 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
     _videosSubscription?.cancel();
     _videosSubscription = _videoRepository.getVideo(limit: limit).listen(
       (videos) {
-        LabelNew().insertDataLabel(videos, Dictionary.labelVideos);
+        labelNew.insertDataLabel(videos, Dictionary.labelVideos);
         add(VideosUpdated(videos));
       },
     );

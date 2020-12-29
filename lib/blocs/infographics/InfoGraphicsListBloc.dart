@@ -10,6 +10,7 @@ import './Bloc.dart';
 class InfoGraphicsListBloc
     extends Bloc<InfoGraphicsListEvent, InfoGraphicsListState> {
   final InfoGraphicsRepository _repository = InfoGraphicsRepository();
+  LabelNew labelNew = LabelNew();
   StreamSubscription _subscription;
 
   InfoGraphicsListBloc() : super(InitialInfoGraphicsListState());
@@ -39,7 +40,7 @@ class InfoGraphicsListBloc
             });
             dataListAllinfographics.sort(
                 (b, a) => a['published_date'].compareTo(b['published_date']));
-            LabelNew().insertDataLabel(
+            labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
             add(InfoGraphicsListUpdate(dataListAllinfographics));
           })

@@ -8,6 +8,7 @@ import './Bloc.dart';
 class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
   DocumentsRepository _repository = DocumentsRepository();
   StreamSubscription _subscription;
+  LabelNew labelNew = LabelNew();
 
   DocumentsBloc() : super(InitialDocumentsState());
 
@@ -27,7 +28,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     _subscription?.cancel();
     _subscription = _repository.getDocuments(limit: limit).listen(
       (data) {
-        LabelNew().insertDataLabel(data, Dictionary.labelDocuments);
+        labelNew.insertDataLabel(data, Dictionary.labelDocuments);
         add(DocumentsUpdate(data));
       },
     );

@@ -9,10 +9,11 @@ class LabelNew {
   DateTime currentDay = DateTime.now();
   DateTime yesterday = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day - 1);
+  LabelNewSharedPreference labelNewSharedPreference = LabelNewSharedPreference();
 
   ///Function for insert datalabel to shared preference
   insertDataLabel(var listData, String nameLabel) async {
-    String label = await LabelNewSharedPreference.getLabelNew(nameLabel);
+    String label = await labelNewSharedPreference.getLabelNew(nameLabel);
     if (label != null) {
       dataLabel = LabelNewModel.decode(label);
     }
@@ -50,12 +51,12 @@ class LabelNew {
     });
 
     String encodeData = LabelNewModel.encode(dataLabel);
-    await LabelNewSharedPreference.setLabelNew(encodeData, nameLabel);
+    await labelNewSharedPreference.setLabelNew(encodeData, nameLabel);
   }
 
   ///Function for get data from shared preference
   Future<List<LabelNewModel>> getDataLabel(String nameLabel) async {
-    String label = await LabelNewSharedPreference.getLabelNew(nameLabel);
+    String label = await labelNewSharedPreference.getLabelNew(nameLabel);
     if (label != null) {
       dataLabel = LabelNewModel.decode(label);
     }
@@ -77,13 +78,13 @@ class LabelNew {
       dataLabel[dataLabel.indexWhere((element) => element.id == id)] =
           LabelNewModel(id: id, isRead: '1', date: date);
       String encodeData = LabelNewModel.encode(dataLabel);
-      await LabelNewSharedPreference.setLabelNew(encodeData, nameLabel);
+      await labelNewSharedPreference.setLabelNew(encodeData, nameLabel);
     }
   }
 
   ///Function for remove outdate data
   removeData(String nameLabel) async {
-    String label = await LabelNewSharedPreference.getLabelNew(nameLabel);
+    String label = await labelNewSharedPreference.getLabelNew(nameLabel);
     List<LabelNewModel> listDataLabel = [];
     if (label != null) {
       dataLabel = LabelNewModel.decode(label);
@@ -105,7 +106,7 @@ class LabelNew {
       });
 
       String encodeData = LabelNewModel.encode(dataLabel);
-      await LabelNewSharedPreference.setLabelNew(encodeData, nameLabel);
+      await labelNewSharedPreference.setLabelNew(encodeData, nameLabel);
     }
   }
 }

@@ -39,6 +39,7 @@ class InfoGraphics extends StatefulWidget {
 class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
   bool isGetDataLabel = true;
+  LabelNew labelNew;
 
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
@@ -62,6 +63,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 
   @override
   void initState() {
+    labelNew = LabelNew();
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
     infoGraphicsListBloc.add(InfoGraphicsListLoad(
         infoGraphicsCollection: kAllInfographics, limit: 5));
@@ -70,8 +72,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
 
   getDataLabel() {
     if (isGetDataLabel) {
-      LabelNew().getDataLabel(Dictionary.labelInfoGraphic).then((value) {
-        // if (!mounted) return;
+      labelNew.getDataLabel(Dictionary.labelInfoGraphic).then((value) {
+        if (!mounted) return;
         setState(() {
           dataLabel = value;
         });
@@ -313,7 +315,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  LabelNew().readNewInfo(
+                                  labelNew.readNewInfo(
                                       document.id,
                                       document['published_date']
                                           .seconds
@@ -339,7 +341,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                   child: InkWell(
                                     onTap: () {
                                       setState(() {
-                                        LabelNew().readNewInfo(
+                                        labelNew.readNewInfo(
                                             document.id,
                                             document['published_date']
                                                 .seconds
@@ -383,7 +385,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              LabelNew().isLabelNew(
+                                              labelNew.isLabelNew(
                                                       document.id.toString(),
                                                       dataLabel)
                                                   ? Container(

@@ -11,6 +11,7 @@ import 'Bloc.dart';
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
   StreamSubscription _subscription;
+  LabelNew labelNew = LabelNew();
 
   NewsListBloc() : super(InitialNewsListState());
 
@@ -35,9 +36,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
             .getInfoImportantList(improtantInfoCollection: collection)
             .listen(
             (news) {
-              // LabelNew()
-              //     .insertDataLabel(news, Dictionary.labelNews);
-              // add(NewsListUpdate(news));
+              add(NewsListUpdate(news));
             },
           )
         : collection == NewsType.allArticles
@@ -48,8 +47,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 });
                 dataListAllNews
                     .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
-                LabelNew()
-                    .insertDataLabel(dataListAllNews, Dictionary.labelNews);
+                labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
                 add(NewsListUpdate(dataListAllNews));
               })
             : _repository

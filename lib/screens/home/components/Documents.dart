@@ -44,6 +44,7 @@ class _DocumentsState extends State<Documents> {
   List<DocumentSnapshot> dataDocuments = [];
   List<LabelNewModel> dataLabel = [];
   bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class _DocumentsState extends State<Documents> {
 
   getDataLabel() {
     if (isGetDataLabel) {
-      LabelNew().getDataLabel(Dictionary.labelDocuments).then((value) {
+      labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
         if (!mounted) return;
         setState(() {
           dataLabel = value;
@@ -315,9 +316,11 @@ class _DocumentsState extends State<Documents> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  LabelNew().readNewInfo(
+                                  labelNew.readNewInfo(
                                       document.id,
-                                      document['published_at'].seconds.toString(),
+                                      document['published_at']
+                                          .seconds
+                                          .toString(),
                                       dataLabel,
                                       Dictionary.labelDocuments);
                                 });
@@ -334,7 +337,7 @@ class _DocumentsState extends State<Documents> {
                                   child: InkWell(
                                     onTap: () {
                                       setState(() {
-                                        LabelNew().readNewInfo(
+                                        labelNew.readNewInfo(
                                             document.id,
                                             document['published_at']
                                                 .seconds
@@ -372,7 +375,7 @@ class _DocumentsState extends State<Documents> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              LabelNew().isLabelNew(
+                                              labelNew.isLabelNew(
                                                       document.id.toString(),
                                                       dataLabel)
                                                   ? Container(
