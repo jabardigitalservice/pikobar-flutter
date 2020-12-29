@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -308,27 +309,7 @@ class _VideoListState extends State<VideoList> {
                                 children: [
                                   labelNew.isLabelNew(
                                           data[index].id.toString(), dataLabel)
-                                      ? Container(
-                                          padding: EdgeInsets.only(
-                                              top: 5,
-                                              bottom: 5,
-                                              left: 7,
-                                              right: 7),
-                                          margin: EdgeInsets.only(right: 5),
-                                          decoration: BoxDecoration(
-                                            color: ColorBase.red400,
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.circular(
-                                                Dimens.dialogRadius),
-                                          ),
-                                          child: Text(Dictionary.newLabel,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontFamily:
-                                                      FontsFamily.roboto,
-                                                  fontSize: 10.0,
-                                                  fontWeight: FontWeight.w600)),
-                                        )
+                                      ? LabelNewScreen()
                                       : Container(),
                                   Expanded(
                                     child: Text(
