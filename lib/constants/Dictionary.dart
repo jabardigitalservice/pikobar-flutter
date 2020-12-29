@@ -132,6 +132,7 @@ class Dictionary {
   static String jabarToday = "Jabar Hari Ini";
   static String covidInformation = "Informasi COVID-19";
   static String requiredForm = ' • Harus Diisi';
+  static String verificationNumber = 'Verifikasi Nomor';
 
   // Button Text
   static String yes = 'Ya';
@@ -144,7 +145,7 @@ class Dictionary {
   static String nextStep = 'Selanjutnya';
   static String update = 'Perbarui';
   static String save = 'Simpan';
-  static String verification = 'Verifikasi Nomor';
+  static String verification = 'Verifikasi';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
   static String setLocation = 'Pilih Lokasi';
   static String termsConditions = ' Terms & Conditions';
@@ -204,6 +205,7 @@ class Dictionary {
   static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
   static String aggrementIsFalse =
       'Silahkan setujui Terms & Conditions untuk login';
+  static String errorEmptyOTP = 'OTP harus diisi';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
@@ -487,15 +489,21 @@ class Dictionary {
   static const String zoneGreenDescription =
       'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
-  static const String shareZonationInfo = 'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
-  static const String sourceZonationInfo = 'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
+  static const String shareZonationInfo =
+      'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
+  static const String sourceZonationInfo =
+      'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
 
-  static const String npsTitle = 'Seberapa besar kemungkinan Anda ingin merekomendasikan Pikobar sebagai aplikasi informasi dan layanan Covid-19 di Jawa Barat ke teman dan keluargamu?';
+  static const String npsTitle =
+      'Seberapa besar kemungkinan Anda ingin merekomendasikan Pikobar sebagai aplikasi informasi dan layanan Covid-19 di Jawa Barat ke teman dan keluargamu?';
   static const String impossible = 'Tidak Mungkin';
   static const String veryPossible = 'Sangat Mungkin';
-  static const String badRateDesc = 'Apa yang menurutmu bisa kami lakukan untuk meningkatkan aplikasi Pikobar?';
-  static const String goodRateDesc = 'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
+  static const String badRateDesc =
+      'Apa yang menurutmu bisa kami lakukan untuk meningkatkan aplikasi Pikobar?';
+  static const String goodRateDesc =
+      'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
   static const String hintFeedbackField = 'Kirimkan tanggapan Anda di sini...';
   static const String nspSuccessTitle = 'Terima Kasih Atas Tanggapannya';
-  static const String nspSuccessDesc = 'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
+  static const String nspSuccessDesc =
+      'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
 }
