@@ -91,6 +91,8 @@ class Dictionary {
   static String requiredForm = ' • Harus Diisi';
   static String verificationNumber = 'Verifikasi Nomor';
 
+  static String newLabel = 'Baru';
+
   // Button Text
   static String cancel = 'Batal';
   static String ok = 'Ok';
@@ -399,6 +401,11 @@ class Dictionary {
       'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
   static const String hintFeedbackField = 'Kirimkan tanggapan Anda di sini...';
   static const String nspSuccessTitle = 'Terima Kasih Atas Tanggapannya';
-  static const String nspSuccessDesc =
-      'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
+  static const String nspSuccessDesc = 'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
+  
+   //Shared Preference Label Name
+  static const String labelInfoGraphic = 'labelnewinfographic';
+  static const String labelNews = 'labellatestnews';
+  static const String labelVideos = 'labelnewvideos';
+  static const String labelDocuments = 'labelnewdocuments';
 }

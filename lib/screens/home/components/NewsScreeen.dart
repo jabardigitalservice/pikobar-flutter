@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -15,12 +18,14 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/news/News.dart';
 import 'package:pikobar_flutter/screens/news/NewsDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
@@ -42,15 +47,31 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   NewsListBloc newsListBloc;
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew;
 
   @override
   void initState() {
+    labelNew = LabelNew();
     if (widget.maxLength != null) {
       newsListBloc = BlocProvider.of<NewsListBloc>(context);
       newsListBloc
           .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
     }
     super.initState();
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelNews).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   @override
@@ -96,6 +117,8 @@ class _NewsScreenState extends State<NewsScreen> {
         widget.covidInformationScreenState.isEmptyDataNews = true;
       }
     }
+
+    getDataLabel();
 
     return list.isNotEmpty
         ? Container(
@@ -184,6 +207,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ),
                                 ),
                                 onTap: () {
+                                  setState(() {
+                                    labelNew.readNewInfo(
+                                        newsmodel.id,
+                                        newsmodel.publishedAt.toString(),
+                                        dataLabel,
+                                        Dictionary.labelNews);
+                                  });
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -205,6 +235,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
+                                        setState(() {
+                                          labelNew.readNewInfo(
+                                              newsmodel.id,
+                                              newsmodel.publishedAt.toString(),
+                                              dataLabel,
+                                              Dictionary.labelNews);
+                                        });
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -245,6 +282,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: <Widget>[
+                                                labelNew.isLabelNew(
+                                                        newsmodel.id.toString(),
+                                                        dataLabel)
+                                                    ? LabelNewScreen()
+                                                    : Container(),
                                                 Expanded(
                                                   child: Text(
                                                     unixTimeStampToDateTime(
@@ -290,6 +332,10 @@ class _NewsScreenState extends State<NewsScreen> {
           elevation: 0,
           color: Colors.white,
           onPressed: () {
+            setState(() {
+              labelNew.readNewInfo(data.id, data.publishedAt.toString(),
+                  dataLabel, Dictionary.labelNews);
+            });
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -526,6 +572,10 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ),
             onPressed: () {
+              setState(() {
+                labelNew.readNewInfo(data.id, data.publishedAt.toString(),
+                    dataLabel, Dictionary.labelNews);
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -550,6 +600,8 @@ class _NewsScreenState extends State<NewsScreen> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
     }
+
+    // getDataLabel();
 
     return list.isNotEmpty
         ? ListView.builder(

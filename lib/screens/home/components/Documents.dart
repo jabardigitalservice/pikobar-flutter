@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -21,10 +22,12 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
@@ -40,6 +43,9 @@ class Documents extends StatefulWidget {
 
 class _DocumentsState extends State<Documents> {
   List<DocumentSnapshot> dataDocuments = [];
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +70,18 @@ class _DocumentsState extends State<Documents> {
             : _buildLoading();
       },
     );
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   Widget _buildHeaderLoading() {
@@ -198,6 +216,8 @@ class _DocumentsState extends State<Documents> {
       }
     }
 
+    getDataLabel();
+
     return dataDocuments.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,6 +316,15 @@ class _DocumentsState extends State<Documents> {
                                 ],
                               ),
                               onTap: () {
+                                setState(() {
+                                  labelNew.readNewInfo(
+                                      document.id,
+                                      document['published_at']
+                                          .seconds
+                                          .toString(),
+                                      dataLabel,
+                                      Dictionary.labelDocuments);
+                                });
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
                                         document['document_url'])
@@ -308,6 +337,15 @@ class _DocumentsState extends State<Documents> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
+                                      setState(() {
+                                        labelNew.readNewInfo(
+                                            document.id,
+                                            document['published_at']
+                                                .seconds
+                                                .toString(),
+                                            dataLabel,
+                                            Dictionary.labelDocuments);
+                                      });
                                       Platform.isAndroid
                                           ? _downloadAttachment(
                                               document['title'],
@@ -338,6 +376,11 @@ class _DocumentsState extends State<Documents> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
+                                              labelNew.isLabelNew(
+                                                      document.id.toString(),
+                                                      dataLabel)
+                                                  ? LabelNewScreen()
+                                                  : Container(),
                                               Expanded(
                                                 child: Text(
                                                   unixTimeStampToDateTime(

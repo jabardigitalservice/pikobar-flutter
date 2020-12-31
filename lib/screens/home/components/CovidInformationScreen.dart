@@ -46,7 +46,8 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
     return ListView(
       children: [
         CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery, margin: EdgeInsets.symmetric(horizontal: Dimens.padding)),
+            _searchController, Dictionary.searchInformation, updateSearchQuery,
+            margin: EdgeInsets.symmetric(horizontal: Dimens.padding)),
         SizedBox(height: Dimens.verticalPadding * 1.5),
         !getIsEmptyData()
             ? Column(

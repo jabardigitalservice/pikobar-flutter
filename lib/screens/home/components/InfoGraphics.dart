@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -15,10 +18,12 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 // ignore: must_be_immutable
@@ -34,6 +39,8 @@ class InfoGraphics extends StatefulWidget {
 
 class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
+  bool isGetDataLabel = true;
+  LabelNew labelNew;
 
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
@@ -53,12 +60,27 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     Analytics.tappedInfographicWho,
   ];
 
+  List<LabelNewModel> dataLabel = [];
+
   @override
   void initState() {
+    labelNew = LabelNew();
     infoGraphicsListBloc = BlocProvider.of<InfoGraphicsListBloc>(context);
     infoGraphicsListBloc.add(InfoGraphicsListLoad(
         infoGraphicsCollection: kAllInfographics, limit: 5));
     super.initState();
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelInfoGraphic).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   @override
@@ -210,6 +232,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
       }
     }
+    getDataLabel();
 
     return listData.isNotEmpty
         ? Column(
@@ -254,7 +277,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 height: 265,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(left: 6.0, right: 16.0, bottom: 16.0),
+                    padding: const EdgeInsets.only(
+                        left: 6.0, right: 16.0, bottom: 16.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.searchQuery != null ? listData.length : 5,
@@ -292,6 +316,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 ),
                               ),
                               onTap: () {
+                                setState(() {
+                                  labelNew.readNewInfo(
+                                      document.id,
+                                      document['published_date']
+                                          .seconds
+                                          .toString(),
+                                      dataLabel,
+                                      Dictionary.labelInfoGraphic);
+                                });
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         DetailInfoGraphicScreen(
@@ -309,6 +342,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
+                                      setState(() {
+                                        labelNew.readNewInfo(
+                                            document.id,
+                                            document['published_date']
+                                                .seconds
+                                                .toString(),
+                                            dataLabel,
+                                            Dictionary.labelInfoGraphic);
+                                      });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
@@ -332,7 +374,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             document['title'],
                                             style: TextStyle(
                                                 fontSize: 14.0,
-                                                fontFamily: FontsFamily.lato,
+                                                fontFamily: FontsFamily.roboto,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
@@ -345,6 +387,11 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
+                                              labelNew.isLabelNew(
+                                                      document.id.toString(),
+                                                      dataLabel)
+                                                  ? LabelNewScreen()
+                                                  : Container(),
                                               Expanded(
                                                 child: Text(
                                                   unixTimeStampToDateTime(
@@ -353,7 +400,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:
-                                                          FontsFamily.lato,
+                                                          FontsFamily.roboto,
                                                       fontSize: 10.0,
                                                       fontWeight:
                                                           FontWeight.w600),

@@ -30,6 +30,7 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/NPSService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
@@ -62,6 +63,7 @@ class IndexScreenState extends State<IndexScreen> {
     initializeBottomNavigationBar();
     initializeToken();
     getCountMessage();
+    removeOutDateLabelNew();
     loadNetPromoterScore();
 
     super.initState();
@@ -128,6 +130,13 @@ class IndexScreenState extends State<IndexScreen> {
   initializeToken() async {
     await AuthRepository().registerFCMToken();
     await AuthRepository().updateIdToken();
+  }
+
+  removeOutDateLabelNew() {
+    LabelNew().removeData(Dictionary.labelInfoGraphic);
+    LabelNew().removeData(Dictionary.labelNews);
+    LabelNew().removeData(Dictionary.labelVideos);
+    LabelNew().removeData(Dictionary.labelDocuments);
   }
 
   initializeBottomNavigationBar() {
@@ -302,23 +311,17 @@ class IndexScreenState extends State<IndexScreen> {
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
-                        colors: [
-                          Color(0xFF16A75C),
-                          Color(0xFF9BDBB3)
-                        ],
-                        transform: GradientRotation(45)
-                    ),
+                        colors: [Color(0xFF16A75C), Color(0xFF9BDBB3)],
+                        transform: GradientRotation(45)),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                           color: Colors.grey.shade200,
                           offset: Offset(0.0, 2.0), //(x,y)
                           blurRadius: 5.0,
-                          spreadRadius: 0.0
-                      ),
+                          spreadRadius: 0.0),
                     ],
-                    border: Border.all(color: Colors.white, width: 4.0)
-                ),
+                    border: Border.all(color: Colors.white, width: 4.0)),
                 child: Image.asset('${Environment.iconAssets}menu.png'),
               ),
               onTap: () {
