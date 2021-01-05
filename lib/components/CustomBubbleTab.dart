@@ -34,6 +34,8 @@ class CustomBubbleTab extends StatefulWidget {
   final double paddingTopTabBarView;
   final TabController tabController;
   final String typeTabSelected;
+  final String titleNameLabelNew;
+  final int totalUnreadinfo;
   double paddingBubbleTab;
   bool isExpand;
   bool isScrollable;
@@ -65,7 +67,9 @@ class CustomBubbleTab extends StatefulWidget {
       this.searchBar,
       this.titleHeader,
       this.subTitle,
-      this.paddingBubbleTab});
+      this.paddingBubbleTab,
+      this.titleNameLabelNew,
+      this.totalUnreadinfo});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -141,6 +145,18 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       controller: _basetabController,
                       isScrollable: isScrollable,
                       onTap: (index) {
+                        dataSelected = widget.listItemTitleTab[index];
+                        for (int i = 0;
+                            i < widget.listItemTitleTab.length;
+                            i++) {
+                          if (widget.listItemTitleTab[i] == dataSelected) {
+                            listBubbleTabItem[index] = bubbleTabItem(
+                                widget.listItemTitleTab[index], dataSelected);
+                          } else {
+                            listBubbleTabItem[i] = bubbleTabItem(
+                                widget.listItemTitleTab[i], dataSelected);
+                          }
+                        }
                         widget.onTap(index);
                       },
                       labelColor: widget.labelColor,
@@ -166,8 +182,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       )
                     : Container(
                         height: widget.heightTabBarView,
-                        padding: EdgeInsets.only(
-                            top: paddingTopTabBarView),
+                        padding: EdgeInsets.only(top: paddingTopTabBarView),
                         child: TabBarView(
                           controller: _basetabController,
                           children: widget.tabBarView,
@@ -191,19 +206,37 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   ///widget for set item tab in tabbar
   // ignore: non_constant_identifier_names
   Widget bubbleTabItem(String title, String dataSelected) {
-    return Tab(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          title,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.lato,
-              fontSize: widget.sizeLabel ?? 10.0),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Tab(
+          child: Container(
+            // color: Colors.black,
+            padding: EdgeInsets.all(10),
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: FontsFamily.lato,
+                  fontSize: widget.sizeLabel ?? 10.0),
+            ),
+          ),
         ),
-      ),
+       widget.titleNameLabelNew != null && title != dataSelected
+            ? Container(
+                padding: EdgeInsets.only(left: 10),
+                width: 10,
+                height: 10,
+                decoration: new BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
+                ),
+              )
+            : Container()
+      ],
     );
   }
+
 
   Widget _buildSliverAppBar(BuildContext context) {
     return SliverAppBar(
@@ -214,7 +247,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
             ? 150
             : widget.searchBar != null
                 ? 250.0
-                : widget.subTitle != null ? 200 : 150,
+                : widget.subTitle != null
+                    ? 200
+                    : 150,
         title: AnimatedOpacity(
           opacity: widget.showTitle ? 1.0 : 0.0,
           duration: Duration(milliseconds: 250),
@@ -268,16 +303,18 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w900),
                             ),
-                            widget.subTitle != null ? Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                widget.subTitle,
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.roboto,
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                            ) : Container(),
+                            widget.subTitle != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      widget.subTitle,
+                                      style: TextStyle(
+                                        fontFamily: FontsFamily.roboto,
+                                        fontSize: 12.0,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ),

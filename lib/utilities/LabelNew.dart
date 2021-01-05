@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/LabelNew.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
 
 import 'FormatDate.dart';
@@ -9,7 +10,8 @@ class LabelNew {
   DateTime currentDay = DateTime.now();
   DateTime yesterday = DateTime(
       DateTime.now().year, DateTime.now().month, DateTime.now().day - 1);
-  LabelNewSharedPreference labelNewSharedPreference = LabelNewSharedPreference();
+  LabelNewSharedPreference labelNewSharedPreference =
+      LabelNewSharedPreference();
 
   ///Function for insert datalabel to shared preference
   insertDataLabel(var listData, String nameLabel) async {
@@ -62,6 +64,29 @@ class LabelNew {
     }
 
     return dataLabel;
+  }
+
+  ///Function for get all data from shared preference
+  int getAllUnreadDataLabel() {
+    List<String> listNameLabel = [
+      Dictionary.labelInfoGraphic,
+      Dictionary.labelNews,
+      Dictionary.labelVideos,
+      Dictionary.labelDocuments
+    ];
+
+    int totalUnreadData = 0;
+
+    listNameLabel.forEach((element) async {
+      String label = await labelNewSharedPreference.getLabelNew(element);
+      if (label != null) {
+        dataLabel = LabelNewModel.decode(label);
+        dataLabel = dataLabel.where((test) => test.isRead.contains('0'));
+        totalUnreadData = totalUnreadData + dataLabel.length;
+      }
+    });
+
+    return totalUnreadData;
   }
 
   ///Function for check data is new or not
