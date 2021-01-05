@@ -100,63 +100,64 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: CollapsingAppbar(
-      scrollController: _scrollController,
-      heightAppbar: 300.0,
-      showTitle: isShrink,
-      isBottomAppbar: false,
-      actionsAppBar: [
-        IconButton(
-          icon: Icon(
-            Icons.share,
-            color: isShrink ? Colors.black : Colors.white,
+          scrollController: _scrollController,
+          heightAppbar: 300.0,
+          showTitle: isShrink,
+          isBottomAppbar: false,
+          actionsAppBar: [
+            IconButton(
+              icon: Icon(
+                Icons.share,
+                color: isShrink ? Colors.black : Colors.white,
+              ),
+              onPressed: () {
+                widget.news == Dictionary.importantInfo
+                    ? _shareMessage(widget.model)
+                    : Share.share(
+                        '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                    <String, dynamic>{'title': widget.model.title});
+              },
+            )
+          ],
+          titleAppbar: widget.model.title,
+          backgroundAppBar: GestureDetector(
+            child: Hero(
+                tag: Dictionary.heroImageTag,
+                child: Stack(
+                  children: [
+                    Image.network(
+                      widget.model.image,
+                      fit: BoxFit.cover,
+                      height: MediaQuery.of(context).size.height,
+                    ),
+                    Container(
+                      color: Colors.black12.withOpacity(0.2),
+                    )
+                  ],
+                )),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => HeroImagePreview(
+                            Dictionary.heroImageTag,
+                            imageUrl: widget.model.image,
+                          )));
+            },
           ),
-          onPressed: () {
-            widget.news == Dictionary.importantInfo
-                ? _shareMessage(widget.model)
-                : Share.share(
-                    '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-            AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                <String, dynamic>{'title': widget.model.title});
-          },
-        )
-      ],
-      titleAppbar: Dictionary.news,
-      backgroundAppBar: GestureDetector(
-        child: Hero(
-            tag: Dictionary.heroImageTag,
-            child: Stack(
-              children: [
-                Image.network(
-                  widget.model.image,
-                  fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height,
-                ),
-                Container(
-                  color: Colors.black12.withOpacity(0.2),
-                )
-              ],
-            )),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => HeroImagePreview(
-                        Dictionary.heroImageTag,
-                        imageUrl: widget.model.image,
-                      )));
-        },
-      ),
-      body: widget.model == null
-          ? state is NewsDetailLoading
-              ? _buildLoading(context)
-              : state is NewsDetailLoaded
-                  ? _buildContent(context, state.record)
-                  : state is NewsDetailFailure
-                      ? ErrorContent(error: state.error)
-                      : Container()
-          : _buildContent(context, widget.model),
-    ));
+          body: widget.model == null
+              ? state is NewsDetailLoading
+                  ? _buildLoading(context)
+                  : state is NewsDetailLoaded
+                      ? _buildContent(context, state.record)
+                      : state is NewsDetailFailure
+                          ? ErrorContent(error: state.error)
+                          : Container()
+              : _buildContent(context, widget.model),
+        ));
   }
 
   _buildLoading(BuildContext context) {
@@ -263,20 +264,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  AnimatedOpacity(
-                    opacity: isShrink ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 250),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 10, left: 3),
-                      child: Text(
-                        Dictionary.news,
-                        style: TextStyle(
-                            fontFamily: FontsFamily.lato,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -296,7 +283,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                               data.newsChannel,
                                           style: TextStyle(
                                               fontSize: 12.0,
-                                              fontFamily: FontsFamily.lato))
+                                              fontFamily: FontsFamily.roboto))
                                       : Container()
                                 ]),
                           )
@@ -312,7 +299,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18.0,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -369,7 +356,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                   maxLines: 2,
                                   style: TextStyle(
                                       fontSize: 14.0,
-                                      fontFamily: FontsFamily.lato,
+                                      fontFamily: FontsFamily.roboto,
                                       color: Colors.grey[800])),
                             ),
                             ButtonTheme(
@@ -384,7 +371,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                 child: Text(Dictionary.downloadAttachment,
                                     style: TextStyle(
                                         fontSize: 14.0,
-                                        fontFamily: FontsFamily.lato,
+                                        fontFamily: FontsFamily.roboto,
                                         color: Colors.white)),
                                 onPressed: () {
                                   Platform.isAndroid
@@ -408,7 +395,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       child: Text(Dictionary.otherNews,
                           style: TextStyle(
                               fontSize: 16.0,
-                              fontFamily: FontsFamily.lato,
+                              fontFamily: FontsFamily.roboto,
                               color: Colors.grey[700])),
                       padding: EdgeInsets.all(15.0),
                       shape: RoundedRectangleBorder(

@@ -109,25 +109,21 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
             flexibleSpace: !isBottomAppbar
                 ? FlexibleSpaceBar(
                     centerTitle: true,
-                    title: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 70),
-                          child: AnimatedOpacity(
-                            opacity: widget.showTitle ? 1.0 : 0.0,
-                            duration: Duration(milliseconds: 250),
-                            child: Text(
-                              widget.showTitle ? widget.titleAppbar : '',
-                              style: TextStyle(
-                                  fontFamily: FontsFamily.lato,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        )
-                      ],
+                    title: Container(
+                      margin: EdgeInsets.only(left: 70, bottom: 2, right: 50),
+                      child: AnimatedOpacity(
+                        opacity: widget.showTitle ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 250),
+                        child: Text(
+                          widget.showTitle ? widget.titleAppbar : '',
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
                     ),
                     background: widget.backgroundAppBar)
                 : null,
