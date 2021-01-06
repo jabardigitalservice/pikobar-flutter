@@ -387,7 +387,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       : Container(),
 
                   SizedBox(height: 25.0),
-                  Container(
+                  widget.id != Environment.idDailyUpdate ? Container(
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
                     child: OutlineButton(
@@ -404,8 +404,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                         Navigator.of(context).pop(true);
                       },
                     ),
-                  ),
-//                        _latestNews(state),
+                  ) : Container(),
                   SizedBox(height: 10.0)
                 ],
               ),
