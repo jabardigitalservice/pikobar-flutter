@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,8 +40,6 @@ class DetailInfoGraphicScreen extends StatefulWidget {
 
 class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   int _current = 0;
-  ScrollController _scrollController;
-  bool lastStatus = true;
 
   List<String> getDataUrl() {
     List<String> dataUrl = [];
@@ -50,231 +49,233 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     return dataUrl;
   }
 
-  _scrollListener() {
-    if (isShrink != lastStatus) {
-      setState(() {
-        lastStatus = isShrink;
-      });
-    }
-  }
-
-  bool get isShrink {
-    return _scrollController.hasClients &&
-        _scrollController.offset > (200 - kToolbarHeight);
-  }
-
-  @override
-  void initState() {
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     List<String> dataUrl = getDataUrl();
-    return Scaffold(
-        body: CollapsingAppbar(
-      scrollController: _scrollController,
-      heightAppbar: 310.0,
-      showTitle: isShrink,
-      isBottomAppbar: false,
-      actionsAppBar: [
-        IconButton(
-          icon: Icon(
-            Icons.share,
-            color: isShrink ? Colors.black : Colors.white,
-          ),
-          onPressed: () {
-            InfoGraphicsServices().shareInfoGraphics(
-                widget.dataInfoGraphic['title'],
-                widget.dataInfoGraphic['images']);
-          },
-        )
-      ],
-      titleAppbar: Dictionary.infoGraphics,
-      backgroundAppBar: Column(
-        children: [
-          Container(
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            child: CarouselSlider(
-              options: CarouselOptions(
-                initialPage: 0,
-                enableInfiniteScroll: dataUrl.length > 1 ? true : false,
-                aspectRatio: 9 / 9,
-                viewportFraction: 1.0,
-                autoPlay: dataUrl.length > 1 ? true : false,
-                autoPlayInterval: Duration(seconds: 5),
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
-              ),
-              items: dataUrl.map((String data) {
-                return Builder(builder: (BuildContext context) {
-                  return GestureDetector(
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(shape: BoxShape.circle),
-                          child: ClipRRect(
-                            child: CachedNetworkImage(
-                                imageUrl: data ?? '',
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      height: 360,
+                      width: MediaQuery.of(context).size.width,
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          initialPage: 0,
+                          enableInfiniteScroll:
+                              dataUrl.length > 1 ? true : false,
+                          aspectRatio: 9 / 9,
+                          viewportFraction: 1.0,
+                          autoPlay: dataUrl.length > 1 ? true : false,
+                          autoPlayInterval: Duration(seconds: 5),
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          },
+                        ),
+                        items: dataUrl.map((String data) {
+                          return Builder(builder: (BuildContext context) {
+                            return GestureDetector(
+                              child: Stack(
+                                children: [
+                                  CachedNetworkImage(
+                                      imageUrl: data ?? '',
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                      placeholder: (context, url) => Center(
+                                          heightFactor: 10.2,
+                                          child: CupertinoActivityIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(5.0),
+                                                    topRight:
+                                                        Radius.circular(5.0)),
+                                              ),
+                                              child: PikobarPlaceholder())),
+                                  Container(
+                                    height: 360,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      gradient: LinearGradient(
+                                        begin: FractionalOffset.topCenter,
+                                        end: FractionalOffset.bottomCenter,
+                                        colors: [
+                                          Colors.black.withOpacity(0.6),
+                                          Colors.transparent,
+                                        ],
+                                        stops: [0.0, 1.0],
                                       ),
                                     ),
-                                placeholder: (context, url) => Center(
-                                    heightFactor: 10.2,
-                                    child: CupertinoActivityIndicator()),
-                                errorWidget: (context, url, error) => Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(5.0),
-                                          topRight: Radius.circular(5.0)),
-                                    ),
-                                    child: PikobarPlaceholder())),
-                          ),
-                        ),
-                        Container(
-                          height: 300,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Colors.black12.withOpacity(0.2),
-                            shape: BoxShape.rectangle,
-                            borderRadius:
-                                BorderRadius.circular(Dimens.dialogRadius),
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      if (data.isNotEmpty) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => HeroImagePreview(
-                                Dictionary.heroImageTag,
-                                galleryItems: dataUrl,
+                                  ),
+                                ],
                               ),
-                            ));
-                      }
-                    },
-                  );
-                });
-              }).toList(),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: dataUrl.map((String data) {
-                int index = dataUrl.indexOf(data);
-                return _current == index
-                    ? Container(
-                        width: 24.0,
-                        height: 8.0,
-                        margin: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 2.0),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(30.0),
-                            color: ColorBase.green))
-                    : Container(
-                        width: 8.0,
-                        height: 8.0,
-                        margin: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 2.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromRGBO(0, 0, 0, 0.4),
-                        ),
-                      );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding:
-                  EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    unixTimeStampToDateTime(
-                        widget.dataInfoGraphic['published_date'].seconds),
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 10.0,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            widget.dataInfoGraphic['title'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato,
+                              onTap: () {
+                                if (data.isNotEmpty) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => HeroImagePreview(
+                                          Dictionary.heroImageTag,
+                                          galleryItems: dataUrl,
+                                        ),
+                                      ));
+                                }
+                              },
+                            );
+                          });
+                        }).toList(),
+                      ),
+                    ),
+                    SafeArea(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
                             ),
-                            textAlign: TextAlign.left,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                           ),
-                        ),
-                      ]),
-                ],
+                          IconButton(
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              InfoGraphicsServices().shareInfoGraphics(
+                                  widget.dataInfoGraphic['title'],
+                                  widget.dataInfoGraphic['images']);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: dataUrl.map((String data) {
+                      int index = dataUrl.indexOf(data);
+                      return _current == index
+                          ? Container(
+                              width: 24.0,
+                              height: 8.0,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 2.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  color: ColorBase.green))
+                          : Container(
+                              width: 8.0,
+                              height: 8.0,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 2.0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromRGBO(0, 0, 0, 0.4),
+                              ),
+                            );
+                    }).toList(),
+                  ),
+                ),
+                Container(
+                  padding:
+                      EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        unixTimeStampToDateTime(
+                            widget.dataInfoGraphic['published_date'].seconds),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                widget.dataInfoGraphic['title'],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: FontsFamily.lato,
+                                ),
+                                textAlign: TextAlign.left,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ]),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: EdgeInsets.only(
+                    left: Dimens.padding, right: Dimens.padding, bottom: 32.0),
+                child: RoundedButton(
+                    borderRadius: BorderRadius.circular(10.0),
+                    title: Dictionary.downloadImage,
+                    color: ColorBase.green,
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.lato,
+                    ),
+                    onPressed: () {
+                      Platform.isAndroid
+                          ? _downloadAttachment(widget.dataInfoGraphic['title'],
+                              widget.dataInfoGraphic['images'][_current])
+                          : _viewPdf(widget.dataInfoGraphic['title'],
+                              widget.dataInfoGraphic['images'][_current]);
+                    }),
               ),
             ),
-            Container(
-              padding:
-                  EdgeInsets.only(top: 195, left: 16, right: 16, bottom: 16),
-              child: RoundedButton(
-                  borderRadius: BorderRadius.circular(10.0),
-                  title: Dictionary.downloadImage,
-                  color: ColorBase.green,
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: FontsFamily.lato,
-                  ),
-                  onPressed: () {
-                    Platform.isAndroid
-                        ? _downloadAttachment(widget.dataInfoGraphic['title'],
-                            widget.dataInfoGraphic['images'][_current])
-                        : _viewPdf(widget.dataInfoGraphic['title'],
-                            widget.dataInfoGraphic['images'][_current]);
-                  }),
-            )
           ],
         ),
       ),
-    ));
+    );
   }
 
   void _viewPdf(String title, String url) async {
@@ -351,7 +352,6 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
     super.dispose();
   }
 }
