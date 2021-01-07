@@ -67,7 +67,7 @@ class LabelNew {
   }
 
   ///Function for get all data from shared preference
-  int getAllUnreadDataLabel() {
+  Future<int> getAllUnreadDataLabel() async {
     List<String> listNameLabel = [
       Dictionary.labelInfoGraphic,
       Dictionary.labelNews,
@@ -77,14 +77,16 @@ class LabelNew {
 
     int totalUnreadData = 0;
 
-    listNameLabel.forEach((element) async {
-      String label = await labelNewSharedPreference.getLabelNew(element);
+    for (int i = 0; i < listNameLabel.length; i++) {
+      String label =
+          await labelNewSharedPreference.getLabelNew(listNameLabel[i]);
       if (label != null) {
         dataLabel = LabelNewModel.decode(label);
-        dataLabel = dataLabel.where((test) => test.isRead.contains('0'));
+        dataLabel =
+            dataLabel.where((test) => test.isRead.contains('0')).toList();
         totalUnreadData = totalUnreadData + dataLabel.length;
       }
-    });
+    }
 
     return totalUnreadData;
   }

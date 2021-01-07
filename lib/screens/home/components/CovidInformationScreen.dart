@@ -7,12 +7,19 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/Documents.dart';
+import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
+// ignore: must_be_immutable
 class CovidInformationScreen extends StatefulWidget {
+  HomeScreenState homeScreenState;
+
+  CovidInformationScreen({this.homeScreenState});
+
   @override
   CovidInformationScreenState createState() => CovidInformationScreenState();
 }
@@ -31,6 +38,9 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
     _searchController.addListener((() {
       _onSearchChanged();
     }));
+
+    getAllUnreadData();
+
     super.initState();
   }
 
@@ -39,6 +49,11 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
         isEmptyDataInfoGraphic &&
         isEmptyDataNews &&
         isEmptyDataVideoList;
+  }
+
+  Future<void> getAllUnreadData() async {
+    widget.homeScreenState.totalUnreadInfo =
+        await LabelNew().getAllUnreadDataLabel();
   }
 
   @override

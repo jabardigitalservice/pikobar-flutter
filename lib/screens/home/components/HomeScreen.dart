@@ -28,6 +28,7 @@ import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.d
 import 'package:pikobar_flutter/screens/home/components/JabarToday.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
@@ -35,10 +36,10 @@ class HomeScreen extends StatefulWidget {
   HomeScreen({this.indexScreenState});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   RemoteConfigBloc _remoteConfigBloc;
   BannersBloc _bannersBloc;
@@ -61,13 +62,24 @@ class _HomeScreenState extends State<HomeScreen>
     Analytics.tappedCovidInformation,
   ];
   TabController tabController;
+  int totalUnreadInfo = 0;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
     getDataFromServer();
     setControllerTab();
+    getAllUnreadData();
     super.initState();
+  }
+
+  getAllUnreadData() {
+    Future.delayed(Duration(milliseconds: 0), () async {
+      var data = await LabelNew().getAllUnreadDataLabel();
+      setState(() {
+        totalUnreadInfo = data;
+      });
+    });
   }
 
   void getDataFromServer() {
@@ -187,6 +199,8 @@ class _HomeScreenState extends State<HomeScreen>
           unselectedLabelColor: Colors.grey,
           tabController: tabController,
           paddingBubbleTab: 10,
+          titleNameLabelNew: listItemTitleTab[1],
+          totalUnreadinfo: totalUnreadInfo,
           sizeLabel: 13.0,
           onTap: (index) async {
             if (listItemTitleTab[index] == Dictionary.covidInformation) {
@@ -199,7 +213,9 @@ class _HomeScreenState extends State<HomeScreen>
           },
           tabBarView: <Widget>[
             JabarTodayScreen(),
-            CovidInformationScreen(),
+            CovidInformationScreen(
+              homeScreenState: this,
+            ),
           ],
           isExpand: true,
         ),

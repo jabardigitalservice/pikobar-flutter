@@ -316,7 +316,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 ),
                               ),
                               onTap: () {
-                                setState(() {
+                                setState(() async {
                                   labelNew.readNewInfo(
                                       document.id,
                                       document['published_date']
@@ -324,6 +324,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                           .toString(),
                                       dataLabel,
                                       Dictionary.labelInfoGraphic);
+                                  widget.covidInformationScreenState.widget.homeScreenState.totalUnreadInfo = await labelNew.getAllUnreadDataLabel();
                                 });
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
@@ -342,7 +343,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      setState(() {
+                                      setState(() async {
                                         labelNew.readNewInfo(
                                             document.id,
                                             document['published_date']
@@ -350,6 +351,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                 .toString(),
                                             dataLabel,
                                             Dictionary.labelInfoGraphic);
+                                        widget.covidInformationScreenState.widget.homeScreenState.totalUnreadInfo = await labelNew.getAllUnreadDataLabel();
                                       });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(

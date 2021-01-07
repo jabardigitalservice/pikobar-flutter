@@ -267,12 +267,15 @@ class _VideoListState extends State<VideoList> {
                                   ),
                                 ),
                                 onTap: () {
-                                  setState(() {
-                                   labelNew.readNewInfo(
+                                  setState(() async {
+                                    labelNew.readNewInfo(
                                         data[index].id,
                                         data[index].publishedAt.toString(),
                                         dataLabel,
                                         Dictionary.labelVideos);
+                                    widget.covidInformationScreenState.widget
+                                            .homeScreenState.totalUnreadInfo =
+                                        await labelNew.getAllUnreadDataLabel();
                                   });
                                   launchExternal(data[index].url);
 

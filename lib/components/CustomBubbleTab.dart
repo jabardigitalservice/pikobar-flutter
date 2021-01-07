@@ -1,6 +1,7 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 // ignore: must_be_immutable
 class CustomBubbleTab extends StatefulWidget {
@@ -35,7 +36,7 @@ class CustomBubbleTab extends StatefulWidget {
   final TabController tabController;
   final String typeTabSelected;
   final String titleNameLabelNew;
-  final int totalUnreadinfo;
+  int totalUnreadinfo;
   double paddingBubbleTab;
   bool isExpand;
   bool isScrollable;
@@ -86,10 +87,13 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   double paddingBubleTab;
   bool isScrollable;
   double paddingTopTabBarView;
+  int totalUnreadlabelNew;
+  bool isLoadLabelNew = true;
 
   @override
   void initState() {
     ///for set default each variable if get value null
+    totalUnreadlabelNew = widget.totalUnreadinfo ?? 0;
     paddingBubleTab = widget.paddingBubbleTab ?? 0;
     paddingTopTabBarView = widget.paddingTopTabBarView ?? 0;
     isScrollable = widget.isScrollable ?? true;
@@ -97,15 +101,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         TabController(vsync: this, length: widget.listItemTitleTab.length);
     _basetabController.addListener(_handleTabSelection);
     listBubbleTabItem.clear();
-    for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-      if (widget.typeTabSelected != null) {
-        dataSelected = widget.typeTabSelected;
-      } else {
-        dataSelected = widget.listItemTitleTab[0];
-      }
-      listBubbleTabItem
-          .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
-    }
+    addItemDataBuble(false);
     if (widget.isExpand != null) {
       isExpand = widget.isExpand;
     } else {
@@ -114,9 +110,32 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
     super.initState();
   }
 
+  addItemDataBuble(bool isUpdateData) {
+    for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+      if (widget.typeTabSelected != null) {
+        dataSelected = widget.typeTabSelected;
+      } else {
+        dataSelected = widget.listItemTitleTab[0];
+      }
+      if (isUpdateData) {
+        listBubbleTabItem[i] =
+            bubbleTabItem(widget.listItemTitleTab[i], dataSelected);
+      } else {
+        listBubbleTabItem
+            .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ///condition for check is use collapsing appbar or not
+    if (widget.titleNameLabelNew != null &&
+        isLoadLabelNew &&
+        widget.totalUnreadinfo > 0) {
+      addItemDataBuble(true);
+      isLoadLabelNew = false;
+    }
     return widget.isStickyHeader
         ? DefaultTabController(
             length: listBubbleTabItem.length,
@@ -145,6 +164,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       controller: _basetabController,
                       isScrollable: isScrollable,
                       onTap: (index) {
+                        totalUnreadlabelNew = widget.totalUnreadinfo;
                         dataSelected = widget.listItemTitleTab[index];
                         for (int i = 0;
                             i < widget.listItemTitleTab.length;
@@ -206,6 +226,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   ///widget for set item tab in tabbar
   // ignore: non_constant_identifier_names
   Widget bubbleTabItem(String title, String dataSelected) {
+    totalUnreadlabelNew = widget.totalUnreadinfo;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -222,7 +243,10 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
             ),
           ),
         ),
-       widget.titleNameLabelNew != null && title != dataSelected
+        widget.titleNameLabelNew != null &&
+                widget.titleNameLabelNew == title &&
+                dataSelected != title &&
+                totalUnreadlabelNew > 0
             ? Container(
                 padding: EdgeInsets.only(left: 10),
                 width: 10,
@@ -236,7 +260,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
       ],
     );
   }
-
 
   Widget _buildSliverAppBar(BuildContext context) {
     return SliverAppBar(
