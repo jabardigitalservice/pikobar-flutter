@@ -34,7 +34,10 @@ class _ContactHistoryDetailScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportDetail),
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: false,
+        title: Dictionary.selfReportDetail,
+      ),
       backgroundColor: Colors.white,
       body: BlocProvider<ContactHistoryDetailBloc>(
         create: (context) => ContactHistoryDetailBloc()
@@ -59,7 +62,18 @@ class _ContactHistoryDetailScreenState
           padding: EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Text(
+                Dictionary.contactHistory,
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               Container(
                 child: Row(
                   children: <Widget>[
