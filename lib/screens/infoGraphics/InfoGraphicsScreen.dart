@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -18,9 +19,11 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 class InfoGraphicsScreen extends StatefulWidget {
   @override
@@ -35,6 +38,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   String searchQuery;
   List<int> _current = [];
   bool isSetDataCurrent = false;
+  bool isGetDataLabel = true;
+  LabelNew labelNew;
+  List<LabelNewModel> dataLabel = [];
 
   List<String> listItemTitleTab = [
     Dictionary.all,
@@ -60,6 +66,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.infoGraphics);
+    labelNew = LabelNew();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _searchController.addListener((() {
       _onSearchChanged();
@@ -71,6 +78,18 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
     return _scrollController.hasClients &&
         _scrollController.offset >
             0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelInfoGraphic).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   @override
@@ -140,6 +159,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       });
       isSetDataCurrent = true;
     }
+
+    getDataLabel();
 
     return listData.isNotEmpty
         ? ListView.builder(
@@ -289,11 +310,21 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              unixTimeStampToDateTime(
-                                  data['published_date'].seconds),
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.white),
+                            Row(
+                              children: [
+                                labelNew.isLabelNew(
+                                        data.id.toString(), dataLabel)
+                                    ? LabelNewScreen()
+                                    : Container(),
+                                Expanded(
+                                  child: Text(
+                                    unixTimeStampToDateTime(
+                                        data['published_date'].seconds),
+                                    style: TextStyle(
+                                        fontSize: 16.0, color: Colors.white),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(
                               height: 3,
@@ -359,6 +390,15 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               ),
             ),
             onPressed: () {
+              setState(() {
+                labelNew.readNewInfo(
+                    data.id,
+                    data['published_date'].seconds.toString(),
+                    dataLabel,
+                    Dictionary.labelInfoGraphic);
+                // widget.covidInformationScreenState.widget
+                //     .homeScreenState.getAllUnreadData();
+              });
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>
                       DetailInfoGraphicScreen(dataInfoGraphic: data)));

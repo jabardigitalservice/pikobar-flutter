@@ -41,6 +41,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
   bool isGetDataLabel = true;
   LabelNew labelNew;
+  List<LabelNewModel> dataLabel = [];
 
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
@@ -59,8 +60,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     Analytics.tappedInfographicCenter,
     Analytics.tappedInfographicWho,
   ];
-
-  List<LabelNewModel> dataLabel = [];
 
   @override
   void initState() {
@@ -315,8 +314,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                   ),
                                 ),
                               ),
-                              onTap: () {
-                                setState(() async {
+                              onTap: () async {
+                                setState(() {
                                   labelNew.readNewInfo(
                                       document.id,
                                       document['published_date']
@@ -324,7 +323,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                           .toString(),
                                       dataLabel,
                                       Dictionary.labelInfoGraphic);
-                                  widget.covidInformationScreenState.widget.homeScreenState.totalUnreadInfo = await labelNew.getAllUnreadDataLabel();
+                                  widget.covidInformationScreenState.widget
+                                      .homeScreenState.getAllUnreadData();
                                 });
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
@@ -342,8 +342,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                               children: <Widget>[
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () {
-                                      setState(() async {
+                                    onTap: () async {
+                                      setState(() {
                                         labelNew.readNewInfo(
                                             document.id,
                                             document['published_date']
@@ -351,7 +351,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                 .toString(),
                                             dataLabel,
                                             Dictionary.labelInfoGraphic);
-                                        widget.covidInformationScreenState.widget.homeScreenState.totalUnreadInfo = await labelNew.getAllUnreadDataLabel();
+                                        widget.covidInformationScreenState.widget
+                                            .homeScreenState.getAllUnreadData();
                                       });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(

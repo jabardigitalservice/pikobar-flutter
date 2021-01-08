@@ -8,14 +8,17 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
@@ -41,6 +44,9 @@ class _VideosListState extends State<VideosList> {
   Timer _debounce;
   List<VideoModel> listVideos;
   String searchQuery;
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   void initState() {
@@ -56,6 +62,18 @@ class _VideosListState extends State<VideosList> {
     return _scrollController.hasClients &&
         _scrollController.offset >
             0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   void _onSearchChanged() {
@@ -147,6 +165,8 @@ class _VideosListState extends State<VideosList> {
       listVideos = state.videos;
     }
 
+    getDataLabel();
+
     return Container(
         child: listVideos.isNotEmpty
             ? ListView.builder(
@@ -208,11 +228,23 @@ class _VideosListState extends State<VideosList> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      unixTimeStampToDateTime(
-                                          listVideos[index].publishedAt),
-                                      style: TextStyle(
-                                          fontSize: 16.0, color: Colors.white),
+                                    Row(
+                                      children: [
+                                        labelNew.isLabelNew(
+                                                listVideos[index].id.toString(),
+                                                dataLabel)
+                                            ? LabelNewScreen()
+                                            : Container(),
+                                        Expanded(
+                                          child: Text(
+                                            unixTimeStampToDateTime(
+                                                listVideos[index].publishedAt),
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.white),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                     SizedBox(
                                       height: 3,
@@ -234,6 +266,15 @@ class _VideosListState extends State<VideosList> {
                           ),
                         ),
                         onTap: () {
+                          setState(() {
+                            labelNew.readNewInfo(
+                                listVideos[index].id,
+                                listVideos[index].publishedAt.toString(),
+                                dataLabel,
+                                Dictionary.labelVideos);
+                            // widget.covidInformationScreenState.widget
+                            //     .homeScreenState.getAllUnreadData();
+                          });
                           launchExternal(listVideos[index].url);
 
                           AnalyticsHelper.setLogEvent(

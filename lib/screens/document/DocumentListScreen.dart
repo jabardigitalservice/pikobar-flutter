@@ -12,14 +12,17 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 import 'DocumentViewScreen.dart';
 
@@ -33,6 +36,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   void initState() {
@@ -103,6 +109,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
           .toList();
     }
 
+    getDataLabel();
+
     return dataDocuments.length > 0
         ? ListView.builder(
             padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
@@ -170,11 +178,24 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  unixTimeStampToDateTime(
-                                      document['published_at'].seconds),
-                                  style: TextStyle(
-                                      fontSize: 16.0, color: Colors.white),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    labelNew.isLabelNew(
+                                            document.id.toString(), dataLabel)
+                                        ? LabelNewScreen()
+                                        : Container(),
+                                    Expanded(
+                                      child: Text(
+                                        unixTimeStampToDateTime(
+                                            document['published_at'].seconds),
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 3,
@@ -196,6 +217,16 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                       ),
                     ),
                     onTap: () {
+                      setState(() {
+                        labelNew.readNewInfo(
+                            document.id,
+                            document['published_at'].seconds.toString(),
+                            dataLabel,
+                            Dictionary.labelDocuments);
+                        // widget.covidInformationScreenState.widget
+                        //     .homeScreenState
+                        //     .getAllUnreadData();
+                      });
                       Platform.isAndroid
                           ? _downloadAttachment(
                               document['title'], document['document_url'])
@@ -324,6 +355,18 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
+    }
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
     }
   }
 

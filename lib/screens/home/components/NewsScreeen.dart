@@ -207,16 +207,16 @@ class _NewsScreenState extends State<NewsScreen> {
                                     ),
                                   ),
                                 ),
-                                onTap: () {
-                                  setState(() async {
+                                onTap: () async {
+                                  setState(() {
                                     labelNew.readNewInfo(
                                         newsmodel.id,
                                         newsmodel.publishedAt.toString(),
                                         dataLabel,
                                         Dictionary.labelNews);
                                     widget.covidInformationScreenState.widget
-                                            .homeScreenState.totalUnreadInfo =
-                                        await labelNew.getAllUnreadDataLabel();
+                                        .homeScreenState
+                                        .getAllUnreadData();
                                   });
                                   Navigator.push(
                                     context,
@@ -238,21 +238,18 @@ class _NewsScreenState extends State<NewsScreen> {
                                 children: <Widget>[
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {
-                                        setState(() async {
+                                      onTap: () async {
+                                        setState(() {
                                           labelNew.readNewInfo(
                                               newsmodel.id,
                                               newsmodel.publishedAt.toString(),
                                               dataLabel,
                                               Dictionary.labelNews);
-                                          widget
-                                                  .covidInformationScreenState
-                                                  .widget
-                                                  .homeScreenState
-                                                  .totalUnreadInfo =
-                                              await labelNew
-                                                  .getAllUnreadDataLabel();
+                                          widget.covidInformationScreenState
+                                              .widget.homeScreenState
+                                              .getAllUnreadData();
                                         });
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -342,13 +339,14 @@ class _NewsScreenState extends State<NewsScreen> {
       child: RaisedButton(
           elevation: 0,
           color: Colors.white,
-          onPressed: () {
-            setState(() async {
+          onPressed: () async {
+            setState(() {
               labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                   dataLabel, Dictionary.labelNews);
               widget.covidInformationScreenState.widget.homeScreenState
-                  .totalUnreadInfo = await labelNew.getAllUnreadDataLabel();
+                  .getAllUnreadData();
             });
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -558,10 +556,21 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              unixTimeStampToDateTime(data.publishedAt),
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.white),
+                            Row(
+                              children: [
+                                labelNew.isLabelNew(
+                                    data.id.toString(),
+                                    dataLabel)
+                                    ? LabelNewScreen()
+                                    : Container(),
+                                Expanded(
+                                  child: Text(
+                                    unixTimeStampToDateTime(data.publishedAt),
+                                    style: TextStyle(
+                                        fontSize: 16.0, color: Colors.white),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(
                               height: 3,
@@ -584,13 +593,14 @@ class _NewsScreenState extends State<NewsScreen> {
                 ],
               ),
             ),
-            onPressed: () {
-              setState(() async {
+            onPressed: () async {
+              setState(() {
                 labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                     dataLabel, Dictionary.labelNews);
-                widget.covidInformationScreenState.widget.homeScreenState
-                    .totalUnreadInfo = await labelNew.getAllUnreadDataLabel();
+                // widget.covidInformationScreenState.widget.homeScreenState
+                //     .getAllUnreadData();
               });
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -616,7 +626,7 @@ class _NewsScreenState extends State<NewsScreen> {
           .toList();
     }
 
-    // getDataLabel();
+    getDataLabel();
 
     return list.isNotEmpty
         ? ListView.builder(

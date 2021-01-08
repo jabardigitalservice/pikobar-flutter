@@ -93,6 +93,7 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   setControllerTab() async {
+    getAllUnreadData();
     String historyTab =
         await HistoryTabHomeSharedPreference.getHistoryTabHome();
     tabController =
@@ -185,6 +186,7 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Widget buildContent() {
+    print('cekk juga '+totalUnreadInfo.toString());
     return Stack(
       children: <Widget>[
         Container(
@@ -203,6 +205,7 @@ class HomeScreenState extends State<HomeScreen>
           totalUnreadinfo: totalUnreadInfo,
           sizeLabel: 13.0,
           onTap: (index) async {
+            getAllUnreadData();
             if (listItemTitleTab[index] == Dictionary.covidInformation) {
               _newsListBloc.add(
                   NewsListLoad(NewsType.allArticles, statImportantInfo: true));

@@ -317,7 +317,7 @@ class _DocumentsState extends State<Documents> {
                                 ],
                               ),
                               onTap: () {
-                                setState(() async {
+                                setState(() {
                                   labelNew.readNewInfo(
                                       document.id,
                                       document['published_at']
@@ -326,8 +326,8 @@ class _DocumentsState extends State<Documents> {
                                       dataLabel,
                                       Dictionary.labelDocuments);
                                   widget.covidInformationScreenState.widget
-                                          .homeScreenState.totalUnreadInfo = await
-                                      labelNew.getAllUnreadDataLabel();
+                                      .homeScreenState
+                                      .getAllUnreadData();
                                 });
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
@@ -341,7 +341,7 @@ class _DocumentsState extends State<Documents> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      setState(() async {
+                                      setState(() {
                                         labelNew.readNewInfo(
                                             document.id,
                                             document['published_at']
@@ -349,12 +349,9 @@ class _DocumentsState extends State<Documents> {
                                                 .toString(),
                                             dataLabel,
                                             Dictionary.labelDocuments);
-                                        widget
-                                                .covidInformationScreenState
-                                                .widget
-                                                .homeScreenState
-                                                .totalUnreadInfo =
-                                           await labelNew.getAllUnreadDataLabel();
+                                        widget.covidInformationScreenState
+                                            .widget.homeScreenState
+                                            .getAllUnreadData();
                                       });
                                       Platform.isAndroid
                                           ? _downloadAttachment(
