@@ -35,7 +35,7 @@ class CustomBubbleTab extends StatefulWidget {
   final TabController tabController;
   final String typeTabSelected;
   final String titleNameLabelNew;
-  int totalUnreadinfo;
+  int totalInfoUnread;
   double paddingBubbleTab;
   bool isExpand;
   bool isScrollable;
@@ -69,7 +69,7 @@ class CustomBubbleTab extends StatefulWidget {
       this.subTitle,
       this.paddingBubbleTab,
       this.titleNameLabelNew,
-      this.totalUnreadinfo});
+      this.totalInfoUnread});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -92,7 +92,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   @override
   void initState() {
     ///for set default each variable if get value null
-    totalUnreadlabelNew = widget.totalUnreadinfo ?? 0;
+    totalUnreadlabelNew = widget.totalInfoUnread ?? 0;
     paddingBubleTab = widget.paddingBubbleTab ?? 0;
     paddingTopTabBarView = widget.paddingTopTabBarView ?? 0;
     isScrollable = widget.isScrollable ?? true;
@@ -100,7 +100,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         TabController(vsync: this, length: widget.listItemTitleTab.length);
     _basetabController.addListener(_handleTabSelection);
     listBubbleTabItem.clear();
-    addItemDataBuble(false);
+    addItemDataBuble(true);
     if (widget.isExpand != null) {
       isExpand = widget.isExpand;
     } else {
@@ -109,19 +109,21 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
     super.initState();
   }
 
-  addItemDataBuble(bool isUpdateData) {
+  addItemDataBuble(bool isAddData) {
     for (int i = 0; i < widget.listItemTitleTab.length; i++) {
       if (widget.typeTabSelected != null) {
         dataSelected = widget.typeTabSelected;
       } else {
-        dataSelected = widget.listItemTitleTab[0];
+        dataSelected = isAddData
+            ? widget.listItemTitleTab[0]
+            : widget.listItemTitleTab[_basetabController.index];
       }
-      if (isUpdateData) {
-        listBubbleTabItem[i] =
-            bubbleTabItem(widget.listItemTitleTab[i], dataSelected);
-      } else {
+      if (isAddData) {
         listBubbleTabItem
             .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
+      } else {
+        listBubbleTabItem[i] =
+            bubbleTabItem(widget.listItemTitleTab[i], dataSelected);
       }
     }
   }
@@ -131,8 +133,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
     ///condition for check is use collapsing appbar or not
     if (widget.titleNameLabelNew != null &&
         isLoadLabelNew &&
-        widget.totalUnreadinfo > 0) {
-      addItemDataBuble(true);
+        widget.totalInfoUnread > 0) {
+      addItemDataBuble(false);
       isLoadLabelNew = false;
     }
 
@@ -164,17 +166,19 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       controller: _basetabController,
                       isScrollable: isScrollable,
                       onTap: (index) {
-                        totalUnreadlabelNew = widget.totalUnreadinfo;
-                        dataSelected = widget.listItemTitleTab[index];
-                        for (int i = 0;
-                            i < widget.listItemTitleTab.length;
-                            i++) {
-                          if (widget.listItemTitleTab[i] == dataSelected) {
-                            listBubbleTabItem[index] = bubbleTabItem(
-                                widget.listItemTitleTab[index], dataSelected);
-                          } else {
-                            listBubbleTabItem[i] = bubbleTabItem(
-                                widget.listItemTitleTab[i], dataSelected);
+                        if (widget.titleNameLabelNew != null) {
+                          totalUnreadlabelNew = widget.totalInfoUnread;
+                          dataSelected = widget.listItemTitleTab[index];
+                          for (int i = 0;
+                              i < widget.listItemTitleTab.length;
+                              i++) {
+                            if (widget.listItemTitleTab[i] == dataSelected) {
+                              listBubbleTabItem[index] = bubbleTabItem(
+                                  widget.listItemTitleTab[index], dataSelected);
+                            } else {
+                              listBubbleTabItem[i] = bubbleTabItem(
+                                  widget.listItemTitleTab[i], dataSelected);
+                            }
                           }
                         }
                         widget.onTap(index);
@@ -226,7 +230,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   ///widget for set item tab in tabbar
   // ignore: non_constant_identifier_names
   Widget bubbleTabItem(String title, String dataSelected) {
-    totalUnreadlabelNew = widget.totalUnreadinfo;
+    totalUnreadlabelNew = widget.totalInfoUnread;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -245,7 +249,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         ),
         widget.titleNameLabelNew != null &&
                 widget.titleNameLabelNew == title &&
-                dataSelected != title &&
+                dataSelected != widget.titleNameLabelNew &&
                 totalUnreadlabelNew > 0
             ? Container(
                 padding: EdgeInsets.only(left: 10),

@@ -84,7 +84,7 @@ class HomeScreenState extends State<HomeScreen>
       var data = await LabelNew().getAllUnreadDataLabel();
       setState(() {
         totalUnreadInfo = data;
-        print('isinya piro? '+totalUnreadInfo.toString());
+        print('isinya piro? ' + totalUnreadInfo.toString());
       });
     });
   }
@@ -158,8 +158,9 @@ class HomeScreenState extends State<HomeScreen>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
             create: (context) => _newsListBloc = NewsListBloc()
-              ..add(
-                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
+            /*..add(
+                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))*/
+            ),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
                 _importantInfoListBloc = ImportantInfoListBloc()
@@ -169,8 +170,9 @@ class HomeScreenState extends State<HomeScreen>
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
         BlocProvider<InfoGraphicsListBloc>(
             create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-              ..add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: kInfographics, limit: 3))),
+            /*..add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: kInfographics, limit: 3))*/
+            ),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
@@ -208,14 +210,10 @@ class HomeScreenState extends State<HomeScreen>
           tabController: tabController,
           paddingBubbleTab: 10,
           titleNameLabelNew: listItemTitleTab[1],
-          totalUnreadinfo: totalUnreadInfo,
+          totalInfoUnread: totalUnreadInfo,
           sizeLabel: 13.0,
           onTap: (index) async {
             getAllUnreadData();
-            if (listItemTitleTab[index] == Dictionary.covidInformation) {
-              _newsListBloc.add(
-                  NewsListLoad(NewsType.allArticles, statImportantInfo: true));
-            }
             AnalyticsHelper.setLogEvent(analyticsData[index]);
             await HistoryTabHomeSharedPreference.setHistoryTabHome(
                 listItemTitleTab[index]);
