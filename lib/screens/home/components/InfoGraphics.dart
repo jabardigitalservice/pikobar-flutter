@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -122,7 +120,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                     ),
                     onTap: () {
                       Navigator.pushNamed(
-                          context, NavigationConstrants.InfoGraphics);
+                          context, NavigationConstrants.InfoGraphics, arguments: widget.covidInformationScreenState);
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsMore);

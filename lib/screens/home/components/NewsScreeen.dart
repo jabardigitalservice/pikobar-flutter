@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -154,8 +152,10 @@ class _NewsScreenState extends State<NewsScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    NewsListScreen(news: Dictionary.allNews),
+                                builder: (context) => NewsListScreen(
+                                    news: Dictionary.allNews,
+                                    covidInformationScreenState:
+                                        widget.covidInformationScreenState),
                               ),
                             );
                             AnalyticsHelper.setLogEvent(Analytics.tappedMore);
@@ -214,9 +214,12 @@ class _NewsScreenState extends State<NewsScreen> {
                                         newsmodel.publishedAt.toString(),
                                         dataLabel,
                                         Dictionary.labelNews);
-                                    widget.covidInformationScreenState.widget
-                                        .homeScreenState
-                                        .getAllUnreadData();
+                                    if (widget.covidInformationScreenState !=
+                                        null) {
+                                      widget.covidInformationScreenState.widget
+                                          .homeScreenState
+                                          .getAllUnreadData();
+                                    }
                                   });
                                   Navigator.push(
                                     context,
@@ -245,9 +248,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                               newsmodel.publishedAt.toString(),
                                               dataLabel,
                                               Dictionary.labelNews);
-                                          widget.covidInformationScreenState
-                                              .widget.homeScreenState
-                                              .getAllUnreadData();
+                                          if (widget
+                                                  .covidInformationScreenState !=
+                                              null) {
+                                            widget.covidInformationScreenState
+                                                .widget.homeScreenState
+                                                .getAllUnreadData();
+                                          }
                                         });
 
                                         Navigator.push(
@@ -343,8 +350,10 @@ class _NewsScreenState extends State<NewsScreen> {
             setState(() {
               labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                   dataLabel, Dictionary.labelNews);
-              widget.covidInformationScreenState.widget.homeScreenState
-                  .getAllUnreadData();
+              if (widget.covidInformationScreenState != null) {
+                widget.covidInformationScreenState.widget.homeScreenState
+                    .getAllUnreadData();
+              }
             });
 
             Navigator.push(
@@ -559,8 +568,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             Row(
                               children: [
                                 labelNew.isLabelNew(
-                                    data.id.toString(),
-                                    dataLabel)
+                                        data.id.toString(), dataLabel)
                                     ? LabelNewScreen()
                                     : Container(),
                                 Expanded(
@@ -597,8 +605,10 @@ class _NewsScreenState extends State<NewsScreen> {
               setState(() {
                 labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                     dataLabel, Dictionary.labelNews);
-                // widget.covidInformationScreenState.widget.homeScreenState
-                //     .getAllUnreadData();
+                if (widget.covidInformationScreenState != null) {
+                  widget.covidInformationScreenState.widget.homeScreenState
+                      .getAllUnreadData();
+                }
               });
 
               Navigator.push(

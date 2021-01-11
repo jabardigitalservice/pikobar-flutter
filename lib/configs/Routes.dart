@@ -47,7 +47,8 @@ Route generateRoutes(RouteSettings settings) {
       return buildRoute(settings, SurveysScreen());
 
     case NavigationConstrants.VideoList:
-      return buildRoute(settings, VideosScreen());
+      return buildRoute(
+          settings, VideosScreen(covidInformationScreenState: args));
 
     case NavigationConstrants.Edit:
       return buildRoute(
@@ -67,9 +68,11 @@ Route generateRoutes(RouteSettings settings) {
 
 // screen info graphics
     case NavigationConstrants.InfoGraphics:
-      return buildRoute(settings, InfoGraphicsScreen());
+      return buildRoute(
+          settings, InfoGraphicsScreen(covidInformationScreenState: args));
     case NavigationConstrants.Document:
-      return buildRoute(settings, DocumentListScreen());
+      return buildRoute(
+          settings, DocumentListScreen(covidInformationScreenState: args));
 
 // screen Check Distribution
     case NavigationConstrants.CheckDistribution:

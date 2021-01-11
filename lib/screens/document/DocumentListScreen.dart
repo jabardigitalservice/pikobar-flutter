@@ -20,13 +20,19 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 import 'DocumentViewScreen.dart';
 
+// ignore: must_be_immutable
 class DocumentListScreen extends StatefulWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  DocumentListScreen({this.covidInformationScreenState});
+
   @override
   _DocumentListScreenState createState() => _DocumentListScreenState();
 }
@@ -223,9 +229,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             document['published_at'].seconds.toString(),
                             dataLabel,
                             Dictionary.labelDocuments);
-                        // widget.covidInformationScreenState.widget
-                        //     .homeScreenState
-                        //     .getAllUnreadData();
+                        if (widget.covidInformationScreenState != null) {
+                          widget.covidInformationScreenState.widget
+                              .homeScreenState
+                              .getAllUnreadData();
+                        }
                       });
                       Platform.isAndroid
                           ? _downloadAttachment(

@@ -16,13 +16,19 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
+// ignore: must_be_immutable
 class VideosScreen extends StatelessWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  VideosScreen({this.covidInformationScreenState});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
@@ -32,7 +38,12 @@ class VideosScreen extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class VideosList extends StatefulWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  VideosList({this.covidInformationScreenState});
+
   @override
   _VideosListState createState() => _VideosListState();
 }
@@ -272,8 +283,11 @@ class _VideosListState extends State<VideosList> {
                                 listVideos[index].publishedAt.toString(),
                                 dataLabel,
                                 Dictionary.labelVideos);
-                            // widget.covidInformationScreenState.widget
-                            //     .homeScreenState.getAllUnreadData();
+                            if (widget.covidInformationScreenState != null) {
+                              widget.covidInformationScreenState.widget
+                                  .homeScreenState
+                                  .getAllUnreadData();
+                            }
                           });
                           launchExternal(listVideos[index].url);
 

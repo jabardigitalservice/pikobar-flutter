@@ -20,12 +20,18 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
+// ignore: must_be_immutable
 class InfoGraphicsScreen extends StatefulWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  InfoGraphicsScreen({this.covidInformationScreenState});
+
   @override
   _InfoGraphicsScreenState createState() => _InfoGraphicsScreenState();
 }
@@ -396,8 +402,10 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     data['published_date'].seconds.toString(),
                     dataLabel,
                     Dictionary.labelInfoGraphic);
-                // widget.covidInformationScreenState.widget
-                //     .homeScreenState.getAllUnreadData();
+                if(widget.covidInformationScreenState != null){
+                  widget.covidInformationScreenState.widget
+                      .homeScreenState.getAllUnreadData();
+                }
               });
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) =>

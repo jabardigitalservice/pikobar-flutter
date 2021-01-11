@@ -112,7 +112,8 @@ class _DocumentsState extends State<Documents> {
                       fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.Document);
+                  Navigator.pushNamed(context, NavigationConstrants.Document,
+                      arguments: widget.covidInformationScreenState);
 
                   AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
                 },

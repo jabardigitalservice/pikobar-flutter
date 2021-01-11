@@ -9,7 +9,6 @@ import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
 import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -180,7 +179,7 @@ class _VideoListState extends State<VideoList> {
                       ),
                       onTap: () {
                         Navigator.pushNamed(
-                            context, NavigationConstrants.VideoList);
+                            context, NavigationConstrants.VideoList, arguments: widget.covidInformationScreenState);
 
                         AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
                       },
