@@ -116,22 +116,25 @@ class _VideosListState extends State<VideosList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CollapsingAppbar(
-      searchBar: CustomAppBar.buildSearchField(
-          _searchController, Dictionary.searchInformation, updateSearchQuery),
-      showTitle: _showTitle,
-      titleAppbar: Dictionary.videoUpToDate,
-      scrollController: _scrollController,
-      body: BlocBuilder<VideoListBloc, VideoListState>(
-        builder: (context, state) {
-          return state is VideosLoading
-              ? _buildLoading()
-              : state is VideosLoaded
-                  ? _buildContent(state)
-                  : Container();
-        },
-      ),
-    ));
+        body: WillPopScope(
+          child: CollapsingAppbar(
+            searchBar: CustomAppBar.buildSearchField(
+                _searchController, Dictionary.searchInformation, updateSearchQuery),
+            showTitle: _showTitle,
+            titleAppbar: Dictionary.videoUpToDate,
+            scrollController: _scrollController,
+            body: BlocBuilder<VideoListBloc, VideoListState>(
+              builder: (context, state) {
+                return state is VideosLoading
+                    ? _buildLoading()
+                    : state is VideosLoaded
+                    ? _buildContent(state)
+                    : Container();
+              },
+            ),
+          ),
+          onWillPop: _onWillPop,
+        ));
   }
 
   _buildLoading() {
@@ -164,6 +167,11 @@ class _VideosListState extends State<VideosList> {
         ),
       ),
     );
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
   }
 
   _buildContent(VideosLoaded state) {

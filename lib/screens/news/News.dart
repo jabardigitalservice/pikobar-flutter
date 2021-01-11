@@ -112,10 +112,12 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-        builder: (context, state) {
-      return state is RemoteConfigLoaded ? buildContent(state) : Container();
-    }));
+    return Scaffold(body: WillPopScope(onWillPop: _onWillPop,
+      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+          builder: (context, state) {
+            return state is RemoteConfigLoaded ? buildContent(state) : Container();
+          }),
+    ));
   }
 
   buildContent(RemoteConfigLoaded state) {
@@ -211,6 +213,11 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       _newsListBloc.add(NewsListLoad(listCollectionData[tabController.index],
           statImportantInfo: statImportantInfo));
     }
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
   }
 
   @override

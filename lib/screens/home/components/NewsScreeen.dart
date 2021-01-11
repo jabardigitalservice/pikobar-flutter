@@ -148,8 +148,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                 fontFamily: FontsFamily.lato,
                                 fontSize: Dimens.textSubtitleSize),
                           ),
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NewsListScreen(
@@ -157,7 +157,13 @@ class _NewsScreenState extends State<NewsScreen> {
                                     covidInformationScreenState:
                                         widget.covidInformationScreenState),
                               ),
-                            );
+                            ) as bool;
+
+                            if (result) {
+                              isGetDataLabel = result;
+                              getDataLabel();
+                            }
+
                             AnalyticsHelper.setLogEvent(Analytics.tappedMore);
                           },
                         ),

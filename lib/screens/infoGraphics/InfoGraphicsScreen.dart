@@ -101,44 +101,52 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: MultiBlocProvider(
-      providers: [
-        BlocProvider<InfoGraphicsListBloc>(
-          create: (context) => _infoGraphicsListBloc
-            ..add(
-                InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics)),
-        ),
-      ],
-      child: Container(
-          child: CustomBubbleTab(
-        isStickyHeader: true,
-        titleHeader: Dictionary.infoGraphics,
-        listItemTitleTab: listItemTitleTab,
-        indicatorColor: ColorBase.green,
-        labelColor: Colors.white,
-        showTitle: _showTitle,
-        sizeLabel: 13.0,
-        isScrollable: false,
-        searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
-        unselectedLabelColor: Colors.grey,
-        scrollController: _scrollController,
-        onTap: (index) {
-          setState(() {});
-          isSetDataCurrent = false;
-          _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-              infoGraphicsCollection: listCollectionData[index]));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        },
-        tabBarView: <Widget>[
-          _buildInfoGraphic(),
-          _buildInfoGraphic(),
-          _buildInfoGraphic(),
-          _buildInfoGraphic(),
+        body: WillPopScope(
+      onWillPop: _onWillPop,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<InfoGraphicsListBloc>(
+            create: (context) => _infoGraphicsListBloc
+              ..add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: kAllInfographics)),
+          ),
         ],
-        heightTabBarView: MediaQuery.of(context).size.height - 148,
-      )),
+        child: Container(
+            child: CustomBubbleTab(
+          isStickyHeader: true,
+          titleHeader: Dictionary.infoGraphics,
+          listItemTitleTab: listItemTitleTab,
+          indicatorColor: ColorBase.green,
+          labelColor: Colors.white,
+          showTitle: _showTitle,
+          sizeLabel: 13.0,
+          isScrollable: false,
+          searchBar: CustomAppBar.buildSearchField(_searchController,
+              Dictionary.searchInformation, updateSearchQuery),
+          unselectedLabelColor: Colors.grey,
+          scrollController: _scrollController,
+          onTap: (index) {
+            setState(() {});
+            isSetDataCurrent = false;
+            _infoGraphicsListBloc.add(InfoGraphicsListLoad(
+                infoGraphicsCollection: listCollectionData[index]));
+            AnalyticsHelper.setLogEvent(analyticsData[index]);
+          },
+          tabBarView: <Widget>[
+            _buildInfoGraphic(),
+            _buildInfoGraphic(),
+            _buildInfoGraphic(),
+            _buildInfoGraphic(),
+          ],
+          heightTabBarView: MediaQuery.of(context).size.height - 148,
+        )),
+      ),
     ));
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
   }
 
   Widget _buildInfoGraphic() {
@@ -402,9 +410,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                     data['published_date'].seconds.toString(),
                     dataLabel,
                     Dictionary.labelInfoGraphic);
-                if(widget.covidInformationScreenState != null){
-                  widget.covidInformationScreenState.widget
-                      .homeScreenState.getAllUnreadData();
+                if (widget.covidInformationScreenState != null) {
+                  widget.covidInformationScreenState.widget.homeScreenState
+                      .getAllUnreadData();
                 }
               });
               Navigator.of(context).push(MaterialPageRoute(

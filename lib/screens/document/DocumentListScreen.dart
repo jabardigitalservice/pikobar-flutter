@@ -65,7 +65,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CollapsingAppbar(
+        body: WillPopScope(
+      child: CollapsingAppbar(
         searchBar: CustomAppBar.buildSearchField(
             _searchController, Dictionary.searchInformation, updateSearchQuery),
         showTitle: _showTitle,
@@ -103,8 +104,14 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
           },
         ),
       ),
-    );
+      onWillPop: _onWillPop,
+    ));
     //   body:
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
   }
 
   Widget _buildContent(List<DocumentSnapshot> dataDocuments) {

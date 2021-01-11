@@ -118,9 +118,16 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           fontFamily: FontsFamily.lato,
                           fontSize: Dimens.textSubtitleSize),
                     ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, NavigationConstrants.InfoGraphics, arguments: widget.covidInformationScreenState);
+                    onTap: () async {
+                      final result = await Navigator.pushNamed(
+                              context, NavigationConstrants.InfoGraphics,
+                              arguments: widget.covidInformationScreenState)
+                          as bool;
+
+                      if (result) {
+                        isGetDataLabel = result;
+                        getDataLabel();
+                      }
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsMore);
@@ -322,7 +329,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       dataLabel,
                                       Dictionary.labelInfoGraphic);
                                   widget.covidInformationScreenState.widget
-                                      .homeScreenState.getAllUnreadData();
+                                      .homeScreenState
+                                      .getAllUnreadData();
                                 });
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
@@ -349,8 +357,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                 .toString(),
                                             dataLabel,
                                             Dictionary.labelInfoGraphic);
-                                        widget.covidInformationScreenState.widget
-                                            .homeScreenState.getAllUnreadData();
+                                        widget.covidInformationScreenState
+                                            .widget.homeScreenState
+                                            .getAllUnreadData();
                                       });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(

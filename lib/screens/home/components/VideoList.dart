@@ -177,9 +177,16 @@ class _VideoListState extends State<VideoList> {
                             fontFamily: FontsFamily.lato,
                             fontSize: Dimens.textSubtitleSize),
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, NavigationConstrants.VideoList, arguments: widget.covidInformationScreenState);
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.VideoList,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
 
                         AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
                       },
@@ -273,7 +280,8 @@ class _VideoListState extends State<VideoList> {
                                         dataLabel,
                                         Dictionary.labelVideos);
                                     widget.covidInformationScreenState.widget
-                                            .homeScreenState.getAllUnreadData();
+                                        .homeScreenState
+                                        .getAllUnreadData();
                                   });
                                   launchExternal(data[index].url);
 

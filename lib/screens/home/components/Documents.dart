@@ -111,9 +111,15 @@ class _DocumentsState extends State<Documents> {
                       fontFamily: FontsFamily.lato,
                       fontSize: Dimens.textSubtitleSize),
                 ),
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.Document,
-                      arguments: widget.covidInformationScreenState);
+                onTap: () async {
+                  final result = await Navigator.pushNamed(
+                      context, NavigationConstrants.Document,
+                      arguments: widget.covidInformationScreenState) as bool;
+
+                  if (result) {
+                    isGetDataLabel = result;
+                    getDataLabel();
+                  }
 
                   AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
                 },
