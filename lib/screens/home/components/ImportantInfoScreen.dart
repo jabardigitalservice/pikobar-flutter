@@ -84,8 +84,8 @@ class _ImportantInfoScreenState extends State<ImportantInfoScreen> {
                   builder: (context, state) {
                     return state is ImpoftantInfoListLoaded
                         ? widget.maxLength != null
-                        ? _buildContent(state.imporntantinfoList)
-                        : _buildContentList(state.imporntantinfoList)
+                        // ? _buildContent(state.imporntantinfoList)
+                        // : _buildContentList(state.imporntantinfoList)
                         : _buildLoading();
                   },
                 )

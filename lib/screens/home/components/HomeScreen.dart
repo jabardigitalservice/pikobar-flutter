@@ -46,11 +46,11 @@ class HomeScreenState extends State<HomeScreen>
   StatisticsBloc _statisticsBloc;
   RapidTestBloc _rapidTestBloc;
   PcrTestBloc _pcrTestBloc;
-  NewsListBloc _newsListBloc;
+  NewsListBloc _newsListBloc = NewsListBloc();
   ImportantInfoListBloc _importantInfoListBloc;
-  VideoListBloc _videoListBloc;
-  InfoGraphicsListBloc _infoGraphicsListBloc;
-  DocumentsBloc _documentsBloc;
+  VideoListBloc _videoListBloc = VideoListBloc();
+  InfoGraphicsListBloc _infoGraphicsListBloc = InfoGraphicsListBloc();
+  DocumentsBloc _documentsBloc = DocumentsBloc();
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
   List<String> listItemTitleTab = [
@@ -66,6 +66,12 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    _infoGraphicsListBloc
+        .add(InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics));
+    _newsListBloc
+        .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+    _videoListBloc.add(LoadVideos());
+    _documentsBloc.add(DocumentsLoad());
     AnalyticsHelper.setCurrentScreen(Analytics.home);
     getDataFromServer();
     setControllerTab();
@@ -78,6 +84,7 @@ class HomeScreenState extends State<HomeScreen>
       var data = await LabelNew().getAllUnreadDataLabel();
       setState(() {
         totalUnreadInfo = data;
+        print('isinya piro? '+totalUnreadInfo.toString());
       });
     });
   }
@@ -236,7 +243,9 @@ class HomeScreenState extends State<HomeScreen>
     if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
     }
-    _newsListBloc.close();
+    if (_newsListBloc != null) {
+      _newsListBloc.close();
+    }
     if (_importantInfoListBloc != null) {
       _importantInfoListBloc.close();
     }

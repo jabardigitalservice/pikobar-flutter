@@ -20,6 +20,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     NewsListEvent event,
   ) async* {
     if (event is NewsListLoad) {
+      print('ini ada ngga euy?');
       yield* _mapLoadVideosToState(event.newsCollection,
           statImportantInfo: event.statImportantInfo);
     } else if (event is NewsListUpdate) {
@@ -29,6 +30,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
 
   Stream<NewsListState> _mapLoadVideosToState(String collection,
       {bool statImportantInfo = true}) async* {
+    print('koleksi apa? '+collection);
     yield NewsListLoading();
     _subscription?.cancel();
     _subscription = collection == kImportantInfor
@@ -36,11 +38,13 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
             .getInfoImportantList(improtantInfoCollection: collection)
             .listen(
             (news) {
+              print('langsung kesini ya kayanya?');
               add(NewsListUpdate(news));
             },
           )
         : collection == NewsType.allArticles
             ? _repository.getAllNewsList(statImportantInfo).listen((event) {
+                print('kesini juga harusnya masuk atuh');
                 List<NewsModel> dataListAllNews = [];
                 event.forEach((iterable) {
                   dataListAllNews.addAll(iterable.toList());
