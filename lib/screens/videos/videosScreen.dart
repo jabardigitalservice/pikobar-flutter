@@ -291,9 +291,7 @@ class _VideosListState extends State<VideosList> {
                                 listVideos[index].publishedAt.toString(),
                                 dataLabel,
                                 Dictionary.labelVideos);
-                            print('masuk sini ngga videozzzz');
                             if (widget.covidInformationScreenState != null) {
-                              print('masuk sini ngga video');
                               widget.covidInformationScreenState.widget
                                   .homeScreenState
                                   .getAllUnreadData();

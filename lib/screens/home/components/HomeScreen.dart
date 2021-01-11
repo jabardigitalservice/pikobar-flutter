@@ -186,7 +186,6 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Widget buildContent() {
-    print('cekk juga '+totalUnreadInfo.toString());
     return Stack(
       children: <Widget>[
         Container(

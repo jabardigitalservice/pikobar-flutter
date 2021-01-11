@@ -611,9 +611,7 @@ class _NewsScreenState extends State<NewsScreen> {
               setState(() {
                 labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                     dataLabel, Dictionary.labelNews);
-                print('masuk sini ngga newzzzz');
                 if (widget.covidInformationScreenState != null) {
-                  print('masuk sini ngga news');
                   widget.covidInformationScreenState.widget.homeScreenState
                       .getAllUnreadData();
                 }

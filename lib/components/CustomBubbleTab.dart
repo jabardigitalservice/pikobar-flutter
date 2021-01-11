@@ -136,8 +136,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
       isLoadLabelNew = false;
     }
 
-    print('cek mana euyy aye '+widget.totalUnreadinfo.toString());
-
     return widget.isStickyHeader
         ? DefaultTabController(
             length: listBubbleTabItem.length,
@@ -167,7 +165,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       isScrollable: isScrollable,
                       onTap: (index) {
                         totalUnreadlabelNew = widget.totalUnreadinfo;
-                        print('cek mana euyy '+totalUnreadlabelNew.toString());
                         dataSelected = widget.listItemTitleTab[index];
                         for (int i = 0;
                             i < widget.listItemTitleTab.length;
