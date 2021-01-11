@@ -95,7 +95,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         sizeLabel: 13.0,
         isScrollable: false,
         searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
+            _searchController, Dictionary.searchInformation, updateSearchQuery, margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
         unselectedLabelColor: Colors.grey,
         scrollController: _scrollController,
         onTap: (index) {
