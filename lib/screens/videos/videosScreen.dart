@@ -33,7 +33,7 @@ class VideosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
       create: (context) => VideoListBloc()..add(LoadVideos()),
-      child: VideosList(),
+      child: VideosList(covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
@@ -291,7 +291,9 @@ class _VideosListState extends State<VideosList> {
                                 listVideos[index].publishedAt.toString(),
                                 dataLabel,
                                 Dictionary.labelVideos);
+                            print('masuk sini ngga videozzzz');
                             if (widget.covidInformationScreenState != null) {
+                              print('masuk sini ngga video');
                               widget.covidInformationScreenState.widget
                                   .homeScreenState
                                   .getAllUnreadData();

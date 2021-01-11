@@ -31,7 +31,7 @@ class NewsListScreen extends StatelessWidget {
             create: (context) => RemoteConfigBloc()..add(RemoteConfigLoad())),
         BlocProvider<NewsListBloc>(create: (context) => NewsListBloc())
       ],
-      child: News(news: news),
+      child: News(news: news, covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
