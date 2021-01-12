@@ -23,6 +23,8 @@ class CustomBubbleTab extends StatefulWidget {
   /// [scrollController] for set controller inside NestedScrollView
   /// [searchBar] for set search inside appbar
   /// [titleHeader] for set title header in appbar
+  /// [totalInfoUnread] for show label new on tab
+  /// [titleNameLabelNew] for check hide & show label on tab
 
   final List<String> listItemTitleTab;
   final Color indicatorColor;
