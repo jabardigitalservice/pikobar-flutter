@@ -13,6 +13,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
@@ -33,7 +34,8 @@ class VideosScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
       create: (context) => VideoListBloc()..add(LoadVideos()),
-      child: VideosList(covidInformationScreenState: covidInformationScreenState),
+      child:
+          VideosList(covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
@@ -117,24 +119,24 @@ class _VideosListState extends State<VideosList> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: WillPopScope(
-          child: CollapsingAppbar(
-            searchBar: CustomAppBar.buildSearchField(
-                _searchController, Dictionary.searchInformation, updateSearchQuery),
-            showTitle: _showTitle,
-            titleAppbar: Dictionary.videoUpToDate,
-            scrollController: _scrollController,
-            body: BlocBuilder<VideoListBloc, VideoListState>(
-              builder: (context, state) {
-                return state is VideosLoading
-                    ? _buildLoading()
-                    : state is VideosLoaded
+      child: CollapsingAppbar(
+        searchBar: CustomAppBar.buildSearchField(
+            _searchController, Dictionary.searchInformation, updateSearchQuery),
+        showTitle: _showTitle,
+        titleAppbar: Dictionary.videoUpToDate,
+        scrollController: _scrollController,
+        body: BlocBuilder<VideoListBloc, VideoListState>(
+          builder: (context, state) {
+            return state is VideosLoading
+                ? _buildLoading()
+                : state is VideosLoaded
                     ? _buildContent(state)
                     : Container();
-              },
-            ),
-          ),
-          onWillPop: _onWillPop,
-        ));
+          },
+        ),
+      ),
+      onWillPop: _onWillPop,
+    ));
   }
 
   _buildLoading() {
@@ -260,7 +262,8 @@ class _VideosListState extends State<VideosList> {
                                                 listVideos[index].publishedAt),
                                             style: TextStyle(
                                                 fontSize: 16.0,
-                                                color: Colors.white),
+                                                color: Colors.white,
+                                                fontFamily: FontsFamily.roboto),
                                           ),
                                         )
                                       ],
@@ -273,7 +276,8 @@ class _VideosListState extends State<VideosList> {
                                       style: TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.white),
+                                          color: Colors.white,
+                                          fontFamily: FontsFamily.roboto),
                                       textAlign: TextAlign.left,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,

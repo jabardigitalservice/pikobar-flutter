@@ -105,7 +105,7 @@ class _DocumentsState extends State<Documents> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 16.0),
               ),
               InkWell(
@@ -114,7 +114,7 @@ class _DocumentsState extends State<Documents> {
                   style: TextStyle(
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: Dimens.textSubtitleSize),
                 ),
                 onTap: () async {
@@ -139,7 +139,7 @@ class _DocumentsState extends State<Documents> {
             Dictionary.descDocument,
             style: TextStyle(
                 color: Colors.black,
-                fontFamily: FontsFamily.lato,
+                fontFamily: FontsFamily.roboto,
                 fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
@@ -247,7 +247,7 @@ class _DocumentsState extends State<Documents> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textTitleSize),
                     ),
                     InkWell(
@@ -256,7 +256,7 @@ class _DocumentsState extends State<Documents> {
                         style: TextStyle(
                             color: ColorBase.green,
                             fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontSize: Dimens.textSubtitleSize),
                       ),
                       onTap: () async {
@@ -390,7 +390,7 @@ class _DocumentsState extends State<Documents> {
                                             document['title'],
                                             style: TextStyle(
                                                 fontSize: 14.0,
-                                                fontFamily: FontsFamily.lato,
+                                                fontFamily: FontsFamily.roboto,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
@@ -416,7 +416,7 @@ class _DocumentsState extends State<Documents> {
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:
-                                                          FontsFamily.lato,
+                                                          FontsFamily.roboto,
                                                       fontSize: 10.0,
                                                       fontWeight:
                                                           FontWeight.w600),

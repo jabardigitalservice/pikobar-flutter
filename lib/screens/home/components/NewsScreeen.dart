@@ -142,7 +142,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
+                              fontFamily: FontsFamily.roboto,
                               fontSize: Dimens.textTitleSize),
                         ),
                         InkWell(
@@ -151,7 +151,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             style: TextStyle(
                                 color: ColorBase.green,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: FontsFamily.lato,
+                                fontFamily: FontsFamily.roboto,
                                 fontSize: Dimens.textSubtitleSize),
                           ),
                           onTap: () async {
@@ -295,7 +295,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                               newsmodel.title,
                                               style: TextStyle(
                                                   fontSize: 14.0,
-                                                  fontFamily: FontsFamily.lato,
+                                                  fontFamily: FontsFamily.roboto,
                                                   fontWeight: FontWeight.w600),
                                               textAlign: TextAlign.left,
                                               maxLines: 2,
@@ -321,7 +321,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontFamily:
-                                                            FontsFamily.lato,
+                                                            FontsFamily.roboto,
                                                         fontSize: 10.0,
                                                         fontWeight:
                                                             FontWeight.w600),

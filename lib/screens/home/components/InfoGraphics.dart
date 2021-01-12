@@ -106,7 +106,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 16.0),
                   ),
                   InkWell(
@@ -115,7 +115,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       style: TextStyle(
                           color: ColorBase.green,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textSubtitleSize),
                     ),
                     onTap: () async {
@@ -141,7 +141,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 Dictionary.descInfoGraphic,
                 style: TextStyle(
                     color: Colors.black,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12.0),
                 textAlign: TextAlign.left,
               ),
@@ -258,7 +258,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textTitleSize),
                     ),
                     InkWell(
@@ -267,7 +267,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         style: TextStyle(
                             color: ColorBase.green,
                             fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontSize: Dimens.textSubtitleSize),
                       ),
                       onTap: () async {

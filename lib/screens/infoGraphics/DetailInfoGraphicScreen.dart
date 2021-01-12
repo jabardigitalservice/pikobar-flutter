@@ -221,7 +221,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                         widget.dataInfoGraphic['published_date'].seconds),
                     style: TextStyle(
                         color: Colors.grey,
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 10.0,
                         fontWeight: FontWeight.w600),
                     textAlign: TextAlign.left,
@@ -240,7 +240,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                             widget.dataInfoGraphic['title'],
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato,
+                              fontFamily: FontsFamily.roboto,
                             ),
                             textAlign: TextAlign.left,
                             maxLines: 2,
@@ -261,7 +261,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                   textStyle: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                   ),
                   onPressed: () {
                     Platform.isAndroid

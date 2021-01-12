@@ -173,7 +173,7 @@ class _VideoListState extends State<VideoList> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textTitleSize),
                     ),
                     InkWell(
@@ -182,7 +182,7 @@ class _VideoListState extends State<VideoList> {
                         style: TextStyle(
                             color: Color(0xFF27AE60),
                             fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontSize: Dimens.textSubtitleSize),
                       ),
                       onTap: () async {
@@ -314,7 +314,7 @@ class _VideoListState extends State<VideoList> {
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              fontFamily: FontsFamily.lato,
+                                              fontFamily: FontsFamily.roboto,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -334,7 +334,7 @@ class _VideoListState extends State<VideoList> {
                                           data[index].publishedAt),
                                       style: TextStyle(
                                           color: Colors.grey,
-                                          fontFamily: FontsFamily.lato,
+                                          fontFamily: FontsFamily.roboto,
                                           fontSize: 10.0,
                                           fontWeight: FontWeight.w600),
                                     ),

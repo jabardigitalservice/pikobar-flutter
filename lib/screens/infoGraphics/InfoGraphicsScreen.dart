@@ -17,6 +17,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
@@ -335,7 +336,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                                     unixTimeStampToDateTime(
                                         data['published_date'].seconds),
                                     style: TextStyle(
-                                        fontSize: 16.0, color: Colors.white),
+                                        fontSize: 16.0, color: Colors.white, fontFamily: FontsFamily.roboto),
                                   ),
                                 )
                               ],
@@ -348,7 +349,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                               style: TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white),
+                                  color: Colors.white, fontFamily: FontsFamily.roboto),
                               textAlign: TextAlign.left,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
