@@ -1,5 +1,6 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 // ignore: must_be_immutable
@@ -231,23 +232,29 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
 
         ///condition for set title when collapsing
         bottom: widget.showTitle
-            ? TabBar(
-                controller: _basetabController,
-                isScrollable: isScrollable,
-                onTap: (index) {
-                  widget.onTap(index);
-                },
-                labelColor: widget.labelColor,
-                unselectedLabelColor: widget.unselectedLabelColor,
-                indicator: BubbleTabIndicator(
-                  indicatorHeight: 37.0,
-                  indicatorColor: widget.indicatorColor,
-                  tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                ),
-                indicatorColor: widget.indicatorColor,
-                indicatorWeight: 0.1,
-                labelPadding: EdgeInsets.all(10),
-                tabs: listBubbleTabItem)
+            ? PreferredSize(
+          preferredSize: Size.fromHeight(65),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TabBar(
+                    controller: _basetabController,
+                    isScrollable: isScrollable,
+                    onTap: (index) {
+                      widget.onTap(index);
+                    },
+                    labelColor: widget.labelColor,
+                    unselectedLabelColor: widget.unselectedLabelColor,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 37.0,
+                      indicatorColor: widget.indicatorColor,
+                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                    ),
+                    indicatorColor: widget.indicatorColor,
+                    indicatorWeight: 0.1,
+                    labelPadding: EdgeInsets.all(10),
+                    tabs: listBubbleTabItem),
+              ),
+            )
             : PreferredSize(
                 preferredSize: Size.fromHeight(widget.showTitle ? 0 : 130.0),
                 child: Column(
@@ -257,7 +264,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       opacity: widget.showTitle ? 0.0 : 1.0,
                       duration: Duration(milliseconds: 250),
                       child: Padding(
-                        padding: EdgeInsets.all(20.0),
+                        padding: EdgeInsets.symmetric(vertical: Dimens.homeCardMargin, horizontal: Dimens.padding),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -285,23 +292,26 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     widget.showTitle
                         ? Container()
                         : widget.searchBar ?? Container(),
-                    TabBar(
-                        controller: _basetabController,
-                        isScrollable: isScrollable,
-                        onTap: (index) {
-                          widget.onTap(index);
-                        },
-                        labelColor: widget.labelColor,
-                        unselectedLabelColor: widget.unselectedLabelColor,
-                        indicator: BubbleTabIndicator(
-                          indicatorHeight: 37.0,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: TabBar(
+                          controller: _basetabController,
+                          isScrollable: isScrollable,
+                          onTap: (index) {
+                            widget.onTap(index);
+                          },
+                          labelColor: widget.labelColor,
+                          unselectedLabelColor: widget.unselectedLabelColor,
+                          indicator: BubbleTabIndicator(
+                            indicatorHeight: 37.0,
+                            indicatorColor: widget.indicatorColor,
+                            tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                          ),
                           indicatorColor: widget.indicatorColor,
-                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                        ),
-                        indicatorColor: widget.indicatorColor,
-                        indicatorWeight: 0.1,
-                        labelPadding: EdgeInsets.all(10),
-                        tabs: listBubbleTabItem),
+                          indicatorWeight: 0.1,
+                          labelPadding: EdgeInsets.all(10),
+                          tabs: listBubbleTabItem),
+                    ),
                   ],
                 ),
               ));
