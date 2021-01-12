@@ -6,7 +6,6 @@ import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionScree
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/document/DocumentListScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/ComplaintsMenuScreen.dart';
-import 'package:pikobar_flutter/screens/importantInfo/ImportantInfoListScreen.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/EditScreen.dart';
@@ -30,8 +29,6 @@ Route generateRoutes(RouteSettings settings) {
           ));
     case NavigationConstrants.News:
       return buildRoute(settings, News());
-    case NavigationConstrants.ImportantInfoList:
-      return buildRoute(settings, ImportantInfoListScreen());
     case NavigationConstrants.Phonebook:
       return buildRoute(settings, Phonebook());
     case NavigationConstrants.BroadcastDetail:
