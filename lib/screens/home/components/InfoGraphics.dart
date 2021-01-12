@@ -156,7 +156,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     return BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
         listener: (context, state) {
       if (state is InfoGraphicsListLoaded) {
-        isGetDataLabel = true;
         getDataLabel();
       }
     }, child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
@@ -241,7 +240,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
       }
     }
-    getDataLabel();
     return listData.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,

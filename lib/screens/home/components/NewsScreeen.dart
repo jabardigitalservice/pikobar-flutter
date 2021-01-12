@@ -88,7 +88,6 @@ class _NewsScreenState extends State<NewsScreen> {
     return BlocListener<NewsListBloc, NewsListState>(
         listener: (context, state) {
       if (state is NewsListLoaded) {
-        isGetDataLabel = true;
         getDataLabel();
       }
     }, child: BlocBuilder<NewsListBloc, NewsListState>(
@@ -121,9 +120,6 @@ class _NewsScreenState extends State<NewsScreen> {
         widget.covidInformationScreenState.isEmptyDataNews = true;
       }
     }
-
-    getDataLabel();
-
     return list.isNotEmpty
         ? Container(
             child: Column(
