@@ -161,7 +161,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       child: CircularProgressIndicator(),
                     );
                   } else if (state is ProfileLoaded) {
-                    ProfileLoaded _getProfile = state as ProfileLoaded;
+                    ProfileLoaded _getProfile = state;
                     return _getProfile.profile.exists
                         ? _buildContent(_getProfile.profile)
                         : _buildContent(null);
@@ -322,10 +322,10 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                     ),
                     _buildContainer(
                       imageDisable:
-                          '${Environment.iconAssets}history_contact_disable.png',
+                          '${Environment.iconAssets}runway_disable.png',
                       imageEnable:
-                          '${Environment.iconAssets}history_contact_enable.png',
-                      title: Dictionary.historyContact,
+                          '${Environment.iconAssets}runway_enable.png',
+                      title: Dictionary.historyTravel,
                       length: 2,
                       onPressedEnable: () {
                         if (latLng == null ||
@@ -612,7 +612,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     }
   }
 
-  // Function to get lat long user and auto complete address field
+  /// Function to get lat long user and auto complete address field
   Future<void> _openLocationPicker() async {
     latLng = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => LocationPicker()));
@@ -625,7 +625,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     }
   }
 
-  // Function to get status for access location
+  /// Function to get status for access location
   void _onStatusRequested(
       BuildContext context, PermissionStatus statuses) async {
     if (statuses.isGranted) {
