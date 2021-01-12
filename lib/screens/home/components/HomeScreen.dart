@@ -66,12 +66,6 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-    // _infoGraphicsListBloc
-    //     .add(InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics));
-    // _newsListBloc
-    //     .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
-    // _videoListBloc.add(LoadVideos());
-    // _documentsBloc.add(DocumentsLoad());
     AnalyticsHelper.setCurrentScreen(Analytics.home);
     getDataFromServer();
     setControllerTab();

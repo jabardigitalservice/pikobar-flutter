@@ -644,7 +644,6 @@ class _NewsScreenState extends State<NewsScreen> {
           .toList();
     }
 
-    getDataLabel();
 
     return list.isNotEmpty
         ? ListView.builder(
