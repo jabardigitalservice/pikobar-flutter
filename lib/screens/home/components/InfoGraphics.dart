@@ -73,6 +73,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       labelNew.getDataLabel(Dictionary.labelInfoGraphic).then((value) {
         if (!mounted) return;
         setState(() {
+          print('isinya bosque ' + value.length.toString());
           dataLabel = value;
         });
       });
@@ -153,13 +154,19 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   }
 
   Widget _buildInfographic(Map<String, dynamic> getLabel) {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+    return BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+        listener: (context, state) {
+      if (state is InfoGraphicsListLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
       builder: (context, state) {
         return state is InfoGraphicsListLoaded
             ? _buildContent(state.infoGraphicsList, getLabel)
             : _buildLoading();
       },
-    );
+    ));
   }
 
   Widget _buildLoading() {

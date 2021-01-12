@@ -43,17 +43,25 @@ class _VideoListState extends State<VideoList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VideoListBloc, VideoListState>(
-        builder: (context, state) {
-      return state is VideosLoaded
-          ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-              builder: (context, remoteState) {
-              return remoteState is RemoteConfigLoaded
-                  ? _buildContent(state.videos, remoteState.remoteConfig)
-                  : _buildLoading();
-            })
-          : _buildLoading();
-    });
+    return BlocListener<VideoListBloc, VideoListState>(
+      listener: (context, state) {
+        if (state is VideosLoaded) {
+          isGetDataLabel = true;
+          getDataLabel();
+        }
+      },
+      child:
+          BlocBuilder<VideoListBloc, VideoListState>(builder: (context, state) {
+        return state is VideosLoaded
+            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                builder: (context, remoteState) {
+                return remoteState is RemoteConfigLoaded
+                    ? _buildContent(state.videos, remoteState.remoteConfig)
+                    : _buildLoading();
+              })
+            : _buildLoading();
+      }),
+    );
   }
 
   getDataLabel() {

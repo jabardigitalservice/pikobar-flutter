@@ -85,7 +85,13 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
-    return BlocBuilder<NewsListBloc, NewsListState>(
+    return BlocListener<NewsListBloc, NewsListState>(
+        listener: (context, state) {
+      if (state is NewsListLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<NewsListBloc, NewsListState>(
       builder: (context, state) {
         return state is NewsListLoaded
             ? widget.maxLength != null
@@ -95,7 +101,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ? _buildLoadingNew()
                 : _buildLoading();
       },
-    );
+    ));
   }
 
   _buildContent(List<NewsModel> list, RemoteConfig remoteConfig) {

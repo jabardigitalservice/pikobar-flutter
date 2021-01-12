@@ -49,13 +49,19 @@ class _DocumentsState extends State<Documents> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+    return BlocListener<DocumentsBloc, DocumentsState>(
+        listener: (context, state) {
+      if (state is DocumentsLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
       builder: (context, remoteState) {
         return remoteState is RemoteConfigLoaded
             ? _buildHeader(remoteState.remoteConfig)
             : _buildHeaderLoading();
       },
-    );
+    ));
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
