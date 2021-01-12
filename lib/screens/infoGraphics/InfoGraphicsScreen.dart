@@ -111,34 +111,34 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               ..add(InfoGraphicsListLoad(
                   infoGraphicsCollection: kAllInfographics)),
           ),
+      ],
+      child: Container(
+          child: CustomBubbleTab(
+        isStickyHeader: true,
+        titleHeader: Dictionary.infoGraphics,
+        listItemTitleTab: listItemTitleTab,
+        indicatorColor: ColorBase.green,
+        labelColor: Colors.white,
+        showTitle: _showTitle,
+        sizeLabel: 13.0,
+        isScrollable: false,
+        searchBar: CustomAppBar.buildSearchField(
+            _searchController, Dictionary.searchInformation, updateSearchQuery, margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
+        unselectedLabelColor: Colors.grey,
+        scrollController: _scrollController,
+        onTap: (index) {
+          setState(() {});
+          isSetDataCurrent = false;
+          _infoGraphicsListBloc.add(InfoGraphicsListLoad(
+              infoGraphicsCollection: listCollectionData[index]));
+          AnalyticsHelper.setLogEvent(analyticsData[index]);
+        },
+        tabBarView: <Widget>[
+          _buildInfoGraphic(),
+          _buildInfoGraphic(),
+          _buildInfoGraphic(),
+          _buildInfoGraphic(),
         ],
-        child: Container(
-            child: CustomBubbleTab(
-          isStickyHeader: true,
-          titleHeader: Dictionary.infoGraphics,
-          listItemTitleTab: listItemTitleTab,
-          indicatorColor: ColorBase.green,
-          labelColor: Colors.white,
-          showTitle: _showTitle,
-          sizeLabel: 13.0,
-          isScrollable: false,
-          searchBar: CustomAppBar.buildSearchField(_searchController,
-              Dictionary.searchInformation, updateSearchQuery),
-          unselectedLabelColor: Colors.grey,
-          scrollController: _scrollController,
-          onTap: (index) {
-            setState(() {});
-            isSetDataCurrent = false;
-            _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-                infoGraphicsCollection: listCollectionData[index]));
-            AnalyticsHelper.setLogEvent(analyticsData[index]);
-          },
-          tabBarView: <Widget>[
-            _buildInfoGraphic(),
-            _buildInfoGraphic(),
-            _buildInfoGraphic(),
-            _buildInfoGraphic(),
-          ],
           heightTabBarView: MediaQuery.of(context).size.height - 148,
         )),
       ),

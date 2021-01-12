@@ -387,25 +387,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       : Container(),
 
                   SizedBox(height: 25.0),
-                  widget.id != Environment.idDailyUpdate ? Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
-                    child: OutlineButton(
-                      borderSide: BorderSide(color: Colors.grey[600]),
-                      child: Text(Dictionary.otherNews,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              fontFamily: FontsFamily.roboto,
-                              color: Colors.grey[700])),
-                      padding: EdgeInsets.all(15.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                    ),
-                  ) : Container(),
-                  SizedBox(height: 10.0)
                 ],
               ),
             ),
