@@ -123,7 +123,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                               context, NavigationConstrants.InfoGraphics,
                               arguments: widget.covidInformationScreenState)
                           as bool;
-
                       if (result) {
                         isGetDataLabel = result;
                         getDataLabel();
@@ -237,7 +236,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       }
     }
     getDataLabel();
-
     return listData.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,9 +264,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             fontFamily: FontsFamily.lato,
                             fontSize: Dimens.textSubtitleSize),
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, NavigationConstrants.InfoGraphics);
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.InfoGraphics,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
 
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedInfoGraphicsMore);
@@ -285,7 +289,11 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         left: 6.0, right: 16.0, bottom: 16.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: widget.searchQuery != null ? listData.length : 5,
+                    itemCount: widget.searchQuery != null
+                        ? listData.length
+                        : listData.length < 5
+                            ? listData.length
+                            : 5,
                     itemBuilder: (context, index) {
                       final DocumentSnapshot document = listData[index];
                       return Container(

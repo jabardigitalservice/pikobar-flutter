@@ -66,12 +66,12 @@ class HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-    _infoGraphicsListBloc
-        .add(InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics));
-    _newsListBloc
-        .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
-    _videoListBloc.add(LoadVideos());
-    _documentsBloc.add(DocumentsLoad());
+    // _infoGraphicsListBloc
+    //     .add(InfoGraphicsListLoad(infoGraphicsCollection: kAllInfographics));
+    // _newsListBloc
+    //     .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+    // _videoListBloc.add(LoadVideos());
+    // _documentsBloc.add(DocumentsLoad());
     AnalyticsHelper.setCurrentScreen(Analytics.home);
     getDataFromServer();
     setControllerTab();
@@ -84,7 +84,6 @@ class HomeScreenState extends State<HomeScreen>
       var data = await LabelNew().getAllUnreadDataLabel();
       setState(() {
         totalUnreadInfo = data;
-        print('isinya piro? ' + totalUnreadInfo.toString());
       });
     });
   }
@@ -158,9 +157,8 @@ class HomeScreenState extends State<HomeScreen>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
         BlocProvider<NewsListBloc>(
             create: (context) => _newsListBloc = NewsListBloc()
-            /*..add(
-                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))*/
-            ),
+              ..add(
+                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
                 _importantInfoListBloc = ImportantInfoListBloc()
@@ -170,9 +168,8 @@ class HomeScreenState extends State<HomeScreen>
                 _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
         BlocProvider<InfoGraphicsListBloc>(
             create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-            /*..add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: kInfographics, limit: 3))*/
-            ),
+              ..add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: kInfographics, limit: 3))),
         BlocProvider<DocumentsBloc>(
             create: (context) =>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
@@ -189,7 +186,35 @@ class HomeScreenState extends State<HomeScreen>
             backgroundColor: Colors.white,
           ),
         ),
-        body: buildContent(),
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+                listener: (context, state) {
+              if (state is InfoGraphicsListLoaded) {
+                getAllUnreadData();
+              }
+            }),
+            BlocListener<NewsListBloc, NewsListState>(
+                listener: (context, state) {
+              if (state is NewsListLoaded) {
+                getAllUnreadData();
+              }
+            }),
+            BlocListener<VideoListBloc, VideoListState>(
+                listener: (context, state) {
+              if (state is VideosLoaded) {
+                getAllUnreadData();
+              }
+            }),
+            BlocListener<DocumentsBloc, DocumentsState>(
+                listener: (context, state) {
+              if (state is DocumentsLoaded) {
+                getAllUnreadData();
+              }
+            }),
+          ],
+          child: buildContent(),
+        ),
       ),
     );
   }
@@ -237,7 +262,9 @@ class HomeScreenState extends State<HomeScreen>
     _remoteConfigBloc.close();
     _bannersBloc.close();
     _statisticsBloc.close();
-    _rapidTestBloc.close();
+    if(_rapidTestBloc != null){
+      _rapidTestBloc.close();
+    }
     if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
     }

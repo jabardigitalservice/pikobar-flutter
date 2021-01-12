@@ -220,6 +220,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   ///function for handle tab selected for update data
   _handleTabSelection() {
     if (indexTab != _basetabController.index) {
+      if (widget.titleNameLabelNew != null && widget.totalInfoUnread > 0) {
+        addItemDataBuble(false);
+      }
       setState(() {
         widget.onTap(_basetabController.index);
         indexTab = _basetabController.index;
