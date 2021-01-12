@@ -291,7 +291,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                               newsmodel.title,
                                               style: TextStyle(
                                                   fontSize: 14.0,
-                                                  fontFamily: FontsFamily.roboto,
+                                                  fontFamily:
+                                                      FontsFamily.roboto,
                                                   fontWeight: FontWeight.w600),
                                               textAlign: TextAlign.left,
                                               maxLines: 2,
@@ -644,7 +645,7 @@ class _NewsScreenState extends State<NewsScreen> {
           .toList();
     }
 
-
+    getDataLabel();
     return list.isNotEmpty
         ? ListView.builder(
             itemCount: list.length,
