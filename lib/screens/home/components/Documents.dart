@@ -49,19 +49,13 @@ class _DocumentsState extends State<Documents> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DocumentsBloc, DocumentsState>(
-        listener: (context, state) {
-      if (state is DocumentsLoaded) {
-        isGetDataLabel = true;
-        getDataLabel();
-      }
-    }, child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
       builder: (context, remoteState) {
         return remoteState is RemoteConfigLoaded
             ? _buildHeader(remoteState.remoteConfig)
             : _buildHeaderLoading();
       },
-    ));
+    );
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
@@ -69,13 +63,19 @@ class _DocumentsState extends State<Documents> {
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.labels,
         defaultValue: FirebaseConfig.labelsDefaultValue);
-    return BlocBuilder<DocumentsBloc, DocumentsState>(
+    return BlocListener<DocumentsBloc, DocumentsState>(
+        listener: (context, state) {
+      if (state is DocumentsLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<DocumentsBloc, DocumentsState>(
       builder: (context, state) {
         return state is DocumentsLoaded
             ? _buildContent(state.documents, getLabel)
             : _buildLoading();
       },
-    );
+    ));
   }
 
   getDataLabel() {

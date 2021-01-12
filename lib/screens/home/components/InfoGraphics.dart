@@ -73,7 +73,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       labelNew.getDataLabel(Dictionary.labelInfoGraphic).then((value) {
         if (!mounted) return;
         setState(() {
-          print('isinya bosque ' + value.length.toString());
           dataLabel = value;
         });
       });
