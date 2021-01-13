@@ -88,6 +88,7 @@ class _NewsScreenState extends State<NewsScreen> {
     return BlocListener<NewsListBloc, NewsListState>(
         listener: (context, state) {
       if (state is NewsListLoaded) {
+        isGetDataLabel = true;
         getDataLabel();
       }
     }, child: BlocBuilder<NewsListBloc, NewsListState>(
