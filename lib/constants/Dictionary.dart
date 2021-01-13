@@ -287,6 +287,7 @@ class Dictionary {
   static String monitoringDays = 'Pemantauan Hari ke-';
   static String titleSelfReport = 'Lapor Mandiri';
   static String historyContact = 'Riwayat \nKontak';
+  static String historyTravel = 'Lapor Aktivitas \nBepergian';
   static String educationContent = 'Konten Edukasi';
   static String profileNotComplete = 'Profil Anda Belum Lengkap';
   static String descProfile1 =
