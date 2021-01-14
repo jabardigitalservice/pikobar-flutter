@@ -302,6 +302,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
         setState(() {
           searchQuery = _searchController.text;
         });
+        AnalyticsHelper.setLogEvent(Analytics.tappedSerachDocument);
       } else {
         _clearSearchQuery();
       }
