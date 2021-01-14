@@ -63,13 +63,19 @@ class _DocumentsState extends State<Documents> {
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.labels,
         defaultValue: FirebaseConfig.labelsDefaultValue);
-    return BlocBuilder<DocumentsBloc, DocumentsState>(
+    return BlocListener<DocumentsBloc, DocumentsState>(
+        listener: (context, state) {
+      if (state is DocumentsLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<DocumentsBloc, DocumentsState>(
       builder: (context, state) {
         return state is DocumentsLoaded
             ? _buildContent(state.documents, getLabel)
             : _buildLoading();
       },
-    );
+    ));
   }
 
   getDataLabel() {
@@ -99,7 +105,7 @@ class _DocumentsState extends State<Documents> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 16.0),
               ),
               InkWell(
@@ -108,11 +114,18 @@ class _DocumentsState extends State<Documents> {
                   style: TextStyle(
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: Dimens.textSubtitleSize),
                 ),
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.Document);
+                onTap: () async {
+                  final result = await Navigator.pushNamed(
+                      context, NavigationConstrants.Document,
+                      arguments: widget.covidInformationScreenState) as bool;
+
+                  if (result) {
+                    isGetDataLabel = result;
+                    getDataLabel();
+                  }
 
                   AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
                 },
@@ -126,7 +139,7 @@ class _DocumentsState extends State<Documents> {
             Dictionary.descDocument,
             style: TextStyle(
                 color: Colors.black,
-                fontFamily: FontsFamily.lato,
+                fontFamily: FontsFamily.roboto,
                 fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
@@ -234,7 +247,7 @@ class _DocumentsState extends State<Documents> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textTitleSize),
                     ),
                     InkWell(
@@ -243,12 +256,19 @@ class _DocumentsState extends State<Documents> {
                         style: TextStyle(
                             color: ColorBase.green,
                             fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontSize: Dimens.textSubtitleSize),
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, NavigationConstrants.Document);
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.Document,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
 
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedDocumentsMore);
@@ -261,7 +281,8 @@ class _DocumentsState extends State<Documents> {
                 height: 265,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(left: 6.0, right: 16.0, bottom: 16.0),
+                    padding: const EdgeInsets.only(
+                        left: 6.0, right: 16.0, bottom: 16.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount:
@@ -324,6 +345,9 @@ class _DocumentsState extends State<Documents> {
                                           .toString(),
                                       dataLabel,
                                       Dictionary.labelDocuments);
+                                  widget.covidInformationScreenState.widget
+                                      .homeScreenState
+                                      .getAllUnreadData();
                                 });
                                 Platform.isAndroid
                                     ? _downloadAttachment(document['title'],
@@ -345,6 +369,9 @@ class _DocumentsState extends State<Documents> {
                                                 .toString(),
                                             dataLabel,
                                             Dictionary.labelDocuments);
+                                        widget.covidInformationScreenState
+                                            .widget.homeScreenState
+                                            .getAllUnreadData();
                                       });
                                       Platform.isAndroid
                                           ? _downloadAttachment(
@@ -363,7 +390,7 @@ class _DocumentsState extends State<Documents> {
                                             document['title'],
                                             style: TextStyle(
                                                 fontSize: 14.0,
-                                                fontFamily: FontsFamily.lato,
+                                                fontFamily: FontsFamily.roboto,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
@@ -389,7 +416,7 @@ class _DocumentsState extends State<Documents> {
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:
-                                                          FontsFamily.lato,
+                                                          FontsFamily.roboto,
                                                       fontSize: 10.0,
                                                       fontWeight:
                                                           FontWeight.w600),

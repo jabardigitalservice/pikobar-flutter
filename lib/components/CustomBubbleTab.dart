@@ -24,6 +24,8 @@ class CustomBubbleTab extends StatefulWidget {
   /// [scrollController] for set controller inside NestedScrollView
   /// [searchBar] for set search inside appbar
   /// [titleHeader] for set title header in appbar
+  /// [totalInfoUnread] for show label new on tab
+  /// [titleNameLabelNew] for check hide & show label on tab
 
   final List<String> listItemTitleTab;
   final Color indicatorColor;
@@ -35,6 +37,8 @@ class CustomBubbleTab extends StatefulWidget {
   final double paddingTopTabBarView;
   final TabController tabController;
   final String typeTabSelected;
+  final String titleNameLabelNew;
+  int totalInfoUnread;
   double paddingBubbleTab;
   bool isExpand;
   bool isScrollable;
@@ -66,7 +70,9 @@ class CustomBubbleTab extends StatefulWidget {
       this.searchBar,
       this.titleHeader,
       this.subTitle,
-      this.paddingBubbleTab});
+      this.paddingBubbleTab,
+      this.titleNameLabelNew,
+      this.totalInfoUnread});
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -83,10 +89,13 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   double paddingBubleTab;
   bool isScrollable;
   double paddingTopTabBarView;
+  int totalUnreadlabelNew;
+  bool isLoadLabelNew = true;
 
   @override
   void initState() {
     ///for set default each variable if get value null
+    totalUnreadlabelNew = widget.totalInfoUnread ?? 0;
     paddingBubleTab = widget.paddingBubbleTab ?? 0;
     paddingTopTabBarView = widget.paddingTopTabBarView ?? 0;
     isScrollable = widget.isScrollable ?? true;
@@ -94,15 +103,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         TabController(vsync: this, length: widget.listItemTitleTab.length);
     _basetabController.addListener(_handleTabSelection);
     listBubbleTabItem.clear();
-    for (int i = 0; i < widget.listItemTitleTab.length; i++) {
-      if (widget.typeTabSelected != null) {
-        dataSelected = widget.typeTabSelected;
-      } else {
-        dataSelected = widget.listItemTitleTab[0];
-      }
-      listBubbleTabItem
-          .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
-    }
+    addItemDataBuble(true);
     if (widget.isExpand != null) {
       isExpand = widget.isExpand;
     } else {
@@ -111,9 +112,35 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
     super.initState();
   }
 
+  addItemDataBuble(bool isAddData) {
+    for (int i = 0; i < widget.listItemTitleTab.length; i++) {
+      if (widget.typeTabSelected != null) {
+        dataSelected = widget.typeTabSelected;
+      } else {
+        dataSelected = isAddData
+            ? widget.listItemTitleTab[0]
+            : widget.listItemTitleTab[_basetabController.index];
+      }
+      if (isAddData) {
+        listBubbleTabItem
+            .add(bubbleTabItem(widget.listItemTitleTab[i], dataSelected));
+      } else {
+        listBubbleTabItem[i] =
+            bubbleTabItem(widget.listItemTitleTab[i], dataSelected);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ///condition for check is use collapsing appbar or not
+    if (widget.titleNameLabelNew != null &&
+        isLoadLabelNew &&
+        widget.totalInfoUnread > 0) {
+      addItemDataBuble(false);
+      isLoadLabelNew = false;
+    }
+
     return widget.isStickyHeader
         ? DefaultTabController(
             length: listBubbleTabItem.length,
@@ -142,6 +169,21 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       controller: _basetabController,
                       isScrollable: isScrollable,
                       onTap: (index) {
+                        if (widget.titleNameLabelNew != null) {
+                          totalUnreadlabelNew = widget.totalInfoUnread;
+                          dataSelected = widget.listItemTitleTab[index];
+                          for (int i = 0;
+                              i < widget.listItemTitleTab.length;
+                              i++) {
+                            if (widget.listItemTitleTab[i] == dataSelected) {
+                              listBubbleTabItem[index] = bubbleTabItem(
+                                  widget.listItemTitleTab[index], dataSelected);
+                            } else {
+                              listBubbleTabItem[i] = bubbleTabItem(
+                                  widget.listItemTitleTab[i], dataSelected);
+                            }
+                          }
+                        }
                         widget.onTap(index);
                       },
                       labelColor: widget.labelColor,
@@ -167,8 +209,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       )
                     : Container(
                         height: widget.heightTabBarView,
-                        padding: EdgeInsets.only(
-                            top: paddingTopTabBarView),
+                        padding: EdgeInsets.only(top: paddingTopTabBarView),
                         child: TabBarView(
                           controller: _basetabController,
                           children: widget.tabBarView,
@@ -182,6 +223,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   ///function for handle tab selected for update data
   _handleTabSelection() {
     if (indexTab != _basetabController.index) {
+      if (widget.titleNameLabelNew != null && widget.totalInfoUnread > 0) {
+        addItemDataBuble(false);
+      }
       setState(() {
         widget.onTap(_basetabController.index);
         indexTab = _basetabController.index;
@@ -192,17 +236,38 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
   ///widget for set item tab in tabbar
   // ignore: non_constant_identifier_names
   Widget bubbleTabItem(String title, String dataSelected) {
-    return Tab(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          title,
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontFamily: FontsFamily.lato,
-              fontSize: widget.sizeLabel ?? 10.0),
+    totalUnreadlabelNew = widget.totalInfoUnread;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Tab(
+          child: Container(
+            // color: Colors.black,
+            padding: EdgeInsets.all(10),
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: FontsFamily.lato,
+                  fontSize: widget.sizeLabel ?? 10.0),
+            ),
+          ),
         ),
-      ),
+        widget.titleNameLabelNew != null &&
+                widget.titleNameLabelNew == title &&
+                dataSelected != widget.titleNameLabelNew &&
+                totalUnreadlabelNew > 0
+            ? Container(
+                padding: EdgeInsets.only(left: 10),
+                width: 10,
+                height: 10,
+                decoration: new BoxDecoration(
+                  color: Colors.redAccent,
+                  shape: BoxShape.circle,
+                ),
+              )
+            : Container()
+      ],
     );
   }
 
@@ -215,7 +280,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
             ? 150
             : widget.searchBar != null
                 ? 250.0
-                : widget.subTitle != null ? 200 : 150,
+                : widget.subTitle != null
+                    ? 200
+                    : 150,
         title: AnimatedOpacity(
           opacity: widget.showTitle ? 1.0 : 0.0,
           duration: Duration(milliseconds: 250),
@@ -275,16 +342,18 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w900),
                             ),
-                            widget.subTitle != null ? Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                widget.subTitle,
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.roboto,
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                            ) : Container(),
+                            widget.subTitle != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      widget.subTitle,
+                                      style: TextStyle(
+                                        fontFamily: FontsFamily.roboto,
+                                        fontSize: 12.0,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ),

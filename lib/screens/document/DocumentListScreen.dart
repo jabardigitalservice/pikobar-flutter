@@ -12,18 +12,28 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 import 'DocumentViewScreen.dart';
 
+// ignore: must_be_immutable
 class DocumentListScreen extends StatefulWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  DocumentListScreen({this.covidInformationScreenState});
+
   @override
   _DocumentListScreenState createState() => _DocumentListScreenState();
 }
@@ -33,6 +43,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   void initState() {
@@ -53,7 +66,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CollapsingAppbar(
+        body: WillPopScope(
+      child: CollapsingAppbar(
         searchBar: CustomAppBar.buildSearchField(
             _searchController, Dictionary.searchInformation, updateSearchQuery),
         showTitle: _showTitle,
@@ -91,8 +105,14 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
           },
         ),
       ),
-    );
+      onWillPop: _onWillPop,
+    ));
     //   body:
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
   }
 
   Widget _buildContent(List<DocumentSnapshot> dataDocuments) {
@@ -102,6 +122,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
               test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
     }
+
+    getDataLabel();
 
     return dataDocuments.length > 0
         ? ListView.builder(
@@ -170,11 +192,25 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  unixTimeStampToDateTime(
-                                      document['published_at'].seconds),
-                                  style: TextStyle(
-                                      fontSize: 16.0, color: Colors.white),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    labelNew.isLabelNew(
+                                            document.id.toString(), dataLabel)
+                                        ? LabelNewScreen()
+                                        : Container(),
+                                    Expanded(
+                                      child: Text(
+                                        unixTimeStampToDateTime(
+                                            document['published_at'].seconds),
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.white,
+                                            fontFamily: FontsFamily.roboto),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 3,
@@ -184,7 +220,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                   style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.white),
+                                      color: Colors.white,
+                                      fontFamily: FontsFamily.roboto),
                                   textAlign: TextAlign.left,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -196,6 +233,18 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                       ),
                     ),
                     onTap: () {
+                      setState(() {
+                        labelNew.readNewInfo(
+                            document.id,
+                            document['published_at'].seconds.toString(),
+                            dataLabel,
+                            Dictionary.labelDocuments);
+                        if (widget.covidInformationScreenState != null) {
+                          widget.covidInformationScreenState.widget
+                              .homeScreenState
+                              .getAllUnreadData();
+                        }
+                      });
                       Platform.isAndroid
                           ? _downloadAttachment(
                               document['title'], document['document_url'])
@@ -324,6 +373,18 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
+    }
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
     }
   }
 

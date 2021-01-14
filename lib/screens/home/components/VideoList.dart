@@ -9,7 +9,6 @@ import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
 import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -44,17 +43,25 @@ class _VideoListState extends State<VideoList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VideoListBloc, VideoListState>(
-        builder: (context, state) {
-      return state is VideosLoaded
-          ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-              builder: (context, remoteState) {
-              return remoteState is RemoteConfigLoaded
-                  ? _buildContent(state.videos, remoteState.remoteConfig)
-                  : _buildLoading();
-            })
-          : _buildLoading();
-    });
+    return BlocListener<VideoListBloc, VideoListState>(
+      listener: (context, state) {
+        if (state is VideosLoaded) {
+          isGetDataLabel = true;
+          getDataLabel();
+        }
+      },
+      child:
+          BlocBuilder<VideoListBloc, VideoListState>(builder: (context, state) {
+        return state is VideosLoaded
+            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                builder: (context, remoteState) {
+                return remoteState is RemoteConfigLoaded
+                    ? _buildContent(state.videos, remoteState.remoteConfig)
+                    : _buildLoading();
+              })
+            : _buildLoading();
+      }),
+    );
   }
 
   getDataLabel() {
@@ -166,7 +173,7 @@ class _VideoListState extends State<VideoList> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textTitleSize),
                     ),
                     InkWell(
@@ -175,12 +182,19 @@ class _VideoListState extends State<VideoList> {
                         style: TextStyle(
                             color: Color(0xFF27AE60),
                             fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontSize: Dimens.textSubtitleSize),
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, NavigationConstrants.VideoList);
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.VideoList,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
 
                         AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
                       },
@@ -268,11 +282,14 @@ class _VideoListState extends State<VideoList> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                   labelNew.readNewInfo(
+                                    labelNew.readNewInfo(
                                         data[index].id,
                                         data[index].publishedAt.toString(),
                                         dataLabel,
                                         Dictionary.labelVideos);
+                                    widget.covidInformationScreenState.widget
+                                        .homeScreenState
+                                        .getAllUnreadData();
                                   });
                                   launchExternal(data[index].url);
 
@@ -297,7 +314,7 @@ class _VideoListState extends State<VideoList> {
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 14.0,
-                                              fontFamily: FontsFamily.lato,
+                                              fontFamily: FontsFamily.roboto,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -317,7 +334,7 @@ class _VideoListState extends State<VideoList> {
                                           data[index].publishedAt),
                                       style: TextStyle(
                                           color: Colors.grey,
-                                          fontFamily: FontsFamily.lato,
+                                          fontFamily: FontsFamily.roboto,
                                           fontSize: 10.0,
                                           fontWeight: FontWeight.w600),
                                     ),

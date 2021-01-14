@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
+import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/repositories/ImportantInfoRepository.dart';
 import 'Bloc.dart';
 
@@ -29,7 +29,7 @@ class ImportantInfoListBloc
     _subscription = _repository
         .getInfoImportantList(improtantInfoCollection: collection)
         .listen((importantInfo) {
-      List<ImportantInfoModel> list = [];
+      List<NewsModel> list = [];
       for (int i = 0; i < importantInfo.length; i++) {
         if (importantInfo[i].published) {
           list.add(importantInfo[i]);

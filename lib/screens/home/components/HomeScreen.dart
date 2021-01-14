@@ -28,6 +28,7 @@ import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.d
 import 'package:pikobar_flutter/screens/home/components/JabarToday.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
@@ -35,21 +36,21 @@ class HomeScreen extends StatefulWidget {
   HomeScreen({this.indexScreenState});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   RemoteConfigBloc _remoteConfigBloc;
   BannersBloc _bannersBloc;
   StatisticsBloc _statisticsBloc;
   RapidTestBloc _rapidTestBloc;
   PcrTestBloc _pcrTestBloc;
-  NewsListBloc _newsListBloc;
+  NewsListBloc _newsListBloc = NewsListBloc();
   ImportantInfoListBloc _importantInfoListBloc;
-  VideoListBloc _videoListBloc;
-  InfoGraphicsListBloc _infoGraphicsListBloc;
-  DocumentsBloc _documentsBloc;
+  VideoListBloc _videoListBloc = VideoListBloc();
+  InfoGraphicsListBloc _infoGraphicsListBloc = InfoGraphicsListBloc();
+  DocumentsBloc _documentsBloc = DocumentsBloc();
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
   List<String> listItemTitleTab = [
@@ -61,13 +62,24 @@ class _HomeScreenState extends State<HomeScreen>
     Analytics.tappedCovidInformation,
   ];
   TabController tabController;
+  int totalUnreadInfo = 0;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
     getDataFromServer();
     setControllerTab();
+    getAllUnreadData();
     super.initState();
+  }
+
+  getAllUnreadData() {
+    Future.delayed(Duration(milliseconds: 0), () async {
+      var data = await LabelNew().getAllUnreadDataLabel();
+      setState(() {
+        totalUnreadInfo = data;
+      });
+    });
   }
 
   void getDataFromServer() {
@@ -81,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   setControllerTab() async {
+    getAllUnreadData();
     String historyTab =
         await HistoryTabHomeSharedPreference.getHistoryTabHome();
     tabController =
@@ -167,7 +180,35 @@ class _HomeScreenState extends State<HomeScreen>
             backgroundColor: Colors.white,
           ),
         ),
-        body: buildContent(),
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+                listener: (context, state) {
+              if (state is InfoGraphicsListLoaded) {
+                getAllUnreadData();
+              }
+            }),
+            BlocListener<NewsListBloc, NewsListState>(
+                listener: (context, state) {
+              if (state is NewsListLoaded) {
+                getAllUnreadData();
+              }
+            }),
+            BlocListener<VideoListBloc, VideoListState>(
+                listener: (context, state) {
+              if (state is VideosLoaded) {
+                getAllUnreadData();
+              }
+            }),
+            BlocListener<DocumentsBloc, DocumentsState>(
+                listener: (context, state) {
+              if (state is DocumentsLoaded) {
+                getAllUnreadData();
+              }
+            }),
+          ],
+          child: buildContent(),
+        ),
       ),
     );
   }
@@ -187,19 +228,20 @@ class _HomeScreenState extends State<HomeScreen>
           unselectedLabelColor: Colors.grey,
           tabController: tabController,
           paddingBubbleTab: 10,
+          titleNameLabelNew: listItemTitleTab[1],
+          totalInfoUnread: totalUnreadInfo,
           sizeLabel: 13.0,
           onTap: (index) async {
-            if (listItemTitleTab[index] == Dictionary.covidInformation) {
-              _newsListBloc.add(
-                  NewsListLoad(NewsType.allArticles, statImportantInfo: true));
-            }
+            getAllUnreadData();
             AnalyticsHelper.setLogEvent(analyticsData[index]);
             await HistoryTabHomeSharedPreference.setHistoryTabHome(
                 listItemTitleTab[index]);
           },
           tabBarView: <Widget>[
             JabarTodayScreen(),
-            CovidInformationScreen(),
+            CovidInformationScreen(
+              homeScreenState: this,
+            ),
           ],
           isExpand: true,
         ),
@@ -214,11 +256,15 @@ class _HomeScreenState extends State<HomeScreen>
     _remoteConfigBloc.close();
     _bannersBloc.close();
     _statisticsBloc.close();
-    _rapidTestBloc.close();
+    if(_rapidTestBloc != null){
+      _rapidTestBloc.close();
+    }
     if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
     }
-    _newsListBloc.close();
+    if (_newsListBloc != null) {
+      _newsListBloc.close();
+    }
     if (_importantInfoListBloc != null) {
       _importantInfoListBloc.close();
     }
