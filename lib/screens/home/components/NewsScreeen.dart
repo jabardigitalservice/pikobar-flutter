@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -87,7 +85,13 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
-    return BlocBuilder<NewsListBloc, NewsListState>(
+    return BlocListener<NewsListBloc, NewsListState>(
+        listener: (context, state) {
+      if (state is NewsListLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<NewsListBloc, NewsListState>(
       builder: (context, state) {
         return state is NewsListLoaded
             ? widget.maxLength != null
@@ -97,7 +101,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ? _buildLoadingNew()
                 : _buildLoading();
       },
-    );
+    ));
   }
 
   _buildContent(List<NewsModel> list, RemoteConfig remoteConfig) {
@@ -117,9 +121,6 @@ class _NewsScreenState extends State<NewsScreen> {
         widget.covidInformationScreenState.isEmptyDataNews = true;
       }
     }
-
-    getDataLabel();
-
     return list.isNotEmpty
         ? Container(
             child: Column(
@@ -138,7 +139,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
-                              fontFamily: FontsFamily.lato,
+                              fontFamily: FontsFamily.roboto,
                               fontSize: Dimens.textTitleSize),
                         ),
                         InkWell(
@@ -147,17 +148,25 @@ class _NewsScreenState extends State<NewsScreen> {
                             style: TextStyle(
                                 color: ColorBase.green,
                                 fontWeight: FontWeight.w600,
-                                fontFamily: FontsFamily.lato,
+                                fontFamily: FontsFamily.roboto,
                                 fontSize: Dimens.textSubtitleSize),
                           ),
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    NewsListScreen(news: Dictionary.allNews),
+                                builder: (context) => NewsListScreen(
+                                    news: Dictionary.allNews,
+                                    covidInformationScreenState:
+                                        widget.covidInformationScreenState),
                               ),
-                            );
+                            ) as bool;
+
+                            if (result) {
+                              isGetDataLabel = result;
+                              getDataLabel();
+                            }
+
                             AnalyticsHelper.setLogEvent(Analytics.tappedMore);
                           },
                         ),
@@ -167,7 +176,8 @@ class _NewsScreenState extends State<NewsScreen> {
                   height: 265,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
-                      padding: const EdgeInsets.only(left: 6.0, right: 16.0, bottom: 16.0),
+                      padding: const EdgeInsets.only(
+                          left: 6.0, right: 16.0, bottom: 16.0),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemCount: list.length < widget.maxLength
@@ -206,13 +216,19 @@ class _NewsScreenState extends State<NewsScreen> {
                                     ),
                                   ),
                                 ),
-                                onTap: () {
+                                onTap: () async {
                                   setState(() {
                                     labelNew.readNewInfo(
                                         newsmodel.id,
                                         newsmodel.publishedAt.toString(),
                                         dataLabel,
                                         Dictionary.labelNews);
+                                    if (widget.covidInformationScreenState !=
+                                        null) {
+                                      widget.covidInformationScreenState.widget
+                                          .homeScreenState
+                                          .getAllUnreadData();
+                                    }
                                   });
                                   Navigator.push(
                                     context,
@@ -234,14 +250,22 @@ class _NewsScreenState extends State<NewsScreen> {
                                 children: <Widget>[
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {
+                                      onTap: () async {
                                         setState(() {
                                           labelNew.readNewInfo(
                                               newsmodel.id,
                                               newsmodel.publishedAt.toString(),
                                               dataLabel,
                                               Dictionary.labelNews);
+                                          if (widget
+                                                  .covidInformationScreenState !=
+                                              null) {
+                                            widget.covidInformationScreenState
+                                                .widget.homeScreenState
+                                                .getAllUnreadData();
+                                          }
                                         });
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -268,7 +292,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                               newsmodel.title,
                                               style: TextStyle(
                                                   fontSize: 14.0,
-                                                  fontFamily: FontsFamily.lato,
+                                                  fontFamily:
+                                                      FontsFamily.roboto,
                                                   fontWeight: FontWeight.w600),
                                               textAlign: TextAlign.left,
                                               maxLines: 2,
@@ -294,7 +319,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontFamily:
-                                                            FontsFamily.lato,
+                                                            FontsFamily.roboto,
                                                         fontSize: 10.0,
                                                         fontWeight:
                                                             FontWeight.w600),
@@ -331,11 +356,16 @@ class _NewsScreenState extends State<NewsScreen> {
       child: RaisedButton(
           elevation: 0,
           color: Colors.white,
-          onPressed: () {
+          onPressed: () async {
             setState(() {
               labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                   dataLabel, Dictionary.labelNews);
+              if (widget.covidInformationScreenState != null) {
+                widget.covidInformationScreenState.widget.homeScreenState
+                    .getAllUnreadData();
+              }
             });
+
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -545,10 +575,20 @@ class _NewsScreenState extends State<NewsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              unixTimeStampToDateTime(data.publishedAt),
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.white),
+                            Row(
+                              children: [
+                                labelNew.isLabelNew(
+                                        data.id.toString(), dataLabel)
+                                    ? LabelNewScreen()
+                                    : Container(),
+                                Expanded(
+                                  child: Text(
+                                    unixTimeStampToDateTime(data.publishedAt),
+                                    style: TextStyle(
+                                        fontSize: 16.0, color: Colors.white),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(
                               height: 3,
@@ -571,11 +611,16 @@ class _NewsScreenState extends State<NewsScreen> {
                 ],
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               setState(() {
                 labelNew.readNewInfo(data.id, data.publishedAt.toString(),
                     dataLabel, Dictionary.labelNews);
+                if (widget.covidInformationScreenState != null) {
+                  widget.covidInformationScreenState.widget.homeScreenState
+                      .getAllUnreadData();
+                }
               });
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -601,8 +646,7 @@ class _NewsScreenState extends State<NewsScreen> {
           .toList();
     }
 
-    // getDataLabel();
-
+    getDataLabel();
     return list.isNotEmpty
         ? ListView.builder(
             itemCount: list.length,

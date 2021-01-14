@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +39,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   InfoGraphicsListBloc infoGraphicsListBloc;
   bool isGetDataLabel = true;
   LabelNew labelNew;
+  List<LabelNewModel> dataLabel = [];
 
   List<String> listItemTitleTab = [
     Dictionary.titleLatestNews,
@@ -59,8 +58,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
     Analytics.tappedInfographicCenter,
     Analytics.tappedInfographicWho,
   ];
-
-  List<LabelNewModel> dataLabel = [];
 
   @override
   void initState() {
@@ -109,7 +106,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 16.0),
                   ),
                   InkWell(
@@ -118,12 +115,18 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       style: TextStyle(
                           color: ColorBase.green,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textSubtitleSize),
                     ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, NavigationConstrants.InfoGraphics);
+                    onTap: () async {
+                      final result = await Navigator.pushNamed(
+                              context, NavigationConstrants.InfoGraphics,
+                              arguments: widget.covidInformationScreenState)
+                          as bool;
+                      if (result) {
+                        isGetDataLabel = result;
+                        getDataLabel();
+                      }
 
                       AnalyticsHelper.setLogEvent(
                           Analytics.tappedInfoGraphicsMore);
@@ -138,7 +141,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 Dictionary.descInfoGraphic,
                 style: TextStyle(
                     color: Colors.black,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12.0),
                 textAlign: TextAlign.left,
               ),
@@ -150,13 +153,18 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   }
 
   Widget _buildInfographic(Map<String, dynamic> getLabel) {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+    return BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+        listener: (context, state) {
+      if (state is InfoGraphicsListLoaded) {
+        getDataLabel();
+      }
+    }, child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
       builder: (context, state) {
         return state is InfoGraphicsListLoaded
             ? _buildContent(state.infoGraphicsList, getLabel)
             : _buildLoading();
       },
-    );
+    ));
   }
 
   Widget _buildLoading() {
@@ -232,8 +240,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
       }
     }
-    getDataLabel();
-
     return listData.isNotEmpty
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +256,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: Dimens.textTitleSize),
                     ),
                     InkWell(
@@ -259,12 +265,18 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         style: TextStyle(
                             color: ColorBase.green,
                             fontWeight: FontWeight.w600,
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontSize: Dimens.textSubtitleSize),
                       ),
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, NavigationConstrants.InfoGraphics);
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.InfoGraphics,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
 
                         AnalyticsHelper.setLogEvent(
                             Analytics.tappedInfoGraphicsMore);
@@ -281,7 +293,11 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                         left: 6.0, right: 16.0, bottom: 16.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: widget.searchQuery != null ? listData.length : 5,
+                    itemCount: widget.searchQuery != null
+                        ? listData.length
+                        : listData.length < 5
+                            ? listData.length
+                            : 5,
                     itemBuilder: (context, index) {
                       final DocumentSnapshot document = listData[index];
                       return Container(
@@ -315,7 +331,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                   ),
                                 ),
                               ),
-                              onTap: () {
+                              onTap: () async {
                                 setState(() {
                                   labelNew.readNewInfo(
                                       document.id,
@@ -324,6 +340,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                           .toString(),
                                       dataLabel,
                                       Dictionary.labelInfoGraphic);
+                                  widget.covidInformationScreenState.widget
+                                      .homeScreenState
+                                      .getAllUnreadData();
                                 });
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
@@ -341,7 +360,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                               children: <Widget>[
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () {
+                                    onTap: () async {
                                       setState(() {
                                         labelNew.readNewInfo(
                                             document.id,
@@ -350,6 +369,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                 .toString(),
                                             dataLabel,
                                             Dictionary.labelInfoGraphic);
+                                        widget.covidInformationScreenState
+                                            .widget.homeScreenState
+                                            .getAllUnreadData();
                                       });
                                       Navigator.of(context).push(
                                           MaterialPageRoute(

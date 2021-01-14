@@ -9,7 +9,6 @@ class NavigationConstrants {
   static const String Phonebook = "/phonebook";
   static const String Browser = "/browser";
   static const String BroadcastDetail = "/broadcast-detail";
-  static const String ImportantInfoList = "/important-info-list";
   static const String VideoList = "/videos";
   static const String Edit = "/edit";
   static const String Verification = "/verifikasi";

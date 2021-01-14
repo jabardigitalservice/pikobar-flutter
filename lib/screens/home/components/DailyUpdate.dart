@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/ImportantInfoListBloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -19,21 +20,21 @@ class DailyUpdateScreen extends StatefulWidget {
 }
 
 class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
-  NewsListBloc newsListBloc;
+  ImportantInfoListBloc newsListBloc;
 
   @override
   void initState() {
-    newsListBloc = BlocProvider.of<NewsListBloc>(context);
-    newsListBloc.add(NewsListLoad(kImportantInfor));
+    newsListBloc = BlocProvider.of<ImportantInfoListBloc>(context);
+    newsListBloc.add(ImportantInfoListLoad(kImportantInfor));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewsListBloc, NewsListState>(
+    return BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
       builder: (context, state) {
-        return state is NewsListLoaded
-            ? _buildContent(state.newsList)
+        return state is ImpoftantInfoListLoaded
+            ? _buildContent(state.imporntantinfoList)
             : Container();
       },
     );

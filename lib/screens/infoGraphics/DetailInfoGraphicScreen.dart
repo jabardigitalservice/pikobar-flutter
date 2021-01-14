@@ -5,21 +5,20 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/components/ShareButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/infoGraphics/infoGraphicsServices.dart';
@@ -52,135 +51,76 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> dataUrl = getDataUrl();
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 360,
-                      width: MediaQuery.of(context).size.width,
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          initialPage: 0,
-                          enableInfiniteScroll:
-                              dataUrl.length > 1 ? true : false,
-                          aspectRatio: 9 / 9,
-                          viewportFraction: 1.0,
-                          autoPlay: dataUrl.length > 1 ? true : false,
-                          autoPlayInterval: Duration(seconds: 5),
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _current = index;
-                            });
-                          },
-                        ),
-                        items: dataUrl.map((String data) {
-                          return Builder(builder: (BuildContext context) {
-                            return GestureDetector(
-                              child: Stack(
-                                children: [
-                                  CachedNetworkImage(
-                                      imageUrl: data ?? '',
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                      placeholder: (context, url) => Center(
-                                          heightFactor: 10.2,
-                                          child: CupertinoActivityIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(5.0),
-                                                    topRight:
-                                                        Radius.circular(5.0)),
-                                              ),
-                                              child: PikobarPlaceholder())),
-                                  Container(
-                                    height: 360,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Colors.black.withOpacity(0.6),
-                                          Colors.transparent,
-                                        ],
-                                        stops: [0.0, 1.0],
+    return Scaffold(
+        appBar: CustomAppBar.defaultAppBar(title: Dictionary.infoGraphics),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                CarouselSlider(
+                  options: CarouselOptions(
+                    initialPage: 0,
+                    enableInfiniteScroll: dataUrl.length > 1 ? true : false,
+                    aspectRatio: 9 / 9,
+                    viewportFraction: 1.0,
+                    autoPlay: dataUrl.length > 1 ? true : false,
+                    autoPlayInterval: Duration(seconds: 5),
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
+                  items: dataUrl.map((String data) {
+                    return Builder(builder: (BuildContext context) {
+                      return GestureDetector(
+                        child: Container(
+                          decoration: BoxDecoration(shape: BoxShape.circle),
+                          child: ClipRRect(
+                            child: CachedNetworkImage(
+                                imageUrl: data ?? '',
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
+                                placeholder: (context, url) => Center(
+                                    heightFactor: 10.2,
+                                    child: CupertinoActivityIndicator()),
+                                errorWidget: (context, url, error) => Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(5.0),
+                                          topRight: Radius.circular(5.0)),
+                                    ),
+                                    child: PikobarPlaceholder())),
+                          ),
+                        ),
+                        onTap: () {
+                          if (data.isNotEmpty) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => HeroImagePreview(
+                                    Dictionary.heroImageTag,
+                                    galleryItems: dataUrl,
                                   ),
-                                ],
-                              ),
-                              onTap: () {
-                                if (data.isNotEmpty) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => HeroImagePreview(
-                                          Dictionary.heroImageTag,
-                                          galleryItems: dataUrl,
-                                        ),
-                                      ));
-                                }
-                              },
-                            );
-                          });
-                        }).toList(),
-                      ),
-                    ),
-                    SafeArea(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.share,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              InfoGraphicsServices().shareInfoGraphics(
-                                  widget.dataInfoGraphic['title'],
-                                  widget.dataInfoGraphic['images']);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                                ));
+                          }
+                        },
+                      );
+                    });
+                  }).toList(),
                 ),
-                Container(
-                  alignment: Alignment.center,
+                Padding(
                   padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: dataUrl.map((String data) {
                       int index = dataUrl.indexOf(data);
                       return _current == index
@@ -243,39 +183,44 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
+                            ShareButton(
+                              height: 20,
+                              paddingLeft: 0,
+                              alignmentIcon: Alignment.topRight,
+                              onPressed: () {
+                                InfoGraphicsServices().shareInfoGraphics(
+                                    widget.dataInfoGraphic['title'],
+                                    widget.dataInfoGraphic['images']);
+                              },
+                            )
                           ]),
                     ],
                   ),
                 ),
+                Container(
+                  padding: EdgeInsets.only(top: 10, left: 16, right: 16),
+                  child: RoundedButton(
+                      borderRadius: BorderRadius.circular(10.0),
+                      title: Dictionary.downloadImage,
+                      color: ColorBase.green,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.lato,
+                      ),
+                      onPressed: () {
+                        Platform.isAndroid
+                            ? _downloadAttachment(
+                                widget.dataInfoGraphic['title'],
+                                widget.dataInfoGraphic['images'][_current])
+                            : _viewPdf(widget.dataInfoGraphic['title'],
+                                widget.dataInfoGraphic['images'][_current]);
+                      }),
+                )
               ],
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                padding: EdgeInsets.only(
-                    left: Dimens.padding, right: Dimens.padding, bottom: 32.0),
-                child: RoundedButton(
-                    borderRadius: BorderRadius.circular(10.0),
-                    title: Dictionary.downloadImage,
-                    color: ColorBase.green,
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato,
-                    ),
-                    onPressed: () {
-                      Platform.isAndroid
-                          ? _downloadAttachment(widget.dataInfoGraphic['title'],
-                              widget.dataInfoGraphic['images'][_current])
-                          : _viewPdf(widget.dataInfoGraphic['title'],
-                              widget.dataInfoGraphic['images'][_current]);
-                    }),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
   void _viewPdf(String title, String url) async {
@@ -348,10 +293,5 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

@@ -8,28 +8,44 @@ import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
+// ignore: must_be_immutable
 class VideosScreen extends StatelessWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  VideosScreen({this.covidInformationScreenState});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
       create: (context) => VideoListBloc()..add(LoadVideos()),
-      child: VideosList(),
+      child:
+          VideosList(covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
 
+// ignore: must_be_immutable
 class VideosList extends StatefulWidget {
+  CovidInformationScreenState covidInformationScreenState;
+
+  VideosList({this.covidInformationScreenState});
+
   @override
   _VideosListState createState() => _VideosListState();
 }
@@ -41,6 +57,9 @@ class _VideosListState extends State<VideosList> {
   Timer _debounce;
   List<VideoModel> listVideos;
   String searchQuery;
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   void initState() {
@@ -56,6 +75,18 @@ class _VideosListState extends State<VideosList> {
     return _scrollController.hasClients &&
         _scrollController.offset >
             0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   void _onSearchChanged() {
@@ -88,21 +119,24 @@ class _VideosListState extends State<VideosList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CollapsingAppbar(
-      searchBar: CustomAppBar.buildSearchField(
-          _searchController, Dictionary.searchInformation, updateSearchQuery),
-      showTitle: _showTitle,
-      titleAppbar: Dictionary.videoUpToDate,
-      scrollController: _scrollController,
-      body: BlocBuilder<VideoListBloc, VideoListState>(
-        builder: (context, state) {
-          return state is VideosLoading
-              ? _buildLoading()
-              : state is VideosLoaded
-                  ? _buildContent(state)
-                  : Container();
-        },
+        body: WillPopScope(
+      child: CollapsingAppbar(
+        searchBar: CustomAppBar.buildSearchField(
+            _searchController, Dictionary.searchInformation, updateSearchQuery),
+        showTitle: _showTitle,
+        titleAppbar: Dictionary.videoUpToDate,
+        scrollController: _scrollController,
+        body: BlocBuilder<VideoListBloc, VideoListState>(
+          builder: (context, state) {
+            return state is VideosLoading
+                ? _buildLoading()
+                : state is VideosLoaded
+                    ? _buildContent(state)
+                    : Container();
+          },
+        ),
       ),
+      onWillPop: _onWillPop,
     ));
   }
 
@@ -138,6 +172,11 @@ class _VideosListState extends State<VideosList> {
     );
   }
 
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
+  }
+
   _buildContent(VideosLoaded state) {
     if (searchQuery != null) {
       listVideos = state.videos
@@ -147,6 +186,8 @@ class _VideosListState extends State<VideosList> {
     } else {
       listVideos = state.videos;
     }
+
+    getDataLabel();
 
     return Container(
         child: listVideos.isNotEmpty
@@ -209,11 +250,24 @@ class _VideosListState extends State<VideosList> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      unixTimeStampToDateTime(
-                                          listVideos[index].publishedAt),
-                                      style: TextStyle(
-                                          fontSize: 16.0, color: Colors.white),
+                                    Row(
+                                      children: [
+                                        labelNew.isLabelNew(
+                                                listVideos[index].id.toString(),
+                                                dataLabel)
+                                            ? LabelNewScreen()
+                                            : Container(),
+                                        Expanded(
+                                          child: Text(
+                                            unixTimeStampToDateTime(
+                                                listVideos[index].publishedAt),
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.white,
+                                                fontFamily: FontsFamily.roboto),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                     SizedBox(
                                       height: 3,
@@ -223,7 +277,8 @@ class _VideosListState extends State<VideosList> {
                                       style: TextStyle(
                                           fontSize: 20.0,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.white),
+                                          color: Colors.white,
+                                          fontFamily: FontsFamily.roboto),
                                       textAlign: TextAlign.left,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
@@ -235,6 +290,18 @@ class _VideosListState extends State<VideosList> {
                           ),
                         ),
                         onTap: () {
+                          setState(() {
+                            labelNew.readNewInfo(
+                                listVideos[index].id,
+                                listVideos[index].publishedAt.toString(),
+                                dataLabel,
+                                Dictionary.labelVideos);
+                            if (widget.covidInformationScreenState != null) {
+                              widget.covidInformationScreenState.widget
+                                  .homeScreenState
+                                  .getAllUnreadData();
+                            }
+                          });
                           launchExternal(listVideos[index].url);
 
                           AnalyticsHelper.setLogEvent(

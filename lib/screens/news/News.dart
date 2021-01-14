@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
@@ -18,8 +19,9 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 // ignore: must_be_immutable
 class NewsListScreen extends StatelessWidget {
   String news;
+  CovidInformationScreenState covidInformationScreenState;
 
-  NewsListScreen({this.news});
+  NewsListScreen({this.news, this.covidInformationScreenState});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class NewsListScreen extends StatelessWidget {
             create: (context) => RemoteConfigBloc()..add(RemoteConfigLoad())),
         BlocProvider<NewsListBloc>(create: (context) => NewsListBloc())
       ],
-      child: News(news: news),
+      child: News(news: news, covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
@@ -37,8 +39,9 @@ class NewsListScreen extends StatelessWidget {
 // ignore: must_be_immutable
 class News extends StatefulWidget {
   String news;
+  CovidInformationScreenState covidInformationScreenState;
 
-  News({this.news});
+  News({this.news, this.covidInformationScreenState});
 
   @override
   _NewsState createState() => _NewsState();
@@ -109,10 +112,12 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-        builder: (context, state) {
-      return state is RemoteConfigLoaded ? buildContent(state) : Container();
-    }));
+    return Scaffold(body: WillPopScope(onWillPop: _onWillPop,
+      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+          builder: (context, state) {
+            return state is RemoteConfigLoaded ? buildContent(state) : Container();
+          }),
+    ));
   }
 
   buildContent(RemoteConfigLoaded state) {
@@ -147,12 +152,31 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         AnalyticsHelper.setLogEvent(analyticsData[index]);
       },
       tabBarView: <Widget>[
-        NewsScreen(news: Dictionary.allNews, searchQuery: searchQuery),
+        NewsScreen(
+            news: Dictionary.allNews,
+            searchQuery: searchQuery,
+            covidInformationScreenState: widget.covidInformationScreenState),
         if (statImportantInfo)
-          NewsScreen(news: Dictionary.importantInfo, searchQuery: searchQuery),
-        NewsScreen(news: Dictionary.latestNews, searchQuery: searchQuery),
-        NewsScreen(news: Dictionary.nationalNews, searchQuery: searchQuery),
-        NewsScreen(news: Dictionary.worldNews, searchQuery: searchQuery),
+          NewsScreen(
+            news: Dictionary.importantInfo,
+            searchQuery: searchQuery,
+            covidInformationScreenState: widget.covidInformationScreenState,
+          ),
+        NewsScreen(
+          news: Dictionary.latestNews,
+          searchQuery: searchQuery,
+          covidInformationScreenState: widget.covidInformationScreenState,
+        ),
+        NewsScreen(
+          news: Dictionary.nationalNews,
+          searchQuery: searchQuery,
+          covidInformationScreenState: widget.covidInformationScreenState,
+        ),
+        NewsScreen(
+          news: Dictionary.worldNews,
+          searchQuery: searchQuery,
+          covidInformationScreenState: widget.covidInformationScreenState,
+        ),
       ],
       isExpand: true,
     );
@@ -190,6 +214,11 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       _newsListBloc.add(NewsListLoad(listCollectionData[tabController.index],
           statImportantInfo: statImportantInfo));
     }
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
   }
 
   @override
