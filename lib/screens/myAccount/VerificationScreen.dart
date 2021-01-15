@@ -6,11 +6,13 @@ import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/ProfileState.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class Verification extends StatefulWidget {
@@ -55,6 +57,7 @@ class _VerificationState extends State<Verification> {
 
   @override
   void initState() {
+    AnalyticsHelper.setLogEvent(Analytics.tappedVerificationNumber);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
   }
@@ -311,6 +314,8 @@ class _VerificationState extends State<Verification> {
                                     InkWell(
                                       onTap: () {
                                         sendCodeToPhoneNumber();
+                                        AnalyticsHelper.setLogEvent(Analytics
+                                            .tappedSendAgainVerificationNumber);
                                       },
                                       child: Text(Dictionary.sendAgainOTP,
                                           style: TextStyle(

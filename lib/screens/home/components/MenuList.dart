@@ -253,6 +253,11 @@ class _MenuListState extends State<MenuList> {
           data: Theme.of(context).copyWith(
               dividerColor: Colors.transparent, accentColor: Colors.black),
           child: ExpansionTile(
+            onExpansionChanged: (bool isExpand) {
+              if (isExpand) {
+                AnalyticsHelper.setLogEvent(Analytics.tappedOthers);
+              }
+            },
             tilePadding: EdgeInsets.zero,
             title: Text(
               '${Dictionary.otherMenus} (${otherMenus.length})',
