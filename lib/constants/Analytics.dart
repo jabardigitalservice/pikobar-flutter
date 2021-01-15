@@ -92,6 +92,10 @@ class Analytics {
   // event FAQ
   static String tappedFaqSearch = 'tapped_faq_pencarian';
 
+  //event NPS
+  static String tappedSendNPS = 'tapped_submit_form_nps';
+  static String tappedSkipNPS = 'tapped_nanti_form_nps';
+
   // event Videos
   static String tappedVideoShare = 'tapped_video_share';
   static String tappedSearchVideo = 'tapped_cari_video';
