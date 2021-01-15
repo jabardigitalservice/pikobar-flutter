@@ -27,7 +27,7 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
 
   @override
   void initState() {
-    AnalyticsHelper.setCurrentScreen(Analytics.tappedTermsAndConditions);
+    AnalyticsHelper.setLogEvent(Analytics.tappedTermsAndConditions);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
   }
