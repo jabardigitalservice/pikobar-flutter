@@ -69,6 +69,21 @@ class _SocialMediaState extends State<SocialMedia> {
                 ),
               ),
             ),
+            SizedBox(
+              width: 20,
+            ),
+            InkWell(
+              onTap: () async {
+                launchUrl(kUrlFacebookPikobar);
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.05,
+                child: Image.asset(
+                  '${Environment.logoAssets}facebook_logo.png',
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
           ],
         ),
         SizedBox(
