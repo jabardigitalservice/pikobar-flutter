@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -12,6 +13,7 @@ import 'package:pikobar_flutter/screens/home/components/InfoGraphics.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 // ignore: must_be_immutable
@@ -104,6 +106,7 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
         setState(() {
           searchQuery = _searchController.text;
         });
+        AnalyticsHelper.setLogEvent(Analytics.tappedSearchCovidInformation);
       } else {
         _clearSearchQuery();
       }
