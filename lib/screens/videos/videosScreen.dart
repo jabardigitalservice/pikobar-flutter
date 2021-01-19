@@ -96,6 +96,7 @@ class _VideosListState extends State<VideosList> {
         setState(() {
           searchQuery = _searchController.text;
         });
+        AnalyticsHelper.setLogEvent(Analytics.tappedSearchVideo);
       } else {
         _clearSearchQuery();
       }

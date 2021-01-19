@@ -99,6 +99,7 @@ class _ZonationState extends State<Zonation> {
                 color: ColorBase.green,
                 elevation: 0.0,
                 onPressed: () async {
+                  AnalyticsHelper.setLogEvent(Analytics.tappedShareLocation);
                   await LocationService.initializeBackgroundLocation(context);
                 })
           ],
@@ -259,8 +260,7 @@ class _ZonationState extends State<Zonation> {
                           showTextBottomSheet(
                               context: context,
                               title: Dictionary.zonationSource,
-                              message:
-                              Dictionary.sourceZonationInfo);
+                              message: Dictionary.sourceZonationInfo);
                         },
                       ),
                     ],
@@ -308,6 +308,8 @@ class _ZonationState extends State<Zonation> {
                         onPressed: state is CheckDistributionLoading
                             ? null
                             : () async {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedArroundYouLocation);
                                 _checkDistributionBloc.add(
                                     LoadCheckDistribution(
                                         lat: position.latitude,

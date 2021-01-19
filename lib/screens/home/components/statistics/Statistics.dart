@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -16,6 +17,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/screens/home/components/statistics/StatisticsDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
@@ -79,6 +81,7 @@ class _StatisticsState extends State<Statistics> {
         ),
       ),
       onTap: () {
+        AnalyticsHelper.setLogEvent(Analytics.tappedMoreCaseDataJabar);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => StatisticsDetailScreen(
                 remoteConfigLoaded: remoteConfigLoaded,
@@ -402,7 +405,7 @@ class _StatisticsState extends State<Statistics> {
                     margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 16.0,
                             color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -465,22 +468,11 @@ class _StatisticsState extends State<Statistics> {
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 16.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
-                child: percentage != ''
-                    ? Text(percentage,
-                        style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff828282),
-                            fontFamily: FontsFamily.roboto))
-                    : null,
-              )
             ],
           ),
         ),
