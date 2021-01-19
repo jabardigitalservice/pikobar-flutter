@@ -402,7 +402,7 @@ class _StatisticsState extends State<Statistics> {
                     margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 16.0,
                             color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -465,22 +465,11 @@ class _StatisticsState extends State<Statistics> {
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 16.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
-                child: percentage != ''
-                    ? Text(percentage,
-                        style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff828282),
-                            fontFamily: FontsFamily.roboto))
-                    : null,
-              )
             ],
           ),
         ),
