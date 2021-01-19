@@ -35,7 +35,9 @@ class BannerListSliderState extends State<BannerListSlider> {
       builder: (context, state) {
         return state is BannersLoading
             ? _buildLoading()
-            : state is BannersLoaded ? _buildSlider(state) : _buildLoading();
+            : state is BannersLoaded
+                ? _buildSlider(state)
+                : _buildLoading();
       },
     );
   }
@@ -120,8 +122,11 @@ class BannerListSliderState extends State<BannerListSlider> {
                         if (data.actionUrl != null) {
                           _clickAction(
                               url: data.actionUrl, isLoginRequired: data.login);
-                          AnalyticsHelper.setLogEvent(Analytics.tappedBanner,
-                              <String, dynamic>{'url': data.actionUrl});
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedBanner, <String, dynamic>{
+                            'url': data.actionUrl,
+                            'title': data.title
+                          });
                         }
                       },
                     );
@@ -136,7 +141,8 @@ class BannerListSliderState extends State<BannerListSlider> {
               ),
         Padding(
           padding: EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: state.records.map((BannerModel data) {
               int index = state.records.indexOf(data);
               return _current == index

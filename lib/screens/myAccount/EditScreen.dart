@@ -75,12 +75,12 @@ class _EditState extends State<Edit> {
 
   @override
   void initState() {
+    AnalyticsHelper.setLogEvent(Analytics.tappedEditProfile);
     _nameController.text = getField(widget.state, 'name');
     _emailController.text = getField(widget.state, 'email');
-    _phoneNumberController.text =
-        getField(widget.state, 'phone_number') != null
-            ? '0' + widget.state['phone_number'].toString().substring(3)
-            : null;
+    _phoneNumberController.text = getField(widget.state, 'phone_number') != null
+        ? '0' + widget.state['phone_number'].toString().substring(3)
+        : null;
     _addressController.text = getField(widget.state, 'address');
     _birthDayController.text = getField(widget.state, 'birthdate') == null
         ? null
@@ -840,7 +840,6 @@ class _EditState extends State<Edit> {
               ),
             ],
           ),
-          
           SizedBox(
             height: 10,
           ),

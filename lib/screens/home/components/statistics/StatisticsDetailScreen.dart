@@ -355,22 +355,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
               child: Text(count,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 16.0,
                       color: ColorBase.veryDarkGrey,
                       fontWeight: FontWeight.bold,
                       fontFamily: FontsFamily.roboto)),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 10, left: 5.0),
-              child: percentage != ''
-                  ? Text(percentage,
-                      style: TextStyle(
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff828282),
-                          fontFamily: FontsFamily.roboto))
-                  : null,
-            )
           ],
         ),
       ),
@@ -428,7 +417,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             child: Text(mainCount,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 16.0,
                     color: ColorBase.veryDarkGrey,
                     fontWeight: FontWeight.bold,
                     fontFamily: FontsFamily.roboto)),
@@ -455,20 +444,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       child: Text(secondCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 16.0,
                               color: ColorBase.darkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(secondPercentage,
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              fontWeight: FontWeight.bold,
-                              color: ColorBase.darkGrey,
-                              fontFamily: FontsFamily.roboto)),
-                    )
                   ],
                 ),
               ),
@@ -500,20 +480,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       child: Text(thirdCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 16.0,
                               color: ColorBase.darkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(thirdPercentage,
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              fontWeight: FontWeight.bold,
-                              color: ColorBase.darkGrey,
-                              fontFamily: FontsFamily.roboto)),
-                    )
                   ],
                 ),
               ),
@@ -548,20 +519,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             child: Text(fourthCount ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 20.0,
+                                    fontSize: 16.0,
                                     color: ColorBase.darkGrey,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: FontsFamily.roboto)),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 10),
-                            child: Text(fourthPercentage ?? '',
-                                style: TextStyle(
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorBase.darkGrey,
-                                    fontFamily: FontsFamily.roboto)),
-                          )
                         ],
                       ),
                     )
