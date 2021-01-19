@@ -53,7 +53,7 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
           ),
         );
 
-        AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+        AnalyticsHelper.setLogEvent(Analytics.tappedDailyUpdate,
             <String, dynamic>{'title': list[0].title});
       },
       child: Container(

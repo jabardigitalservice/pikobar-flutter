@@ -452,6 +452,10 @@ class BuildButtonMenu extends StatelessWidget {
           } else if (iconPath ==
               '${Environment.iconAssets}conversation_active.png') {
             AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+          } else if (defaultLabel == Dictionary.bansos) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedBansos);
+          } else if (defaultLabel == Dictionary.massiveTestRegistration) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedMassiveTest);
           }
         }
       },
