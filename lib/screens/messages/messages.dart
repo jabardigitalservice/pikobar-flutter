@@ -53,39 +53,40 @@ class _MessagesState extends State<Messages> {
         backgroundColor: Colors.white,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FutureBuilder<int>(
-          future: MessageRepository().hasUnreadData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data != 0) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 30),
-                child: RaisedButton(
-                  color: ColorBase.primaryLightGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: ColorBase.primaryGreen)),
-                  onPressed: () async {
-                    await MessageRepository().updateAllReadData();
-                    widget.indexScreenState.getCountMessage();
-                    setState(() {
-                      for (int i = 0; i < listMessage.length; i++) {
-                        listMessage[i].readAt = 1;
-                      }
-                    });
-                  },
-                  child: Text(
-                    Dictionary.markAsRead,
-                    style: TextStyle(
-                        color: ColorBase.primaryGreen,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 11),
+            future: MessageRepository().hasUnreadData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data != 0) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: RaisedButton(
+                    color: ColorBase.primaryLightGreen,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: ColorBase.primaryGreen)),
+                    onPressed: () async {
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedReadAllMessage);
+                      await MessageRepository().updateAllReadData();
+                      widget.indexScreenState.getCountMessage();
+                      setState(() {
+                        for (int i = 0; i < listMessage.length; i++) {
+                          listMessage[i].readAt = 1;
+                        }
+                      });
+                    },
+                    child: Text(
+                      Dictionary.markAsRead,
+                      style: TextStyle(
+                          color: ColorBase.primaryGreen,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: 11),
+                    ),
                   ),
-                ),
-              );
-            }
+                );
+              }
               return Container();
-          }
-        ),
+            }),
         appBar: CustomAppBar.animatedAppBar(
             title: Dictionary.message, showTitle: true, fontSize: 20),
         body: _buildContent());
