@@ -322,10 +322,10 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                     ),
                     _buildContainer(
                       imageDisable:
-                          '${Environment.iconAssets}runway_disable.png',
+                          '${Environment.iconAssets}history_contact_disable.png',
                       imageEnable:
-                          '${Environment.iconAssets}runway_enable.png',
-                      title: Dictionary.historyTravel,
+                          '${Environment.iconAssets}history_contact_enable.png',
+                      title: Dictionary.historyContact,
                       length: 2,
                       onPressedEnable: () {
                         if (latLng == null ||
