@@ -76,9 +76,8 @@ class _SocialMediaState extends State<SocialMedia> {
             ),
             InkWell(
               onTap: () async {
-                launchUrl(Platform.isIOS
-                    ? kUrlFacebookPikobarIos
-                    : kUrlFacebookPikobar);
+                launchUrlFacebook(
+                    kUrlFacebookPikobarProtocol, kUrlFacebookPikobar);
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.05,
@@ -105,6 +104,20 @@ class _SocialMediaState extends State<SocialMedia> {
       );
     } else {
       throw 'There was a problem to open the url: $url';
+    }
+  }
+
+  launchUrlFacebook(String urlProtocol, String url) async {
+    if (await canLaunch(urlProtocol)) {
+      await launch(
+        urlProtocol,
+        universalLinksOnly: true,
+      );
+    } else {
+      await launch(
+        url,
+        universalLinksOnly: true,
+      );
     }
   }
 }
