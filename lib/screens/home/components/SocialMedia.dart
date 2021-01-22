@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -74,7 +76,9 @@ class _SocialMediaState extends State<SocialMedia> {
             ),
             InkWell(
               onTap: () async {
-                launchUrl(kUrlFacebookPikobar);
+                launchUrl(Platform.isIOS
+                    ? kUrlFacebookPikobarIos
+                    : kUrlFacebookPikobar);
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.05,

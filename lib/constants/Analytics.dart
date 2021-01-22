@@ -166,7 +166,7 @@ class Analytics {
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
 
   static String crowdReport = "tapped_lapor_kerumunan";
-
+  
   //event profile
   static String tappedEditProfile = "tapped_edit_akun";
   static String tappedVerificationNumber = "tapped_verifikasi_nomor";
