@@ -347,14 +347,18 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                       title: Dictionary.save,
                       elevation: 0.0,
-                      color: ColorBase.green,
+                      color: isEmptyField()
+                          ? ColorBase.disableText
+                          : ColorBase.green,
                       textStyle: TextStyle(
                           fontFamily: FontsFamily.roboto,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w900,
                           color: Colors.white),
                       onPressed: () {
-                        if (_bodyTempController.text.isEmpty) {
+                        if (isEmptyField()) {
+                          
+                        } else if (_bodyTempController.text.isEmpty) {
                           // Bottom sheet temperature message
                           showSuccessBottomSheet(
                               context: context,
@@ -471,6 +475,24 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             : Container()
       ],
     );
+  }
+
+  bool isEmptyField() {
+    if (widget.dailyId == '1') {
+      if (_checkedItemList.isEmpty ||
+          _dateController.text.isEmpty ||
+          _quarantineDateController.text.isEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (_checkedItemList.isEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   // Function to build Date Picker
