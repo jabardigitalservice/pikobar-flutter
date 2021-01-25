@@ -291,7 +291,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                             Text(
                                               newsmodel.title,
                                               style: TextStyle(
-                                                  fontSize: 14.0,
+                                                  fontSize: Dimens.textSubtitleSize,
                                                   fontFamily:
                                                       FontsFamily.roboto,
                                                   fontWeight: FontWeight.w600),
