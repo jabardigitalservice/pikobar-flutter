@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    AnalyticsHelper.setCurrentScreen(Analytics.profile);
+    AnalyticsHelper.setLogEvent(Analytics.tappedProfile);
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       setState(() {
         _versionText = packageInfo.version != null
