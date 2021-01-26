@@ -248,7 +248,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
               title,
               style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontFamily: FontsFamily.lato,
+                  fontFamily: FontsFamily.roboto,
                   fontSize: widget.sizeLabel ?? 10.0),
             ),
           ),
