@@ -313,7 +313,7 @@ class _VideoListState extends State<VideoList> {
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                                              fontSize: 14.0,
+                                              fontSize: Dimens.textSubtitleSize,
                                               fontFamily: FontsFamily.roboto,
                                               fontWeight: FontWeight.w600),
                                         ),
