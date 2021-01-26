@@ -356,23 +356,23 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           fontWeight: FontWeight.w900,
                           color: Colors.white),
                       onPressed: () {
-                        if (isEmptyField()) {
-                          
-                        } else if (_bodyTempController.text.isEmpty) {
-                          // Bottom sheet temperature message
-                          showSuccessBottomSheet(
-                              context: context,
-                              image: Image.asset(
-                                  '${Environment.imageAssets}temperature_info.png'),
-                              title:
-                                  Dictionary.additionalTemperatureInformation,
-                              message: Dictionary.descTemperatureInformation,
-                              onPressed: () {
-                                Navigator.of(context).pop(true);
-                                _saveSelfReport();
-                              });
-                        } else {
-                          _saveSelfReport();
+                        if (!isEmptyField()) {
+                          if (_bodyTempController.text.isEmpty) {
+                            // Bottom sheet temperature message
+                            showSuccessBottomSheet(
+                                context: context,
+                                image: Image.asset(
+                                    '${Environment.imageAssets}temperature_info.png'),
+                                title:
+                                    Dictionary.additionalTemperatureInformation,
+                                message: Dictionary.descTemperatureInformation,
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  _saveSelfReport();
+                                });
+                          } else {
+                            _saveSelfReport();
+                          }
                         }
                       }),
                   SizedBox(height: Dimens.padding),
@@ -479,19 +479,11 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
 
   bool isEmptyField() {
     if (widget.dailyId == '1') {
-      if (_checkedItemList.isEmpty ||
+      return _checkedItemList.isEmpty ||
           _dateController.text.isEmpty ||
-          _quarantineDateController.text.isEmpty) {
-        return true;
-      } else {
-        return false;
-      }
+          _quarantineDateController.text.isEmpty;
     } else {
-      if (_checkedItemList.isEmpty) {
-        return true;
-      } else {
-        return false;
-      }
+      return _checkedItemList.isEmpty;
     }
   }
 
