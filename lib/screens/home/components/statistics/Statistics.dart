@@ -468,7 +468,7 @@ class _StatisticsState extends State<Statistics> {
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 16.0,
+                        fontSize: 15.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
