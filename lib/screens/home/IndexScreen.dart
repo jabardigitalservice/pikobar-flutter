@@ -307,7 +307,7 @@ class IndexScreenState extends State<IndexScreen> {
               child: Container(
                 width: 60,
                 height: 60,
-                margin: EdgeInsets.only(bottom: 30.0),
+                margin: EdgeInsets.only(bottom: 22.0),
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
