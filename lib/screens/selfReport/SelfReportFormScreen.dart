@@ -347,28 +347,32 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                       title: Dictionary.save,
                       elevation: 0.0,
-                      color: ColorBase.green,
+                      color: isEmptyField()
+                          ? ColorBase.disableText
+                          : ColorBase.green,
                       textStyle: TextStyle(
                           fontFamily: FontsFamily.roboto,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w900,
                           color: Colors.white),
                       onPressed: () {
-                        if (_bodyTempController.text.isEmpty) {
-                          // Bottom sheet temperature message
-                          showSuccessBottomSheet(
-                              context: context,
-                              image: Image.asset(
-                                  '${Environment.imageAssets}temperature_info.png'),
-                              title:
-                                  Dictionary.additionalTemperatureInformation,
-                              message: Dictionary.descTemperatureInformation,
-                              onPressed: () {
-                                Navigator.of(context).pop(true);
-                                _saveSelfReport();
-                              });
-                        } else {
-                          _saveSelfReport();
+                        if (!isEmptyField()) {
+                          if (_bodyTempController.text.isEmpty) {
+                            // Bottom sheet temperature message
+                            showSuccessBottomSheet(
+                                context: context,
+                                image: Image.asset(
+                                    '${Environment.imageAssets}temperature_info.png'),
+                                title:
+                                    Dictionary.additionalTemperatureInformation,
+                                message: Dictionary.descTemperatureInformation,
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  _saveSelfReport();
+                                });
+                          } else {
+                            _saveSelfReport();
+                          }
                         }
                       }),
                   SizedBox(height: Dimens.padding),
@@ -471,6 +475,16 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             : Container()
       ],
     );
+  }
+
+  bool isEmptyField() {
+    if (widget.dailyId == '1') {
+      return _checkedItemList.isEmpty ||
+          _dateController.text.isEmpty ||
+          _quarantineDateController.text.isEmpty;
+    } else {
+      return _checkedItemList.isEmpty;
+    }
   }
 
   // Function to build Date Picker

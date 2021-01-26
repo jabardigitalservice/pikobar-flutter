@@ -61,8 +61,6 @@ class Dictionary {
   static String checkLocationSpreadDesc =
       'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol Cek Lokasi Saat Ini';
   static String phoneNumberHasBeenUsed = 'No telepon sudah digunakan';
-
-
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String qrCode = 'QR Code';
   static String qrCodeDesc = 'Pindai QR Code di bawah untuk melakukan validasi';
@@ -78,20 +76,18 @@ class Dictionary {
   static String referralHospital = 'RS Rujukan COVID-19';
   static String callCenterArea = 'Call Center Kota/Kab';
   static String gugusTugasWeb = 'Website Gugus Tugas Kota/Kabupaten Jawa Barat';
-
   static String locationAddress = 'Lokasi Tempat Tinggal';
   static String center = "Pusat";
   static String who = "WHO";
   static String sayThanks = "Terima kasih sudah membaca";
   static String followOurSosmed = "Follow juga sosmed kami";
   static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
-
   static String jabarToday = "Jabar Hari Ini";
   static String covidInformation = "Informasi COVID-19";
   static String requiredForm = ' • Harus Diisi';
   static String verificationNumber = 'Verifikasi Nomor';
-
   static String newLabel = 'Baru';
+  static String travelHistoryReport = 'Lapor Aktivitas Berpegian';
 
   // Button Text
   static String cancel = 'Batal';
@@ -307,7 +303,7 @@ class Dictionary {
   static String quarantineDate = 'Tanggal Awal Karantina';
   static String contactDateCovid =
       'Tanggal Terakhir Bertemu Dengan Terduga COVID-19';
-  static String selfReportForm = 'Form Lapor  Kesehatan Harian';
+  static String selfReportForm = 'Form Lapor Kesehatan Harian';
   static String additionalTemperatureInformation = 'Informasi Tambahan';
   static String descTemperatureInformation =
       'Agar dapat memantau suhu tubuh secara akurat, penting bagi Anda untuk memiliki thermometer selama isolasi mandiri.';
@@ -366,6 +362,9 @@ class Dictionary {
   static String previewData = 'Cek Kembali Data Anda';
   static String reportForMySelf = 'Lapor Untuk Diri Sendiri';
   static String reportForOther = 'Lapor Untuk Orang Lain';
+  static String setLocationTravelHistory = 'Pilih Lokasi Saat Ini';
+  static String selfReportTravelHistory = 'Lihat Riwayat Check-in';
+  static String noLocation = 'Tidak Ada Lokasi?';
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';
@@ -402,9 +401,10 @@ class Dictionary {
       'Apa yang membuat Anda memberikan penilaian bagus kepada kami?';
   static const String hintFeedbackField = 'Kirimkan tanggapan Anda di sini...';
   static const String nspSuccessTitle = 'Terima Kasih Atas Tanggapannya';
-  static const String nspSuccessDesc = 'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
-  
-   //Shared Preference Label Name
+  static const String nspSuccessDesc =
+      'Masukkan Anda telah kami terima. Terima kasih telah membantu kami agar Jawa Barat lebih baik lagi';
+
+  //Shared Preference Label Name
   static const String labelInfoGraphic = 'labelnewinfographic';
   static const String labelNews = 'labellatestnews';
   static const String labelVideos = 'labelnewvideos';
