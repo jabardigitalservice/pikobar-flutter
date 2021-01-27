@@ -31,7 +31,8 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 class InfoGraphicsScreen extends StatefulWidget {
   CovidInformationScreenState covidInformationScreenState;
 
-  InfoGraphicsScreen({this.covidInformationScreenState});
+  InfoGraphicsScreen({Key key, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _InfoGraphicsScreenState createState() => _InfoGraphicsScreenState();
@@ -111,34 +112,35 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               ..add(InfoGraphicsListLoad(
                   infoGraphicsCollection: kAllInfographics)),
           ),
-      ],
-      child: Container(
-          child: CustomBubbleTab(
-        isStickyHeader: true,
-        titleHeader: Dictionary.infoGraphics,
-        listItemTitleTab: listItemTitleTab,
-        indicatorColor: ColorBase.green,
-        labelColor: Colors.white,
-        showTitle: _showTitle,
-        sizeLabel: 13.0,
-        isScrollable: false,
-        searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery, margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
-        unselectedLabelColor: Colors.grey,
-        scrollController: _scrollController,
-        onTap: (index) {
-          setState(() {});
-          isSetDataCurrent = false;
-          _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-              infoGraphicsCollection: listCollectionData[index]));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        },
-        tabBarView: <Widget>[
-          _buildInfoGraphic(),
-          _buildInfoGraphic(),
-          _buildInfoGraphic(),
-          _buildInfoGraphic(),
         ],
+        child: Container(
+            child: CustomBubbleTab(
+          isStickyHeader: true,
+          titleHeader: Dictionary.infoGraphics,
+          listItemTitleTab: listItemTitleTab,
+          indicatorColor: ColorBase.green,
+          labelColor: Colors.white,
+          showTitle: _showTitle,
+          sizeLabel: 13.0,
+          isScrollable: false,
+          searchBar: CustomAppBar.buildSearchField(_searchController,
+              Dictionary.searchInformation, updateSearchQuery,
+              margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
+          unselectedLabelColor: Colors.grey,
+          scrollController: _scrollController,
+          onTap: (index) {
+            setState(() {});
+            isSetDataCurrent = false;
+            _infoGraphicsListBloc.add(InfoGraphicsListLoad(
+                infoGraphicsCollection: listCollectionData[index]));
+            AnalyticsHelper.setLogEvent(analyticsData[index]);
+          },
+          tabBarView: <Widget>[
+            _buildInfoGraphic(),
+            _buildInfoGraphic(),
+            _buildInfoGraphic(),
+            _buildInfoGraphic(),
+          ],
           heightTabBarView: MediaQuery.of(context).size.height - 148,
         )),
       ),
@@ -336,7 +338,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                                     unixTimeStampToDateTime(
                                         data['published_date'].seconds),
                                     style: TextStyle(
-                                        fontSize: 16.0, color: Colors.white, fontFamily: FontsFamily.roboto),
+                                        fontSize: 16.0,
+                                        color: Colors.white,
+                                        fontFamily: FontsFamily.roboto),
                                   ),
                                 )
                               ],
@@ -349,7 +353,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                               style: TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white, fontFamily: FontsFamily.roboto),
+                                  color: Colors.white,
+                                  fontFamily: FontsFamily.roboto),
                               textAlign: TextAlign.left,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,

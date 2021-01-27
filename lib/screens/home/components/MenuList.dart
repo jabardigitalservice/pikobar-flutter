@@ -301,7 +301,8 @@ class BuildButtonMenu extends StatelessWidget {
   final String remoteMenuLoginKey;
 
   const BuildButtonMenu(
-      {@required this.remoteConfig,
+      {Key key,
+      @required this.remoteConfig,
       @required this.iconPath,
       @required this.defaultLabel,
       this.firebaseConfigLabel,
@@ -312,7 +313,8 @@ class BuildButtonMenu extends StatelessWidget {
       : assert(remoteConfig != null),
         assert(iconPath != null),
         assert(defaultLabel != null),
-        assert(route != null);
+        assert(route != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
