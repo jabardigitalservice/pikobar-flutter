@@ -327,8 +327,8 @@ class _VideoListState extends State<VideoList> {
                                     : Container(),
                                 Expanded(
                                   child: Text(
-                                    unixTimeStampToDateTime(
-                                        data[index].publishedAt),
+                                    unixTimeStampToCustomDateFormat(
+                                        data[index].publishedAt, 'EEEE, dd MMM yyyy'),
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontFamily: FontsFamily.roboto,

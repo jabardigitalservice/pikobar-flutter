@@ -410,9 +410,9 @@ class _DocumentsState extends State<Documents> {
                                                   : Container(),
                                               Expanded(
                                                 child: Text(
-                                                  unixTimeStampToDateTime(
+                                                  unixTimeStampToCustomDateFormat(
                                                       document['published_at']
-                                                          .seconds),
+                                                          .seconds, 'EEEE, dd MMM yyyy'),
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:

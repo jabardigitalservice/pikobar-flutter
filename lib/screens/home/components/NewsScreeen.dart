@@ -314,8 +314,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                                     : Container(),
                                                 Expanded(
                                                   child: Text(
-                                                    unixTimeStampToDateTime(
-                                                        newsmodel.publishedAt),
+                                                    unixTimeStampToCustomDateFormat(
+                                                        newsmodel.publishedAt, 'EEEE, dd MMM yyyy'),
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontFamily:

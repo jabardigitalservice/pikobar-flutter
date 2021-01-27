@@ -248,7 +248,7 @@ class _StatisticsState extends State<Statistics> {
           ),
           SizedBox(height: 10),
           Text(
-            unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
+            unixTimeStampToCustomDateFormat(data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
             style: TextStyle(
                 color: Color(0xff333333),
                 fontFamily: FontsFamily.roboto,
