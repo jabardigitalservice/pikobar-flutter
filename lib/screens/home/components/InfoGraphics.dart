@@ -416,9 +416,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                   : Container(),
                                               Expanded(
                                                 child: Text(
-                                                  unixTimeStampToDateTime(
+                                                  unixTimeStampToCustomDateFormat(
                                                       document['published_date']
-                                                          .seconds),
+                                                          .seconds, 'EEEE, dd MMM yyyy'),
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:
