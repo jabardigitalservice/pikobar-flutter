@@ -176,8 +176,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   height: 265,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
-                      padding: const EdgeInsets.only(
-                          left: 6.0, right: 16.0, bottom: 16.0),
+                      padding: const EdgeInsets.only(right: Dimens.padding, bottom: Dimens.padding),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemCount: list.length < widget.maxLength
@@ -186,8 +185,9 @@ class _NewsScreenState extends State<NewsScreen> {
                       itemBuilder: (context, index) {
                         NewsModel newsmodel = list[index];
                         return Container(
-                          padding: EdgeInsets.only(left: 10),
-                          width: 150,
+                          padding: EdgeInsets.only(left: Dimens.padding),
+                          width: 150.0,
+                          height: 150.0,
                           child: Column(
                             children: <Widget>[
                               InkWell(
@@ -314,8 +314,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                                     : Container(),
                                                 Expanded(
                                                   child: Text(
-                                                    unixTimeStampToDateTime(
-                                                        newsmodel.publishedAt),
+                                                    unixTimeStampToCustomDateFormat(
+                                                        newsmodel.publishedAt, 'EEEE, dd MMM yyyy'),
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontFamily:
@@ -677,10 +677,10 @@ class _NewsScreenState extends State<NewsScreen> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: widget.maxLength != null ? widget.maxLength : 6,
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(right: Dimens.padding, top: Dimens.padding, bottom: Dimens.padding),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                padding: const EdgeInsets.only(left: Dimens.padding),
                 height: 300.0,
                 child: Row(
                   children: <Widget>[

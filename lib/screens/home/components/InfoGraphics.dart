@@ -172,15 +172,15 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       height: 265,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
-          padding: const EdgeInsets.only(
-              left: 11.0, right: 16.0, top: 16.0, bottom: 16.0),
+          padding: const EdgeInsets.only(right: Dimens.padding, top: Dimens.padding, bottom: Dimens.padding),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: 3,
           itemBuilder: (context, index) {
             return Container(
-                width: 150,
-                padding: EdgeInsets.only(left: 10),
+                width: 150.0,
+                height: 150.0,
+                padding: const EdgeInsets.only(left: Dimens.padding),
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -289,8 +289,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 height: 265,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(
-                        left: 6.0, right: 16.0, bottom: 16.0),
+                    padding: const EdgeInsets.only(right: Dimens.padding, bottom: Dimens.padding),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.searchQuery != null
@@ -301,8 +300,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                     itemBuilder: (context, index) {
                       final DocumentSnapshot document = listData[index];
                       return Container(
-                        padding: EdgeInsets.only(left: 10),
-                        width: 150,
+                        padding: EdgeInsets.only(left: Dimens.padding),
+                        width: 150.0,
+                        height: 150.0,
                         child: Column(
                           children: <Widget>[
                             InkWell(
@@ -416,9 +416,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                   : Container(),
                                               Expanded(
                                                 child: Text(
-                                                  unixTimeStampToDateTime(
+                                                  unixTimeStampToCustomDateFormat(
                                                       document['published_date']
-                                                          .seconds),
+                                                          .seconds, 'EEEE, dd MMM yyyy'),
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:

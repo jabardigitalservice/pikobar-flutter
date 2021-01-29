@@ -22,6 +22,13 @@ String unixTimeStampToDateTimeWithoutDayAndHour(int millisecond) {
   return dateTimeString;
 }
 
+String unixTimeStampToCustomDateFormat(int millisecond, String dateFormat) {
+  var format = DateFormat(dateFormat, 'id');
+  var dateTimeString =
+  format.format(DateTime.fromMillisecondsSinceEpoch(millisecond * 1000));
+  return dateTimeString;
+}
+
 String unixTimeStampToDate(int millisecond) {
   var format = DateFormat.yMMMMEEEEd('id');
   var dateString =
