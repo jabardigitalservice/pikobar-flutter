@@ -15,11 +15,13 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
@@ -152,29 +154,31 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 );
               } else if (state is AuthenticationAuthenticated ||
                   state is AuthenticationLoading) {
-                return BlocBuilder<ProfileBloc, ProfileState>(builder: (
-                  BuildContext context,
-                  ProfileState state,
-                ) {
-                  if (state is ProfileLoading) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is ProfileLoaded) {
-                    ProfileLoaded _getProfile = state;
-                    return _getProfile.profile.exists
-                        ? _buildContent(_getProfile.profile)
-                        : _buildContent(null);
-                  } else {
-                    _profileBloc.add(ProfileLoad(
-                        uid: profileLoaded != null
+                return StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection(kUsers)
+                        .doc(profileLoaded != null
                             ? profileLoaded.record.uid
-                            : null));
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                });
+                            : null)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError)
+                        // Show error ui when unable to get data
+                        return ErrorContent(error: snapshot.error);
+                      switch (snapshot.connectionState) {
+                        // Show loading while get data
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        default:
+                          // Show content when data is ready
+                          return snapshot.data.exists
+                              ? _buildContent(snapshot.data)
+                              : _buildContent(null);
+                      }
+                    });
               } else if (state is AuthenticationFailure ||
                   state is AuthenticationLoading) {
                 return OnBoardingLoginScreen(
