@@ -20,7 +20,7 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 class CovidInformationScreen extends StatefulWidget {
   HomeScreenState homeScreenState;
 
-  CovidInformationScreen({this.homeScreenState});
+  CovidInformationScreen({Key key, this.homeScreenState}) : super(key: key);
 
   @override
   CovidInformationScreenState createState() => CovidInformationScreenState();

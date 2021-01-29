@@ -17,7 +17,8 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 
 class SelfReportOtherScreen extends StatefulWidget {
   final LatLng location;
-  SelfReportOtherScreen(this.location);
+
+  SelfReportOtherScreen({Key key, this.location}) : super(key: key);
 
   @override
   _SelfReportOtherScreenState createState() => _SelfReportOtherScreenState();

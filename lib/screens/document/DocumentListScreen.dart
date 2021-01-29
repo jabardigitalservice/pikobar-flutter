@@ -32,7 +32,8 @@ import 'DocumentViewScreen.dart';
 class DocumentListScreen extends StatefulWidget {
   CovidInformationScreenState covidInformationScreenState;
 
-  DocumentListScreen({this.covidInformationScreenState});
+  DocumentListScreen({Key key, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _DocumentListScreenState createState() => _DocumentListScreenState();

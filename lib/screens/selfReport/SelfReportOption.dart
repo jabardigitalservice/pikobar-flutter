@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
 
 class SelfReportOption extends StatefulWidget {
   final LatLng location;
+
   SelfReportOption(this.location);
 
   @override
@@ -54,8 +55,9 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     2, () {
                   // move to self report other screen
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          SelfReportOtherScreen(widget.location)));
+                      builder: (context) => SelfReportOtherScreen(
+                            location: widget.location,
+                          )));
                 }, true)
               ],
             )
