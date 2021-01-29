@@ -6,6 +6,8 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class LabelNewScreen extends StatelessWidget {
+  LabelNewScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

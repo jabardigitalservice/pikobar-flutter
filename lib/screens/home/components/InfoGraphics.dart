@@ -29,7 +29,8 @@ class InfoGraphics extends StatefulWidget {
   final String searchQuery;
   CovidInformationScreenState covidInformationScreenState;
 
-  InfoGraphics({this.searchQuery, this.covidInformationScreenState});
+  InfoGraphics({Key key, this.searchQuery, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _InfoGraphicsState createState() => _InfoGraphicsState();
@@ -172,7 +173,10 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       height: 265,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
-          padding: const EdgeInsets.only(right: Dimens.padding, top: Dimens.padding, bottom: Dimens.padding),
+          padding: const EdgeInsets.only(
+              right: Dimens.padding,
+              top: Dimens.padding,
+              bottom: Dimens.padding),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: 3,
@@ -289,7 +293,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                 height: 265,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(right: Dimens.padding, bottom: Dimens.padding),
+                    padding: const EdgeInsets.only(
+                        right: Dimens.padding, bottom: Dimens.padding),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.searchQuery != null
@@ -395,7 +400,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                           Text(
                                             document['title'],
                                             style: TextStyle(
-                                                fontSize: Dimens.textSubtitleSize,
+                                                fontSize:
+                                                    Dimens.textSubtitleSize,
                                                 fontFamily: FontsFamily.roboto,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
@@ -418,7 +424,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                 child: Text(
                                                   unixTimeStampToCustomDateFormat(
                                                       document['published_date']
-                                                          .seconds, 'EEEE, dd MMM yyyy'),
+                                                          .seconds,
+                                                      'EEEE, dd MMM yyyy'),
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:

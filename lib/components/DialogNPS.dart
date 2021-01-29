@@ -17,6 +17,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 
 class DialogNPS extends StatefulWidget {
+  DialogNPS({Key key}) : super(key: key);
+
   @override
   _DialogNPSState createState() => _DialogNPSState();
 }
@@ -60,12 +62,15 @@ class _DialogNPSState extends State<DialogNPS> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 44.0, vertical: Dimens.verticalPadding),
-                      child: Image.asset('${Environment.imageAssets}nps_success.png'),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 44.0, vertical: Dimens.verticalPadding),
+                      child: Image.asset(
+                          '${Environment.imageAssets}nps_success.png'),
                     ),
                     Padding(
                       padding: EdgeInsets.only(bottom: 8.0),
-                      child: Text(Dictionary.nspSuccessTitle,
+                      child: Text(
+                        Dictionary.nspSuccessTitle,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: FontsFamily.roboto,
@@ -73,7 +78,8 @@ class _DialogNPSState extends State<DialogNPS> {
                             fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(Dictionary.nspSuccessDesc,
+                    Text(
+                      Dictionary.nspSuccessDesc,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: FontsFamily.roboto,
@@ -90,7 +96,7 @@ class _DialogNPSState extends State<DialogNPS> {
                             color: Colors.white),
                         color: ColorBase.green,
                         elevation: 0.0,
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pop(context);
                         })
                   ],
@@ -124,16 +130,12 @@ class _DialogNPSState extends State<DialogNPS> {
             trackHeight: 8.0,
             thumbShape: CustomSliderThumbCircle(thumbRadius: 12.0),
             thumbColor: _sliderColor(_currentSliderValue),
-            overlayColor:
-            _sliderColor(_currentSliderValue).withAlpha(32),
-            overlayShape:
-            RoundSliderOverlayShape(overlayRadius: 20.0),
-            tickMarkShape:
-            CustomSliderTickMark(tickMarkRadius: 4.0),
+            overlayColor: _sliderColor(_currentSliderValue).withAlpha(32),
+            overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
+            tickMarkShape: CustomSliderTickMark(tickMarkRadius: 4.0),
             activeTickMarkColor: _sliderColor(_currentSliderValue),
             inactiveTickMarkColor: ColorBase.grey,
-            valueIndicatorShape:
-            RectangularSliderValueIndicatorShape(),
+            valueIndicatorShape: RectangularSliderValueIndicatorShape(),
             valueIndicatorColor: _sliderColor(_currentSliderValue),
             valueIndicatorTextStyle: TextStyle(
               fontFamily: FontsFamily.roboto,
@@ -181,18 +183,15 @@ class _DialogNPSState extends State<DialogNPS> {
             controller: _feedbackFieldController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,
-            style: TextStyle(
-                fontFamily: FontsFamily.roboto, fontSize: 12.0),
+            style: TextStyle(fontFamily: FontsFamily.roboto, fontSize: 12.0),
             cursorHeight: 16.0,
             decoration: InputDecoration(
                 filled: true,
                 fillColor: ColorBase.greyContainer,
                 enabledBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: ColorBase.greyBorder)),
+                    borderSide: BorderSide(color: ColorBase.greyBorder)),
                 focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: ColorBase.greyBorder)),
+                    borderSide: BorderSide(color: ColorBase.greyBorder)),
                 hintText: Dictionary.hintFeedbackField,
                 hintStyle: TextStyle(
                     fontFamily: FontsFamily.roboto,
@@ -212,14 +211,12 @@ class _DialogNPSState extends State<DialogNPS> {
             elevation: 0.0,
             onPressed: _currentSliderValue != null
                 ? () async {
-              AnalyticsHelper.setLogEvent(Analytics.tappedSendNPS);
-              final npsData = NPSModel(
-                  score:
-                  _currentSliderValue.round().toString(),
-                  feedback:
-                  _feedbackFieldController.text.trim());
-              await _npsCubit.saveNPS(npsData);
-            }
+                    AnalyticsHelper.setLogEvent(Analytics.tappedSendNPS);
+                    final npsData = NPSModel(
+                        score: _currentSliderValue.round().toString(),
+                        feedback: _feedbackFieldController.text.trim());
+                    await _npsCubit.saveNPS(npsData);
+                  }
                 : null),
         SizedBox(height: Dimens.padding),
         RoundedButton(

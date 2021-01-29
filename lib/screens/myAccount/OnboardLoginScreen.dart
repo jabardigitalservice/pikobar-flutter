@@ -24,7 +24,12 @@ class OnBoardingLoginScreen extends StatefulWidget {
   final double positionBottom;
   final bool showTitle;
 
-  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom, this.showTitle = false});
+  OnBoardingLoginScreen(
+      {Key key,
+      this.authenticationBloc,
+      this.positionBottom,
+      this.showTitle = false})
+      : super(key: key);
 
   @override
   _OnBoardingLoginScreenState createState() => _OnBoardingLoginScreenState();
@@ -56,21 +61,23 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
           _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
       child: Stack(
         children: <Widget>[
-          widget.showTitle ? Positioned(
-            left: 0.0,
-            right: 0.0,
-            top: 0.0,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                Dictionary.profile,
-                style: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ) : Container(),
+          widget.showTitle
+              ? Positioned(
+                  left: 0.0,
+                  right: 0.0,
+                  top: 0.0,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      Dictionary.profile,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : Container(),
           Positioned(
             left: 0.0,
             right: 0.0,

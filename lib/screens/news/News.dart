@@ -21,7 +21,8 @@ class NewsListScreen extends StatelessWidget {
   String news;
   CovidInformationScreenState covidInformationScreenState;
 
-  NewsListScreen({this.news, this.covidInformationScreenState});
+  NewsListScreen({Key key, this.news, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,8 @@ class NewsListScreen extends StatelessWidget {
             create: (context) => RemoteConfigBloc()..add(RemoteConfigLoad())),
         BlocProvider<NewsListBloc>(create: (context) => NewsListBloc())
       ],
-      child: News(news: news, covidInformationScreenState: covidInformationScreenState),
+      child: News(
+          news: news, covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
@@ -41,7 +43,8 @@ class News extends StatefulWidget {
   String news;
   CovidInformationScreenState covidInformationScreenState;
 
-  News({this.news, this.covidInformationScreenState});
+  News({Key key, this.news, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _NewsState createState() => _NewsState();
@@ -112,11 +115,13 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: WillPopScope(onWillPop: _onWillPop,
+    return Scaffold(
+        body: WillPopScope(
+      onWillPop: _onWillPop,
       child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, state) {
-            return state is RemoteConfigLoaded ? buildContent(state) : Container();
-          }),
+        return state is RemoteConfigLoaded ? buildContent(state) : Container();
+      }),
     ));
   }
 
