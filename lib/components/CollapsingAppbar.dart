@@ -71,9 +71,9 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                           children: [
                             AnimatedOpacity(
                               opacity: widget.showTitle ? 0.0 : 1.0,
-                              duration: Duration(milliseconds: 250),
+                              duration: const Duration(milliseconds: 250),
                               child: Padding(
-                                padding: EdgeInsets.all(20.0),
+                                padding: const EdgeInsets.all(20.0),
                                 child: Text(
                                   widget.titleAppbar,
                                   style: TextStyle(
@@ -92,7 +92,8 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                         ),
                       )
                     : PreferredSize(
-                        child: Container(), preferredSize: Size.fromHeight(0))
+                        child: Container(),
+                        preferredSize: const Size.fromHeight(0))
                 : null,
             iconTheme: IconThemeData(
                 color: isBottomAppbar
@@ -110,10 +111,11 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
                 ? FlexibleSpaceBar(
                     centerTitle: true,
                     title: Container(
-                      margin: EdgeInsets.only(left: 70, bottom: 2, right: 50),
+                      margin:
+                          const EdgeInsets.only(left: 70, bottom: 2, right: 50),
                       child: AnimatedOpacity(
                         opacity: widget.showTitle ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 250),
+                        duration: const Duration(milliseconds: 250),
                         child: Text(
                           widget.showTitle ? widget.titleAppbar : '',
                           style: TextStyle(
@@ -130,7 +132,7 @@ class _CollapsingAppbarState extends State<CollapsingAppbar> {
             title: isBottomAppbar
                 ? AnimatedOpacity(
                     opacity: widget.showTitle ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 250),
                     child: Text(
                       widget.showTitle ? widget.titleAppbar : '',
                       style: TextStyle(

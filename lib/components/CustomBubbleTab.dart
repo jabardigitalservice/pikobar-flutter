@@ -258,10 +258,10 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                 dataSelected != widget.titleNameLabelNew &&
                 totalUnreadlabelNew > 0
             ? Container(
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
                 width: 10,
                 height: 10,
-                decoration: new BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.redAccent,
                   shape: BoxShape.circle,
                 ),
@@ -285,7 +285,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     : 150,
         title: AnimatedOpacity(
           opacity: widget.showTitle ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 250),
           child: Text(
             widget.showTitle ? widget.titleHeader : '',
             style: TextStyle(
@@ -300,7 +300,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         ///condition for set title when collapsing
         bottom: widget.showTitle
             ? PreferredSize(
-          preferredSize: Size.fromHeight(65),
+          preferredSize: const Size.fromHeight(65),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TabBar(
@@ -318,7 +318,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     ),
                     indicatorColor: widget.indicatorColor,
                     indicatorWeight: 0.1,
-                    labelPadding: EdgeInsets.all(10),
+                    labelPadding: const EdgeInsets.all(10),
                     tabs: listBubbleTabItem),
               ),
             )
@@ -329,9 +329,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                   children: [
                     AnimatedOpacity(
                       opacity: widget.showTitle ? 0.0 : 1.0,
-                      duration: Duration(milliseconds: 250),
+                      duration: const Duration(milliseconds: 250),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: Dimens.homeCardMargin, horizontal: Dimens.padding),
+                        padding: const EdgeInsets.symmetric(vertical: Dimens.homeCardMargin, horizontal: Dimens.padding),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -378,7 +378,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                           ),
                           indicatorColor: widget.indicatorColor,
                           indicatorWeight: 0.1,
-                          labelPadding: EdgeInsets.all(10),
+                          labelPadding: const EdgeInsets.all(10),
                           tabs: listBubbleTabItem),
                     ),
                   ],

@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
+// ignore: must_be_immutable
 class Announcement extends StatelessWidget {
   final String title;
   final String content;
@@ -24,7 +25,7 @@ class Announcement extends StatelessWidget {
   final Style htmlStyle;
   final EdgeInsetsGeometry margin;
 
-  Announcement(
+  const Announcement(
       {this.title,
       this.content,
       this.context,
