@@ -24,8 +24,9 @@ class Announcement extends StatelessWidget {
   final Style htmlStyle;
   final EdgeInsetsGeometry margin;
 
-  Announcement(
-      {this.title,
+  const Announcement(
+      {Key key,
+      this.title,
       this.content,
       this.context,
       this.onLinkTap,
@@ -34,13 +35,14 @@ class Announcement extends StatelessWidget {
       this.textStyleContent,
       this.textStyleMoreDetail,
       this.htmlStyle,
-      this.margin});
+      this.margin})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimens.padding),
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: Dimens.padding),
       decoration: BoxDecoration(
           color: ColorBase.announcementBackgroundColor,
           borderRadius: BorderRadius.circular(8.0)),
@@ -48,7 +50,7 @@ class Announcement extends StatelessWidget {
         children: <Widget>[
           Image.asset('${Environment.imageAssets}intersect.png', width: 73),
           Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -66,7 +68,7 @@ class Announcement extends StatelessWidget {
                         )
                       : Container(),
                   title != null && title.isNotEmpty
-                      ? SizedBox(height: 10)
+                      ? const SizedBox(height: 10)
                       : Container(),
 
                   ///Set Text content & url if actionUrl is not empty
@@ -114,7 +116,7 @@ class Announcement extends StatelessWidget {
                                 : Style(
                                     margin: EdgeInsets.zero,
                                     color: Colors.grey[600],
-                                    fontSize: FontSize(12.0),
+                                    fontSize: const FontSize(12.0),
                                     fontFamily: FontsFamily.lato,
                                     textAlign: TextAlign.justify),
                           },
