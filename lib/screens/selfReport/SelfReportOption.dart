@@ -56,8 +56,9 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     2, () {
                   // move to self report other screen
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          SelfReportOtherScreen(widget.location)));
+                      builder: (context) => SelfReportOtherScreen(
+                            location: widget.location,
+                          )));
                 }, true)
               ],
             )

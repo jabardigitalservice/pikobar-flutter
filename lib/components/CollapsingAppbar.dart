@@ -24,7 +24,8 @@ class CollapsingAppbar extends StatefulWidget {
   bool isBottomAppbar;
 
   CollapsingAppbar(
-      {@required this.scrollController,
+      {Key key,
+      @required this.scrollController,
       @required this.showTitle,
       this.heightAppbar,
       this.actionsAppBar,
@@ -32,7 +33,8 @@ class CollapsingAppbar extends StatefulWidget {
       this.backgroundAppBar,
       @required this.body,
       this.searchBar,
-      this.isBottomAppbar});
+      this.isBottomAppbar})
+      : super(key: key);
 
   @override
   _CollapsingAppbarState createState() => _CollapsingAppbarState();

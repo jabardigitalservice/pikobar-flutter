@@ -35,7 +35,8 @@ class Documents extends StatefulWidget {
   final String searchQuery;
   CovidInformationScreenState covidInformationScreenState;
 
-  Documents({this.searchQuery, this.covidInformationScreenState});
+  Documents({Key key, this.searchQuery, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _DocumentsState createState() => _DocumentsState();
@@ -153,7 +154,10 @@ class _DocumentsState extends State<Documents> {
       height: 260,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
-          padding: const EdgeInsets.only(right: Dimens.padding, top: Dimens.padding, bottom: Dimens.padding),
+          padding: const EdgeInsets.only(
+              right: Dimens.padding,
+              top: Dimens.padding,
+              bottom: Dimens.padding),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: 3,
@@ -281,7 +285,10 @@ class _DocumentsState extends State<Documents> {
                 height: 265,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(right: Dimens.padding, top: Dimens.padding, bottom: Dimens.padding),
+                    padding: const EdgeInsets.only(
+                        right: Dimens.padding,
+                        top: Dimens.padding,
+                        bottom: Dimens.padding),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount:
@@ -389,7 +396,8 @@ class _DocumentsState extends State<Documents> {
                                           Text(
                                             document['title'],
                                             style: TextStyle(
-                                                fontSize: Dimens.textSubtitleSize,
+                                                fontSize:
+                                                    Dimens.textSubtitleSize,
                                                 fontFamily: FontsFamily.roboto,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
@@ -412,7 +420,8 @@ class _DocumentsState extends State<Documents> {
                                                 child: Text(
                                                   unixTimeStampToCustomDateFormat(
                                                       document['published_at']
-                                                          .seconds, 'EEEE, dd MMM yyyy'),
+                                                          .seconds,
+                                                      'EEEE, dd MMM yyyy'),
                                                   style: TextStyle(
                                                       color: Colors.grey,
                                                       fontFamily:

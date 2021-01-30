@@ -30,7 +30,8 @@ class VideoList extends StatefulWidget {
   final String searchQuery;
   CovidInformationScreenState covidInformationScreenState;
 
-  VideoList({this.searchQuery, this.covidInformationScreenState});
+  VideoList({Key key, this.searchQuery, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _VideoListState createState() => _VideoListState();
@@ -81,7 +82,10 @@ class _VideoListState extends State<VideoList> {
       height: 260,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
-          padding: const EdgeInsets.only(right: Dimens.padding, top: Dimens.padding, bottom: Dimens.padding),
+          padding: const EdgeInsets.only(
+              right: Dimens.padding,
+              top: Dimens.padding,
+              bottom: Dimens.padding),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: 3,
@@ -205,7 +209,8 @@ class _VideoListState extends State<VideoList> {
               Container(
                 height: 265.0,
                 child: ListView.builder(
-                    padding: const EdgeInsets.only(right: Dimens.padding, bottom: Dimens.padding),
+                    padding: const EdgeInsets.only(
+                        right: Dimens.padding, bottom: Dimens.padding),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: widget.searchQuery != null ? data.length : 5,
@@ -229,9 +234,8 @@ class _VideoListState extends State<VideoList> {
                                       imageUrl: getYtThumbnail(
                                           youtubeUrl: data[index].url,
                                           error: false),
-                                      imageBuilder:
-                                          (context, imageProvider) =>
-                                              Container(
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -243,8 +247,7 @@ class _VideoListState extends State<VideoList> {
                                       ),
                                       placeholder: (context, url) => Center(
                                           heightFactor: 10.2,
-                                          child:
-                                              CupertinoActivityIndicator()),
+                                          child: CupertinoActivityIndicator()),
                                       errorWidget: (context, url, error) =>
                                           CachedNetworkImage(
                                         imageUrl: getYtThumbnail(
@@ -328,7 +331,8 @@ class _VideoListState extends State<VideoList> {
                                 Expanded(
                                   child: Text(
                                     unixTimeStampToCustomDateFormat(
-                                        data[index].publishedAt, 'EEEE, dd MMM yyyy'),
+                                        data[index].publishedAt,
+                                        'EEEE, dd MMM yyyy'),
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontFamily: FontsFamily.roboto,

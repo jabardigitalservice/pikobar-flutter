@@ -28,7 +28,7 @@ import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 class VideosScreen extends StatelessWidget {
   CovidInformationScreenState covidInformationScreenState;
 
-  VideosScreen({this.covidInformationScreenState});
+  VideosScreen({Key key, this.covidInformationScreenState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class VideosScreen extends StatelessWidget {
 class VideosList extends StatefulWidget {
   CovidInformationScreenState covidInformationScreenState;
 
-  VideosList({this.covidInformationScreenState});
+  VideosList({Key key, this.covidInformationScreenState}) : super(key: key);
 
   @override
   _VideosListState createState() => _VideosListState();
