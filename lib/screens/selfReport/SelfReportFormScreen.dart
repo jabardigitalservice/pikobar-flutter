@@ -30,13 +30,15 @@ class SelfReportFormScreen extends StatefulWidget {
   final String analytics;
 
   SelfReportFormScreen(
-      {@required this.dailyId,
+      {Key key,
+      @required this.dailyId,
       @required this.location,
       this.dailyReportModel,
       this.otherUID,
       @required this.analytics})
       : assert(dailyId != null),
-        assert(location != null);
+        assert(location != null),
+        super(key: key);
 
   @override
   _SelfReportFormScreenState createState() => _SelfReportFormScreenState();
@@ -145,9 +147,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => SelfReportDoneScreen(
-                                widget.location,
-                                widget.otherUID,
-                                widget.analytics)),
+                                location: widget.location,
+                                otherUID: widget.otherUID,
+                                analytics: widget.analytics)),
                       );
                     } else {
                       Navigator.of(context).pop(true);

@@ -30,7 +30,7 @@ import 'package:pedantic/pedantic.dart';
 class DetailInfoGraphicScreen extends StatefulWidget {
   DocumentSnapshot dataInfoGraphic;
 
-  DetailInfoGraphicScreen({this.dataInfoGraphic});
+  DetailInfoGraphicScreen({Key key, this.dataInfoGraphic}) : super(key: key);
 
   @override
   _DetailInfoGraphicScreenState createState() =>
@@ -71,7 +71,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                         options: CarouselOptions(
                           initialPage: 0,
                           enableInfiniteScroll:
-                          dataUrl.length > 1 ? true : false,
+                              dataUrl.length > 1 ? true : false,
                           aspectRatio: 9 / 9,
                           viewportFraction: 1.0,
                           autoPlay: dataUrl.length > 1 ? true : false,
@@ -107,9 +107,9 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                                                 color: Colors.grey[200],
                                                 borderRadius: BorderRadius.only(
                                                     topLeft:
-                                                    Radius.circular(5.0),
+                                                        Radius.circular(5.0),
                                                     topRight:
-                                                    Radius.circular(5.0)),
+                                                        Radius.circular(5.0)),
                                               ),
                                               child: PikobarPlaceholder())),
                                   Container(
@@ -184,30 +184,30 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                       int index = dataUrl.indexOf(data);
                       return _current == index
                           ? Container(
-                          width: 24.0,
-                          height: 8.0,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2.0),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(30.0),
-                              color: ColorBase.green))
+                              width: 24.0,
+                              height: 8.0,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 2.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  color: ColorBase.green))
                           : Container(
-                        width: 8.0,
-                        height: 8.0,
-                        margin: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 2.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromRGBO(0, 0, 0, 0.4),
-                        ),
-                      );
+                              width: 8.0,
+                              height: 8.0,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 2.0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromRGBO(0, 0, 0, 0.4),
+                              ),
+                            );
                     }).toList(),
                   ),
                 ),
                 Container(
                   padding:
-                  EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+                      EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -234,11 +234,9 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                               child: Text(
                                 widget.dataInfoGraphic['title'],
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.roboto,
-                                  fontSize: 20.0
-
-                                ),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: FontsFamily.roboto,
+                                    fontSize: 20.0),
                                 textAlign: TextAlign.left,
                               ),
                             ),
@@ -265,9 +263,9 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                     onPressed: () {
                       Platform.isAndroid
                           ? _downloadAttachment(widget.dataInfoGraphic['title'],
-                          widget.dataInfoGraphic['images'][_current])
+                              widget.dataInfoGraphic['images'][_current])
                           : _viewPdf(widget.dataInfoGraphic['title'],
-                          widget.dataInfoGraphic['images'][_current]);
+                              widget.dataInfoGraphic['images'][_current]);
                     }),
               ),
             ),
@@ -291,19 +289,19 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
       unawaited(showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
-            image: Image.asset(
-              'assets/icons/folder.png',
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            description: Dictionary.permissionDownloadAttachment,
-            onOkPressed: () {
-              Navigator.of(context).pop();
-              Permission.storage.request().then((val) {
-                _onStatusRequested(val, name, url);
-              });
-            },
-          )));
+                image: Image.asset(
+                  'assets/icons/folder.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionDownloadAttachment,
+                onOkPressed: () {
+                  Navigator.of(context).pop();
+                  Permission.storage.request().then((val) {
+                    _onStatusRequested(val, name, url);
+                  });
+                },
+              )));
     } else {
       Fluttertoast.showToast(
           msg: Dictionary.downloadingFile,
@@ -321,7 +319,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
           showNotification: true,
           // show download progress in status bar (for Android)
           openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
+              true, // click on notification to open downloaded file (for Android)
         );
       } catch (e) {
         String dir = (await getExternalStorageDirectory()).path + '/download';
@@ -332,7 +330,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
           showNotification: true,
           // show download progress in status bar (for Android)
           openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
+              true, // click on notification to open downloaded file (for Android)
         );
       }
 

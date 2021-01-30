@@ -35,6 +35,8 @@ import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 
 class SelfReportScreen extends StatefulWidget {
+  SelfReportScreen({Key key}) : super(key: key);
+
   @override
   _SelfReportScreenState createState() => _SelfReportScreenState();
 }
@@ -287,7 +289,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               fontSize: 16.0);
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SelfReportOption(latLng)));
+                              builder: (context) =>
+                                  SelfReportOption(location: latLng)));
                         }
                       },
                       onPressedDisable: () {

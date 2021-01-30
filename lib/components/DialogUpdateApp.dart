@@ -8,7 +8,7 @@ import 'package:pikobar_flutter/utilities/launchExternal.dart';
 class DialogUpdateApp extends StatefulWidget {
   final linkUpdate;
 
-  DialogUpdateApp({this.linkUpdate});
+  DialogUpdateApp({Key key, this.linkUpdate}) : super(key: key);
 
   @override
   _DialogUpdateAppState createState() => _DialogUpdateAppState();

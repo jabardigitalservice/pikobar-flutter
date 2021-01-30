@@ -9,6 +9,8 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 
 class AnnouncementScreen extends StatefulWidget {
+  AnnouncementScreen({Key key}) : super(key: key);
+
   @override
   _AnnouncementScreenState createState() => _AnnouncementScreenState();
 }
@@ -37,15 +39,15 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     /// Set up for show announcement widget
     return remoteConfig != null && dataAnnouncement['enabled'] == true
         ? Announcement(
-          title: dataAnnouncement['title'] != null
-              ? dataAnnouncement['title']
-              : Dictionary.titleInfoTextAnnouncement,
-          content: dataAnnouncement['content'] != null
-              ? dataAnnouncement['content']
-              : Dictionary.infoTextAnnouncement,
-          context: context,
-          actionUrl: dataAnnouncement['action_url'],
-        )
+            title: dataAnnouncement['title'] != null
+                ? dataAnnouncement['title']
+                : Dictionary.titleInfoTextAnnouncement,
+            content: dataAnnouncement['content'] != null
+                ? dataAnnouncement['content']
+                : Dictionary.infoTextAnnouncement,
+            context: context,
+            actionUrl: dataAnnouncement['action_url'],
+          )
         : Container();
   }
 }

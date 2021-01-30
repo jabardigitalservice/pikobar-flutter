@@ -51,7 +51,8 @@ class CustomBubbleTab extends StatefulWidget {
   String subTitle;
 
   CustomBubbleTab(
-      {this.listItemTitleTab,
+      {Key key,
+      this.listItemTitleTab,
       this.labelColor,
       this.unselectedLabelColor,
       this.indicatorColor,
@@ -72,7 +73,8 @@ class CustomBubbleTab extends StatefulWidget {
       this.subTitle,
       this.paddingBubbleTab,
       this.titleNameLabelNew,
-      this.totalInfoUnread});
+      this.totalInfoUnread})
+      : super(key: key);
 
   @override
   _CustomBubbleTabState createState() => _CustomBubbleTabState();
@@ -300,28 +302,28 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
         ///condition for set title when collapsing
         bottom: widget.showTitle
             ? PreferredSize(
-          preferredSize: const Size.fromHeight(65),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TabBar(
-                    controller: _basetabController,
-                    isScrollable: isScrollable,
-                    onTap: (index) {
-                      widget.onTap(index);
-                    },
-                    labelColor: widget.labelColor,
-                    unselectedLabelColor: widget.unselectedLabelColor,
-                    indicator: BubbleTabIndicator(
-                      indicatorHeight: 37.0,
+                preferredSize: const Size.fromHeight(65),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: TabBar(
+                      controller: _basetabController,
+                      isScrollable: isScrollable,
+                      onTap: (index) {
+                        widget.onTap(index);
+                      },
+                      labelColor: widget.labelColor,
+                      unselectedLabelColor: widget.unselectedLabelColor,
+                      indicator: BubbleTabIndicator(
+                        indicatorHeight: 37.0,
+                        indicatorColor: widget.indicatorColor,
+                        tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                      ),
                       indicatorColor: widget.indicatorColor,
-                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                    ),
-                    indicatorColor: widget.indicatorColor,
-                    indicatorWeight: 0.1,
-                    labelPadding: const EdgeInsets.all(10),
-                    tabs: listBubbleTabItem),
-              ),
-            )
+                      indicatorWeight: 0.1,
+                      labelPadding: const EdgeInsets.all(10),
+                      tabs: listBubbleTabItem),
+                ),
+              )
             : PreferredSize(
                 preferredSize: Size.fromHeight(widget.showTitle ? 0 : 130.0),
                 child: Column(
@@ -331,7 +333,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       opacity: widget.showTitle ? 0.0 : 1.0,
                       duration: const Duration(milliseconds: 250),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: Dimens.homeCardMargin, horizontal: Dimens.padding),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: Dimens.homeCardMargin,
+                            horizontal: Dimens.padding),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

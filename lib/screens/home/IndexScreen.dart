@@ -36,6 +36,8 @@ import 'package:pikobar_flutter/utilities/NPSService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
+  IndexScreen({Key key}) : super(key: key);
+
   @override
   IndexScreenState createState() => IndexScreenState();
 }

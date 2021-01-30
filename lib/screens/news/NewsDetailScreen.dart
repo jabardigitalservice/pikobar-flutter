@@ -40,7 +40,7 @@ class NewsDetailScreen extends StatefulWidget {
   final String news;
   final NewsModel model;
 
-  NewsDetailScreen({this.id, this.news, this.model});
+  NewsDetailScreen({Key key, this.id, this.news, this.model}) : super(key: key);
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
@@ -385,7 +385,6 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           ],
                         )
                       : Container(),
-
                   SizedBox(height: 25.0),
                 ],
               ),

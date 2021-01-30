@@ -37,7 +37,7 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 class Edit extends StatefulWidget {
   final DocumentSnapshot state;
 
-  Edit({this.state});
+  Edit({Key key, this.state}) : super(key: key);
 
   @override
   _EditState createState() => _EditState();

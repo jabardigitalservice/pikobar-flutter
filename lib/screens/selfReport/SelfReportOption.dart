@@ -11,7 +11,8 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
 
 class SelfReportOption extends StatefulWidget {
   final LatLng location;
-  SelfReportOption(this.location);
+
+  SelfReportOption({Key key, this.location}) : super(key: key);
 
   @override
   _SelfReportOptionState createState() => _SelfReportOptionState();
@@ -46,7 +47,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                   // move to self report list screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportList(
-                          widget.location, Analytics.tappedDailyReport)));
+                          location: widget.location,
+                          analytics: Analytics.tappedDailyReport)));
                 }, true),
                 _buildContainer(
                     '${Environment.iconAssets}self_report_other_icon.png',

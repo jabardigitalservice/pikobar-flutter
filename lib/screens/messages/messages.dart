@@ -20,7 +20,7 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 class Messages extends StatefulWidget {
   final IndexScreenState indexScreenState;
 
-  Messages({this.indexScreenState});
+  Messages({Key key, this.indexScreenState}) : super(key: key);
 
   @override
   _MessagesState createState() => _MessagesState();

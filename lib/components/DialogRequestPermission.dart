@@ -11,13 +11,15 @@ class DialogRequestPermission extends StatelessWidget {
   final GestureTapCallback onCancelPressed;
 
   DialogRequestPermission(
-      {this.title,
+      {Key key,
+      this.title,
       @required this.description,
       this.buttonText,
       this.image,
       this.icon,
       @required this.onOkPressed,
-      this.onCancelPressed});
+      this.onCancelPressed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +81,11 @@ class DialogRequestPermission extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               FlatButton(
-                onPressed: onCancelPressed != null ? onCancelPressed : () {
-                  Navigator.of(context).pop(); // To close the dialog
-                },
+                onPressed: onCancelPressed != null
+                    ? onCancelPressed
+                    : () {
+                        Navigator.of(context).pop(); // To close the dialog
+                      },
                 child: Text(
                   Dictionary.later.toUpperCase(),
                   style: TextStyle(

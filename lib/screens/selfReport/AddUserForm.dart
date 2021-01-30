@@ -17,6 +17,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 
 class AddUserFormScreen extends StatefulWidget {
+  AddUserFormScreen({Key key}) : super(key: key);
+
   @override
   _AddUserFormScreenState createState() => _AddUserFormScreenState();
 }

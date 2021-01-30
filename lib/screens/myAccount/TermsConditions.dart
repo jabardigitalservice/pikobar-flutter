@@ -16,7 +16,7 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 class TermsConditionsPage extends StatefulWidget {
   final Map<String, dynamic> termsConfig;
 
-  TermsConditionsPage(this.termsConfig);
+  TermsConditionsPage({Key key, this.termsConfig}) : super(key: key);
 
   @override
   _TermsConditionsPageState createState() => _TermsConditionsPageState();

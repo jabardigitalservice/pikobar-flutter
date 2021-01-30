@@ -17,6 +17,8 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'dart:convert';
 
 class GroupHomeBanner extends StatefulWidget {
+  GroupHomeBanner({Key key}) : super(key: key);
+
   @override
   _GroupHomeBannerState createState() => _GroupHomeBannerState();
 }
@@ -120,13 +122,15 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                           if (isLoggedIn != null && isLoggedIn) {
                             var url =
                                 await userDataUrlAppend(groupBanner[i]['url']);
-                            AnalyticsHelper.setLogEvent(groupBanner[i]['analyticName']);
+                            AnalyticsHelper.setLogEvent(
+                                groupBanner[i]['analyticName']);
                             openChromeSafariBrowser(url: url);
                           }
                         } else {
                           var url =
                               await userDataUrlAppend(groupBanner[i]['url']);
-                          AnalyticsHelper.setLogEvent(groupBanner[i]['analyticName']);
+                          AnalyticsHelper.setLogEvent(
+                              groupBanner[i]['analyticName']);
                           openChromeSafariBrowser(url: url);
                         }
                       }),

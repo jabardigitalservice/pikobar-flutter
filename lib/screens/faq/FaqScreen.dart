@@ -19,7 +19,7 @@ import 'package:pikobar_flutter/utilities/launchExternal.dart';
 class FaqScreen extends StatefulWidget {
   final bool isNewPage;
 
-  FaqScreen({this.isNewPage = true});
+  FaqScreen({Key key, this.isNewPage = true}) : super(key: key);
 
   @override
   _FaqScreenState createState() => _FaqScreenState();
@@ -165,7 +165,7 @@ class _FaqScreenState extends State<FaqScreen> {
 
   Widget _cardContent(dataHelp) {
     return Container(
-      color:Colors.white,
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           ExpandableNotifier(
@@ -199,9 +199,7 @@ class _FaqScreenState extends State<FaqScreen> {
                               color: Colors.grey[600],
                               fontSize: FontSize(14.0),
                               textAlign: TextAlign.start),
-                          'li': Style(
-                            margin: EdgeInsets.only(bottom: 10.0)
-                          )
+                          'li': Style(margin: EdgeInsets.only(bottom: 10.0))
                         },
                         onLinkTap: (url) {
                           launchExternal(url);
@@ -210,7 +208,8 @@ class _FaqScreenState extends State<FaqScreen> {
                     ),
                     builder: (_, collapsed, expanded) {
                       return Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
                         child: Expandable(
                           collapsed: collapsed,
                           expanded: expanded,

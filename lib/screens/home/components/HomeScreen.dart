@@ -33,7 +33,7 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
 
-  HomeScreen({this.indexScreenState});
+  HomeScreen({Key key, this.indexScreenState}) : super(key: key);
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -256,7 +256,7 @@ class HomeScreenState extends State<HomeScreen>
     _remoteConfigBloc.close();
     _bannersBloc.close();
     _statisticsBloc.close();
-    if(_rapidTestBloc != null){
+    if (_rapidTestBloc != null) {
       _rapidTestBloc.close();
     }
     if (_pcrTestBloc != null) {

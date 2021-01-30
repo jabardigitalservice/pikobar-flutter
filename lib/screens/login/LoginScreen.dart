@@ -10,7 +10,7 @@ import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 class LoginScreen extends StatefulWidget {
   final String title;
 
-  LoginScreen({this.title});
+  LoginScreen({Key key, this.title}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -25,17 +25,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationBloc>(
         create: (BuildContext context) => _authenticationBloc =
-        AuthenticationBloc(authRepository: _authRepository)
-          ..add(AppStarted()),
+            AuthenticationBloc(authRepository: _authRepository)
+              ..add(AppStarted()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             print(state);
             if (state is AuthenticationFailure) {
-              if (!state.error.contains('ERROR_ABORTED_BY_USER') && !state.error.contains('NoSuchMethodError')) {
+              if (!state.error.contains('ERROR_ABORTED_BY_USER') &&
+                  !state.error.contains('NoSuchMethodError')) {
                 showDialog(
                     context: context,
-                    builder: (BuildContext context) =>
-                        DialogTextOnly(
+                    builder: (BuildContext context) => DialogTextOnly(
                           description: state.error.toString(),
                           buttonText: "OK",
                           onOkPressed: () {
@@ -74,13 +74,13 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (
-                  BuildContext context,
-                  AuthenticationState state,
-                  ) {
-                  return OnBoardingLoginScreen(
-                    authenticationBloc: _authenticationBloc,
-                    positionBottom: 20.0,
-                  );
+                BuildContext context,
+                AuthenticationState state,
+              ) {
+                return OnBoardingLoginScreen(
+                  authenticationBloc: _authenticationBloc,
+                  positionBottom: 20.0,
+                );
               },
             ),
           ),
@@ -92,5 +92,4 @@ class _LoginScreenState extends State<LoginScreen> {
     _authenticationBloc.close();
     super.dispose();
   }
-
 }

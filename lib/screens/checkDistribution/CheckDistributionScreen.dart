@@ -28,6 +28,8 @@ import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
+  CheckDistributionScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CheckDistributionBloc>(
@@ -39,6 +41,8 @@ class CheckDistributionScreen extends StatelessWidget {
 }
 
 class CheckDistribution extends StatefulWidget {
+  CheckDistribution({Key key}) : super(key: key);
+
   @override
   _CheckDistributionState createState() => _CheckDistributionState();
 }
@@ -88,8 +92,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        CheckDistributionDetail(state, _address)),
+                    builder: (context) => CheckDistributionDetail(
+                        state: state, address: _address)),
               );
             } else {
               Scaffold.of(context).hideCurrentSnackBar();
@@ -473,7 +477,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
       // Pick location by current location
       Position position = await Geolocator.getLastKnownPosition();
       if (position != null && position.latitude != null) {
-        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];
@@ -492,7 +497,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
               id: id);
         }
       } else {
-        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];

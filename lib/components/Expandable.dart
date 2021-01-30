@@ -352,7 +352,7 @@ class ExpandablePanel extends StatelessWidget {
 class ExpandableIcon extends StatelessWidget {
   final Color color;
 
-  ExpandableIcon({this.color});
+  ExpandableIcon({Key key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -371,7 +371,7 @@ class ExpandableIcon extends StatelessWidget {
 class ExpandableButton extends StatelessWidget {
   final Widget child;
 
-  ExpandableButton({this.child});
+  ExpandableButton({Key key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

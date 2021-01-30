@@ -12,13 +12,13 @@ import 'package:pikobar_flutter/models/SpreadCheckModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class SpreadSection extends StatefulWidget {
+  SpreadSection({Key key}) : super(key: key);
 
   @override
   _SpreadSectionState createState() => _SpreadSectionState();
 }
 
 class _SpreadSectionState extends State<SpreadSection> {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
@@ -81,5 +81,4 @@ class _SpreadSectionState extends State<SpreadSection> {
       return Container();
     }
   }
-
 }

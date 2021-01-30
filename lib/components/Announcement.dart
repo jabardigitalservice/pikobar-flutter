@@ -26,7 +26,8 @@ class Announcement extends StatelessWidget {
   final EdgeInsetsGeometry margin;
 
   const Announcement(
-      {this.title,
+      {Key key,
+      this.title,
       this.content,
       this.context,
       this.onLinkTap,
@@ -35,7 +36,8 @@ class Announcement extends StatelessWidget {
       this.textStyleContent,
       this.textStyleMoreDetail,
       this.htmlStyle,
-      this.margin});
+      this.margin})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

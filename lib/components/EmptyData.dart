@@ -18,12 +18,14 @@ class EmptyData extends StatelessWidget {
   /// * [center] type bool default value is true.
   /// * [image] type String must not be null if [isFlare] is false.
   EmptyData(
-      {this.message,
+      {Key key,
+      this.message,
       this.desc,
       this.center = true,
       this.margin,
       this.isFlare = true,
-      this.image});
+      this.image})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class EmptyData extends StatelessWidget {
               height: 5,
             ),
             Padding(
-              padding:EdgeInsets.only(left: 50, right: 50),
+              padding: EdgeInsets.only(left: 50, right: 50),
               child: Text(desc == null ? '' : desc,
                   textAlign: TextAlign.center,
                   style: TextStyle(

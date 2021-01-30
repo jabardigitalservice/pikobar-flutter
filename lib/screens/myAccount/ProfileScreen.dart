@@ -32,6 +32,8 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'TermsConditions.dart';
 
 class ProfileScreen extends StatefulWidget {
+  ProfileScreen({Key key}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -474,8 +476,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  TermsConditionsPage(termsConditions)),
+                              builder: (context) => TermsConditionsPage(
+                                    termsConfig: termsConditions,
+                                  )),
                         );
                       })
               ]),
