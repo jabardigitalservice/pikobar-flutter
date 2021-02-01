@@ -137,7 +137,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           child: Scaffold(
             key: _scaffoldKey,
             appBar: CustomAppBar.animatedAppBar(
-              showTitle: _showTitle,
+              showTitle: true,
               title: Dictionary.titleSelfReport,
             ),
             backgroundColor: Colors.white,
@@ -224,22 +224,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     return Padding(
         padding: EdgeInsets.all(10),
         child: ListView(
-          controller: _scrollController,
           children: <Widget>[
-            AnimatedOpacity(
-              opacity: _showTitle ? 0.0 : 1.0,
-              duration: Duration(milliseconds: 250),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  Dictionary.titleSelfReport,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
             hasLogin
                 ? !HealthCheck()
                             .isUserHealty(getField(state, 'health_status')) &&
