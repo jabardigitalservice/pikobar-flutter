@@ -21,12 +21,12 @@ class BuildTextField extends StatelessWidget {
   /// * [isEdit] type bool.
   BuildTextField(
       {this.title,
-      this.hintText,
-      this.controller,
-      this.validation,
-      this.textInputType,
-      this.textStyle,
-      this.isEdit});
+        this.hintText,
+        this.controller,
+        this.validation,
+        this.textInputType,
+        this.textStyle,
+        this.isEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class BuildTextField extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(hintText: hintText),
             keyboardType:
-                textInputType != null ? textInputType : TextInputType.text,
+            textInputType != null ? textInputType : TextInputType.text,
           )
         ],
       ),

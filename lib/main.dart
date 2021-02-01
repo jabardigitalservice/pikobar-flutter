@@ -121,6 +121,8 @@ void main() async {
 }
 
 class App extends StatefulWidget {
+  App({Key key}) : super(key: key);
+
   @override
   _AppState createState() => _AppState();
 }
@@ -139,6 +141,7 @@ class _AppState extends State<App> {
     Function originalOnError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
       await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+
       /// Forward to original handler.
       originalOnError(errorDetails);
     };
@@ -182,7 +185,8 @@ class _AppState extends State<App> {
                 );
               }
               return BlocProvider<LocationPermissionBloc>(
-                  create: (context) => LocationPermissionBloc(), child: IndexScreen());
+                  create: (context) => LocationPermissionBloc(),
+                  child: IndexScreen());
               break;
             default:
               return Scaffold(
@@ -190,8 +194,13 @@ class _AppState extends State<App> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('${Environment.logoAssets}pikobar_big.png', scale: 4.0,),
-                      SizedBox(height: Dimens.verticalPadding,),
+                      Image.asset(
+                        '${Environment.logoAssets}pikobar_big.png',
+                        scale: 4.0,
+                      ),
+                      SizedBox(
+                        height: Dimens.verticalPadding,
+                      ),
                       CircularProgressIndicator()
                     ],
                   ),

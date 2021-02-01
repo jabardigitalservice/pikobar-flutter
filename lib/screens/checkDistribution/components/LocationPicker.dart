@@ -15,6 +15,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 
 class LocationPicker extends StatefulWidget {
+  LocationPicker({Key key}) : super(key: key);
+
   @override
   _LocationPickerState createState() => _LocationPickerState();
 }
@@ -138,11 +140,13 @@ class _LocationPickerState extends State<LocationPicker> {
           scale: 2,
         ),
         SizedBox(width: 14),
-        Container(width: MediaQuery.of(context).size.width/1.2,
+        Container(
+          width: MediaQuery.of(context).size.width / 1.2,
           child: Text(
             state.address,
             style: TextStyle(
-                fontSize: 12,fontWeight: FontWeight.bold,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
                 fontFamily: FontsFamily.lato,
                 color: Color(0xff000000)),
           ),

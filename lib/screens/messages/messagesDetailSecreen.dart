@@ -30,7 +30,7 @@ import 'package:share/share.dart';
 class MessageDetailScreen extends StatefulWidget {
   final String id;
 
-  MessageDetailScreen({this.id});
+  MessageDetailScreen({Key key, this.id}) : super(key: key);
 
   @override
   _MessageDetailScreenState createState() => _MessageDetailScreenState();

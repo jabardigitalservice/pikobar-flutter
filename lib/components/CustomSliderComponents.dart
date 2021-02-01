@@ -19,19 +19,19 @@ class CustomSliderThumbCircle extends SliderComponentShape {
 
   @override
   void paint(
-      PaintingContext context,
-      Offset center, {
-        Animation<double> activationAnimation,
-        Animation<double> enableAnimation,
-        bool isDiscrete,
-        TextPainter labelPainter,
-        RenderBox parentBox,
-        SliderThemeData sliderTheme,
-        TextDirection textDirection,
-        double value,
-        double textScaleFactor,
-        Size sizeWithOverflow,
-      }) {
+    PaintingContext context,
+    Offset center, {
+    Animation<double> activationAnimation,
+    Animation<double> enableAnimation,
+    bool isDiscrete,
+    TextPainter labelPainter,
+    RenderBox parentBox,
+    SliderThemeData sliderTheme,
+    TextDirection textDirection,
+    double value,
+    double textScaleFactor,
+    Size sizeWithOverflow,
+  }) {
     final Canvas canvas = context.canvas;
 
     final paint = Paint()
@@ -64,7 +64,8 @@ class CustomSliderTickMark extends SliderTickMarkShape {
   });
 
   @override
-  Size getPreferredSize({SliderThemeData sliderTheme, bool isEnabled}) {
+  Size getPreferredSize(
+      {@required SliderThemeData sliderTheme, @required bool isEnabled}) {
     assert(sliderTheme != null);
     assert(sliderTheme.trackHeight != null);
     assert(isEnabled != null);
@@ -76,12 +77,12 @@ class CustomSliderTickMark extends SliderTickMarkShape {
 
   @override
   void paint(PaintingContext context, Offset center,
-      {RenderBox parentBox,
-        SliderThemeData sliderTheme,
-        Animation<double> enableAnimation,
-        Offset thumbCenter,
-        bool isEnabled,
-        TextDirection textDirection}) {
+      {@required RenderBox parentBox,
+      @required SliderThemeData sliderTheme,
+      @required Animation<double> enableAnimation,
+      @required Offset thumbCenter,
+      @required bool isEnabled,
+      @required TextDirection textDirection}) {
     assert(context != null);
     assert(center != null);
     assert(parentBox != null);
@@ -133,7 +134,8 @@ class CustomSliderTickMark extends SliderTickMarkShape {
       Radius.circular(tickMarkRadius),
     );
 
-    final Paint paint = Paint()..color = ColorTween(begin: begin, end: end).evaluate(enableAnimation);
+    final Paint paint = Paint()
+      ..color = ColorTween(begin: begin, end: end).evaluate(enableAnimation);
 
     if (tickMarkRadius > 0) {
       canvas.drawRRect(rRect, paint);

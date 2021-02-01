@@ -15,7 +15,8 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 class ContactHistoryDetailScreen extends StatefulWidget {
   final String contactHistoryId;
 
-  ContactHistoryDetailScreen(this.contactHistoryId);
+  ContactHistoryDetailScreen({Key key, this.contactHistoryId})
+      : super(key: key);
 
   @override
   _ContactHistoryDetailScreenState createState() =>

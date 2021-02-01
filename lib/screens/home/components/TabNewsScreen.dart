@@ -19,6 +19,8 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 
 // ignore: must_be_immutable
 class TabNewsScreen extends StatefulWidget {
+  TabNewsScreen({Key key}) : super(key: key);
+
   @override
   _TabNewsScreenState createState() => _TabNewsScreenState();
 }
@@ -60,8 +62,10 @@ class _TabNewsScreenState extends State<TabNewsScreen> {
         checkInitTypeNews = false;
       }
     }
-    Map<String, dynamic> getLabel =
-    RemoteConfigHelper.decode(remoteConfig: state.remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+        remoteConfig: state.remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
     return Container(
       color: Colors.white,
       child: Column(

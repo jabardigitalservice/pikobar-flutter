@@ -12,14 +12,16 @@ class ShareButton extends StatelessWidget {
   final Alignment alignmentIcon;
 
   ShareButton(
-      {this.onPressed,
+      {Key key,
+      this.onPressed,
       this.height,
       this.padding,
       this.paddingTop,
       this.paddingBottom,
       this.paddingRight,
       this.paddingLeft,
-      this.alignmentIcon});
+      this.alignmentIcon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

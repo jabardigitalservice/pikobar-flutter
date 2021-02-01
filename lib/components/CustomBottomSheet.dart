@@ -27,8 +27,8 @@ void showSuccessBottomSheet(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(8.0),
-          topRight: Radius.circular(8.0),
+          topLeft: const Radius.circular(8.0),
+          topRight: const Radius.circular(8.0),
         ),
       ),
       isDismissible: isDismissible,
@@ -41,7 +41,7 @@ void showSuccessBottomSheet(
               /// Divider section
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(bottom: Dimens.padding),
+                  margin: const EdgeInsets.only(bottom: Dimens.padding),
                   height: 6,
                   width: 60.0,
                   decoration: BoxDecoration(
@@ -49,6 +49,7 @@ void showSuccessBottomSheet(
                       borderRadius: BorderRadius.circular(30.0)),
                 ),
               ),
+
               /// Image section
               ///
               /// If image null, by default it will use image:
@@ -59,7 +60,8 @@ void showSuccessBottomSheet(
               /// )
               /// ```
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 44.0, vertical: Dimens.verticalPadding),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 44.0, vertical: Dimens.verticalPadding),
                 child: image ??
                     Image.asset(
                       '${Environment.imageAssets}daily_success.png',
@@ -178,7 +180,7 @@ void showTextBottomSheet(
                   openChromeSafariBrowser(url: url);
                 },
               ),
-              SizedBox(height: Dimens.sizedBoxHeight)
+              const SizedBox(height: Dimens.sizedBoxHeight)
             ],
           ),
         );
@@ -186,21 +188,25 @@ void showTextBottomSheet(
 }
 
 Future<void> showWidgetBottomSheet(
-    {@required BuildContext context, Widget child, bool isScrollControlled = false}) async {
+    {@required BuildContext context,
+    Widget child,
+    bool isScrollControlled = false}) async {
   return await showModalBottomSheet(
       context: context,
       isScrollControlled: isScrollControlled,
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(8.0),
           topRight: Radius.circular(8.0),
         ),
       ),
       builder: (context) {
         return Container(
-          margin: EdgeInsets.all(Dimens.padding),
-          constraints: BoxConstraints(minHeight: 100, maxHeight: MediaQuery.of(context).size.height - 200),
+          margin: const EdgeInsets.all(Dimens.padding),
+          constraints: BoxConstraints(
+              minHeight: 100,
+              maxHeight: MediaQuery.of(context).size.height - 200),
           child: Stack(
             children: [
               /// Divider section
@@ -217,7 +223,7 @@ Future<void> showWidgetBottomSheet(
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 30.0),
+                margin: const EdgeInsets.only(top: 30.0),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -228,8 +234,7 @@ Future<void> showWidgetBottomSheet(
                       /// If title null, the title section will be hidden
                       child ?? Container(),
 
-
-                      SizedBox(height: Dimens.sizedBoxHeight)
+                      const SizedBox(height: Dimens.sizedBoxHeight)
                     ],
                   ),
                 ),
@@ -240,31 +245,38 @@ Future<void> showWidgetBottomSheet(
       });
 }
 
-
-void showLocationRequestPermission({@required BuildContext context, GestureTapCallback onAgreePressed, GestureTapCallback onCancelPressed}) {
-  showModalBottomSheet(isScrollControlled: true,
+void showLocationRequestPermission(
+    {@required BuildContext context,
+    GestureTapCallback onAgreePressed,
+    GestureTapCallback onCancelPressed}) {
+  showModalBottomSheet(
+      isScrollControlled: true,
       enableDrag: false,
       context: context,
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(8.0),
-          topRight: Radius.circular(8.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.only(
+          topLeft: const Radius.circular(8.0),
+          topRight: const Radius.circular(8.0),
         ),
       ),
       isDismissible: false,
       builder: (context) {
         return SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: Dimens.padding),
+            padding:
+                EdgeInsets.symmetric(vertical: 10, horizontal: Dimens.padding),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Container(width: 60, height: 6, decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3.0),
-                    color: Color(0xFFE0E0E0)
-                ),),
-                SizedBox(height: Dimens.padding),
+                Container(
+                  width: 60,
+                  height: 6,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3.0),
+                      color: const Color(0xFFE0E0E0)),
+                ),
+                const SizedBox(height: Dimens.padding),
                 Text(
                   Dictionary.permissionLocationGeneral,
                   textAlign: TextAlign.center,
@@ -273,7 +285,7 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 Text(
                   Dictionary.permissionLocationAgreement,
                   textAlign: TextAlign.start,
@@ -282,7 +294,7 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
                       fontSize: 12.0,
                       color: Colors.grey[600]),
                 ),
-                SizedBox(height: Dimens.verticalPadding),
+                const SizedBox(height: Dimens.verticalPadding),
                 RoundedButton(
                     title: Dictionary.agree,
                     textStyle: TextStyle(
@@ -293,11 +305,10 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
                     color: ColorBase.green,
                     elevation: 0.0,
                     onPressed: () {
-
                       Navigator.of(context).pop();
                       onAgreePressed();
                     }),
-                SizedBox(height: Dimens.fieldMarginTop),
+                const SizedBox(height: Dimens.fieldMarginTop),
                 RoundedButton(
                     title: Dictionary.later,
                     textStyle: TextStyle(
@@ -306,8 +317,7 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
                         fontWeight: FontWeight.bold,
                         color: ColorBase.darkGrey),
                     color: Colors.white,
-                    borderSide: BorderSide(
-                        color: ColorBase.darkGrey),
+                    borderSide: BorderSide(color: ColorBase.darkGrey),
                     elevation: 0.0,
                     onPressed: () {
                       AnalyticsHelper.setLogEvent(
@@ -316,7 +326,7 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
                       Navigator.of(context).pop();
                       onCancelPressed();
                     }),
-                SizedBox(height: Dimens.verticalPadding),
+                const SizedBox(height: Dimens.verticalPadding),
               ],
             ),
           ),
@@ -326,8 +336,5 @@ void showLocationRequestPermission({@required BuildContext context, GestureTapCa
 
 void showDialogNPS(BuildContext context) {
   showWidgetBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      child: DialogNPS()
-  );
+      context: context, isScrollControlled: true, child: DialogNPS());
 }

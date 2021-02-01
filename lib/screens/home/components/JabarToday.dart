@@ -9,6 +9,8 @@ import 'package:pikobar_flutter/screens/home/components/Zonation.dart';
 import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
 
 class JabarTodayScreen extends StatefulWidget {
+  JabarTodayScreen({Key key}) : super(key: key);
+
   @override
   _JabarTodayScreenState createState() => _JabarTodayScreenState();
 }

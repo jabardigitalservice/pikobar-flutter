@@ -157,12 +157,14 @@ class GroupedRadioButton extends StatefulWidget {
       this.wrapDirection = Axis.horizontal,
       this.wrapAlignment = WrapAlignment.start,
       this.wrapSpacing = 0.0,
-      this.wrapRunSpacing = 0.0})
+      this.wrapRunSpacing = 0.0,
+      Key key})
       : assert(
             defaultSelectedIndex != null
                 ? defaultSelectedIndex < itemLabelList.length
                 : true,
-            "The defaultSelected index value must be less than the number of items. (< ${itemLabelList.length})");
+            "The defaultSelected index value must be less than the number of items. (< ${itemLabelList.length})"),
+        super(key: key);
 
   @override
   _GroupedRadioButtonState createState() => _GroupedRadioButtonState();
@@ -287,7 +289,8 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             validatorValue != null
                 ? Padding(
                     padding: EdgeInsets.only(
-                        left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
+                        left: Dimens.contentPadding,
+                        top: Dimens.sizedBoxHeight),
                     child: Text(
                       validatorValue,
                       style: TextStyle(color: Colors.red, fontSize: 12),

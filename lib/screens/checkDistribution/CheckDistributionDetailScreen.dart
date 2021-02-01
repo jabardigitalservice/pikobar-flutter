@@ -26,7 +26,7 @@ class CheckDistributionDetail extends StatefulWidget {
   CheckDistributionLoaded state;
   String address;
 
-  CheckDistributionDetail(this.state, this.address);
+  CheckDistributionDetail({Key key,this.state, this.address}) : super(key: key);
 
   @override
   _CheckDistributionDetailState createState() =>

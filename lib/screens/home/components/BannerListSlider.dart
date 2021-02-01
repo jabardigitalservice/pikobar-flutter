@@ -22,6 +22,8 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BannerListSlider extends StatefulWidget {
+  BannerListSlider({Key key}) : super(key: key);
+
   @override
   BannerListSliderState createState() => BannerListSliderState();
 }

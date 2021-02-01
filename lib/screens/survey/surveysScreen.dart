@@ -24,6 +24,8 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SurveysScreen extends StatefulWidget {
+  SurveysScreen({Key key}) : super(key: key);
+
   @override
   _SurveysScreenState createState() => _SurveysScreenState();
 }
@@ -32,7 +34,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
-  bool isConnected=false;
+  bool isConnected = false;
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
     super.initState();
     checkConnection();
   }
+
   checkConnection() async {
     isConnected = await Connection().checkConnection(kUrlGoogle);
   }
@@ -105,11 +108,13 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
                   AuthenticationAuthenticated _profileLoaded =
-                  state as AuthenticationAuthenticated;
+                      state as AuthenticationAuthenticated;
                   // ignore: unnecessary_statements
                   _profileLoaded.record.uid;
                   return StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection(kSurveys).snapshots(),
+                    stream: FirebaseFirestore.instance
+                        .collection(kSurveys)
+                        .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
@@ -117,11 +122,10 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           return _buildContent(snapshot);
                         } else {
                           if (isConnected) {
-                          return EmptyData(message: Dictionary.surveyEmpty);
-                            
+                            return EmptyData(message: Dictionary.surveyEmpty);
                           } else {
-                          return EmptyData(message: Dictionary.errorConnection);
-
+                            return EmptyData(
+                                message: Dictionary.errorConnection);
                           }
                         }
                       } else {
@@ -212,8 +216,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final DocumentSnapshot document =
-                      snapshot.data.docs[index];
+                  final DocumentSnapshot document = snapshot.data.docs[index];
 
                   return Column(
                     children: <Widget>[

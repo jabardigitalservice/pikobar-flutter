@@ -16,6 +16,8 @@ import 'package:pikobar_flutter/screens/selfReport/ContactHistoryDetailScreen.da
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class ContactHistoryScreen extends StatefulWidget {
+  ContactHistoryScreen({Key key}) : super(key: key);
+
   @override
   _ContactHistoryScreenState createState() => _ContactHistoryScreenState();
 }
@@ -214,7 +216,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     ContactHistoryDetailScreen(
-                                        documents[i].id)),
+                                        contactHistoryId: documents[i].id)),
                           );
                         },
                         child: Padding(

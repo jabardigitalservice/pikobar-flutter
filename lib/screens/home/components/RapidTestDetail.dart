@@ -24,7 +24,8 @@ class RapidTestDetail extends StatefulWidget {
   final RemoteConfig remoteConfig;
   final DocumentSnapshot document, documentPCR;
 
-  RapidTestDetail(this.remoteConfig, this.document, this.documentPCR);
+  RapidTestDetail({Key key, this.remoteConfig, this.document, this.documentPCR})
+      : super(key: key);
 
   @override
   _RapidTestDetailState createState() => _RapidTestDetailState();
@@ -76,7 +77,8 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         child: CustomBubbleTab(
           isStickyHeader: true,
           titleHeader: Dictionary.testSummaryTitleAppbar,
-          subTitle: unixTimeStampToDate(widget.document.get('last_update').seconds),
+          subTitle:
+              unixTimeStampToDate(widget.document.get('last_update').seconds),
           showTitle: _showTitle,
           scrollController: _scrollController,
           indicatorColor: ColorBase.green,

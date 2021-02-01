@@ -19,7 +19,9 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 class SelfReportDetailScreen extends StatefulWidget {
   final String reportId, otherUID, analytics;
 
-  SelfReportDetailScreen(this.reportId, this.otherUID, this.analytics);
+  SelfReportDetailScreen(
+      {Key key, this.reportId, this.otherUID, this.analytics})
+      : super(key: key);
 
   @override
   _SelfReportDetailScreenState createState() => _SelfReportDetailScreenState();
@@ -35,7 +37,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportDetail);
-  
+
     _scrollController = ScrollController()..addListener(() => setState(() {}));
   }
 
@@ -44,6 +46,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
         _scrollController.offset >
             0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SelfReportDetailBloc>(
@@ -190,7 +193,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
   }
 
   Widget _buildContent(SelfReportDetailLoaded state) {
-    return ListView(controller: _scrollController,
+    return ListView(
+      controller: _scrollController,
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(
@@ -198,17 +202,17 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-               AnimatedOpacity(
-                    opacity: _showTitle ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 250),
-                    child: Text(
-                      Dictionary.selfReportDetail,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+              AnimatedOpacity(
+                opacity: _showTitle ? 0.0 : 1.0,
+                duration: Duration(milliseconds: 250),
+                child: Text(
+                  Dictionary.selfReportDetail,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
               SizedBox(height: 30.0),
 
               Container(
@@ -386,12 +390,16 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 height: 10.0,
               ),
               _buildText(
-                  text: state.documentSnapshot['indications'].replaceAll('[', '').replaceAll(']', ''),
+                  text: state.documentSnapshot['indications']
+                      .replaceAll('[', '')
+                      .replaceAll(']', ''),
                   textAlign: TextAlign.start)
             ],
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height*0.2,)
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.2,
+        )
       ],
     );
   }

@@ -26,15 +26,15 @@ class Announcement extends StatelessWidget {
 
   Announcement(
       {this.title,
-      this.content,
-      this.context,
-      this.onLinkTap,
-      this.actionUrl,
-      this.textStyleTitle,
-      this.textStyleContent,
-      this.textStyleMoreDetail,
-      this.htmlStyle,
-      this.margin});
+        this.content,
+        this.context,
+        this.onLinkTap,
+        this.actionUrl,
+        this.textStyleTitle,
+        this.textStyleContent,
+        this.textStyleMoreDetail,
+        this.htmlStyle,
+        this.margin});
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +55,15 @@ class Announcement extends StatelessWidget {
                   ///Set Text title section
                   title != null && title.isNotEmpty
                       ? Text(
-                          title,
-                          style: textStyleTitle != null
-                              ? textStyleTitle
-                              : TextStyle(
-                                  fontSize: 13.0,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.lato),
-                        )
+                    title,
+                    style: textStyleTitle != null
+                        ? textStyleTitle
+                        : TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.lato),
+                  )
                       : Container(),
                   title != null && title.isNotEmpty
                       ? SizedBox(height: 10)
@@ -72,53 +72,53 @@ class Announcement extends StatelessWidget {
                   ///Set Text content & url if actionUrl is not empty
                   actionUrl != null && actionUrl.isNotEmpty
                       ? RichText(
-                          text: TextSpan(children: [
-                            /// Set Text content section
-                            TextSpan(
-                              text: content,
-                              style: textStyleContent != null
-                                  ? textStyleContent
-                                  : TextStyle(
-                                      fontSize: 12.0,
-                                      height: 1.4,
-                                      color: Colors.grey[600],
-                                      fontFamily: FontsFamily.lato),
-                            ),
+                    text: TextSpan(children: [
+                      /// Set Text content section
+                      TextSpan(
+                        text: content,
+                        style: textStyleContent != null
+                            ? textStyleContent
+                            : TextStyle(
+                            fontSize: 12.0,
+                            height: 1.4,
+                            color: Colors.grey[600],
+                            fontFamily: FontsFamily.lato),
+                      ),
 
-                            /// Set Text url section
-                            TextSpan(
-                                text: Dictionary.moreDetail,
-                                style: textStyleMoreDetail != null
-                                    ? textStyleMoreDetail
-                                    : TextStyle(
-                                        fontSize: 12.0,
-                                        height: 1.4,
-                                        color: ColorBase.green,
-                                        fontFamily: FontsFamily.lato,
-                                        fontWeight: FontWeight.bold),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.announcement);
-                                    openChromeSafariBrowser(url: actionUrl);
-                                  })
-                          ]),
-                        )
+                      /// Set Text url section
+                      TextSpan(
+                          text: Dictionary.moreDetail,
+                          style: textStyleMoreDetail != null
+                              ? textStyleMoreDetail
+                              : TextStyle(
+                              fontSize: 12.0,
+                              height: 1.4,
+                              color: ColorBase.green,
+                              fontFamily: FontsFamily.lato,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.announcement);
+                              openChromeSafariBrowser(url: actionUrl);
+                            })
+                    ]),
+                  )
 
-                      ///Set Text content if actionUrl is empty
+                  ///Set Text content if actionUrl is empty
                       : Html(
-                          data: content,
-                          style: {
-                            'body': htmlStyle != null
-                                ? htmlStyle
-                                : Style(
-                                    margin: EdgeInsets.zero,
-                                    color: Colors.grey[600],
-                                    fontSize: FontSize(12.0),
-                                    fontFamily: FontsFamily.lato,
-                                    textAlign: TextAlign.justify),
-                          },
-                          onLinkTap: onLinkTap)
+                      data: content,
+                      style: {
+                        'body': htmlStyle != null
+                            ? htmlStyle
+                            : Style(
+                            margin: EdgeInsets.zero,
+                            color: Colors.grey[600],
+                            fontSize: FontSize(12.0),
+                            fontFamily: FontsFamily.lato,
+                            textAlign: TextAlign.justify),
+                      },
+                      onLinkTap: onLinkTap)
                 ]),
           ),
         ],

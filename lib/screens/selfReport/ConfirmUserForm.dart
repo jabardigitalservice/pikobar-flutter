@@ -18,12 +18,16 @@ import 'package:uuid/uuid.dart';
 
 class ConfirmUserForm extends StatefulWidget {
   final String nik, name, birthday, gender, relation;
+
   ConfirmUserForm(
-      {@required this.nik,
+      {Key key,
+      @required this.nik,
       @required this.name,
       @required this.birthday,
       @required this.gender,
-      @required this.relation});
+      @required this.relation})
+      : super(key: key);
+
   @override
   _ConfirmUserFormState createState() => _ConfirmUserFormState();
 }

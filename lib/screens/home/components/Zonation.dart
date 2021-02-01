@@ -207,7 +207,8 @@ class _ZonationState extends State<Zonation> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => CheckDistributionDetail(state, _address)),
+                builder: (context) =>
+                    CheckDistributionDetail(state: state, address: _address)),
           );
         } else {
           await _flushbar.dismiss();

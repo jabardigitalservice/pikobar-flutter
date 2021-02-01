@@ -29,14 +29,16 @@ class StatisticsDetailScreen extends StatefulWidget {
   final PcrTestLoaded pcrTestLoaded;
 
   StatisticsDetailScreen(
-      {@required this.remoteConfigLoaded,
+      {Key key,
+      @required this.remoteConfigLoaded,
       @required this.statisticsLoaded,
       @required this.rapidTestLoaded,
       @required this.pcrTestLoaded})
       : assert(remoteConfigLoaded != null),
         assert(statisticsLoaded != null),
         assert(rapidTestLoaded != null),
-        assert(pcrTestLoaded != null);
+        assert(pcrTestLoaded != null),
+        super(key: key);
 
   @override
   _StatisticsDetailScreenState createState() => _StatisticsDetailScreenState();
@@ -545,8 +547,10 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  RapidTestDetail(remoteConfig, rapidDoc, pcrDoc)),
+              builder: (context) => RapidTestDetail(
+                  remoteConfig: remoteConfig,
+                  document: rapidDoc,
+                  documentPCR: pcrDoc)),
         );
       },
       child: Card(
