@@ -39,6 +39,7 @@ class DetailInfoGraphicScreen extends StatefulWidget {
 
 class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   int _current = 0;
+  FToast fToast;
 
   List<String> getDataUrl() {
     List<String> dataUrl = [];
@@ -46,6 +47,13 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
       dataUrl.add(widget.dataInfoGraphic.get('images')[i]);
     }
     return dataUrl;
+  }
+
+  @override
+  void initState() {
+    fToast = FToast();
+    fToast.init(context);
+    super.initState();
   }
 
   @override
@@ -234,11 +242,9 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                               child: Text(
                                 widget.dataInfoGraphic['title'],
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.roboto,
-                                  fontSize: 20.0
-
-                                ),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: FontsFamily.roboto,
+                                    fontSize: 20.0),
                                 textAlign: TextAlign.left,
                               ),
                             ),
@@ -305,11 +311,44 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
             },
           )));
     } else {
-      Fluttertoast.showToast(
-          msg: Dictionary.downloadingFile,
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0);
+      Widget toast = Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            color: ColorBase.grey500,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 12.0,
+              ),
+              Text(
+                Dictionary.downloadingFile,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      fToast.showToast(
+          child: toast,
+          toastDuration: Duration(seconds: 2),
+          positionedToastBuilder: (context, child) {
+            return Positioned(
+              child: child,
+              bottom: 100,
+            );
+          });
 
       name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.jpg';
 
