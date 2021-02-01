@@ -26,6 +26,8 @@ import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 
 class Zonation extends StatefulWidget {
+  Zonation({Key key}) : super(key: key);
+
   @override
   _ZonationState createState() => _ZonationState();
 }

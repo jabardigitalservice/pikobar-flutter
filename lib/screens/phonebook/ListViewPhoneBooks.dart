@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +23,6 @@ import 'package:pikobar_flutter/models/EmergencyNumber.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 import 'package:pikobar_flutter/repositories/EmergencyNumberRepository.dart';
-import 'package:pikobar_flutter/screens/phonebook/CallCenterDetailScreen.dart';
 import 'package:pikobar_flutter/screens/phonebook/PhoneBookDetailScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
@@ -1032,75 +1030,6 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     return list;
   }
 
-  Widget _buildCardHeader(BuildContext context, String iconPath, title, content,
-      nameBoolean, bool isExpand) {
-    return InkWell(
-      onTap: () {
-        callback(nameBoolean, isExpand);
-      },
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-                color: Color(0xffF2C94C),
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: Padding(
-              padding: EdgeInsets.all(17.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                          height: 60,
-                          child: Image.asset(
-                              '${Environment.iconAssets}$iconPath')),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            title,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Text(content, style: TextStyle(fontSize: 11))
-                        ],
-                      ),
-                    ],
-                  ),
-                  Icon(
-                    isExpand
-                        ? Icons.keyboard_arrow_up
-                        : Icons.keyboard_arrow_down,
-                    size: 30,
-                  )
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          )
-        ],
-      ),
-    );
-  }
-
-  void _onTapCallCenter(BuildContext context, DocumentSnapshot document) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CallCenterDetailScreen(document: document),
-      ),
-    );
-
-    AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergencyDetail,
-        <String, dynamic>{'title': document['nama_kotkab']});
-  }
 
   _launchURL(String launchUrl, tipeURL, {String message}) async {
     String url;
