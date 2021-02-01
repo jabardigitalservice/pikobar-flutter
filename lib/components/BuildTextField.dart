@@ -10,6 +10,7 @@ class BuildTextField extends StatelessWidget {
   final TextStyle textStyle;
   final bool isEdit;
 
+
   /// @params
   /// * [title] type String must not be null.
   /// * [hintText] type String must not be null.
@@ -19,15 +20,13 @@ class BuildTextField extends StatelessWidget {
   /// * [textStyle] type from class TextStyle.
   /// * [isEdit] type bool.
   BuildTextField(
-      {Key key,
-      this.title,
-      this.hintText,
-      this.controller,
-      this.validation,
-      this.textInputType,
-      this.textStyle,
-      this.isEdit})
-      : super(key: key);
+      {this.title,
+        this.hintText,
+        this.controller,
+        this.validation,
+        this.textInputType,
+        this.textStyle,
+        this.isEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +40,15 @@ class BuildTextField extends StatelessWidget {
             style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
           ),
           TextFormField(
-            style:
-                textStyle != null ? textStyle : TextStyle(color: Colors.black),
+            style: textStyle != null
+                ? textStyle
+                : TextStyle(color: Colors.black),
             enabled: isEdit != null ? false : true,
             validator: validation,
             controller: controller,
             decoration: InputDecoration(hintText: hintText),
             keyboardType:
-                textInputType != null ? textInputType : TextInputType.text,
+            textInputType != null ? textInputType : TextInputType.text,
           )
         ],
       ),

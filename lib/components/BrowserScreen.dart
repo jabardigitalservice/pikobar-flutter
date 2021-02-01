@@ -9,7 +9,7 @@ class BrowserScreen extends StatefulWidget {
   BrowserScreen({
     Key key,
     @required this.url,
-  }) : super(key: key);
+  });
 
   @override
   _BrowserScreenState createState() => _BrowserScreenState();
@@ -40,8 +40,7 @@ class _BrowserScreenState extends State<BrowserScreen> {
         body: Column(
           children: <Widget>[
             Container(
-                padding:
-                    progress < 1.0 ? EdgeInsets.symmetric(vertical: 5.0) : null,
+                padding: progress < 1.0 ? EdgeInsets.symmetric(vertical: 5.0) : null,
                 child: progress < 1.0
                     ? LinearProgressIndicator(value: progress)
                     : Container()),
@@ -55,12 +54,12 @@ class _BrowserScreenState extends State<BrowserScreen> {
                         debuggingEnabled: true,
                         useShouldOverrideUrlLoading: true,
                       ),
-                      android: AndroidInAppWebViewOptions()),
+                      android: AndroidInAppWebViewOptions()
+                  ),
                   onWebViewCreated: (InAppWebViewController controller) {
                     webView = controller;
                   },
-                  onProgressChanged:
-                      (InAppWebViewController controller, int progress) {
+                  onProgressChanged: (InAppWebViewController controller, int progress) {
                     setState(() {
                       this.progress = progress / 100;
                     });
