@@ -221,7 +221,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
               width: MediaQuery.of(context).size.width * 0.75,
               child: RichText(
                 text: TextSpan(
-                    text: termsConditions['agreement'],
+                    text: termsConditions['agreement']+' ',
                     style: TextStyle(
                         fontFamily: FontsFamily.roboto,
                         height: 1.6,
