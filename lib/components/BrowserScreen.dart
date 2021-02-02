@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pedantic/pedantic.dart';
 
 class BrowserScreen extends StatefulWidget {
   final String url;
 
-  BrowserScreen({
+  const BrowserScreen({
     Key key,
     @required this.url,
-  });
+  }) : super(key: key);
 
   @override
   _BrowserScreenState createState() => _BrowserScreenState();
@@ -40,7 +41,9 @@ class _BrowserScreenState extends State<BrowserScreen> {
         body: Column(
           children: <Widget>[
             Container(
-                padding: progress < 1.0 ? EdgeInsets.symmetric(vertical: 5.0) : null,
+                padding: progress < 1.0
+                    ? const EdgeInsets.symmetric(vertical: 5.0)
+                    : null,
                 child: progress < 1.0
                     ? LinearProgressIndicator(value: progress)
                     : Container()),
@@ -54,12 +57,12 @@ class _BrowserScreenState extends State<BrowserScreen> {
                         debuggingEnabled: true,
                         useShouldOverrideUrlLoading: true,
                       ),
-                      android: AndroidInAppWebViewOptions()
-                  ),
+                      android: AndroidInAppWebViewOptions()),
                   onWebViewCreated: (InAppWebViewController controller) {
                     webView = controller;
                   },
-                  onProgressChanged: (InAppWebViewController controller, int progress) {
+                  onProgressChanged:
+                      (InAppWebViewController controller, int progress) {
                     setState(() {
                       this.progress = progress / 100;
                     });
@@ -75,10 +78,11 @@ class _BrowserScreenState extends State<BrowserScreen> {
 
   Future<bool> _exitWebView() async {
     if (await webView.canGoBack()) {
-      webView.goBack();
+      unawaited(webView.goBack());
       return Future.value(false);
     } else {
       return Future.value(true);
     }
   }
+
 }
