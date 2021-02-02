@@ -22,7 +22,9 @@ class EducationDetailScreen extends StatefulWidget {
   final String educationCollection;
   final EducationModel model;
 
-  EducationDetailScreen({this.id, this.educationCollection, this.model});
+  EducationDetailScreen(
+      {Key key, this.id, this.educationCollection, this.model})
+      : super(key: key);
 
   @override
   _EducationDetailScreenState createState() => _EducationDetailScreenState();

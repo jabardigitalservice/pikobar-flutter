@@ -19,6 +19,8 @@ import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/SliverGrideDelegate.dart';
 
 class MenuList extends StatefulWidget {
+  MenuList({Key key}) : super(key: key);
+
   @override
   _MenuListState createState() => _MenuListState();
 }

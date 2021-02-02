@@ -16,6 +16,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class EducationListScreen extends StatefulWidget {
+  EducationListScreen({Key key}) : super(key: key);
+
   @override
   _EducationListScreenState createState() => _EducationListScreenState();
 }
@@ -55,7 +57,6 @@ class _EducationListScreenState extends State<EducationListScreen> {
                       fontSize: 16.0),
                 ),
               ),
-              
               SizedBox(
                 height: 15,
               ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
 class SplashScreen extends StatefulWidget {
+  SplashScreen({Key key}) : super(key: key);
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }

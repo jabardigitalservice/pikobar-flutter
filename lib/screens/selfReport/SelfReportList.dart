@@ -23,7 +23,8 @@ class SelfReportList extends StatefulWidget {
   final String otherUID;
   final String analytics;
 
-  SelfReportList(this.location, this.analytics, {this.otherUID});
+  SelfReportList({Key key, this.location, this.analytics, this.otherUID})
+      : super(key: key);
 
   @override
   _SelfReportListState createState() => _SelfReportListState();
@@ -293,7 +294,9 @@ class _SelfReportListState extends State<SelfReportList> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => SelfReportDetailScreen(
-                                '${i + 1}', widget.otherUID, widget.analytics)),
+                                reportId: '${i + 1}',
+                                otherUID: widget.otherUID,
+                                analytics: widget.analytics)),
                       );
                     } else {
                       if (listDocumentId.contains('$i')) {
@@ -352,7 +355,9 @@ class _SelfReportListState extends State<SelfReportList> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SelfReportDetailScreen(
-                            '${i + 1}', widget.otherUID, widget.analytics)),
+                            reportId: '${i + 1}',
+                            otherUID: widget.otherUID,
+                            analytics: widget.analytics)),
                   );
                 } else {
                   /// Move to form screen

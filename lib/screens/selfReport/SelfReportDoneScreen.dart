@@ -21,7 +21,9 @@ class SelfReportDoneScreen extends StatefulWidget {
   final String otherUID;
   final String analytics;
 
-  SelfReportDoneScreen(this.location, this.otherUID, this.analytics);
+  SelfReportDoneScreen({Key key, this.location, this.otherUID, this.analytics})
+      : super(key: key);
+
   @override
   _SelfReportDoneScreenState createState() => _SelfReportDoneScreenState();
 }

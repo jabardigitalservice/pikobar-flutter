@@ -25,6 +25,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 
 class ContactHistoryFormScreen extends StatefulWidget {
+  ContactHistoryFormScreen({Key key}) : super(key: key);
+
   @override
   _ContactHistoryFormScreenState createState() =>
       _ContactHistoryFormScreenState();
@@ -166,7 +168,6 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             ),
           ),
           SizedBox(height: Dimens.padding),
-
           _buildLabel(text: Dictionary.contactName),
           _buildTextField(
               title: Dictionary.contactName,

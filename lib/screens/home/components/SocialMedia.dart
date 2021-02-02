@@ -9,6 +9,8 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SocialMedia extends StatefulWidget {
+  SocialMedia({Key key}) : super(key: key);
+
   @override
   _SocialMediaState createState() => _SocialMediaState();
 }

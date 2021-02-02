@@ -13,7 +13,7 @@ class DocumentViewScreen extends StatefulWidget {
   final String url;
   final String nameFile;
 
-  DocumentViewScreen({this.url, this.nameFile});
+  DocumentViewScreen({Key key, this.url, this.nameFile}) : super(key: key);
 
   @override
   _DocumentViewScreenState createState() => _DocumentViewScreenState();

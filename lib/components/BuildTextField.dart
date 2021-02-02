@@ -18,6 +18,7 @@ class BuildTextField extends StatelessWidget {
   /// * [textInputType] type from class TextInputType.
   /// * [textStyle] type from class TextStyle.
   /// * [isEdit] type bool.
+
   const BuildTextField(
       {Key key,
       this.title,
@@ -47,7 +48,7 @@ class BuildTextField extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(hintText: hintText),
             keyboardType:
-                textInputType != null ? textInputType : TextInputType.text,
+            textInputType != null ? textInputType : TextInputType.text,
           )
         ],
       ),

@@ -61,7 +61,7 @@ class CustomAppBar {
       {@required TextEditingController searchController,
       @required String title,
       @required String hintText,
-        double elevation,
+      double elevation,
       ValueChanged<String> onChanged}) {
     return AppBar(
         backgroundColor: Colors.white,
@@ -84,7 +84,8 @@ class CustomAppBar {
   }
 
   static Widget buildSearchField(TextEditingController searchController,
-      String hintText, ValueChanged<String> onChanged, {EdgeInsetsGeometry margin}) {
+      String hintText, ValueChanged<String> onChanged,
+      {EdgeInsetsGeometry margin}) {
     return Container(
       margin: margin ?? EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
@@ -133,7 +134,7 @@ class CustomAppBar {
     return AppBar(
       title: AnimatedOpacity(
         opacity: showTitle ? 1.0 : 0.0,
-        duration: Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
         child: Text(
           showTitle ? title : '',
           style: TextStyle(

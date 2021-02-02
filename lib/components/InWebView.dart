@@ -7,14 +7,13 @@ class InWebView extends StatefulWidget {
   final String url;
   final String title;
 
-  InWebView({@required this.url, this.title});
+  InWebView({@required this.url, this.title, Key key}) : super(key: key);
 
   @override
   _InWebViewState createState() => _InWebViewState();
 }
 
 class _InWebViewState extends State<InWebView> {
-
   WebViewController controllerGlobal;
   bool showLoading = true;
 
@@ -24,7 +23,9 @@ class _InWebViewState extends State<InWebView> {
       onWillPop: () => _exitWebView(context),
       child: Scaffold(
         appBar: CustomAppBar.defaultAppBar(
-          title: widget.title != null && widget.title.isNotEmpty ? widget.title : Dictionary.appName,
+          title: widget.title != null && widget.title.isNotEmpty
+              ? widget.title
+              : Dictionary.appName,
         ),
         body: Stack(
           children: <Widget>[
@@ -41,8 +42,9 @@ class _InWebViewState extends State<InWebView> {
               },
               gestureNavigationEnabled: true,
             ),
-
-            showLoading ? Center(child: CircularProgressIndicator()) : Container()
+            showLoading
+                ? Center(child: CircularProgressIndicator())
+                : Container()
           ],
         ),
       ),

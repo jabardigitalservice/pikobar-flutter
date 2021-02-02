@@ -240,7 +240,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        TermsConditionsPage(termsConditions)),
+                                        TermsConditionsPage(termsConfig: termsConditions,)),
                               );
                             })
                     ]),

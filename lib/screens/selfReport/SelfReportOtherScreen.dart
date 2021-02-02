@@ -170,8 +170,8 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelfReportList(
-                              widget.location,
-                              Analytics.tappedDailyOtherReport,
+                              location: widget.location,
+                              analytics: Analytics.tappedDailyOtherReport,
                               otherUID: documents[i].get('user_id'),
                             )));
                   },

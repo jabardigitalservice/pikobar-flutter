@@ -38,6 +38,7 @@ class Announcement extends StatelessWidget {
       this.margin})
       : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,15 +58,15 @@ class Announcement extends StatelessWidget {
                   ///Set Text title section
                   title != null && title.isNotEmpty
                       ? Text(
-                          title,
-                          style: textStyleTitle != null
-                              ? textStyleTitle
-                              : TextStyle(
-                                  fontSize: 13.0,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: FontsFamily.lato),
-                        )
+                    title,
+                    style: textStyleTitle != null
+                        ? textStyleTitle
+                        : TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.lato),
+                  )
                       : Container(),
                   title != null && title.isNotEmpty
                       ? const SizedBox(height: 10)
@@ -74,40 +75,40 @@ class Announcement extends StatelessWidget {
                   ///Set Text content & url if actionUrl is not empty
                   actionUrl != null && actionUrl.isNotEmpty
                       ? RichText(
-                          text: TextSpan(children: [
-                            /// Set Text content section
-                            TextSpan(
-                              text: content,
-                              style: textStyleContent != null
-                                  ? textStyleContent
-                                  : TextStyle(
-                                      fontSize: 12.0,
-                                      height: 1.4,
-                                      color: Colors.grey[600],
-                                      fontFamily: FontsFamily.lato),
-                            ),
+                    text: TextSpan(children: [
+                      /// Set Text content section
+                      TextSpan(
+                        text: content,
+                        style: textStyleContent != null
+                            ? textStyleContent
+                            : TextStyle(
+                            fontSize: 12.0,
+                            height: 1.4,
+                            color: Colors.grey[600],
+                            fontFamily: FontsFamily.lato),
+                      ),
 
-                            /// Set Text url section
-                            TextSpan(
-                                text: Dictionary.moreDetail,
-                                style: textStyleMoreDetail != null
-                                    ? textStyleMoreDetail
-                                    : TextStyle(
-                                        fontSize: 12.0,
-                                        height: 1.4,
-                                        color: ColorBase.green,
-                                        fontFamily: FontsFamily.lato,
-                                        fontWeight: FontWeight.bold),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.announcement);
-                                    openChromeSafariBrowser(url: actionUrl);
-                                  })
-                          ]),
-                        )
+                      /// Set Text url section
+                      TextSpan(
+                          text: Dictionary.moreDetail,
+                          style: textStyleMoreDetail != null
+                              ? textStyleMoreDetail
+                              : TextStyle(
+                              fontSize: 12.0,
+                              height: 1.4,
+                              color: ColorBase.green,
+                              fontFamily: FontsFamily.lato,
+                              fontWeight: FontWeight.bold),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.announcement);
+                              openChromeSafariBrowser(url: actionUrl);
+                            })
+                    ]),
+                  )
 
-                      ///Set Text content if actionUrl is empty
+                  ///Set Text content if actionUrl is empty
                       : Html(
                           data: content,
                           style: {

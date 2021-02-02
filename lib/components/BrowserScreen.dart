@@ -84,4 +84,5 @@ class _BrowserScreenState extends State<BrowserScreen> {
       return Future.value(true);
     }
   }
+
 }

@@ -23,6 +23,8 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Statistics extends StatefulWidget {
+  Statistics({Key key}) : super(key: key);
+
   @override
   _StatisticsState createState() => _StatisticsState();
 }
@@ -248,7 +250,8 @@ class _StatisticsState extends State<Statistics> {
           ),
           SizedBox(height: 10),
           Text(
-            unixTimeStampToCustomDateFormat(data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
+            unixTimeStampToCustomDateFormat(
+                data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
             style: TextStyle(
                 color: Color(0xff333333),
                 fontFamily: FontsFamily.roboto,
@@ -374,8 +377,10 @@ class _StatisticsState extends State<Statistics> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  RapidTestDetail(remoteConfig, document, documentPCR)),
+              builder: (context) => RapidTestDetail(
+                  remoteConfig: remoteConfig,
+                  document: document,
+                  documentPCR: documentPCR)),
         );
       },
       child: Card(

@@ -52,24 +52,41 @@ class ComplaintsMenuScreen extends StatelessWidget {
                     _buildButtonMenu(
                         context,
                         '${Environment.iconAssets}whatsapp.png',
-                        Dictionary.crowdComplaints, () async {
-                      await launchExternal(kUrlPikobarHotline);
-                      await AnalyticsHelper.setLogEvent(
-                          Analytics.crowdReport);
-                    }),
+                        isReady
+                            ? RemoteConfigHelper.getString(
+                                remoteConfig: snapshot.data,
+                                firebaseConfig:
+                                    FirebaseConfig.reportHotlineCaption,
+                                defaultValue: Dictionary.crowdComplaints)
+                            : Dictionary.crowdComplaints,
+                        isReady &&
+                                !snapshot.data.getBool(
+                                    FirebaseConfig.reportHotlineEnabled)
+                            ? null
+                            : () async {
+                                await launchExternal(kUrlPikobarHotline);
+                                await AnalyticsHelper.setLogEvent(
+                                    Analytics.crowdReport);
+                              }),
                     _buildButtonMenu(
                         context,
                         '${Environment.iconAssets}menu_logistik.png',
                         isReady
                             ? RemoteConfigHelper.getString(
-                            remoteConfig: snapshot.data,
-                            firebaseConfig: FirebaseConfig.reportCaption,
-                            defaultValue: Dictionary.bansosComplaints)
-                            : Dictionary.bansosComplaints, isReady && !snapshot.data.getBool(FirebaseConfig.reportEnabled) ? null : () async {
-                      await openChromeSafariBrowser(url: complaintsUrl);
-                      await AnalyticsHelper.setLogEvent(
-                          Analytics.tappedCaseReport);
-                    })
+                                remoteConfig: snapshot.data,
+                                firebaseConfig: FirebaseConfig.reportCaption,
+                                defaultValue: Dictionary.bansosComplaints)
+                            : Dictionary.bansosComplaints,
+                        isReady &&
+                                !snapshot.data
+                                    .getBool(FirebaseConfig.reportEnabled)
+                            ? null
+                            : () async {
+                                await openChromeSafariBrowser(
+                                    url: complaintsUrl);
+                                await AnalyticsHelper.setLogEvent(
+                                    Analytics.tappedCaseReport);
+                              })
                   ],
                 )
               ],

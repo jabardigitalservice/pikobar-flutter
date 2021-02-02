@@ -12,8 +12,9 @@ class HeroImagePreview extends StatefulWidget {
   final PageController pageController;
 
   HeroImagePreview(this.heroTag,
-      {this.imageUrl, this.galleryItems, this.initialIndex})
-      : pageController = PageController(initialPage: initialIndex ?? 0);
+      {this.imageUrl, this.galleryItems, this.initialIndex, Key key})
+      : pageController = PageController(initialPage: initialIndex ?? 0),
+        super(key: key);
 
   @override
   _HeroImagePreviewState createState() => _HeroImagePreviewState();
