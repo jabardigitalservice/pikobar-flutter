@@ -461,13 +461,14 @@ class _EditState extends State<Edit> {
                                           .substring(3) !=
                                       _phoneNumberController.text
                                           .substring(1)) {
-                                    final data = FirebaseFirestore.instance
-                                        .collection(kUsers)
-                                        .where("phone_number",
-                                            isEqualTo: Dictionary.inaCode +
-                                                _phoneNumberController.text
-                                                    .substring(1))
-                                        .get();
+                                    final Future<QuerySnapshot> data =
+                                        FirebaseFirestore.instance
+                                            .collection(kUsers)
+                                            .where("phone_number",
+                                                isEqualTo: Dictionary.inaCode +
+                                                    _phoneNumberController.text
+                                                        .substring(1))
+                                            .get();
 
                                     data.then((docs) {
                                       if (docs.docs.isNotEmpty) {
