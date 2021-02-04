@@ -13,8 +13,9 @@ class HeroImagePreview extends StatefulWidget {
   final PageController pageController;
 
   HeroImagePreview(this.heroTag,
-      {this.imageUrl, this.galleryItems, this.initialIndex})
-      : pageController = PageController(initialPage: initialIndex ?? 0);
+      {this.imageUrl, this.galleryItems, this.initialIndex, Key key})
+      : pageController = PageController(initialPage: initialIndex ?? 0),
+        super(key: key);
 
   @override
   _HeroImagePreviewState createState() => _HeroImagePreviewState();
@@ -46,22 +47,20 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar.animatedAppBar(
-          showTitle: false,
-          title: ''),
+      appBar: CustomAppBar.animatedAppBar(showTitle: false, title: ''),
       body: Container(
         child: widget.imageUrl == null
             ? _buildPhotoViewGallery()
             : PhotoView(
-          imageProvider: NetworkImage(widget.imageUrl),
-          maxScale: PhotoViewComputedScale.covered * 2.0,
-          minScale: PhotoViewComputedScale.contained * 0.8,
-          backgroundDecoration: BoxDecoration(color: Colors.white),
-          heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
-          onTapUp: (context, tapDetail, controller) {
-            Navigator.of(context).pop();
-          },
-        ),
+                imageProvider: NetworkImage(widget.imageUrl),
+                maxScale: PhotoViewComputedScale.covered * 2.0,
+                minScale: PhotoViewComputedScale.contained * 0.8,
+                backgroundDecoration: BoxDecoration(color: Colors.white),
+                heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
+                onTapUp: (context, tapDetail, controller) {
+                  Navigator.of(context).pop();
+                },
+              ),
       ),
     );
   }
@@ -89,42 +88,42 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
       ),
       widget.galleryItems.length > 1
           ? Positioned(
-        bottom: 0.0,
-        left: 0.0,
-        right: 0.0,
-        child: Container(
-          color: Colors.grey[800].withOpacity(0.5),
-          width: MediaQuery.of(context).size.width,
-          height: 40,
-        ),
-      )
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Container(
+                color: Colors.grey[800].withOpacity(0.5),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+              ),
+            )
           : Container(),
       widget.galleryItems.length > 1
           ? Positioned(
-          bottom: 0.0,
-          left: 0.0,
-          right: 0.0,
-          child: Center(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                child: new Center(
-                  child: DotsIndicator(
-                    controller: widget.pageController,
-                    itemCount: widget.galleryItems.length,
-                    onPageSelected: (int page) {
-                      widget.pageController.animateToPage(
-                        page,
-                        duration: _kDuration,
-                        curve: _kCurve,
-                      );
-                    },
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Center(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: new Center(
+                      child: DotsIndicator(
+                        controller: widget.pageController,
+                        itemCount: widget.galleryItems.length,
+                        onPageSelected: (int page) {
+                          widget.pageController.animateToPage(
+                            page,
+                            duration: _kDuration,
+                            curve: _kCurve,
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ))
+              ))
           : Container(),
     ]);
   }
