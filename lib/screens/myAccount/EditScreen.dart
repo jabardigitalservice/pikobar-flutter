@@ -461,7 +461,7 @@ class _EditState extends State<Edit> {
                                           .substring(3) !=
                                       _phoneNumberController.text
                                           .substring(1)) {
-                                    var data = FirebaseFirestore.instance
+                                    final data = FirebaseFirestore.instance
                                         .collection(kUsers)
                                         .where("phone_number",
                                             isEqualTo: Dictionary.inaCode +
@@ -608,7 +608,7 @@ class _EditState extends State<Edit> {
       if (otpEnabled) {
         // Otp is enable
         // Check connection
-        bool isConnected = await Connection().checkConnection(kUrlGoogle);
+        final bool isConnected = await Connection().checkConnection(kUrlGoogle);
         if (isConnected) {
           // Process for auto verification
           verificationCompleted = (AuthCredential credential) async {
