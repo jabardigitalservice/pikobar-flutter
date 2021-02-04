@@ -229,7 +229,7 @@ class _EditState extends State<Edit> {
                               children: <Widget>[
                                 CircularProgressIndicator(),
                                 Container(
-                                  margin: EdgeInsets.only(left: 15.0),
+                                  margin: const EdgeInsets.only(left: 15.0),
                                   child: Text(Dictionary.loading),
                                 )
                               ],
@@ -243,19 +243,19 @@ class _EditState extends State<Edit> {
                     },
                     child: ListView(
                       controller: _scrollController,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               AnimatedOpacity(
                                 opacity: _showTitle ? 0.0 : 1.0,
-                                duration: Duration(milliseconds: 250),
+                                duration: const Duration(milliseconds: 250),
                                 child: Padding(
-                                  padding: EdgeInsets.all(15.0),
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Text(
                                     Dictionary.edit,
                                     style: TextStyle(
@@ -265,7 +265,7 @@ class _EditState extends State<Edit> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildTextField(
@@ -274,14 +274,14 @@ class _EditState extends State<Edit> {
                                   controller: _nameController,
                                   validation: Validations.nameValidation,
                                   isEdit: true),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildTextField(
                                   title: Dictionary.email,
                                   controller: _emailController,
                                   isEdit: false),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildTextField(
@@ -291,7 +291,7 @@ class _EditState extends State<Edit> {
                                   hintText: Dictionary.placeholderYourNIK,
                                   validation: Validations.nikValidation,
                                   isEdit: true),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildPhoneField(
@@ -300,7 +300,7 @@ class _EditState extends State<Edit> {
                                   validation: Validations.telephoneValidation,
                                   isEdit: true,
                                   hintText: Dictionary.phoneNumberPlaceholder),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildRadioButton(
@@ -310,7 +310,7 @@ class _EditState extends State<Edit> {
                                     "Perempuan",
                                   ],
                                   isEmpty: isGenderEmpty),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildDateField(
@@ -322,12 +322,12 @@ class _EditState extends State<Edit> {
                                               .text
                                               .substring(0, 10))),
                                   isEmpty: isBirthdayEmpty),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               Container(
-                                padding:
-                                    EdgeInsets.only(left: 16.0, right: 16.0),
+                                padding: const EdgeInsets.only(
+                                    left: 16.0, right: 16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -343,7 +343,7 @@ class _EditState extends State<Edit> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     ButtonTheme(
@@ -387,7 +387,7 @@ class _EditState extends State<Edit> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               buildTextField(
@@ -397,7 +397,7 @@ class _EditState extends State<Edit> {
                                   hintText: Dictionary.addressPlaceholder,
                                   validation: Validations.addressValidation,
                                   isEdit: true),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               StreamBuilder<QuerySnapshot>(
@@ -432,58 +432,70 @@ class _EditState extends State<Edit> {
                                             isCityFieldEmpty);
                                     }
                                   }),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: RaisedButton(
-                            color: ColorBase.limeGreen,
+                            color: isEmptyField()
+                                ? ColorBase.disableText
+                                : ColorBase.limeGreen,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             onPressed: () {
-                              if (widget.state['phone_number']
-                                      .toString()
-                                      .substring(3) !=
-                                  _phoneNumberController.text.substring(1)) {
-                                var data = FirebaseFirestore.instance
-                                    .collection(kUsers)
-                                    .where("phone_number",
-                                        isEqualTo: Dictionary.inaCode +
-                                            _phoneNumberController.text
-                                                .substring(1))
-                                    .get();
+                              checkEmptyField();
+                              if (_formKey.currentState.validate()) {
+                                FocusScope.of(context).unfocus();
+                                if (!isGenderEmpty &&
+                                    !isBirthdayEmpty &&
+                                    !isCityFieldEmpty) {
+                                  if (widget.state['phone_number']
+                                          .toString()
+                                          .substring(3) !=
+                                      _phoneNumberController.text
+                                          .substring(1)) {
+                                    final Future<QuerySnapshot> data =
+                                        FirebaseFirestore.instance
+                                            .collection(kUsers)
+                                            .where("phone_number",
+                                                isEqualTo: Dictionary.inaCode +
+                                                    _phoneNumberController.text
+                                                        .substring(1))
+                                            .get();
 
-                                data.then((docs) {
-                                  if (docs.docs.isNotEmpty) {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            DialogTextOnly(
-                                              description: Dictionary
-                                                  .phoneNumberHasBeenUsed,
-                                              buttonText: Dictionary.ok,
-                                              onOkPressed: () {
-                                                Navigator.of(context)
-                                                    .pop(); // To close the dialog
-                                              },
-                                            ));
+                                    data.then((docs) {
+                                      if (docs.docs.isNotEmpty) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                DialogTextOnly(
+                                                  description: Dictionary
+                                                      .phoneNumberHasBeenUsed,
+                                                  buttonText: Dictionary.ok,
+                                                  onOkPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(); // To close the dialog
+                                                  },
+                                                ));
+                                      } else {
+                                        _onSaveProfileButtonPressed(otpEnabled);
+                                      }
+                                    });
                                   } else {
                                     _onSaveProfileButtonPressed(otpEnabled);
                                   }
-                                });
-                              } else {
-                                _onSaveProfileButtonPressed(otpEnabled);
+                                }
                               }
                             },
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 13),
+                              padding: const EdgeInsets.symmetric(vertical: 13),
                               child: Text(
                                 Dictionary.save,
                                 style: TextStyle(
@@ -535,8 +547,17 @@ class _EditState extends State<Edit> {
     );
   }
 
-  // Function to process user input in edit profile
-  _onSaveProfileButtonPressed(bool otpEnabled) async {
+  bool isEmptyField() {
+    return _nameController.text.isEmpty ||
+        _nikController.text.isEmpty ||
+        _phoneNumberController.text.isEmpty ||
+        _genderController.text.isEmpty ||
+        _birthDayController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _cityController.text.isEmpty;
+  }
+
+  checkEmptyField() {
     // Check empty field
     if (_cityController.text == '') {
       setState(() {
@@ -565,82 +586,79 @@ class _EditState extends State<Edit> {
         isBirthdayEmpty = false;
       });
     }
-    if (_formKey.currentState.validate()) {
-      FocusScope.of(context).unfocus();
-      if (isGenderEmpty || isBirthdayEmpty || isCityFieldEmpty) {
-        // If the field is empty doing nothing and validator will be shown
+  }
 
-      } else if (widget.state['phone_number'] ==
-          Dictionary.inaCode + _phoneNumberController.text.substring(1)) {
-        // If phone number field not change by user it will be save to firebase and skip otp
+  // Function to process user input in edit profile
+  _onSaveProfileButtonPressed(bool otpEnabled) async {
+    if (widget.state['phone_number'] ==
+        Dictionary.inaCode + _phoneNumberController.text.substring(1)) {
+      // If phone number field not change by user it will be save to firebase and skip otp
+      _profileBloc.add(Save(
+          id: widget.state['id'],
+          phoneNumber: _phoneNumberController.text.substring(1),
+          gender: _genderController.text,
+          address: _addressController.text,
+          cityId: _cityController.text,
+          provinceId: Dictionary.provinceId,
+          name: _nameController.text,
+          nik: _nikController.text,
+          latLng: latLng,
+          birthdate: DateTime.parse(_birthDayController.text)));
+    } else {
+      // If phone number field changed, check otp enable or disable
+      if (otpEnabled) {
+        // Otp is enable
+        // Check connection
+        final bool isConnected = await Connection().checkConnection(kUrlGoogle);
+        if (isConnected) {
+          // Process for auto verification
+          verificationCompleted = (AuthCredential credential) async {
+            await _profileRepository.linkCredential(
+                widget.state['id'],
+                _phoneNumberController.text.substring(1),
+                _genderController.text,
+                _addressController.text,
+                _cityController.text,
+                Dictionary.provinceId,
+                _nameController.text,
+                _nikController.text,
+                DateTime.parse(_birthDayController.text),
+                credential,
+                latLng);
+            // Change state to verified
+            _profileBloc.add(VerifyConfirm());
+          };
+          verificationFailed = (FirebaseAuthException authException) {
+            // Change state to verification failed
+            _profileBloc.add(VerifyFailed());
+          };
+          // Process for sending otp code
+          codeSent = (String verificationId, [int forceResendingToken]) async {
+            // Change state to code successfully sent
+            _profileBloc.add(CodeSend(verificationID: verificationId));
+          };
+          // Execute otp process
+          _profileBloc.add(Verify(
+              id: widget.state['id'],
+              phoneNumber: _phoneNumberController.text.substring(1),
+              verificationCompleted: verificationCompleted,
+              verificationFailed: verificationFailed,
+              codeSent: codeSent));
+        }
+      } else {
+        // Otp is disable
+        // Save change directly to firestore
         _profileBloc.add(Save(
             id: widget.state['id'],
             phoneNumber: _phoneNumberController.text.substring(1),
+            name: _nameController.text,
+            nik: _nikController.text,
             gender: _genderController.text,
             address: _addressController.text,
             cityId: _cityController.text,
             provinceId: Dictionary.provinceId,
-            name: _nameController.text,
-            nik: _nikController.text,
             latLng: latLng,
             birthdate: DateTime.parse(_birthDayController.text)));
-      } else {
-        // If phone number field changed, check otp enable or disable
-        if (otpEnabled) {
-          // Otp is enable
-          // Check connection
-          bool isConnected = await Connection().checkConnection(kUrlGoogle);
-          if (isConnected) {
-            // Process for auto verification
-            verificationCompleted = (AuthCredential credential) async {
-              await _profileRepository.linkCredential(
-                  widget.state['id'],
-                  _phoneNumberController.text.substring(1),
-                  _genderController.text,
-                  _addressController.text,
-                  _cityController.text,
-                  Dictionary.provinceId,
-                  _nameController.text,
-                  _nikController.text,
-                  DateTime.parse(_birthDayController.text),
-                  credential,
-                  latLng);
-              // Change state to verified
-              _profileBloc.add(VerifyConfirm());
-            };
-            verificationFailed = (FirebaseAuthException authException) {
-              // Change state to verification failed
-              _profileBloc.add(VerifyFailed());
-            };
-            // Process for sending otp code
-            codeSent =
-                (String verificationId, [int forceResendingToken]) async {
-              // Change state to code successfully sent
-              _profileBloc.add(CodeSend(verificationID: verificationId));
-            };
-            // Execute otp process
-            _profileBloc.add(Verify(
-                id: widget.state['id'],
-                phoneNumber: _phoneNumberController.text.substring(1),
-                verificationCompleted: verificationCompleted,
-                verificationFailed: verificationFailed,
-                codeSent: codeSent));
-          }
-        } else {
-          // Otp is disable
-          // Save change directly to firestore
-          _profileBloc.add(Save(
-              id: widget.state['id'],
-              phoneNumber: _phoneNumberController.text.substring(1),
-              name: _nameController.text,
-              nik: _nikController.text,
-              gender: _genderController.text,
-              address: _addressController.text,
-              cityId: _cityController.text,
-              provinceId: Dictionary.provinceId,
-              latLng: latLng,
-              birthdate: DateTime.parse(_birthDayController.text)));
-        }
       }
     }
   }
@@ -651,7 +669,7 @@ class _EditState extends State<Edit> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 16),
+          padding: const EdgeInsets.only(left: 16),
           child: Row(
             children: <Widget>[
               Text(
@@ -673,7 +691,7 @@ class _EditState extends State<Edit> {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         RadioButtonGroup(
@@ -700,13 +718,13 @@ class _EditState extends State<Edit> {
           },
         ),
         isEmpty
-            ? SizedBox(
+            ? const SizedBox(
                 height: 10,
               )
             : Container(),
         isEmpty
             ? Padding(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
@@ -720,7 +738,7 @@ class _EditState extends State<Edit> {
 // Funtion to build date field
   Widget buildDateField({String title, placeholder, bool isEmpty}) {
     return Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -744,7 +762,7 @@ class _EditState extends State<Edit> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           InkWell(
@@ -764,7 +782,7 @@ class _EditState extends State<Edit> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       placeholder,
                       style: TextStyle(
@@ -776,7 +794,7 @@ class _EditState extends State<Edit> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Container(
                         height: 15,
                         child: Image.asset(
@@ -787,13 +805,13 @@ class _EditState extends State<Edit> {
             ),
           ),
           isEmpty
-              ? SizedBox(
+              ? const SizedBox(
                   height: 10,
                 )
               : Container(),
           isEmpty
               ? Padding(
-                  padding: EdgeInsets.only(left: 15),
+                  padding: const EdgeInsets.only(left: 15),
                   child: Text(
                     title + Dictionary.pleaseCompleteAllField,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -816,7 +834,7 @@ class _EditState extends State<Edit> {
       bool isEdit,
       int maxLines}) {
     return Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -840,7 +858,7 @@ class _EditState extends State<Edit> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextFormField(
@@ -894,7 +912,7 @@ class _EditState extends State<Edit> {
       TextEditingController controller, bool isEmpty,
       [validation]) {
     return Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -918,7 +936,7 @@ class _EditState extends State<Edit> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
@@ -931,7 +949,7 @@ class _EditState extends State<Edit> {
                     color: isEmpty ? Colors.red : ColorBase.greyBorder,
                     width: 1.5)),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: custom.DropdownButton<dynamic>(
                 underline: SizedBox(),
                 icon: Icon(
@@ -969,13 +987,13 @@ class _EditState extends State<Edit> {
             ),
           ),
           isEmpty
-              ? SizedBox(
+              ? const SizedBox(
                   height: 10,
                 )
               : Container(),
           isEmpty
               ? Padding(
-                  padding: EdgeInsets.only(left: 15),
+                  padding: const EdgeInsets.only(left: 15),
                   child: Text(
                     title + Dictionary.pleaseCompleteAllField,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -997,7 +1015,7 @@ class _EditState extends State<Edit> {
       TextStyle textStyle,
       bool isEdit}) {
     return Container(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1021,7 +1039,7 @@ class _EditState extends State<Edit> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextFormField(
