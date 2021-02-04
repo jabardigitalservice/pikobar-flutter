@@ -142,9 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: CircularProgressIndicator(),
                         );
                       } else if (state is ProfileLoaded) {
-                        ProfileLoaded _getProfile = state;
-                        return _buildContent(
-                            _getProfile.profile, _profileLoaded);
+                        return _buildContent(state.profile, _profileLoaded);
                       } else {
                         _profileBloc
                             .add(ProfileLoad(uid: _profileLoaded.record.uid));

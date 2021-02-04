@@ -161,9 +161,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       child: CircularProgressIndicator(),
                     );
                   } else if (state is ProfileLoaded) {
-                    ProfileLoaded _getProfile = state;
-                    return _getProfile.profile.exists
-                        ? _buildContent(_getProfile.profile)
+                    return state.profile.exists
+                        ? _buildContent(state.profile)
                         : _buildContent(null);
                   } else {
                     _profileBloc.add(ProfileLoad(
