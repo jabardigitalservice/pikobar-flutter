@@ -12,13 +12,11 @@ import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogQrCode.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
-import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
@@ -135,39 +133,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     HealthCheck().isUserHealty(_profileLoaded.record.uid);
-                    return StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection(kUsers)
-                            .doc(_profileLoaded.record.uid)
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (snapshot.hasError)
-                            // Show error ui when unable to get data
-                            return ErrorContent(error: snapshot.error);
-
-                          // Logout when data doesn't exist
-                          if (snapshot.connectionState !=
-                                  ConnectionState.waiting &&
-                              !snapshot.data.exists) {
-                            _authenticationBloc.add(LoggedOut());
-                          }
-
-                          switch (snapshot.connectionState) {
-                            // Show loading while get data
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            default:
-                              // Show content when data is ready
-                              return snapshot.data.exists
-                                  ? _buildContent(snapshot.data, _profileLoaded)
-                                  : Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                          }
-                        });
+                    return BlocBuilder<ProfileBloc, ProfileState>(builder: (
+                      BuildContext context,
+                      ProfileState state,
+                    ) {
+                      if (state is ProfileLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is ProfileLoaded) {
+                        return _buildContent(state.profile, _profileLoaded);
+                      } else {
+                        _profileBloc
+                            .add(ProfileLoad(uid: _profileLoaded.record.uid));
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    });
                   } else if (state is AuthenticationFailure ||
                       state is AuthenticationLoading) {
                     return OnBoardingLoginScreen(
@@ -489,8 +472,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  TermsConditionsPage(termsConditions)),
+                              builder: (context) => TermsConditionsPage(
+                                    termsConditions,
+                                  )),
                         );
                       })
               ]),
