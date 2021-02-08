@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -40,6 +42,7 @@ class DetailInfoGraphicScreen extends StatefulWidget {
 class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   int _current = 0;
   FToast fToast;
+  ReceivePort _port = ReceivePort();
 
   List<String> getDataUrl() {
     List<String> dataUrl = [];
@@ -53,6 +56,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   void initState() {
     fToast = FToast();
     fToast.init(context);
+    _downloadListener();
     super.initState();
   }
 
@@ -382,7 +386,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
             (await _findLocalPath()) + Platform.pathSeparator + 'Downloads';
 
         try {
-          var coba = await FlutterDownloader.enqueue(
+          await FlutterDownloader.enqueue(
             url: url,
             headers: {"auth": "test_for_sql_encoding"},
             savedDir: _localPath,
@@ -390,8 +394,6 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
             showNotification: true,
             openFileFromNotification: true,
           );
-          print('cekk sound ' + _localPath);
-          FlutterDownloader.open(taskId: coba);
         } catch (e) {
           print(e.toString());
         }
@@ -408,6 +410,32 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
+  }
+
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort send =
+        IsolateNameServer.lookupPortByName('downloader_send_port');
+    send.send([id, status, progress]);
+  }
+
+  _downloadListener() {
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+      if (status.toString() == "DownloadTaskStatus(3)" &&
+          progress == 100 &&
+          id != null) {
+        String query = "SELECT * FROM task WHERE task_id='" + id + "'";
+        var tasks = FlutterDownloader.loadTasksWithRawQuery(query: query);
+        //if the task exists, open it
+        if (tasks != null) FlutterDownloader.open(taskId: id);
+      }
+    });
+    FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override
