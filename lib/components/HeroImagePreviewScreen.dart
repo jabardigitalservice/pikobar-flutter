@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DotsIndicator.dart';
 
 class HeroImagePreview extends StatefulWidget {
@@ -44,19 +45,23 @@ class _HeroImagePreviewState extends State<HeroImagePreview> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.imageUrl == null
-          ? _buildPhotoViewGallery()
-          : PhotoView(
-              imageProvider: NetworkImage(widget.imageUrl),
-              maxScale: PhotoViewComputedScale.covered * 2.0,
-              minScale: PhotoViewComputedScale.contained * 0.8,
-              backgroundDecoration: BoxDecoration(color: Colors.white),
-              heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
-              onTapUp: (context, tapDetail, controller) {
-                Navigator.of(context).pop();
-              },
-            ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: CustomAppBar.animatedAppBar(showTitle: false, title: ''),
+      body: Container(
+        child: widget.imageUrl == null
+            ? _buildPhotoViewGallery()
+            : PhotoView(
+                imageProvider: NetworkImage(widget.imageUrl),
+                maxScale: PhotoViewComputedScale.covered * 2.0,
+                minScale: PhotoViewComputedScale.contained * 0.8,
+                backgroundDecoration: BoxDecoration(color: Colors.white),
+                heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
+                onTapUp: (context, tapDetail, controller) {
+                  Navigator.of(context).pop();
+                },
+              ),
+      ),
     );
   }
 
