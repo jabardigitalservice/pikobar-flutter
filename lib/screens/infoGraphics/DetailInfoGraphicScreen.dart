@@ -269,11 +269,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                       fontFamily: FontsFamily.roboto,
                     ),
                     onPressed: () {
-                      Platform.isAndroid
-                          ? _downloadAttachment(widget.dataInfoGraphic['title'],
-                              widget.dataInfoGraphic['images'][_current])
-                          : _viewPdf(widget.dataInfoGraphic['title'],
-                              widget.dataInfoGraphic['images'][_current]);
+                      _downloadAttachment(widget.dataInfoGraphic['title'],
+                          widget.dataInfoGraphic['images'][_current]);
                     }),
               ),
             ),
@@ -290,6 +287,11 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     await AnalyticsHelper.setLogEvent(Analytics.openImage, <String, dynamic>{
       'name_image': title.length < 100 ? title : title.substring(0, 100),
     });
+  }
+
+  Future<String> _findLocalPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
 
   void _downloadAttachment(String name, String url) async {
@@ -352,27 +354,47 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
       name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.jpg';
 
-      try {
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: Environment.downloadStorage,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      } catch (e) {
-        String dir = (await getExternalStorageDirectory()).path + '/download';
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: dir,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
+      if (Platform.isAndroid) {
+        try {
+          await FlutterDownloader.enqueue(
+            url: url,
+            savedDir: Environment.downloadStorage,
+            fileName: name,
+            showNotification: true,
+            // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+        } catch (e) {
+          String dir = (await getExternalStorageDirectory()).path + '/download';
+          await FlutterDownloader.enqueue(
+            url: url,
+            savedDir: dir,
+            fileName: name,
+            showNotification: true,
+            // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+        }
+      } else if (Platform.isIOS) {
+        String _localPath =
+            (await _findLocalPath()) + Platform.pathSeparator + 'Downloads';
+
+        try {
+          var coba = await FlutterDownloader.enqueue(
+            url: url,
+            headers: {"auth": "test_for_sql_encoding"},
+            savedDir: _localPath,
+            fileName: name,
+            showNotification: true,
+            openFileFromNotification: true,
+          );
+          print('cekk sound ' + _localPath);
+          FlutterDownloader.open(taskId: coba);
+        } catch (e) {
+          print(e.toString());
+        }
       }
 
       await AnalyticsHelper.setLogEvent(
