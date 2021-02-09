@@ -208,6 +208,7 @@ class _VideoListState extends State<VideoList> {
               ),
               Container(
                 height: 265.0,
+                width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     padding: const EdgeInsets.only(
                         right: Dimens.padding, bottom: Dimens.padding),
@@ -217,8 +218,8 @@ class _VideoListState extends State<VideoList> {
                     itemBuilder: (context, index) {
                       return Container(
                         padding: const EdgeInsets.only(left: Dimens.padding),
-                        width: MediaQuery.of(context).size.width * 0.38,
-                        // decoration: BoxDecoration(shape: BoxShape.circle),
+                        width: 150.0,
+                        height: 150.0,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
