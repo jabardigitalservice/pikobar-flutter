@@ -25,7 +25,7 @@ class GeocoderRepository {
 
   Future getCity(LatLng coordinate) async {
     if (coordinate != null) {
-     final placemarks = await placemarkFromCoordinates(
+     final List<Placemark> placemarks = await placemarkFromCoordinates(
           coordinate.latitude, coordinate.longitude);
 
       if (placemarks != null && placemarks.isNotEmpty) {
