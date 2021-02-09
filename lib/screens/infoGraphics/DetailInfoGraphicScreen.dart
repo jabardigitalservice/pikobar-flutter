@@ -294,7 +294,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   }
 
   Future<String> _findLocalPath() async {
-    final directory = await getApplicationDocumentsDirectory();
+    final Directory directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
