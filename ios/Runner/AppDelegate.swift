@@ -11,7 +11,7 @@ import FirebaseAuth
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self
+      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
     GMSServices.provideAPIKey("%GOOGLE_API_KEY%")
     GeneratedPluginRegistrant.register(with: self)

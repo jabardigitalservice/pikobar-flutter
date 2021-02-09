@@ -255,7 +255,9 @@ class HomeScreenState extends State<HomeScreen>
     tabController.dispose();
     _remoteConfigBloc.close();
     _bannersBloc.close();
-    _statisticsBloc.close();
+    if (_statisticsBloc != null) {
+      _statisticsBloc.close();
+    }
     if (_rapidTestBloc != null) {
       _rapidTestBloc.close();
     }
