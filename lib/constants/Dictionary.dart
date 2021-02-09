@@ -33,8 +33,8 @@ class Dictionary {
   static String videoUpToDate = 'Video Terkini';
   static String hintSearch = 'Ketikkan kata kunci ...';
   static String nomorDarurat = 'Detail Nomor Darurat';
-  static String bansosComplaints = 'Aduan Bansos Pikobar';
-  static String crowdComplaints = 'Aduan Kerumunan Pikobar';
+  static String bansosComplaints = 'Aduan Bansos';
+  static String crowdComplaints = 'Aduan Kerumunan';
   static String underSupervision = 'Dalam Pengawasan';
   static String inMonitoring = 'Dalam Pemantauan';
   static String positif = 'Positif Aktif';

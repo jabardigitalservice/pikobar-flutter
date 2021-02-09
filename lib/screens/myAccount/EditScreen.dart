@@ -1167,9 +1167,10 @@ class _EditState extends State<Edit> {
         city = 'kab. ' + city.replaceAll('Regency', '');
       });
     }
+
     for (var i = 0; i < listCity.length; i++) {
       /// Checking same name of [city] in [listCity]
-      if (listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
+      if (city.isNotEmpty && listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
         setState(() {
           tempCity = listCity[i];
         });
