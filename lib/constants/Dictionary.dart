@@ -88,6 +88,7 @@ class Dictionary {
   static String verificationNumber = 'Verifikasi Nomor';
   static String newLabel = 'Baru';
   static String travelHistoryReport = 'Lapor Aktivitas Berpegian';
+  static String isolationCenter = 'Pusat Isolasi';
 
   // Button Text
   static String cancel = 'Batal';

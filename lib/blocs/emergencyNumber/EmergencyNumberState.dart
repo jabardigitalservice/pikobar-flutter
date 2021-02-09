@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
+import 'package:pikobar_flutter/models/IsolationCenterModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 
 abstract class EmergencyNumberState extends Equatable {
@@ -20,7 +21,7 @@ class EmergencyNumberLoading extends EmergencyNumberState {
 class ReferralHospitalLoaded extends EmergencyNumberState {
   final List<ReferralHospitalModel> referralHospitalList;
 
-  ReferralHospitalLoaded(this.referralHospitalList);
+  const ReferralHospitalLoaded(this.referralHospitalList);
 
   @override
   List<Object> get props => [referralHospitalList];
@@ -29,7 +30,7 @@ class ReferralHospitalLoaded extends EmergencyNumberState {
 class CallCenterLoaded extends EmergencyNumberState {
   final List<CallCenterModel> callCenterList;
 
-  CallCenterLoaded(this.callCenterList);
+  const CallCenterLoaded(this.callCenterList);
 
   @override
   List<Object> get props => [callCenterList];
@@ -38,8 +39,17 @@ class CallCenterLoaded extends EmergencyNumberState {
 class GugusTugasWebLoaded extends EmergencyNumberState {
   final List<GugusTugasWebModel> gugusTugasWebModel;
 
-  GugusTugasWebLoaded(this.gugusTugasWebModel);
+  const GugusTugasWebLoaded(this.gugusTugasWebModel);
 
   @override
   List<Object> get props => [gugusTugasWebModel];
+}
+
+class IsolationCenterLoaded extends EmergencyNumberState {
+  final List<IsolationCenterModel> isolationCenterModel;
+
+  const IsolationCenterLoaded(this.isolationCenterModel);
+
+  @override
+  List<Object> get props => [isolationCenterModel];
 }
