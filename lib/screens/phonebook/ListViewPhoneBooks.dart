@@ -233,7 +233,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   : Column(
                       children: getListContent(
                           listReferralHospitalModel: dataNomorDarurat,
-                          nameModel: 'ReferralHospitalModel',
+                          nameModel: Dictionary.referralHospitalModel,
                           listCityName: tempListCityName),
                     );
             } else {
@@ -285,7 +285,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   : Column(
                       children: getListContent(
                           callCenterModel: dataCallCenter,
-                          nameModel: 'CallCenterModel',
+                          nameModel: Dictionary.callCenterModel,
                           listCityName: null),
                     );
             } else {
@@ -337,7 +337,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   : Column(
                       children: getListContent(
                           gugusTugasWebModel: dataWebGugusTugas,
-                          nameModel: 'GugusTugasWebModel',
+                          nameModel: Dictionary.gugusTugasWebModel,
                           listCityName: null),
                     );
             } else {
@@ -395,7 +395,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                   : Column(
                       children: getListContent(
                           listIsolationCenterModel: dataIsolationCenter,
-                          nameModel: 'IsolationCenterModel',
+                          nameModel: Dictionary.isolationCenterModel,
                           listCityName: tempListCityName),
                     );
             } else {
@@ -418,9 +418,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       @required List<dynamic> listCityName,
       @required String nameModel}) {
     List<Widget> list = List();
-    if (nameModel == 'GugusTugasWebModel') {
+    if (nameModel == Dictionary.gugusTugasWebModel) {
       listCityName = gugusTugasWebModel;
-    } else if (nameModel == 'CallCenterModel') {
+    } else if (nameModel == Dictionary.callCenterModel) {
       listCityName = callCenterModel;
     }
     for (int i = 0; i < listCityName.length; i++) {
@@ -440,8 +440,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                       callCenterModel != null ? callCenterModel[i] : null,
                   gugusTugasWebModel:
                       gugusTugasWebModel != null ? gugusTugasWebModel[i] : null,
-                  cityName: nameModel == 'GugusTugasWebModel' ||
-                          nameModel == 'CallCenterModel'
+                  cityName: nameModel == Dictionary.gugusTugasWebModel ||
+                          nameModel == Dictionary.callCenterModel
                       ? null
                       : listCityName[i],
                   nameAnalytics: Analytics.tappedphoneBookEmergencyDetail,
@@ -462,9 +462,9 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       @required String cityName,
       @required String nameAnalytics,
       @required String nameModel}) {
-    if (nameModel == 'GugusTugasWebModel') {
+    if (nameModel == Dictionary.gugusTugasWebModel) {
       cityName = gugusTugasWebModel.name;
-    } else if (nameModel == 'CallCenterModel') {
+    } else if (nameModel == Dictionary.callCenterModel) {
       cityName = callCenterModel.nameCity;
     }
     return Column(
@@ -502,9 +502,10 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
                       padding: const EdgeInsets.all(10.0),
                       child: Container(
                           height: 25,
-                          child: Image.asset(nameModel == 'GugusTugasWebModel'
-                              ? '${Environment.iconAssets}web_underline.png'
-                              : '${Environment.iconAssets}phone.png')),
+                          child: Image.asset(
+                              nameModel == Dictionary.gugusTugasWebModel
+                                  ? '${Environment.iconAssets}web_underline.png'
+                                  : '${Environment.iconAssets}phone.png')),
                     ),
                   ),
                   const SizedBox(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
@@ -75,15 +76,15 @@ class _PhoneBookDetailState extends State<PhoneBookDetail> {
                   ),
                 ),
               ),
-              widget.nameModel == 'ReferralHospitalModel' ||
-                      widget.nameModel == 'IsolationCenterModel'
+              widget.nameModel == Dictionary.referralHospitalModel ||
+                      widget.nameModel == Dictionary.isolationCenterModel
                   ? Column(
                       children: buildListContent(
                           referralHospitalModel:
                               widget.documentReferralHospital,
                           isolationCenterModel: widget.isolationCenterModel),
                     )
-                  : widget.nameModel == 'CallCenterModel'
+                  : widget.nameModel == Dictionary.callCenterModel
                       ? buildCallCenter(widget.documentCallCenterModel)
                       : buildWebGugusTugas(widget.documentGugusTugasWebModel)
             ]));

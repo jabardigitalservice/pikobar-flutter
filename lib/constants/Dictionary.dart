@@ -222,6 +222,10 @@ class Dictionary {
       'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
   static String checkAroundYou = 'Cek Sekitar Anda';
   static String youAreIn = 'Anda berada di Zona';
+  static String referralHospitalModel = 'ReferralHospitalModel';
+  static String isolationCenterModel = 'IsolationCenterModel';
+  static String callCenterModel = 'CallCenterModel';
+  static String gugusTugasWebModel = 'GugusTugasWebModel';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
