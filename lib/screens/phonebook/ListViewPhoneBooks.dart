@@ -204,7 +204,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               /// Checking search field
               if (widget.searchQuery != null) {
                 /// Filtering data by search
-                List<ReferralHospitalModel> tempList = state
+                final List<ReferralHospitalModel> tempList = state
                     .referralHospitalList
                     .where((test) => test.name
                         .toLowerCase()
@@ -367,7 +367,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               /// Checking search field
               if (widget.searchQuery != null) {
                 /// Filtering data by search
-                List<IsolationCenterModel> tempList = state.isolationCenterModel
+                final List<IsolationCenterModel> tempList = state
+                    .isolationCenterModel
                     .where((test) => test.name
                         .toLowerCase()
                         .contains(widget.searchQuery.toLowerCase()))
