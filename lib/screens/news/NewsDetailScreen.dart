@@ -35,10 +35,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
 
+// ignore: must_be_immutable
 class NewsDetailScreen extends StatefulWidget {
   final String id;
   final String news;
-  final NewsModel model;
+  NewsModel model;
 
   NewsDetailScreen({Key key, this.id, this.news, this.model}) : super(key: key);
 
@@ -52,6 +53,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   String _newsType;
   ScrollController _scrollController;
   bool lastStatus = true;
+  bool isUpdateData = true;
+  NewsModel dataNews;
 
   _scrollListener() {
     if (isShrink != lastStatus) {
@@ -71,6 +74,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     AnalyticsHelper.setCurrentScreen(Analytics.news);
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    dataNews = widget.model;
 
     if (widget.news == Dictionary.importantInfo) {
       _newsType = NewsType.articlesImportantInfo;
@@ -88,14 +92,20 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<NewsDetailBloc>(
-      create: (context) => _newsDetailBloc = NewsDetailBloc()
-        ..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
-      child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
-        builder: (context, state) {
-          return _buildScaffold(context, state);
-        },
-      ),
-    );
+        create: (context) => _newsDetailBloc = NewsDetailBloc()
+          ..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
+        child: BlocListener<NewsDetailBloc, NewsDetailState>(
+            listener: (context, state) {
+          if (state is NewsDetailLoaded) {
+            setState(() {
+              dataNews = state.record;
+            });
+          }
+        }, child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
+          builder: (context, state) {
+            return _buildScaffold(context, state);
+          },
+        )));
   }
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
@@ -113,23 +123,25 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 color: isShrink ? Colors.black : Colors.white,
               ),
               onPressed: () {
-                widget.news == Dictionary.importantInfo
-                    ? _shareMessage(widget.model)
-                    : Share.share(
-                        '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                    <String, dynamic>{'title': widget.model.title});
+                if (dataNews != null) {
+                  widget.news == Dictionary.importantInfo
+                      ? _shareMessage(dataNews)
+                      : Share.share(
+                          '${dataNews.title}\n\n${dataNews.backlink != null ? 'Baca berita lengkapnya:\n' + dataNews.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                  AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                      <String, dynamic>{'title': dataNews.title});
+                }
               },
             )
           ],
-          titleAppbar: widget.model.title,
+          titleAppbar: dataNews != null ? dataNews.title : '',
           backgroundAppBar: GestureDetector(
             child: Hero(
                 tag: Dictionary.heroImageTag,
                 child: Stack(
                   children: [
                     Image.network(
-                      widget.model.image,
+                      dataNews != null ? dataNews.image : '',
                       fit: BoxFit.cover,
                       height: MediaQuery.of(context).size.height,
                     ),
@@ -139,16 +151,18 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   ],
                 )),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => HeroImagePreview(
-                            Dictionary.heroImageTag,
-                            imageUrl: widget.model.image,
-                          )));
+              if (dataNews != null) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => HeroImagePreview(
+                              Dictionary.heroImageTag,
+                              imageUrl: dataNews.image,
+                            )));
+              }
             },
           ),
-          body: widget.model == null
+          body: dataNews == null
               ? state is NewsDetailLoading
                   ? _buildLoading(context)
                   : state is NewsDetailLoaded
@@ -156,7 +170,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       : state is NewsDetailFailure
                           ? ErrorContent(error: state.error)
                           : Container()
-              : _buildContent(context, widget.model),
+              : _buildContent(context, dataNews),
         ));
   }
 
