@@ -60,11 +60,14 @@ class Analytics {
 
   //event tab jabar today
   static String tappedDailyUpdate = 'tapped_update_harian';
-  static String tappedTotalInspectionCovid = 'tapped_total_pemeriksaan_covid_19';
-  static String tappedMoreCaseDataJabar = 'tapped_selengkapnya_data_kasus_jabar';
+  static String tappedTotalInspectionCovid =
+      'tapped_total_pemeriksaan_covid_19';
+  static String tappedMoreCaseDataJabar =
+      'tapped_selengkapnya_data_kasus_jabar';
 
   //event tab informasi covid-19
-  static String tappedSearchCovidInformation = 'tapped_cari_tab_informasi_covid_19';
+  static String tappedSearchCovidInformation =
+      'tapped_cari_tab_informasi_covid_19';
 
   // event phoneBook Emergency
   static String tappedphoneBookEmergencyDetail = 'tapped_nomor_darurat_detail';
@@ -77,6 +80,7 @@ class Analytics {
   static String tappedRefferalHospitalTab = 'tapped_rs_rujukan_tab';
   static String tappedCallCenterTab = 'tapped_call_center_tab';
   static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
+  static String tappedIsolationCenterTab = 'tapped_pusat_Isolasi_tab';
 
   // event infographic
   static String tappedInfographicall = 'tapped_semua_info_praktikal';
@@ -166,15 +170,15 @@ class Analytics {
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
 
   static String crowdReport = "tapped_lapor_kerumunan";
-  
+
   //event profile
   static String tappedEditProfile = "tapped_edit_akun";
   static String tappedVerificationNumber = "tapped_verifikasi_nomor";
-  static String tappedSendAgainVerificationNumber = "tapped_kirim_ulang_verifikasi_nomor";
+  static String tappedSendAgainVerificationNumber =
+      "tapped_kirim_ulang_verifikasi_nomor";
   static String tappedTermsAndConditions = "tapped_terms_and_conditions";
 
   //event zonation
   static String tappedShareLocation = "tapped_bagikan_lokasi";
   static String tappedArroundYouLocation = "tapped_lokasi_sekitar_anda";
-
 }

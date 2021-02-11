@@ -50,6 +50,7 @@ class FirebaseConfig {
   static String statisticsSwitch = 'statistics_switch';
   static String bottomSheetContent = 'bottom_sheet_content';
   static String geolocationEnabled = 'geolocation_enabled';
+  static String emergencyNumberTab = 'emergency_number_tab';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -210,4 +211,44 @@ class FirebaseConfig {
       '}'
       '}'
       '}';
+
+  static String emergencyCallDefaultValue = '['
+      '{'
+      '"title": "119 Call Center",'
+      '"image": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fphone.png?alt=media&token=fba990d3-3ca1-4078-a8cb-2eb7432fdf05",'
+      '"phone_number": "119",'
+      '"action": "call",'
+      '"message": ""'
+      ' },'
+      '{'
+      '"title": "WA Hotline Pikobar",'
+      '"image": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fwhatsapp_icon.png?alt=media&token=b0554181-390d-453e-8a58-890dd4942ab7",'
+      ' "phone_number": "+6285697391854",'
+      '"action": "whatsapp",'
+      ' "message": "Halo Admin! Saya ingin tanya seputar PIKOBAR"'
+      '}'
+      ']';
+
+  static String emergencyNumberTabDefaultValue = '['
+      '{'
+      '"name": "No Darurat",'
+      '"analytics": "tapped_nomor_darurat_tab"'
+      '},'
+      '{'
+      '"name": "RS Rujukan COVID-19",'
+      '"analytics": "tapped_rs_rujukan_tab"'
+      '},'
+      '{'
+      '"name": "Call Center Kota/Kab",'
+      '"analytics": "tapped_call_center_tab"'
+      '},'
+      '{'
+      '"name": "Website Gugus Tugas Kota/Kabupaten Jawa Barat",'
+      ' "analytics": "tapped_gugus_tugas_web_tab"'
+      '},'
+      ' {'
+      '"name": "Pusat Isolasi",'
+      '"analytics": "tapped_pusat_Isolasi_tab"'
+      '}'
+      ']';
 }
