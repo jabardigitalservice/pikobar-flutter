@@ -35,10 +35,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
 
+// ignore: must_be_immutable
 class NewsDetailScreen extends StatefulWidget {
   final String id;
   final String news;
-  final NewsModel model;
+  NewsModel model;
 
   NewsDetailScreen({Key key, this.id, this.news, this.model}) : super(key: key);
 
@@ -52,6 +53,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   String _newsType;
   ScrollController _scrollController;
   bool lastStatus = true;
+  bool isUpdateData = true;
 
   _scrollListener() {
     if (isShrink != lastStatus) {
@@ -99,6 +101,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   }
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
+    if (widget.model != null) {
+      print('cekk isi image ' + widget.model.image);
+    }
     return Scaffold(
         backgroundColor: Colors.white,
         body: CollapsingAppbar(
@@ -113,23 +118,25 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 color: isShrink ? Colors.black : Colors.white,
               ),
               onPressed: () {
-                widget.news == Dictionary.importantInfo
-                    ? _shareMessage(widget.model)
-                    : Share.share(
-                        '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                    <String, dynamic>{'title': widget.model.title});
+                if (widget.model != null) {
+                  widget.news == Dictionary.importantInfo
+                      ? _shareMessage(widget.model)
+                      : Share.share(
+                          '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                  AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                      <String, dynamic>{'title': widget.model.title});
+                }
               },
             )
           ],
-          titleAppbar: widget.model.title,
+          titleAppbar: widget.model != null ? widget.model.title : '',
           backgroundAppBar: GestureDetector(
             child: Hero(
                 tag: Dictionary.heroImageTag,
                 child: Stack(
                   children: [
                     Image.network(
-                      widget.model.image,
+                      widget.model != null ? widget.model.image : '',
                       fit: BoxFit.cover,
                       height: MediaQuery.of(context).size.height,
                     ),
@@ -139,13 +146,15 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   ],
                 )),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => HeroImagePreview(
-                            Dictionary.heroImageTag,
-                            imageUrl: widget.model.image,
-                          )));
+              if (widget.model != null) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => HeroImagePreview(
+                              Dictionary.heroImageTag,
+                              imageUrl: widget.model.image,
+                            )));
+              }
             },
           ),
           body: widget.model == null
@@ -249,6 +258,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start, children: widgets);
   }
+
 
   _buildContent(BuildContext context, NewsModel data) {
     return SingleChildScrollView(
