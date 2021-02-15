@@ -143,6 +143,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     Image.network(
                       dataNews != null ? dataNews.image : '',
                       fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                     ),
                     Container(
@@ -179,7 +180,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       scrollDirection: Axis.vertical,
       child: Skeleton(
         child: Container(
-          margin: EdgeInsets.only(bottom: 20.0),
+          margin: const EdgeInsets.only(bottom: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -199,7 +200,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       height: 20.0,
                       color: Colors.grey,
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     Row(
                       children: <Widget>[
                         Container(
@@ -208,7 +209,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           color: Colors.grey,
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 5.0),
+                          margin: const EdgeInsets.only(left: 5.0),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -218,7 +219,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                   color: Colors.grey,
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(top: 4.0),
+                                  margin: const EdgeInsets.only(top: 4.0),
                                   width: 150.0,
                                   height: 10.0,
                                   color: Colors.grey,
@@ -227,9 +228,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                         )
                       ],
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     _loadingText(),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     _loadingText(),
                   ],
                 ),
@@ -246,7 +247,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
     for (int i = 0; i < 4; i++) {
       widgets.add(Container(
-        margin: EdgeInsets.only(bottom: 5.0),
+        margin: const EdgeInsets.only(bottom: 5.0),
         width: MediaQuery.of(context).size.width,
         height: 18.0,
         color: Colors.grey,
@@ -254,7 +255,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     }
 
     widgets.add(Container(
-      margin: EdgeInsets.only(bottom: 5.0),
+      margin: const EdgeInsets.only(bottom: 5.0),
       width: MediaQuery.of(context).size.width / 2,
       height: 18.0,
       color: Colors.grey,
@@ -268,7 +269,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Container(
-        margin: EdgeInsets.only(bottom: 20.0),
+        margin: const EdgeInsets.only(bottom: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -284,7 +285,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       Row(
                         children: <Widget>[
                           Container(
-                            margin: EdgeInsets.only(left: 5.0),
+                            margin: const EdgeInsets.only(left: 5.0),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -305,9 +306,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Padding(
-                    padding: EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 5),
                     child: Text(
                       data.title,
                       style: TextStyle(
@@ -317,7 +318,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Html(
                       data: data.content,
                       style: {
@@ -338,7 +339,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   data.actionTitle != null &&
                           data.actionTitle.isNotEmpty &&
                           data.actionUrl != null &&
@@ -357,7 +358,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           width: MediaQuery.of(context).size.width,
                           height: 1.0,
                           color: Colors.grey,
-                          margin: EdgeInsets.only(top: 25.0, bottom: 16.0),
+                          margin:
+                              const EdgeInsets.only(top: 25.0, bottom: 16.0),
                         )
                       : Container(),
                   data.attachmentUrl.isNotEmpty
@@ -399,7 +401,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           ],
                         )
                       : Container(),
-                  SizedBox(height: 25.0),
+                  const SizedBox(height: 25.0),
                 ],
               ),
             ),
@@ -488,9 +490,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       try {
         blockCircleLoading(context: context, dismissible: true);
 
-        var request = await HttpClient().getUrl(Uri.parse(data.image));
-        var response = await request.close();
-        Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+        final HttpClientRequest request = await HttpClient().getUrl(Uri.parse(data.image));
+        final HttpClientResponse response = await request.close();
+        final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
 
         Navigator.of(context).pop();
 
