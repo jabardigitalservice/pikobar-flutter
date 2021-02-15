@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,7 +105,7 @@ class AuthRepository {
               FirebaseFirestore.instance.collection(kUsers).doc(user.uid);
 
           await userDocument.get().then((snapshot) async {
-            if (snapshot.exists && snapshot.get('name') == null) {
+            if (snapshot.exists && getField(snapshot, 'name') == null) {
               await userDocument.update({'name': displayName});
             }
           });
@@ -259,9 +260,9 @@ class AuthRepository {
       FirebaseAnalytics().setUserId(_user.uid);
 
       userDocument.get().then((snapshot) {
-        if (snapshot.exists && snapshot.get('city_id') != null) {
+        if (snapshot.exists && getField(snapshot, 'city_id') != null) {
           FirebaseAnalytics().setUserProperty(
-              name: 'city_id', value: snapshot.get('city_id'));
+              name: 'city_id', value: getField(snapshot, 'city_id'));
         }
       });
     }
