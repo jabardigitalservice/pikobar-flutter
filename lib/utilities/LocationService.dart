@@ -29,12 +29,14 @@ import 'AnalyticsHelper.dart';
 
 class LocationService {
   static Future<bool> initializeBackgroundLocation(BuildContext context) async {
-
     final locationBloc = BlocProvider.of<LocationPermissionBloc>(context);
 
-    bool isGranted = await Permission.locationAlways.status.isGranted;
+    bool isGranted = await Permission.locationAlways.status.isGranted ||
+        await Permission.locationWhenInUse.status.isGranted;
     if (isGranted) {
-      locationBloc..add(LocationPermissionLoad(isGranted))..close();
+      locationBloc
+        ..add(LocationPermissionLoad(isGranted))
+        ..close();
       if (await _isMonitoredUser()) {
         if (await AuthRepository().hasLocalUserInfo()) {
           await configureBackgroundLocation();
@@ -43,7 +45,6 @@ class LocationService {
       } else {
         await stopBackgroundLocation();
       }
-
     } else {
       showLocationRequestPermission(
           context: context,
@@ -52,7 +53,8 @@ class LocationService {
             locationBloc.add(LocationPermissionLoad(isGranted));
           },
           onAgreePressed: () async {
-            if (await Permission.locationAlways.status.isPermanentlyDenied) {
+            if (await Permission.locationAlways.status.isPermanentlyDenied &&
+                await Permission.locationWhenInUse.status.isPermanentlyDenied) {
               isGranted = false;
               locationBloc.add(LocationPermissionLoad(isGranted));
 
@@ -60,8 +62,11 @@ class LocationService {
                   ? await AppSettings.openAppSettings()
                   : await AppSettings.openLocationSettings();
             } else {
-              [Permission.locationAlways].request().then((status) async {
-                isGranted = status[Permission.locationAlways].isGranted;
+              [Permission.locationAlways, Permission.locationWhenInUse]
+                  .request()
+                  .then((status) async {
+                isGranted = status[Permission.locationAlways].isGranted ||
+                    status[Permission.locationWhenInUse].isGranted;
                 locationBloc.add(LocationPermissionLoad(isGranted));
                 if (isGranted) {
                   locationBloc.close();
@@ -79,7 +84,8 @@ class LocationService {
   // Old Method
   // Send data to dashboard geolocation at least 5 minutes.
   static Future<void> actionSendLocation() async {
-    if (await Permission.locationAlways.status.isGranted) {
+    if (await Permission.locationAlways.status.isGranted ||
+        await Permission.locationWhenInUse.status.isGranted) {
       int oldTime =
           await LocationSharedPreference.getLastLocationRecordingTime();
 
@@ -106,10 +112,6 @@ class LocationService {
               timestamp: currentMillis);
 
           await LocationsRepository().recordLocation(data);
-
-          // This call after all process done (Moved to LocationsRepository)
-          /*await LocationSharedPreference.setLastLocationRecordingTime(
-            currentMillis);*/
         }
       }
     }
@@ -117,7 +119,8 @@ class LocationService {
 
   // New Method
   static Future<void> configureBackgroundLocation({UserModel userInfo}) async {
-    if (await Permission.locationAlways.status.isGranted) {
+    if (await Permission.locationAlways.status.isGranted ||
+        await Permission.locationWhenInUse.status.isGranted) {
       String locationTemplate = '{'
           '"latitude":<%= latitude %>, '
           '"longitude":<%= longitude %>, '
@@ -246,7 +249,8 @@ class LocationService {
 
   static Future<void> _onStatusRequested(
       BuildContext context, Map<Permission, PermissionStatus> statuses) async {
-    if (statuses[Permission.locationAlways].isGranted) {
+    if (statuses[Permission.locationAlways].isGranted ||
+        statuses[Permission.locationAlways].isGranted) {
       if (await AuthRepository().hasLocalUserInfo()) {
         await configureBackgroundLocation();
         await actionSendLocation();
