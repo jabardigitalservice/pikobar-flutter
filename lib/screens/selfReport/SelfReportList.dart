@@ -22,8 +22,10 @@ class SelfReportList extends StatefulWidget {
   final LatLng location;
   final String otherUID;
   final String analytics;
+  final String cityId;
 
-  SelfReportList({Key key, this.location, this.analytics, this.otherUID})
+  SelfReportList(
+      {Key key, this.location, this.analytics, this.otherUID, this.cityId})
       : super(key: key);
 
   @override
@@ -32,7 +34,7 @@ class SelfReportList extends StatefulWidget {
 
 class _SelfReportListState extends State<SelfReportList> {
   bool isReminder;
-  var listDocumentId = [];
+  List<dynamic> listDocumentId = [];
   DateTime firstDay, currentDay;
   Color textColor;
   ScrollController _scrollController;
@@ -64,11 +66,11 @@ class _SelfReportListState extends State<SelfReportList> {
       body: MultiBlocProvider(
           providers: [
             BlocProvider<SelfReportReminderBloc>(
-              create: (BuildContext context) =>
+              create: (context) =>
                   SelfReportReminderBloc()..add(SelfReportReminderListLoad()),
             ),
             BlocProvider<SelfReportListBloc>(
-              create: (BuildContext context) => SelfReportListBloc()
+              create: (context) => SelfReportListBloc()
                 ..add(SelfReportListLoad(otherUID: widget.otherUID)),
             ),
           ],
@@ -79,7 +81,8 @@ class _SelfReportListState extends State<SelfReportList> {
                 opacity: _showTitle ? 0.0 : 1.0,
                 duration: Duration(milliseconds: 250),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 20),
                   child: Text(
                     widget.otherUID != null
                         ? Dictionary.reportForOther
@@ -94,20 +97,21 @@ class _SelfReportListState extends State<SelfReportList> {
               _showTitle
                   ? Container()
                   : Container(
-                      margin: EdgeInsets.all(Dimens.contentPadding),
+                      margin: const EdgeInsets.all(Dimens.contentPadding),
                       decoration: BoxDecoration(
                           color: ColorBase.grey,
                           borderRadius: BorderRadius.circular(8)),
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.15,
                       child: Padding(
-                          padding: EdgeInsets.all(Dimens.contentPadding),
+                          padding: const EdgeInsets.all(Dimens.contentPadding),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 BlocBuilder<SelfReportListBloc,
                                         SelfReportListState>(
-                                    builder: (context, state) {
+                                    builder: (BuildContext context,
+                                        SelfReportListState state) {
                                   if (state is SelfReportListLoaded) {
                                     return Row(
                                       mainAxisAlignment:
@@ -139,7 +143,8 @@ class _SelfReportListState extends State<SelfReportList> {
                                 }),
                                 BlocBuilder<SelfReportListBloc,
                                         SelfReportListState>(
-                                    builder: (context, state) {
+                                    builder: (BuildContext context,
+                                        SelfReportListState state) {
                                   if (state is SelfReportListLoaded) {
                                     return LinearPercentIndicator(
                                       width: MediaQuery.of(context).size.width *
@@ -171,7 +176,8 @@ class _SelfReportListState extends State<SelfReportList> {
                                     ),
                                     BlocBuilder<SelfReportReminderBloc,
                                             SelfReportReminderState>(
-                                        builder: (context, state) {
+                                        builder: (BuildContext context,
+                                            SelfReportReminderState state) {
                                       if (state is SelfReportIsReminderLoaded) {
                                         isReminder = state.querySnapshot
                                             .get('remind_me');
@@ -205,7 +211,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                 ),
                               ]))),
               BlocBuilder<SelfReportListBloc, SelfReportListState>(
-                  builder: (context, state) {
+                  builder: (BuildContext context, SelfReportListState state) {
                 if (state is SelfReportListLoaded) {
                   return Column(
                     children: _buildContent(state),
@@ -303,6 +309,7 @@ class _SelfReportListState extends State<SelfReportList> {
                         /// Move to form screen
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelfReportFormScreen(
+                                cityId: widget.cityId,
                                 analytics: widget.analytics,
                                 otherUID: widget.otherUID,
                                 dailyId: '${i + 1}',
@@ -310,7 +317,7 @@ class _SelfReportListState extends State<SelfReportList> {
                       } else {
                         showDialog(
                             context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
+                            builder: (context) => DialogTextOnly(
                                   description:
                                       '${Dictionary.errorMessageDailyMonitoringOrder}$i',
                                   buttonText: Dictionary.ok,
@@ -323,7 +330,7 @@ class _SelfReportListState extends State<SelfReportList> {
                   } else {
                     showDialog(
                         context: context,
-                        builder: (BuildContext context) => DialogTextOnly(
+                        builder: (context) => DialogTextOnly(
                               description:
                                   '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
                               buttonText: Dictionary.ok,
@@ -336,7 +343,7 @@ class _SelfReportListState extends State<SelfReportList> {
                   /// Show dialog users cant input form
                   showDialog(
                       context: context,
-                      builder: (BuildContext context) => DialogTextOnly(
+                      builder: (context) => DialogTextOnly(
                             description:
                                 '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
                             buttonText: Dictionary.ok,
@@ -363,6 +370,7 @@ class _SelfReportListState extends State<SelfReportList> {
                   /// Move to form screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportFormScreen(
+                          cityId: widget.cityId,
                           analytics: widget.analytics,
                           dailyId: '${i + 1}',
                           otherUID: widget.otherUID,
@@ -371,7 +379,8 @@ class _SelfReportListState extends State<SelfReportList> {
               }
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -394,7 +403,7 @@ class _SelfReportListState extends State<SelfReportList> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
@@ -419,11 +428,11 @@ class _SelfReportListState extends State<SelfReportList> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Divider(
               color: ColorBase.grey,
               thickness: 1,

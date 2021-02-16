@@ -15,6 +15,8 @@ class DailyReportLoading extends DailyReportState {
 }
 
 class DailyReportSaved extends DailyReportState {
+  final dynamic successMessage;
+  const DailyReportSaved(this.successMessage);
   @override
   List<Object> get props => [];
 }
@@ -22,7 +24,7 @@ class DailyReportSaved extends DailyReportState {
 class DailyReportFailed extends DailyReportState {
   final String error;
 
-  DailyReportFailed({@required this.error}):assert(error != null);
+  const DailyReportFailed({@required this.error}) : assert(error != null);
 
   @override
   List<Object> get props => [];

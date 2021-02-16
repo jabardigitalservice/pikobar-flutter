@@ -17,8 +17,10 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 
 class SelfReportOtherScreen extends StatefulWidget {
   final LatLng location;
+  final String cityId;
 
-  SelfReportOtherScreen({Key key, this.location}) : super(key: key);
+  SelfReportOtherScreen({Key key, this.location, this.cityId})
+      : super(key: key);
 
   @override
   _SelfReportOtherScreenState createState() => _SelfReportOtherScreenState();
@@ -51,10 +53,9 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
       ),
       backgroundColor: Colors.white,
       body: BlocProvider<OtherSelfReportBloc>(
-        create: (BuildContext context) =>
-            OtherSelfReportBloc()..add(OtherSelfReportLoad()),
+        create: (context) => OtherSelfReportBloc()..add(OtherSelfReportLoad()),
         child: BlocBuilder<OtherSelfReportBloc, OtherSelfReportState>(
-            builder: (context, state) {
+            builder: (BuildContext context, OtherSelfReportState state) {
           if (state is OtherSelfReportLoaded) {
             return state.querySnapshot.docs.length == 0
                 ? buildCreateOtherReport()
@@ -78,7 +79,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
         right: 0.0,
         top: 0.0,
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Text(
             Dictionary.reportForOther,
             style: TextStyle(
@@ -95,7 +96,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 20,
               ),
               child: Column(
@@ -105,11 +106,11 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                       '${Environment.imageAssets}no_data_other_report.png',
                       width: 180.0,
                       height: 180.0),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Container(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Text(
                         Dictionary.emptyContact,
                         style: TextStyle(
@@ -141,11 +142,11 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
   Widget buildOtherReportList(List<DocumentSnapshot> documents) {
     documents.sort((b, a) => b['created_at'].compareTo(a['created_at']));
     return Padding(
-      padding: EdgeInsets.all(Dimens.padding),
+      padding: const EdgeInsets.all(Dimens.padding),
       child: ListView.builder(
           controller: _scrollController,
           itemCount: documents.length,
-          itemBuilder: (context, i) {
+          itemBuilder: (BuildContext context, int i) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -170,6 +171,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelfReportList(
+                              cityId: widget.cityId,
                               location: widget.location,
                               analytics: Analytics.tappedDailyOtherReport,
                               otherUID: documents[i].get('user_id'),
@@ -185,7 +187,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                             Container(
                               height: 40,
                               width: 40,
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   color: ColorBase.greyContainer,
                                   borderRadius: BorderRadius.circular(8)),
@@ -193,7 +195,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                                 '${Environment.imageAssets}${documents[i].get('gender') == 'M' ? 'male_icon' : 'female_icon'}.png',
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Column(
@@ -207,7 +209,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                                       color: ColorBase.grey800,
                                       fontFamily: FontsFamily.roboto),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
@@ -229,11 +231,11 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 i == documents.length - 1
-                    ? SizedBox(
+                    ? const SizedBox(
                         height: 80,
                       )
                     : Container()
@@ -246,7 +248,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
   /// Function to build create button
   Widget buildCreateButton() {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: RoundedButton(
           title: Dictionary.addOtherReport,
           elevation: 0.0,

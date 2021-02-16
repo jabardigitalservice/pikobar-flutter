@@ -11,8 +11,9 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
 
 class SelfReportOption extends StatefulWidget {
   final LatLng location;
+  final String cityId;
 
-  SelfReportOption({Key key, this.location}) : super(key: key);
+  SelfReportOption({Key key, this.location, this.cityId}) : super(key: key);
 
   @override
   _SelfReportOptionState createState() => _SelfReportOptionState();
@@ -31,7 +32,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
               child: Text(
                 Dictionary.dailySelfReport,
                 style: TextStyle(
@@ -48,6 +50,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportList(
                           location: widget.location,
+                          cityId: widget.cityId,
                           analytics: Analytics.tappedDailyReport)));
                 }, true),
                 _buildContainer(
@@ -57,6 +60,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                   // move to self report other screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportOtherScreen(
+                            cityId: widget.cityId,
                             location: widget.location,
                           )));
                 }, true)
@@ -71,24 +75,25 @@ class _SelfReportOptionState extends State<SelfReportOption> {
       GestureTapCallback onPressed, bool isShowMenu) {
     return Expanded(
         child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: RaisedButton(
         elevation: 0,
-        padding: EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(0.0),
         color: ColorBase.greyContainer,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
-          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 8),
+          padding:
+              const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(height: 30, child: Image.asset(image)),
               Container(
-                margin: EdgeInsets.only(top: 15, left: 5.0, right: 10.0),
+                margin: const EdgeInsets.only(top: 15, left: 5.0, right: 10.0),
                 child: Text(title,
                     textAlign: TextAlign.left,
                     style: TextStyle(

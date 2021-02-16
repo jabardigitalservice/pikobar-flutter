@@ -75,15 +75,15 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(
-              create: (BuildContext context) => _authenticationBloc =
+              create: (context) => _authenticationBloc =
                   AuthenticationBloc(authRepository: _authRepository)
                     ..add(AppStarted())),
           BlocProvider<ProfileBloc>(
-              create: (BuildContext context) => _profileBloc =
+              create: (context) => _profileBloc =
                   ProfileBloc(profileRepository: _profileRepository)),
         ],
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
+          listener: (BuildContext context, AuthenticationState state) {
             if (state is AuthenticationFailure) {
               // Show an error message dialog when login,
               // except for errors caused by users who were canceled to login.
@@ -91,7 +91,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   !state.error.contains('NoSuchMethodError')) {
                 showDialog(
                     context: context,
-                    builder: (BuildContext context) => DialogTextOnly(
+                    builder: (context) => DialogTextOnly(
                           description: state.error.toString(),
                           buttonText: "OK",
                           onOkPressed: () {
@@ -113,7 +113,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                     children: <Widget>[
                       CircularProgressIndicator(),
                       Container(
-                        margin: EdgeInsets.only(left: 15.0),
+                        margin: const EdgeInsets.only(left: 15.0),
                         child: Text(Dictionary.loading),
                       )
                     ],
@@ -220,7 +220,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function for build widget content
   Widget _buildContent(DocumentSnapshot state) {
     return Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: ListView(
           controller: _scrollController,
           children: <Widget>[
@@ -228,7 +228,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               opacity: _showTitle ? 0.0 : 1.0,
               duration: Duration(milliseconds: 250),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   Dictionary.titleSelfReport,
                   style: TextStyle(
@@ -242,7 +242,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 ? !HealthCheck()
                             .isUserHealty(getField(state, 'health_status')) &&
                         _isProfileUserNotComplete(state)
-                    ? SizedBox(
+                    ? const SizedBox(
                         height: 20,
                       )
                     : Container()
@@ -254,11 +254,11 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                     ? _buildAnnounceProfileNotComplete(state)
                     : Container()
                 : Container(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             _buildLocation(state),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FutureBuilder<bool>(
@@ -289,8 +289,10 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               fontSize: 16.0);
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  SelfReportOption(location: latLng)));
+                              builder: (context) => SelfReportOption(
+                                    location: latLng,
+                                    cityId: getField(state, 'city_id'),
+                                  )));
                         }
                       },
                       onPressedDisable: () {
@@ -378,7 +380,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             EducationListScreen()
@@ -390,14 +392,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   Widget _buildAnnounceProfileNotComplete(DocumentSnapshot state) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 5, right: 5),
+      margin: const EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
           color: ColorBase.lightRed, borderRadius: BorderRadius.circular(8.0)),
       child: Stack(
         children: <Widget>[
           Image.asset('${Environment.imageAssets}red_intersect.png', width: 73),
           Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -413,7 +415,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Container(
                       child: RichText(
                     text: TextSpan(children: [
@@ -476,7 +478,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 7),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 7),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -490,7 +492,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   height: 1.2,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -538,7 +540,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       bool isShowMenu}) {
     return Expanded(
         child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: RaisedButton(
         elevation: 0,
         padding: EdgeInsets.all(0.0),
@@ -548,8 +550,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         ),
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
-          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 8),
+          padding:
+              const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -557,7 +560,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   height: 30,
                   child: Image.asset(isShowMenu ? imageEnable : imageDisable)),
               Container(
-                margin: EdgeInsets.only(top: 15, right: 10.0),
+                margin: const EdgeInsets.only(top: 15, right: 10.0),
                 child: Text(title,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -578,7 +581,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function to get location user
   Future<void> _handleLocation() async {
     //Checking permission status
-    var permissionService =
+    final PermissionWithService permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
     if (await permissionService.status.isGranted) {
@@ -589,7 +592,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       // Show dialog to ask permission
       showDialog(
           context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
+          builder: (context) => DialogRequestPermission(
                 image: Image.asset(
                   '${Environment.iconAssets}map_pin.png',
                   fit: BoxFit.contain,
