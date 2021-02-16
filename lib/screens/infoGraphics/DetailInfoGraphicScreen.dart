@@ -383,7 +383,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
         }
       } else if (Platform.isIOS) {
        final String _localPath =
-            (await _findLocalPath()) + Platform.pathSeparator + 'PikobarFiles';
+            (await _findLocalPath()) + Platform.pathSeparator + 'images';
 
         try {
           await FlutterDownloader.enqueue(

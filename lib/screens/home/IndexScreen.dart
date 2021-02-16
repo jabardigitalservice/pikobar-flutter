@@ -129,7 +129,7 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (Platform.isIOS) {
       await FlutterDownloader.initialize();
       final String _localPath =
-          (await _findLocalPath()) + Platform.pathSeparator + 'PikobarFiles';
+          (await _findLocalPath()) + Platform.pathSeparator + 'images';
       final publicDownloadDir = Directory(_localPath);
       bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
 
