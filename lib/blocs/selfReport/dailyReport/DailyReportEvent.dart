@@ -5,11 +5,13 @@ abstract class DailyReportEvent extends Equatable {
 }
 
 class DailyReportSave extends DailyReportEvent {
-
   final DailyReportModel dailyReportModel;
   final String otherUID;
+  final dynamic successMessage;
 
-  DailyReportSave(this.dailyReportModel,{this.otherUID}):assert(dailyReportModel != null);
+  const DailyReportSave(this.dailyReportModel,
+      {this.otherUID, this.successMessage})
+      : assert(dailyReportModel != null);
 
   @override
   List<Object> get props => [dailyReportModel];

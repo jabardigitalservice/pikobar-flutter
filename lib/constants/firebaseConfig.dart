@@ -51,6 +51,7 @@ class FirebaseConfig {
   static String bottomSheetContent = 'bottom_sheet_content';
   static String geolocationEnabled = 'geolocation_enabled';
   static String emergencyNumberTab = 'emergency_number_tab';
+  static String successMessageSelfReport = 'succes_message_self_report';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -251,4 +252,37 @@ class FirebaseConfig {
       '"analytics": "tapped_pusat_Isolasi_tab"'
       '}'
       ']';
+
+  static String successMessageSelfReportDefaultValue = '{'
+      '"saved_message": ['
+      '{'
+      '"icon": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fdaily_success.png?alt=media&token=5a08e00b-b47b-4d5a-9230-3e50d0fe2fe5",'
+      ' "title": "Berhasil Disimpan",'
+      '"description": "Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.",'
+      '"city_id": ['
+      '"default"'
+      ' ]'
+      '}'
+      '],'
+      '"indications_message": ['
+      ' {'
+      '"icon": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Findications_info.png?alt=media&token=cb1dc19a-30d6-4e3a-88aa-55f69ff9cc3a",'
+      '"title": "Anda terdeteksi bergejala",'
+      ' "description": "Jika Anda merasakan gejala selama isolasi mandiri, segera lapor ke Puskesmas terdekat untuk mendapatkan arahan lebih lanjut.",'
+      ' "city_id": ['
+      '"default"'
+      ']'
+      '}'
+      '],'
+      '"temperature_message": ['
+      '{'
+      '"icon": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Ftemperature_info.png?alt=media&token=6b4103a5-87e4-4da9-a53c-76de3cd65105",'
+      '"title": "Informasi Tambahan",'
+      ' "description": "Agar dapat memantau suhu tubuh secara akurat, penting bagi Anda untuk memiliki thermometer selama isolasi mandiri.",'
+      ' "city_id": ['
+      ' "default"'
+      ']'
+      ' }'
+      ']'
+      '}';
 }

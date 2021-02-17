@@ -23,7 +23,7 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
       yield DailyReportLoading();
 
       try {
-        String userId = await AuthRepository().getToken();
+        final String userId = await AuthRepository().getToken();
         await SelfReportRepository().saveDailyReport(
             userId: userId,
             dailyReport: event.dailyReportModel,
@@ -32,7 +32,7 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
           await SelfReportRepository()
               .updateToCollection(userId: userId, isReminder: false);
         }
-        yield DailyReportSaved();
+        yield DailyReportSaved(event.successMessage);
       } catch (e) {
         yield DailyReportFailed(
             error: CustomException.onConnectionException(e.toString()));
