@@ -382,8 +382,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
           );
         }
       } else if (Platform.isIOS) {
-        String _localPath =
-            (await _findLocalPath()) + Platform.pathSeparator + 'Downloads';
+       final String _localPath =
+            (await _findLocalPath()) + Platform.pathSeparator + 'images';
 
         try {
           await FlutterDownloader.enqueue(

@@ -380,6 +380,7 @@ class _EditState extends State<Edit> {
                                               width: 1.5),
                                         ),
                                         onPressed: () async {
+                                          FocusScope.of(context).requestFocus(FocusNode());
                                           await _handleLocation();
                                         },
                                       ),
@@ -699,6 +700,7 @@ class _EditState extends State<Edit> {
           labelStyle: TextStyle(fontSize: 14, fontFamily: FontsFamily.roboto),
           orientation: GroupedButtonsOrientation.VERTICAL,
           onSelected: (String selected) => setState(() {
+            FocusScope.of(context).requestFocus(FocusNode());
             // Set value to M or F
             _genderController.text = selected.contains('Laki') ? 'M' : 'F';
           }),
@@ -767,6 +769,7 @@ class _EditState extends State<Edit> {
           ),
           InkWell(
             onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
               _showDatePickerBirthday();
             },
             child: Container(
@@ -978,6 +981,7 @@ class _EditState extends State<Edit> {
                   );
                 }).toList(),
                 onChanged: (value) {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   setState(() {
                     controller.text = value;
                   });
