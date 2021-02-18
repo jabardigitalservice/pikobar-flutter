@@ -67,12 +67,19 @@ class Validations {
   }
 
   static String otherRelationValidation(String val) {
-
     if (val.isEmpty) return Dictionary.errorEmptyOtherRelation;
 
     if (val.length < 3) return Dictionary.errorMinimumOtherRelation;
 
     if (val.length > 25) return Dictionary.errorMaximumOtherRelation;
+
+    return null;
+  }
+
+  static String npsValidation(String val) {
+    if (val.length < 6) return Dictionary.errorMinimumEmptyNPS;
+
+    if (val.isEmpty) return Dictionary.errorEmptyNPS;
 
     return null;
   }
