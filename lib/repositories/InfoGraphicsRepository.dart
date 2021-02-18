@@ -20,6 +20,13 @@ class InfoGraphicsRepository {
         (QuerySnapshot snapshot) => snapshot.docs.map((doc) => doc).toList());
   }
 
+  Future<DocumentSnapshot> getInfoGraphicDetail(
+      {@required String infoGraphicCollection, @required String infoGraphicId}) async {
+    DocumentSnapshot doc =
+    await firestore.collection(infoGraphicCollection).doc(infoGraphicId).get();
+    return doc;
+  }
+
   Stream<List<Iterable<DocumentSnapshot>>> getAllInfographicList() {
     var infographicCollection = firestore
         .collection(kInfographics)

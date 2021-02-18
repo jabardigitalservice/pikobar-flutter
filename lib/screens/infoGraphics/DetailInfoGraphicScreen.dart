@@ -30,9 +30,13 @@ import 'package:pedantic/pedantic.dart';
 
 // ignore: must_be_immutable
 class DetailInfoGraphicScreen extends StatefulWidget {
-  DocumentSnapshot dataInfoGraphic;
+  final DocumentSnapshot dataInfoGraphic;
+  final String id;
+  final String infographicType;
 
-  DetailInfoGraphicScreen({Key key, this.dataInfoGraphic}) : super(key: key);
+  DetailInfoGraphicScreen(
+      {Key key, this.dataInfoGraphic, this.id, this.infographicType})
+      : super(key: key);
 
   @override
   _DetailInfoGraphicScreenState createState() =>
@@ -382,7 +386,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
           );
         }
       } else if (Platform.isIOS) {
-       final String _localPath =
+        final String _localPath =
             (await _findLocalPath()) + Platform.pathSeparator + 'images';
 
         try {
