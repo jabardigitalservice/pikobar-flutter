@@ -20,6 +20,8 @@ import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/BottomSheetMenu.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
@@ -254,6 +256,20 @@ class IndexScreenState extends State<IndexScreen> {
       } else {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => NewsListScreen(news: newsType)));
+      }
+    } else if (data['target'] == 'infographics') {
+      if (data['id'] != null &&
+          data['id'] != 'null' &&
+          data['type'] != null &&
+          data['type'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DetailInfoGraphicScreen(
+                  id: data['id'].toString().trim(),
+                  infographicType: data['type'],
+                )));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => InfoGraphicsScreen()));
       }
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {

@@ -5,9 +5,9 @@ import 'package:pikobar_flutter/repositories/InfoGraphicsRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 import 'Bloc.dart';
 
-class NewsDetailBloc
+class InfoGraphicDetailDetailBloc
     extends Bloc<InfoGraphicDetailEvent, InfoGraphicDetailState> {
-  NewsDetailBloc() : super(InitialInfoGraphicDetailState());
+  InfoGraphicDetailDetailBloc() : super(InitialInfoGraphicDetailState());
 
   @override
   Stream<InfoGraphicDetailState> mapEventToState(
