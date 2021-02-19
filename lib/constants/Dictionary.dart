@@ -154,6 +154,9 @@ class Dictionary {
   static String aggrementIsFalse =
       'Silahkan setujui Terms & Conditions untuk login';
   static String errorEmptyOTP = 'OTP harus diisi';
+  static String errorEmptyNPS = 'Tanggapan harus diisi';
+  static String errorMinimumEmptyNPS =
+      'Tanggapan harus terdiri dari 6 karakter atau lebih';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
