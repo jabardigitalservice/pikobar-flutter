@@ -241,7 +241,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: dataUrl.map((String data) {
-                    int index = dataUrl.indexOf(data);
+                    final int index = dataUrl.indexOf(data);
                     return _current == index
                         ? Container(
                             width: 24.0,
