@@ -5,7 +5,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/InfoGraphicsRepository.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
-import './Bloc.dart';
+import 'Bloc.dart';
 
 class InfoGraphicsListBloc
     extends Bloc<InfoGraphicsListEvent, InfoGraphicsListState> {

@@ -5,7 +5,7 @@ import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
-import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/infographics/infographicslist/Bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
