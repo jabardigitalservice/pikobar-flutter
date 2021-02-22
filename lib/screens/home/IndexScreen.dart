@@ -110,8 +110,8 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   initializeFlutterDownloader() async {
-    await FlutterDownloader.initialize();
     if (Platform.isAndroid) {
+      await FlutterDownloader.initialize();
       String localPath =
           (await getExternalStorageDirectory()).path + '/download';
       final publicDownloadDir = Directory(Environment.downloadStorage);
@@ -124,7 +124,28 @@ class IndexScreenState extends State<IndexScreen> {
       if (!hasExistedSavedDir) {
         savedDir.create();
       }
+    } else if (Platform.isIOS) {
+      await FlutterDownloader.initialize();
+      final String _localPath =
+          (await _findLocalPath()) + Platform.pathSeparator + 'images';
+      final publicDownloadDir = Directory(_localPath);
+      bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
+
+      if (!hasExistedPublicDownloadDir) {
+        publicDownloadDir.create();
+      }
+
+      final savedDir = Directory(_localPath);
+      bool hasExisted = await savedDir.exists();
+      if (!hasExisted) {
+        savedDir.create();
+      }
     }
+  }
+
+  Future<String> _findLocalPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
 
   initializeToken() async {

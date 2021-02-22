@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -40,6 +42,7 @@ class DetailInfoGraphicScreen extends StatefulWidget {
 class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   int _current = 0;
   FToast fToast;
+  ReceivePort _port = ReceivePort();
 
   List<String> getDataUrl() {
     List<String> dataUrl = [];
@@ -53,6 +56,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   void initState() {
     fToast = FToast();
     fToast.init(context);
+    _downloadListener();
     super.initState();
   }
 
@@ -269,11 +273,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                       fontFamily: FontsFamily.roboto,
                     ),
                     onPressed: () {
-                      Platform.isAndroid
-                          ? _downloadAttachment(widget.dataInfoGraphic['title'],
-                              widget.dataInfoGraphic['images'][_current])
-                          : _viewPdf(widget.dataInfoGraphic['title'],
-                              widget.dataInfoGraphic['images'][_current]);
+                      _downloadAttachment(widget.dataInfoGraphic['title'],
+                          widget.dataInfoGraphic['images'][_current]);
                     }),
               ),
             ),
@@ -352,27 +353,45 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
       name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.jpg';
 
-      try {
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: Environment.downloadStorage,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-      } catch (e) {
-        String dir = (await getExternalStorageDirectory()).path + '/download';
-        await FlutterDownloader.enqueue(
-          url: url,
-          savedDir: dir,
-          fileName: name,
-          showNotification: true,
-          // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
+      if (Platform.isAndroid) {
+        try {
+          await FlutterDownloader.enqueue(
+            url: url,
+            savedDir: Environment.downloadStorage,
+            fileName: name,
+            showNotification: true,
+            // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+        } catch (e) {
+          String dir = (await getExternalStorageDirectory()).path + '/download';
+          await FlutterDownloader.enqueue(
+            url: url,
+            savedDir: dir,
+            fileName: name,
+            showNotification: true,
+            // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+        }
+      } else if (Platform.isIOS) {
+        final String _localPath =
+            (await _findLocalPath()) + Platform.pathSeparator + 'images';
+
+        try {
+          await FlutterDownloader.enqueue(
+            url: url,
+            headers: {"auth": "test_for_sql_encoding"},
+            savedDir: _localPath,
+            fileName: name,
+            showNotification: true,
+            openFileFromNotification: true,
+          );
+        } catch (e) {
+          print(e.toString());
+        }
       }
 
       await AnalyticsHelper.setLogEvent(
@@ -382,10 +401,41 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     }
   }
 
+  Future<String> _findLocalPath() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
   void _onStatusRequested(PermissionStatus statuses, String name, String url) {
     if (statuses.isGranted) {
       _downloadAttachment(name, url);
     }
+  }
+
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort send =
+    IsolateNameServer.lookupPortByName('downloader_send_port');
+    send.send([id, status, progress]);
+  }
+
+  _downloadListener() {
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    _port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+      if (status.toString() == "DownloadTaskStatus(3)" &&
+          progress == 100 &&
+          id != null) {
+        String query = "SELECT * FROM task WHERE task_id='" + id + "'";
+        var tasks = FlutterDownloader.loadTasksWithRawQuery(query: query);
+        //if the task exists, open it
+        if (tasks != null) FlutterDownloader.open(taskId: id);
+      }
+    });
+    FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override
