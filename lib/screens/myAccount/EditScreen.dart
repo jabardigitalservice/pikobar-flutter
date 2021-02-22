@@ -380,7 +380,8 @@ class _EditState extends State<Edit> {
                                               width: 1.5),
                                         ),
                                         onPressed: () async {
-                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
                                           await _handleLocation();
                                         },
                                       ),
@@ -1155,7 +1156,8 @@ class _EditState extends State<Edit> {
     }
     for (var i = 0; i < listCity.length; i++) {
       /// Checking same name of [city] in [listCity]
-      if (listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
+      if (city.isNotEmpty &&
+          listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
         setState(() {
           tempCity = listCity[i];
         });
