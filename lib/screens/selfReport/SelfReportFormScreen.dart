@@ -103,7 +103,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       _checkedItemList = widget.dailyReportModel.indications
           .substring(1, widget.dailyReportModel.indications.length - 1)
           .split(', ');
-      if (_checkedItemList.contains(_allItemList[12])) {
+      if (_checkedItemList.contains(_allItemList[11])) {
         _otherIndicationsController.text =
             _checkedItemList[_checkedItemList.length - 1];
         _isOtherIndication = true;
@@ -270,7 +270,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               alignment: Alignment.centerLeft,
               child: GroupedCheckBox(
                 itemHeight: 40.0,
-                indexAllDisabled: 11,
+                indexAllDisabled: 10,
                 borderRadius: BorderRadius.circular(8.0),
                 color: ColorBase.netralGrey,
                 defaultSelectedList: _checkedItemList,
@@ -285,7 +285,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 onChanged: (itemList) {
                   setState(() {
                     _checkedItemList = itemList;
-                    _isOtherIndication = itemList.contains(_allItemList[12]);
+                    _isOtherIndication = itemList.contains(_allItemList[11]);
                     _isIndicationEmpty = itemList.isEmpty;
                   });
                 },
