@@ -35,12 +35,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
 
+// ignore: must_be_immutable
 class NewsDetailScreen extends StatefulWidget {
   final String id;
   final String news;
-  final NewsModel model;
+  NewsModel model;
 
-  NewsDetailScreen({this.id, this.news, this.model});
+  NewsDetailScreen({Key key, this.id, this.news, this.model}) : super(key: key);
 
   @override
   _NewsDetailScreenState createState() => _NewsDetailScreenState();
@@ -52,6 +53,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   String _newsType;
   ScrollController _scrollController;
   bool lastStatus = true;
+  bool isUpdateData = true;
+  NewsModel dataNews;
 
   _scrollListener() {
     if (isShrink != lastStatus) {
@@ -71,6 +74,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     AnalyticsHelper.setCurrentScreen(Analytics.news);
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    dataNews = widget.model;
 
     if (widget.news == Dictionary.importantInfo) {
       _newsType = NewsType.articlesImportantInfo;
@@ -88,14 +92,20 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<NewsDetailBloc>(
-      create: (context) => _newsDetailBloc = NewsDetailBloc()
-        ..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
-      child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
-        builder: (context, state) {
-          return _buildScaffold(context, state);
-        },
-      ),
-    );
+        create: (context) => _newsDetailBloc = NewsDetailBloc()
+          ..add(NewsDetailLoad(newsCollection: _newsType, newsId: widget.id)),
+        child: BlocListener<NewsDetailBloc, NewsDetailState>(
+            listener: (context, state) {
+              if (state is NewsDetailLoaded) {
+                setState(() {
+                  dataNews = state.record;
+                });
+              }
+            }, child: BlocBuilder<NewsDetailBloc, NewsDetailState>(
+          builder: (context, state) {
+            return _buildScaffold(context, state);
+          },
+        )));
   }
 
   Scaffold _buildScaffold(BuildContext context, NewsDetailState state) {
@@ -113,24 +123,27 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 color: isShrink ? Colors.black : Colors.white,
               ),
               onPressed: () {
-                widget.news == Dictionary.importantInfo
-                    ? _shareMessage(widget.model)
-                    : Share.share(
-                        '${widget.model.title}\n\n${widget.model.backlink != null ? 'Baca berita lengkapnya:\n' + widget.model.backlink : ''}\n\n${Dictionary.sharedFrom}');
-                AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
-                    <String, dynamic>{'title': widget.model.title});
+                if (dataNews != null) {
+                  widget.news == Dictionary.importantInfo
+                      ? _shareMessage(dataNews)
+                      : Share.share(
+                      '${dataNews.title}\n\n${dataNews.backlink != null ? 'Baca berita lengkapnya:\n' + dataNews.backlink : ''}\n\n${Dictionary.sharedFrom}');
+                  AnalyticsHelper.setLogEvent(Analytics.tappedShareNews,
+                      <String, dynamic>{'title': dataNews.title});
+                }
               },
             )
           ],
-          titleAppbar: widget.model.title,
+          titleAppbar: dataNews != null ? dataNews.title : '',
           backgroundAppBar: GestureDetector(
             child: Hero(
                 tag: Dictionary.heroImageTag,
                 child: Stack(
                   children: [
                     Image.network(
-                      widget.model.image,
+                      dataNews != null ? dataNews.image : '',
                       fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                     ),
                     Container(
@@ -139,24 +152,26 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   ],
                 )),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => HeroImagePreview(
-                            Dictionary.heroImageTag,
-                            imageUrl: widget.model.image,
-                          )));
+              if (dataNews != null) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => HeroImagePreview(
+                          Dictionary.heroImageTag,
+                          imageUrl: dataNews.image,
+                        )));
+              }
             },
           ),
-          body: widget.model == null
+          body: dataNews == null
               ? state is NewsDetailLoading
-                  ? _buildLoading(context)
-                  : state is NewsDetailLoaded
-                      ? _buildContent(context, state.record)
-                      : state is NewsDetailFailure
-                          ? ErrorContent(error: state.error)
-                          : Container()
-              : _buildContent(context, widget.model),
+              ? _buildLoading(context)
+              : state is NewsDetailLoaded
+              ? _buildContent(context, state.record)
+              : state is NewsDetailFailure
+              ? ErrorContent(error: state.error)
+              : Container()
+              : _buildContent(context, dataNews),
         ));
   }
 
@@ -275,15 +290,15 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   _newsType != NewsType.articlesImportantInfo &&
-                                          data.newsChannel.isNotEmpty
+                                      data.newsChannel.isNotEmpty
                                       ? Text(
-                                          unixTimeStampToDateTime(
-                                                  data.publishedAt) +
-                                              ' • ' +
-                                              data.newsChannel,
-                                          style: TextStyle(
-                                              fontSize: 12.0,
-                                              fontFamily: FontsFamily.roboto))
+                                      unixTimeStampToDateTime(
+                                          data.publishedAt) +
+                                          ' • ' +
+                                          data.newsChannel,
+                                      style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontFamily: FontsFamily.roboto))
                                       : Container()
                                 ]),
                           )
@@ -320,72 +335,71 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.only(left: 20.0, top: 15.0, right: 20.0),
+              const EdgeInsets.only(left: 20.0, top: 15.0, right: 20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   SizedBox(height: 10.0),
                   data.actionTitle != null &&
-                          data.actionTitle.isNotEmpty &&
-                          data.actionUrl != null &&
-                          data.actionUrl.isNotEmpty
+                      data.actionTitle.isNotEmpty &&
+                      data.actionUrl != null &&
+                      data.actionUrl.isNotEmpty
                       ? RoundedButton(
-                          title: data.actionTitle,
-                          color: ColorBase.green,
-                          textStyle: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                          onPressed: () {
-                            _launchURL(data.actionUrl);
-                          })
+                      title: data.actionTitle,
+                      color: ColorBase.green,
+                      textStyle: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      onPressed: () {
+                        _launchURL(data.actionUrl);
+                      })
                       : Container(),
                   data.attachmentUrl.isNotEmpty
                       ? Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 1.0,
-                          color: Colors.grey,
-                          margin: EdgeInsets.only(top: 25.0, bottom: 16.0),
-                        )
+                    width: MediaQuery.of(context).size.width,
+                    height: 1.0,
+                    color: Colors.grey,
+                    margin: EdgeInsets.only(top: 25.0, bottom: 16.0),
+                  )
                       : Container(),
                   data.attachmentUrl.isNotEmpty
                       ? Row(
-                          children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width - 180,
-                              child: Text(data.attachmentName,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontFamily: FontsFamily.roboto,
-                                      color: Colors.grey[800])),
-                            ),
-                            ButtonTheme(
-                              minWidth: 129.0,
-                              height: 34.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: RaisedButton(
-                                color: ColorBase.green,
-                                highlightElevation: 5,
-                                child: Text(Dictionary.downloadAttachment,
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontFamily: FontsFamily.roboto,
-                                        color: Colors.white)),
-                                onPressed: () {
-                                  Platform.isAndroid
-                                      ? _downloadAttachment(data.attachmentName,
-                                          data.attachmentUrl)
-                                      : _viewPdf(data.attachmentName,
-                                          data.attachmentUrl);
-                                },
-                              ),
-                            )
-                          ],
-                        )
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width - 180,
+                        child: Text(data.attachmentName,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontFamily: FontsFamily.roboto,
+                                color: Colors.grey[800])),
+                      ),
+                      ButtonTheme(
+                        minWidth: 129.0,
+                        height: 34.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: RaisedButton(
+                          color: ColorBase.green,
+                          highlightElevation: 5,
+                          child: Text(Dictionary.downloadAttachment,
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontFamily: FontsFamily.roboto,
+                                  color: Colors.white)),
+                          onPressed: () {
+                            Platform.isAndroid
+                                ? _downloadAttachment(data.attachmentName,
+                                data.attachmentUrl)
+                                : _viewPdf(data.attachmentName,
+                                data.attachmentUrl);
+                          },
+                        ),
+                      )
+                    ],
+                  )
                       : Container(),
-
                   SizedBox(height: 25.0),
                 ],
               ),
@@ -407,19 +421,19 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       unawaited(showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
-                image: Image.asset(
-                  'assets/icons/folder.png',
-                  fit: BoxFit.contain,
-                  color: Colors.white,
-                ),
-                description: Dictionary.permissionDownloadAttachment,
-                onOkPressed: () {
-                  Navigator.of(context).pop();
-                  Permission.storage.request().then((val) {
-                    _onStatusRequested(val, name, url);
-                  });
-                },
-              )));
+            image: Image.asset(
+              'assets/icons/folder.png',
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            description: Dictionary.permissionDownloadAttachment,
+            onOkPressed: () {
+              Navigator.of(context).pop();
+              Permission.storage.request().then((val) {
+                _onStatusRequested(val, name, url);
+              });
+            },
+          )));
     } else {
       Fluttertoast.showToast(
           msg: Dictionary.downloadingFile,
@@ -437,7 +451,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           showNotification: true,
           // show download progress in status bar (for Android)
           openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
+          true, // click on notification to open downloaded file (for Android)
         );
       } catch (e) {
         String dir = (await getExternalStorageDirectory()).path + '/download';
@@ -448,7 +462,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           showNotification: true,
           // show download progress in status bar (for Android)
           openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
+          true, // click on notification to open downloaded file (for Android)
         );
       }
 
@@ -503,7 +517,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     AnalyticsHelper.setLogEvent(
         Analytics.tappedImportantInfoDetailShare, <String, dynamic>{
       'title':
-          data.title.length < 100 ? data.title : data.title.substring(0, 100)
+      data.title.length < 100 ? data.title : data.title.substring(0, 100)
     });
   }
 
