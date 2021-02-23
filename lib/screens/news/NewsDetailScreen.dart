@@ -39,7 +39,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart' as fShare;
 class NewsDetailScreen extends StatefulWidget {
   final String id;
   final String news;
-  NewsModel model;
+  final NewsModel model;
 
   NewsDetailScreen({Key key, this.id, this.news, this.model}) : super(key: key);
 
