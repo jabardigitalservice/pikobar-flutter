@@ -7,6 +7,7 @@
         android:icon="@mipmap/launcher_icon"
         android:label="Pikobar"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:replace="android:label">
 
         <activity
