@@ -321,8 +321,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                     fontFamily: FontsFamily.roboto,
                   ),
                   onPressed: () {
-                    _downloadAttachment(documentSnapshot['title'],
-                        documentSnapshot['images'][_current]);
+                    _downloadAttachment(documentSnapshot['images'][_current]);
                   }),
             ),
           ),
@@ -331,21 +330,16 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     );
   }
 
-  void _viewPdf(String title, String url) async {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => InWebView(url: url, title: title)));
-
-    await AnalyticsHelper.setLogEvent(Analytics.openImage, <String, dynamic>{
-      'name_image': title.length < 100 ? title : title.substring(0, 100),
-    });
-  }
-
   Future<String> _findLocalPath() async {
     final Directory directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
-  void _downloadAttachment(String name, String url) async {
+  void _downloadAttachment(String url) async {
+
+    final String decodeUrl = Uri.decodeComponent(url);
+    final String fileName = decodeUrl.split('/').last.split('?').first;
+
     if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
@@ -359,7 +353,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                 onOkPressed: () {
                   Navigator.of(context).pop();
                   Permission.storage.request().then((val) {
-                    _onStatusRequested(val, name, url);
+                    _onStatusRequested(val, url);
                   });
                 },
               )));
@@ -403,14 +397,12 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
             );
           });
 
-      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.jpg';
-
       if (Platform.isAndroid) {
         try {
           await FlutterDownloader.enqueue(
             url: url,
             savedDir: Environment.downloadStorage,
-            fileName: name,
+            fileName: fileName,
             showNotification: true,
             // show download progress in status bar (for Android)
             openFileFromNotification:
@@ -421,7 +413,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
           await FlutterDownloader.enqueue(
             url: url,
             savedDir: dir,
-            fileName: name,
+            fileName: fileName,
             showNotification: true,
             // show download progress in status bar (for Android)
             openFileFromNotification:
@@ -437,7 +429,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
             url: url,
             headers: {"auth": "test_for_sql_encoding"},
             savedDir: _localPath,
-            fileName: name,
+            fileName: fileName,
             showNotification: true,
             openFileFromNotification: true,
           );
@@ -448,14 +440,14 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadImage, <String, dynamic>{
-        'name_image': name.length < 100 ? name : name.substring(0, 100),
+        'name_image': fileName.length < 100 ? fileName : fileName.substring(0, 100),
       });
     }
   }
 
-  void _onStatusRequested(PermissionStatus statuses, String name, String url) {
+  void _onStatusRequested(PermissionStatus statuses, String url) {
     if (statuses.isGranted) {
-      _downloadAttachment(name, url);
+      _downloadAttachment(url);
     }
   }
 
