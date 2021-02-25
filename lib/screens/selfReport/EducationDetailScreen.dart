@@ -22,7 +22,9 @@ class EducationDetailScreen extends StatefulWidget {
   final String educationCollection;
   final EducationModel model;
 
-  EducationDetailScreen({this.id, this.educationCollection, this.model});
+  EducationDetailScreen(
+      {Key key, this.id, this.educationCollection, this.model})
+      : super(key: key);
 
   @override
   _EducationDetailScreenState createState() => _EducationDetailScreenState();
@@ -31,6 +33,7 @@ class EducationDetailScreen extends StatefulWidget {
 class _EducationDetailScreenState extends State<EducationDetailScreen> {
   ScrollController _scrollController;
   bool lastStatus = true;
+  EducationModel dataEducation;
 
   _scrollListener() {
     if (isShrink != lastStatus) {
@@ -47,6 +50,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
 
   @override
   void initState() {
+    dataEducation = widget.model;
     AnalyticsHelper.setCurrentScreen(Analytics.education);
     AnalyticsHelper.setLogEvent(Analytics.tappedEducationDetail);
     _scrollController = ScrollController();
@@ -61,11 +65,18 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
         ..add(EducationDetailLoad(
             educationCollection: widget.educationCollection,
             educationId: widget.id)),
-      child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
+      child: BlocListener<EducationDetailBloc, EducationDetailState>(
+          listener: (context, state) {
+            if (state is EducationDetailLoaded) {
+              setState(() {
+                dataEducation = state.record;
+              });
+            }
+          }, child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
         builder: (context, state) {
           return _buildScaffold(context, state);
         },
-      ),
+      )),
     );
   }
 
@@ -84,7 +95,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                   child: Stack(
                     children: [
                       Image.network(
-                        widget.model.image,
+                        dataEducation != null ? dataEducation.image : '',
                         fit: BoxFit.cover,
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
@@ -95,30 +106,32 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                     ],
                   )),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => HeroImagePreview(
-                              Dictionary.heroImageTag,
-                              imageUrl: widget.model.image,
-                            )));
+                if (dataEducation != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => HeroImagePreview(
+                            Dictionary.heroImageTag,
+                            imageUrl: dataEducation.image,
+                          )));
+                }
               },
             ),
             body: state is EducationDetailLoading
                 ? _buildLoading(context)
                 : state is EducationDetailLoaded
-                    ? _buildContent(context, state.record)
-                    : state is EducationDetailFailure
-                        ? widget.model != null
-                            ? _buildContent(context, widget.model)
-                            : EmptyData(
-                                message: Dictionary.emptyData,
-                                desc: '',
-                                isFlare: false,
-                                image:
-                                    "${Environment.imageAssets}not_found.png",
-                              )
-                        : Container()));
+                ? _buildContent(context, state.record)
+                : state is EducationDetailFailure
+                ? dataEducation != null
+                ? _buildContent(context, dataEducation)
+                : EmptyData(
+              message: Dictionary.emptyData,
+              desc: '',
+              isFlare: false,
+              image:
+              "${Environment.imageAssets}not_found.png",
+            )
+                : Container()));
   }
 
   /// Widget for show loading when request data from server
@@ -127,7 +140,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
       scrollDirection: Axis.vertical,
       child: Skeleton(
         child: Container(
-          margin: EdgeInsets.only(bottom: 20.0),
+          margin: const EdgeInsets.only(bottom: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -147,7 +160,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                       height: 20.0,
                       color: Colors.grey,
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     Row(
                       children: <Widget>[
                         Container(
@@ -156,7 +169,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                           color: Colors.grey,
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 5.0),
+                          margin: const EdgeInsets.only(left: 5.0),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -166,7 +179,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                                   color: Colors.grey,
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(top: 4.0),
+                                  margin: const EdgeInsets.only(top: 4.0),
                                   width: 150.0,
                                   height: 10.0,
                                   color: Colors.grey,
@@ -175,9 +188,9 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                         )
                       ],
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     _loadingText(),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     _loadingText(),
                   ],
                 ),
@@ -195,7 +208,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
 
     for (int i = 0; i < 4; i++) {
       widgets.add(Container(
-        margin: EdgeInsets.only(bottom: 5.0),
+        margin: const EdgeInsets.only(bottom: 5.0),
         width: MediaQuery.of(context).size.width,
         height: 18.0,
         color: Colors.grey,
@@ -203,7 +216,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
     }
 
     widgets.add(Container(
-      margin: EdgeInsets.only(bottom: 5.0),
+      margin: const EdgeInsets.only(bottom: 5.0),
       width: MediaQuery.of(context).size.width / 2,
       height: 18.0,
       color: Colors.grey,
@@ -218,7 +231,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
     return SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
-            margin: EdgeInsets.only(bottom: 20.0),
+            margin: const EdgeInsets.only(bottom: 20.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -274,7 +287,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                                     fontFamily: FontsFamily.roboto,
                                     fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 10.0),
+                              const SizedBox(height: 10.0),
 
                               //add content data from server to widget text
                               Html(
@@ -289,7 +302,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                                   onLinkTap: (url) {
                                     _launchURL(url);
                                   }),
-                              SizedBox(height: 10.0),
+                              const SizedBox(height: 10.0),
                             ],
                           ),
                         ),
