@@ -51,7 +51,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   List<LabelNewModel> dataLabel = [];
 
   List<String> listItemTitleTab = [
-    Dictionary.all,
     Dictionary.titleLatestNews,
     Dictionary.center,
     Dictionary.who,
