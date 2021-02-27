@@ -88,8 +88,10 @@ class _FaqScreenState extends State<FaqScreen> {
               listDataRemoteConfigTab = getLabel['faq'] as List;
 
               listDataRemoteConfigTab.forEach((element) {
-                listWidgetTab.add(_buildFaq());
-                listItemTitleTab.add(element['title']);
+                if(element['published']){
+                  listWidgetTab.add(_buildFaq());
+                  listItemTitleTab.add(element['title']);
+                }
               });
 
               return MultiBlocProvider(
