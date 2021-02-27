@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/faq/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -16,9 +17,11 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class FaqScreen extends StatefulWidget {
@@ -32,35 +35,20 @@ class FaqScreen extends StatefulWidget {
 
 class _FaqScreenState extends State<FaqScreen> {
   FaqListBloc _faqListBloc = FaqListBloc();
+  RemoteConfigBloc _remoteConfigBloc;
   TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController;
   String searchQuery = '';
   Timer _debounce;
   bool isConnected = false;
   final containerWidth = 40.0;
+
   List<Widget> listWidgetTab = [];
-
-  List<String> listItemTitleTab = [
-    Dictionary.covidVaccination,
-    Dictionary.covidInfo,
-    // Dictionary.psbb,
-    // Dictionary.otherTabFaq3,
-    // Dictionary.otherTabFaq4,
-  ];
-
-  List<String> listCategoryFaqTab = [
-    'vaksin',
-    'covid',
-    // 'psbb',
-    // Dictionary.otherTabFaq3,
-    // Dictionary.otherTabFaq4,
-  ];
+  List<dynamic> listDataRemoteConfigTab = [];
+  List<String> listItemTitleTab = [];
 
   @override
   void initState() {
-    listItemTitleTab.forEach((element) {
-      listWidgetTab.add(_buildFaq());
-    });
     AnalyticsHelper.setCurrentScreen(Analytics.faq);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _scrollController.addListener((() {
@@ -83,86 +71,67 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<FaqListBloc>(
-            create: (context) => _faqListBloc
-              ..add(FaqListLoad(
-                  faqCollection: kFaq, category: listCategoryFaqTab[0])),
-          ),
-        ],
-        child: CustomBubbleTab(
-          isStickyHeader: true,
-          titleHeader: Dictionary.faq,
-          listItemTitleTab: listItemTitleTab,
-          indicatorColor: ColorBase.green,
-          labelColor: Colors.white,
-          showTitle: _showTitle,
-          searchBar: CustomAppBar.buildSearchField(_searchController,
-              Dictionary.searchInformation, updateSearchQuery,
-              margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
-          unselectedLabelColor: Colors.grey,
-          scrollController: _scrollController,
-          onTap: (index) {
-            setState(() {});
-            _faqListBloc.add(FaqListLoad(
-                faqCollection: kFaq, category: listCategoryFaqTab[index]));
-            // AnalyticsHelper.setLogEvent(analyticsData[index]);
-          },
-          tabBarView: listWidgetTab,
-          isExpand: true,
-        ),
-      ),
+      body: BlocProvider<RemoteConfigBloc>(
+          create: (BuildContext context) =>
+              _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
+          child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+              builder: (context, remoteState) {
+            if (remoteState is RemoteConfigLoaded) {
+              Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+                  remoteConfig: remoteState.remoteConfig,
+                  firebaseConfig: FirebaseConfig.labels,
+                  defaultValue: FirebaseConfig.labelsDefaultValue);
 
-      // appBar: CustomAppBar.bottomSearchAppBar(
-      //     searchController: _searchController,
-      //     title: Dictionary.faq,
-      //     hintText: Dictionary.findFaq,
-      //     onChanged: updateSearchQuery),
-      // body: StreamBuilder<QuerySnapshot>(
-      //   stream: FirebaseFirestore.instance
-      //       .collection(kFaq)
-      //       .orderBy('sequence_number')
-      //       .snapshots(),
-      //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      //     if (snapshot.hasData) {
-      //       List dataFaq;
-      //
-      //       // if search active
-      //       if (searchQuery.isNotEmpty) {
-      //         dataFaq = snapshot.data.docs
-      //             .where((test) => test['title']
-      //                 .toLowerCase()
-      //                 .contains(searchQuery.toLowerCase()))
-      //             .toList();
-      //       } else {
-      //         dataFaq = snapshot.data.docs;
-      //       }
-      //
-      //       final int messageCount = dataFaq.length;
-      //
-      //       // check if data is empty
-      //       if (dataFaq.length == 0) {
-      //         if (isConnected) {
-      //           return EmptyData(
-      //               message: '${Dictionary.emptyData} ${Dictionary.faq}');
-      //         } else {
-      //           return EmptyData(message: Dictionary.errorConnection);
-      //         }
-      //       }
-      //
-      //       return ListView.builder(
-      //         itemCount: messageCount,
-      //         padding: EdgeInsets.only(bottom: 30.0),
-      //         itemBuilder: (_, int index) {
-      //           return _cardContent(dataFaq[index]);
-      //         },
-      //       );
-      //     } else {
-      //       return _buildLoading();
-      //     }
-      //   },
-      // ),
+              listWidgetTab.clear();
+              listDataRemoteConfigTab.clear();
+              listItemTitleTab.clear();
+              listDataRemoteConfigTab = getLabel['faq'] as List;
+
+              listDataRemoteConfigTab.forEach((element) {
+                listWidgetTab.add(_buildFaq());
+                listItemTitleTab.add(element['title']);
+              });
+
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<FaqListBloc>(
+                    create: (context) => _faqListBloc
+                      ..add(FaqListLoad(
+                          faqCollection: kFaq,
+                          category: listDataRemoteConfigTab[0]['category']
+                              .toString())),
+                  ),
+                ],
+                child: CustomBubbleTab(
+                  isStickyHeader: true,
+                  titleHeader: Dictionary.faq,
+                  listItemTitleTab: listItemTitleTab,
+                  indicatorColor: ColorBase.green,
+                  labelColor: Colors.white,
+                  showTitle: _showTitle,
+                  searchBar: CustomAppBar.buildSearchField(_searchController,
+                      Dictionary.searchInformation, updateSearchQuery,
+                      margin: EdgeInsets.only(
+                          left: 16.0, right: 16.0, bottom: 20.0)),
+                  unselectedLabelColor: Colors.grey,
+                  scrollController: _scrollController,
+                  onTap: (index) {
+                    setState(() {});
+                    _faqListBloc.add(FaqListLoad(
+                        faqCollection: kFaq,
+                        category: listDataRemoteConfigTab[index]['category']
+                            .toString()));
+                    // AnalyticsHelper.setLogEvent(
+                    //     listDataRemoteConfigTab[index]['analytic'].toString());
+                  },
+                  tabBarView: listWidgetTab,
+                  isExpand: true,
+                ),
+              );
+            } else {
+              return _buildLoading();
+            }
+          })),
     );
   }
 
