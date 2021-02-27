@@ -38,10 +38,12 @@ class _FaqScreenState extends State<FaqScreen> {
   Timer _debounce;
   bool isConnected = false;
   final containerWidth = 40.0;
+  List<Widget> listWidgetTab = [];
 
   List<String> listItemTitleTab = [
     Dictionary.covidVaccination,
     Dictionary.covidInfo,
+    // Dictionary.psbb,
     // Dictionary.otherTabFaq3,
     // Dictionary.otherTabFaq4,
   ];
@@ -49,12 +51,16 @@ class _FaqScreenState extends State<FaqScreen> {
   List<String> listCategoryFaqTab = [
     'vaksin',
     'covid',
+    // 'psbb',
     // Dictionary.otherTabFaq3,
     // Dictionary.otherTabFaq4,
   ];
 
   @override
   void initState() {
+    listItemTitleTab.forEach((element) {
+      listWidgetTab.add(_buildFaq());
+    });
     AnalyticsHelper.setCurrentScreen(Analytics.faq);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     _scrollController.addListener((() {
@@ -92,8 +98,6 @@ class _FaqScreenState extends State<FaqScreen> {
           indicatorColor: ColorBase.green,
           labelColor: Colors.white,
           showTitle: _showTitle,
-          sizeLabel: 13.0,
-          isScrollable: false,
           searchBar: CustomAppBar.buildSearchField(_searchController,
               Dictionary.searchInformation, updateSearchQuery,
               margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
@@ -105,11 +109,8 @@ class _FaqScreenState extends State<FaqScreen> {
                 faqCollection: kFaq, category: listCategoryFaqTab[index]));
             // AnalyticsHelper.setLogEvent(analyticsData[index]);
           },
-          tabBarView: <Widget>[
-            _buildFaq(),
-            _buildFaq(),
-          ],
-          heightTabBarView: MediaQuery.of(context).size.height - 148,
+          tabBarView: listWidgetTab,
+          isExpand: true,
         ),
       ),
 
