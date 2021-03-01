@@ -110,7 +110,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   showTitle: _showTitle,
                   searchBar: CustomAppBar.buildSearchField(_searchController,
                       Dictionary.searchInformation, updateSearchQuery,
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                           left: 16.0, right: 16.0, bottom: 20.0)),
                   unselectedLabelColor: Colors.grey,
                   scrollController: _scrollController,
@@ -156,7 +156,7 @@ class _FaqScreenState extends State<FaqScreen> {
     return listData.isNotEmpty
         ? ListView.builder(
             itemCount: listData.length,
-            padding: EdgeInsets.only(bottom: 30.0),
+            padding: const EdgeInsets.only(bottom: 30.0),
             itemBuilder: (_, int index) {
               return _cardContent(listData[index]);
             },
@@ -211,7 +211,7 @@ class _FaqScreenState extends State<FaqScreen> {
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) => Container(
-          margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+          margin: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
           child: Column(
             children: <Widget>[
               ListTile(
@@ -232,7 +232,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
+                margin: const EdgeInsets.only(left: 16, right: 16),
                 color: Colors.grey[300],
                 height: 1,
               )
@@ -251,7 +251,7 @@ class _FaqScreenState extends State<FaqScreen> {
               scrollOnExpand: false,
               scrollOnCollapse: true,
               child: Container(
-                margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: ScrollOnExpand(
                   scrollOnExpand: true,
                   scrollOnCollapse: false,
@@ -260,7 +260,7 @@ class _FaqScreenState extends State<FaqScreen> {
                     tapBodyToCollapse: true,
                     headerAlignment: ExpandablePanelHeaderAlignment.center,
                     header: Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       child: Text(
                         dataHelp['title'],
                         style: TextStyle(
@@ -268,7 +268,7 @@ class _FaqScreenState extends State<FaqScreen> {
                       ),
                     ),
                     expanded: Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: Html(
                         data: dataHelp['content'].replaceAll('\n', '</br>'),
                         style: {
@@ -277,7 +277,7 @@ class _FaqScreenState extends State<FaqScreen> {
                               color: Colors.grey[600],
                               fontSize: FontSize(14.0),
                               textAlign: TextAlign.start),
-                          'li': Style(margin: EdgeInsets.only(bottom: 10.0))
+                          'li': Style(margin: const EdgeInsets.only(bottom: 10.0))
                         },
                         onLinkTap: (url) {
                           launchExternal(url);
@@ -287,7 +287,7 @@ class _FaqScreenState extends State<FaqScreen> {
                     builder: (_, collapsed, expanded) {
                       return Padding(
                         padding:
-                            EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                            const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                         child: Expandable(
                           collapsed: collapsed,
                           expanded: expanded,
@@ -301,7 +301,7 @@ class _FaqScreenState extends State<FaqScreen> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 16, right: 16),
+            margin: const EdgeInsets.only(left: 16, right: 16),
             color: Colors.grey[300],
             height: 1,
           )
