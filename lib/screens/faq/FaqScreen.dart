@@ -42,6 +42,7 @@ class _FaqScreenState extends State<FaqScreen> {
   Timer _debounce;
   bool isConnected = false;
   final containerWidth = 40.0;
+  int indexTab = 0;
 
   List<Widget> listWidgetTab = [];
   List<dynamic> listDataRemoteConfigTab = [];
@@ -51,7 +52,7 @@ class _FaqScreenState extends State<FaqScreen> {
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.faq);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
-    _scrollController.addListener((() {
+    _searchController.addListener((() {
       _onSearchChanged();
     }));
     checkConnection();
@@ -88,22 +89,18 @@ class _FaqScreenState extends State<FaqScreen> {
               listDataRemoteConfigTab = getLabel['faq'] as List;
 
               listDataRemoteConfigTab.forEach((element) {
-                if(element['published']){
+                if (element['published']) {
                   listWidgetTab.add(_buildFaq());
                   listItemTitleTab.add(element['title']);
                 }
               });
 
-              return MultiBlocProvider(
-                providers: [
-                  BlocProvider<FaqListBloc>(
-                    create: (context) => _faqListBloc
-                      ..add(FaqListLoad(
-                          faqCollection: kFaq,
-                          category: listDataRemoteConfigTab[0]['category']
-                              .toString())),
-                  ),
-                ],
+              return BlocProvider<FaqListBloc>(
+                create: (context) => _faqListBloc
+                  ..add(FaqListLoad(
+                      faqCollection: kFaq,
+                      category:
+                          listDataRemoteConfigTab[0]['category'].toString())),
                 child: CustomBubbleTab(
                   isStickyHeader: true,
                   titleHeader: Dictionary.faq,
@@ -119,12 +116,13 @@ class _FaqScreenState extends State<FaqScreen> {
                   scrollController: _scrollController,
                   onTap: (index) {
                     setState(() {});
+                    indexTab = index;
                     _faqListBloc.add(FaqListLoad(
                         faqCollection: kFaq,
                         category: listDataRemoteConfigTab[index]['category']
                             .toString()));
-                    // AnalyticsHelper.setLogEvent(
-                    //     listDataRemoteConfigTab[index]['analytic'].toString());
+                    AnalyticsHelper.setLogEvent(
+                        listDataRemoteConfigTab[index]['analytic'].toString());
                   },
                   tabBarView: listWidgetTab,
                   isExpand: true,
@@ -148,6 +146,13 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
+    if (searchQuery != null) {
+      listData = listData
+          .where((test) =>
+              test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
+          .toList();
+    }
+
     return listData.isNotEmpty
         ? ListView.builder(
             itemCount: listData.length,
@@ -178,18 +183,25 @@ class _FaqScreenState extends State<FaqScreen> {
   void _clearSearchQuery() {
     setState(() {
       _searchController.clear();
-      updateSearchQuery('');
+      updateSearchQuery(null);
     });
+    _faqListBloc.add(FaqListLoad(
+        faqCollection: kFaq,
+        category: listDataRemoteConfigTab[indexTab]['category'].toString()));
   }
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
+        _faqListBloc.add(FaqListLoad(
+            faqCollection: kFaq,
+            category:
+                listDataRemoteConfigTab[indexTab]['category'].toString()));
         setState(() {
           searchQuery = _searchController.text;
         });
-      } else {
+      } else if (_searchController.text.isEmpty) {
         _clearSearchQuery();
       }
     });
