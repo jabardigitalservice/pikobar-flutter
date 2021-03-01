@@ -17,7 +17,7 @@ class InfoGraphicsServices {
         var request = await HttpClient().getUrl(Uri.parse(image));
         var response = await request.close();
         Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-        files[StringUtils.replaceSpaceToUnderscore(
+        files[StringUtils.replaceSymbolToUnderscore(
             index == 0 ? '$title.jpg' : '$title$index.jpg')] = bytes;
         index++;
       }
