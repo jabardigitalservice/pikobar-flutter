@@ -8,11 +8,9 @@ class FaqRepository {
 
   Stream<List<DocumentSnapshot>> getFaq(
       {@required String faqCollection, String category}) {
-    print('isinya apa '+faqCollection +' categori '+category);
     Query faqQuery = firestore
         .collection(faqCollection)
         .where("category", isEqualTo: category);
-        // .orderBy('sequence_number');
 
     return faqQuery.snapshots().map(
         (QuerySnapshot snapshot) => snapshot.docs.map((doc) => doc).toList());
