@@ -27,9 +27,9 @@ class StringUtils {
     }
   }
 
-  static String replaceSpaceToUnderscore(String str) {
+  static String replaceSymbolToUnderscore(String str) {
     try {
-      return str.replaceAll(' ', '_');
+      return str.replaceAll(RegExp(r'[^a-zA-Z\d.]'), '_');
     } catch (e) {
       print(e.toString());
       return str;
