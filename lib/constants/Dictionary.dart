@@ -100,7 +100,7 @@ class Dictionary {
   static String verification = 'Verifikasi';
   static String acceptLogin = 'Ya, Saya Bersedia Login';
   static String setLocation = 'Pilih Lokasi';
-  static String termsConditions = ' Terms & Conditions';
+  static String termsConditions = 'Terms & Conditions';
   static String agree = 'Setuju';
   static String back = 'Kembali';
   static String change = 'Ubah';
