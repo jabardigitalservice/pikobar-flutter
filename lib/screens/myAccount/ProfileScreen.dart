@@ -453,7 +453,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Container(
         child: RichText(
           text: TextSpan(
-              text: termsConditions['agreement'],
+              text: termsConditions['agreement']+' ',
               style: TextStyle(
                   fontFamily: FontsFamily.roboto,
                   fontWeight: FontWeight.bold,
