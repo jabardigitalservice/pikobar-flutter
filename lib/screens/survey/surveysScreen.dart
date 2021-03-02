@@ -32,16 +32,15 @@ class _SurveysScreenState extends State<SurveysScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
-  bool isConnected=false;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.survey);
     super.initState();
-    checkConnection();
   }
-  checkConnection() async {
-    isConnected = await Connection().checkConnection(kUrlGoogle);
+
+  Future<bool> checkConnection() async {
+    return await Connection().checkConnection(kUrlGoogle);
   }
 
   @override
@@ -116,13 +115,15 @@ class _SurveysScreenState extends State<SurveysScreen> {
                         if (snapshot.data.docs.isNotEmpty) {
                           return _buildContent(snapshot);
                         } else {
-                          if (isConnected) {
-                          return EmptyData(message: Dictionary.surveyEmpty);
-                            
-                          } else {
-                          return EmptyData(message: Dictionary.errorConnection);
-
-                          }
+                          return FutureBuilder<bool>(
+                            future: checkConnection(),
+                              builder: (_, connection) {
+                                if (connection.hasData && connection.data) {
+                                  return EmptyData(message: Dictionary.surveyEmpty);
+                                } else {
+                                  return EmptyData(message: Dictionary.errorConnection);
+                                }
+                              });
                         }
                       } else {
                         return _buildLoading();
