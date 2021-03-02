@@ -122,6 +122,7 @@ class _StatisticsState extends State<Statistics> {
                 return rapidState is RapidTestLoaded
                     ? BlocBuilder<PcrTestBloc, PcrTestState>(
                         builder: (context, pcrState) {
+                          this.rapidTestLoaded = rapidState;
                           return pcrState is PcrTestLoaded
                               ? buildContentRapidTest(remoteState.remoteConfig,
                                   rapidState.snapshot, pcrState)
@@ -367,6 +368,7 @@ class _StatisticsState extends State<Statistics> {
   Widget buildContentRapidTest(RemoteConfig remoteConfig,
       DocumentSnapshot document, PcrTestLoaded pcrTestLoaded) {
     DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+    this.pcrTestLoaded = pcrTestLoaded;
 
     String count = formatter
         .format(document.get('total') + documentPCR.get('total'))
