@@ -300,6 +300,7 @@ class _SelfReportListState extends State<SelfReportList> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => SelfReportDetailScreen(
+                                cityId: widget.cityId,
                                 reportId: '${i + 1}',
                                 otherUID: widget.otherUID,
                                 analytics: widget.analytics)),
@@ -362,6 +363,7 @@ class _SelfReportListState extends State<SelfReportList> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SelfReportDetailScreen(
+                            cityId: widget.cityId,
                             reportId: '${i + 1}',
                             otherUID: widget.otherUID,
                             analytics: widget.analytics)),
