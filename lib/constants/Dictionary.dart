@@ -417,4 +417,11 @@ class Dictionary {
   static const String labelNews = 'labellatestnews';
   static const String labelVideos = 'labelnewvideos';
   static const String labelDocuments = 'labelnewdocuments';
+
+  //title tab faq
+  static const String covidVaccination = 'Vaksinasi COVID-19';
+  static const String covidInfo = 'Info COVID-19';
+  static const String psbb = 'PSBB';
+  static const String otherTabFaq3 = 'Tab FAQ 3';
+  static const String otherTabFaq4 = 'Tab FAQ 4';
 }
