@@ -39,7 +39,7 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       color: Colors.white,
       child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, remoteState) {
@@ -51,7 +51,7 @@ class _StatisticsState extends State<Statistics> {
                         children: <Widget>[
                           _buildContent(statisticState.snapshot, remoteState,
                               statisticState),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           _buildRapidTest(remoteState),
@@ -67,7 +67,7 @@ class _StatisticsState extends State<Statistics> {
   _buildMore(StatisticsLoaded statisticState) {
     return InkWell(
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -151,8 +151,8 @@ class _StatisticsState extends State<Statistics> {
                   fontFamily: FontsFamily.lato,
                   fontSize: Dimens.textTitleSize),
             ),
-            SizedBox(height: Dimens.padding),
-            SizedBox(height: 15),
+            const SizedBox(height: Dimens.padding),
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -166,7 +166,7 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 _buildContainer(
                     '',
                     Dictionary.positif,
@@ -177,12 +177,12 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 _buildContainer('', Dictionary.die, Dictionary.die, '-', 4,
                     Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
             ),
-            SizedBox(height: Dimens.padding),
+            const SizedBox(height: Dimens.padding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -217,7 +217,7 @@ class _StatisticsState extends State<Statistics> {
   Container _buildContent(DocumentSnapshot data,
       RemoteConfigLoaded remoteConfigLoaded, StatisticsLoaded statisticState) {
     this.remoteConfigLoaded = remoteConfigLoaded;
-    RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
+    final RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
     if (!data.exists)
       return Container(
         child: Center(
@@ -249,7 +249,7 @@ class _StatisticsState extends State<Statistics> {
               _buildMore(statisticState)
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             unixTimeStampToCustomDateFormat(
                 data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
@@ -258,11 +258,11 @@ class _StatisticsState extends State<Statistics> {
                 fontFamily: FontsFamily.roboto,
                 fontSize: Dimens.textSubtitleSize),
           ),
-          SizedBox(height: Dimens.padding),
+          const SizedBox(height: Dimens.padding),
           _buildConfirmedBox(
               label: labelUpdateTerkini['statistics']['confirmed'],
               caseTotal: '${data['aktif']['jabar']}'),
-          SizedBox(height: Dimens.padding),
+          const SizedBox(height: Dimens.padding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -274,15 +274,15 @@ class _StatisticsState extends State<Statistics> {
                       data['sembuh']['jabar'], data['meninggal']['jabar']),
                   4,
                   Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff333333),
+                  const Color(0xff333333),
+                  const Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'],
                       int.parse(getDataActivePositive(
                           data['aktif']['jabar'],
                           data['sembuh']['jabar'],
                           data['meninggal']['jabar'])))),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               _buildContainer(
                   '${Environment.iconAssets}circle_check_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
@@ -290,11 +290,11 @@ class _StatisticsState extends State<Statistics> {
                   '${data['sembuh']['jabar']}',
                   4,
                   Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff333333),
+                  const Color(0xff333333),
+                  const Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['sembuh']['jabar'])),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               _buildContainer(
                   '${Environment.iconAssets}circle_cross_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
@@ -302,8 +302,8 @@ class _StatisticsState extends State<Statistics> {
                   '${data['meninggal']['jabar']}',
                   4,
                   Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff333333),
+                  const Color(0xff333333),
+                  const Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['meninggal']['jabar'])),
             ],
@@ -316,10 +316,10 @@ class _StatisticsState extends State<Statistics> {
   Widget buildLoadingRapidTest() {
     return Card(
       elevation: 0,
-      color: Color(0xffFAFAFA),
+      color: const Color(0xffFAFAFA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -329,23 +329,23 @@ class _StatisticsState extends State<Statistics> {
               children: <Widget>[
                 Skeleton(
                   child: Container(
-                    margin: EdgeInsets.only(left: 5.0),
+                    margin: const EdgeInsets.only(left: 5.0),
                     child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Color(0xff828282),
+                            color: const Color(0xff828282),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   ),
                 ),
                 Skeleton(
                   child: Container(
-                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text('0',
                         style: TextStyle(
                             fontSize: 22.0,
-                            color: Color(0xff828282),
+                            color: const Color(0xff828282),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   ),
@@ -370,7 +370,7 @@ class _StatisticsState extends State<Statistics> {
     DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
     this.pcrTestLoaded = pcrTestLoaded;
 
-    String count = formatter
+    final String count = formatter
         .format(document.get('total') + documentPCR.get('total'))
         .replaceAll(',', '.');
 
@@ -386,12 +386,12 @@ class _StatisticsState extends State<Statistics> {
         );
       },
       child: Card(
-        margin: EdgeInsets.all(0),
+        margin: const EdgeInsets.all(0),
         elevation: 0,
-        color: Color(0xffFAFAFA),
+        color: const Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.only(left: 5.0, right: 20.0, top: 15, bottom: 15),
+          padding: const EdgeInsets.only(left: 5.0, right: 20.0, top: 15, bottom: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -400,20 +400,20 @@ class _StatisticsState extends State<Statistics> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(left: 5.0),
+                    margin: const EdgeInsets.only(left: 5.0),
                     child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.0,
-                            color: Color(0xff333333),
+                            color: const Color(0xff333333),
                             fontFamily: FontsFamily.roboto)),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: Color(0xff333333),
+                            color: const Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   )
@@ -447,15 +447,15 @@ class _StatisticsState extends State<Statistics> {
       child: InkWell(
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
-          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
           decoration: BoxDecoration(
-              color: Color(0xffFAFAFA),
+              color: const Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  margin: EdgeInsets.only(left: 5.0),
+                  margin: const EdgeInsets.only(left: 5.0),
                   child: image != ''
                       ? Image.asset(
                           image,
@@ -463,7 +463,7 @@ class _StatisticsState extends State<Statistics> {
                         )
                       : null),
               Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
+                margin: const EdgeInsets.only(top: 10, left: 5.0),
                 child: Text(title,
                     style: TextStyle(
                         fontSize: 12.0,
@@ -471,7 +471,7 @@ class _StatisticsState extends State<Statistics> {
                         fontFamily: FontsFamily.roboto)),
               ),
               Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
+                margin: const EdgeInsets.only(top: 10, left: 5.0),
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -507,7 +507,7 @@ class _StatisticsState extends State<Statistics> {
                 height: 60.0,
               )),
           Container(
-            margin: EdgeInsets.all(Dimens.padding),
+            margin: const EdgeInsets.all(Dimens.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -520,7 +520,7 @@ class _StatisticsState extends State<Statistics> {
                       color: Colors.white),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
@@ -549,17 +549,17 @@ class _StatisticsState extends State<Statistics> {
 }
 
 String getDataProcess(int totalData, int dataDone) {
-  int processData = totalData - dataDone;
+  final int processData = totalData - dataDone;
   return processData.toString();
 }
 
 String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
-  int dataActivePositive = totalData - dataDone - dataRecover;
+  final int dataActivePositive = totalData - dataDone - dataRecover;
   return dataActivePositive.toString();
 }
 
 String getDataProcessPercent(int totalData, int dataDone) {
-  double processData =
+  final double processData =
       num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
 
   return processData.toString() + '%';
