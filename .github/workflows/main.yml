@@ -23,4 +23,4 @@ jobs:
     - uses: actions/checkout@v2
     
     - run: echo "Your PR is ${{ github.event.number }}"
-    - run: echo "Your PR is ${{ github.event.pull_request }}"
+    - run: echo "Your PR is ${{ github.event.pull_request.html }}"
