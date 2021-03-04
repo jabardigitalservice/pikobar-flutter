@@ -1,8 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/banners/BannersBloc.dart';
 import 'package:pikobar_flutter/blocs/banners/BannersState.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -93,7 +94,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                         decoration: BoxDecoration(shape: BoxShape.circle),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: CachedNetworkImage(
+                          child: OptimizedCacheImage(
                               imageUrl: data.url ?? '',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
