@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/infographics/infographicdetail/Bloc.dart';
@@ -148,7 +148,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                           return GestureDetector(
                             child: Stack(
                               children: [
-                                CachedNetworkImage(
+                                OptimizedCacheImage(
                                     imageUrl: data ?? '',
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
@@ -336,7 +336,6 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   }
 
   void _downloadAttachment(String url) async {
-
     final String decodeUrl = Uri.decodeComponent(url);
     final String fileName = decodeUrl.split('/').last.split('?').first;
 
@@ -409,7 +408,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                 true, // click on notification to open downloaded file (for Android)
           );
         } catch (e) {
-          final String dir = (await getExternalStorageDirectory()).path + '/download';
+          final String dir =
+              (await getExternalStorageDirectory()).path + '/download';
           await FlutterDownloader.enqueue(
             url: url,
             savedDir: dir,
@@ -440,7 +440,8 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadImage, <String, dynamic>{
-        'name_image': fileName.length < 100 ? fileName : fileName.substring(0, 100),
+        'name_image':
+            fileName.length < 100 ? fileName : fileName.substring(0, 100),
       });
     }
   }
