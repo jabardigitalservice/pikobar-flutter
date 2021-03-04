@@ -31,6 +31,6 @@ jobs:
       id: pr-url
 
     # This will echo "Your PR is 7", or be skipped if there is no current PR.
-    - run: echo "Your PR is ${{ steps.find-pr.outputs.title }}"
+    - run: echo "Your PR is ${{ steps.find-pr.outputs.number }}"
         
     - run: echo "${{ steps.pr-url.outputs.url }}"
