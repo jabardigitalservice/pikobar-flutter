@@ -6,7 +6,7 @@ name: BUILD
 # events but only for the master branch
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ test-pr-notif ]
   # pull_request:
   #   branches: [ feature/Feature-github-workflow ]
 
