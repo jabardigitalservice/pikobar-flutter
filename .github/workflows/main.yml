@@ -25,10 +25,15 @@ jobs:
     # Find the PR associated with this push, if there is one.
     - uses: jwalton/gh-find-current-pr@v1.0.3
       id: findPr
+      
+    - name: Pull Request URL
+      uses: kceb/pull-request-url-action@v2
 
     # This will echo "Your PR is 7", or be skipped if there is no current PR.
-    - run: echo "Your PR is ${PR} ${{steps.findPr.outputs.title}}"
+    - run: echo "Your PR is ${PR} ${{ steps.findPr.outputs.title }}"
       if: success() && steps.findPr.outputs.number
       env:
         PR: ${{ steps.findPr.outputs.pr }}
         TITLE: ${{ steps.findPr.outputs.title }}
+        
+    - run: echo "${{ steps.pr-url.outputs.url }}"
