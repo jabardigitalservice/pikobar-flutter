@@ -19,11 +19,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-    
-    - run: echo "Your PR is ${{ github.event.number }}"
-    - run: echo "Your PR is ${{ github.event.pull_request.html_url }}"
-    - run: echo "Your PR is ${{ github.event.pull_request.title }}"
-    - run: echo "Your PR is ${{ github.event.pull_request.number }}"
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: "Send Message to Telegram Pull Request Channel"
+        run: curl
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID_PR }}
+          -d text="<b>[PIKOBAR]</b> <a href='${{ github.event.pull_request.html_url }}'><b>${{ github.event.pull_request.title }} ${{ github.event.pull_request.number }}</b></a> by ${{ github.event.pull_request.user.login }} %0A%0A${{ github.event.pull_request.html_url }}"
+          -d parse_mode="html"
+          -X POST https://api.telegram.org/bot1371713613:AAGnhiz2p5CKHLNYHCRAn0FgF7gs1sjoAwk/sendMessage
     
