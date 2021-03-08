@@ -27,5 +27,5 @@ jobs:
           -d chat_id=${{ secrets.TELEGRAM_CHAT_ID_PR }}
           -d text="<b>[PIKOBAR]</b> <a href='${{ github.event.pull_request.html_url }}'><b>${{ github.event.pull_request.title }} ${{ github.event.pull_request.number }}</b></a> by ${{ github.event.pull_request.user.login }} %0A%0A${{ github.event.pull_request.html_url }}"
           -d parse_mode="html"
-          -X POST https://api.telegram.org/bot1371713613:AAGnhiz2p5CKHLNYHCRAn0FgF7gs1sjoAwk/sendMessage
+          -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
     
