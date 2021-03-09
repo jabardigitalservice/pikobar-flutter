@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +26,10 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
-// ignore: must_be_immutable
 class InfoGraphicsScreen extends StatefulWidget {
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  InfoGraphicsScreen({Key key, this.covidInformationScreenState})
+  const InfoGraphicsScreen({Key key, this.covidInformationScreenState})
       : super(key: key);
 
   @override
@@ -39,37 +37,36 @@ class InfoGraphicsScreen extends StatefulWidget {
 }
 
 class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
-  InfoGraphicsListBloc _infoGraphicsListBloc = InfoGraphicsListBloc();
-  TextEditingController _searchController = TextEditingController();
-  ScrollController _scrollController;
-  Timer _debounce;
-  String searchQuery;
-  List<int> _current = [];
-  bool isSetDataCurrent = false;
-  bool isGetDataLabel = true;
-  LabelNew labelNew;
-  List<LabelNewModel> dataLabel = [];
+  final InfoGraphicsListBloc _infoGraphicsListBloc = InfoGraphicsListBloc();
+  final TextEditingController _searchController = TextEditingController();
 
-  List<String> listItemTitleTab = [
+  final List<String> listItemTitleTab = [
     Dictionary.all,
     Dictionary.titleLatestNews,
     Dictionary.center,
     Dictionary.who,
   ];
 
-  List<String> listCollectionData = [
+  final List<String> listCollectionData = [
     kAllInfographics,
     kInfographics,
     kInfographicsCenter,
     kInfographicsWho,
   ];
 
-  List<String> analyticsData = [
+  final List<String> analyticsData = [
     Analytics.tappedInfographicall,
     Analytics.tappedInfographicJabar,
     Analytics.tappedInfographicCenter,
     Analytics.tappedInfographicWho,
   ];
+
+  ScrollController _scrollController;
+  Timer _debounce;
+  String searchQuery;
+  bool isGetDataLabel = true;
+  LabelNew labelNew;
+  List<LabelNewModel> dataLabel = [];
 
   @override
   void initState() {
@@ -125,12 +122,12 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           isScrollable: false,
           searchBar: CustomAppBar.buildSearchField(_searchController,
               Dictionary.searchInformation, updateSearchQuery,
-              margin: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
+              margin:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
           unselectedLabelColor: Colors.grey,
           scrollController: _scrollController,
           onTap: (index) {
             setState(() {});
-            isSetDataCurrent = false;
             _infoGraphicsListBloc.add(InfoGraphicsListLoad(
                 infoGraphicsCollection: listCollectionData[index]));
             AnalyticsHelper.setLogEvent(analyticsData[index]);
@@ -169,13 +166,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
               test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
     }
-    if (!isSetDataCurrent) {
-      _current.clear();
-      listData.forEach((element) {
-        _current.add(0);
-      });
-      isSetDataCurrent = true;
-    }
 
     getDataLabel();
 
@@ -183,7 +173,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         ? ListView.builder(
             shrinkWrap: true,
             itemCount: listData.length,
-            padding: EdgeInsets.only(bottom: 20.0),
+            padding: const EdgeInsets.only(bottom: 20.0),
             itemBuilder: (_, int index) {
               return _cardContent(listData[index], index);
             },
@@ -205,15 +195,15 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0),
           child: ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: 6,
             padding: const EdgeInsets.all(10.0),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
                 height: 300.0,
                 child: Row(
                   children: <Widget>[
@@ -233,8 +223,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   }
 
   Widget _cardContent(DocumentSnapshot data, int indexListData) {
-    var dataListImage =
-        (data['images'] as List)?.map((item) => item as String)?.toList();
     return Container(
         child: Column(
       children: <Widget>[
@@ -243,7 +231,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             elevation: 0,
             color: Colors.white,
             child: Container(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -251,63 +239,32 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                   Stack(
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width - 35,
-                        height: 300,
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            initialPage: 0,
-                            enableInfiniteScroll:
-                                dataListImage.length > 1 ? true : false,
-                            aspectRatio: 9 / 9,
-                            viewportFraction: 1.0,
-                            autoPlay: dataListImage.length > 1 ? true : false,
-                            autoPlayInterval: Duration(seconds: 5),
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _current[indexListData] = index;
-                              });
-                            },
-                          ),
-                          items: dataListImage.map((dynamic data) {
-                            return Builder(builder: (BuildContext context) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(
-                                      Dimens.dialogRadius),
-                                ),
-                                child: ClipRRect(
-                                  child: OptimizedCacheImage(
-                                      imageUrl: data.toString() ?? '',
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                      placeholder: (context, url) => Center(
-                                          heightFactor: 10.2,
-                                          child: CupertinoActivityIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(5.0),
-                                                    topRight:
-                                                        Radius.circular(5.0)),
-                                              ),
-                                              child: PikobarPlaceholder())),
-                                ),
-                              );
-                            });
-                          }).toList(),
-                        ),
-                      ),
+                          width: MediaQuery.of(context).size.width - 35,
+                          height: 300,
+                          child: OptimizedCacheImage(
+                              imageUrl: data['images'][0].toString() ?? '',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Dimens.dialogRadius),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                              placeholder: (context, url) => Center(
+                                  heightFactor: 10.2,
+                                  child: const CupertinoActivityIndicator()),
+                              errorWidget: (context, url, error) => Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(5.0),
+                                        topRight: Radius.circular(5.0)),
+                                  ),
+                                  child: PikobarPlaceholder()))),
                       Container(
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
@@ -322,7 +279,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         left: 10,
                         right: 10,
                         bottom: 0,
-                        top: 190,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -345,7 +301,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 3,
                             ),
                             Text(
@@ -359,51 +315,33 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 5.0, 0, 0.0),
-                              child: Row(
-                                children: dataListImage.map((String data) {
-                                  int index = dataListImage.indexOf(data);
-                                  return _current[indexListData] == index
-                                      ? Expanded(
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  dataListImage.length,
-                                              height: 6.0,
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 2.0),
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0),
-                                                  color: Colors.white)),
-                                        )
-                                      : Expanded(
-                                          child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              dataListImage.length,
-                                          height: 6.0,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 2.0),
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.rectangle,
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                              color:
-                                                  Color.fromRGBO(0, 0, 0, 0.4)),
-                                        ));
-                                }).toList(),
-                              ),
+                            const SizedBox(
+                              height: 10,
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 3.0, horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.black12.withOpacity(0.5),
+                            shape: BoxShape.rectangle,
+                            borderRadius:
+                                BorderRadius.circular(Dimens.dialogRadius),
+                          ),
+                          child: Text(
+                            '1/${data['images'].length}',
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.white,
+                                fontFamily: FontsFamily.roboto),
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],
