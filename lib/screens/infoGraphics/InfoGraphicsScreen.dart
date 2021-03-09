@@ -44,8 +44,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   ScrollController _scrollController;
   Timer _debounce;
   String searchQuery;
-  List<int> _current = [];
-  bool isSetDataCurrent = false;
   bool isGetDataLabel = true;
   LabelNew labelNew;
   List<LabelNewModel> dataLabel = [];
@@ -130,7 +128,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           scrollController: _scrollController,
           onTap: (index) {
             setState(() {});
-            isSetDataCurrent = false;
             _infoGraphicsListBloc.add(InfoGraphicsListLoad(
                 infoGraphicsCollection: listCollectionData[index]));
             AnalyticsHelper.setLogEvent(analyticsData[index]);
@@ -168,13 +165,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           .where((test) =>
               test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
-    }
-    if (!isSetDataCurrent) {
-      _current.clear();
-      listData.forEach((element) {
-        _current.add(0);
-      });
-      isSetDataCurrent = true;
     }
 
     getDataLabel();
@@ -233,8 +223,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   }
 
   Widget _cardContent(DocumentSnapshot data, int indexListData) {
-    var dataListImage =
-        (data['images'] as List)?.map((item) => item as String)?.toList();
     return Container(
         child: Column(
       children: <Widget>[
@@ -251,63 +239,32 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                   Stack(
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width - 35,
-                        height: 300,
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            initialPage: 0,
-                            enableInfiniteScroll:
-                                dataListImage.length > 1 ? true : false,
-                            aspectRatio: 9 / 9,
-                            viewportFraction: 1.0,
-                            autoPlay: dataListImage.length > 1 ? true : false,
-                            autoPlayInterval: Duration(seconds: 5),
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _current[indexListData] = index;
-                              });
-                            },
-                          ),
-                          items: dataListImage.map((dynamic data) {
-                            return Builder(builder: (BuildContext context) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(
-                                      Dimens.dialogRadius),
-                                ),
-                                child: ClipRRect(
-                                  child: OptimizedCacheImage(
-                                      imageUrl: data.toString() ?? '',
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                      placeholder: (context, url) => Center(
-                                          heightFactor: 10.2,
-                                          child: CupertinoActivityIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(5.0),
-                                                    topRight:
-                                                        Radius.circular(5.0)),
-                                              ),
-                                              child: PikobarPlaceholder())),
-                                ),
-                              );
-                            });
-                          }).toList(),
-                        ),
-                      ),
+                          width: MediaQuery.of(context).size.width - 35,
+                          height: 300,
+                          child: OptimizedCacheImage(
+                              imageUrl: data['images'][0].toString() ?? '',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          Dimens.dialogRadius),
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                              placeholder: (context, url) => Center(
+                                  heightFactor: 10.2,
+                                  child: CupertinoActivityIndicator()),
+                              errorWidget: (context, url, error) => Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5.0),
+                                        topRight: Radius.circular(5.0)),
+                                  ),
+                                  child: PikobarPlaceholder()))),
                       Container(
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
@@ -322,7 +279,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         left: 10,
                         right: 10,
                         bottom: 0,
-                        top: 190,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -359,51 +315,33 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 5.0, 0, 0.0),
-                              child: Row(
-                                children: dataListImage.map((String data) {
-                                  int index = dataListImage.indexOf(data);
-                                  return _current[indexListData] == index
-                                      ? Expanded(
-                                          child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  dataListImage.length,
-                                              height: 6.0,
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 2.0),
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0),
-                                                  color: Colors.white)),
-                                        )
-                                      : Expanded(
-                                          child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              dataListImage.length,
-                                          height: 6.0,
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 2.0),
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.rectangle,
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                              color:
-                                                  Color.fromRGBO(0, 0, 0, 0.4)),
-                                        ));
-                                }).toList(),
-                              ),
+                            SizedBox(
+                              height: 10,
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 3.0, horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.black12.withOpacity(0.5),
+                            shape: BoxShape.rectangle,
+                            borderRadius:
+                                BorderRadius.circular(Dimens.dialogRadius),
+                          ),
+                          child: Text(
+                            '1/${data['images'].length}',
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.white,
+                                fontFamily: FontsFamily.roboto),
+                          ),
+                        ),
+                      ),
                     ],
                   )
                 ],
