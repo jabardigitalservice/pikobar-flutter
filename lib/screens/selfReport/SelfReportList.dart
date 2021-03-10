@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:overlay_tutorial/overlay_tutorial.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportList/SelfReportListBloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportReminder/SelfReportReminderBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportDetailScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -38,13 +42,27 @@ class _SelfReportListState extends State<SelfReportList> {
   DateTime firstDay, currentDay;
   Color textColor;
   ScrollController _scrollController;
-
+  final OverlayTutorialController _controller = OverlayTutorialController();
+  final addButtonKey = GlobalKey(),
+      counterTextKey = GlobalKey(),
+      resetKey = GlobalKey();
+  bool isTouchDisable = false;
+  bool isShow = true;
   @override
   void initState() {
-    super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(widget.analytics);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
+
+    super.initState();
+  }
+
+  showTutorial() async {
+    isShow = false;
+    isTouchDisable = true;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _controller.showOverlayTutorial();
+    });
   }
 
   bool get _showTitle {
@@ -55,176 +73,322 @@ class _SelfReportListState extends State<SelfReportList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar.animatedAppBar(
-        showTitle: _showTitle,
-        title: widget.otherUID != null
-            ? Dictionary.reportForOther
-            : Dictionary.reportForMySelf,
-      ),
-      backgroundColor: Colors.white,
-      body: MultiBlocProvider(
-          providers: [
-            BlocProvider<SelfReportReminderBloc>(
-              create: (context) =>
-                  SelfReportReminderBloc()..add(SelfReportReminderListLoad()),
-            ),
-            BlocProvider<SelfReportListBloc>(
-              create: (context) => SelfReportListBloc()
-                ..add(SelfReportListLoad(otherUID: widget.otherUID)),
-            ),
-          ],
-          child: ListView(
-            controller: _scrollController,
-            children: <Widget>[
-              AnimatedOpacity(
-                opacity: _showTitle ? 0.0 : 1.0,
-                duration: Duration(milliseconds: 250),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 20),
-                  child: Text(
-                    widget.otherUID != null
-                        ? Dictionary.reportForOther
-                        : Dictionary.reportForMySelf,
-                    style: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
-                  ),
+    return SafeArea(
+        child: OverlayTutorial(
+      context: context,
+      controller: _controller,
+      overlayTutorialEntries: <OverlayTutorialEntry>[
+        OverlayTutorialCustomShapeEntry(
+          widgetKey: resetKey,
+          shapeBuilder: (rect, path) {
+            path = Path.combine(
+              PathOperation.difference,
+              path,
+              Path()
+                ..addOval(Rect.fromLTWH(
+                  rect.left - 10,
+                  rect.top - 10,
+                  80,
+                  80,
+                )),
+            );
+            return path;
+          },
+        ),
+      ],
+      overlayColor: Color(0xff006430).withOpacity(0.9),
+      overlayChildren: <Widget>[
+        Positioned(
+            top: MediaQuery.of(context).size.height * 0.15,
+            left: 20,
+            child: Column(
+              children: [
+                Text('Anda telah melewati masa 14 \nhari lapor mandiri',
+                    style: Theme.of(context).textTheme.caption.copyWith(
+                        color: Colors.white,
+                        fontFamily: FontsFamily.roboto,
+                        fontWeight: FontWeight.bold,
+                        height: 1.5,
+                        fontSize: 24)),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                    'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas',
+                    style: Theme.of(context).textTheme.caption.copyWith(
+                        color: Colors.white,
+                        fontFamily: FontsFamily.roboto,
+                        height: 1.5,
+                        fontSize: 16)),
+              ],
+            )),
+        Positioned(
+          child: Row(
+            children: [
+              FlatButton(
+                minWidth: 1,
+                onPressed: () {
+                  _controller.hideOverlayTutorial();
+                  setState(() {
+                    isTouchDisable = false;
+                  });
+                },
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
                 ),
               ),
-              _showTitle
-                  ? Container()
-                  : Container(
-                      margin: const EdgeInsets.all(Dimens.contentPadding),
-                      decoration: BoxDecoration(
-                          color: ColorBase.grey,
-                          borderRadius: BorderRadius.circular(8)),
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: Padding(
-                          padding: const EdgeInsets.all(Dimens.contentPadding),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                BlocBuilder<SelfReportListBloc,
-                                        SelfReportListState>(
-                                    builder: (BuildContext context,
-                                        SelfReportListState state) {
-                                  if (state is SelfReportListLoaded) {
-                                    return Row(
+            ],
+          ),
+          left: 0,
+        ),
+        Positioned(
+          child: Row(
+            children: [
+              FlatButton(
+                minWidth: 1,
+                onPressed: () {
+                  _controller.hideOverlayTutorial();
+                  showResetButton();
+
+                  setState(() {
+                    isTouchDisable = false;
+                  });
+                },
+                child: Icon(Icons.more_horiz, color: Colors.white),
+              ),
+            ],
+          ),
+          right: 0,
+        ),
+        Positioned(
+          child: FlatButton(
+            minWidth: 1,
+            onPressed: () {
+              _controller.hideOverlayTutorial();
+              setState(() {
+                isTouchDisable = false;
+              });
+            },
+            child: Text('Skip',
+                style: Theme.of(context).textTheme.caption.copyWith(
+                    color: Colors.white,
+                    fontFamily: FontsFamily.roboto,
+                    height: 1.5,
+                    fontSize: 14)),
+          ),
+          right: 20,
+          bottom: 20,
+        ),
+      ],
+      child: AbsorbPointer(
+        absorbing: isTouchDisable,
+        child: Scaffold(
+          appBar: CustomAppBar.animatedAppBar(
+            actions: [
+              IconButton(
+                  key: resetKey,
+                  icon: Icon(Icons.more_horiz, color: Colors.black),
+                  onPressed: () {
+                    showResetButton();
+                  })
+            ],
+            showTitle: _showTitle,
+            title: widget.otherUID != null
+                ? Dictionary.reportForOther
+                : Dictionary.reportForMySelf,
+          ),
+          backgroundColor: Colors.white,
+          body: MultiBlocProvider(
+              providers: [
+                BlocProvider<SelfReportReminderBloc>(
+                  create: (context) => SelfReportReminderBloc()
+                    ..add(SelfReportReminderListLoad()),
+                ),
+                BlocProvider<SelfReportListBloc>(
+                  create: (context) => SelfReportListBloc()
+                    ..add(SelfReportListLoad(otherUID: widget.otherUID)),
+                ),
+              ],
+              child: ListView(
+                controller: _scrollController,
+                children: <Widget>[
+                  AnimatedOpacity(
+                    opacity: _showTitle ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 250),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20),
+                      child: Text(
+                        widget.otherUID != null
+                            ? Dictionary.reportForOther
+                            : Dictionary.reportForMySelf,
+                        style: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  _showTitle
+                      ? Container()
+                      : Container(
+                          margin: const EdgeInsets.all(Dimens.contentPadding),
+                          decoration: BoxDecoration(
+                              color: ColorBase.grey,
+                              borderRadius: BorderRadius.circular(8)),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          child: Padding(
+                              padding:
+                                  const EdgeInsets.all(Dimens.contentPadding),
+                              child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    BlocBuilder<SelfReportListBloc,
+                                            SelfReportListState>(
+                                        builder: (BuildContext context,
+                                            SelfReportListState state) {
+                                      if (state is SelfReportListLoaded) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              Dictionary
+                                                  .dailyMonitoringProgress,
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      FontsFamily.roboto,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: ColorBase.netralGrey,
+                                                  fontSize: 12),
+                                            ),
+                                            Text(
+                                              '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      FontsFamily.roboto,
+                                                  color: ColorBase.primaryGreen,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            )
+                                          ],
+                                        );
+                                      } else if (state
+                                          is SelfReportListFailure) {
+                                        return ErrorContent(error: state.error);
+                                      } else {
+                                        return Container();
+                                      }
+                                    }),
+                                    BlocBuilder<SelfReportListBloc,
+                                            SelfReportListState>(
+                                        builder: (BuildContext context,
+                                            SelfReportListState state) {
+                                      if (state is SelfReportListLoaded) {
+                                        return LinearPercentIndicator(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.8,
+                                          lineHeight: 8.0,
+                                          backgroundColor:
+                                              ColorBase.menuBorderColor,
+                                          percent:
+                                              (state.querySnapshot.docs.length /
+                                                  14),
+                                          progressColor: ColorBase.primaryGreen,
+                                        );
+                                      } else if (state
+                                          is SelfReportListFailure) {
+                                        return ErrorContent(error: state.error);
+                                      } else {
+                                        return Container();
+                                      }
+                                    }),
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text(
-                                          Dictionary.dailyMonitoringProgress,
+                                          Dictionary.rememberMe,
                                           style: TextStyle(
+                                              color: ColorBase.darkGrey,
                                               fontFamily: FontsFamily.roboto,
-                                              fontWeight: FontWeight.bold,
-                                              color: ColorBase.netralGrey,
                                               fontSize: 12),
                                         ),
-                                        Text(
-                                          '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
-                                          style: TextStyle(
-                                              fontFamily: FontsFamily.roboto,
-                                              color: ColorBase.primaryGreen,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        )
+                                        BlocBuilder<SelfReportReminderBloc,
+                                                SelfReportReminderState>(
+                                            builder: (BuildContext context,
+                                                SelfReportReminderState state) {
+                                          if (state
+                                              is SelfReportIsReminderLoaded) {
+                                            isReminder = state.querySnapshot
+                                                .get('remind_me');
+                                            return FlutterSwitch(
+                                              width: 50.0,
+                                              height: 20.0,
+                                              toggleColor: Colors.white,
+                                              valueFontSize: 12.0,
+                                              activeColor:
+                                                  ColorBase.primaryGreen,
+                                              inactiveColor:
+                                                  ColorBase.disableText,
+                                              toggleSize: 18.0,
+                                              value: isReminder,
+                                              onToggle: (val) {
+                                                setState(() {
+                                                  isReminder = val;
+                                                  SelfReportReminderBloc().add(
+                                                      SelfReportListUpdateReminder(
+                                                          isReminder));
+                                                });
+                                              },
+                                            );
+                                          } else if (state
+                                              is SelfReportReminderFailure) {
+                                            return ErrorContent(
+                                                error: state.error);
+                                          } else {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+                                        }),
                                       ],
-                                    );
-                                  } else if (state is SelfReportListFailure) {
-                                    return ErrorContent(error: state.error);
-                                  } else {
-                                    return Container();
-                                  }
-                                }),
-                                BlocBuilder<SelfReportListBloc,
-                                        SelfReportListState>(
-                                    builder: (BuildContext context,
-                                        SelfReportListState state) {
-                                  if (state is SelfReportListLoaded) {
-                                    return LinearPercentIndicator(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.8,
-                                      lineHeight: 8.0,
-                                      backgroundColor:
-                                          ColorBase.menuBorderColor,
-                                      percent:
-                                          (state.querySnapshot.docs.length /
-                                              14),
-                                      progressColor: ColorBase.primaryGreen,
-                                    );
-                                  } else if (state is SelfReportListFailure) {
-                                    return ErrorContent(error: state.error);
-                                  } else {
-                                    return Container();
-                                  }
-                                }),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      Dictionary.rememberMe,
-                                      style: TextStyle(
-                                          color: ColorBase.darkGrey,
-                                          fontFamily: FontsFamily.roboto,
-                                          fontSize: 12),
                                     ),
-                                    BlocBuilder<SelfReportReminderBloc,
-                                            SelfReportReminderState>(
-                                        builder: (BuildContext context,
-                                            SelfReportReminderState state) {
-                                      if (state is SelfReportIsReminderLoaded) {
-                                        isReminder = state.querySnapshot
-                                            .get('remind_me');
-                                        return FlutterSwitch(
-                                          width: 50.0,
-                                          height: 20.0,
-                                          toggleColor: Colors.white,
-                                          valueFontSize: 12.0,
-                                          activeColor: ColorBase.primaryGreen,
-                                          inactiveColor: ColorBase.disableText,
-                                          toggleSize: 18.0,
-                                          value: isReminder,
-                                          onToggle: (val) {
-                                            setState(() {
-                                              isReminder = val;
-                                              SelfReportReminderBloc().add(
-                                                  SelfReportListUpdateReminder(
-                                                      isReminder));
-                                            });
-                                          },
-                                        );
-                                      } else if (state
-                                          is SelfReportReminderFailure) {
-                                        return ErrorContent(error: state.error);
-                                      } else {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                    }),
-                                  ],
-                                ),
-                              ]))),
-              BlocBuilder<SelfReportListBloc, SelfReportListState>(
-                  builder: (BuildContext context, SelfReportListState state) {
-                if (state is SelfReportListLoaded) {
-                  return Column(
-                    children: _buildContent(state),
-                  );
-                } else if (state is SelfReportListFailure) {
-                  return ErrorContent(error: state.error);
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              }),
-            ],
-          )),
-    );
+                                  ]))),
+                  BlocBuilder<SelfReportListBloc, SelfReportListState>(builder:
+                      (BuildContext context, SelfReportListState state) {
+                    if (state is SelfReportListLoaded) {
+                      if (isShow) {
+                        if (DateTime.now()
+                                .difference(DateTime.fromMillisecondsSinceEpoch(
+                                    state.querySnapshot.docs.last
+                                            .get('created_at')
+                                            .seconds *
+                                        1000))
+                                .inDays >=
+                            8) {
+                          showTutorial();
+                        }
+                      }
+                      return Column(
+                        children: _buildContent(state),
+                      );
+                    } else if (state is SelfReportListFailure) {
+                      return ErrorContent(error: state.error);
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }),
+                ],
+              )),
+        ),
+      ),
+    ));
   }
 
   List<Widget> _buildContent(SelfReportListLoaded snapshot) {
@@ -446,5 +610,93 @@ class _SelfReportListState extends State<SelfReportList> {
       list.add(column);
     }
     return list;
+  }
+
+  showResetButton() {
+    showWidgetBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      child: Center(
+        child: FlatButton(
+          minWidth: 1,
+          onPressed: () {
+            showConfirmDialog();
+          },
+          child: Text('Reset Laporan',
+              style: Theme.of(context).textTheme.caption.copyWith(
+                  color: Colors.red[400],
+                  fontFamily: FontsFamily.roboto,
+                  fontWeight: FontWeight.bold,
+                  height: 1.5,
+                  fontSize: 16)),
+        ),
+      ),
+    );
+  }
+
+  showConfirmDialog() {
+    return showWidgetBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 44.0, vertical: Dimens.verticalPadding),
+            child: Image.asset(
+              '${Environment.imageAssets}warning_image.png',
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              'Apakah Anda yakin?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Text(
+            'Laporan Anda tidak bisa diakses kembali \nsetelah Reset. Anda akan mulai laporan dari \nhari pertama',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: FontsFamily.roboto,
+                height: 1.5,
+                fontSize: 12.0,
+                color: Colors.grey[600]),
+          ),
+          SizedBox(height: 24.0),
+          RoundedButton(
+              borderRadius: BorderRadius.circular(10),
+              title: 'Reset',
+              textStyle: TextStyle(
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+              color: Colors.red[400],
+              elevation: 0.0,
+              onPressed: () {}),
+          SizedBox(height: 10.0),
+          RoundedButton(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: ColorBase.disableText),
+              title: Dictionary.cancel,
+              textStyle: TextStyle(
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600]),
+              color: Colors.white,
+              elevation: 0.0,
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+        ],
+      ),
+    );
   }
 }
