@@ -116,6 +116,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   scrollController: _scrollController,
                   onTap: (index) {
                     setState(() {});
+                    _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                     indexTab = index;
                     _faqListBloc.add(FaqListLoad(
                         faqCollection: kFaq,
