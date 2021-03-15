@@ -106,7 +106,10 @@ class _SelfReportListState extends State<SelfReportList> {
             left: 20,
             child: Column(
               children: [
-                Text('Anda telah melewati masa 14 \nhari lapor mandiri',
+                Text(
+                    widget.isHealthStatusChange
+                        ? 'Kami mendeteksi perubahan \nstatus kesehatan Anda'
+                        : 'Anda telah melewati masa 14 \nhari lapor mandiri',
                     style: Theme.of(context).textTheme.caption.copyWith(
                         color: Colors.white,
                         fontFamily: FontsFamily.roboto,
@@ -117,7 +120,9 @@ class _SelfReportListState extends State<SelfReportList> {
                   height: 20,
                 ),
                 Text(
-                    'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas',
+                    widget.isHealthStatusChange
+                        ? 'Untuk melanjutkan laporan mandiri, silakan \nlakukan reset melalui tombol titik tiga di \npojok kanan atas'
+                        : 'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas',
                     style: Theme.of(context).textTheme.caption.copyWith(
                         color: Colors.white,
                         fontFamily: FontsFamily.roboto,

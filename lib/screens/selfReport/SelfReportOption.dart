@@ -12,8 +12,11 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
 class SelfReportOption extends StatefulWidget {
   final LatLng location;
   final String cityId;
+  final bool isHealthStatusChange;
 
-  SelfReportOption({Key key, this.location, this.cityId}) : super(key: key);
+  SelfReportOption(
+      {Key key, this.location, this.cityId, this.isHealthStatusChange})
+      : super(key: key);
 
   @override
   _SelfReportOptionState createState() => _SelfReportOptionState();
@@ -49,9 +52,11 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                   // move to self report list screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportList(
-                          location: widget.location,
-                          cityId: widget.cityId,
-                          analytics: Analytics.tappedDailyReport)));
+                            location: widget.location,
+                            cityId: widget.cityId,
+                            analytics: Analytics.tappedDailyReport,
+                            isHealthStatusChange: widget.isHealthStatusChange,
+                          )));
                 }, true),
                 _buildContainer(
                     '${Environment.iconAssets}self_report_other_icon.png',

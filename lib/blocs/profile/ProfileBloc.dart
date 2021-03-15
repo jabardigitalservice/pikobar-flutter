@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/HealthStatus.dart';
 import 'package:pikobar_flutter/models/CityModel.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 import './Bloc.dart';
@@ -118,6 +120,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> _selfReportListToState(ProfileUpdated event) async* {
-    yield ProfileLoaded(event.profile);
+    bool isHealthStatusChange;
+    String getHealthStatus =
+        await HealthStatusSharedPreference.getHealthStatus();
+    if (getHealthStatus == null) {
+      await HealthStatusSharedPreference.setHealthStatus(
+          getField(event.profile, 'health_status'));
+    } else {
+      if (getHealthStatus != getField(event.profile, 'health_status')) {
+        isHealthStatusChange = true;
+      }
+    }
+    yield ProfileLoaded(event.profile,
+        isHealthStatusChange: isHealthStatusChange ?? false);
   }
 }

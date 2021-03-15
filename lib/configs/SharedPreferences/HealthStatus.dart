@@ -1,0 +1,17 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
+class HealthStatusSharedPreference {
+  /// Method GET health status
+  static Future<String> getHealthStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString('healthstatus');
+  }
+
+  /// Method SET health status
+  static Future<bool> setHealthStatus(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.setString('healthstatus', value);
+  }
+}
