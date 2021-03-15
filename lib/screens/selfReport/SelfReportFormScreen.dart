@@ -72,14 +72,16 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   List<String> _allItemList = [
     'Batuk',
     'Demam',
+    'Menggigil',
     'Diare',
-    'Lemah/Lemas',
+    'Lemah (Malaise)',
     'Nyeri Otot',
+    'Nyeri Abdomen',
     'Mual Atau Muntah',
     'Pilek',
     'Sakit Kepala',
     'Sakit Tenggorokan',
-    'Sesak Nafas',
+    'Sesak Napas',
     'Tidak Ada Gejala',
     'Gejala Lainnya'
   ];
@@ -270,7 +272,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               alignment: Alignment.centerLeft,
               child: GroupedCheckBox(
                 itemHeight: 40.0,
-                indexAllDisabled: 10,
+                indexAllDisabled: 12,
                 borderRadius: BorderRadius.circular(8.0),
                 color: ColorBase.netralGrey,
                 defaultSelectedList: _checkedItemList,
@@ -285,7 +287,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 onChanged: (itemList) {
                   setState(() {
                     _checkedItemList = itemList;
-                    _isOtherIndication = itemList.contains(_allItemList[11]);
+                    _isOtherIndication = itemList.contains(_allItemList[13]);
                     _isIndicationEmpty = itemList.isEmpty;
                   });
                 },
