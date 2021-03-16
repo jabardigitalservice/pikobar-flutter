@@ -118,6 +118,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> _selfReportListToState(ProfileUpdated event) async* {
-    yield ProfileLoaded(event.profile);
+    yield ProfileLoaded(profile: event.profile);
   }
 }

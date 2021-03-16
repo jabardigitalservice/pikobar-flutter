@@ -135,26 +135,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     HealthCheck().isUserHealty(_profileLoaded.record.uid);
-                    return BlocBuilder<ProfileBloc, ProfileState>(builder: (
-                      BuildContext context,
-                      ProfileState state,
-                    ) {
-                      if (state is ProfileLoading) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (state is ProfileLoaded) {
-                        ProfileLoaded _getProfile = state;
-                        return _buildContent(
-                            _getProfile.profile, _profileLoaded);
-                      } else {
-                        _profileBloc
-                            .add(ProfileLoad(uid: _profileLoaded.record.uid));
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    });
+                    return BlocProvider<ProfileBloc>(
+                        create: (context) => ProfileBloc(
+                            profileRepository: ProfileRepository())
+                          ..add(ProfileLoad(uid: _profileLoaded.record.uid)),
+                        child: BlocBuilder<ProfileBloc, ProfileState>(builder: (
+                          BuildContext context,
+                          ProfileState state,
+                        ) {
+                          if (state is ProfileLoading) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (state is ProfileLoaded) {
+                            return _buildContent(state.profile, _profileLoaded);
+                          } else {
+                            // _profileBloc.add(
+                            //     ProfileLoad(uid: _profileLoaded.record.uid));
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }));
                   } else if (state is AuthenticationFailure ||
                       state is AuthenticationLoading) {
                     return OnBoardingLoginScreen(
@@ -206,7 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: 30.0,
                       child: Text(
-                        state['name'],
+                        _profileLoaded.record.name,
                         style: TextStyle(
                             color: ColorBase.grey800,
                             fontSize: 16,
@@ -457,7 +459,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Container(
         child: RichText(
           text: TextSpan(
-              text: termsConditions['agreement']+' ',
+              text: termsConditions['agreement'] + ' ',
               style: TextStyle(
                   fontFamily: FontsFamily.roboto,
                   fontWeight: FontWeight.bold,
