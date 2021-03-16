@@ -14,4 +14,18 @@ class HealthStatusSharedPreference {
 
     return prefs.setString('healthstatus', value);
   }
+
+  /// Method GET temp health status
+  static Future<String> getTempHealthStatus() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString('temphealthstatus');
+  }
+
+  /// Method SET temp health status
+  static Future<bool> setTempHealthStatus(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.setString('temphealthstatus', value);
+  }
 }

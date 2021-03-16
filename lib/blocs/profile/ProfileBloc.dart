@@ -121,10 +121,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _selfReportListToState(ProfileUpdated event) async* {
     bool isHealthStatusChange;
-    String getHealthStatus =
+    final String getHealthStatus =
         await HealthStatusSharedPreference.getHealthStatus();
     if (getHealthStatus == null) {
       await HealthStatusSharedPreference.setHealthStatus(
+          getField(event.profile, 'health_status'));
+      await HealthStatusSharedPreference.setTempHealthStatus(
           getField(event.profile, 'health_status'));
     } else {
       if (getHealthStatus != getField(event.profile, 'health_status')) {

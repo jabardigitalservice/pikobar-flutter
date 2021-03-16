@@ -17,10 +17,15 @@ import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
-  final String reportId, otherUID, analytics, cityId;
+  final String reportId, otherUID, analytics, cityId, recurrenceReport;
 
   SelfReportDetailScreen(
-      {Key key, this.reportId, this.otherUID, this.analytics, this.cityId})
+      {Key key,
+      this.reportId,
+      this.otherUID,
+      this.analytics,
+      this.cityId,
+      this.recurrenceReport})
       : super(key: key);
 
   @override

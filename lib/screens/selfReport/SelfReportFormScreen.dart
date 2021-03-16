@@ -33,6 +33,7 @@ class SelfReportFormScreen extends StatefulWidget {
   final String otherUID;
   final String analytics;
   final String cityId;
+  final String recurrenceReport;
 
   SelfReportFormScreen(
       {Key key,
@@ -41,7 +42,8 @@ class SelfReportFormScreen extends StatefulWidget {
       this.dailyReportModel,
       this.otherUID,
       @required this.analytics,
-      this.cityId})
+      this.cityId,
+      this.recurrenceReport})
       : assert(dailyId != null),
         assert(location != null),
         super(key: key);
@@ -167,9 +169,11 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SelfReportDoneScreen(
-                                    location: widget.location,
-                                    otherUID: widget.otherUID,
-                                    analytics: widget.analytics)),
+                                      location: widget.location,
+                                      otherUID: widget.otherUID,
+                                      analytics: widget.analytics,
+                                      recurrenceReport: widget.recurrenceReport,
+                                    )),
                           );
                         } else {
                           Navigator.of(context).pop(true);
@@ -576,7 +580,8 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 : null,
             indications: _checkedItemList.toString(),
             bodyTemperature: _bodyTempController.text,
-            location: widget.location);
+            location: widget.location,
+            recurrenceReport: widget.recurrenceReport);
         _dailyReportBloc.add(DailyReportSave(data,
             otherUID: widget.otherUID, successMessage: successMessage));
       }

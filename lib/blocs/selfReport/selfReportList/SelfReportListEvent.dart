@@ -5,8 +5,8 @@ abstract class SelfReportListEvent extends Equatable {
 }
 
 class SelfReportListLoad extends SelfReportListEvent {
-  final String otherUID;
-  SelfReportListLoad({this.otherUID});
+  final String otherUID, recurrenceReport;
+  SelfReportListLoad({this.otherUID, this.recurrenceReport});
   @override
   List<Object> get props => [];
 }
@@ -19,6 +19,3 @@ class SelfReportListUpdated extends SelfReportListEvent {
   @override
   List<Object> get props => [selfReportList];
 }
-
-
-

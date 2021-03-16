@@ -22,12 +22,13 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
+// ignore: must_be_immutable
 class SelfReportList extends StatefulWidget {
   final LatLng location;
   final String otherUID;
   final String analytics;
   final String cityId;
-  final bool isHealthStatusChange;
+  bool isHealthStatusChange;
 
   SelfReportList(
       {Key key,
@@ -53,6 +54,10 @@ class _SelfReportListState extends State<SelfReportList> {
       counterTextKey = GlobalKey(),
       resetKey = GlobalKey();
   bool isTouchDisable = false;
+  String recurrenceReport;
+  SelfReportReminderBloc _selfReportReminderBloc;
+  SelfReportListBloc _selfReportListBloc;
+
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
@@ -210,39 +215,76 @@ class _SelfReportListState extends State<SelfReportList> {
           body: MultiBlocProvider(
               providers: [
                 BlocProvider<SelfReportReminderBloc>(
-                  create: (context) => SelfReportReminderBloc()
-                    ..add(SelfReportReminderListLoad()),
+                  create: (context) =>
+                      _selfReportReminderBloc = SelfReportReminderBloc()
+                        ..add(SelfReportReminderListLoad()),
                 ),
                 BlocProvider<SelfReportListBloc>(
-                  create: (context) => SelfReportListBloc()
-                    ..add(SelfReportListLoad(otherUID: widget.otherUID)),
+                  create: (context) =>
+                      _selfReportListBloc = SelfReportListBloc(),
                 ),
               ],
-              child: BlocListener<SelfReportListBloc, SelfReportListState>(
-                listener: (context, state) {
-                  if (state is SelfReportListLoaded) {
-                    if (widget.isHealthStatusChange) {
-                      print('health status');
-                      setState(() {
-                        isTouchDisable = true;
-                      });
-                      showTutorial();
-                    } else if (DateTime.now()
-                            .difference(DateTime.fromMillisecondsSinceEpoch(
-                                state.querySnapshot.docs.last
-                                        .get('created_at')
-                                        .seconds *
-                                    1000))
-                            .inDays >=
-                        14) {
-                      print('14 hari');
-                      setState(() {
-                        isTouchDisable = true;
-                      });
-                      showTutorial();
+              child: MultiBlocListener(
+                listeners: [
+                  BlocListener<SelfReportListBloc, SelfReportListState>(
+                      listener:
+                          (BuildContext context, SelfReportListState state) {
+                    if (state is SelfReportListLoaded) {
+                      if (widget.isHealthStatusChange) {
+                        print('health status');
+                        setState(() {
+                          isTouchDisable = true;
+                        });
+                        showTutorial();
+                      } else if (DateTime.now()
+                              .difference(DateTime.fromMillisecondsSinceEpoch(
+                                  state.querySnapshot.docs.last
+                                          .get('created_at')
+                                          .seconds *
+                                      1000))
+                              .inDays >=
+                          14) {
+                        print('14 hari');
+                        setState(() {
+                          isTouchDisable = true;
+                        });
+                        showTutorial();
+                      }
                     }
-                  }
-                },
+                  }),
+                  BlocListener<SelfReportReminderBloc, SelfReportReminderState>(
+                      listener: (BuildContext context,
+                          SelfReportReminderState state) {
+                    if (state is SelfReportIsReminderLoaded) {
+                      _selfReportListBloc.add(SelfReportListLoad(
+                          otherUID: widget.otherUID,
+                          recurrenceReport: getField(
+                              state.querySnapshot, 'recurrence_report')));
+                    } else if (state is SelfReportRecurrenceReportSaved) {
+                      widget.isHealthStatusChange = false;
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      // _selfReportReminderBloc.add(SelfReportReminderListLoad());
+                      // _selfReportListBloc.add(SelfReportListLoad(
+                      //     otherUID: widget.otherUID,
+                      //     recurrenceReport:
+                      //         (int.parse(recurrenceReport ?? '0') + 1)
+                      //             .toString()));
+                    } else if (state is SelfReportReminderFailure) {
+                      showDialog(
+                          context: context,
+                          builder: (context) => DialogTextOnly(
+                                description: state.error.toString(),
+                                buttonText: Dictionary.ok,
+                                onOkPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // To close the dialog
+                                },
+                              ));
+                    }
+                  })
+                ],
                 child: ListView(
                   controller: _scrollController,
                   children: <Widget>[
@@ -365,6 +407,9 @@ class _SelfReportListState extends State<SelfReportList> {
                                                 is SelfReportIsReminderLoaded) {
                                               isReminder = state.querySnapshot
                                                   .get('remind_me');
+                                              recurrenceReport = getField(
+                                                  state.querySnapshot,
+                                                  'recurrence_report');
                                               return FlutterSwitch(
                                                 width: 50.0,
                                                 height: 20.0,
@@ -379,7 +424,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                                 onToggle: (val) {
                                                   setState(() {
                                                     isReminder = val;
-                                                    SelfReportReminderBloc().add(
+                                                    _selfReportReminderBloc.add(
                                                         SelfReportListUpdateReminder(
                                                             isReminder));
                                                   });
@@ -421,6 +466,13 @@ class _SelfReportListState extends State<SelfReportList> {
 
   List<Widget> _buildContent(SelfReportListLoaded snapshot) {
     List<Widget> list = List();
+    int firstData = 0;
+    int lastData = 14;
+    int countDay = 1;
+    if (recurrenceReport != null) {
+      firstData = int.parse(recurrenceReport) * 14;
+      lastData = (int.parse(recurrenceReport) + 1) * 14;
+    }
     if (snapshot.querySnapshot.docs.length != 0) {
       for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
         /// Get [documentID] to [listDocumentId]
@@ -430,22 +482,26 @@ class _SelfReportListState extends State<SelfReportList> {
         listDocumentId = listDocumentId.toSet().toList();
       }
 
-      if (getField(snapshot.querySnapshot.docs[0], 'quarantine_date') == null) {
+      if (getField(snapshot.querySnapshot.docs[firstData], 'quarantine_date') ==
+          null) {
         /// Save ['created_at'] as [firstDay] for main parameter
         firstDay = DateTime.fromMillisecondsSinceEpoch(
-            snapshot.querySnapshot.docs[0].get('created_at').seconds * 1000);
+            snapshot.querySnapshot.docs[firstData].get('created_at').seconds *
+                1000);
       } else {
         /// Save ['quarantine_date'] as [firstDay] for main parameter
-        firstDay = DateTime.fromMillisecondsSinceEpoch(
-            snapshot.querySnapshot.docs[0].get('quarantine_date').seconds *
-                1000);
+        firstDay = DateTime.fromMillisecondsSinceEpoch(snapshot
+                .querySnapshot.docs[firstData]
+                .get('quarantine_date')
+                .seconds *
+            1000);
       }
 
       currentDay = DateTime.now();
     }
 
-    for (int i = 0; i < 14; i++) {
-      if (i != 0) {
+    for (int i = firstData; i < lastData; i++) {
+      if (i != firstData) {
         if (currentDay != null) {
           if (currentDay.day == firstDay.add(Duration(days: i)).day ||
               firstDay
@@ -475,7 +531,7 @@ class _SelfReportListState extends State<SelfReportList> {
           InkWell(
             onTap: () {
               /// Checking data is not first array
-              if (i != 0) {
+              if (i != firstData) {
                 /// Checking data if [currentDay] not null
                 if (currentDay != null) {
                   if (currentDay.day == firstDay.add(Duration(days: i)).day ||
@@ -495,18 +551,21 @@ class _SelfReportListState extends State<SelfReportList> {
                                 cityId: widget.cityId,
                                 reportId: '${i + 1}',
                                 otherUID: widget.otherUID,
-                                analytics: widget.analytics)),
+                                analytics: widget.analytics,
+                                recurrenceReport: recurrenceReport)),
                       );
                     } else {
                       if (listDocumentId.contains('$i')) {
                         /// Move to form screen
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => SelfReportFormScreen(
-                                cityId: widget.cityId,
-                                analytics: widget.analytics,
-                                otherUID: widget.otherUID,
-                                dailyId: '${i + 1}',
-                                location: widget.location)));
+                                  cityId: widget.cityId,
+                                  analytics: widget.analytics,
+                                  otherUID: widget.otherUID,
+                                  dailyId: '${i + 1}',
+                                  location: widget.location,
+                                  recurrenceReport: recurrenceReport,
+                                )));
                       } else {
                         showDialog(
                             context: context,
@@ -558,17 +617,19 @@ class _SelfReportListState extends State<SelfReportList> {
                             cityId: widget.cityId,
                             reportId: '${i + 1}',
                             otherUID: widget.otherUID,
-                            analytics: widget.analytics)),
+                            analytics: widget.analytics,
+                            recurrenceReport: recurrenceReport)),
                   );
                 } else {
-                  /// Move to form screen
+                  // Move to form screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportFormScreen(
                           cityId: widget.cityId,
                           analytics: widget.analytics,
                           dailyId: '${i + 1}',
                           otherUID: widget.otherUID,
-                          location: widget.location)));
+                          location: widget.location,
+                          recurrenceReport: recurrenceReport)));
                 }
               }
             },
@@ -587,8 +648,10 @@ class _SelfReportListState extends State<SelfReportList> {
                             children: [
                               Text(
                                 listDocumentId.contains('${i + 1}')
-                                    ? "✅" + '  ${Dictionary.countDay}${i + 1}'
-                                    : '' + '${Dictionary.countDay}${i + 1}',
+                                    ? "✅" +
+                                        '  ${Dictionary.countDay}${countDay++}'
+                                    : '' +
+                                        '${Dictionary.countDay}${countDay++}',
                                 style: TextStyle(
                                     color: textColor,
                                     fontWeight: FontWeight.bold,
@@ -707,7 +770,10 @@ class _SelfReportListState extends State<SelfReportList> {
                   color: Colors.white),
               color: Colors.red[400],
               elevation: 0.0,
-              onPressed: () {}),
+              onPressed: () {
+                _selfReportReminderBloc
+                    .add(SelfReportUpdateRecurrenceReport(recurrenceReport));
+              }),
           SizedBox(height: 10.0),
           RoundedButton(
               borderRadius: BorderRadius.circular(10),

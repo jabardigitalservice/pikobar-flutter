@@ -22,20 +22,23 @@ class SelfReportListBloc
     SelfReportListEvent event,
   ) async* {
     if (event is SelfReportListLoad) {
-      yield* _loadSelfReportListToState(event.otherUID);
+      yield* _loadSelfReportListToState(event.otherUID, event.recurrenceReport);
     } else if (event is SelfReportListUpdated) {
       yield* _selfReportListToState(event);
     }
   }
 
   Stream<SelfReportListState> _loadSelfReportListToState(
-      String otherUID) async* {
+      String otherUID, recurrenceReport) async* {
     yield SelfReportListLoading();
     _subscription?.cancel();
     String userId = await AuthRepository().getToken();
 
     _subscription = SelfReportRepository()
-        .getSelfReportList(userId: userId, otherUID: otherUID)
+        .getSelfReportList(
+            userId: userId,
+            otherUID: otherUID,
+            recurrenceReport: recurrenceReport)
         .listen((event) {
       add(SelfReportListUpdated(event));
     });
