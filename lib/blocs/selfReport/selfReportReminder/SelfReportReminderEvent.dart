@@ -17,10 +17,10 @@ class SelfReportListUpdateReminder extends SelfReportReminderEvent {
 }
 
 class SelfReportUpdateRecurrenceReport extends SelfReportReminderEvent {
-  final String recurrenceReport;
-  SelfReportUpdateRecurrenceReport(this.recurrenceReport);
+  final String recurrenceReport, otherUID;
+  SelfReportUpdateRecurrenceReport(this.recurrenceReport, this.otherUID);
   @override
-  List<Object> get props => [recurrenceReport];
+  List<Object> get props => [recurrenceReport, otherUID];
 }
 
 class SelfReportReminderUpdated extends SelfReportReminderEvent {

@@ -32,10 +32,13 @@ class SelfReportListBloc
   Stream<SelfReportListState> _loadSelfReportListToState(
       String otherUID, recurrenceReport) async* {
     yield SelfReportListLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     final String userId = await AuthRepository().getToken();
-    final bool isHealtStatusChanged =
-        await HealthStatusSharedPreference.getIsHealthStatusChange();
+    bool isHealtStatusChanged;
+    if (otherUID == null) {
+      isHealtStatusChanged =
+          await HealthStatusSharedPreference.getIsHealthStatusChange();
+    }
 
     _subscription = SelfReportRepository()
         .getSelfReportList(

@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/selfReport/AddUserForm.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 class SelfReportOtherScreen extends StatefulWidget {
   final LatLng location;
@@ -171,11 +172,12 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelfReportList(
-                              cityId: widget.cityId,
-                              location: widget.location,
-                              analytics: Analytics.tappedDailyOtherReport,
-                              otherUID: documents[i].get('user_id'),
-                            )));
+                            cityId: widget.cityId,
+                            location: widget.location,
+                            analytics: Analytics.tappedDailyOtherReport,
+                            otherUID: documents[i].get('user_id'),
+                            otherRecurrenceReport:
+                                getField(documents[i], 'recurrence_report'))));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),

@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-
 AddOtherSelfReportModel dailyReportFromJson(String str) =>
     AddOtherSelfReportModel.fromJson(json.decode(str));
 
@@ -19,7 +18,11 @@ class AddOtherSelfReportModel {
       this.name,
       this.gender,
       this.nik,
-      this.relation});
+      this.relation,
+      this.healthStatusCheck,
+      this.healthStatus,
+      this.healthStatusText,
+      this.recurrenceReport});
 
   String userId;
   DateTime createdAt;
@@ -28,6 +31,10 @@ class AddOtherSelfReportModel {
   String gender;
   String nik;
   String relation;
+  DateTime healthStatusCheck;
+  String healthStatus;
+  String healthStatusText;
+  String recurrenceReport;
 
   factory AddOtherSelfReportModel.fromJson(Map<String, dynamic> json) =>
       AddOtherSelfReportModel(
@@ -38,6 +45,10 @@ class AddOtherSelfReportModel {
         gender: json["gender"],
         nik: json["nik"],
         relation: json["relation"],
+        healthStatusCheck: DateTime.parse(json["healh_status_check"]),
+        healthStatus: json["health_status"],
+        healthStatusText: json["health_status_text"],
+        recurrenceReport: json["recurrence_report"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,5 +59,9 @@ class AddOtherSelfReportModel {
         "gender": gender,
         "nik": nik,
         "relation": relation,
+        "healh_status_check": healthStatusCheck,
+        "health_status": healthStatus,
+        "health_status_text": healthStatusText,
+        "recurrence_report": recurrenceReport
       };
 }

@@ -28,9 +28,15 @@ class SelfReportList extends StatefulWidget {
   final String otherUID;
   final String analytics;
   final String cityId;
+  final String otherRecurrenceReport;
 
   SelfReportList(
-      {Key key, this.location, this.analytics, this.otherUID, this.cityId})
+      {Key key,
+      this.location,
+      this.analytics,
+      this.otherUID,
+      this.cityId,
+      this.otherRecurrenceReport})
       : super(key: key);
 
   @override
@@ -92,12 +98,13 @@ class _SelfReportListState extends State<SelfReportList> {
                 listener: (BuildContext context, SelfReportListState state) {
               if (state is SelfReportListLoaded) {
                 isStatusChanged = state.isHealthStatusChanged;
-                if (state.isHealthStatusChanged) {
-                  print('health status');
-                  setState(() {
-                    isTouchDisable = true;
-                  });
-                  showTutorial();
+                if (isStatusChanged) {
+                  if (widget.otherUID == null) {
+                    setState(() {
+                      isTouchDisable = true;
+                    });
+                    showTutorial();
+                  }
                 } else if (DateTime.now()
                         .difference(DateTime.fromMillisecondsSinceEpoch(state
                                 .querySnapshot.docs.last
@@ -106,7 +113,6 @@ class _SelfReportListState extends State<SelfReportList> {
                             1000))
                         .inDays >=
                     14) {
-                  print('14 hari');
                   setState(() {
                     isTouchDisable = true;
                   });
@@ -118,27 +124,30 @@ class _SelfReportListState extends State<SelfReportList> {
                 listener:
                     (BuildContext context, SelfReportReminderState state) {
               if (state is SelfReportIsReminderLoaded) {
+                if (widget.otherUID == null) {
+                  recurrenceReport =
+                      getField(state.querySnapshot, 'recurrence_report');
+                } else {
+                  recurrenceReport = widget.otherRecurrenceReport;
+                }
                 _selfReportListBloc.add(SelfReportListLoad(
                     otherUID: widget.otherUID,
-                    recurrenceReport:
-                        getField(state.querySnapshot, 'recurrence_report')));
+                    recurrenceReport: recurrenceReport));
               } else if (state is SelfReportRecurrenceReportSaved) {
+                print(recurrenceReport);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                // Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => SelfReportList(
                           location: widget.location,
                           cityId: widget.cityId,
                           analytics: Analytics.tappedDailyReport,
                           otherUID: widget.otherUID,
+                          otherRecurrenceReport:
+                              (int.parse(widget.otherRecurrenceReport ?? '0') +
+                                      1)
+                                  .toString(),
                         )));
-                // _selfReportReminderBloc.add(SelfReportReminderListLoad());
-                // _selfReportListBloc.add(SelfReportListLoad(
-                //     otherUID: widget.otherUID,
-                //     recurrenceReport:
-                //         (int.parse(recurrenceReport ?? '0') + 1)
-                //             .toString()));
               } else if (state is SelfReportReminderFailure) {
                 showDialog(
                     context: context,
@@ -184,8 +193,8 @@ class _SelfReportListState extends State<SelfReportList> {
                       children: [
                         Text(
                             isStatusChanged
-                                ? 'Kami mendeteksi perubahan \nstatus kesehatan Anda'
-                                : 'Anda telah melewati masa 14 \nhari lapor mandiri',
+                                ? Dictionary.statusChanged
+                                : Dictionary.moreThan14Days,
                             style: Theme.of(context).textTheme.caption.copyWith(
                                 color: Colors.white,
                                 fontFamily: FontsFamily.roboto,
@@ -197,8 +206,8 @@ class _SelfReportListState extends State<SelfReportList> {
                         ),
                         Text(
                             isStatusChanged
-                                ? 'Untuk melanjutkan laporan mandiri, silakan \nlakukan reset melalui tombol titik tiga di \npojok kanan atas'
-                                : 'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas',
+                                ? Dictionary.statusChangedDesc
+                                : Dictionary.moreThan14DaysDesc,
                             style: Theme.of(context).textTheme.caption.copyWith(
                                 color: Colors.white,
                                 fontFamily: FontsFamily.roboto,
@@ -254,7 +263,7 @@ class _SelfReportListState extends State<SelfReportList> {
                         isTouchDisable = false;
                       });
                     },
-                    child: Text('Skip',
+                    child: Text(Dictionary.skip,
                         style: Theme.of(context).textTheme.caption.copyWith(
                             color: Colors.white,
                             fontFamily: FontsFamily.roboto,
@@ -415,9 +424,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                                   isReminder = state
                                                       .querySnapshot
                                                       .get('remind_me');
-                                                  recurrenceReport = getField(
-                                                      state.querySnapshot,
-                                                      'recurrence_report');
+
                                                   return FlutterSwitch(
                                                     width: 50.0,
                                                     height: 20.0,
@@ -562,6 +569,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                   recurrenceReport: recurrenceReport,
                                   firstData: firstData,
                                   lastData: lastData,
+                                  countDay: ((i - firstData) + 1).toString(),
                                 )),
                       );
                     } else {
@@ -626,14 +634,14 @@ class _SelfReportListState extends State<SelfReportList> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SelfReportDetailScreen(
-                              cityId: widget.cityId,
-                              reportId: '${i + 1}',
-                              otherUID: widget.otherUID,
-                              analytics: widget.analytics,
-                              recurrenceReport: recurrenceReport,
-                              firstData: firstData,
-                              lastData: lastData,
-                            )),
+                            cityId: widget.cityId,
+                            reportId: '${i + 1}',
+                            otherUID: widget.otherUID,
+                            analytics: widget.analytics,
+                            recurrenceReport: recurrenceReport,
+                            firstData: firstData,
+                            lastData: lastData,
+                            countDay: ((i - firstData) + 1).toString())),
                   );
                 } else {
                   // Move to form screen
@@ -731,7 +739,7 @@ class _SelfReportListState extends State<SelfReportList> {
           onPressed: () {
             showConfirmDialog();
           },
-          child: Text('Reset Laporan',
+          child: Text(Dictionary.resetReport,
               style: Theme.of(context).textTheme.caption.copyWith(
                   color: Colors.red[400],
                   fontFamily: FontsFamily.roboto,
@@ -758,9 +766,9 @@ class _SelfReportListState extends State<SelfReportList> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              'Apakah Anda yakin?',
+              Dictionary.confirmResetMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: FontsFamily.roboto,
@@ -769,7 +777,7 @@ class _SelfReportListState extends State<SelfReportList> {
             ),
           ),
           Text(
-            'Laporan Anda tidak bisa diakses kembali \nsetelah Reset. Anda akan mulai laporan dari \nhari pertama',
+            Dictionary.confirmResetMessageDesc,
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: FontsFamily.roboto,
@@ -777,10 +785,10 @@ class _SelfReportListState extends State<SelfReportList> {
                 fontSize: 12.0,
                 color: Colors.grey[600]),
           ),
-          SizedBox(height: 24.0),
+          const SizedBox(height: 24.0),
           RoundedButton(
               borderRadius: BorderRadius.circular(10),
-              title: 'Reset',
+              title: Dictionary.reset,
               textStyle: TextStyle(
                   fontFamily: FontsFamily.roboto,
                   fontSize: 14.0,
@@ -789,10 +797,10 @@ class _SelfReportListState extends State<SelfReportList> {
               color: Colors.red[400],
               elevation: 0.0,
               onPressed: () {
-                _selfReportReminderBloc
-                    .add(SelfReportUpdateRecurrenceReport(recurrenceReport));
+                _selfReportReminderBloc.add(SelfReportUpdateRecurrenceReport(
+                    recurrenceReport, widget.otherUID));
               }),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           RoundedButton(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: ColorBase.disableText),
