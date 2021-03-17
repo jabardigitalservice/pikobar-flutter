@@ -28,4 +28,18 @@ class HealthStatusSharedPreference {
 
     return prefs.setString('temphealthstatus', value);
   }
+
+  /// Method SET health status bool
+  static Future<bool> setIsHealthStatusChange(bool value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.setBool('ishealthstatuschange', value);
+  }
+
+  /// Method GET health status bool
+  static Future<bool> getIsHealthStatusChange() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getBool('ishealthstatuschange');
+  }
 }

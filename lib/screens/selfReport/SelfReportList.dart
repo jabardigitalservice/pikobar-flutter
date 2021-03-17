@@ -28,15 +28,9 @@ class SelfReportList extends StatefulWidget {
   final String otherUID;
   final String analytics;
   final String cityId;
-  bool isHealthStatusChange;
 
   SelfReportList(
-      {Key key,
-      this.location,
-      this.analytics,
-      this.otherUID,
-      this.cityId,
-      this.isHealthStatusChange})
+      {Key key, this.location, this.analytics, this.otherUID, this.cityId})
       : super(key: key);
 
   @override
@@ -57,6 +51,7 @@ class _SelfReportListState extends State<SelfReportList> {
   String recurrenceReport;
   SelfReportReminderBloc _selfReportReminderBloc;
   SelfReportListBloc _selfReportListBloc;
+  bool isStatusChanged = false;
 
   @override
   void initState() {
@@ -81,394 +76,406 @@ class _SelfReportListState extends State<SelfReportList> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: OverlayTutorial(
-      context: context,
-      controller: _controller,
-      overlayTutorialEntries: <OverlayTutorialEntry>[
-        OverlayTutorialCustomShapeEntry(
-          widgetKey: resetKey,
-          shapeBuilder: (rect, path) {
-            path = Path.combine(
-              PathOperation.difference,
-              path,
-              Path()
-                ..addOval(Rect.fromLTWH(
-                  rect.left - 10,
-                  rect.top - 10,
-                  80,
-                  80,
-                )),
-            );
-            return path;
-          },
-        ),
-      ],
-      overlayColor: Color(0xff006430).withOpacity(0.9),
-      overlayChildren: <Widget>[
-        Positioned(
-            top: MediaQuery.of(context).size.height * 0.15,
-            left: 20,
-            child: Column(
-              children: [
-                Text(
-                    widget.isHealthStatusChange
-                        ? 'Kami mendeteksi perubahan \nstatus kesehatan Anda'
-                        : 'Anda telah melewati masa 14 \nhari lapor mandiri',
-                    style: Theme.of(context).textTheme.caption.copyWith(
-                        color: Colors.white,
-                        fontFamily: FontsFamily.roboto,
-                        fontWeight: FontWeight.bold,
-                        height: 1.5,
-                        fontSize: 24)),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                    widget.isHealthStatusChange
-                        ? 'Untuk melanjutkan laporan mandiri, silakan \nlakukan reset melalui tombol titik tiga di \npojok kanan atas'
-                        : 'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas',
-                    style: Theme.of(context).textTheme.caption.copyWith(
-                        color: Colors.white,
-                        fontFamily: FontsFamily.roboto,
-                        height: 1.5,
-                        fontSize: 16)),
-              ],
-            )),
-        Positioned(
-          child: Row(
-            children: [
-              FlatButton(
-                minWidth: 1,
-                onPressed: () {
-                  _controller.hideOverlayTutorial();
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<SelfReportReminderBloc>(
+            create: (context) => _selfReportReminderBloc =
+                SelfReportReminderBloc()..add(SelfReportReminderListLoad()),
+          ),
+          BlocProvider<SelfReportListBloc>(
+            create: (context) => _selfReportListBloc = SelfReportListBloc(),
+          ),
+        ],
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<SelfReportListBloc, SelfReportListState>(
+                listener: (BuildContext context, SelfReportListState state) {
+              if (state is SelfReportListLoaded) {
+                isStatusChanged = state.isHealthStatusChanged;
+                if (state.isHealthStatusChanged) {
+                  print('health status');
                   setState(() {
-                    isTouchDisable = false;
+                    isTouchDisable = true;
                   });
-                },
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          left: 0,
-        ),
-        Positioned(
-          child: Row(
-            children: [
-              FlatButton(
-                minWidth: 1,
-                onPressed: () {
-                  _controller.hideOverlayTutorial();
-                  showResetButton();
-
+                  showTutorial();
+                } else if (DateTime.now()
+                        .difference(DateTime.fromMillisecondsSinceEpoch(state
+                                .querySnapshot.docs.last
+                                .get('created_at')
+                                .seconds *
+                            1000))
+                        .inDays >=
+                    14) {
+                  print('14 hari');
                   setState(() {
-                    isTouchDisable = false;
+                    isTouchDisable = true;
                   });
-                },
-                child: Icon(Icons.more_horiz, color: Colors.white),
-              ),
-            ],
-          ),
-          right: 0,
-        ),
-        Positioned(
-          child: FlatButton(
-            minWidth: 1,
-            onPressed: () {
-              _controller.hideOverlayTutorial();
-              setState(() {
-                isTouchDisable = false;
-              });
-            },
-            child: Text('Skip',
-                style: Theme.of(context).textTheme.caption.copyWith(
-                    color: Colors.white,
-                    fontFamily: FontsFamily.roboto,
-                    height: 1.5,
-                    fontSize: 14)),
-          ),
-          right: 20,
-          bottom: 20,
-        ),
-      ],
-      child: AbsorbPointer(
-        absorbing: isTouchDisable,
-        child: Scaffold(
-          appBar: CustomAppBar.animatedAppBar(
-            actions: [
-              IconButton(
-                  key: resetKey,
-                  icon: Icon(Icons.more_horiz, color: Colors.black),
-                  onPressed: () {
-                    showResetButton();
-                  })
-            ],
-            showTitle: _showTitle,
-            title: widget.otherUID != null
-                ? Dictionary.reportForOther
-                : Dictionary.reportForMySelf,
-          ),
-          backgroundColor: Colors.white,
-          body: MultiBlocProvider(
-              providers: [
-                BlocProvider<SelfReportReminderBloc>(
-                  create: (context) =>
-                      _selfReportReminderBloc = SelfReportReminderBloc()
-                        ..add(SelfReportReminderListLoad()),
-                ),
-                BlocProvider<SelfReportListBloc>(
-                  create: (context) =>
-                      _selfReportListBloc = SelfReportListBloc(),
-                ),
-              ],
-              child: MultiBlocListener(
-                listeners: [
-                  BlocListener<SelfReportListBloc, SelfReportListState>(
-                      listener:
-                          (BuildContext context, SelfReportListState state) {
-                    if (state is SelfReportListLoaded) {
-                      if (widget.isHealthStatusChange) {
-                        print('health status');
-                        setState(() {
-                          isTouchDisable = true;
-                        });
-                        showTutorial();
-                      } else if (DateTime.now()
-                              .difference(DateTime.fromMillisecondsSinceEpoch(
-                                  state.querySnapshot.docs.last
-                                          .get('created_at')
-                                          .seconds *
-                                      1000))
-                              .inDays >=
-                          14) {
-                        print('14 hari');
-                        setState(() {
-                          isTouchDisable = true;
-                        });
-                        showTutorial();
-                      }
-                    }
-                  }),
-                  BlocListener<SelfReportReminderBloc, SelfReportReminderState>(
-                      listener: (BuildContext context,
-                          SelfReportReminderState state) {
-                    if (state is SelfReportIsReminderLoaded) {
-                      _selfReportListBloc.add(SelfReportListLoad(
+                  showTutorial();
+                }
+              }
+            }),
+            BlocListener<SelfReportReminderBloc, SelfReportReminderState>(
+                listener:
+                    (BuildContext context, SelfReportReminderState state) {
+              if (state is SelfReportIsReminderLoaded) {
+                _selfReportListBloc.add(SelfReportListLoad(
+                    otherUID: widget.otherUID,
+                    recurrenceReport:
+                        getField(state.querySnapshot, 'recurrence_report')));
+              } else if (state is SelfReportRecurrenceReportSaved) {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => SelfReportList(
+                          location: widget.location,
+                          cityId: widget.cityId,
+                          analytics: Analytics.tappedDailyReport,
                           otherUID: widget.otherUID,
-                          recurrenceReport: getField(
-                              state.querySnapshot, 'recurrence_report')));
-                    } else if (state is SelfReportRecurrenceReportSaved) {
-                      widget.isHealthStatusChange = false;
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      // _selfReportReminderBloc.add(SelfReportReminderListLoad());
-                      // _selfReportListBloc.add(SelfReportListLoad(
-                      //     otherUID: widget.otherUID,
-                      //     recurrenceReport:
-                      //         (int.parse(recurrenceReport ?? '0') + 1)
-                      //             .toString()));
-                    } else if (state is SelfReportReminderFailure) {
-                      showDialog(
-                          context: context,
-                          builder: (context) => DialogTextOnly(
-                                description: state.error.toString(),
-                                buttonText: Dictionary.ok,
-                                onOkPressed: () {
-                                  Navigator.of(context)
-                                      .pop(); // To close the dialog
-                                },
-                              ));
-                    }
-                  })
-                ],
-                child: ListView(
-                  controller: _scrollController,
-                  children: <Widget>[
-                    AnimatedOpacity(
-                      opacity: _showTitle ? 0.0 : 1.0,
-                      duration: Duration(milliseconds: 250),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 20),
-                        child: Text(
-                          widget.otherUID != null
-                              ? Dictionary.reportForOther
-                              : Dictionary.reportForMySelf,
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold),
+                        )));
+                // _selfReportReminderBloc.add(SelfReportReminderListLoad());
+                // _selfReportListBloc.add(SelfReportListLoad(
+                //     otherUID: widget.otherUID,
+                //     recurrenceReport:
+                //         (int.parse(recurrenceReport ?? '0') + 1)
+                //             .toString()));
+              } else if (state is SelfReportReminderFailure) {
+                showDialog(
+                    context: context,
+                    builder: (context) => DialogTextOnly(
+                          description: state.error.toString(),
+                          buttonText: Dictionary.ok,
+                          onOkPressed: () {
+                            Navigator.of(context).pop(); // To close the dialog
+                          },
+                        ));
+              }
+            })
+          ],
+          child: SafeArea(
+            child: OverlayTutorial(
+              context: context,
+              controller: _controller,
+              overlayTutorialEntries: <OverlayTutorialEntry>[
+                OverlayTutorialCustomShapeEntry(
+                  widgetKey: resetKey,
+                  shapeBuilder: (rect, path) {
+                    path = Path.combine(
+                      PathOperation.difference,
+                      path,
+                      Path()
+                        ..addOval(Rect.fromLTWH(
+                          rect.left - 10,
+                          rect.top - 10,
+                          80,
+                          80,
+                        )),
+                    );
+                    return path;
+                  },
+                ),
+              ],
+              overlayColor: Color(0xff006430).withOpacity(0.9),
+              overlayChildren: <Widget>[
+                Positioned(
+                    top: MediaQuery.of(context).size.height * 0.15,
+                    left: 20,
+                    child: Column(
+                      children: [
+                        Text(
+                            isStatusChanged
+                                ? 'Kami mendeteksi perubahan \nstatus kesehatan Anda'
+                                : 'Anda telah melewati masa 14 \nhari lapor mandiri',
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                color: Colors.white,
+                                fontFamily: FontsFamily.roboto,
+                                fontWeight: FontWeight.bold,
+                                height: 1.5,
+                                fontSize: 24)),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                            isStatusChanged
+                                ? 'Untuk melanjutkan laporan mandiri, silakan \nlakukan reset melalui tombol titik tiga di \npojok kanan atas'
+                                : 'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas',
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                color: Colors.white,
+                                fontFamily: FontsFamily.roboto,
+                                height: 1.5,
+                                fontSize: 16)),
+                      ],
+                    )),
+                Positioned(
+                  child: Row(
+                    children: [
+                      FlatButton(
+                        minWidth: 1,
+                        onPressed: () {
+                          _controller.hideOverlayTutorial();
+                          setState(() {
+                            isTouchDisable = false;
+                          });
+                        },
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
                         ),
                       ),
+                    ],
+                  ),
+                  left: 0,
+                ),
+                Positioned(
+                  child: Row(
+                    children: [
+                      FlatButton(
+                        minWidth: 1,
+                        onPressed: () {
+                          _controller.hideOverlayTutorial();
+                          showResetButton();
+
+                          setState(() {
+                            isTouchDisable = false;
+                          });
+                        },
+                        child: Icon(Icons.more_horiz, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  right: 0,
+                ),
+                Positioned(
+                  child: FlatButton(
+                    minWidth: 1,
+                    onPressed: () {
+                      _controller.hideOverlayTutorial();
+                      setState(() {
+                        isTouchDisable = false;
+                      });
+                    },
+                    child: Text('Skip',
+                        style: Theme.of(context).textTheme.caption.copyWith(
+                            color: Colors.white,
+                            fontFamily: FontsFamily.roboto,
+                            height: 1.5,
+                            fontSize: 14)),
+                  ),
+                  right: 20,
+                  bottom: 20,
+                ),
+              ],
+              child: AbsorbPointer(
+                  absorbing: isTouchDisable,
+                  child: Scaffold(
+                    appBar: CustomAppBar.animatedAppBar(
+                      actions: [
+                        IconButton(
+                            key: resetKey,
+                            icon: Icon(Icons.more_horiz, color: Colors.black),
+                            onPressed: () {
+                              showResetButton();
+                            })
+                      ],
+                      showTitle: _showTitle,
+                      title: widget.otherUID != null
+                          ? Dictionary.reportForOther
+                          : Dictionary.reportForMySelf,
                     ),
-                    _showTitle
-                        ? Container()
-                        : Container(
-                            margin: const EdgeInsets.all(Dimens.contentPadding),
-                            decoration: BoxDecoration(
-                                color: ColorBase.grey,
-                                borderRadius: BorderRadius.circular(8)),
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            child: Padding(
-                                padding:
+                    backgroundColor: Colors.white,
+                    body: ListView(
+                      controller: _scrollController,
+                      children: <Widget>[
+                        AnimatedOpacity(
+                          opacity: _showTitle ? 0.0 : 1.0,
+                          duration: Duration(milliseconds: 250),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20),
+                            child: Text(
+                              widget.otherUID != null
+                                  ? Dictionary.reportForOther
+                                  : Dictionary.reportForMySelf,
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        _showTitle
+                            ? Container()
+                            : Container(
+                                margin:
                                     const EdgeInsets.all(Dimens.contentPadding),
-                                child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      BlocBuilder<SelfReportListBloc,
-                                              SelfReportListState>(
-                                          builder: (BuildContext context,
-                                              SelfReportListState state) {
-                                        if (state is SelfReportListLoaded) {
-                                          return Row(
+                                decoration: BoxDecoration(
+                                    color: ColorBase.grey,
+                                    borderRadius: BorderRadius.circular(8)),
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(
+                                        Dimens.contentPadding),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          BlocBuilder<SelfReportListBloc,
+                                                  SelfReportListState>(
+                                              builder: (BuildContext context,
+                                                  SelfReportListState state) {
+                                            if (state is SelfReportListLoaded) {
+                                              return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    Dictionary
+                                                        .dailyMonitoringProgress,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            FontsFamily.roboto,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: ColorBase
+                                                            .netralGrey,
+                                                        fontSize: 12),
+                                                  ),
+                                                  Text(
+                                                    '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            FontsFamily.roboto,
+                                                        color: ColorBase
+                                                            .primaryGreen,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20),
+                                                  )
+                                                ],
+                                              );
+                                            } else if (state
+                                                is SelfReportListFailure) {
+                                              return ErrorContent(
+                                                  error: state.error);
+                                            } else {
+                                              return Container();
+                                            }
+                                          }),
+                                          BlocBuilder<SelfReportListBloc,
+                                                  SelfReportListState>(
+                                              builder: (BuildContext context,
+                                                  SelfReportListState state) {
+                                            if (state is SelfReportListLoaded) {
+                                              return LinearPercentIndicator(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.8,
+                                                lineHeight: 8.0,
+                                                backgroundColor:
+                                                    ColorBase.menuBorderColor,
+                                                percent: (state.querySnapshot
+                                                        .docs.length /
+                                                    14),
+                                                progressColor:
+                                                    ColorBase.primaryGreen,
+                                              );
+                                            } else if (state
+                                                is SelfReportListFailure) {
+                                              return ErrorContent(
+                                                  error: state.error);
+                                            } else {
+                                              return Container();
+                                            }
+                                          }),
+                                          Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Text(
-                                                Dictionary
-                                                    .dailyMonitoringProgress,
+                                                Dictionary.rememberMe,
                                                 style: TextStyle(
+                                                    color: ColorBase.darkGrey,
                                                     fontFamily:
                                                         FontsFamily.roboto,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: ColorBase.netralGrey,
                                                     fontSize: 12),
                                               ),
-                                              Text(
-                                                '${((state.querySnapshot.docs.length / 14) * 100).toStringAsPrecision(3)}%',
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        FontsFamily.roboto,
-                                                    color:
+                                              BlocBuilder<
+                                                      SelfReportReminderBloc,
+                                                      SelfReportReminderState>(
+                                                  builder: (BuildContext
+                                                          context,
+                                                      SelfReportReminderState
+                                                          state) {
+                                                if (state
+                                                    is SelfReportIsReminderLoaded) {
+                                                  isReminder = state
+                                                      .querySnapshot
+                                                      .get('remind_me');
+                                                  recurrenceReport = getField(
+                                                      state.querySnapshot,
+                                                      'recurrence_report');
+                                                  return FlutterSwitch(
+                                                    width: 50.0,
+                                                    height: 20.0,
+                                                    toggleColor: Colors.white,
+                                                    valueFontSize: 12.0,
+                                                    activeColor:
                                                         ColorBase.primaryGreen,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20),
-                                              )
+                                                    inactiveColor:
+                                                        ColorBase.disableText,
+                                                    toggleSize: 18.0,
+                                                    value: isReminder,
+                                                    onToggle: (val) {
+                                                      setState(() {
+                                                        isReminder = val;
+                                                        _selfReportReminderBloc.add(
+                                                            SelfReportListUpdateReminder(
+                                                                isReminder));
+                                                      });
+                                                    },
+                                                  );
+                                                } else if (state
+                                                    is SelfReportReminderFailure) {
+                                                  return ErrorContent(
+                                                      error: state.error);
+                                                } else {
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+                                              }),
                                             ],
-                                          );
-                                        } else if (state
-                                            is SelfReportListFailure) {
-                                          return ErrorContent(
-                                              error: state.error);
-                                        } else {
-                                          return Container();
-                                        }
-                                      }),
-                                      BlocBuilder<SelfReportListBloc,
-                                              SelfReportListState>(
-                                          builder: (BuildContext context,
-                                              SelfReportListState state) {
-                                        if (state is SelfReportListLoaded) {
-                                          return LinearPercentIndicator(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
-                                            lineHeight: 8.0,
-                                            backgroundColor:
-                                                ColorBase.menuBorderColor,
-                                            percent: (state
-                                                    .querySnapshot.docs.length /
-                                                14),
-                                            progressColor:
-                                                ColorBase.primaryGreen,
-                                          );
-                                        } else if (state
-                                            is SelfReportListFailure) {
-                                          return ErrorContent(
-                                              error: state.error);
-                                        } else {
-                                          return Container();
-                                        }
-                                      }),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            Dictionary.rememberMe,
-                                            style: TextStyle(
-                                                color: ColorBase.darkGrey,
-                                                fontFamily: FontsFamily.roboto,
-                                                fontSize: 12),
                                           ),
-                                          BlocBuilder<SelfReportReminderBloc,
-                                                  SelfReportReminderState>(
-                                              builder: (BuildContext context,
-                                                  SelfReportReminderState
-                                                      state) {
-                                            if (state
-                                                is SelfReportIsReminderLoaded) {
-                                              isReminder = state.querySnapshot
-                                                  .get('remind_me');
-                                              recurrenceReport = getField(
-                                                  state.querySnapshot,
-                                                  'recurrence_report');
-                                              return FlutterSwitch(
-                                                width: 50.0,
-                                                height: 20.0,
-                                                toggleColor: Colors.white,
-                                                valueFontSize: 12.0,
-                                                activeColor:
-                                                    ColorBase.primaryGreen,
-                                                inactiveColor:
-                                                    ColorBase.disableText,
-                                                toggleSize: 18.0,
-                                                value: isReminder,
-                                                onToggle: (val) {
-                                                  setState(() {
-                                                    isReminder = val;
-                                                    _selfReportReminderBloc.add(
-                                                        SelfReportListUpdateReminder(
-                                                            isReminder));
-                                                  });
-                                                },
-                                              );
-                                            } else if (state
-                                                is SelfReportReminderFailure) {
-                                              return ErrorContent(
-                                                  error: state.error);
-                                            } else {
-                                              return Center(
-                                                  child:
-                                                      CircularProgressIndicator());
-                                            }
-                                          }),
-                                        ],
-                                      ),
-                                    ]))),
-                    BlocBuilder<SelfReportListBloc, SelfReportListState>(
-                        builder:
-                            (BuildContext context, SelfReportListState state) {
-                      if (state is SelfReportListLoaded) {
-                        return Column(
-                          children: _buildContent(state),
-                        );
-                      } else if (state is SelfReportListFailure) {
-                        return ErrorContent(error: state.error);
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    }),
-                  ],
-                ),
-              )),
-        ),
-      ),
-    ));
+                                        ]))),
+                        BlocBuilder<SelfReportListBloc, SelfReportListState>(
+                            builder: (BuildContext context,
+                                SelfReportListState state) {
+                          if (state is SelfReportListLoaded) {
+                            return Column(
+                              children: _buildContent(state),
+                            );
+                          } else if (state is SelfReportListFailure) {
+                            return ErrorContent(error: state.error);
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
+                      ],
+                    ),
+                  )),
+            ),
+          ),
+        ));
   }
 
   List<Widget> _buildContent(SelfReportListLoaded snapshot) {
     List<Widget> list = List();
     int firstData = 0;
     int lastData = 14;
-    int countDay = 1;
     if (recurrenceReport != null) {
       firstData = int.parse(recurrenceReport) * 14;
       lastData = (int.parse(recurrenceReport) + 1) * 14;
@@ -482,19 +489,15 @@ class _SelfReportListState extends State<SelfReportList> {
         listDocumentId = listDocumentId.toSet().toList();
       }
 
-      if (getField(snapshot.querySnapshot.docs[firstData], 'quarantine_date') ==
-          null) {
+      if (getField(snapshot.querySnapshot.docs[0], 'quarantine_date') == null) {
         /// Save ['created_at'] as [firstDay] for main parameter
         firstDay = DateTime.fromMillisecondsSinceEpoch(
-            snapshot.querySnapshot.docs[firstData].get('created_at').seconds *
-                1000);
+            snapshot.querySnapshot.docs[0].get('created_at').seconds * 1000);
       } else {
         /// Save ['quarantine_date'] as [firstDay] for main parameter
-        firstDay = DateTime.fromMillisecondsSinceEpoch(snapshot
-                .querySnapshot.docs[firstData]
-                .get('quarantine_date')
-                .seconds *
-            1000);
+        firstDay = DateTime.fromMillisecondsSinceEpoch(
+            snapshot.querySnapshot.docs[0].get('quarantine_date').seconds *
+                1000);
       }
 
       currentDay = DateTime.now();
@@ -503,9 +506,10 @@ class _SelfReportListState extends State<SelfReportList> {
     for (int i = firstData; i < lastData; i++) {
       if (i != firstData) {
         if (currentDay != null) {
-          if (currentDay.day == firstDay.add(Duration(days: i)).day ||
+          if (currentDay.day ==
+                  firstDay.add(Duration(days: i - firstData)).day ||
               firstDay
-                  .add(Duration(days: i))
+                  .add(Duration(days: i - firstData))
                   .difference(currentDay)
                   .isNegative) {
             if (listDocumentId.contains('${i + 1}')) {
@@ -530,13 +534,16 @@ class _SelfReportListState extends State<SelfReportList> {
         children: <Widget>[
           InkWell(
             onTap: () {
+              print(i - firstData);
+
               /// Checking data is not first array
               if (i != firstData) {
                 /// Checking data if [currentDay] not null
                 if (currentDay != null) {
-                  if (currentDay.day == firstDay.add(Duration(days: i)).day ||
+                  if (currentDay.day ==
+                          firstDay.add(Duration(days: i - firstData)).day ||
                       firstDay
-                          .add(Duration(days: i))
+                          .add(Duration(days: i - firstData))
                           .difference(currentDay)
                           .isNegative) {
                     /// [currentDay] same as the day user can fill the form
@@ -548,11 +555,14 @@ class _SelfReportListState extends State<SelfReportList> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => SelfReportDetailScreen(
-                                cityId: widget.cityId,
-                                reportId: '${i + 1}',
-                                otherUID: widget.otherUID,
-                                analytics: widget.analytics,
-                                recurrenceReport: recurrenceReport)),
+                                  cityId: widget.cityId,
+                                  reportId: '${i + 1}',
+                                  otherUID: widget.otherUID,
+                                  analytics: widget.analytics,
+                                  recurrenceReport: recurrenceReport,
+                                  firstData: firstData,
+                                  lastData: lastData,
+                                )),
                       );
                     } else {
                       if (listDocumentId.contains('$i')) {
@@ -565,13 +575,15 @@ class _SelfReportListState extends State<SelfReportList> {
                                   dailyId: '${i + 1}',
                                   location: widget.location,
                                   recurrenceReport: recurrenceReport,
+                                  firstData: firstData,
+                                  lastData: lastData,
                                 )));
                       } else {
                         showDialog(
                             context: context,
                             builder: (context) => DialogTextOnly(
                                   description:
-                                      '${Dictionary.errorMessageDailyMonitoringOrder}$i',
+                                      '${Dictionary.errorMessageDailyMonitoringOrder}${(i - firstData)}',
                                   buttonText: Dictionary.ok,
                                   onOkPressed: () {
                                     Navigator.of(context).pop();
@@ -584,7 +596,7 @@ class _SelfReportListState extends State<SelfReportList> {
                         context: context,
                         builder: (context) => DialogTextOnly(
                               description:
-                                  '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
+                                  '${Dictionary.errorMessageDailyMonitoring}${(i - firstData) + 1}',
                               buttonText: Dictionary.ok,
                               onOkPressed: () {
                                 Navigator.of(context).pop();
@@ -597,7 +609,7 @@ class _SelfReportListState extends State<SelfReportList> {
                       context: context,
                       builder: (context) => DialogTextOnly(
                             description:
-                                '${Dictionary.errorMessageDailyMonitoring}${i + 1}',
+                                '${Dictionary.errorMessageDailyMonitoring}${(i - firstData) + 1}',
                             buttonText: Dictionary.ok,
                             onOkPressed: () {
                               Navigator.of(context).pop();
@@ -614,22 +626,28 @@ class _SelfReportListState extends State<SelfReportList> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => SelfReportDetailScreen(
-                            cityId: widget.cityId,
-                            reportId: '${i + 1}',
-                            otherUID: widget.otherUID,
-                            analytics: widget.analytics,
-                            recurrenceReport: recurrenceReport)),
+                              cityId: widget.cityId,
+                              reportId: '${i + 1}',
+                              otherUID: widget.otherUID,
+                              analytics: widget.analytics,
+                              recurrenceReport: recurrenceReport,
+                              firstData: firstData,
+                              lastData: lastData,
+                            )),
                   );
                 } else {
                   // Move to form screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportFormScreen(
-                          cityId: widget.cityId,
-                          analytics: widget.analytics,
-                          dailyId: '${i + 1}',
-                          otherUID: widget.otherUID,
-                          location: widget.location,
-                          recurrenceReport: recurrenceReport)));
+                            cityId: widget.cityId,
+                            analytics: widget.analytics,
+                            dailyId: '${i + 1}',
+                            otherUID: widget.otherUID,
+                            location: widget.location,
+                            recurrenceReport: recurrenceReport,
+                            firstData: firstData,
+                            lastData: lastData,
+                          )));
                 }
               }
             },
@@ -649,9 +667,9 @@ class _SelfReportListState extends State<SelfReportList> {
                               Text(
                                 listDocumentId.contains('${i + 1}')
                                     ? "✅" +
-                                        '  ${Dictionary.countDay}${countDay++}'
+                                        '  ${Dictionary.countDay}${(i - firstData) + 1}'
                                     : '' +
-                                        '${Dictionary.countDay}${countDay++}',
+                                        '${Dictionary.countDay}${(i - firstData) + 1}',
                                 style: TextStyle(
                                     color: textColor,
                                     fontWeight: FontWeight.bold,

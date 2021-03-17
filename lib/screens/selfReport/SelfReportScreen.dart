@@ -165,9 +165,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   } else if (state is ProfileLoaded) {
                     ProfileLoaded _getProfile = state;
                     return _getProfile.profile.exists
-                        ? _buildContent(_getProfile.profile,
-                            _getProfile.isHealthStatusChange)
-                        : _buildContent(null, null);
+                        ? _buildContent(_getProfile.profile)
+                        : _buildContent(null);
                   } else {
                     _profileBloc.add(ProfileLoad(
                         uid: profileLoaded != null
@@ -219,7 +218,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   }
 
   /// Function for build widget content
-  Widget _buildContent(DocumentSnapshot state, bool isHealthStatusChange) {
+  Widget _buildContent(DocumentSnapshot state) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
@@ -291,10 +290,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => SelfReportOption(
-                                    location: latLng,
-                                    cityId: getField(state, 'city_id'),
-                                    isHealthStatusChange: isHealthStatusChange,
-                                  )));
+                                  location: latLng,
+                                  cityId: getField(state, 'city_id'))));
                         }
                       },
                       onPressedDisable: () {

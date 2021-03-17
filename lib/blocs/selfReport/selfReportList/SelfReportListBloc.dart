@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/HealthStatus.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 
@@ -32,7 +33,9 @@ class SelfReportListBloc
       String otherUID, recurrenceReport) async* {
     yield SelfReportListLoading();
     _subscription?.cancel();
-    String userId = await AuthRepository().getToken();
+    final String userId = await AuthRepository().getToken();
+    final bool isHealtStatusChanged =
+        await HealthStatusSharedPreference.getIsHealthStatusChange();
 
     _subscription = SelfReportRepository()
         .getSelfReportList(
@@ -40,12 +43,14 @@ class SelfReportListBloc
             otherUID: otherUID,
             recurrenceReport: recurrenceReport)
         .listen((event) {
-      add(SelfReportListUpdated(event));
+      add(SelfReportListUpdated(event, isHealtStatusChanged));
     });
   }
 
   Stream<SelfReportListState> _selfReportListToState(
       SelfReportListUpdated event) async* {
-    yield SelfReportListLoaded(querySnapshot: event.selfReportList);
+    yield SelfReportListLoaded(
+        querySnapshot: event.selfReportList,
+        isHealthStatusChanged: event.isHealthStatusChanged ?? false);
   }
 }

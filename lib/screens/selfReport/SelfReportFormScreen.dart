@@ -34,6 +34,8 @@ class SelfReportFormScreen extends StatefulWidget {
   final String analytics;
   final String cityId;
   final String recurrenceReport;
+  final int firstData;
+  final int lastData;
 
   SelfReportFormScreen(
       {Key key,
@@ -43,7 +45,9 @@ class SelfReportFormScreen extends StatefulWidget {
       this.otherUID,
       @required this.analytics,
       this.cityId,
-      this.recurrenceReport})
+      this.recurrenceReport,
+      @required this.firstData,
+      @required this.lastData})
       : assert(dailyId != null),
         assert(location != null),
         super(key: key);
@@ -162,7 +166,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       title: getMessage['title'],
                       message: getMessage['description'],
                       onPressed: () async {
-                        if (widget.dailyId == '14') {
+                        if (widget.dailyId == widget.lastData.toString()) {
                           Navigator.of(context).pop(true);
                           Navigator.of(context).pop(true);
                           Navigator.pushReplacement(
@@ -233,7 +237,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               ),
             ),
             const SizedBox(height: Dimens.padding),
-            widget.dailyId == '1'
+            widget.dailyId == (widget.firstData + 1).toString()
                 ? Column(
                     children: <Widget>[
                       buildLabel(text: Dictionary.selfReportQuestion1),
@@ -250,7 +254,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     ],
                   )
                 : Container(),
-            widget.dailyId == '1'
+            widget.dailyId == (widget.firstData + 1).toString()
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -512,7 +516,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   }
 
   bool isEmptyField() {
-    if (widget.dailyId == '1') {
+    if (widget.dailyId == (widget.firstData + 1).toString()) {
       return _checkedItemList.isEmpty ||
           _dateController.text.isEmpty ||
           _quarantineDateController.text.isEmpty;
@@ -550,7 +554,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   void _saveSelfReport(dynamic successMessage) async {
     setState(() {
       _isIndicationEmpty = _checkedItemList.isEmpty;
-      if (widget.dailyId == '1') {
+      if (widget.dailyId == (widget.firstData + 1).toString()) {
         _isDateEmpty = _dateController.text.isEmpty;
         _isquarantineDateEmpty = _quarantineDateController.text.isEmpty;
       } else {

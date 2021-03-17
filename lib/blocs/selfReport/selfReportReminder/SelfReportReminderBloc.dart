@@ -46,9 +46,7 @@ class SelfReportReminderBloc
         final String userId = await AuthRepository().getToken();
         await SelfReportRepository().updateRecurrenceReport(
             userId: userId, recurrenceReport: event.recurrenceReport);
-        final String tempHealthStatus =
-            await HealthStatusSharedPreference.getTempHealthStatus();
-        await HealthStatusSharedPreference.setHealthStatus(tempHealthStatus);
+        await HealthStatusSharedPreference.setIsHealthStatusChange(false);
         yield SelfReportRecurrenceReportSaved();
       } catch (e) {
         yield SelfReportReminderFailure(error: e.toString());

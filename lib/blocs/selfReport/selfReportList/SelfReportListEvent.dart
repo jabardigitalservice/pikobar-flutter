@@ -13,9 +13,10 @@ class SelfReportListLoad extends SelfReportListEvent {
 
 class SelfReportListUpdated extends SelfReportListEvent {
   final QuerySnapshot selfReportList;
+  final bool isHealthStatusChanged;
 
-  const SelfReportListUpdated(this.selfReportList);
+  const SelfReportListUpdated(this.selfReportList, this.isHealthStatusChanged);
 
   @override
-  List<Object> get props => [selfReportList];
+  List<Object> get props => [selfReportList, isHealthStatusChanged];
 }

@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
   final String reportId, otherUID, analytics, cityId, recurrenceReport;
+  final int firstData, lastData;
 
   SelfReportDetailScreen(
       {Key key,
@@ -25,7 +26,9 @@ class SelfReportDetailScreen extends StatefulWidget {
       this.otherUID,
       this.analytics,
       this.cityId,
-      this.recurrenceReport})
+      this.recurrenceReport,
+      @required this.firstData,
+      @required this.lastData})
       : super(key: key);
 
   @override
@@ -142,6 +145,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                                               analytics: widget.analytics,
                                               dailyReportModel:
                                                   dailyReportModel,
+                                              firstData: widget.firstData,
+                                              lastData: widget.lastData,
                                             )));
 
                                 /// If data form updates, will get the newest data detail

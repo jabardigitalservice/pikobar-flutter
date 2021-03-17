@@ -120,20 +120,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> _selfReportListToState(ProfileUpdated event) async* {
-    bool isHealthStatusChange;
     final String getHealthStatus =
         await HealthStatusSharedPreference.getHealthStatus();
+    final bool getIsHealthStatusChange =
+        await HealthStatusSharedPreference.getIsHealthStatusChange() ?? false;
     if (getHealthStatus == null) {
       await HealthStatusSharedPreference.setHealthStatus(
           getField(event.profile, 'health_status'));
-      await HealthStatusSharedPreference.setTempHealthStatus(
+    } else if (getIsHealthStatusChange) {
+      await HealthStatusSharedPreference.setHealthStatus(
           getField(event.profile, 'health_status'));
     } else {
       if (getHealthStatus != getField(event.profile, 'health_status')) {
-        isHealthStatusChange = true;
+        await HealthStatusSharedPreference.setIsHealthStatusChange(true);
       }
     }
-    yield ProfileLoaded(event.profile,
-        isHealthStatusChange: isHealthStatusChange ?? false);
+    yield ProfileLoaded(event.profile);
   }
 }
