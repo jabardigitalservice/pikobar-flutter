@@ -101,8 +101,20 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                         height: MediaQuery.of(context).size.height,
                       ),
                       Container(
-                        color: Colors.black12.withOpacity(0.2),
-                      )
+                        height: 360,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.6),
+                              Colors.transparent,
+                            ],
+                            stops: [0.0, 1.0],
+                          ),
+                        ),
+                      ),
                     ],
                   )),
               onTap: () {

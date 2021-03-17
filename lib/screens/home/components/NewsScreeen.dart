@@ -566,10 +566,16 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
-                          color: Colors.black12.withOpacity(0.2),
-                          shape: BoxShape.rectangle,
-                          borderRadius:
-                              BorderRadius.circular(Dimens.dialogRadius),
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.8),
+                            ],
+                            stops: [0.0, 1.0],
+                          ),
                         ),
                       ),
                       Positioned(
