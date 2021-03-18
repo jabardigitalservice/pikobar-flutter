@@ -290,9 +290,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => SelfReportOption(
-                                    location: latLng,
-                                    cityId: getField(state, 'city_id'),
-                                  )));
+                                  location: latLng,
+                                  cityId: getField(state, 'city_id'))));
                         }
                       },
                       onPressedDisable: () {

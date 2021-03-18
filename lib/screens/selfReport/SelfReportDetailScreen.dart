@@ -17,10 +17,24 @@ import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
-  final String reportId, otherUID, analytics, cityId;
+  final String reportId,
+      otherUID,
+      analytics,
+      cityId,
+      recurrenceReport,
+      countDay;
+  final int firstData, lastData;
 
   SelfReportDetailScreen(
-      {Key key, this.reportId, this.otherUID, this.analytics, this.cityId})
+      {Key key,
+      this.reportId,
+      this.otherUID,
+      this.analytics,
+      this.cityId,
+      this.recurrenceReport,
+      this.countDay,
+      @required this.firstData,
+      @required this.lastData})
       : super(key: key);
 
   @override
@@ -78,7 +92,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                       ? Container(
                           height: 38.0,
                           width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                               left: Dimens.padding, right: Dimens.padding),
                           child: RaisedButton(
                               splashColor: Colors.lightGreenAccent,
@@ -96,16 +110,15 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                               ),
                               onPressed: () async {
                                 /// Add data to DailyReportModel that will be used for edit data
-                                LatLng latLng = LatLng(
+                                final LatLng latLng = LatLng(
                                     state.documentSnapshot['location'].latitude,
                                     state.documentSnapshot['location']
                                         .longitude);
 
-                                var dailyReportModel = DailyReportModel(
+                                final DailyReportModel dailyReportModel = DailyReportModel(
                                     id: state.documentSnapshot['id'],
                                     quarantineDate:
-                                        state.documentSnapshot['quarantine_date'] !=
-                                                null
+                                        state.documentSnapshot['quarantine_date'] != null
                                             ? DateTime.fromMillisecondsSinceEpoch(
                                                 state.documentSnapshot['quarantine_date'].seconds *
                                                     1000)
@@ -125,19 +138,22 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                                     location: latLng);
 
                                 /// Move to form screen
-                                bool isUpdateForm = await Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelfReportFormScreen(
-                                              cityId: widget.cityId,
-                                              dailyId:
-                                                  state.documentSnapshot['id'],
-                                              otherUID: widget.otherUID,
-                                              location: latLng,
-                                              analytics: widget.analytics,
-                                              dailyReportModel:
-                                                  dailyReportModel,
-                                            )));
+                                final bool isUpdateForm =
+                                    await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelfReportFormScreen(
+                                                  cityId: widget.cityId,
+                                                  dailyId: state
+                                                      .documentSnapshot['id'],
+                                                  otherUID: widget.otherUID,
+                                                  location: latLng,
+                                                  analytics: widget.analytics,
+                                                  dailyReportModel:
+                                                      dailyReportModel,
+                                                  firstData: widget.firstData,
+                                                  lastData: widget.lastData,
+                                                )));
 
                                 /// If data form updates, will get the newest data detail
                                 if (isUpdateForm != null && isUpdateForm) {
@@ -160,7 +176,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
             Container(
               height: 38.0,
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.all(Dimens.padding),
+              margin: const EdgeInsets.all(Dimens.padding),
               child: RaisedButton(
                   splashColor: Colors.lightGreenAccent,
                   color: ColorBase.green,
@@ -182,7 +198,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           ],
         ),
         body: BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
-            builder: (context, state) {
+            builder: (BuildContext context, SelfReportDetailState state) {
           return state is SelfReportDetailLoaded
               ? _buildContent(state)
               : state is SelfReportDetailFailure
@@ -198,7 +214,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
       controller: _scrollController,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,19 +230,19 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 30.0),
+              const SizedBox(height: 30.0),
 
               Container(
                 child: Row(
                   children: <Widget>[
                     Image.asset('${Environment.iconAssets}calendar_1.png',
                         width: 39, height: 39),
-                    SizedBox(width: 16.0),
+                    const SizedBox(width: 16.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          '${Dictionary.monitoringDays}${state.documentSnapshot['id']}',
+                          '${Dictionary.monitoringDays}${widget.countDay}',
                           style: TextStyle(
                               fontFamily: FontsFamily.roboto,
                               fontWeight: FontWeight.bold,
@@ -234,7 +250,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                               fontSize: 14.0,
                               height: 1.214),
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         _buildText(
                             text: Dictionary.monitoringCompleted,
                             color: ColorBase.netralGrey,
@@ -245,7 +261,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
 
@@ -256,7 +272,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     _buildText(text: Dictionary.inputDate, isLabel: true),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     _buildText(
@@ -276,14 +292,15 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 children: <Widget>[
                   /// Divider
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: Dimens.padding),
                     height: 1.0,
                     color: ColorBase.greyBorder,
                   ),
 
                   /// Contact date section
                   Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         horizontal: Dimens.padding,
                         vertical: Dimens.verticalPadding),
                     child: Column(
@@ -292,7 +309,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                       children: <Widget>[
                         _buildText(
                             text: Dictionary.contactDateCovid, isLabel: true),
-                        SizedBox(
+                        const SizedBox(
                           height: 10.0,
                         ),
                         _buildText(
@@ -314,14 +331,15 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 children: <Widget>[
                   /// Divider
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: Dimens.padding),
                     height: 1.0,
                     color: ColorBase.greyBorder,
                   ),
 
                   /// Quarantine date section
                   Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         horizontal: Dimens.padding,
                         vertical: Dimens.verticalPadding),
                     child: Column(
@@ -330,7 +348,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                       children: <Widget>[
                         _buildText(
                             text: Dictionary.quarantineDate, isLabel: true),
-                        SizedBox(
+                        const SizedBox(
                           height: 10.0,
                         ),
                         _buildText(
@@ -345,21 +363,21 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.padding),
           height: 1.0,
           color: ColorBase.greyBorder,
         ),
 
         /// Temperature section
         Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildText(text: Dictionary.bodyTemperature, isLabel: true),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               _buildText(
@@ -370,14 +388,14 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.padding),
           height: 1.0,
           color: ColorBase.greyBorder,
         ),
 
         /// The symptoms section
         Container(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
               horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -387,7 +405,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                   width: MediaQuery.of(context).size.width / 2,
                   child:
                       _buildText(text: Dictionary.indications, isLabel: true)),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               _buildText(

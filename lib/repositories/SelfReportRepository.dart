@@ -45,7 +45,7 @@ class SelfReportRepository {
       @required DailyReportModel dailyReport,
       String otherUID}) async {
     try {
-      var doc;
+      dynamic doc;
       if (otherUID == null) {
         doc = _firestore
             .collection(kSelfReports)
@@ -79,7 +79,7 @@ class SelfReportRepository {
       {@required String userId,
       @required AddOtherSelfReportModel dailyReport}) async {
     try {
-      var doc = _firestore
+      final DocumentReference doc = _firestore
           .collection(kSelfReports)
           .doc(userId)
           .collection(kOtherSelfReports)
@@ -96,20 +96,21 @@ class SelfReportRepository {
 
   /// Reads the self report document referenced by the [CollectionReference].
   Stream<QuerySnapshot> getSelfReportList(
-      {@required String userId, String otherUID}) {
-    final selfReport = _firestore.collection(kSelfReports).doc(userId);
+      {@required String userId, String otherUID, String recurrenceReport}) {
+    final DocumentReference selfReport =
+        _firestore.collection(kSelfReports).doc(userId);
     selfReport.get().then((snapshot) {
       if (snapshot.exists) {
       } else {
         selfReport.set({'remind_me': false, 'user_id': userId});
       }
     });
-
     return otherUID == null
         ? _firestore
             .collection(kSelfReports)
             .doc(userId)
             .collection(kDailyReport)
+            .where('recurrence_report', isEqualTo: recurrenceReport)
             .snapshots()
         : _firestore
             .collection(kSelfReports)
@@ -117,11 +118,13 @@ class SelfReportRepository {
             .collection(kOtherSelfReports)
             .doc(otherUID)
             .collection(kDailyReport)
+            .where('recurrence_report', isEqualTo: recurrenceReport)
             .snapshots();
   }
 
   Stream<QuerySnapshot> getContactHistoryList({@required String userId}) {
-    final selfReport = _firestore.collection(kSelfReports).doc(userId);
+    final DocumentReference selfReport =
+        _firestore.collection(kSelfReports).doc(userId);
     selfReport.get().then((snapshot) {
       if (snapshot.exists) {
       } else {
@@ -137,7 +140,8 @@ class SelfReportRepository {
   }
 
   Stream<QuerySnapshot> getOtherSelfReport({@required String userId}) {
-    final selfReport = _firestore.collection(kSelfReports).doc(userId);
+    final DocumentReference selfReport =
+        _firestore.collection(kSelfReports).doc(userId);
     selfReport.get().then((snapshot) {
       if (snapshot.exists) {
       } else {
@@ -154,7 +158,7 @@ class SelfReportRepository {
 
   Future<DocumentSnapshot> getContactHistoryDetail(
       {@required String userId, @required String contactHistoryId}) async {
-    DocumentSnapshot doc = await _firestore
+    final DocumentSnapshot doc = await _firestore
         .collection(kSelfReports)
         .doc(userId)
         .collection(kContactHistory)
@@ -168,12 +172,29 @@ class SelfReportRepository {
   }
 
   Future updateToCollection({@required String userId, bool isReminder}) async {
-    return await _firestore
-        .collection(kSelfReports)
-        .doc(userId)
-        .update({
+    return await _firestore.collection(kSelfReports).doc(userId).update({
       'remind_me': isReminder,
     });
+  }
+
+  Future updateRecurrenceReport(
+      {@required String userId,
+      String recurrenceReport,
+      String otherUID}) async {
+    return otherUID == null
+        ? await _firestore.collection(kSelfReports).doc(userId).update({
+            'recurrence_report':
+                (int.parse(recurrenceReport ?? '0') + 1).toString(),
+          })
+        : await _firestore
+            .collection(kSelfReports)
+            .doc(userId)
+            .collection(kOtherSelfReports)
+            .doc(otherUID)
+            .update({
+            'recurrence_report':
+                (int.parse(recurrenceReport ?? '0') + 1).toString(),
+          });
   }
 
   /// Save the contact history to firestore with provided [data]

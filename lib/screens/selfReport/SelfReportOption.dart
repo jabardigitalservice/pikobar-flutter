@@ -49,9 +49,10 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                   // move to self report list screen
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportList(
-                          location: widget.location,
-                          cityId: widget.cityId,
-                          analytics: Analytics.tappedDailyReport)));
+                            location: widget.location,
+                            cityId: widget.cityId,
+                            analytics: Analytics.tappedDailyReport,
+                          )));
                 }, true),
                 _buildContainer(
                     '${Environment.iconAssets}self_report_other_icon.png',

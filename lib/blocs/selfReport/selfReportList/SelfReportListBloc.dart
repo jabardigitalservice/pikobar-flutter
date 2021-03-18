@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pikobar_flutter/configs/SharedPreferences/HealthStatus.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 
@@ -22,27 +23,37 @@ class SelfReportListBloc
     SelfReportListEvent event,
   ) async* {
     if (event is SelfReportListLoad) {
-      yield* _loadSelfReportListToState(event.otherUID);
+      yield* _loadSelfReportListToState(event.otherUID, event.recurrenceReport);
     } else if (event is SelfReportListUpdated) {
       yield* _selfReportListToState(event);
     }
   }
 
   Stream<SelfReportListState> _loadSelfReportListToState(
-      String otherUID) async* {
+      String otherUID, recurrenceReport) async* {
     yield SelfReportListLoading();
-    _subscription?.cancel();
-    String userId = await AuthRepository().getToken();
+    await _subscription?.cancel();
+    final String userId = await AuthRepository().getToken();
+    bool isHealtStatusChanged;
+    if (otherUID == null) {
+      isHealtStatusChanged =
+          await HealthStatusSharedPreference.getIsHealthStatusChange();
+    }
 
     _subscription = SelfReportRepository()
-        .getSelfReportList(userId: userId, otherUID: otherUID)
+        .getSelfReportList(
+            userId: userId,
+            otherUID: otherUID,
+            recurrenceReport: recurrenceReport)
         .listen((event) {
-      add(SelfReportListUpdated(event));
+      add(SelfReportListUpdated(event, isHealtStatusChanged));
     });
   }
 
   Stream<SelfReportListState> _selfReportListToState(
       SelfReportListUpdated event) async* {
-    yield SelfReportListLoaded(querySnapshot: event.selfReportList);
+    yield SelfReportListLoaded(
+        querySnapshot: event.selfReportList,
+        isHealthStatusChanged: event.isHealthStatusChanged ?? false);
   }
 }
