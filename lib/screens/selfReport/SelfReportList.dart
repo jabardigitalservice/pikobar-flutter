@@ -29,6 +29,7 @@ class SelfReportList extends StatefulWidget {
   final String analytics;
   final String cityId;
   final String otherRecurrenceReport;
+  final bool isHealthStatusChanged;
 
   SelfReportList(
       {Key key,
@@ -36,7 +37,8 @@ class SelfReportList extends StatefulWidget {
       this.analytics,
       this.otherUID,
       this.cityId,
-      this.otherRecurrenceReport})
+      this.otherRecurrenceReport,
+      this.isHealthStatusChanged})
       : super(key: key);
 
   @override
@@ -57,7 +59,6 @@ class _SelfReportListState extends State<SelfReportList> {
   String recurrenceReport;
   SelfReportReminderBloc _selfReportReminderBloc;
   SelfReportListBloc _selfReportListBloc;
-  bool isStatusChanged = false;
 
   @override
   void initState() {
@@ -97,14 +98,11 @@ class _SelfReportListState extends State<SelfReportList> {
             BlocListener<SelfReportListBloc, SelfReportListState>(
                 listener: (BuildContext context, SelfReportListState state) {
               if (state is SelfReportListLoaded) {
-                isStatusChanged = state.isHealthStatusChanged;
-                if (isStatusChanged) {
-                  if (widget.otherUID == null) {
-                    setState(() {
-                      isTouchDisable = true;
-                    });
-                    showTutorial();
-                  }
+                if (widget.isHealthStatusChanged) {
+                  setState(() {
+                    isTouchDisable = true;
+                  });
+                  showTutorial();
                 } else if (DateTime.now()
                         .difference(DateTime.fromMillisecondsSinceEpoch(state
                                 .querySnapshot.docs.last
@@ -146,6 +144,7 @@ class _SelfReportListState extends State<SelfReportList> {
                               (int.parse(widget.otherRecurrenceReport ?? '0') +
                                       1)
                                   .toString(),
+                          isHealthStatusChanged: false,
                         )));
               } else if (state is SelfReportReminderFailure) {
                 showDialog(
@@ -191,7 +190,7 @@ class _SelfReportListState extends State<SelfReportList> {
                     child: Column(
                       children: [
                         Text(
-                            isStatusChanged
+                            widget.isHealthStatusChanged
                                 ? Dictionary.statusChanged
                                 : Dictionary.moreThan14Days,
                             style: Theme.of(context).textTheme.caption.copyWith(
@@ -200,11 +199,11 @@ class _SelfReportListState extends State<SelfReportList> {
                                 fontWeight: FontWeight.bold,
                                 height: 1.5,
                                 fontSize: 24)),
-                       const SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(
-                            isStatusChanged
+                            widget.isHealthStatusChanged
                                 ? Dictionary.statusChangedDesc
                                 : Dictionary.moreThan14DaysDesc,
                             style: Theme.of(context).textTheme.caption.copyWith(
@@ -420,7 +419,10 @@ class _SelfReportListState extends State<SelfReportList> {
                                                           state) {
                                                 if (state
                                                     is SelfReportIsReminderLoaded) {
-                                                   isReminder = getField(state.querySnapshot, 'remind_me') ?? false;
+                                                  isReminder = getField(
+                                                          state.querySnapshot,
+                                                          'remind_me') ??
+                                                      false;
 
                                                   return FlutterSwitch(
                                                     width: 50.0,

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/otherSelfReport/OtherSelfReportBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
@@ -11,10 +15,12 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/selfReport/AddUserForm.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
+import 'package:pikobar_flutter/utilities/HexColor.dart';
 
 class SelfReportOtherScreen extends StatefulWidget {
   final LatLng location;
@@ -29,7 +35,8 @@ class SelfReportOtherScreen extends StatefulWidget {
 
 class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
   ScrollController _scrollController;
-
+  RemoteConfigBloc _remoteConfigBloc;
+  OtherSelfReportBloc _otherSelfReportBloc;
   @override
   void initState() {
     super.initState();
@@ -53,8 +60,15 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
         title: Dictionary.reportForOther,
       ),
       backgroundColor: Colors.white,
-      body: BlocProvider<OtherSelfReportBloc>(
-        create: (context) => OtherSelfReportBloc()..add(OtherSelfReportLoad()),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider<RemoteConfigBloc>(
+              create: (BuildContext context) => _remoteConfigBloc =
+                  RemoteConfigBloc()..add(RemoteConfigLoad())),
+          BlocProvider<OtherSelfReportBloc>(
+              create: (context) => _otherSelfReportBloc = OtherSelfReportBloc()
+                ..add(OtherSelfReportLoad()))
+        ],
         child: BlocBuilder<OtherSelfReportBloc, OtherSelfReportState>(
             builder: (BuildContext context, OtherSelfReportState state) {
           if (state is OtherSelfReportLoaded) {
@@ -156,7 +170,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                         opacity: _showTitle ? 0.0 : 1.0,
                         duration: Duration(milliseconds: 250),
                         child: Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               bottom: 15.0, left: 10, right: 10),
                           child: Text(
                             Dictionary.reportForOther,
@@ -172,12 +186,16 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SelfReportList(
-                            cityId: widget.cityId,
-                            location: widget.location,
-                            analytics: Analytics.tappedDailyOtherReport,
-                            otherUID: documents[i].get('user_id'),
-                            otherRecurrenceReport:
-                                getField(documents[i], 'recurrence_report'))));
+                              cityId: widget.cityId,
+                              location: widget.location,
+                              analytics: Analytics.tappedDailyOtherReport,
+                              otherUID: documents[i].get('user_id'),
+                              otherRecurrenceReport:
+                                  getField(documents[i], 'recurrence_report'),
+                              isHealthStatusChanged: getField(
+                                      documents[i], 'health_status_changed') ??
+                                  false,
+                            )));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -221,6 +239,16 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                                       color: ColorBase.grey800,
                                       fontFamily: FontsFamily.roboto),
                                 ),
+                                BlocBuilder<RemoteConfigBloc,
+                                    RemoteConfigState>(
+                                  builder: (context, remoteState) {
+                                    return remoteState is RemoteConfigLoaded
+                                        ? _buildHealthStatus(
+                                            remoteState.remoteConfig,
+                                            documents[i])
+                                        : Container();
+                                  },
+                                )
                               ],
                             ),
                           ],
@@ -247,6 +275,81 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
     );
   }
 
+  _buildHealthStatus(RemoteConfig remoteConfig, DocumentSnapshot data) {
+    Color cardColor = ColorBase.grey;
+    Color textColor = Colors.white;
+    String uriImage = '${Environment.iconAssets}user_health.png';
+    // Get data health status visible or not
+    bool visible = remoteConfig != null &&
+            remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
+        ? remoteConfig.getBool(FirebaseConfig.healthStatusVisible)
+        : false;
+    // Get data health status color from remote config
+    if (remoteConfig != null &&
+        remoteConfig.getString(FirebaseConfig.healthStatusColors) != null &&
+        getField(data, 'health_status') != null) {
+      Map<String, dynamic> healthStatusColor = json
+          .decode(remoteConfig.getString(FirebaseConfig.healthStatusColors));
+
+      switch (getField(data, 'health_status')) {
+        case "HEALTHY":
+          cardColor = HexColor.fromHex(healthStatusColor['healthy'] != null
+              ? healthStatusColor['healthy']
+              : ColorBase.green);
+          break;
+
+        case "ODP":
+          cardColor = HexColor.fromHex(healthStatusColor['odp'] != null
+              ? healthStatusColor['odp']
+              : Colors.yellow);
+          textColor = Colors.black;
+          uriImage = '${Environment.iconAssets}user_health_black.png';
+          break;
+
+        case "PDP":
+          cardColor = HexColor.fromHex(healthStatusColor['pdp'] != null
+              ? healthStatusColor['pdp']
+              : Colors.orange);
+          textColor = Colors.black;
+          uriImage = '${Environment.iconAssets}user_health_black.png';
+          break;
+
+        case "CONFIRMED":
+          cardColor = HexColor.fromHex(healthStatusColor['confirmed'] != null
+              ? healthStatusColor['confirmed']
+              : Colors.red);
+          break;
+
+        case "OTG":
+          cardColor = HexColor.fromHex(healthStatusColor['otg'] != null
+              ? healthStatusColor['otg']
+              : Colors.black);
+          break;
+
+        default:
+          cardColor = Colors.grey;
+      }
+    }
+    // Check if health status visible or not
+    return visible && getField(data, 'health_status_text') != null
+        ? Container(
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+                color: cardColor, borderRadius: BorderRadius.circular(6)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Text(
+                getField(data, 'health_status_text'),
+                style: TextStyle(
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: textColor),
+              ),
+            ))
+        : Container();
+  }
+
   /// Function to build create button
   Widget buildCreateButton() {
     return Padding(
@@ -267,5 +370,14 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                 MaterialPageRoute(builder: (context) => AddUserFormScreen()));
           }),
     );
+  }
+
+  @override
+  void dispose() {
+    _otherSelfReportBloc.close();
+    if (_remoteConfigBloc != null) {
+      _remoteConfigBloc.close();
+    }
+    super.dispose();
   }
 }

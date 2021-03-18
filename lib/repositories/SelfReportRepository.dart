@@ -197,6 +197,22 @@ class SelfReportRepository {
           });
   }
 
+  Future updateHealthStatus({@required String userId, String otherUID}) async {
+    return otherUID == null
+        ? await _firestore
+            .collection(kUsers)
+            .doc(userId)
+            .update({'health_status_changed': false})
+        : _firestore
+            .collection(kSelfReports)
+            .doc(userId)
+            .collection(kOtherSelfReports)
+            .doc(otherUID)
+            .update({
+            'health_status_changed': false,
+          });
+  }
+
   /// Save the contact history to firestore with provided [data]
   /// to the [kContactHistory] collection
   /// in documents in the [kSelfReports] collection referenced by the [userId]

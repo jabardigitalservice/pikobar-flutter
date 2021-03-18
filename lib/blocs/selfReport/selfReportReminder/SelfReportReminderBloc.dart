@@ -47,12 +47,14 @@ class SelfReportReminderBloc
         if (event.otherUID == null) {
           await SelfReportRepository().updateRecurrenceReport(
               userId: userId, recurrenceReport: event.recurrenceReport);
-          await HealthStatusSharedPreference.setIsHealthStatusChange(false);
+          await SelfReportRepository().updateHealthStatus(userId: userId);
         } else {
           await SelfReportRepository().updateRecurrenceReport(
               userId: userId,
               recurrenceReport: event.recurrenceReport,
               otherUID: event.otherUID);
+          await SelfReportRepository()
+              .updateHealthStatus(userId: userId, otherUID: event.otherUID);
         }
 
         yield SelfReportRecurrenceReportSaved();
