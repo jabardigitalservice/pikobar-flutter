@@ -128,7 +128,7 @@ class _NewsScreenState extends State<NewsScreen> {
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: Dimens.padding,
                         right: Dimens.padding,
                         bottom: Dimens.padding),
@@ -188,7 +188,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       itemBuilder: (context, index) {
                         NewsModel newsmodel = list[index];
                         return Container(
-                          padding: EdgeInsets.only(left: Dimens.padding),
+                          padding: const EdgeInsets.only(left: Dimens.padding),
                           width: 150.0,
                           height: 150.0,
                           child: Column(
@@ -286,7 +286,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                             });
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.only(top: 10),
+                                        padding: const EdgeInsets.only(top: 10),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -303,7 +303,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 5,
                                             ),
                                             Row(
@@ -343,7 +343,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20)
+                              const SizedBox(height: 20)
                             ],
                           ),
                         );
@@ -383,7 +383,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 <String, dynamic>{'title': data.title});
           },
           child: Container(
-            padding: EdgeInsets.only(top: 5, bottom: 5),
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,7 +392,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     ? Stack(
                         children: <Widget>[
                           Container(
-                            margin: EdgeInsets.only(left: 6),
+                            margin: const EdgeInsets.only(left: 6),
                             width: 70,
                             height: 70,
                             child: ClipRRect(
@@ -414,7 +414,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 5),
+                            margin: const EdgeInsets.only(top: 5),
                             child: Image.asset(
                                 '${Environment.imageAssets}label.png',
                                 fit: BoxFit.fill,
@@ -422,7 +422,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                 height: 32.0),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 9, left: 5),
+                            margin: const EdgeInsets.only(top: 9, left: 5),
                             child: Text(
                               Dictionary.labelImportantInfo,
                               style: TextStyle(
@@ -473,7 +473,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Container(
-                          padding: EdgeInsets.only(top: 5.0),
+                          padding: const EdgeInsets.only(top: 5.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -488,7 +488,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                               height: 25.0,
                                             )
                                           : Container(),
-                                      SizedBox(width: 3.0),
+                                      const SizedBox(width: 3.0),
                                       Expanded(
                                         child: Text(
                                           data.newsChannel,
@@ -534,7 +534,7 @@ class _NewsScreenState extends State<NewsScreen> {
             elevation: 0,
             color: Colors.white,
             child: Container(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -601,7 +601,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 3,
                             ),
                             Text(
@@ -683,7 +683,7 @@ class _NewsScreenState extends State<NewsScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0),
           child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -726,7 +726,7 @@ class _NewsScreenState extends State<NewsScreen> {
           itemBuilder: (context, index) {
             return Container(
                 width: 150,
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -740,7 +740,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -756,7 +756,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                       MediaQuery.of(context).size.width / 1.8,
                                   padding: 10.0,
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Skeleton(
                                   height: 20.0,
                                   width: MediaQuery.of(context).size.width / 2,

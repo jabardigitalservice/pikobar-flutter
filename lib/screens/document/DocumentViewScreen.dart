@@ -30,7 +30,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
   @override
   void initState() {
     if (widget.nameFile.length > 253) {
-      var maxlength = widget.nameFile.length - 253;
+      final int maxlength = widget.nameFile.length - 253;
       nameFile =
           widget.nameFile.substring(0, widget.nameFile.length - maxlength);
     } else {

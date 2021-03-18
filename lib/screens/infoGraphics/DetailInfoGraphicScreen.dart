@@ -17,7 +17,6 @@ import 'package:pikobar_flutter/blocs/infographics/infographicdetail/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/ErrorContent.dart';
 import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
-import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/components/PikobarPlaceholder.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';

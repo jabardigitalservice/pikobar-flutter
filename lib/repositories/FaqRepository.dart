@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:meta/meta.dart';
-import 'package:async/async.dart';
 
 class FaqRepository {
   final firestore = FirebaseFirestore.instance;
