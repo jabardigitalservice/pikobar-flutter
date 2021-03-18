@@ -421,9 +421,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                                           state) {
                                                 if (state
                                                     is SelfReportIsReminderLoaded) {
-                                                  isReminder = state
-                                                      .querySnapshot
-                                                      .get('remind_me');
+                                                   isReminder = getField(state.querySnapshot, 'remind_me') ?? false;
 
                                                   return FlutterSwitch(
                                                     width: 50.0,

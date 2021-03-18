@@ -130,10 +130,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } else if (getIsHealthStatusChange) {
       await HealthStatusSharedPreference.setHealthStatus(
           getField(event.profile, 'health_status'));
-    } else {
-      if (getHealthStatus != getField(event.profile, 'health_status')) {
-        await HealthStatusSharedPreference.setIsHealthStatusChange(true);
-      }
+    } else if (getHealthStatus != getField(event.profile, 'health_status')) {
+       await HealthStatusSharedPreference.setIsHealthStatusChange(true);
     }
     yield ProfileLoaded(event.profile);
   }

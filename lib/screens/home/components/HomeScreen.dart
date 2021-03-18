@@ -76,6 +76,7 @@ class HomeScreenState extends State<HomeScreen>
   getAllUnreadData() {
     Future.delayed(Duration(milliseconds: 0), () async {
       var data = await LabelNew().getAllUnreadDataLabel();
+      if (!mounted) return;
       setState(() {
         totalUnreadInfo = data;
       });

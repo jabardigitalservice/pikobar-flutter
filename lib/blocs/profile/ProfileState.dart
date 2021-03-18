@@ -60,7 +60,7 @@ class ProfileVerifiedFailed extends ProfileState {
 
 class ProfileLoaded extends ProfileState {
   final DocumentSnapshot profile;
-  ProfileLoaded(this.profile);
+  ProfileLoaded({this.profile});
   @override
   String toString() => 'ProfileLoaded';
 
