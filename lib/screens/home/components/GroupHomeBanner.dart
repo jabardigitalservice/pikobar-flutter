@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -75,7 +75,7 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.fromLTRB(12.0, 12.0, 0.0, 12.0),
-                            child: OptimizedCacheImage(
+                            child: CachedNetworkImage(
                                 imageUrl: groupBanner[i]['image'],
                                 imageBuilder: (context, imageProvider) =>
                                     Image.network(groupBanner[i]['image']),

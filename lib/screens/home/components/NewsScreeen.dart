@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -199,7 +199,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   width: 150,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    child: OptimizedCacheImage(
+                                    child: CachedNetworkImage(
                                       imageUrl: newsmodel.image ?? '',
                                       alignment: Alignment.topCenter,
                                       fit: BoxFit.cover,
@@ -397,7 +397,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             height: 70,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: OptimizedCacheImage(
+                              child: CachedNetworkImage(
                                 imageUrl: data.image,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => Center(
@@ -441,7 +441,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         height: 70,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: OptimizedCacheImage(
+                          child: CachedNetworkImage(
                             imageUrl: data.image,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Center(
@@ -546,7 +546,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         height: 300,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: OptimizedCacheImage(
+                          child: CachedNetworkImage(
                             imageUrl: data.image,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Center(

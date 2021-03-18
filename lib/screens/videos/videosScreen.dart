@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -212,7 +212,7 @@ class _VideosListState extends State<VideosList> {
                                 height: 300,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  child: OptimizedCacheImage(
+                                  child: CachedNetworkImage(
                                     imageUrl: getYtThumbnail(
                                         youtubeUrl: listVideos[index].url,
                                         error: false),

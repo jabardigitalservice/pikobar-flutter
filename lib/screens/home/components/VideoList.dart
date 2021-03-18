@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
@@ -231,7 +231,7 @@ class _VideoListState extends State<VideoList> {
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
-                                    OptimizedCacheImage(
+                                    CachedNetworkImage(
                                       imageUrl: getYtThumbnail(
                                           youtubeUrl: data[index].url,
                                           error: false),
@@ -250,7 +250,7 @@ class _VideoListState extends State<VideoList> {
                                           heightFactor: 10.2,
                                           child: CupertinoActivityIndicator()),
                                       errorWidget: (context, url, error) =>
-                                          OptimizedCacheImage(
+                                          CachedNetworkImage(
                                         imageUrl: getYtThumbnail(
                                             youtubeUrl: data[index].url,
                                             error: true),

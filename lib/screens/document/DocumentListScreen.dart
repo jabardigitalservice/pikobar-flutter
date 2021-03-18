@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
@@ -150,7 +150,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             height: 300,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
-                              child: OptimizedCacheImage(
+                              child: CachedNetworkImage(
                                 imageUrl: document['images'],
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => Center(
