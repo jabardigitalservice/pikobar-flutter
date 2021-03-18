@@ -12,8 +12,11 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
 class SelfReportOption extends StatefulWidget {
   final LatLng location;
   final String cityId;
+  final bool isHealthStatusChanged;
 
-  SelfReportOption({Key key, this.location, this.cityId}) : super(key: key);
+  SelfReportOption(
+      {Key key, this.location, this.cityId, this.isHealthStatusChanged})
+      : super(key: key);
 
   @override
   _SelfReportOptionState createState() => _SelfReportOptionState();
@@ -52,6 +55,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                             location: widget.location,
                             cityId: widget.cityId,
                             analytics: Analytics.tappedDailyReport,
+                            isHealthStatusChanged: widget.isHealthStatusChanged,
                           )));
                 }, true),
                 _buildContainer(
