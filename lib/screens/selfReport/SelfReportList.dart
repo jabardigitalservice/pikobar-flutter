@@ -134,7 +134,6 @@ class _SelfReportListState extends State<SelfReportList> {
                     otherUID: widget.otherUID,
                     recurrenceReport: recurrenceReport));
               } else if (state is SelfReportRecurrenceReportSaved) {
-                print(recurrenceReport);
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -201,7 +200,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                 fontWeight: FontWeight.bold,
                                 height: 1.5,
                                 fontSize: 24)),
-                        SizedBox(
+                       const SizedBox(
                           height: 20,
                         ),
                         Text(
