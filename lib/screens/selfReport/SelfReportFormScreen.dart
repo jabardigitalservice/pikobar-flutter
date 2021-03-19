@@ -111,7 +111,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       _checkedItemList = widget.dailyReportModel.indications
           .substring(1, widget.dailyReportModel.indications.length - 1)
           .split(', ');
-      if (_checkedItemList.contains(_allItemList[11])) {
+      if (_checkedItemList.contains(_allItemList[13])) {
         _otherIndicationsController.text =
             _checkedItemList[_checkedItemList.length - 1];
         _isOtherIndication = true;
