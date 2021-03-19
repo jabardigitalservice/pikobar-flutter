@@ -55,8 +55,8 @@ dependencies:
   meta: ^1.2.3
   equatable: ^1.2.5
   permission_handler: ^5.0.1+1
-  optimized_cached_image: ^1.0.0
-  carousel_slider: ^2.3.1
+  cached_network_image: ^2.5.1
+  carousel_slider: ^3.0.0
   intl: ^0.16.1
   timeago: ^2.0.27
   package_info: ^0.4.3

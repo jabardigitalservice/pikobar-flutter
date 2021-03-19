@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -120,7 +120,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                       height: 300,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: OptimizedCacheImage(
+                        child: CachedNetworkImage(
                           imageUrl: educationModel.image,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Center(
