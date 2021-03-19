@@ -168,6 +168,10 @@ class Analytics {
   static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";
   static String contactHistorySaved = "riwayat_kontak_baru_tersimpan";
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
+  static String resetDailyReport = "tapped_menu_reset_diri_sendiri";
+  static String resetOtherReport = "tapped_menu_reset_orang_lain";
+  static String submitResetDailyReport = "submitted_reset_diri_sendiri";
+  static String submitResetOtherReport = "submitted_reset_orang_lain";
 
   static String crowdReport = "tapped_lapor_kerumunan";
 
