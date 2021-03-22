@@ -281,6 +281,13 @@ class _SelfReportListState extends State<SelfReportList> {
                             key: resetKey,
                             icon: Icon(Icons.more_horiz, color: Colors.black),
                             onPressed: () {
+                              if (widget.otherUID == null) {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.resetDailyReport);
+                              } else {
+                                AnalyticsHelper.setLogEvent(
+                                    Analytics.resetOtherReport);
+                              }
                               showResetButton();
                             })
                       ],
@@ -796,6 +803,11 @@ class _SelfReportListState extends State<SelfReportList> {
               color: Colors.red[400],
               elevation: 0.0,
               onPressed: () {
+                if (widget.otherUID == null) {
+                  AnalyticsHelper.setLogEvent(Analytics.submitResetDailyReport);
+                } else {
+                  AnalyticsHelper.setLogEvent(Analytics.submitResetOtherReport);
+                }
                 _selfReportReminderBloc.add(SelfReportUpdateRecurrenceReport(
                     recurrenceReport, widget.otherUID));
               }),
