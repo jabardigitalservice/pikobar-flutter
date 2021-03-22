@@ -34,11 +34,6 @@ class SelfReportListBloc
     yield SelfReportListLoading();
     await _subscription?.cancel();
     final String userId = await AuthRepository().getToken();
-    bool isHealtStatusChanged;
-    if (otherUID == null) {
-      isHealtStatusChanged =
-          await HealthStatusSharedPreference.getIsHealthStatusChange();
-    }
 
     _subscription = SelfReportRepository()
         .getSelfReportList(
@@ -46,14 +41,12 @@ class SelfReportListBloc
             otherUID: otherUID,
             recurrenceReport: recurrenceReport)
         .listen((event) {
-      add(SelfReportListUpdated(event, isHealtStatusChanged));
+      add(SelfReportListUpdated(event));
     });
   }
 
   Stream<SelfReportListState> _selfReportListToState(
       SelfReportListUpdated event) async* {
-    yield SelfReportListLoaded(
-        querySnapshot: event.selfReportList,
-        isHealthStatusChanged: event.isHealthStatusChanged ?? false);
+    yield SelfReportListLoaded(querySnapshot: event.selfReportList);
   }
 }

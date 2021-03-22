@@ -16,13 +16,11 @@ class SelfReportListLoading extends SelfReportListState {
 
 class SelfReportListLoaded extends SelfReportListState {
   final QuerySnapshot querySnapshot;
-  final bool isHealthStatusChanged;
 
-  SelfReportListLoaded(
-      {@required this.querySnapshot, this.isHealthStatusChanged});
+  SelfReportListLoaded({@required this.querySnapshot});
 
   @override
-  List<Object> get props => [querySnapshot, isHealthStatusChanged];
+  List<Object> get props => [querySnapshot];
 }
 
 class SelfReportListFailure extends SelfReportListState {

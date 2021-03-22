@@ -19,6 +19,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportDetailScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
@@ -134,7 +135,15 @@ class _SelfReportListState extends State<SelfReportList> {
               } else if (state is SelfReportRecurrenceReportSaved) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SelfReportOption(
+                          location: widget.location,
+                          cityId: widget.cityId,
+                          isHealthStatusChanged: false,
+                        )));
+                Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => SelfReportList(
                           location: widget.location,
                           cityId: widget.cityId,
