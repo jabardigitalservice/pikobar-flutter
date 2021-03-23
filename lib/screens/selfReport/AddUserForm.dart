@@ -63,7 +63,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       ),
       backgroundColor: Colors.white,
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -73,7 +73,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                 opacity: _showTitle ? 0.0 : 1.0,
                 duration: Duration(milliseconds: 250),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(
                     Dictionary.addUserForm,
                     style: TextStyle(
@@ -83,9 +83,9 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
               buildAnnouncement(),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
               buildTextField(
                   controller: _nikController,
                   hintText: Dictionary.placeholderNIK,
@@ -93,7 +93,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   isEdit: true,
                   title: Dictionary.nik,
                   textInputType: TextInputType.number),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
               buildTextField(
                   controller: _nameController,
                   hintText: Dictionary.placeholderName,
@@ -101,9 +101,9 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   title: Dictionary.name,
                   validation: Validations.nameValidation,
                   textInputType: TextInputType.text),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
               buildLabel(text: Dictionary.birthday, required: true),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
               buildDateField(
                   title: Dictionary.birthday,
                   placeholder: _dateController.text == ''
@@ -111,7 +111,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                       : DateFormat.yMMMMd('id')
                           .format(DateTime.parse(_dateController.text)),
                   isEmpty: isBirthdayEmpty),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
               buildLabel(text: Dictionary.gender),
               _buildRadioButton(
                   title: Dictionary.gender,
@@ -150,7 +150,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                         ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
                         : null;
                   }),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               RoundedButton(
                   title: Dictionary.nextStep,
                   elevation: 0.0,
@@ -163,7 +163,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   onPressed: () {
                     _saveSelfReport();
                   }),
-              SizedBox(height: Dimens.padding),
+              const SizedBox(height: Dimens.padding),
             ],
           ),
         ),
@@ -206,7 +206,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextFormField(
@@ -301,7 +301,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     placeholder,
                     style: TextStyle(
@@ -313,7 +313,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
                       height: 15,
                       child:
@@ -324,13 +324,13 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
           ),
         ),
         isEmpty
-            ? SizedBox(
+            ? const SizedBox(
                 height: 10,
               )
             : Container(),
         isEmpty
             ? Padding(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
@@ -366,67 +366,6 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
     );
   }
 
-  // Bottom sheet message form
-  void _showBottomSheetForm(String image, String titleDialog, String descDialog,
-      GestureTapCallback onPressed) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(8.0),
-          ),
-        ),
-        isDismissible: false,
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.all(Dimens.padding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 44.0),
-                  child: Image.asset(
-                    image,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                SizedBox(height: 24.0),
-                Text(
-                  titleDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  descDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12.0,
-                      color: Colors.grey[600]),
-                ),
-                SizedBox(height: 24.0),
-                RoundedButton(
-                    title: Dictionary.ok.toUpperCase(),
-                    textStyle: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    color: ColorBase.green,
-                    elevation: 0.0,
-                    onPressed: onPressed)
-              ],
-            ),
-          );
-        });
-  }
-
   // Build each radio button on the form
   _buildRadioButton(
       {@required title,
@@ -434,7 +373,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       @required void Function(String label, int index) onChanged,
       FormFieldValidator<String> validator}) {
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
           top: Dimens.fieldMarginTop, bottom: Dimens.fieldMarginBottom),
       child: GroupedRadioButton(
         itemWidth: MediaQuery.of(context).size.width / 2 - 21,
@@ -465,7 +404,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   /// Set up for show announcement widget
   Widget buildAnnouncement() {
     return Announcement(
-      margin: EdgeInsets.all(0),
+      margin: const EdgeInsets.all(0),
       title: Dictionary.titleInfoTextAnnouncement,
       content: Dictionary.otherReportAnnouncement,
       context: context,
