@@ -88,7 +88,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               SizedBox(height: Dimens.padding),
               buildTextField(
                   controller: _nikController,
-                  hintText: Dictionary.placeholderYourNIK,
+                  hintText: Dictionary.placeholderNIK,
                   isRequired: false,
                   isEdit: true,
                   title: Dictionary.nik,
@@ -96,7 +96,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               SizedBox(height: Dimens.padding),
               buildTextField(
                   controller: _nameController,
-                  hintText: Dictionary.placeholderYourName,
+                  hintText: Dictionary.placeholderName,
                   isEdit: true,
                   title: Dictionary.name,
                   validation: Validations.nameValidation,

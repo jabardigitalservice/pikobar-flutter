@@ -199,6 +199,7 @@ class Dictionary {
   static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
   static String placeholderYourName = 'Masukkan Nama Anda';
   static String placeholderYourNIK = 'Masukkan NIK Anda';
+  static String placeholderNIK = 'Masukkan NIK';
   static String placeholderName = 'Masukkan Nama';
   static String placeholderPhone = 'Masukkan Nomor HP';
   static String placeholderOtherRelation = 'Masukkan Hubungan Lainnya';
