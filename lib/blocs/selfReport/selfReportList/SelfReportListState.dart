@@ -14,6 +14,7 @@ class SelfReportListLoading extends SelfReportListState {
   List<Object> get props => [];
 }
 
+@immutable
 class SelfReportListLoaded extends SelfReportListState {
   final QuerySnapshot querySnapshot;
   final bool isHealthStatusChanged;

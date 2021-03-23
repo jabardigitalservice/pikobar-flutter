@@ -145,7 +145,7 @@ class _VideosListState extends State<VideosList> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0),
           child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -153,7 +153,7 @@ class _VideosListState extends State<VideosList> {
             padding: const EdgeInsets.all(10.0),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
                 height: 300.0,
                 child: Row(
                   children: <Widget>[
@@ -200,7 +200,7 @@ class _VideosListState extends State<VideosList> {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: Dimens.padding,
                               right: Dimens.padding,
                               bottom: Dimens.padding),
@@ -275,7 +275,7 @@ class _VideosListState extends State<VideosList> {
                                         )
                                       ],
                                     ),
-                                    SizedBox(
+                                   const SizedBox(
                                       height: 3,
                                     ),
                                     Text(

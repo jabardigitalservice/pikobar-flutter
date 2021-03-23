@@ -138,7 +138,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 children: <Widget>[
                   GestureDetector(
                     child: Container(
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           left: Dimens.padding,
                           right: Dimens.padding,
                           bottom: Dimens.padding),
@@ -171,21 +171,20 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             ),
                           ),
                           Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 300,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              gradient: LinearGradient(
-                                begin: FractionalOffset.topCenter,
-                                end: FractionalOffset.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black.withOpacity(0.8),
-                                ],
-                                stops: [0.0, 1.0],
-                              ),
-                            )
-                          ),
+                              width: MediaQuery.of(context).size.width,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.8),
+                                  ],
+                                  stops: [0.0, 1.0],
+                                ),
+                              )),
                           Image.asset(
                             '${Environment.iconAssets}pdf_icon.png',
                             height: 80,
@@ -219,7 +218,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 3,
                                 ),
                                 Text(
@@ -279,7 +278,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0),
           child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -287,7 +286,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             padding: const EdgeInsets.all(10.0),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
                 height: 300.0,
                 child: Row(
                   children: <Widget>[
