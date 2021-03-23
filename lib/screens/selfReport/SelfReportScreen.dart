@@ -265,6 +265,12 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               future:
                   SelfReportRepository().checkNIK(nik: getField(state, 'nik')),
               builder: (context, snapshot) {
+
+                final bool checkHasData = snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData;
+                final bool isQuarantined = (checkHasData && snapshot.data) || !HealthCheck()
+                    .isUserHealty(getField(state, 'health_status'));
+
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -295,6 +301,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                                     isHealthStatusChanged: getField(
                                             state, 'health_status_changed') ??
                                         false,
+                                isQuarantined: isQuarantined,
                                   )));
                         }
                       },
@@ -317,16 +324,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       // condition for check if user login and user complete fill that profile
                       // and health status is not healthy user can access for press the button in _buildContainer
                       isShowMenu: hasLogin &&
-                          !_isProfileUserNotComplete(state) &&
-                          (snapshot.connectionState == ConnectionState.done &&
-                                  snapshot.hasData
-                              ? (snapshot.data ||
-                                  !HealthCheck().isUserHealty(
-                                    getField(state, 'health_status'),
-                                  ))
-                              : !HealthCheck().isUserHealty(
-                                  getField(state, 'health_status'),
-                                )),
+                          !_isProfileUserNotComplete(state),
                     ),
                     _buildContainer(
                       imageDisable:
