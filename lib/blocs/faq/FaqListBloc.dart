@@ -26,7 +26,7 @@ class FaqListBloc extends Bloc<FaqListEvent, FaqListState> {
   Stream<FaqListState> _mapLoadFaqListToState(
       {String faqCollection, String category}) async* {
     yield FaqListLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = _repository
         .getFaq(faqCollection: faqCollection, category: category)
         .listen(

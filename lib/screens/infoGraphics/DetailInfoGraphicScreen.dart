@@ -30,7 +30,7 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pedantic/pedantic.dart';
 
-// ignore: must_be_immutable
+@immutable
 class DetailInfoGraphicScreen extends StatefulWidget {
   final DocumentSnapshot dataInfoGraphic;
   final String id;
@@ -48,7 +48,7 @@ class DetailInfoGraphicScreen extends StatefulWidget {
 class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   int _current = 0;
   FToast fToast;
-  ReceivePort _port = ReceivePort();
+  final ReceivePort _port = ReceivePort();
   List<String> dataUrl = [];
 
   List<String> getDataUrl() {
@@ -72,7 +72,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
+        value: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.light),
         child: widget.dataInfoGraphic == null
@@ -135,7 +135,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                         aspectRatio: 9 / 9,
                         viewportFraction: 1.0,
                         autoPlay: dataUrl.length > 1 ? true : false,
-                        autoPlayInterval: Duration(seconds: 5),
+                        autoPlayInterval: const Duration(seconds: 5),
                         onPageChanged: (index, reason) {
                           setState(() {
                             _current = index;
@@ -158,19 +158,22 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                                             ),
                                           ),
                                         ),
-                                    placeholder: (context, url) => Center(
+                                    placeholder: (context, url) => const Center(
                                         heightFactor: 10.2,
-                                        child: CupertinoActivityIndicator()),
+                                        child: const CupertinoActivityIndicator()),
                                     errorWidget: (context, url, error) =>
                                         Container(
                                             decoration: BoxDecoration(
                                               color: Colors.grey[200],
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(5.0),
+                                              borderRadius: const BorderRadius.only(
+                                                  topLeft:
+                                                      const Radius.circular(
+                                                          5.0),
                                                   topRight:
-                                                      Radius.circular(5.0)),
+                                                      const Radius.circular(
+                                                          5.0)),
                                             ),
-                                            child: PikobarPlaceholder())),
+                                            child: const PikobarPlaceholder())),
                                 Container(
                                   height: 360,
                                   decoration: BoxDecoration(
@@ -210,7 +213,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.arrow_back,
                             color: Colors.white,
                           ),
@@ -219,7 +222,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                           },
                         ),
                         IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.share,
                             color: Colors.white,
                           ),
@@ -256,9 +259,9 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                             height: 8.0,
                             margin: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 2.0),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color.fromRGBO(0, 0, 0, 0.4),
+                              color: const Color.fromRGBO(0, 0, 0, 0.4),
                             ),
                           );
                   }).toList(),
@@ -334,7 +337,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     return directory.path;
   }
 
-  void _downloadAttachment(String url) async {
+   _downloadAttachment(String url) async {
     final String decodeUrl = Uri.decodeComponent(url);
     final String fileName = decodeUrl.split('/').last.split('?').first;
 
@@ -356,7 +359,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                 },
               )));
     } else {
-      Widget toast = Container(
+      final Widget toast = Container(
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width,
         child: Container(
@@ -387,7 +390,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
 
       fToast.showToast(
           child: toast,
-          toastDuration: Duration(seconds: 2),
+          toastDuration: const Duration(seconds: 2),
           positionedToastBuilder: (context, child) {
             return Positioned(
               child: child,
@@ -462,14 +465,14 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
     IsolateNameServer.registerPortWithName(
         _port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      int progress = data[2];
+      final String id = data[0];
+      final DownloadTaskStatus status = data[1];
+      final int progress = data[2];
       if (status.toString() == "DownloadTaskStatus(3)" &&
           progress == 100 &&
           id != null) {
-        String query = "SELECT * FROM task WHERE task_id='" + id + "'";
-        var tasks = FlutterDownloader.loadTasksWithRawQuery(query: query);
+        final String query = "SELECT * FROM task WHERE task_id='" + id + "'";
+        final  tasks = FlutterDownloader.loadTasksWithRawQuery(query: query);
         //if the task exists, open it
         if (tasks != null) FlutterDownloader.open(taskId: id);
       }

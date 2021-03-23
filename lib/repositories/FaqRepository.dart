@@ -6,7 +6,7 @@ class FaqRepository {
 
   Stream<List<DocumentSnapshot>> getFaq(
       {@required String faqCollection, String category}) {
-    Query faqQuery = firestore
+   final Query faqQuery = firestore
         .collection(faqCollection)
         .where("category", isEqualTo: category);
 

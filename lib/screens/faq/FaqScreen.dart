@@ -24,6 +24,7 @@ import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
+@immutable
 class FaqScreen extends StatefulWidget {
   final bool isNewPage;
 
@@ -34,9 +35,9 @@ class FaqScreen extends StatefulWidget {
 }
 
 class _FaqScreenState extends State<FaqScreen> {
-  FaqListBloc _faqListBloc = FaqListBloc();
+  final FaqListBloc _faqListBloc = FaqListBloc();
   RemoteConfigBloc _remoteConfigBloc;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController;
   String searchQuery = '';
   Timer _debounce;
@@ -47,6 +48,7 @@ class _FaqScreenState extends State<FaqScreen> {
   List<Widget> listWidgetTab = [];
   List<dynamic> listDataRemoteConfigTab = [];
   List<String> listItemTitleTab = [];
+  List<DocumentSnapshot> listDataFaq;
 
   @override
   void initState() {
@@ -78,7 +80,7 @@ class _FaqScreenState extends State<FaqScreen> {
           child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
               builder: (context, remoteState) {
             if (remoteState is RemoteConfigLoaded) {
-              Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+              final Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
                   remoteConfig: remoteState.remoteConfig,
                   firebaseConfig: FirebaseConfig.labels,
                   defaultValue: FirebaseConfig.labelsDefaultValue);
@@ -116,7 +118,8 @@ class _FaqScreenState extends State<FaqScreen> {
                   scrollController: _scrollController,
                   onTap: (index) {
                     setState(() {});
-                    _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                    _scrollController
+                        .jumpTo(_scrollController.position.minScrollExtent);
                     indexTab = index;
                     _faqListBloc.add(FaqListLoad(
                         faqCollection: kFaq,
@@ -148,18 +151,20 @@ class _FaqScreenState extends State<FaqScreen> {
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
     if (searchQuery != null) {
-      listData = listData
+      listDataFaq = listData
           .where((test) =>
               test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
+    } else {
+      listDataFaq = listData;
     }
 
-    return listData.isNotEmpty
+    return listDataFaq.isNotEmpty
         ? ListView.builder(
-            itemCount: listData.length,
+            itemCount: listDataFaq.length,
             padding: const EdgeInsets.only(bottom: 30.0),
             itemBuilder: (_, int index) {
-              return _cardContent(listData[index]);
+              return _cardContent(listDataFaq[index]);
             },
           )
         : ListView(
@@ -264,7 +269,7 @@ class _FaqScreenState extends State<FaqScreen> {
                       padding: const EdgeInsets.all(10),
                       child: Text(
                         dataHelp['title'],
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 15.0, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -276,9 +281,10 @@ class _FaqScreenState extends State<FaqScreen> {
                           'body': Style(
                               margin: EdgeInsets.zero,
                               color: Colors.grey[600],
-                              fontSize: FontSize(14.0),
+                              fontSize: const FontSize(14.0),
                               textAlign: TextAlign.start),
-                          'li': Style(margin: const EdgeInsets.only(bottom: 10.0))
+                          'li':
+                              Style(margin: const EdgeInsets.only(bottom: 10.0))
                         },
                         onLinkTap: (url) {
                           launchExternal(url);
@@ -287,8 +293,8 @@ class _FaqScreenState extends State<FaqScreen> {
                     ),
                     builder: (_, collapsed, expanded) {
                       return Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, bottom: 10),
                         child: Expandable(
                           collapsed: collapsed,
                           expanded: expanded,

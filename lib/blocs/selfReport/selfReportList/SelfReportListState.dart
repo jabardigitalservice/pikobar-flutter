@@ -16,7 +16,7 @@ class SelfReportListLoading extends SelfReportListState {
 }
 
 
-
+@immutable
 class SelfReportListLoaded extends SelfReportListState {
   final QuerySnapshot querySnapshot;
 

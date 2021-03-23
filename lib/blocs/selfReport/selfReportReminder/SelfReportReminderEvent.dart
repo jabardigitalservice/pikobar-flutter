@@ -11,6 +11,7 @@ class SelfReportReminderListLoad extends SelfReportReminderEvent {
   List<Object> get props => [];
 }
 
+@immutable
 class SelfReportListUpdateReminder extends SelfReportReminderEvent {
   final bool isReminder;
   SelfReportListUpdateReminder(this.isReminder);
