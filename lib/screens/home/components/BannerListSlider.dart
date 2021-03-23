@@ -1,9 +1,9 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/blocs/banners/BannersBloc.dart';
 import 'package:pikobar_flutter/blocs/banners/BannersState.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -76,8 +76,9 @@ class BannerListSliderState extends State<BannerListSlider> {
                 options: CarouselOptions(
                   initialPage: 0,
                   enableInfiniteScroll: state.records.length > 1 ? true : false,
-                  aspectRatio: 21 / 10,
-                  viewportFraction: 0.95,
+                  aspectRatio: 2.0,
+                  viewportFraction: 0.8,
+                  enlargeCenterPage: true,
                   autoPlay: state.records.length > 1 ? true : false,
                   autoPlayInterval: Duration(seconds: 5),
                   onPageChanged: (index, reason) {
@@ -90,11 +91,10 @@ class BannerListSliderState extends State<BannerListSlider> {
                   return Builder(builder: (BuildContext context) {
                     return GestureDetector(
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4.0),
                         decoration: BoxDecoration(shape: BoxShape.circle),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: OptimizedCacheImage(
+                          child: CachedNetworkImage(
                               imageUrl: data.url ?? '',
                               imageBuilder: (context, imageProvider) =>
                                   Container(

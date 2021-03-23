@@ -292,6 +292,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               builder: (context) => SelfReportOption(
                                     location: latLng,
                                     cityId: getField(state, 'city_id'),
+                                    isHealthStatusChanged: getField(
+                                            state, 'health_status_changed') ??
+                                        false,
                                   )));
                         }
                       },

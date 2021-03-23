@@ -197,8 +197,8 @@ Future<void> showWidgetBottomSheet(
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(8.0),
-          topRight: Radius.circular(8.0),
+          topLeft: Radius.circular(16.0),
+          topRight: Radius.circular(16.0),
         ),
       ),
       builder: (context) {

@@ -33,6 +33,9 @@ class SelfReportFormScreen extends StatefulWidget {
   final String otherUID;
   final String analytics;
   final String cityId;
+  final String recurrenceReport;
+  final int firstData;
+  final int lastData;
 
   SelfReportFormScreen(
       {Key key,
@@ -41,7 +44,10 @@ class SelfReportFormScreen extends StatefulWidget {
       this.dailyReportModel,
       this.otherUID,
       @required this.analytics,
-      this.cityId})
+      this.cityId,
+      this.recurrenceReport,
+      @required this.firstData,
+      @required this.lastData})
       : assert(dailyId != null),
         assert(location != null),
         super(key: key);
@@ -105,7 +111,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       _checkedItemList = widget.dailyReportModel.indications
           .substring(1, widget.dailyReportModel.indications.length - 1)
           .split(', ');
-      if (_checkedItemList.contains(_allItemList[11])) {
+      if (_checkedItemList.contains(_allItemList[13])) {
         _otherIndicationsController.text =
             _checkedItemList[_checkedItemList.length - 1];
         _isOtherIndication = true;
@@ -162,16 +168,18 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       title: getMessage['title'],
                       message: getMessage['description'],
                       onPressed: () async {
-                        if (widget.dailyId == '14') {
+                        if (widget.dailyId == widget.lastData.toString()) {
                           Navigator.of(context).pop(true);
                           Navigator.of(context).pop(true);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => SelfReportDoneScreen(
-                                    location: widget.location,
-                                    otherUID: widget.otherUID,
-                                    analytics: widget.analytics)),
+                                      location: widget.location,
+                                      otherUID: widget.otherUID,
+                                      analytics: widget.analytics,
+                                      recurrenceReport: widget.recurrenceReport,
+                                    )),
                           );
                         } else {
                           Navigator.of(context).pop(true);
@@ -231,7 +239,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               ),
             ),
             const SizedBox(height: Dimens.padding),
-            widget.dailyId == '1'
+            widget.dailyId == (widget.firstData + 1).toString()
                 ? Column(
                     children: <Widget>[
                       buildLabel(text: Dictionary.selfReportQuestion1),
@@ -248,7 +256,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     ],
                   )
                 : Container(),
-            widget.dailyId == '1'
+            widget.dailyId == (widget.firstData + 1).toString()
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -510,7 +518,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   }
 
   bool isEmptyField() {
-    if (widget.dailyId == '1') {
+    if (widget.dailyId == (widget.firstData + 1).toString()) {
       return _checkedItemList.isEmpty ||
           _dateController.text.isEmpty ||
           _quarantineDateController.text.isEmpty;
@@ -548,7 +556,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   void _saveSelfReport(dynamic successMessage) async {
     setState(() {
       _isIndicationEmpty = _checkedItemList.isEmpty;
-      if (widget.dailyId == '1') {
+      if (widget.dailyId == (widget.firstData + 1).toString()) {
         _isDateEmpty = _dateController.text.isEmpty;
         _isquarantineDateEmpty = _quarantineDateController.text.isEmpty;
       } else {
@@ -578,7 +586,8 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 : null,
             indications: _checkedItemList.toString(),
             bodyTemperature: _bodyTempController.text,
-            location: widget.location);
+            location: widget.location,
+            recurrenceReport: widget.recurrenceReport);
         _dailyReportBloc.add(DailyReportSave(data,
             otherUID: widget.otherUID, successMessage: successMessage));
       }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/infographics/infographicdetail/Bloc.dart';
@@ -147,7 +147,7 @@ class _DetailInfoGraphicScreenState extends State<DetailInfoGraphicScreen> {
                           return GestureDetector(
                             child: Stack(
                               children: [
-                                OptimizedCacheImage(
+                                CachedNetworkImage(
                                     imageUrl: data ?? '',
                                     imageBuilder: (context, imageProvider) =>
                                         Container(

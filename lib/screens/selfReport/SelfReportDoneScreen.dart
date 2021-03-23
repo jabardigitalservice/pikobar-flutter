@@ -20,8 +20,14 @@ class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;
   final String otherUID;
   final String analytics;
+  final String recurrenceReport;
 
-  SelfReportDoneScreen({Key key, this.location, this.otherUID, this.analytics})
+  SelfReportDoneScreen(
+      {Key key,
+      this.location,
+      this.otherUID,
+      this.analytics,
+      this.recurrenceReport})
       : super(key: key);
 
   @override
@@ -101,7 +107,9 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
       ),
       body: BlocProvider<SelfReportListBloc>(
         create: (BuildContext context) => SelfReportListBloc()
-          ..add(SelfReportListLoad(otherUID: widget.otherUID)),
+          ..add(SelfReportListLoad(
+              otherUID: widget.otherUID,
+              recurrenceReport: widget.recurrenceReport)),
         child: BlocBuilder<SelfReportListBloc, SelfReportListState>(
             builder: (context, state) {
           if (state is SelfReportListLoaded) {

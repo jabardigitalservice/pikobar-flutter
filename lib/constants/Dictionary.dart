@@ -112,6 +112,8 @@ class Dictionary {
   static String shareLocation = 'Bagikan Lokasi';
   static String send = 'Kirim';
   static String skip = 'Skip';
+  static String resetReport = 'Reset Laporan';
+  static String reset = 'Reset';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -172,6 +174,9 @@ class Dictionary {
   static String savedSuccessfully = 'Berhasil Disimpan';
   static String dailySuccess =
       'Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.';
+  static String confirmResetMessage = 'Apakah Anda yakin?';
+  static String confirmResetMessageDesc =
+      'Laporan Anda tidak bisa diakses kembali \nsetelah Reset. Anda akan mulai laporan dari \nhari pertama';
 
   static String latestNews = 'Berita Jabar';
   static String worldNews = 'Berita Dunia';
@@ -373,6 +378,14 @@ class Dictionary {
   static String setLocationTravelHistory = 'Pilih Lokasi Saat Ini';
   static String selfReportTravelHistory = 'Lihat Riwayat Check-in';
   static String noLocation = 'Tidak Ada Lokasi?';
+  static String statusChanged =
+      'Kami mendeteksi perubahan \nstatus kesehatan Anda';
+  static String moreThan14Days =
+      'Anda telah melewati masa 14 \nhari lapor mandiri';
+  static String statusChangedDesc =
+      'Untuk melanjutkan laporan mandiri, silakan \nlakukan reset melalui tombol titik tiga di \npojok kanan atas';
+  static String moreThan14DaysDesc =
+      'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas';
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';

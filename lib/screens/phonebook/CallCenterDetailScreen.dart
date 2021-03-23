@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -60,7 +60,7 @@ Widget coverImageSection(BuildContext context, DocumentSnapshot document) {
       ));
 
   return document['image_url'] != null
-      ? OptimizedCacheImage(
+      ? CachedNetworkImage(
           imageUrl: document['image_url'],
           placeholder: (context, url) => _loader,
           errorWidget: (context, url, error) => Icon(Icons.error),
