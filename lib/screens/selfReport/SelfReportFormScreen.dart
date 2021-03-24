@@ -25,6 +25,7 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportDoneScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/RegexInputFormatter.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+import 'package:pikobar_flutter/utilities/ReplaceText.dart';
 
 class SelfReportFormScreen extends StatefulWidget {
   final String dailyId;
@@ -165,8 +166,16 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   showSuccessBottomSheet(
                       context: context,
                       image: Image.network(getMessage['icon']),
-                      title: getMessage['title'],
-                      message: getMessage['description'],
+                      title: autoReplaceForDailyReport(
+                          otherUID: widget.otherUID,
+                          text: getMessage['title'],
+                          replaceTo: ['Pasien', 'pasien'],
+                          replaceFrom: ['Anda', 'anda']),
+                      message: autoReplaceForDailyReport(
+                          otherUID: widget.otherUID,
+                          text: getMessage['description'],
+                          replaceTo: ['Pasien', 'pasien'],
+                          replaceFrom: ['Anda', 'anda']),
                       onPressed: () async {
                         if (widget.dailyId == widget.lastData.toString()) {
                           Navigator.of(context).pop(true);
@@ -242,7 +251,12 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             widget.dailyId == (widget.firstData + 1).toString()
                 ? Column(
                     children: <Widget>[
-                      buildLabel(text: Dictionary.selfReportQuestion1),
+                      buildLabel(
+                          text: autoReplaceForDailyReport(
+                              otherUID: widget.otherUID,
+                              text: Dictionary.selfReportQuestion1,
+                              replaceTo: ['Pasien', 'pasien'],
+                              replaceFrom: ['Anda', 'anda'])),
                       const SizedBox(height: Dimens.padding),
                       buildDateField(
                           title: Dictionary.contactDate,
@@ -260,7 +274,12 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      buildLabel(text: Dictionary.quarantineQuestion),
+                      buildLabel(
+                          text: autoReplaceForDailyReport(
+                              otherUID: widget.otherUID,
+                              text: Dictionary.quarantineQuestion,
+                              replaceTo: ['Pasien', 'pasien'],
+                              replaceFrom: ['Anda', 'anda'])),
                       const SizedBox(height: Dimens.padding),
                       buildDateField(
                           title: Dictionary.quarantineDate,
@@ -406,8 +425,16 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       showSuccessBottomSheet(
                           context: context,
                           image: Image.network(getMessage['icon']),
-                          title: getMessage['title'],
-                          message: getMessage['description'],
+                          title: autoReplaceForDailyReport(
+                              otherUID: widget.otherUID,
+                              text: getMessage['title'],
+                              replaceTo: ['Pasien', 'pasien'],
+                              replaceFrom: ['Anda', 'anda']),
+                          message: autoReplaceForDailyReport(
+                              otherUID: widget.otherUID,
+                              text: getMessage['description'],
+                              replaceTo: ['Pasien', 'pasien'],
+                              replaceFrom: ['Anda', 'anda']),
                           onPressed: () {
                             Navigator.of(context).pop(true);
                             _saveSelfReport(successMessage);

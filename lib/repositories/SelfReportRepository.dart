@@ -111,6 +111,7 @@ class SelfReportRepository {
             .doc(userId)
             .collection(kDailyReport)
             .where('recurrence_report', isEqualTo: recurrenceReport)
+            .orderBy('created_at')
             .snapshots()
         : _firestore
             .collection(kSelfReports)
@@ -119,6 +120,7 @@ class SelfReportRepository {
             .doc(otherUID)
             .collection(kDailyReport)
             .where('recurrence_report', isEqualTo: recurrenceReport)
+            .orderBy('created_at')
             .snapshots();
   }
 

@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -76,7 +75,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                 options: CarouselOptions(
                   initialPage: 0,
                   enableInfiniteScroll: state.records.length > 1 ? true : false,
-                  aspectRatio: 2.0,
+                  aspectRatio: 2.1,
                   viewportFraction: 0.8,
                   enlargeCenterPage: true,
                   autoPlay: state.records.length > 1 ? true : false,
