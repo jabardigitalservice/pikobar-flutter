@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/ReplaceText.dart';
 
 class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;
@@ -219,7 +220,11 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
           title: Dictionary.info,
           content: isHealthy
               ? Dictionary.announcementDescHealthy
-              : Dictionary.announcementDescIndication,
+              : autoReplaceForDailyReport(
+                  otherUID: widget.otherUID,
+                  text: Dictionary.announcementDescIndication,
+                  replaceTo: ['Pasien', 'pasien'],
+                  replaceFrom: ['Anda', 'anda']),
           margin: EdgeInsets.zero,
           htmlStyle: Style(
               margin: EdgeInsets.zero,
