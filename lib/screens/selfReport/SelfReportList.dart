@@ -336,7 +336,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                     borderRadius: BorderRadius.circular(8)),
                                 width: MediaQuery.of(context).size.width,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.15,
+                                    MediaQuery.of(context).size.height * 0.16,
                                 child: Padding(
                                     padding: const EdgeInsets.all(
                                         Dimens.contentPadding),
