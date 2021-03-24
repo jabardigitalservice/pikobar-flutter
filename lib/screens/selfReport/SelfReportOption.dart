@@ -58,6 +58,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                 _buildContainer(
                     imageEnable:
                         '${Environment.iconAssets}self_report_icon.png',
+                    imageDisable:
+                    '${Environment.iconAssets}self_report_icon_disable.png',
                     title: Dictionary.reportForMySelf,
                     length: 2,
                     onPressedEnable: () {
