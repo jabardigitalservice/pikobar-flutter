@@ -159,6 +159,8 @@ class Dictionary {
   static String errorEmptyNPS = 'Tanggapan harus diisi';
   static String errorMinimumEmptyNPS =
       'Tanggapan harus terdiri dari 6 karakter atau lebih';
+  static String quarantineDateInformation =
+      'Silakan isi tanggal terakhir kontak terlebih dahulu';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';

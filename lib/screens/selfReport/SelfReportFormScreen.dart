@@ -486,7 +486,20 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       children: <Widget>[
         InkWell(
           onTap: () {
-            _showDatePicker(controller, isEmpty);
+            if (placeholder == Dictionary.quarantineDatePlaceholder &&
+                _dateController.text == '') {
+              showDialog(
+                  context: context,
+                  builder: (context) => DialogTextOnly(
+                        description: Dictionary.quarantineDateInformation,
+                        buttonText: Dictionary.ok,
+                        onOkPressed: () {
+                          Navigator.of(context).pop(); // To close the dialog
+                        },
+                      ));
+            } else {
+              _showDatePicker(controller, isEmpty);
+            }
           },
           child: Container(
             height: 40,
@@ -563,7 +576,10 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         confirm: Text(Dictionary.save, style: TextStyle(color: Colors.red)),
         cancel: Text(Dictionary.cancel, style: TextStyle(color: Colors.cyan)),
       ),
-      minDateTime: DateTime.parse(_minDate),
+      minDateTime:
+          controller == _quarantineDateController && _dateController.text != ''
+              ? DateTime.parse(_dateController.text)
+              : DateTime.parse(_minDate),
       maxDateTime: DateTime.now(),
       initialDateTime: controller.text == ''
           ? DateTime.now()
