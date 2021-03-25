@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pikobar_flutter/configs/SharedPreferences/HealthStatus.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 
@@ -67,7 +66,7 @@ class SelfReportReminderBloc
   Stream<SelfReportReminderState> _loadSelfReportReminderToState() async* {
     yield SelfReportReminderLoading();
     await _subscription?.cancel();
-    String userId = await AuthRepository().getToken();
+    final String userId = await AuthRepository().getToken();
 
     _subscription =
         SelfReportRepository().getIsReminder(userId: userId).listen((event) {
