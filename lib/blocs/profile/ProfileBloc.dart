@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:pikobar_flutter/configs/SharedPreferences/HealthStatus.dart';
 import 'package:pikobar_flutter/models/CityModel.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
-import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 import './Bloc.dart';
@@ -26,7 +24,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     if (event is CityLoad) {
       yield CityLoading();
       try {
-        CityModel record = await profileRepository.getCityList();
+        final CityModel record = await profileRepository.getCityList();
         yield CityLoaded(record: record);
       } catch (e) {
         yield ProfileFailure(
@@ -112,7 +110,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _loadSelfReportListToState(String otherUID) async* {
     yield ProfileLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
 
     _subscription = profileRepository.getProfile(otherUID).listen((event) {
       add(ProfileUpdated(event));

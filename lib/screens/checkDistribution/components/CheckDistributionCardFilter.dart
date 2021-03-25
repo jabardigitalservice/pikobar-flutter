@@ -49,21 +49,21 @@ class CheckDistributionCardFilter extends StatelessWidget {
     return ListView.builder(
         padding: const EdgeInsets.only(bottom: Dimens.padding, top: 10.0),
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: listOtherVillage.length,
         itemBuilder: (context, index) {
           final DesaLainnya dataOtherVillage = listOtherVillage[index];
           return Column(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
+                margin: const EdgeInsets.only(left: 16, right: 16),
                 child: Row(
                   children: <Widget>[
                     Image.asset(
                       '${Environment.iconAssets}pin_location_red.png',
                       scale: 2.5,
                     ),
-                    SizedBox(width: 14),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Text(
                         "Kel. " + dataOtherVillage.namaDesa,
@@ -90,7 +90,7 @@ class CheckDistributionCardFilter extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                     top: Dimens.padding,
                     bottom: Dimens.padding,
                     left: Dimens.padding,
@@ -105,43 +105,5 @@ class CheckDistributionCardFilter extends StatelessWidget {
             ],
           );
         });
-  }
-
-  Widget _buildContent(
-      BuildContext context, int count, String title, image, Color textColor) {
-    return Expanded(
-      child: Container(
-        width: (MediaQuery.of(context).size.width / 3),
-        padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 15, bottom: 15),
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-            color: Color(0xffFAFAFA), borderRadius: BorderRadius.circular(8.0)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(height: 15, child: Image.asset(image)),
-            Container(
-              margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
-              child: Text(count.toString(),
-                  style: TextStyle(
-                      color: textColor,
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.roboto)),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 5.0, top: Dimens.padding),
-              child: Text(title,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato)),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

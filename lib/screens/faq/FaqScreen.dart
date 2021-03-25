@@ -28,7 +28,7 @@ import 'package:pikobar_flutter/utilities/launchExternal.dart';
 class FaqScreen extends StatefulWidget {
   final bool isNewPage;
 
-  FaqScreen({Key key, this.isNewPage = true}) : super(key: key);
+  const FaqScreen({Key key, this.isNewPage = true}) : super(key: key);
 
   @override
   _FaqScreenState createState() => _FaqScreenState();
@@ -36,6 +36,7 @@ class FaqScreen extends StatefulWidget {
 
 class _FaqScreenState extends State<FaqScreen> {
   final FaqListBloc _faqListBloc = FaqListBloc();
+  // ignore: unused_field, close_sinks
   RemoteConfigBloc _remoteConfigBloc;
   final TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController;
