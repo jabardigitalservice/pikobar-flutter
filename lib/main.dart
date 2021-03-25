@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
@@ -125,8 +126,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  Future<void> _initializeFlutterFireFuture;
-
   Future<void> _initializeFlutterFire() async {
     /// Wait for Firebase to initialize
     await Firebase.initializeApp();
@@ -143,12 +142,8 @@ class _AppState extends State<App> {
       /// Forward to original handler.
       originalOnError(errorDetails);
     };
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeFlutterFireFuture = _initializeFlutterFire();
+    await Future.delayed(Duration(seconds: 1));
   }
 
   @override
@@ -175,7 +170,7 @@ class _AppState extends State<App> {
         );
       },
       home: FutureBuilder(
-        future: _initializeFlutterFireFuture,
+        future: _initializeFlutterFire(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
@@ -186,7 +181,8 @@ class _AppState extends State<App> {
                   ),
                 );
               }
-              return IndexScreen();
+              return BlocProvider<LocationPermissionBloc>(
+                  create: (context) => LocationPermissionBloc(), child: IndexScreen());
               break;
             default:
               return Scaffold(

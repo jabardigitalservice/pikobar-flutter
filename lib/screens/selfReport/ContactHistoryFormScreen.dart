@@ -37,6 +37,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
   final _phoneFieldController = TextEditingController();
   final _otherRelationFieldController = TextEditingController();
   final _dateController = TextEditingController();
+  ScrollController _scrollController;
 
   RemoteConfigBloc _remoteConfigBloc;
   ContactHistorySaveBloc _contactHistorySaveBloc;
@@ -59,6 +60,14 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
     super.initState();
 
     AnalyticsHelper.setLogEvent(Analytics.tappedContactHistoryForm);
+
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
@@ -72,10 +81,10 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             create: (context) =>
                 _contactHistorySaveBloc = ContactHistorySaveBloc())
       ],
-      child: BlocListener(cubit: _contactHistorySaveBloc,
+      child: BlocListener(
+        cubit: _contactHistorySaveBloc,
         listener: (context, state) {
           if (state is ContactHistorySaved) {
-
             // Show success bottom sheet dialog
             // when contact history data is successfully saved
             //
@@ -89,7 +98,6 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                   Navigator.of(context).pop();
                 });
           } else if (state is ContactHistorySaveFailure) {
-
             // Show error dialog
             // when contact history data fails to be saved
             //
@@ -106,15 +114,17 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                       },
                     ));
           } else {
-
             // Show loading
             // while processing of saving data
             blockCircleLoading(context: context, dismissible: false);
           }
         },
         child: Scaffold(
-          appBar:
-              CustomAppBar.defaultAppBar(title: Dictionary.contactHistoryForm),
+          appBar: CustomAppBar.animatedAppBar(
+            showTitle: _showTitle,
+            title: Dictionary.contactHistoryForm,
+          ),
+          backgroundColor: Colors.white,
           body: Container(
             padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
             child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
@@ -133,7 +143,6 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
 
   // Build the contact history form
   Form _buildForm(RemoteConfig remoteConfig) {
-
     // Get the contact history form data from the remote config
     Map<String, dynamic> remoteContactHistoryForm = remoteConfig != null &&
             remoteConfig.getString(FirebaseConfig.contactHistoryForm) != null
@@ -143,8 +152,21 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
     return Form(
       key: _formKey,
       child: ListView(
+        controller: _scrollController,
         children: <Widget>[
+          AnimatedOpacity(
+            opacity: _showTitle ? 0.0 : 1.0,
+            duration: Duration(milliseconds: 250),
+            child: Text(
+              Dictionary.contactHistoryForm,
+              style: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
           SizedBox(height: Dimens.padding),
+
           _buildLabel(text: Dictionary.contactName),
           _buildTextField(
               title: Dictionary.contactName,
@@ -181,7 +203,8 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           _buildLabel(text: Dictionary.relation),
           _buildRadioButton(
               title: Dictionary.relation,
-              itemList: remoteContactHistoryForm['relation_list'].cast<String>(),
+              itemList:
+                  remoteContactHistoryForm['relation_list'].cast<String>(),
               onChanged: (label, index) {
                 setState(() {
                   _relation = label;
@@ -194,15 +217,15 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                     ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
                     : null;
               }),
-
-          _isOther ? _buildTextField(
-              title: Dictionary.otherRelation,
-              controller: _otherRelationFieldController,
-              hint: Dictionary.placeholderOtherRelation,
-              maxLength: 25,
-              error: _errorOtherRelation,
-              textInputType: TextInputType.text) : Container(),
-
+          _isOther
+              ? _buildTextField(
+                  title: Dictionary.otherRelation,
+                  controller: _otherRelationFieldController,
+                  hint: Dictionary.placeholderOtherRelation,
+                  maxLength: 25,
+                  error: _errorOtherRelation,
+                  textInputType: TextInputType.text)
+              : Container(),
           _buildLabel(text: Dictionary.lastContactDate, required: false),
           Container(
             margin: EdgeInsets.only(
@@ -264,7 +287,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
       {@required TextEditingController controller,
       @required title,
       @required String hint,
-        int maxLength,
+      int maxLength,
       String error,
       TextInputType textInputType}) {
     return Column(
@@ -274,11 +297,14 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           height: Dimens.fieldSize,
           margin: EdgeInsets.only(
               top: Dimens.fieldMarginTop,
-              bottom: error != null ? Dimens.sbHeight : Dimens.fieldMarginBottom),
+              bottom: error != null
+                  ? Dimens.sizedBoxHeight
+                  : Dimens.fieldMarginBottom),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                  color: error != null ? Colors.red : ColorBase.menuBorderColor)),
+                  color:
+                      error != null ? Colors.red : ColorBase.menuBorderColor)),
           padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
           child: TextFormField(
             controller: controller,
@@ -302,7 +328,8 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
                 padding: EdgeInsets.only(
                     left: Dimens.contentPadding,
                     bottom: Dimens.fieldMarginBottom),
-                child: Text(error,
+                child: Text(
+                  error,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 ),
               )
@@ -384,7 +411,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         isEmpty
             ? Padding(
                 padding: EdgeInsets.only(
-                    left: Dimens.contentPadding, top: Dimens.sbHeight),
+                    left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
@@ -425,7 +452,10 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
     setState(() {
       _errorName = Validations.nameValidation(_nameFieldController.text);
       _errorPhone = Validations.phoneValidation(_phoneFieldController.text);
-      _errorOtherRelation = _isOther ? Validations.otherRelationValidation(_otherRelationFieldController.text) : null;
+      _errorOtherRelation = _isOther
+          ? Validations.otherRelationValidation(
+              _otherRelationFieldController.text)
+          : null;
 
       _isGenderEmpty = _gender.isEmpty;
       _isRelationEmpty = _relation.isEmpty;
@@ -447,7 +477,9 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             name: _nameFieldController.text.trim(),
             phoneNumber: _phoneFieldController.text,
             gender: _gender,
-            relation: '${_isOther ? _otherRelationFieldController.text : _relation}'.trim());
+            relation:
+                '${_isOther ? _otherRelationFieldController.text : _relation}'
+                    .trim());
 
         _contactHistorySaveBloc.add(ContactHistorySave(data: data));
       }

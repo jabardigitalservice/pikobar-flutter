@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -139,4 +140,23 @@ class CityLoad extends ProfileEvent {
 
   @override
   List<Object> get props => [];
+}
+
+class ProfileLoad extends ProfileEvent {
+  final String uid;
+  ProfileLoad({@required this.uid});
+  @override
+  String toString() => 'ProfileLoad';
+
+  @override
+  List<Object> get props => [uid];
+}
+
+class ProfileUpdated extends ProfileEvent {
+  final DocumentSnapshot profile;
+
+   ProfileUpdated(this.profile);
+
+  @override
+  List<Object> get props => [profile];
 }

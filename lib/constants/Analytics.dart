@@ -14,7 +14,7 @@ class Analytics {
   static String selfReports = 'Lapor Mandiri';
   static String education = 'Konten Edukasi';
   static String announcement = 'tapped_pengumuman_selengkapnya';
-
+  static String profile = 'Akun';
 
   // event home
   static String tappedphoneBookEmergency = 'tapped_menu_nomor_darurat';
@@ -33,6 +33,8 @@ class Analytics {
   static String tappedQna = 'tapped_menu_qna';
   static String tappedMessage = 'tapped_menu_pesan';
   static String tappedFaq = 'tapped_menu_faq';
+  static String tappedBansos = 'tapped_menu_bansos';
+  static String tappedMassiveTest = 'tapped_menu_test_masif';
   static String tappedOthers = 'tapped_menu_lainnya';
   static String tappedDataCovid = 'tapped_data_covid';
   static String tappedBanner = 'tapped_banner';
@@ -43,6 +45,8 @@ class Analytics {
   static String tappedInfoGraphicsMore = 'tapped_info_praktikal_selengkapnya';
   static String tappedDocumentsMore = 'tapped_dokumen_selengkapnya';
   static String tappedImportantInfoMore = 'tapped_info_penting_selengkapnya';
+  static String tappedJabarToday = 'tapped_tab_jabar_hari_ini';
+  static String tappedCovidInformation = 'tapped_tab_informasi_covid_19';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';
@@ -52,6 +56,15 @@ class Analytics {
   static String tappedNewsWorld = 'tapped_berita_dunia';
   static String tappedMore = 'tapped_berita_selengkapnya';
   static String tappedShareNews = 'tapped_share_news';
+  static String tappedSearchNews = 'tapped_cari_berita';
+
+  //event tab jabar today
+  static String tappedDailyUpdate = 'tapped_update_harian';
+  static String tappedTotalInspectionCovid = 'tapped_total_pemeriksaan_covid_19';
+  static String tappedMoreCaseDataJabar = 'tapped_selengkapnya_data_kasus_jabar';
+
+  //event tab informasi covid-19
+  static String tappedSearchCovidInformation = 'tapped_cari_tab_informasi_covid_19';
 
   // event phoneBook Emergency
   static String tappedphoneBookEmergencyDetail = 'tapped_nomor_darurat_detail';
@@ -65,21 +78,26 @@ class Analytics {
   static String tappedCallCenterTab = 'tapped_call_center_tab';
   static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
 
-
   // event infographic
+  static String tappedInfographicall = 'tapped_semua_info_praktikal';
   static String tappedInfographicJabar = 'tapped_info_praktikal_jabar';
   static String tappedInfographicCenter = 'tapped_info_praktikal_pusat';
   static String tappedInfographicWho = 'tapped_info_praktikal_who';
 
-
   //message
   static String tappedShareNewsFromMessage = 'tapped_share_news_from_message';
+  static String tappedReadAllMessage = 'tapped_pesan_tandaisemuadibaca';
 
   // event FAQ
   static String tappedFaqSearch = 'tapped_faq_pencarian';
 
+  //event NPS
+  static String tappedSendNPS = 'tapped_submit_form_nps';
+  static String tappedSkipNPS = 'tapped_nanti_form_nps';
+
   // event Videos
   static String tappedVideoShare = 'tapped_video_share';
+  static String tappedSearchVideo = 'tapped_cari_video';
 
   // event for permission
   static String permissionGrantedLocation = 'permission_granted_location';
@@ -88,6 +106,7 @@ class Analytics {
 
   // event Info Graphics
   static String tappedInfoGraphicsDetail = 'tapped_info_praktikal_detail';
+  static String tappedSearchInfoGraphic = 'tapped_cari_info_praktikal';
   static String tappedInfoGraphicsShare = 'tapped_info_praktikal_bagikan';
   static String openImage = 'open_image';
   static String tappedDownloadImage = 'tapped_download_image';
@@ -97,24 +116,30 @@ class Analytics {
   static String tappedFindByLocation = 'tapped_cari_berdasarkan_lokasi_lain';
   static String tappedFindByVillage = 'tapped_cari_berdasarkan_kelurahan';
   static String tappedFindByDistricts = 'tapped_cari_berdasarkan_kecamatan';
-  static String tappedConfirmedByDistricts = 'tapped_konfirmasi_berdasarkan_kecamatan';
-  static String tappedCloseContactByDistricts = 'tapped_kontak_erat_berdasarkan_kecamatan';
-  static String tappedSuspectByDistricts = 'tapped_suspek_berdasarkan_kecamatan';
-  static String tappedProbableByDistricts = 'tapped_probable_berdasarkan_kecamatan';
+  static String tappedConfirmedByDistricts =
+      'tapped_konfirmasi_berdasarkan_kecamatan';
+  static String tappedCloseContactByDistricts =
+      'tapped_kontak_erat_berdasarkan_kecamatan';
+  static String tappedSuspectByDistricts =
+      'tapped_suspek_berdasarkan_kecamatan';
+  static String tappedProbableByDistricts =
+      'tapped_probable_berdasarkan_kecamatan';
 
   //event document
   static String tappedShareDocuments = 'tapped_share_documents';
   static String tappedDownloadDocuments = 'tapped_download_documents';
   static String openDocument = 'open_document';
+  static String tappedSerachDocument = 'tapped_cari_document';
 
   //important
-  static String tappedImportantInfo= 'tapped_important_info';
+  static String tappedImportantInfo = 'tapped_important_info';
   static String tappedImportantInfoDetail = 'tapped_important_info_detail';
-  static String tappedImportantInfoDetailShare = 'tapped_important_info_detail_share';
+  static String tappedImportantInfoDetailShare =
+      'tapped_important_info_detail_share';
   static String tappedDownloadImportantInfo = 'tapped_download_important_info';
   static String openFileImportantInfo = 'open_file_important_info';
 
-   //event test
+  //event test
   static String tappedRDT = 'tapped_rapid_test';
   static String tappedPCR = 'tapped_pcr';
   static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
@@ -124,8 +149,10 @@ class Analytics {
 
   //event self report
   static String tappedDailyReport = "tapped_lapor_kesehatan_harian";
-  static String tappedDailyOtherReport = "tapped_lapor_kesehatan_orang_lain_harian";
-  static String tappedDailyReportDetail = "tapped_lapor_kesehatan_harian_detail";
+  static String tappedDailyOtherReport =
+      "tapped_lapor_kesehatan_orang_lain_harian";
+  static String tappedDailyReportDetail =
+      "tapped_lapor_kesehatan_harian_detail";
   static String tappedDailyReportForm = "tapped_lapor_kesehatan_harian_form";
   static String tappedAddOtherUserReportForm = "tapped_tambah_orang_lain_form";
   static String dailyReportSaved = "lapor_kesehatan_harian_tersimpan";
@@ -137,5 +164,17 @@ class Analytics {
   static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";
   static String contactHistorySaved = "riwayat_kontak_baru_tersimpan";
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
+
+  static String crowdReport = "tapped_lapor_kerumunan";
+  
+  //event profile
+  static String tappedEditProfile = "tapped_edit_akun";
+  static String tappedVerificationNumber = "tapped_verifikasi_nomor";
+  static String tappedSendAgainVerificationNumber = "tapped_kirim_ulang_verifikasi_nomor";
+  static String tappedTermsAndConditions = "tapped_terms_and_conditions";
+
+  //event zonation
+  static String tappedShareLocation = "tapped_bagikan_lokasi";
+  static String tappedArroundYouLocation = "tapped_lokasi_sekitar_anda";
 
 }

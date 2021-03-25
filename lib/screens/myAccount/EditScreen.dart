@@ -28,13 +28,14 @@ import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPic
 import 'package:pikobar_flutter/screens/myAccount/VerificationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
+import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class Edit extends StatefulWidget {
-  final AsyncSnapshot<DocumentSnapshot> state;
+  final DocumentSnapshot state;
 
   Edit({this.state});
 
@@ -70,399 +71,449 @@ class _EditState extends State<Edit> {
   bool isGenderEmpty = false;
   LatLng latLng;
   List<dynamic> listCity;
+  ScrollController _scrollController;
 
   @override
   void initState() {
-    _nameController.text = widget.state.data['name'];
-    _emailController.text = widget.state.data['email'];
-    _phoneNumberController.text = widget.state.data['phone_number'] != null
-        ? widget.state.data['phone_number'].toString().substring(3)
+    AnalyticsHelper.setLogEvent(Analytics.tappedEditProfile);
+    _nameController.text = getField(widget.state, 'name');
+    _emailController.text = getField(widget.state, 'email');
+    _phoneNumberController.text = getField(widget.state, 'phone_number') != null
+        ? '0' + widget.state['phone_number'].toString().substring(3)
         : null;
-    _addressController.text = widget.state.data['address'];
-    _birthDayController.text = widget.state.data['birthdate'] == null
+    _addressController.text = getField(widget.state, 'address');
+    _birthDayController.text = getField(widget.state, 'birthdate') == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(
-                widget.state.data['birthdate'].seconds * 1000)
+                widget.state['birthdate'].seconds * 1000)
             .toString();
-    _genderController.text = widget.state.data['gender'];
-    _cityController.text = widget.state.data['city_id'];
-    _nikController.text = widget.state.data['nik'];
-    latLng = widget.state.data['location'] == null
+    _genderController.text = getField(widget.state, 'gender');
+    _cityController.text = getField(widget.state, 'city_id');
+    _nikController.text = getField(widget.state, 'nik');
+    latLng = getField(widget.state, 'location') == null
         ? null
-        : new LatLng(widget.state.data['location'].latitude,
-            widget.state.data['location'].longitude);
-    print(latLng);
+        : new LatLng(widget.state['location'].latitude,
+            widget.state['location'].longitude);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        key: _scaffoldState,
-        appBar: CustomAppBar.defaultAppBar(
-          title: Dictionary.edit,
-        ),
-        body: FutureBuilder<RemoteConfig>(
-            future: setupRemoteConfig(),
-            builder:
-                (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
-              otpEnabled = snapshot.data != null &&
-                      snapshot.data.getBool(FirebaseConfig.otpEnabled) != null
-                  ? snapshot.data.getBool(FirebaseConfig.otpEnabled)
-                  : false;
-              return BlocProvider<ProfileBloc>(
-                  create: (BuildContext context) => _profileBloc =
-                      ProfileBloc(profileRepository: _profileRepository),
-                  child: BlocListener<ProfileBloc, ProfileState>(
-                    listener: (context, state) {
-                      if (state is ProfileFailure) {
-                        // Show dialog error message otp
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: state.error.toString(),
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // To close the dialog
-                                  },
-                                ));
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      } else if (state is ProfileWaiting) {
-                      } else if (state is ProfileVerified) {
-                        // Show dialog when otp is confirmed and back to profile menu
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: Dictionary.codeVerified,
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
-                                  },
-                                ));
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      } else if (state is ProfileSaved) {
-                        // Show dialog when profile succesfully change without change phone number or otp disable
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: Dictionary.profileSaved,
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context)
-                                        .pop(); // To close the dialog
-                                  },
-                                ));
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      } else if (state is ProfileOTPSent) {
-                        // Show dialog when otp succesfully send to phone number and move page to Verification Screen
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: Dictionary.codeSend +
-                                      Dictionary.inaCode +
-                                      _phoneNumberController.text,
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    // Close dialog
-                                    Navigator.of(context).pop();
-                                    // Move page to Verification Screen
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Verification(
-                                                phoneNumber:
-                                                    _phoneNumberController.text,
-                                                uid: widget.state.data['id'],
-                                                verificationID:
-                                                    state.verificationID,
-                                                gender: _genderController.text,
-                                                address:
-                                                    _addressController.text,
-                                                cityId: _cityController.text,
-                                                provinceId:
-                                                    Dictionary.provinceId,
-                                                name: _nameController.text,
-                                                nik: _nikController.text,
-                                                latLng: latLng,
-                                                birthdate: DateTime.parse(
-                                                    _birthDayController.text),
-                                              )),
-                                    );
-                                  },
-                                ));
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      } else if (state is ProfileVerifiedFailed) {
-                        // Show dialog when otp failed send to phone number
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DialogTextOnly(
-                                  description: Dictionary.codeSendFailed,
-                                  buttonText: Dictionary.ok,
-                                  onOkPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ));
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      } else if (state is ProfileLoading) {
-                        // Show dialog when loading
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            content: Row(
-                              children: <Widget>[
-                                CircularProgressIndicator(),
-                                Container(
-                                  margin: EdgeInsets.only(left: 15.0),
-                                  child: Text(Dictionary.loading),
-                                )
-                              ],
+    return Listener(
+      onPointerDown: (_) {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          currentFocus.focusedChild.unfocus();
+        }
+      },
+      child: Form(
+        key: _formKey,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          key: _scaffoldState,
+          appBar: CustomAppBar.animatedAppBar(
+              showTitle: _showTitle, title: Dictionary.edit),
+          body: FutureBuilder<RemoteConfig>(
+              future: setupRemoteConfig(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+                otpEnabled = snapshot.data != null &&
+                        snapshot.data.getBool(FirebaseConfig.otpEnabled) != null
+                    ? snapshot.data.getBool(FirebaseConfig.otpEnabled)
+                    : false;
+                return BlocProvider<ProfileBloc>(
+                    create: (BuildContext context) => _profileBloc =
+                        ProfileBloc(profileRepository: _profileRepository),
+                    child: BlocListener<ProfileBloc, ProfileState>(
+                      listener: (context, state) {
+                        if (state is ProfileFailure) {
+                          // Show dialog error message otp
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => DialogTextOnly(
+                                    description: state.error.toString(),
+                                    buttonText: Dictionary.ok,
+                                    onOkPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // To close the dialog
+                                    },
+                                  ));
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        } else if (state is ProfileWaiting) {
+                        } else if (state is ProfileVerified) {
+                          // Show dialog when otp is confirmed and back to profile menu
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => DialogTextOnly(
+                                    description: Dictionary.codeVerified,
+                                    buttonText: Dictionary.ok,
+                                    onOkPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  ));
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        } else if (state is ProfileSaved) {
+                          // Show dialog when profile succesfully change without change phone number or otp disable
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => DialogTextOnly(
+                                    description: Dictionary.profileSaved,
+                                    buttonText: Dictionary.ok,
+                                    onOkPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context)
+                                          .pop(); // To close the dialog
+                                    },
+                                  ));
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        } else if (state is ProfileOTPSent) {
+                          // Show dialog when otp succesfully send to phone number and move page to Verification Screen
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => DialogTextOnly(
+                                    description: Dictionary.codeSend +
+                                        Dictionary.inaCode +
+                                        _phoneNumberController.text
+                                            .substring(1),
+                                    buttonText: Dictionary.ok,
+                                    onOkPressed: () {
+                                      // Close dialog
+                                      Navigator.of(context).pop();
+                                      // Move page to Verification Screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Verification(
+                                                  phoneNumber:
+                                                      _phoneNumberController
+                                                          .text
+                                                          .substring(1),
+                                                  uid: widget.state['id'],
+                                                  verificationID:
+                                                      state.verificationID,
+                                                  gender:
+                                                      _genderController.text,
+                                                  address:
+                                                      _addressController.text,
+                                                  cityId: _cityController.text,
+                                                  provinceId:
+                                                      Dictionary.provinceId,
+                                                  name: _nameController.text,
+                                                  nik: _nikController.text,
+                                                  latLng: latLng,
+                                                  birthdate: DateTime.parse(
+                                                      _birthDayController.text),
+                                                )),
+                                      );
+                                    },
+                                  ));
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        } else if (state is ProfileVerifiedFailed) {
+                          // Show dialog when otp failed send to phone number
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => DialogTextOnly(
+                                    description: Dictionary.codeSendFailed,
+                                    buttonText: Dictionary.ok,
+                                    onOkPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ));
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        } else if (state is ProfileLoading) {
+                          // Show dialog when loading
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 15.0),
+                                    child: Text(Dictionary.loading),
+                                  )
+                                ],
+                              ),
+                              duration: Duration(seconds: 5),
                             ),
-                            duration: Duration(seconds: 5),
-                          ),
-                        );
-                      } else {
-                        Scaffold.of(context).hideCurrentSnackBar();
-                      }
-                    },
-                    child: ListView(
-                      padding: EdgeInsets.all(10),
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Column(
-                            children: <Widget>[
-                              buildTextField(
-                                  title: Dictionary.name,
-                                  hintText: Dictionary.placeholderYourName,
-                                  controller: _nameController,
-                                  validation: Validations.nameValidation,
-                                  isEdit: true),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              buildTextField(
-                                  title: Dictionary.email,
-                                  controller: _emailController,
-                                  isEdit: false),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              buildTextField(
-                                  title: Dictionary.nik,
-                                  controller: _nikController,
-                                  textInputType: TextInputType.number,
-                                  hintText: Dictionary.placeholderYourNIK,
-                                  validation: Validations.nikValidation,
-                                  isEdit: true),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              buildPhoneField(
-                                  title: Dictionary.telephoneNumber,
-                                  controller: _phoneNumberController,
-                                  validation: Validations.telephoneValidation,
-                                  isEdit: true,
-                                  hintText: Dictionary.phoneNumberPlaceholder),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              buildRadioButton(
-                                  title: Dictionary.gender,
-                                  label: <String>[
-                                    "Laki - Laki",
-                                    "Perempuan",
-                                  ],
-                                  isEmpty: isGenderEmpty),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              buildDateField(
-                                  title: Dictionary.birthday,
-                                  placeholder: _birthDayController.text == ''
-                                      ? Dictionary.birthdayPlaceholder
-                                      : DateFormat.yMMMMd('id').format(
-                                          DateTime.parse(_birthDayController
-                                              .text
-                                              .substring(0, 10))),
-                                  isEmpty: isBirthdayEmpty),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                padding:
-                                    EdgeInsets.only(left: 16.0, right: 16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Text(
-                                          Dictionary.locationAddress,
-                                          style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: ColorBase.veryDarkGrey,
-                                              fontFamily: FontsFamily.lato,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                          );
+                        } else {
+                          Scaffold.of(context).hideCurrentSnackBar();
+                        }
+                      },
+                      child: ListView(
+                        controller: _scrollController,
+                        padding: EdgeInsets.all(10),
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                AnimatedOpacity(
+                                  opacity: _showTitle ? 0.0 : 1.0,
+                                  duration: Duration(milliseconds: 250),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Text(
+                                      Dictionary.edit,
+                                      style: TextStyle(
+                                          fontFamily: FontsFamily.lato,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    ButtonTheme(
-                                      minWidth:
-                                          MediaQuery.of(context).size.width,
-                                      height: 45.0,
-                                      child: OutlineButton(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Image.asset(
-                                              '${Environment.iconAssets}pin_location.png',
-                                              width: 15.0,
-                                              height: 15.0,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 10.0),
-                                              child: Text(
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.name,
+                                    hintText: Dictionary.placeholderYourName,
+                                    controller: _nameController,
+                                    validation: Validations.nameValidation,
+                                    isEdit: true),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.email,
+                                    controller: _emailController,
+                                    isEdit: false),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.nik,
+                                    controller: _nikController,
+                                    textInputType: TextInputType.number,
+                                    hintText: Dictionary.placeholderYourNIK,
+                                    validation: Validations.nikValidation,
+                                    isEdit: true),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildPhoneField(
+                                    title: Dictionary.telephoneNumber,
+                                    controller: _phoneNumberController,
+                                    validation: Validations.telephoneValidation,
+                                    isEdit: true,
+                                    hintText:
+                                        Dictionary.phoneNumberPlaceholder),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildRadioButton(
+                                    title: Dictionary.gender,
+                                    label: <String>[
+                                      "Laki - Laki",
+                                      "Perempuan",
+                                    ],
+                                    isEmpty: isGenderEmpty),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildDateField(
+                                    title: Dictionary.birthday,
+                                    placeholder: _birthDayController.text == ''
+                                        ? Dictionary.birthdayPlaceholder
+                                        : DateFormat.yMMMMd('id').format(
+                                            DateTime.parse(_birthDayController
+                                                .text
+                                                .substring(0, 10))),
+                                    isEmpty: isBirthdayEmpty),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  padding:
+                                      EdgeInsets.only(left: 16.0, right: 16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            Dictionary.locationAddress,
+                                            style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: ColorBase.veryDarkGrey,
+                                                fontFamily: FontsFamily.roboto,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      ButtonTheme(
+                                        minWidth:
+                                            MediaQuery.of(context).size.width,
+                                        height: 45.0,
+                                        child: RaisedButton(
+                                          elevation: 0,
+                                          color: ColorBase.greyContainer,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
                                                 Dictionary.setLocation,
                                                 style: TextStyle(
-                                                    color: ColorBase.darkGrey,
-                                                    fontSize: 12,
+                                                    color: ColorBase.netralGrey,
+                                                    fontSize: 14,
                                                     fontFamily:
-                                                        FontsFamily.lato),
+                                                        FontsFamily.roboto),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        shape: RoundedRectangleBorder(
+                                              Image.asset(
+                                                '${Environment.iconAssets}pin_location.png',
+                                                width: 15.0,
+                                                height: 15.0,
+                                              ),
+                                            ],
+                                          ),
+                                          shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        borderSide: BorderSide(
-                                            color: ColorBase.menuBorderColor,
-                                            width: 1.5),
-                                        onPressed: () async {
-                                          await _handleLocation();
-                                        },
+                                                BorderRadius.circular(5.0),
+                                            side: BorderSide(
+                                                color: ColorBase.greyBorder,
+                                                width: 1.5),
+                                          ),
+                                          onPressed: () async {
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                            await _handleLocation();
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              buildTextField(
-                                  title: Dictionary.addressDomicile,
-                                  controller: _addressController,
-                                  maxLines: 2,
-                                  hintText: Dictionary.addressPlaceholder,
-                                  validation: Validations.addressValidation,
-                                  isEdit: true),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection(kAreas)
-                                      .orderBy('name')
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.hasError)
-                                      return buildDropdownField(
-                                          Dictionary.cityDomicile,
-                                          snapshot.error,
-                                          [],
-                                          _cityController,
-                                          false);
-                                    switch (snapshot.connectionState) {
-                                      case ConnectionState.waiting:
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                buildTextField(
+                                    title: Dictionary.addressDomicile,
+                                    controller: _addressController,
+                                    maxLines: 2,
+                                    hintText: Dictionary.addressPlaceholder,
+                                    validation: Validations.addressValidation,
+                                    isEdit: true),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection(kAreas)
+                                        .orderBy('name')
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      if (snapshot.hasError)
                                         return buildDropdownField(
                                             Dictionary.cityDomicile,
-                                            Dictionary.loading,
+                                            snapshot.error,
                                             [],
                                             _cityController,
                                             false);
-                                      default:
-                                        listCity =
-                                            snapshot.data.docs.toList();
-                                        return buildDropdownField(
-                                            Dictionary.cityDomicile,
-                                            Dictionary.cityPlaceholder,
-                                            snapshot.data.docs.toList(),
-                                            _cityController,
-                                            isCityFieldEmpty);
-                                    }
-                                  }),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.waiting:
+                                          return buildDropdownField(
+                                              Dictionary.cityDomicile,
+                                              Dictionary.loading,
+                                              [],
+                                              _cityController,
+                                              false);
+                                        default:
+                                          listCity =
+                                              snapshot.data.docs.toList();
+                                          return buildDropdownField(
+                                              Dictionary.cityDomicile,
+                                              Dictionary.cityPlaceholder,
+                                              snapshot.data.docs.toList(),
+                                              _cityController,
+                                              isCityFieldEmpty);
+                                      }
+                                    }),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        RaisedButton(
-                          color: ColorBase.limeGreen,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          onPressed: () {
-                            if (widget.state.data['phone_number']
-                                    .toString()
-                                    .substring(3) !=
-                                _phoneNumberController.text) {
-                              var data = FirebaseFirestore.instance
-                                  .collection(kUsers)
-                                  .where("phone_number",
-                                      isEqualTo: Dictionary.inaCode +
-                                          _phoneNumberController.text)
-                                  .get();
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: RaisedButton(
+                              color: ColorBase.limeGreen,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              onPressed: () {
+                                if (widget.state['phone_number']
+                                        .toString()
+                                        .substring(3) !=
+                                    _phoneNumberController.text.substring(1)) {
+                                  var data = FirebaseFirestore.instance
+                                      .collection(kUsers)
+                                      .where("phone_number",
+                                          isEqualTo: Dictionary.inaCode +
+                                              _phoneNumberController.text
+                                                  .substring(1))
+                                      .get();
 
-                              data.then((docs) {
-                                if (docs.docs.isNotEmpty) {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          DialogTextOnly(
-                                            description: Dictionary
-                                                .phoneNumberHasBeenUsed,
-                                            buttonText: Dictionary.ok,
-                                            onOkPressed: () {
-                                              Navigator.of(context)
-                                                  .pop(); // To close the dialog
-                                            },
-                                          ));
+                                  data.then((docs) {
+                                    if (docs.docs.isNotEmpty) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              DialogTextOnly(
+                                                description: Dictionary
+                                                    .phoneNumberHasBeenUsed,
+                                                buttonText: Dictionary.ok,
+                                                onOkPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // To close the dialog
+                                                },
+                                              ));
+                                    } else {
+                                      _onSaveProfileButtonPressed(otpEnabled);
+                                    }
+                                  });
                                 } else {
                                   _onSaveProfileButtonPressed(otpEnabled);
                                 }
-                              });
-                            } else {
-                              _onSaveProfileButtonPressed(otpEnabled);
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 13),
-                            child: Text(
-                              Dictionary.save,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 13),
+                                child: Text(
+                                  Dictionary.save,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ));
-            }),
+                          )
+                        ],
+                      ),
+                    ));
+              }),
+        ),
       ),
     );
   }
@@ -536,12 +587,12 @@ class _EditState extends State<Edit> {
       if (isGenderEmpty || isBirthdayEmpty || isCityFieldEmpty) {
         // If the field is empty doing nothing and validator will be shown
 
-      } else if (widget.state.data['phone_number'] ==
-          Dictionary.inaCode + _phoneNumberController.text) {
+      } else if (widget.state['phone_number'] ==
+          Dictionary.inaCode + _phoneNumberController.text.substring(1)) {
         // If phone number field not change by user it will be save to firebase and skip otp
         _profileBloc.add(Save(
-            id: widget.state.data['id'],
-            phoneNumber: _phoneNumberController.text,
+            id: widget.state['id'],
+            phoneNumber: _phoneNumberController.text.substring(1),
             gender: _genderController.text,
             address: _addressController.text,
             cityId: _cityController.text,
@@ -560,8 +611,8 @@ class _EditState extends State<Edit> {
             // Process for auto verification
             verificationCompleted = (AuthCredential credential) async {
               await _profileRepository.linkCredential(
-                  widget.state.data['id'],
-                  _phoneNumberController.text,
+                  widget.state['id'],
+                  _phoneNumberController.text.substring(1),
                   _genderController.text,
                   _addressController.text,
                   _cityController.text,
@@ -586,8 +637,8 @@ class _EditState extends State<Edit> {
             };
             // Execute otp process
             _profileBloc.add(Verify(
-                id: widget.state.data['id'],
-                phoneNumber: _phoneNumberController.text,
+                id: widget.state['id'],
+                phoneNumber: _phoneNumberController.text.substring(1),
                 verificationCompleted: verificationCompleted,
                 verificationFailed: verificationFailed,
                 codeSent: codeSent));
@@ -596,8 +647,8 @@ class _EditState extends State<Edit> {
           // Otp is disable
           // Save change directly to firestore
           _profileBloc.add(Save(
-              id: widget.state.data['id'],
-              phoneNumber: _phoneNumberController.text,
+              id: widget.state['id'],
+              phoneNumber: _phoneNumberController.text.substring(1),
               name: _nameController.text,
               nik: _nikController.text,
               gender: _genderController.text,
@@ -613,79 +664,74 @@ class _EditState extends State<Edit> {
 
   // Function to build radio button
   Widget buildRadioButton({String title, List<String> label, bool isEmpty}) {
-    return Padding(
-      padding: EdgeInsets.only(left: 16.0, right: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 16),
+          child: Row(
             children: <Widget>[
               Text(
                 title,
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.green,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          RadioButtonGroup(
-            activeColor: ColorBase.limeGreen,
-            labelStyle: TextStyle(fontSize: 12, fontFamily: FontsFamily.lato),
-            orientation: GroupedButtonsOrientation.HORIZONTAL,
-            onSelected: (String selected) => setState(() {
-              // Set value to M or F
-              _genderController.text = selected.contains('Laki') ? 'M' : 'F';
-            }),
-            labels: label,
-            picked: _genderController.text == 'M'
-                ? 'Laki - Laki'
-                : _genderController.text == 'F'
-                    ? 'Perempuan'
-                    : null,
-            itemBuilder: (Radio rb, Text txt, int i) {
-              return Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width / 2.8,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: ColorBase.menuBorderColor, width: 1.5)),
-                    child: Row(
-                      children: <Widget>[
-                        rb,
-                        txt,
-                      ],
-                    )),
-              );
-            },
-          ),
-          isEmpty
-              ? SizedBox(
-                  height: 10,
-                )
-              : Container(),
-          isEmpty
-              ? Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    title + Dictionary.pleaseCompleteAllField,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                )
-              : Container()
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        RadioButtonGroup(
+          activeColor: ColorBase.limeGreen,
+          labelStyle: TextStyle(fontSize: 14, fontFamily: FontsFamily.roboto),
+          orientation: GroupedButtonsOrientation.VERTICAL,
+          onSelected: (String selected) => setState(() {
+            FocusScope.of(context).requestFocus(FocusNode());
+            // Set value to M or F
+            _genderController.text = selected.contains('Laki') ? 'M' : 'F';
+          }),
+          labels: label,
+          picked: _genderController.text == 'M'
+              ? 'Laki - Laki'
+              : _genderController.text == 'F'
+                  ? 'Perempuan'
+                  : null,
+          itemBuilder: (Radio rb, Text txt, int i) {
+            return Row(
+              children: <Widget>[
+                rb,
+                txt,
+              ],
+            );
+          },
+        ),
+        isEmpty
+            ? SizedBox(
+                height: 10,
+              )
+            : Container(),
+        isEmpty
+            ? Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Text(
+                  title + Dictionary.pleaseCompleteAllField,
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              )
+            : Container()
+      ],
     );
   }
 
@@ -703,12 +749,16 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.green,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -717,34 +767,40 @@ class _EditState extends State<Edit> {
           ),
           InkWell(
             onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
               _showDatePickerBirthday();
             },
             child: Container(
               height: 60,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
+                  color: ColorBase.greyContainer,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
+                      color: isEmpty ? Colors.red : ColorBase.greyBorder,
                       width: 1.5)),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      placeholder,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: FontsFamily.roboto,
+                          color: placeholder == Dictionary.birthdayPlaceholder
+                              ? ColorBase.netralGrey
+                              : Colors.black),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Container(
-                        height: 20,
+                        height: 15,
                         child: Image.asset(
                             '${Environment.iconAssets}calendar.png')),
-                  ),
-                  Text(
-                    placeholder,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: FontsFamily.lato,
-                        color: placeholder == Dictionary.birthdayPlaceholder
-                            ? ColorBase.darkGrey
-                            : Colors.black),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -790,12 +846,16 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.green,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -807,37 +867,39 @@ class _EditState extends State<Edit> {
             style: isEdit
                 ? TextStyle(
                     color: Colors.black,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12)
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14)
                 : TextStyle(
                     color: ColorBase.disableText,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12),
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14),
             enabled: isEdit,
             validator: validation,
             textCapitalization: TextCapitalization.words,
             controller: controller,
             decoration: InputDecoration(
+                fillColor: ColorBase.greyContainer,
+                filled: true,
                 hintText: hintText,
                 hintStyle: TextStyle(
-                    color: ColorBase.darkGrey,
-                    fontFamily: FontsFamily.lato,
+                    color: ColorBase.netralGrey,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12),
                 errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.red, width: 1.5)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
                 disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5))),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5))),
             keyboardType:
                 textInputType != null ? textInputType : TextInputType.text,
           )
@@ -862,12 +924,16 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.green,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -878,40 +944,47 @@ class _EditState extends State<Edit> {
             height: 60,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
+                color: ColorBase.greyContainer,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: isEmpty ? Colors.red : ColorBase.menuBorderColor,
+                    color: isEmpty ? Colors.red : ColorBase.greyBorder,
                     width: 1.5)),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: custom.DropdownButton<dynamic>(
-                underline: SizedBox(),
-                isExpanded: true,
-                hint: Text(
-                  hintText,
-                  style: TextStyle(
-                      color: ColorBase.darkGrey,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12),
-                ),
-                items: items.map((item) {
-                  return custom.DropdownMenuItem(
-                    child: Text(
-                      item['name'],
-                      style:
-                          TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
-                    ),
-                    value: item['code'].toString(),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    controller.text = value;
-                  });
-                },
-                value: controller.text == '' ? null : controller.text,
-              ),
-            ),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: custom.DropdownButton<dynamic>(
+                  underline: SizedBox(),
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: ColorBase.netralGrey,
+                    size: 30,
+                  ),
+                  isExpanded: true,
+                  hint: Text(
+                    hintText,
+                    style: TextStyle(
+                        color: ColorBase.netralGrey,
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 14),
+                  ),
+                  items: items.map((item) {
+                    return custom.DropdownMenuItem(
+                      child: Text(
+                        item['name'],
+                        style: TextStyle(
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: 14,
+                        ),
+                      ),
+                      value: item['code'].toString(),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      controller.text = value;
+                    });
+                  },
+                  value: controller.text == '' ? null : controller.text,
+                )),
           ),
           isEmpty
               ? SizedBox(
@@ -953,80 +1026,59 @@ class _EditState extends State<Edit> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                ' (*)',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                Dictionary.requiredForm,
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.green,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
           SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                height: 55,
-                width: MediaQuery.of(context).size.width / 7,
-                decoration: BoxDecoration(
+          TextFormField(
+            style: isEdit
+                ? TextStyle(
+                    color: Colors.black,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14)
+                : TextStyle(
+                    color: ColorBase.disableText,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14),
+            enabled: isEdit,
+            validator: validation,
+            controller: controller,
+            decoration: InputDecoration(
+                hintText: hintText,
+                filled: true,
+                fillColor: ColorBase.greyContainer,
+                hintStyle: TextStyle(
+                    color: ColorBase.netralGrey,
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 12),
+                errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
-                child: Center(
-                    child: Text(
-                  Dictionary.inaCode,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: FontsFamily.lato,
-                      color: ColorBase.darkGrey),
-                )),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: TextFormField(
-                  style: isEdit
-                      ? TextStyle(
-                          color: Colors.black,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12)
-                      : TextStyle(
-                          color: ColorBase.disableText,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12),
-                  enabled: isEdit,
-                  validator: validation,
-                  controller: controller,
-                  decoration: InputDecoration(
-                      hintText: hintText,
-                      hintStyle: TextStyle(
-                          color: ColorBase.darkGrey,
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 12),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide:
-                              BorderSide(color: Colors.red, width: 1.5)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: ColorBase.menuBorderColor, width: 1.5)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: ColorBase.menuBorderColor, width: 1)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                              color: ColorBase.menuBorderColor, width: 2))),
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-            ],
+                    borderSide: BorderSide(color: Colors.red, width: 1.5)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 2))),
+            keyboardType: TextInputType.number,
           )
         ],
       ),
@@ -1117,7 +1169,8 @@ class _EditState extends State<Edit> {
     }
     for (var i = 0; i < listCity.length; i++) {
       /// Checking same name of [city] in [listCity]
-      if (listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
+      if (city.isNotEmpty &&
+          listCity[i]['name'].toLowerCase().contains(city.toLowerCase())) {
         setState(() {
           tempCity = listCity[i];
         });

@@ -1,5 +1,6 @@
 name: pikobar_flutter
 description: Pusat Informasi & Koordinasi COVID-19 Jawa Barat
+publish_to: none
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -72,9 +73,9 @@ dependencies:
   google_sign_in: ^4.5.4
   apple_sign_in: ^0.1.0
   share: ^0.6.5+3
-  geolocator: ^6.0.0+4
-  geocoding: ^1.0.4+1
-  pinput: ^0.2.5
+  geolocator: ^6.1.4+1
+  geocoding: ^1.0.5
+  pinput: ^0.2.6
   pretty_qr_code: ^1.0.1
   esys_flutter_share: ^1.0.2
   flutter_web_browser: ^0.12.0
@@ -83,6 +84,7 @@ dependencies:
   grouped_buttons: ^1.0.4
   collection: ^1.15.0-nullsafety.3
   uuid: ^2.2.2
+  flutter_sticky_header: ^0.5.0
 
   # Temporary fix for DiagnosticableMixin not found in the latest flutter version
   # The package on pub.dev hasn't been updated yet
@@ -101,6 +103,7 @@ dependencies:
   flutter_background_geolocation:
     git:
       url: https://github.com/transistorsoft/flutter_background_geolocation.git
+  flushbar: ^1.10.4
   
 
 dev_dependencies:

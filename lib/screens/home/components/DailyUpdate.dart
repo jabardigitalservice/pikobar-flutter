@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
+import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/ImportantInfoListBloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -18,21 +20,21 @@ class DailyUpdateScreen extends StatefulWidget {
 }
 
 class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
-  NewsListBloc newsListBloc;
+  ImportantInfoListBloc newsListBloc;
 
   @override
   void initState() {
-    newsListBloc = BlocProvider.of<NewsListBloc>(context);
-    newsListBloc.add(NewsListLoad(kImportantInfor));
+    newsListBloc = BlocProvider.of<ImportantInfoListBloc>(context);
+    newsListBloc.add(ImportantInfoListLoad(kImportantInfor));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewsListBloc, NewsListState>(
+    return BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
       builder: (context, state) {
-        return state is NewsListLoaded
-            ? _buildContent(state.newsList)
+        return state is ImpoftantInfoListLoaded
+            ? _buildContent(state.imporntantinfoList)
             : Container();
       },
     );
@@ -51,61 +53,59 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
           ),
         );
 
-        AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+        AnalyticsHelper.setLogEvent(Analytics.tappedDailyUpdate,
             <String, dynamic>{'title': list[0].title});
       },
       child: Container(
-          margin: EdgeInsets.only(left: 10, right: 10, top: 20),
-          child: Container(
-            width: (MediaQuery.of(context).size.width),
-            margin: EdgeInsets.only(left: 5, right: 5),
-            decoration: BoxDecoration(
-                color: ColorBase.greyContainer,
-                borderRadius: BorderRadius.circular(8.0)),
-            child: Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
+        width: (MediaQuery.of(context).size.width),
+        margin: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: Dimens.homeCardMargin),
+        decoration: BoxDecoration(
+            color: ColorBase.greyContainer,
+            borderRadius: BorderRadius.circular(8.0)),
+        child: Padding(
+          padding: EdgeInsets.all(Dimens.homeCardMargin),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Container(
+                        height: 13,
+                        child: Image.asset(
+                            '${Environment.iconAssets}email_icon.png')),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                            height: 13,
-                            child: Image.asset(
-                                '${Environment.iconAssets}email_icon.png')),
+                        Text(Dictionary.dailyUpdateSatgasJabar,
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontFamily: FontsFamily.roboto,
+                                fontWeight: FontWeight.bold)),
                         SizedBox(
-                          width: 20,
+                          height: 10,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(Dictionary.dailyUpdateSatgasJabar,
-                                style: TextStyle(
-                                    fontSize: 14.0,
-                                    fontFamily: FontsFamily.roboto,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                                unixTimeStampToDateWithoutDay(
-                                    list[0].publishedAt),
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontFamily: FontsFamily.roboto,
-                                    color: ColorBase.netralGrey))
-                          ],
-                        ),
+                        Text(
+                            unixTimeStampToDateWithoutDay(
+                                list[0].publishedAt),
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                fontFamily: FontsFamily.roboto,
+                                color: ColorBase.netralGrey))
                       ],
                     ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: Colors.black,
-                    )
-                  ]),
-            ),
-          )),
+                  ],
+                ),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: Colors.black,
+                )
+              ]),
+        ),
+      ),
     );
   }
 }

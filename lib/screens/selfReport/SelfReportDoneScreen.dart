@@ -14,16 +14,14 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
-import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
-import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 
 class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;
   final String otherUID;
   final String analytics;
 
-  SelfReportDoneScreen(this.location, this.otherUID,this.analytics);
+  SelfReportDoneScreen(this.location, this.otherUID, this.analytics);
   @override
   _SelfReportDoneScreenState createState() => _SelfReportDoneScreenState();
 }
@@ -33,12 +31,72 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
   bool isHealthy = false;
   String summary = '';
   EducationModel educationModel;
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.dailySelfReport),
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: _showTitle,
+        title: Dictionary.dailySelfReport,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            RoundedButton(
+                title: Dictionary.selfReportHistory,
+                elevation: 0.0,
+                color: ColorBase.green,
+                borderRadius: BorderRadius.circular(8),
+                textStyle: TextStyle(
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            SizedBox(
+              height: 20,
+            ),
+            RoundedButton(
+                title: Dictionary.readHealthTips,
+                borderSide: BorderSide(color: Colors.grey),
+                elevation: 0.0,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                textStyle: TextStyle(
+                    fontSize: 14,
+                    color: ColorBase.netralGrey,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: FontsFamily.roboto),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EducationDetailScreen(
+                            id: 'kejgmxftb0xlbssc944',
+                            educationCollection: kEducationContent,
+                            model: educationModel,
+                          )));
+                }),
+          ],
+        ),
+      ),
       body: BlocProvider<SelfReportListBloc>(
         create: (BuildContext context) => SelfReportListBloc()
           ..add(SelfReportListLoad(otherUID: widget.otherUID)),
@@ -57,44 +115,61 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
   }
 
   Widget _buildContent(SelfReportListLoaded snapshot) {
-    // Checking document is not null
-    if (snapshot.querySnapshot.docs.length != 0) {
-      for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
-        /// Get indications to [listIndications]
-        listIndications.add(snapshot
-            .querySnapshot.docs[i].get('indications')
-            .replaceAll('[', '')
-            .replaceAll(']', ''));
+    if (listIndications.isEmpty) {
+// Checking document is not null
+      if (snapshot.querySnapshot.docs.length != 0) {
+        for (var i = 0; i < snapshot.querySnapshot.docs.length; i++) {
+          /// Get indications to [listIndications]
+          listIndications.add(snapshot.querySnapshot.docs[i]
+              .get('indications')
+              .replaceAll('[', '')
+              .replaceAll(']', ''));
+        }
       }
-    }
-    // Checking user indications
-    if (countNoIndications(listIndications, 'Tidak Ada Gejala') == 14) {
-      isHealthy = true;
-      // Remove same string from list
-      listIndications = listIndications.toSet().toList();
-      summary = 'tidak ada indikasi gejala.';
-    } else {
-      isHealthy = false;
-      String tempStringIndications =
-          listIndications.toString().replaceAll('[', '').replaceAll(']', '');
-      listIndications = tempStringIndications.split(',');
-      listIndications = listIndications.toSet().toList();
-      listIndications.remove('Tidak Ada Gejala');
-      listIndications.remove(' Tidak Ada Gejala');
-      int countIndications = listIndications.length;
-      summary =
-          'terdapat ${countIndications.toString()} indikasi gejala, yaitu ${listIndications.toString().replaceAll('[', '').replaceAll(']', '')}.';
+      // Checking user indications
+      if (countNoIndications(listIndications, 'Tidak Ada Gejala') == 14) {
+        isHealthy = true;
+        // Remove same string from list
+        listIndications = listIndications.toSet().toList();
+        summary = 'tidak ada indikasi gejala.';
+      } else {
+        isHealthy = false;
+        String tempStringIndications =
+            listIndications.toString().replaceAll('[', '').replaceAll(']', '');
+        listIndications = tempStringIndications.split(',');
+        listIndications = listIndications.toSet().toList();
+        listIndications.remove('Tidak Ada Gejala');
+        listIndications.remove(' Tidak Ada Gejala');
+        int countIndications = listIndications.length;
+        summary =
+            'terdapat ${countIndications.toString()} indikasi gejala, yaitu ${listIndications.toString().replaceAll('[', '').replaceAll(']', '')}.';
+      }
     }
 
     return ListView(
+      controller: _scrollController,
       padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
       children: <Widget>[
         SizedBox(
           height: 20,
         ),
+        AnimatedOpacity(
+          opacity: _showTitle ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 250),
+          child: Text(
+            Dictionary.dailySelfReport,
+            style: TextStyle(
+                fontFamily: FontsFamily.lato,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: 60,
+        ),
         Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.25,
+          height: MediaQuery.of(context).size.height * 0.2,
           child: Image.asset(
             '${Environment.imageAssets}daily_report_done.png',
           ),
@@ -106,15 +181,15 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
           child: Text(
             Dictionary.monitoringIsComplete,
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
+              color: ColorBase.veryDarkGrey,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
-              fontFamily: FontsFamily.lato,
+              fontFamily: FontsFamily.roboto,
             ),
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
         Center(
           child: Text(
@@ -123,27 +198,10 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
             style: TextStyle(
               color: Colors.black,
               fontSize: 12,
-              fontFamily: FontsFamily.lato,
+              fontFamily: FontsFamily.roboto,
             ),
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
-        RoundedButton(
-            title: Dictionary.selfReportHistory,
-            elevation: 0.0,
-            color: ColorBase.green,
-            borderRadius: BorderRadius.circular(8),
-            textStyle: TextStyle(
-                fontFamily: FontsFamily.lato,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w900,
-                color: Colors.white),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SelfReportList(widget.location,widget.analytics)));
-            }),
         SizedBox(
           height: 20,
         ),
@@ -152,57 +210,16 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
           content: isHealthy
               ? Dictionary.announcementDescHealthy
               : Dictionary.announcementDescIndication,
+          margin: EdgeInsets.zero,
           htmlStyle: Style(
               margin: EdgeInsets.zero,
-              fontFamily: FontsFamily.lato,
+              fontFamily: FontsFamily.roboto,
               fontSize: FontSize(12.0),
-              color: Colors.black),
+              color: ColorBase.netralGrey),
         ),
         SizedBox(
-          height: 20,
+          height: MediaQuery.of(context).size.height * 0.25,
         ),
-        OutlineButton(
-          borderSide: BorderSide(color: ColorBase.limeGreen),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          color: Colors.white,
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EducationDetailScreen(
-                      id: 'kejgmxftb0xlbssc944',
-                      educationCollection: kEducationContent,
-                      model: educationModel,
-                    )));
-          },
-          child: Padding(
-            padding: EdgeInsets.all(15),
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                    child: Text(
-                  Dictionary.readHealthTips,
-                  style: TextStyle(
-                      color: ColorBase.limeGreen,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato),
-                ))),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        FlatButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => Phonebook()));
-            },
-            child: Text(
-              Dictionary.callEmergencyNumber,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: ColorBase.darkGrey,
-                fontFamily: FontsFamily.lato,
-              ),
-            ))
       ],
     );
   }

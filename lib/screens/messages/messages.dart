@@ -34,7 +34,6 @@ class _MessagesState extends State<Messages> {
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.message);
     getDataFromServer();
-
     super.initState();
   }
 
@@ -51,32 +50,45 @@ class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar.defaultAppBar(
-            title: Dictionary.message,
-            actions: <Widget>[
-              PopupMenuButton<int>(
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Text(Dictionary.markAsRead),
+        backgroundColor: Colors.white,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FutureBuilder<int>(
+            future: MessageRepository().hasUnreadData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data != 0) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: RaisedButton(
+                    color: ColorBase.primaryLightGreen,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: ColorBase.primaryGreen)),
+                    onPressed: () async {
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.tappedReadAllMessage);
+                      await MessageRepository().updateAllReadData();
+                      widget.indexScreenState.getCountMessage();
+                      setState(() {
+                        for (int i = 0; i < listMessage.length; i++) {
+                          listMessage[i].readAt = 1;
+                        }
+                      });
+                    },
+                    child: Text(
+                      Dictionary.markAsRead,
+                      style: TextStyle(
+                          color: ColorBase.primaryGreen,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: 11),
+                    ),
                   ),
-                ],
-                initialValue: 1,
-                onCanceled: () {},
-                onSelected: (value) async {
-                  if (value == 1) {
-                    await MessageRepository().updateAllReadData();
-                    widget.indexScreenState.getCountMessage();
-                    setState(() {
-                      for (int i = 0; i < listMessage.length; i++) {
-                        listMessage[i].readAt = 1;
-                      }
-                    });
-                  }
-                },
-                icon: Icon(Icons.more_horiz),
-              ),
-            ]),
+                );
+              }
+              return Container();
+            }),
+        appBar: CustomAppBar.animatedAppBar(
+            title: Dictionary.message, showTitle: true, fontSize: 20),
         body: _buildContent());
   }
 
@@ -90,7 +102,7 @@ class _MessagesState extends State<Messages> {
 
   _buildLoading() {
     return ListView.builder(
-      itemCount: 5,
+      itemCount: 6,
       itemBuilder: (context, index) => Card(
           margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
           elevation: 0.2,
@@ -111,31 +123,31 @@ class _MessagesState extends State<Messages> {
                     children: <Widget>[
                       Skeleton(
                           width: MediaQuery.of(context).size.width,
-                          height: 20.0),
+                          height: 10.0),
                       Skeleton(
                         child: Container(
                             width: MediaQuery.of(context).size.width,
-                            height: 20.0,
+                            height: 10.0,
                             margin: EdgeInsets.only(top: 10.0, bottom: 5.0),
                             color: Colors.grey[300]),
                       ),
                       Skeleton(
                         child: Container(
                             width: MediaQuery.of(context).size.width,
-                            height: 20.0,
+                            height: 10.0,
                             margin: EdgeInsets.only(bottom: 5.0),
                             color: Colors.grey[300]),
                       ),
                       Skeleton(
                         child: Container(
                             width: MediaQuery.of(context).size.width - 170,
-                            height: 20.0,
+                            height: 10.0,
                             margin: EdgeInsets.only(bottom: 15.0),
                             color: Colors.grey[300]),
                       ),
                       Skeleton(
                           width: MediaQuery.of(context).size.width - 250,
-                          height: 15.0),
+                          height: 10.0),
                     ],
                   ),
                 ),
@@ -158,7 +170,11 @@ class _MessagesState extends State<Messages> {
             controller: _scrollController,
             itemCount: listMessage.length,
             separatorBuilder: (context, index) {
-              return Container(color: ColorBase.grey, height: 10);
+              return Container(
+                color: ColorBase.grey,
+                height: 1,
+                margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+              );
             },
             itemBuilder: (context, index) {
               bool hasRead = listMessage[index].readAt == null ||
@@ -178,25 +194,27 @@ class _MessagesState extends State<Messages> {
                           child: Stack(
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.only(top: hasRead ? 0.0 : 2.0),
+                                padding:
+                                    EdgeInsets.only(top: hasRead ? 0.0 : 2.0),
                                 child: Image.asset(
                                   '${Environment.iconAssets}broadcast.png',
                                   width: 32.0,
                                   height: 32.0,
                                 ),
                               ),
-                              hasRead ? Container() :
-                              Positioned(
-                                right: 0.0,
-                                child: Container(
-                                  width: 12.0,
-                                  height: 12.0,
-                                  decoration: new BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              )
+                              hasRead
+                                  ? Container()
+                                  : Positioned(
+                                      right: 0.0,
+                                      child: Container(
+                                        width: 12.0,
+                                        height: 12.0,
+                                        decoration: new BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    )
                             ],
                           )),
                       Expanded(
@@ -206,20 +224,23 @@ class _MessagesState extends State<Messages> {
                             Text(
                               listMessage[index].title,
                               style: TextStyle(
-                                  fontFamily: FontsFamily.lato,
-                                  fontSize: 14.0,
-                                  color: hasRead ? Colors.grey : Colors.black,
+                                  fontFamily: FontsFamily.roboto,
+                                  fontSize: 12.0,
+                                  color: ColorBase.grey800,
                                   fontWeight: hasRead
-                                      ? FontWeight.normal
+                                      ? FontWeight.w400
                                       : FontWeight.w900),
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                              margin: EdgeInsets.only(top: 8.0, bottom: 13.0),
                               child: Text(
                                 unixTimeStampToDateTime(
                                     listMessage[index].publishedAt),
                                 style: TextStyle(
-                                    fontSize: 12.0, color: Colors.grey),
+                                  fontSize: 10.0,
+                                  color: ColorBase.netralGrey,
+                                  fontFamily: FontsFamily.roboto,
+                                ),
                               ),
                             ),
                             Text(
@@ -227,9 +248,11 @@ class _MessagesState extends State<Messages> {
                               maxLines: 3,
                               overflow: TextOverflow.clip,
                               style: TextStyle(
-                                  fontFamily: FontsFamily.lato,
-                                  fontSize: 14.0,
-                                  color: hasRead ? Colors.grey : Colors.black),
+                                  fontFamily: FontsFamily.roboto,
+                                  fontSize: 10.0,
+                                  color: hasRead
+                                      ? ColorBase.netralGrey
+                                      : ColorBase.grey800),
                             ),
                           ],
                         ),

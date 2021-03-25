@@ -13,5 +13,12 @@ class RemoteConfigHelper{
       return json.decode(defaultValue);
     }
   }
+
+  static String getString({@required RemoteConfig remoteConfig, @required String firebaseConfig, @required String defaultValue}) {
+
+    assert(remoteConfig != null);
+
+    return remoteConfig.getString(firebaseConfig) ?? defaultValue;
+  }
 }
 

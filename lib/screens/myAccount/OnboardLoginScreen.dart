@@ -22,8 +22,14 @@ import 'TermsConditions.dart';
 class OnBoardingLoginScreen extends StatefulWidget {
   final AuthenticationBloc authenticationBloc;
   final double positionBottom;
+  final bool showTitle;
 
-  OnBoardingLoginScreen({this.authenticationBloc, this.positionBottom});
+  OnBoardingLoginScreen(
+      {Key key,
+      this.authenticationBloc,
+      this.positionBottom,
+      this.showTitle = false})
+      : super(key: key);
 
   @override
   _OnBoardingLoginScreenState createState() => _OnBoardingLoginScreenState();
@@ -49,15 +55,33 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocProvider<RemoteConfigBloc>(
       create: (BuildContext context) =>
           _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
       child: Stack(
         children: <Widget>[
+          widget.showTitle
+              ? Positioned(
+                  left: 0.0,
+                  right: 0.0,
+                  top: 0.0,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      Dictionary.profile,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : Container(),
           Positioned(
             left: 0.0,
             right: 0.0,
-            top: MediaQuery.of(context).size.height*0.2,
+            top: size.height * (size.height < 600 ? 0 : 0.15),
             child: Column(
               children: <Widget>[
                 Padding(
@@ -96,7 +120,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: ColorBase.netralGrey,
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontWeight: FontWeight.bold,
                         fontSize: 14.0),
                   ),
@@ -119,7 +143,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   },
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
+                  width: size.width,
                   height: 40.0,
                   margin: EdgeInsets.fromLTRB(Dimens.padding, Dimens.padding,
                       Dimens.padding, Dimens.padding),
@@ -133,7 +157,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                       child: Text(
                         Dictionary.acceptLogin,
                         style: TextStyle(
-                            fontFamily: FontsFamily.lato,
+                            fontFamily: FontsFamily.roboto,
                             fontWeight: FontWeight.bold,
                             fontSize: 12.0,
                             color: Colors.white),
@@ -156,7 +180,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, 0.0, Dimens.padding, 20.0),
+                      Dimens.padding, 0.0, Dimens.padding, 50.0),
                   child: Text(
                     '${Dictionary.versionText} ' + _versionText,
                     textAlign: TextAlign.center,
@@ -197,11 +221,12 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
               width: MediaQuery.of(context).size.width * 0.75,
               child: RichText(
                 text: TextSpan(
-                    text: termsConditions['agreement'],
+                    text: termsConditions['agreement']+' ',
                     style: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
+                        height: 1.6,
                         color: ColorBase.darkGrey,
-                        fontSize: 11.0),
+                        fontSize: 10.0),
                     children: <TextSpan>[
                       TextSpan(
                           text: Dictionary.termsConditions,

@@ -8,7 +8,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -19,6 +18,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/BottomSheetMenu.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
@@ -30,7 +30,9 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/DeviceUpdateHelper.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
+import 'package:pikobar_flutter/utilities/NPSService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -49,6 +51,8 @@ class IndexScreenState extends State<IndexScreen> {
   int countMessage = 0;
   DateTime currentBackPressTime;
 
+  bool showAllMenus = true;
+
   @override
   void initState() {
     initializeBackgroundLocation();
@@ -59,6 +63,8 @@ class IndexScreenState extends State<IndexScreen> {
     initializeBottomNavigationBar();
     initializeToken();
     getCountMessage();
+    removeOutDateLabelNew();
+    loadNetPromoterScore();
 
     super.initState();
   }
@@ -104,8 +110,8 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   initializeFlutterDownloader() async {
-    await FlutterDownloader.initialize();
     if (Platform.isAndroid) {
+      await FlutterDownloader.initialize();
       String localPath =
           (await getExternalStorageDirectory()).path + '/download';
       final publicDownloadDir = Directory(Environment.downloadStorage);
@@ -118,12 +124,40 @@ class IndexScreenState extends State<IndexScreen> {
       if (!hasExistedSavedDir) {
         savedDir.create();
       }
+    } else if (Platform.isIOS) {
+      await FlutterDownloader.initialize();
+      final String _localPath =
+          (await _findLocalPath()) + Platform.pathSeparator + 'images';
+      final publicDownloadDir = Directory(_localPath);
+      bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
+
+      if (!hasExistedPublicDownloadDir) {
+        publicDownloadDir.create();
+      }
+
+      final savedDir = Directory(_localPath);
+      bool hasExisted = await savedDir.exists();
+      if (!hasExisted) {
+        savedDir.create();
+      }
     }
+  }
+
+  Future<String> _findLocalPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
   }
 
   initializeToken() async {
     await AuthRepository().registerFCMToken();
     await AuthRepository().updateIdToken();
+  }
+
+  removeOutDateLabelNew() {
+    LabelNew().removeData(Dictionary.labelInfoGraphic);
+    LabelNew().removeData(Dictionary.labelNews);
+    LabelNew().removeData(Dictionary.labelVideos);
+    LabelNew().removeData(Dictionary.labelDocuments);
   }
 
   initializeBottomNavigationBar() {
@@ -137,6 +171,7 @@ class IndexScreenState extends State<IndexScreen> {
     items = [
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.homeOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -145,10 +180,21 @@ class IndexScreenState extends State<IndexScreen> {
           )),
       BottomNavigationBarItem(
         icon: Icon(EvaIcons.messageCircleOutline, size: 24),
+        // ignore: deprecated_member_use
         title: Text(Dictionary.message),
       ),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          // ignore: deprecated_member_use
+          title: Column(
+            children: <Widget>[
+              SizedBox(height: 4),
+              Text('Menu'),
+            ],
+          )),
+      BottomNavigationBarItem(
+          icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -157,6 +203,7 @@ class IndexScreenState extends State<IndexScreen> {
           )),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.personOutline, size: 24),
+          // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
@@ -246,23 +293,65 @@ class IndexScreenState extends State<IndexScreen> {
   }
 
   void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    if (index != 2) {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        child: _buildContent(_currentIndex),
-        onWillPop: onWillPop,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped,
-          currentIndex: _currentIndex,
-          type: BottomNavigationBarType.fixed,
-          items: items),
+    return Stack(
+      children: [
+        Scaffold(
+          body: WillPopScope(
+            child: _buildContent(_currentIndex),
+            onWillPop: onWillPop,
+          ),
+          bottomNavigationBar: Theme(
+            data: Theme.of(context).copyWith(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            child: BottomNavigationBar(
+                onTap: onTabTapped,
+                currentIndex: _currentIndex,
+                type: BottomNavigationBarType.fixed,
+                items: items),
+          ),
+        ),
+        SafeArea(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: GestureDetector(
+              child: Container(
+                width: 60,
+                height: 60,
+                margin: EdgeInsets.only(bottom: 22.0),
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Color(0xFF16A75C), Color(0xFF9BDBB3)],
+                        transform: GradientRotation(45)),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.shade200,
+                          offset: Offset(0.0, 2.0), //(x,y)
+                          blurRadius: 5.0,
+                          spreadRadius: 0.0),
+                    ],
+                    border: Border.all(color: Colors.white, width: 4.0)),
+                child: Image.asset('${Environment.iconAssets}menu.png'),
+              ),
+              onTap: () {
+                BottomSheetMenu.showBottomSheetMenu(context: context);
+              },
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -285,12 +374,10 @@ class IndexScreenState extends State<IndexScreen> {
       case 1:
         AnalyticsHelper.setLogEvent(Analytics.tappedMessage);
         return Messages(indexScreenState: this);
-
-      case 2:
+      case 3:
         AnalyticsHelper.setLogEvent(Analytics.tappedFaq);
         return FaqScreen(isNewPage: false);
-
-      case 3:
+      case 4:
         return ProfileScreen();
       default:
         return HomeScreen();
@@ -305,6 +392,7 @@ class IndexScreenState extends State<IndexScreen> {
         if (countMessage <= 0) {
           items[1] = BottomNavigationBarItem(
               icon: Icon(EvaIcons.messageCircleOutline, size: 24),
+              // ignore: deprecated_member_use
               title: Column(
                 children: <Widget>[
                   SizedBox(height: 4),
@@ -320,6 +408,10 @@ class IndexScreenState extends State<IndexScreen> {
 
   initializeBackgroundLocation() async {
     await LocationService.initializeBackgroundLocation(context);
+  }
+
+  loadNetPromoterScore() async {
+    await NPSService.loadNetPromoterScore(context);
   }
 
   @override

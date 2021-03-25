@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/selfReport/dailyReport/DailyReportBloc.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
+import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/GroupedCheckBox.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -47,6 +48,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   final _quarantineDateController = TextEditingController();
   final _otherIndicationsController = TextEditingController();
   final _bodyTempController = MaskedTextController(mask: '00.0');
+  ScrollController _scrollController;
 
   DailyReportBloc _dailyReportBloc;
 
@@ -100,15 +102,26 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         _checkedItemList.removeLast();
       }
     }
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportForm);
   }
 
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.selfReportForm),
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: _showTitle,
+        title: Dictionary.selfReportForm,
+      ),
+      backgroundColor: Colors.white,
       body: BlocProvider<DailyReportBloc>(
         create: (BuildContext context) => _dailyReportBloc = DailyReportBloc(),
         child: BlocListener(
@@ -118,26 +131,29 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportSaved);
               Navigator.of(context).pop();
               // Bottom sheet success message
-              _showBottomSheetForm(
-                  '${Environment.imageAssets}daily_success.png',
-                  Dictionary.savedSuccessfully,
-                  Dictionary.dailySuccess, () async {
-                if (widget.dailyId == '14') {
-                  Navigator.of(context).pop(true);
-                  Navigator.of(context).pop(true);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SelfReportDoneScreen(
-                            widget.location,
-                            widget.otherUID,
-                            widget.analytics)),
-                  );
-                } else {
-                  Navigator.of(context).pop(true);
-                  Navigator.of(context).pop(true);
-                }
-              });
+              showSuccessBottomSheet(
+                  context: context,
+                  image: Image.asset(
+                      '${Environment.imageAssets}daily_success.png'),
+                  title: Dictionary.savedSuccessfully,
+                  message: Dictionary.dailySuccess,
+                  onPressed: () async {
+                    if (widget.dailyId == '14') {
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SelfReportDoneScreen(
+                                widget.location,
+                                widget.otherUID,
+                                widget.analytics)),
+                      );
+                    } else {
+                      Navigator.of(context).pop(true);
+                      Navigator.of(context).pop(true);
+                    }
+                  });
             } else if (state is DailyReportFailed) {
               AnalyticsHelper.setLogEvent(Analytics.dailyReportFailed);
               Navigator.of(context).pop();
@@ -159,7 +175,22 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             child: Form(
               key: _formKey,
               child: ListView(
+                controller: _scrollController,
                 children: <Widget>[
+                  AnimatedOpacity(
+                    opacity: _showTitle ? 0.0 : 1.0,
+                    duration: Duration(milliseconds: 250),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                        Dictionary.selfReportForm,
+                        style: TextStyle(
+                            fontFamily: FontsFamily.lato,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: Dimens.padding),
                   widget.dailyId == '1'
                       ? Column(
@@ -200,39 +231,45 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       : Container(),
                   buildLabel(text: Dictionary.selfReportQuestion2),
                   SizedBox(height: Dimens.padding),
-                  GroupedCheckBox(
-                    itemHeight: 40.0,
-                    indexAllDisabled: 11,
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: ColorBase.menuBorderColor,
-                    defaultSelectedList: _checkedItemList,
-                    activeColor: ColorBase.green,
-                    itemLabelList: _allItemList,
-                    itemValueList: _allItemList,
-                    orientation: CheckboxOrientation.WRAP,
-                    itemWidth: MediaQuery.of(context).size.width / 2 - 21,
-                    wrapDirection: Axis.horizontal,
-                    wrapSpacing: 10.0,
-                    wrapRunSpacing: 10.0,
-                    onChanged: (itemList) {
-                      setState(() {
-                        _checkedItemList = itemList;
-                        _isOtherIndication =
-                            itemList.contains(_allItemList[12]);
-                        _isIndicationEmpty = itemList.isEmpty;
-                      });
-                    },
-                    textStyle:
-                        TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GroupedCheckBox(
+                      itemHeight: 40.0,
+                      indexAllDisabled: 11,
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: ColorBase.netralGrey,
+                      defaultSelectedList: _checkedItemList,
+                      activeColor: ColorBase.primaryGreen,
+                      itemLabelList: _allItemList,
+                      itemValueList: _allItemList,
+                      orientation: CheckboxOrientation.VERTICAL,
+                      itemWidth: MediaQuery.of(context).size.width / 2 - 21,
+                      wrapDirection: Axis.horizontal,
+                      wrapSpacing: 10.0,
+                      wrapRunSpacing: 10.0,
+                      onChanged: (itemList) {
+                        setState(() {
+                          _checkedItemList = itemList;
+                          _isOtherIndication =
+                              itemList.contains(_allItemList[12]);
+                          _isIndicationEmpty = itemList.isEmpty;
+                        });
+                      },
+                      textStyle: TextStyle(
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: 14,
+                          color: ColorBase.grey800),
+                    ),
                   ),
                   SizedBox(height: Dimens.padding),
                   Container(
-                    height: 40.0,
+                    height: 80.0,
                     decoration: BoxDecoration(
+                        color: ColorBase.greyContainer,
                         border: Border.all(
                             color: _isOtherIndicationEmpty
                                 ? Colors.red
-                                : ColorBase.menuBorderColor),
+                                : ColorBase.greyBorder),
                         borderRadius: BorderRadius.circular(8.0)),
                     padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
                     child: TextField(
@@ -241,6 +278,10 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       maxLines: 1,
                       decoration: InputDecoration(
                           border: InputBorder.none,
+                          hintStyle: TextStyle(
+                              color: ColorBase.netralGrey,
+                              fontFamily: FontsFamily.roboto,
+                              fontSize: 14),
                           hintText: Dictionary.tellOtherIndication),
                     ),
                   ),
@@ -269,9 +310,10 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                   SizedBox(height: Dimens.padding),
                   Stack(children: [
                     Container(
-                      height: 40.0,
+                      height: 50.0,
                       decoration: BoxDecoration(
-                          border: Border.all(color: ColorBase.menuBorderColor),
+                          color: ColorBase.greyContainer,
+                          border: Border.all(color: ColorBase.greyBorder),
                           borderRadius: BorderRadius.circular(8.0)),
                       padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
                       child: TextField(
@@ -283,54 +325,54 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                         maxLines: 1,
                         maxLength: 4,
                         decoration: InputDecoration(
+                          suffixIcon: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 13),
+                            child: Image.asset(
+                              '${Environment.iconAssets}celcius_icon.png',
+                            ),
+                          ),
                           border: InputBorder.none,
+                          hintStyle: TextStyle(
+                              color: ColorBase.netralGrey,
+                              fontFamily: FontsFamily.roboto,
+                              fontSize: 14),
                           hintText: Dictionary.inputBodyTemperature,
                           counterText: "",
                         ),
                       ),
                     ),
-                    Positioned(
-                      right: 0.0,
-                      child: Container(
-                        height: 40.0,
-                        width: 40.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(color: ColorBase.menuBorderColor),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: Text(
-                          '°C',
-                          style: TextStyle(
-                              fontFamily: FontsFamily.lato,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
                   ]),
                   SizedBox(height: 32.0),
                   RoundedButton(
+                      borderRadius: BorderRadius.circular(8.0),
                       title: Dictionary.save,
                       elevation: 0.0,
-                      color: ColorBase.green,
+                      color: isEmptyField()
+                          ? ColorBase.disableText
+                          : ColorBase.green,
                       textStyle: TextStyle(
-                          fontFamily: FontsFamily.lato,
+                          fontFamily: FontsFamily.roboto,
                           fontSize: 12.0,
                           fontWeight: FontWeight.w900,
                           color: Colors.white),
                       onPressed: () {
-                        if (_bodyTempController.text.isEmpty) {
-                          // Bottom sheet temperature message
-                          _showBottomSheetForm(
-                              '${Environment.imageAssets}temperature_info.png',
-                              Dictionary.additionalTemperatureInformation,
-                              Dictionary.descTemperatureInformation, () {
-                            Navigator.of(context).pop(true);
+                        if (!isEmptyField()) {
+                          if (_bodyTempController.text.isEmpty) {
+                            // Bottom sheet temperature message
+                            showSuccessBottomSheet(
+                                context: context,
+                                image: Image.asset(
+                                    '${Environment.imageAssets}temperature_info.png'),
+                                title:
+                                    Dictionary.additionalTemperatureInformation,
+                                message: Dictionary.descTemperatureInformation,
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                  _saveSelfReport();
+                                });
+                          } else {
                             _saveSelfReport();
-                          });
-                        } else {
-                          _saveSelfReport();
+                          }
                         }
                       }),
                   SizedBox(height: Dimens.padding),
@@ -349,20 +391,20 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
       TextSpan(
           text: text,
           style: TextStyle(
-              fontFamily: FontsFamily.lato,
+              fontFamily: FontsFamily.roboto,
               fontSize: 12.0,
               fontWeight: FontWeight.bold,
               height: 18.0 / 12.0,
               color: Colors.black)),
       required
           ? TextSpan(
-              text: ' (*)',
+              text: Dictionary.requiredForm,
               style: TextStyle(
-                  fontFamily: FontsFamily.lato,
-                  fontSize: 12.0,
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 10.0,
                   fontWeight: FontWeight.bold,
                   height: 18.0 / 12.0,
-                  color: Colors.red))
+                  color: Colors.green))
           : TextSpan()
     ]));
   }
@@ -384,28 +426,34 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             height: 40,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
+                color: ColorBase.greyContainer,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: isEmpty ? Colors.red : ColorBase.menuBorderColor)),
+                    color: isEmpty ? Colors.red : ColorBase.greyBorder)),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    placeholder,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: FontsFamily.roboto,
+                        color:
+                            placeholder == Dictionary.contactDatePlaceholder ||
+                                    placeholder ==
+                                        Dictionary.quarantineDatePlaceholder
+                                ? ColorBase.netralGrey
+                                : Colors.black),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 11),
                   child: Container(
                       height: 20,
                       child:
                           Image.asset('${Environment.iconAssets}calendar.png')),
-                ),
-                Text(
-                  placeholder,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: FontsFamily.lato,
-                      color: placeholder == Dictionary.contactDatePlaceholder ||
-                              placeholder ==
-                                  Dictionary.quarantineDatePlaceholder
-                          ? ColorBase.darkGrey
-                          : Colors.black),
                 ),
               ],
             ),
@@ -427,6 +475,16 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             : Container()
       ],
     );
+  }
+
+  bool isEmptyField() {
+    if (widget.dailyId == '1') {
+      return _checkedItemList.isEmpty ||
+          _dateController.text.isEmpty ||
+          _quarantineDateController.text.isEmpty;
+    } else {
+      return _checkedItemList.isEmpty;
+    }
   }
 
   // Function to build Date Picker
@@ -452,67 +510,6 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         });
       },
     );
-  }
-
-  // Bottom sheet message form
-  void _showBottomSheetForm(String image, String titleDialog, String descDialog,
-      GestureTapCallback onPressed) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(8.0),
-          ),
-        ),
-        isDismissible: false,
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.all(Dimens.padding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 44.0),
-                  child: Image.asset(
-                    image,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                SizedBox(height: 24.0),
-                Text(
-                  titleDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  descDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12.0,
-                      color: Colors.grey[600]),
-                ),
-                SizedBox(height: 24.0),
-                RoundedButton(
-                    title: Dictionary.ok.toUpperCase(),
-                    textStyle: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    color: ColorBase.green,
-                    elevation: 0.0,
-                    onPressed: onPressed)
-              ],
-            ),
-          );
-        });
   }
 
   // Validate and Record data to firestore

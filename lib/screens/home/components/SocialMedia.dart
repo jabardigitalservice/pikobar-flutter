@@ -44,7 +44,7 @@ class _SocialMediaState extends State<SocialMedia> {
           children: <Widget>[
             InkWell(
               onTap: () async {
-                launchUrl(kUrlInstagramPikobar);
+                launchUrl(kUrlInstagramPikobar, '');
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.05,
@@ -59,12 +59,27 @@ class _SocialMediaState extends State<SocialMedia> {
             ),
             InkWell(
               onTap: () async {
-                launchUrl(kUrlTwitterPikobar);
+                launchUrl(kUrlTwitterPikobar, '');
               },
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.05,
                 child: Image.asset(
                   '${Environment.logoAssets}twitter_logo.png',
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            InkWell(
+              onTap: () async {
+                launchUrl(kUrlFacebookPikobarProtocol, kUrlFacebookPikobar);
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.05,
+                child: Image.asset(
+                  '${Environment.logoAssets}facebook_logo.png',
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -78,13 +93,17 @@ class _SocialMediaState extends State<SocialMedia> {
     );
   }
 
-  launchUrl(String url) async {
+  launchUrl(String url, String fallbackUrl) async {
     if (await canLaunch(url)) {
       await launch(
         url,
         universalLinksOnly: true,
       );
     } else {
+      await launch(
+        fallbackUrl,
+        universalLinksOnly: true,
+      );
       throw 'There was a problem to open the url: $url';
     }
   }

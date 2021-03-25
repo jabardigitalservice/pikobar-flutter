@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
+import 'package:pikobar_flutter/models/NewsModel.dart';
 
 abstract class ImportantInfoListState extends Equatable {
   const ImportantInfoListState([List props = const <dynamic>[]]);
@@ -16,7 +16,7 @@ class ImportantInfoListLoading extends ImportantInfoListState {
 }
 
 class ImpoftantInfoListLoaded extends ImportantInfoListState {
-  final List<ImportantInfoModel> imporntantinfoList;
+  final List<NewsModel> imporntantinfoList;
 
   ImpoftantInfoListLoaded(this.imporntantinfoList);
 
