@@ -177,10 +177,12 @@ class _MessagesState extends State<Messages> {
               );
             },
             itemBuilder: (context, index) {
-              bool hasRead = listMessage[index].readAt == null ||
-                      listMessage[index].readAt == 0
-                  ? false
-                  : true;
+              bool hasRead = listMessage[index].readAt != null &&
+                      listMessage[index].readAt != 0;
+
+              if (MessageRepository.hasNullField(listMessage[index])) {
+                return Container();
+              }
 
               return GestureDetector(
                 child: Container(
