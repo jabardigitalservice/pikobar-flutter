@@ -8,6 +8,7 @@ import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -16,6 +17,7 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
 import 'package:pikobar_flutter/screens/home/components/statistics/StatisticsDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
@@ -79,6 +81,7 @@ class _StatisticsState extends State<Statistics> {
         ),
       ),
       onTap: () {
+        AnalyticsHelper.setLogEvent(Analytics.tappedMoreCaseDataJabar);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => StatisticsDetailScreen(
                 remoteConfigLoaded: remoteConfigLoaded,
@@ -160,6 +163,7 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
+                SizedBox(width: 16),
                 _buildContainer(
                     '',
                     Dictionary.positif,
@@ -170,6 +174,7 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
+                SizedBox(width: 16),
                 _buildContainer('', Dictionary.die, Dictionary.die, '-', 4,
                     Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
@@ -243,10 +248,10 @@ class _StatisticsState extends State<Statistics> {
           ),
           SizedBox(height: 10),
           Text(
-            unixTimeStampToDateTimeWithoutDay(data['updated_at'].seconds),
+            unixTimeStampToCustomDateFormat(data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
             style: TextStyle(
                 color: Color(0xff333333),
-                fontFamily: FontsFamily.lato,
+                fontFamily: FontsFamily.roboto,
                 fontSize: Dimens.textSubtitleSize),
           ),
           SizedBox(height: Dimens.padding),
@@ -258,7 +263,7 @@ class _StatisticsState extends State<Statistics> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildContainer(
-                  '${Environment.iconAssets}virus_yellow.png',
+                  '${Environment.iconAssets}circle_plus_yellow.png',
                   labelUpdateTerkini['statistics']['positif'],
                   labelUpdateTerkini['statistics']['positif'],
                   getDataActivePositive(data['aktif']['jabar'],
@@ -273,8 +278,9 @@ class _StatisticsState extends State<Statistics> {
                           data['aktif']['jabar'],
                           data['sembuh']['jabar'],
                           data['meninggal']['jabar'])))),
+              SizedBox(width: 16),
               _buildContainer(
-                  '${Environment.iconAssets}virus_green.png',
+                  '${Environment.iconAssets}circle_check_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
                   labelUpdateTerkini['statistics']['recovered'],
                   '${data['sembuh']['jabar']}',
@@ -284,8 +290,9 @@ class _StatisticsState extends State<Statistics> {
                   Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['sembuh']['jabar'])),
+              SizedBox(width: 16),
               _buildContainer(
-                  '${Environment.iconAssets}virus_red.png',
+                  '${Environment.iconAssets}circle_cross_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
                   labelUpdateTerkini['statistics']['deaths'],
                   '${data['meninggal']['jabar']}',
@@ -312,9 +319,6 @@ class _StatisticsState extends State<Statistics> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Container(
-                height: 60,
-                child: Image.asset('${Environment.imageAssets}bloodTest.png')),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -328,7 +332,7 @@ class _StatisticsState extends State<Statistics> {
                             fontSize: 12.0,
                             color: Color(0xff828282),
                             fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.lato)),
+                            fontFamily: FontsFamily.roboto)),
                   ),
                 ),
                 Skeleton(
@@ -375,18 +379,15 @@ class _StatisticsState extends State<Statistics> {
         );
       },
       child: Card(
+        margin: EdgeInsets.all(0),
         elevation: 0,
         color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.only(left: 5.0, right: 20.0, top: 15, bottom: 15),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
-                  height: 60,
-                  child: Image.asset(
-                      '${Environment.imageAssets}bloodTest@4x.png')),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -398,14 +399,13 @@ class _StatisticsState extends State<Statistics> {
                         style: TextStyle(
                             fontSize: 12.0,
                             color: Color(0xff333333),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: FontsFamily.lato)),
+                            fontFamily: FontsFamily.roboto)),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
-                            fontSize: 22.0,
+                            fontSize: 16.0,
                             color: Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -414,8 +414,8 @@ class _StatisticsState extends State<Statistics> {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                size: 20,
-                color: Color(0xff27AE60),
+                size: 14,
+                color: Colors.black,
               )
             ],
           ),
@@ -441,7 +441,6 @@ class _StatisticsState extends State<Statistics> {
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
           padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
               color: Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(8.0)),
@@ -462,29 +461,18 @@ class _StatisticsState extends State<Statistics> {
                     style: TextStyle(
                         fontSize: 12.0,
                         color: colorTextTitle,
-                        fontFamily: FontsFamily.lato)),
+                        fontFamily: FontsFamily.roboto)),
               ),
               Container(
                 margin: EdgeInsets.only(top: 10, left: 5.0),
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 15.0,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
-                child: percentage != ''
-                    ? Text(percentage,
-                        style: TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff828282),
-                            fontFamily: FontsFamily.lato))
-                    : null,
-              )
             ],
           ),
         ),
@@ -496,7 +484,6 @@ class _StatisticsState extends State<Statistics> {
   _buildConfirmedBox({@required String label, @required caseTotal}) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
           borderRadius: BorderRadius.circular(8.0)),
@@ -520,7 +507,7 @@ class _StatisticsState extends State<Statistics> {
                 Text(
                   label,
                   style: TextStyle(
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
@@ -530,7 +517,7 @@ class _StatisticsState extends State<Statistics> {
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),

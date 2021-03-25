@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pikobar_flutter/constants/Colors.dart';
 
 class ShareButton extends StatelessWidget {
   final GestureTapCallback onPressed;
@@ -38,7 +37,7 @@ class ShareButton extends StatelessWidget {
                 top: paddingTop != null ? paddingTop : 0)
             : EdgeInsets.all(padding != null ? padding : 10),
         alignment: alignmentIcon != null ? alignmentIcon : Alignment.center,
-        icon: Icon(FontAwesomeIcons.share, size: 17, color: ColorBase.green),
+        icon: Icon(FontAwesomeIcons.shareAlt, size: 17, color: Colors.black),
         onPressed: onPressed,
       ),
     );

@@ -32,7 +32,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   bool isBirthdayEmpty = false;
   bool isGenderEmpty = false;
   bool isRelationEmpty = false;
-
+  ScrollController _scrollController;
 
   String _format = 'dd-MMMM-yyyy';
   String minDate = '1900-01-01';
@@ -40,21 +40,47 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
 
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedAddOtherUserReportForm);
   }
 
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.addUserForm),
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: _showTitle,
+        title: Dictionary.addUserForm,
+      ),
+      backgroundColor: Colors.white,
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
         child: Form(
           key: _formKey,
           child: ListView(
+            controller: _scrollController,
             children: <Widget>[
+              AnimatedOpacity(
+                opacity: _showTitle ? 0.0 : 1.0,
+                duration: Duration(milliseconds: 250),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    Dictionary.addUserForm,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
               SizedBox(height: Dimens.padding),
               buildAnnouncement(),
               SizedBox(height: Dimens.padding),
@@ -124,13 +150,13 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   }),
               SizedBox(height: 32.0),
               RoundedButton(
-                  title: Dictionary.save,
+                  title: Dictionary.nextStep,
                   elevation: 0.0,
                   color: ColorBase.green,
                   textStyle: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w900,
+                      fontFamily: FontsFamily.roboto,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white),
                   onPressed: () {
                     _saveSelfReport();
@@ -165,12 +191,16 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                 style: TextStyle(
                     fontSize: 12.0,
                     color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                isRequired ? ' (*)' : '',
-                style: TextStyle(fontSize: 15.0, color: Colors.red),
+                isRequired ? Dictionary.requiredForm : '',
+                style: TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.green,
+                    fontFamily: FontsFamily.roboto,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -182,37 +212,39 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
             style: isEdit
                 ? TextStyle(
                     color: Colors.black,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12)
                 : TextStyle(
                     color: ColorBase.disableText,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12),
             enabled: isEdit,
             validator: validation,
             textCapitalization: TextCapitalization.words,
             controller: controller,
             decoration: InputDecoration(
+                fillColor: ColorBase.greyContainer,
+                filled: true,
                 hintText: hintText,
                 hintStyle: TextStyle(
-                    color: ColorBase.darkGrey,
-                    fontFamily: FontsFamily.lato,
+                    color: ColorBase.netralGrey,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 12),
                 errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.red, width: 1.5)),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
                 disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5)),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                        color: ColorBase.menuBorderColor, width: 1.5))),
+                    borderSide:
+                        BorderSide(color: ColorBase.greyBorder, width: 1.5))),
             keyboardType:
                 textInputType != null ? textInputType : TextInputType.text,
           )
@@ -227,20 +259,20 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       TextSpan(
           text: text,
           style: TextStyle(
-              fontFamily: FontsFamily.lato,
+              fontFamily: FontsFamily.roboto,
               fontSize: 12.0,
               fontWeight: FontWeight.bold,
               height: 18.0 / 12.0,
-              color: Colors.black)),
+              color: ColorBase.veryDarkGrey)),
       required
           ? TextSpan(
-              text: ' (*)',
+              text: Dictionary.requiredForm,
               style: TextStyle(
-                  fontFamily: FontsFamily.lato,
-                  fontSize: 12.0,
+                  fontFamily: FontsFamily.roboto,
+                  fontSize: 10.0,
                   fontWeight: FontWeight.bold,
                   height: 18.0 / 12.0,
-                  color: Colors.red))
+                  color: Colors.green))
           : TextSpan()
     ]));
   }
@@ -255,30 +287,36 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
             _showDatePicker();
           },
           child: Container(
-            height: 40,
+            height: 60,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
+                color: ColorBase.greyContainer,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: isEmpty ? Colors.red : ColorBase.menuBorderColor)),
+                    color: isEmpty ? Colors.red : ColorBase.greyBorder,
+                    width: 1.5)),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    placeholder,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: FontsFamily.roboto,
+                        color: placeholder == Dictionary.birthdayPlaceholder
+                            ? ColorBase.netralGrey
+                            : Colors.black),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
-                      height: 20,
+                      height: 15,
                       child:
                           Image.asset('${Environment.iconAssets}calendar.png')),
-                ),
-                Text(
-                  placeholder,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: FontsFamily.lato,
-                      color: placeholder == Dictionary.birthdayPlaceholder
-                          ? ColorBase.darkGrey
-                          : Colors.black),
-                ),
+                )
               ],
             ),
           ),
@@ -403,7 +441,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
         color: ColorBase.menuBorderColor,
         activeColor: ColorBase.green,
         itemLabelList: itemList,
-        orientation: RadioButtonOrientation.WRAP,
+        orientation: RadioButtonOrientation.VERTICAL,
         wrapDirection: Axis.horizontal,
         wrapSpacing: 10.0,
         wrapRunSpacing: 10.0,
@@ -413,7 +451,10 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
             FocusScope.of(context).unfocus();
           });
         },
-        textStyle: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+        textStyle: TextStyle(
+            fontFamily: FontsFamily.roboto,
+            fontSize: 14,
+            color: ColorBase.grey800),
         validator: validator,
       ),
     );
@@ -422,6 +463,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   /// Set up for show announcement widget
   Widget buildAnnouncement() {
     return Announcement(
+      margin: EdgeInsets.all(0),
       title: Dictionary.titleInfoTextAnnouncement,
       content: Dictionary.otherReportAnnouncement,
       context: context,

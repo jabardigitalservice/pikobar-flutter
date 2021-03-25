@@ -10,14 +10,14 @@ import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 part 'CheckdistributionEvent.dart';
 part 'CheckdistributionState.dart';
 
-class CheckdistributionBloc
+class CheckDistributionBloc
     extends Bloc<CheckdistributionEvent, CheckdistributionState> {
-  final CheckDistributionReposity _checkDistributionReposity;
+  final CheckDistributionRepository _checkDistributionRepository;
 
-  CheckdistributionBloc(
-      {@required CheckDistributionReposity checkDistributionReposity})
-      : assert(checkDistributionReposity != null),
-        _checkDistributionReposity = checkDistributionReposity, super(CheckdistributionInitial());
+  CheckDistributionBloc(
+      {@required CheckDistributionRepository checkDistributionRepository})
+      : assert(checkDistributionRepository != null),
+        _checkDistributionRepository = checkDistributionRepository, super(CheckdistributionInitial());
 
   @override
   Stream<CheckdistributionState> mapEventToState(
@@ -31,11 +31,7 @@ class CheckdistributionBloc
       }
       try {
         CheckDistributionModel record =
-            await _checkDistributionReposity.fetchRecord(event.lat, event.long);
-        if (event.isOther == false) {
-          await _checkDistributionReposity.saveToCollection(
-              event.id, event.lat, event.long);
-        }
+            await _checkDistributionRepository.fetchRecord(event.lat, event.long);
         yield CheckDistributionLoaded(record: record);
       } catch (e) {
         yield CheckDistributionFailure(

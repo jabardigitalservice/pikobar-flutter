@@ -1,10 +1,15 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class CustomAppBar {
   static AppBar defaultAppBar(
-      {Widget leading, @required String title, List<Widget> actions, PreferredSizeWidget bottom}) {
+      {Widget leading,
+      @required String title,
+      List<Widget> actions,
+      PreferredSizeWidget bottom}) {
     return AppBar(
       backgroundColor: Colors.white,
       leading: leading,
@@ -52,13 +57,19 @@ class CustomAppBar {
     );
   }
 
-  static AppBar bottomSearchAppBar({@required TextEditingController searchController, @required String title, @required String hintText, ValueChanged<String> onChanged}) {
+  static AppBar bottomSearchAppBar(
+      {@required TextEditingController searchController,
+      @required String title,
+      @required String hintText,
+        double elevation,
+      ValueChanged<String> onChanged}) {
     return AppBar(
         backgroundColor: Colors.white,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
           child: buildSearchField(searchController, hintText, onChanged),
         ),
+        elevation: elevation ?? 0.0,
         title: CustomAppBar.setTitleAppBar(title));
   }
 
@@ -66,19 +77,21 @@ class CustomAppBar {
     return Text(title,
         style: TextStyle(
             fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            fontFamily: FontsFamily.productSans),
+            fontWeight: FontWeight.bold,
+            fontFamily: FontsFamily.lato),
         maxLines: 1,
         overflow: TextOverflow.ellipsis);
   }
 
-  static Widget buildSearchField(TextEditingController searchController, String hintText, ValueChanged<String> onChanged) {
+  static Widget buildSearchField(TextEditingController searchController,
+      String hintText, ValueChanged<String> onChanged, {EdgeInsetsGeometry margin}) {
     return Container(
-      margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
+      margin: margin ?? EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
       decoration: BoxDecoration(
-          color: Color(0xffFAFAFA),
+          color: ColorBase.greyContainer,
           shape: BoxShape.rectangle,
+          border: Border.all(color: ColorBase.greyBorder),
           borderRadius: BorderRadius.circular(8.0)),
       child: TextField(
         controller: searchController,
@@ -86,20 +99,54 @@ class CustomAppBar {
         decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.search,
-              color: Color(0xff828282),
+              color: ColorBase.darkGrey,
             ),
+            suffixIcon: searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: Icon(EvaIcons.closeCircle),
+                    color: ColorBase.darkGrey,
+                    onPressed: () {
+                      searchController.text = '';
+                    },
+                  )
+                : null,
             hintText: hintText,
             border: InputBorder.none,
             hintStyle: TextStyle(
-                color: Color(0xff828282),
+                color: ColorBase.darkGrey,
                 fontFamily: FontsFamily.lato,
                 fontSize: 12,
                 height: 2.2),
             contentPadding:
-            EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
+                EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0)),
         style: TextStyle(color: Colors.black, fontSize: 16.0),
         onChanged: onChanged,
       ),
+    );
+  }
+
+  static AppBar animatedAppBar(
+      {@required bool showTitle,
+      @required String title,
+      double fontSize,
+      List<Widget> actions}) {
+    return AppBar(
+      title: AnimatedOpacity(
+        opacity: showTitle ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 250),
+        child: Text(
+          showTitle ? title : '',
+          style: TextStyle(
+              fontFamily: FontsFamily.lato,
+              fontSize: fontSize ?? 16.0,
+              fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      backgroundColor: Colors.white,
+      elevation: 0,
+      actions: actions,
     );
   }
 }

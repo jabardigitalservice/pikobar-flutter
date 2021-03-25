@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/CityModel.dart';
@@ -55,6 +56,16 @@ class ProfileVerifiedFailed extends ProfileState {
 
   @override
   List<Object> get props => [];
+}
+
+class ProfileLoaded extends ProfileState {
+  final DocumentSnapshot profile;
+  ProfileLoaded(this.profile);
+  @override
+  String toString() => 'ProfileLoaded';
+
+  @override
+  List<Object> get props => [profile];
 }
 
 class ProfileLoading extends ProfileState {

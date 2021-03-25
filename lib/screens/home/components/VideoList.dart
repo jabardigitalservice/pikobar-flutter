@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/VideoListBloc.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -17,158 +15,219 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
-import 'package:share/share.dart';
 
+// ignore: must_be_immutable
 class VideoList extends StatefulWidget {
+  final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
+
+  VideoList({Key key, this.searchQuery, this.covidInformationScreenState})
+      : super(key: key);
+
   @override
   _VideoListState createState() => _VideoListState();
 }
 
 class _VideoListState extends State<VideoList> {
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VideoListBloc, VideoListState>(
-        builder: (context, state) {
-      return state is VideosLoaded
-          ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-              builder: (context, remoteState) {
-              return remoteState is RemoteConfigLoaded
-                  ? _buildContent(state.videos, remoteState.remoteConfig)
-                  : _buildLoading();
-            })
-          : _buildLoading();
-    });
+    return BlocListener<VideoListBloc, VideoListState>(
+      listener: (context, state) {
+        if (state is VideosLoaded) {
+          isGetDataLabel = true;
+          getDataLabel();
+        }
+      },
+      child:
+          BlocBuilder<VideoListBloc, VideoListState>(builder: (context, state) {
+        return state is VideosLoaded
+            ? BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                builder: (context, remoteState) {
+                return remoteState is RemoteConfigLoaded
+                    ? _buildContent(state.videos, remoteState.remoteConfig)
+                    : _buildLoading();
+              })
+            : _buildLoading();
+      }),
+    );
+  }
+
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   Widget _buildLoading() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 10.0),
-          child: Text(
-            Dictionary.videoUpToDate,
-            style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontFamily: FontsFamily.lato,
-                fontSize: Dimens.textTitleSize),
-          ),
-        ),
-        CarouselSlider(
-            options: CarouselOptions(
-              initialPage: 0,
-              enableInfiniteScroll: false,
-              height: 260.0,
-              viewportFraction: 0.9,
-            ),
-            items: [1, 2, 3].map((record) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Card(
-                        elevation: 5.0,
-                        margin: EdgeInsets.symmetric(vertical: 15.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Skeleton(
-                              height: 180.0,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                            Skeleton(
-                              height: 20.0,
-                              margin: 10.0,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          ],
+    return Container(
+      height: 260,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          padding: const EdgeInsets.only(
+              right: Dimens.padding,
+              top: Dimens.padding,
+              bottom: Dimens.padding),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Container(
+                width: 150.0,
+                height: 150.0,
+                padding: const EdgeInsets.only(left: Dimens.padding),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 140,
+                      width: 150,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Skeleton(
+                          width: MediaQuery.of(context).size.width / 1.4,
+                          padding: 10.0,
                         ),
-                      ));
-                },
-              );
-            }).toList()),
-      ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Skeleton(
+                                  height: 20.0,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.8,
+                                  padding: 10.0,
+                                ),
+                                SizedBox(height: 8),
+                                Skeleton(
+                                  height: 20.0,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  padding: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          }),
     );
   }
 
   Widget _buildContent(List<VideoModel> data, RemoteConfig remoteConfig) {
-    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 5.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                getLabel['video']['title'],
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: Dimens.textTitleSize),
-              ),
-              InkWell(
-                child: Text(
-                  Dictionary.more,
-                  style: TextStyle(
-                      color: Color(0xFF27AE60),
-                      fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: Dimens.textSubtitleSize),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.VideoList);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
 
-                  AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
-                },
+    if (widget.searchQuery != null) {
+      data = data
+          .where((test) => test.title
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+
+      if (data.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataVideoList = true;
+      }
+    }
+
+    getDataLabel();
+
+    return data.isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 16.0, bottom: 16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      getLabel['video']['title'],
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: Dimens.textTitleSize),
+                    ),
+                    InkWell(
+                      child: Text(
+                        Dictionary.more,
+                        style: TextStyle(
+                            color: Color(0xFF27AE60),
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.roboto,
+                            fontSize: Dimens.textSubtitleSize),
+                      ),
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.VideoList,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
+
+                        AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 15),
-          child: Text(
-            getLabel['video']['description'],
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: Dimens.textSubtitleSize),
-            textAlign: TextAlign.left,
-          ),
-        ),
-        Container(
-          height: 280.0,
-          child: data.isNotEmpty
-              ? ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 15.0),
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      // decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: Container(
+              Container(
+                height: 265.0,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                    padding: const EdgeInsets.only(
+                        right: Dimens.padding, bottom: Dimens.padding),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.searchQuery != null ? data.length : 5,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.only(left: Dimens.padding),
+                        width: 150.0,
+                        height: 150.0,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             GestureDetector(
                               child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 180.0,
+                                width: 140.0,
+                                height: 150.0,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: <Widget>[
@@ -217,12 +276,22 @@ class _VideoListState extends State<VideoList> {
                                     ),
                                     Image.asset(
                                       '${Environment.iconAssets}play_button.png',
-                                      scale: 1.5,
+                                      scale: 2.3,
                                     )
                                   ],
                                 ),
                               ),
                               onTap: () {
+                                setState(() {
+                                  labelNew.readNewInfo(
+                                      data[index].id,
+                                      data[index].publishedAt.toString(),
+                                      dataLabel,
+                                      Dictionary.labelVideos);
+                                  widget.covidInformationScreenState.widget
+                                      .homeScreenState
+                                      .getAllUnreadData();
+                                });
                                 launchExternal(data[index].url);
 
                                 AnalyticsHelper.setLogEvent(
@@ -230,18 +299,6 @@ class _VideoListState extends State<VideoList> {
                                   'title': data[index].title
                                 });
                               },
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Text(
-                                unixTimeStampToDateTime(
-                                    data[index].publishedAt),
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.w600),
-                              ),
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width,
@@ -258,43 +315,42 @@ class _VideoListState extends State<VideoList> {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: 14.0,
-                                            fontFamily: FontsFamily.lato,
+                                            fontFamily: FontsFamily.roboto,
                                             fontWeight: FontWeight.w600),
                                       ),
                                     ),
                                   ),
-                                  ShareButton(
-                                    paddingLeft: 10,
-                                    height: 40.0,
-                                    onPressed: () {
-                                      _shareVideo(
-                                          data[index].title, data[index].url);
-                                    },
-                                  ),
                                 ],
                               ),
-                            )
+                            ),
+                            Row(
+                              children: [
+                                labelNew.isLabelNew(
+                                        data[index].id.toString(), dataLabel)
+                                    ? LabelNewScreen()
+                                    : Container(),
+                                Expanded(
+                                  child: Text(
+                                    unixTimeStampToCustomDateFormat(
+                                        data[index].publishedAt,
+                                        'EEEE, dd MMM yyyy'),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontFamily: FontsFamily.roboto,
+                                        fontSize: 10.0,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20)
                           ],
                         ),
-                      ),
-                    );
-                  })
-              : EmptyData(
-                  message: Dictionary.emptyData,
-                  desc: '',
-                  isFlare: false,
-                  image: "${Environment.imageAssets}not_found.png",
-                ),
-        ),
-      ],
-    );
-  }
-
-  _shareVideo(String title, String url) {
-    Share.share(
-        '$title \n\nTonton video lengkapnya:\n$url \n\n${Dictionary.sharedFrom}');
-
-    AnalyticsHelper.setLogEvent(
-        Analytics.tappedVideoShare, <String, dynamic>{'title': title});
+                      );
+                    }),
+              ),
+            ],
+          )
+        : Container();
   }
 }

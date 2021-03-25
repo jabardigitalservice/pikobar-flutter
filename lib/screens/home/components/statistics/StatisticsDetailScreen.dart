@@ -7,6 +7,7 @@ import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -14,6 +15,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/RapidTestDetail.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
@@ -41,6 +43,8 @@ class StatisticsDetailScreen extends StatefulWidget {
 }
 
 class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
+  ScrollController _scrollController;
+
   RemoteConfig get remoteConfig => widget.remoteConfigLoaded.remoteConfig;
 
   DocumentSnapshot get statisticsDoc => widget.statisticsLoaded.snapshot;
@@ -50,11 +54,25 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
   DocumentSnapshot get pcrDoc => widget.pcrTestLoaded.snapshot;
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.13 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.statistics),
-      body: SingleChildScrollView(child: _buildContent()),
+      appBar: CustomAppBar.animatedAppBar(
+          title: Dictionary.statistics, showTitle: _showTitle),
+      body: SingleChildScrollView(
+          controller: _scrollController, child: _buildContent()),
     );
   }
 
@@ -76,7 +94,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     Map<String, dynamic> statisticBottomSheet = RemoteConfigHelper.decode(
         remoteConfig: remoteConfig,
         firebaseConfig: FirebaseConfig.bottomSheetContent,
-        defaultValue: FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
+        defaultValue:
+            FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: Dimens.padding),
@@ -85,24 +104,32 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            child: AnimatedOpacity(
+              opacity: _showTitle ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 250),
+              child: Text(
+                Dictionary.statistics,
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  labels['last_updated_on'],
-                  style: TextStyle(
-                      color: ColorBase.veryDarkGrey,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0),
-                ),
                 SizedBox(height: 8.0),
                 Text(
                   unixTimeStampToDateTimeWithoutDay(
                       statisticsDoc['updated_at'].seconds),
                   style: TextStyle(
                       color: ColorBase.veryDarkGrey,
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 10.0),
                 ),
                 SizedBox(height: Dimens.padding),
@@ -122,7 +149,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildContainerOne(
-                    '${Environment.iconAssets}virus_yellow.png',
+                    '${Environment.iconAssets}circle_plus_yellow.png',
                     labels['statistics']['positif'],
                     getDataActivePositive(
                         statisticsDoc['aktif']['jabar'],
@@ -135,13 +162,13 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             statisticsDoc['sembuh']['jabar'],
                             statisticsDoc['meninggal']['jabar'])))),
                 _buildContainerOne(
-                    '${Environment.iconAssets}virus_green.png',
+                    '${Environment.iconAssets}circle_check_green.png',
                     labels['statistics']['recovered'],
                     '${statisticsDoc['sembuh']['jabar']}',
                     getDataProcessPercent(statisticsDoc['aktif']['jabar'],
                         statisticsDoc['sembuh']['jabar'])),
                 _buildContainerOne(
-                    '${Environment.iconAssets}virus_red.png',
+                    '${Environment.iconAssets}circle_cross_red.png',
                     labels['statistics']['deaths'],
                     '${statisticsDoc['meninggal']['jabar']}',
                     getDataProcessPercent(statisticsDoc['aktif']['jabar'],
@@ -269,7 +296,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                 Text(
                   label,
                   style: TextStyle(
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
@@ -279,7 +306,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -321,29 +348,18 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   style: TextStyle(
                       fontSize: 12.0,
                       color: ColorBase.veryDarkGrey,
-                      fontFamily: FontsFamily.lato)),
+                      fontFamily: FontsFamily.roboto)),
             ),
             Container(
               margin: EdgeInsets.only(top: 10, left: 5.0),
               child: Text(count,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 16.0,
                       color: ColorBase.veryDarkGrey,
                       fontWeight: FontWeight.bold,
                       fontFamily: FontsFamily.roboto)),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 10, left: 5.0),
-              child: percentage != ''
-                  ? Text(percentage,
-                      style: TextStyle(
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff828282),
-                          fontFamily: FontsFamily.lato))
-                  : null,
-            )
           ],
         ),
       ),
@@ -385,14 +401,15 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   style: TextStyle(
                       fontSize: 12.0,
                       color: ColorBase.veryDarkGrey,
-                      fontFamily: FontsFamily.lato)),
+                      fontFamily: FontsFamily.roboto)),
               GestureDetector(
-                  onTap: mainTitleHelpOnTap,
-                  child: SizedBox(
-                    width: 20,
-                    child: Icon(Icons.help_outline,
-                        size: 13.0, color: ColorBase.darkGrey),
-                  ),)
+                onTap: mainTitleHelpOnTap,
+                child: SizedBox(
+                  width: 20,
+                  child: Icon(Icons.help_outline,
+                      size: 13.0, color: ColorBase.darkGrey),
+                ),
+              )
             ],
           ),
           Container(
@@ -400,7 +417,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             child: Text(mainCount,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 16.0,
                     color: ColorBase.veryDarkGrey,
                     fontWeight: FontWeight.bold,
                     fontFamily: FontsFamily.roboto)),
@@ -421,26 +438,17 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                         style: TextStyle(
                             fontSize: 12.0,
                             color: ColorBase.darkGrey,
-                            fontFamily: FontsFamily.lato)),
+                            fontFamily: FontsFamily.roboto)),
                     Container(
                       margin: EdgeInsets.only(top: 10),
                       child: Text(secondCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 16.0,
                               color: ColorBase.darkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(secondPercentage,
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              fontWeight: FontWeight.bold,
-                              color: ColorBase.darkGrey,
-                              fontFamily: FontsFamily.lato)),
-                    )
                   ],
                 ),
               ),
@@ -454,7 +462,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             style: TextStyle(
                                 fontSize: 12.0,
                                 color: ColorBase.darkGrey,
-                                fontFamily: FontsFamily.lato)),
+                                fontFamily: FontsFamily.roboto)),
                         thirdTitleHelpOnTap != null
                             ? GestureDetector(
                                 onTap: thirdTitleHelpOnTap,
@@ -472,20 +480,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       child: Text(thirdCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 16.0,
                               color: ColorBase.darkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(thirdPercentage,
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              fontWeight: FontWeight.bold,
-                              color: ColorBase.darkGrey,
-                              fontFamily: FontsFamily.lato)),
-                    )
                   ],
                 ),
               ),
@@ -500,7 +499,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                   style: TextStyle(
                                       fontSize: 12.0,
                                       color: ColorBase.darkGrey,
-                                      fontFamily: FontsFamily.lato)),
+                                      fontFamily: FontsFamily.roboto)),
                               SizedBox(width: 5.0),
                               fourthTitleHelpOnTap != null
                                   ? GestureDetector(
@@ -508,7 +507,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                       child: SizedBox(
                                         width: 20,
                                         child: Icon(Icons.help_outline,
-                                            size: 13.0, color: ColorBase.darkGrey),
+                                            size: 13.0,
+                                            color: ColorBase.darkGrey),
                                       ),
                                     )
                                   : Container()
@@ -519,20 +519,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             child: Text(fourthCount ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 20.0,
+                                    fontSize: 16.0,
                                     color: ColorBase.darkGrey,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: FontsFamily.roboto)),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 10),
-                            child: Text(fourthPercentage ?? '',
-                                style: TextStyle(
-                                    fontSize: 10.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorBase.darkGrey,
-                                    fontFamily: FontsFamily.lato)),
-                          )
                         ],
                       ),
                     )
@@ -550,6 +541,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
 
     return InkWell(
       onTap: () {
+        AnalyticsHelper.setLogEvent(Analytics.tappedTotalInspectionCovid);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -568,49 +560,42 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                        height: 41,
-                        child: Image.asset(
-                            '${Environment.imageAssets}bloodTest@4x.png')),
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(left: Dimens.verticalPadding),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(Dictionary.testSummaryTitle,
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    color: ColorBase.veryDarkGrey,
-                                    fontFamily: FontsFamily.lato)),
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.0),
-                              child: Text(count,
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      color: ColorBase.veryDarkGrey,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: FontsFamily.roboto)),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(Dictionary.testSummaryTitle,
+                        style: TextStyle(
+                            fontSize: 12.0,
+                            color: ColorBase.veryDarkGrey,
+                            fontFamily: FontsFamily.roboto)),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(count,
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: ColorBase.veryDarkGrey,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: FontsFamily.roboto)),
+                    )
                   ],
                 ),
               ),
               Icon(
                 Icons.arrow_forward_ios,
                 size: 20,
-                color: Color(0xff27AE60),
+                color: ColorBase.netralGrey,
               )
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 }

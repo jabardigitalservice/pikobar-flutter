@@ -25,9 +25,18 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
   int currentPage = 0;
   bool isReady = false;
   String errorMessage = '';
+  String nameFile;
 
   @override
   void initState() {
+    if (widget.nameFile.length > 253) {
+      var maxlength = widget.nameFile.length - 253;
+      nameFile =
+          widget.nameFile.substring(0, widget.nameFile.length - maxlength);
+    } else {
+      nameFile = widget.nameFile;
+    }
+
     createFileOfPdfUrl().then((f) {
       setState(() {
         remotePDFpath = f.path;
@@ -43,7 +52,8 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
     try {
       final url = widget.url;
       final filename =
-          widget.nameFile.replaceAll(RegExp(r"\|.*"), '').replaceAll('/', '').trim() + '.pdf';
+          nameFile.replaceAll(RegExp(r"\|.*"), '').replaceAll('/', '').trim() +
+              '.pdf';
       var request = await HttpClient().getUrl(Uri.parse(url));
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
@@ -78,8 +88,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
             appBar: CustomAppBar.defaultAppBar(
               title: Dictionary.documentPreview,
             ),
-            body:
-                Center(child: CircularProgressIndicator()),
+            body: Center(child: CircularProgressIndicator()),
           );
   }
 }

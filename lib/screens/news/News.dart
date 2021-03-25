@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
@@ -9,6 +11,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
@@ -16,8 +19,10 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 // ignore: must_be_immutable
 class NewsListScreen extends StatelessWidget {
   String news;
+  CovidInformationScreenState covidInformationScreenState;
 
-  NewsListScreen({this.news});
+  NewsListScreen({Key key, this.news, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,8 @@ class NewsListScreen extends StatelessWidget {
             create: (context) => RemoteConfigBloc()..add(RemoteConfigLoad())),
         BlocProvider<NewsListBloc>(create: (context) => NewsListBloc())
       ],
-      child: News(news: news),
+      child: News(
+          news: news, covidInformationScreenState: covidInformationScreenState),
     );
   }
 }
@@ -35,8 +41,10 @@ class NewsListScreen extends StatelessWidget {
 // ignore: must_be_immutable
 class News extends StatefulWidget {
   String news;
+  CovidInformationScreenState covidInformationScreenState;
 
-  News({this.news});
+  News({Key key, this.news, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _NewsState createState() => _NewsState();
@@ -44,6 +52,10 @@ class News extends StatefulWidget {
 
 class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   TabController tabController;
+  ScrollController _scrollController;
+  TextEditingController _searchController = TextEditingController();
+  Timer _debounce;
+  String searchQuery;
   NewsListBloc _newsListBloc;
   bool statImportantInfo = true;
   bool checkStatImportantInfo = true;
@@ -75,7 +87,17 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   void initState() {
     _newsListBloc = BlocProvider.of<NewsListBloc>(context);
     AnalyticsHelper.setCurrentScreen(Analytics.news);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+    _searchController.addListener((() {
+      _onSearchChanged();
+    }));
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   setControllerTab(bool statImportantInfo) {
@@ -94,16 +116,13 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: CustomAppBar.setTitleAppBar(Dictionary.news),
-        ),
-        body: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-            builder: (context, state) {
-          return state is RemoteConfigLoaded
-              ? buildContent(state)
-              : Container();
-        }));
+        body: WillPopScope(
+      onWillPop: _onWillPop,
+      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+          builder: (context, state) {
+        return state is RemoteConfigLoaded ? buildContent(state) : Container();
+      }),
+    ));
   }
 
   buildContent(RemoteConfigLoaded state) {
@@ -119,30 +138,80 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       }
       checkStatImportantInfo = false;
     }
-    return Container(
-      child: CustomBubbleTab(
-        listItemTitleTab: listItemTitleTab,
-        indicatorColor: ColorBase.green,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.grey,
-        tabController: tabController,
-        typeTabSelected: widget.news,
-        onTap: (index) {
-          _newsListBloc.add(NewsListLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        },
-        tabBarView: <Widget>[
-          NewsScreen(news: Dictionary.allNews),
-          if (statImportantInfo) NewsScreen(news: Dictionary.importantInfo),
-          NewsScreen(news: Dictionary.latestNews),
-          NewsScreen(news: Dictionary.nationalNews),
-          NewsScreen(news: Dictionary.worldNews),
-        ],
-        heightTabBarView: MediaQuery.of(context).size.height - 148,
-        paddingTopTabBarView: 0,
-      ),
+    return CustomBubbleTab(
+      isStickyHeader: true,
+      titleHeader: Dictionary.news,
+      listItemTitleTab: listItemTitleTab,
+      indicatorColor: ColorBase.green,
+      searchBar: CustomAppBar.buildSearchField(
+          _searchController, Dictionary.searchInformation, updateSearchQuery),
+      labelColor: Colors.white,
+      showTitle: _showTitle,
+      scrollController: _scrollController,
+      unselectedLabelColor: ColorBase.netralGrey,
+      tabController: tabController,
+      typeTabSelected: widget.news,
+      onTap: (index) {
+        _newsListBloc.add(NewsListLoad(listCollectionData[index],
+            statImportantInfo: statImportantInfo));
+        AnalyticsHelper.setLogEvent(analyticsData[index]);
+      },
+      tabBarView: <Widget>[
+        NewsScreen(
+            news: Dictionary.allNews,
+            searchQuery: searchQuery,
+            covidInformationScreenState: widget.covidInformationScreenState),
+        if (statImportantInfo)
+          NewsScreen(
+            news: Dictionary.importantInfo,
+            searchQuery: searchQuery,
+            covidInformationScreenState: widget.covidInformationScreenState,
+          ),
+        NewsScreen(
+          news: Dictionary.latestNews,
+          searchQuery: searchQuery,
+          covidInformationScreenState: widget.covidInformationScreenState,
+        ),
+        NewsScreen(
+          news: Dictionary.nationalNews,
+          searchQuery: searchQuery,
+          covidInformationScreenState: widget.covidInformationScreenState,
+        ),
+        NewsScreen(
+          news: Dictionary.worldNews,
+          searchQuery: searchQuery,
+          covidInformationScreenState: widget.covidInformationScreenState,
+        ),
+      ],
+      isExpand: true,
     );
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.trim().isNotEmpty) {
+        setState(() {
+          searchQuery = _searchController.text;
+        });
+        AnalyticsHelper.setLogEvent(Analytics.tappedSearchNews);
+      } else {
+        _clearSearchQuery();
+      }
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      updateSearchQuery(null);
+    });
   }
 
   _handleTabSelection() {
@@ -152,8 +221,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
+  }
+
   @override
   void dispose() {
+    _searchController.dispose();
     tabController.dispose();
     _newsListBloc.close();
     super.dispose();

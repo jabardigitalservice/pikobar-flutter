@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,9 +11,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
-import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/InWebView.dart';
-import 'package:pikobar_flutter/components/ShareButton.dart';
+import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -22,19 +22,31 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/screens/document/DocumentServices.dart';
+import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
+import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
+import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
+// ignore: must_be_immutable
 class Documents extends StatefulWidget {
+  final String searchQuery;
+  CovidInformationScreenState covidInformationScreenState;
+
+  Documents({Key key, this.searchQuery, this.covidInformationScreenState})
+      : super(key: key);
+
   @override
   _DocumentsState createState() => _DocumentsState();
 }
 
 class _DocumentsState extends State<Documents> {
   List<DocumentSnapshot> dataDocuments = [];
+  List<LabelNewModel> dataLabel = [];
+  bool isGetDataLabel = true;
+  LabelNew labelNew = LabelNew();
 
   @override
   Widget build(BuildContext context) {
@@ -48,62 +60,35 @@ class _DocumentsState extends State<Documents> {
   }
 
   Widget _buildHeader(RemoteConfig remoteConfig) {
-    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(remoteConfig: remoteConfig, firebaseConfig: FirebaseConfig.labels, defaultValue: FirebaseConfig.labelsDefaultValue);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                getLabel['documents']['title'],
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
-                    fontSize: Dimens.textTitleSize),
-              ),
-              InkWell(
-                child: Text(
-                  Dictionary.more,
-                  style: TextStyle(
-                      color: ColorBase.green,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: Dimens.textSubtitleSize),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.Document);
+    Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
+        remoteConfig: remoteConfig,
+        firebaseConfig: FirebaseConfig.labels,
+        defaultValue: FirebaseConfig.labelsDefaultValue);
+    return BlocListener<DocumentsBloc, DocumentsState>(
+        listener: (context, state) {
+      if (state is DocumentsLoaded) {
+        isGetDataLabel = true;
+        getDataLabel();
+      }
+    }, child: BlocBuilder<DocumentsBloc, DocumentsState>(
+      builder: (context, state) {
+        return state is DocumentsLoaded
+            ? _buildContent(state.documents, getLabel)
+            : _buildLoading();
+      },
+    ));
+  }
 
-                  AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
-                },
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Text(
-            getLabel['documents']['description'],
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: FontsFamily.lato,
-                fontSize: 12.0),
-            textAlign: TextAlign.left,
-          ),
-        ),
-        BlocBuilder<DocumentsBloc, DocumentsState>(
-          builder: (context, state) {
-            return state is DocumentsLoaded
-                ? _buildContent(state.documents)
-                : _buildLoading();
-          },
-        )
-      ],
-    );
+  getDataLabel() {
+    if (isGetDataLabel) {
+      labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
+        if (!mounted) return;
+        setState(() {
+          dataLabel = value;
+        });
+      });
+      isGetDataLabel = false;
+    }
   }
 
   Widget _buildHeaderLoading() {
@@ -121,7 +106,7 @@ class _DocumentsState extends State<Documents> {
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
-                    fontFamily: FontsFamily.lato,
+                    fontFamily: FontsFamily.roboto,
                     fontSize: 16.0),
               ),
               InkWell(
@@ -130,11 +115,18 @@ class _DocumentsState extends State<Documents> {
                   style: TextStyle(
                       color: ColorBase.green,
                       fontWeight: FontWeight.w600,
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: Dimens.textSubtitleSize),
                 ),
-                onTap: () {
-                  Navigator.pushNamed(context, NavigationConstrants.Document);
+                onTap: () async {
+                  final result = await Navigator.pushNamed(
+                      context, NavigationConstrants.Document,
+                      arguments: widget.covidInformationScreenState) as bool;
+
+                  if (result) {
+                    isGetDataLabel = result;
+                    getDataLabel();
+                  }
 
                   AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
                 },
@@ -148,7 +140,7 @@ class _DocumentsState extends State<Documents> {
             Dictionary.descDocument,
             style: TextStyle(
                 color: Colors.black,
-                fontFamily: FontsFamily.lato,
+                fontFamily: FontsFamily.roboto,
                 fontSize: 12.0),
             textAlign: TextAlign.left,
           ),
@@ -158,204 +150,309 @@ class _DocumentsState extends State<Documents> {
   }
 
   Widget _buildLoading() {
-    return Column(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Skeleton(
-            height: 25.0,
-            width: MediaQuery.of(context).size.width,
-          ),
-        ),
-        ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Container(
-                  child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Skeleton(
-                        height: 20.0,
-                        width: 40,
-                        padding: 10.0,
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Skeleton(
-                                height: 20.0,
-                                width: MediaQuery.of(context).size.width / 1.6,
-                                padding: 10.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
+    return Container(
+      height: 260,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+          padding: const EdgeInsets.only(
+              right: Dimens.padding,
+              top: Dimens.padding,
+              bottom: Dimens.padding),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Container(
+                width: 150.0,
+                height: 150.0,
+                padding: const EdgeInsets.only(left: Dimens.padding),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 140,
+                      width: 150,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
                         child: Skeleton(
-                          height: 30.0,
-                          width: 30.0,
+                          width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
                         ),
                       ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20, bottom: 20),
-                    child: Skeleton(
-                      height: 1.5,
-                      width: MediaQuery.of(context).size.width,
-                      padding: 10.0,
                     ),
-                  )
-                ],
-              ));
-            })
-      ],
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Skeleton(
+                                  height: 20.0,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.8,
+                                  padding: 10.0,
+                                ),
+                                SizedBox(height: 8),
+                                Skeleton(
+                                  height: 20.0,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  padding: 10.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          }),
     );
   }
 
-  Widget _buildContent(List<DocumentSnapshot> documents) {
+  Widget _buildContent(
+      List<DocumentSnapshot> documents, Map<String, dynamic> getLabel) {
     dataDocuments.clear();
     documents.forEach((record) {
-      if (record['published'] && dataDocuments.length < 3) {
+      if (record['published'] && dataDocuments.length < 5) {
         dataDocuments.add(record);
       }
     });
 
-    return SingleChildScrollView(
-      child: ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.grey[200]),
-                borderRadius: BorderRadius.circular(8.0)),
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            margin: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 10),
-                Container(
-                  width: 85,
-                  child: Text(
-                    Dictionary.date,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.0,
-                        fontFamily: FontsFamily.lato,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Text(
-                  Dictionary.titleDocument,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Container()
-              ],
-            ),
-          ),
-          dataDocuments.isNotEmpty
-              ? ListView.builder(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 16.0, bottom: 16.0, top: 10.0),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: dataDocuments.length,
-                  itemBuilder: (context, index) {
-                    final DocumentSnapshot document = dataDocuments[index];
+    if (widget.searchQuery != null) {
+      dataDocuments = dataDocuments
+          .where((test) => test['title']
+              .toLowerCase()
+              .contains(widget.searchQuery.toLowerCase()))
+          .toList();
+      if (dataDocuments.isEmpty) {
+        widget.covidInformationScreenState.isEmptyDataDocument = true;
+      }
+    }
 
-                    return Container(
+    getDataLabel();
+
+    return dataDocuments.isNotEmpty
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 16.0, bottom: 16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      getLabel['documents']['title'],
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: Dimens.textTitleSize),
+                    ),
+                    InkWell(
+                      child: Text(
+                        Dictionary.more,
+                        style: TextStyle(
+                            color: ColorBase.green,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.roboto,
+                            fontSize: Dimens.textSubtitleSize),
+                      ),
+                      onTap: () async {
+                        final result = await Navigator.pushNamed(
+                                context, NavigationConstrants.Document,
+                                arguments: widget.covidInformationScreenState)
+                            as bool;
+
+                        if (result) {
+                          isGetDataLabel = result;
+                          getDataLabel();
+                        }
+
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedDocumentsMore);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 265,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                    padding: const EdgeInsets.only(
+                        right: Dimens.padding,
+                        top: Dimens.padding,
+                        bottom: Dimens.padding),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount:
+                        widget.searchQuery != null ? dataDocuments.length : 5,
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot document = dataDocuments[index];
+                      return Container(
+                        padding: EdgeInsets.only(left: Dimens.padding),
+                        width: 150.0,
+                        height: 150.0,
                         child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            SizedBox(width: 10),
-                            Container(
-                              width: 85,
-                              child: Text(
-                                unixTimeStampToDateDocs(
-                                    document['published_at'].seconds),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: FontsFamily.lato,
-                                    fontSize: 13.0),
-                                textAlign: TextAlign.left,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                            InkWell(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 140,
+                                    width: 150,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: document['images'] ?? '',
+                                        alignment: Alignment.topCenter,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => Center(
+                                            heightFactor: 4.2,
+                                            child:
+                                                CupertinoActivityIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              3.3,
+                                          color: Colors.grey[200],
+                                          child: Image.asset(
+                                              '${Environment.iconAssets}pikobar.png',
+                                              fit: BoxFit.fitWidth),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    top: 0,
+                                    child: Image.asset(
+                                      '${Environment.iconAssets}pdf_icon.png',
+                                      scale: 2,
+                                    ),
+                                  )
+                                ],
                               ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Platform.isAndroid
-                                      ? _downloadAttachment(document['title'],
-                                          document['document_url'])
-                                      : _viewPdf(document['title'],
-                                          document['document_url']);
-                                },
-                                child: Text(
-                                  document['title'],
-                                  style: TextStyle(
-                                      fontFamily: FontsFamily.lato,
-                                      color: Colors.lightBlueAccent[700],
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 13.0),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                            ),
-                            ShareButton(
-                              onPressed: () {
-                                DocumentServices().shareDocument(
-                                    document['title'],
-                                    document['document_url']);
+                              onTap: () {
+                                setState(() {
+                                  labelNew.readNewInfo(
+                                      document.id,
+                                      document['published_at']
+                                          .seconds
+                                          .toString(),
+                                      dataLabel,
+                                      Dictionary.labelDocuments);
+                                  widget.covidInformationScreenState.widget
+                                      .homeScreenState
+                                      .getAllUnreadData();
+                                });
+                                Platform.isAndroid
+                                    ? _downloadAttachment(document['title'],
+                                        document['document_url'])
+                                    : _viewPdf(document['title'],
+                                        document['document_url']);
                               },
-                            )
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        labelNew.readNewInfo(
+                                            document.id,
+                                            document['published_at']
+                                                .seconds
+                                                .toString(),
+                                            dataLabel,
+                                            Dictionary.labelDocuments);
+                                        widget.covidInformationScreenState
+                                            .widget.homeScreenState
+                                            .getAllUnreadData();
+                                      });
+                                      Platform.isAndroid
+                                          ? _downloadAttachment(
+                                              document['title'],
+                                              document['document_url'])
+                                          : _viewPdf(document['title'],
+                                              document['document_url']);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            document['title'],
+                                            style: TextStyle(
+                                                fontSize:
+                                                    Dimens.textSubtitleSize,
+                                                fontFamily: FontsFamily.roboto,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.left,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              labelNew.isLabelNew(
+                                                      document.id.toString(),
+                                                      dataLabel)
+                                                  ? LabelNewScreen()
+                                                  : Container(),
+                                              Expanded(
+                                                child: Text(
+                                                  unixTimeStampToCustomDateFormat(
+                                                      document['published_at']
+                                                          .seconds,
+                                                      'EEEE, dd MMM yyyy'),
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontFamily:
+                                                          FontsFamily.roboto,
+                                                      fontSize: 10.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                  textAlign: TextAlign.left,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20)
                           ],
                         ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          color: Colors.grey[200],
-                          width: MediaQuery.of(context).size.width,
-                          height: 1.5,
-                        )
-                      ],
-                    ));
-                  })
-              : EmptyData(
-                  message: Dictionary.emptyData,
-                  desc: '',
-                  isFlare: false,
-                  image: "${Environment.imageAssets}not_found.png",
-                )
-        ],
-      ),
-    );
+                      );
+                    }),
+              )
+            ],
+          )
+        : Container();
   }
 
   void _viewPdf(String title, String url) async {
@@ -386,37 +483,6 @@ class _DocumentsState extends State<Documents> {
                 },
               )));
     } else {
-//      Fluttertoast.showToast(
-//          msg: Dictionary.downloadingFile,
-//          toastLength: Toast.LENGTH_LONG,
-//          gravity: ToastGravity.BOTTOM,
-//          fontSize: 16.0);
-//
-//      name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
-//
-//      try {
-//        await FlutterDownloader.enqueue(
-//          url: url,
-//          savedDir: Environment.downloadStorage,
-//          fileName: name,
-//          showNotification: true,
-//          // show download progress in status bar (for Android)
-//          openFileFromNotification:
-//              true, // click on notification to open downloaded file (for Android)
-//        );
-//      } catch (e) {
-//        String dir = (await getExternalStorageDirectory()).path + '/download';
-//        await FlutterDownloader.enqueue(
-//          url: url,
-//          savedDir: dir,
-//          fileName: name,
-//          showNotification: true,
-//          // show download progress in status bar (for Android)
-//          openFileFromNotification:
-//              true, // click on notification to open downloaded file (for Android)
-//        );
-//      }
-
       Navigator.push(
         context,
         MaterialPageRoute(

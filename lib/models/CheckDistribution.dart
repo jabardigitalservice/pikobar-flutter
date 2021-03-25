@@ -1,28 +1,21 @@
 class CheckDistributionModel {
   CurrentLocation currentLocation;
   Detected detected;
+  String zonaResiko;
 
-  CheckDistributionModel({this.currentLocation, this.detected});
+  CheckDistributionModel({this.currentLocation, this.detected, this.zonaResiko});
 
-  CheckDistributionModel.fromJson(Map<String, dynamic> json) {
-    currentLocation = json['current_location'] != null
-        ? new CurrentLocation.fromJson(json['current_location'])
-        : null;
-    detected = json['detected'] != null
-        ? new Detected.fromJson(json['detected'])
-        : null;
-  }
+  factory CheckDistributionModel.fromJson(Map<String, dynamic> json) => CheckDistributionModel(
+    currentLocation: CurrentLocation.fromJson(json["current_location"]),
+    detected: Detected.fromJson(json["detected"]),
+    zonaResiko: json["zona_resiko"],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.currentLocation != null) {
-      data['current_location'] = this.currentLocation.toJson();
-    }
-    if (this.detected != null) {
-      data['detected'] = this.detected.toJson();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "current_location": currentLocation.toJson(),
+    "detected": detected.toJson(),
+    "zona_resiko": zonaResiko,
+  };
 }
 
 class CurrentLocation {

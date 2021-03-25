@@ -6,10 +6,13 @@ import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/ProfileState.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 class Verification extends StatefulWidget {
@@ -48,17 +51,34 @@ class _VerificationState extends State<Verification> {
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
+  final FocusNode _pinPutFocusNode = FocusNode();
+
+  ScrollController _scrollController;
 
   @override
   void initState() {
+    AnalyticsHelper.setLogEvent(Analytics.tappedVerificationNumber);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   @override
   Widget build(BuildContext context) {
+    final BoxDecoration pinPutDecoration = BoxDecoration(
+      color: ColorBase.greyBorder,
+      borderRadius: BorderRadius.circular(14.0),
+    );
     return Scaffold(
         key: _scaffoldState,
-        appBar: CustomAppBar.defaultAppBar(title: Dictionary.verification),
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar.animatedAppBar(
+            title: Dictionary.verificationNumber, showTitle: _showTitle),
         body: BlocProvider<ProfileBloc>(
             create: (BuildContext context) => _profileBloc =
                 ProfileBloc(profileRepository: _profileRepository),
@@ -162,7 +182,25 @@ class _VerificationState extends State<Verification> {
                     Container(
                       height: MediaQuery.of(context).size.height,
                       child: ListView(
+                        controller: _scrollController,
                         children: <Widget>[
+                          AnimatedOpacity(
+                            opacity: _showTitle ? 0.0 : 1.0,
+                            duration: Duration(milliseconds: 250),
+                            child: Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Text(
+                                Dictionary.verificationNumber,
+                                style: TextStyle(
+                                    fontFamily: FontsFamily.lato,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -182,8 +220,9 @@ class _VerificationState extends State<Verification> {
                                     right: 20.0),
                                 child: Text(Dictionary.otpHasBeenSent,
                                     style: TextStyle(
-                                      color: ColorBase.darkGrey,
-                                    )),
+                                        color: Colors.grey[600],
+                                        fontFamily: FontsFamily.roboto,
+                                        fontSize: 12)),
                               ),
                               SizedBox(
                                 height: 20,
@@ -192,8 +231,9 @@ class _VerificationState extends State<Verification> {
                                 child: Text(
                                     Dictionary.inaCode + widget.phoneNumber,
                                     style: TextStyle(
-                                      fontSize: 16,
-                                      color: ColorBase.veryDarkGrey,
+                                      fontSize: 14,
+                                      color: Colors.grey[800],
+                                      fontFamily: FontsFamily.roboto,
                                       fontWeight: FontWeight.bold,
                                     )),
                               ),
@@ -208,39 +248,52 @@ class _VerificationState extends State<Verification> {
                                     right: 20.0),
                                 child: Text(Dictionary.inputOTP,
                                     style: TextStyle(
-                                      color: ColorBase.darkGrey,
+                                      color: Colors.grey[600],
+                                      fontSize: 12,
+                                      fontFamily: FontsFamily.roboto,
                                     )),
                               ),
                               SizedBox(
                                 height: 40,
                               ),
-                              Container(
-                                height: 70,
-                                child: PinPut(
-                                    textStyle: TextStyle(fontSize: 20),
-                                    inputDecoration: InputDecoration(
-                                        hintText: '-',
-                                        fillColor: ColorBase.veryLightGrey,
-                                        filled: true,
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: ColorBase.veryLightGrey),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: ColorBase.veryLightGrey),
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        counterText: ''),
-                                    fieldsCount: 6,
-                                    textInputAction: TextInputAction.go,
-                                    onSubmit: (String pin) {
-                                      setState(() {
-                                        smsCode = pin;
-                                      });
-                                    }),
-                              ),
+                              PinPut(
+                                  textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: FontsFamily.roboto),
+                                  preFilledWidget: Text(
+                                    '-',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  submittedFieldDecoration: pinPutDecoration,
+                                  selectedFieldDecoration:
+                                      pinPutDecoration.copyWith(
+                                    border: Border.all(
+                                      width: 2,
+                                      color: ColorBase.green,
+                                    ),
+                                  ),
+                                  inputDecoration: InputDecoration(
+                                      contentPadding: EdgeInsets.zero,
+                                      border: InputBorder.none,
+                                      counterText: '',
+                                      hintText: '-',
+                                      hintStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                          fontFamily: FontsFamily.roboto)),
+                                  followingFieldDecoration: pinPutDecoration,
+                                  fieldsCount: 6,
+                                  focusNode: _pinPutFocusNode,
+                                  eachFieldWidth: 55.0,
+                                  eachFieldHeight: 55.0,
+                                  textInputAction: TextInputAction.go,
+                                  onSubmit: (String pin) {
+                                    setState(() {
+                                      smsCode = pin;
+                                    });
+                                  }),
                               SizedBox(height: 20.0),
                               Container(
                                 padding: EdgeInsets.only(
@@ -253,16 +306,22 @@ class _VerificationState extends State<Verification> {
                                   children: <Widget>[
                                     Text(Dictionary.otpNotSent,
                                         style: TextStyle(
-                                          color: Colors.grey,
+                                          color: Colors.grey[600],
+                                          fontSize: 12,
+                                          fontFamily: FontsFamily.roboto,
                                         )),
                                     SizedBox(height: 10.0),
                                     InkWell(
                                       onTap: () {
                                         sendCodeToPhoneNumber();
+                                        AnalyticsHelper.setLogEvent(Analytics
+                                            .tappedSendAgainVerificationNumber);
                                       },
                                       child: Text(Dictionary.sendAgainOTP,
                                           style: TextStyle(
                                             color: ColorBase.brightBlue,
+                                            fontSize: 12,
+                                            fontFamily: FontsFamily.roboto,
                                           )),
                                     )
                                   ],
@@ -278,7 +337,8 @@ class _VerificationState extends State<Verification> {
                       left: 0.0,
                       right: 0.0,
                       child: RaisedButton(
-                        color: ColorBase.limeGreen,
+                        color:
+                            smsCode == null ? Colors.grey : ColorBase.limeGreen,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         onPressed: onVerifyButtonPressed,
@@ -301,20 +361,33 @@ class _VerificationState extends State<Verification> {
 
 // Function for check otp is valid or not
   onVerifyButtonPressed() {
-    _profileBloc.add(ConfirmOTP(
-        smsCode: smsCode,
-        verificationID:
-            verificationID == null ? widget.verificationID : verificationID,
-        id: widget.uid,
-        phoneNumber: widget.phoneNumber,
-        address: widget.address,
-        birthdate: widget.birthdate,
-        cityId: widget.cityId,
-        gender: widget.gender,
-        provinceId: widget.provinceId,
-        latLng: widget.latLng,
-        name: widget.name,
-        nik: widget.nik));
+    FocusScope.of(context).unfocus();
+    if (smsCode == null) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogTextOnly(
+                description: Dictionary.errorEmptyOTP,
+                buttonText: Dictionary.ok,
+                onOkPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ));
+    } else {
+      _profileBloc.add(ConfirmOTP(
+          smsCode: smsCode,
+          verificationID:
+              verificationID == null ? widget.verificationID : verificationID,
+          id: widget.uid,
+          phoneNumber: widget.phoneNumber,
+          address: widget.address,
+          birthdate: widget.birthdate,
+          cityId: widget.cityId,
+          gender: widget.gender,
+          provinceId: widget.provinceId,
+          latLng: widget.latLng,
+          name: widget.name,
+          nik: widget.nik));
+    }
   }
 
 // Function for resend code otp

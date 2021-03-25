@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/selfReport/addOtherSelfReport/AddOtherSelfReportBloc.dart';
-import 'package:pikobar_flutter/components/Announcement.dart';
 import 'package:pikobar_flutter/components/BlockCircleLoading.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -31,11 +30,74 @@ class ConfirmUserForm extends StatefulWidget {
 
 class _ConfirmUserFormState extends State<ConfirmUserForm> {
   AddOtherSelfReportBloc _addOtherSelfReportBloc;
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(title: Dictionary.previewData),
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: _showTitle,
+        title: Dictionary.previewData,
+      ),
+      backgroundColor: Colors.white,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            RoundedButton(
+                title: Dictionary.save,
+                borderRadius: BorderRadius.circular(8),
+                elevation: 0.0,
+                color: ColorBase.green,
+                textStyle: TextStyle(
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white),
+                onPressed: () {
+                  _saveSelfReport();
+                }),
+            SizedBox(height: Dimens.padding),
+            OutlineButton(
+              borderSide: BorderSide(color: Colors.grey[400]),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Text(
+                      Dictionary.change,
+                      style: TextStyle(
+                          color: ColorBase.netralGrey,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.roboto),
+                    ))),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: BlocProvider<AddOtherSelfReportBloc>(
         create: (BuildContext context) =>
             _addOtherSelfReportBloc = AddOtherSelfReportBloc(),
@@ -73,11 +135,26 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
             child: ListView(
+              controller: _scrollController,
               children: <Widget>[
+                AnimatedOpacity(
+                  opacity: _showTitle ? 0.0 : 1.0,
+                  duration: Duration(milliseconds: 250),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      Dictionary.previewData,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
                 SizedBox(height: Dimens.padding),
-                buildAnnouncement(),
-                SizedBox(height: Dimens.padding),
-                buildPreviewText(Dictionary.nik, widget.nik),
+                widget.nik.isEmpty
+                    ? Container()
+                    : buildPreviewText(Dictionary.nik, widget.nik),
                 SizedBox(height: Dimens.padding),
                 buildPreviewText(Dictionary.name, widget.name),
                 SizedBox(height: Dimens.padding),
@@ -89,43 +166,9 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                 buildPreviewText(Dictionary.gender,
                     widget.gender == 'M' ? 'Laki-laki' : 'Perempuan'),
                 SizedBox(height: Dimens.padding),
-                buildPreviewText(Dictionary.relation, widget.relation),
-                SizedBox(height: 32.0),
-                RoundedButton(
-                    title: Dictionary.save,
-                    elevation: 0.0,
-                    color: ColorBase.green,
-                    textStyle: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white),
-                    onPressed: () {
-                      _saveSelfReport();
-                    }),
-                SizedBox(height: Dimens.padding),
-                OutlineButton(
-                  borderSide: BorderSide(color: ColorBase.limeGreen),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                            child: Text(
-                          Dictionary.change,
-                          style: TextStyle(
-                              color: ColorBase.limeGreen,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.lato),
-                        ))),
-                  ),
-                ),
+                buildPreviewText(Dictionary.relation, widget.relation,
+                    withDivider: false),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.3),
               ],
             ),
           ),
@@ -165,7 +208,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                   titleDialog,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold),
                 ),
@@ -174,7 +217,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                   descDialog,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontFamily: FontsFamily.lato,
+                      fontFamily: FontsFamily.roboto,
                       fontSize: 12.0,
                       color: Colors.grey[600]),
                 ),
@@ -182,7 +225,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                 RoundedButton(
                     title: Dictionary.ok.toUpperCase(),
                     textStyle: TextStyle(
-                        fontFamily: FontsFamily.lato,
+                        fontFamily: FontsFamily.roboto,
                         fontSize: 12.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
@@ -195,38 +238,39 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
         });
   }
 
-  Widget buildPreviewText(String label, value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget buildPreviewText(String label, value, {bool withDivider = true}) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
             style: TextStyle(
-                fontFamily: FontsFamily.lato,
+                fontFamily: FontsFamily.roboto,
                 fontSize: 12.0,
                 fontWeight: FontWeight.bold,
                 height: 18.0 / 12.0,
-                color: ColorBase.netralGrey)),
-        Expanded(
-            child: Text(value,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold,
-                    height: 18.0 / 12.0,
-                    color: Colors.black)))
-      ],
-    );
-  }
+                color: ColorBase.grey800)),
+        SizedBox(
+          height: 10.0,
+        ),
+        Text(value,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                fontFamily: FontsFamily.roboto,
+                fontSize: 14.0,
+                height: 18.0 / 12.0,
+                color: ColorBase.grey800)),
+        SizedBox(
+          height: Dimens.padding,
+        ),
 
-  /// Set up for show announcement widget
-  Widget buildAnnouncement() {
-    return Announcement(
-      title: Dictionary.titlePreviewDataAnnouncement,
-      content: Dictionary.previewAnnouncement,
-      context: context,
-      onLinkTap: (url) {},
+        /// Divider
+        withDivider
+            ? Container(
+                height: 1.0,
+                color: ColorBase.greyBorder,
+              )
+            : Container(),
+      ],
     );
   }
 

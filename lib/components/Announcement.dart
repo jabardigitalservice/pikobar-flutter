@@ -6,6 +6,7 @@ import 'package:flutter_html/html_parser.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -21,6 +22,7 @@ class Announcement extends StatelessWidget {
   final TextStyle textStyleContent;
   final TextStyle textStyleMoreDetail;
   final Style htmlStyle;
+  final EdgeInsetsGeometry margin;
 
   Announcement(
       {this.title,
@@ -31,13 +33,14 @@ class Announcement extends StatelessWidget {
       this.textStyleTitle,
       this.textStyleContent,
       this.textStyleMoreDetail,
-      this.htmlStyle});
+      this.htmlStyle,
+      this.margin});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 5, right: 5),
+      margin: margin ?? EdgeInsets.symmetric(horizontal: Dimens.padding),
       decoration: BoxDecoration(
           color: ColorBase.announcementBackgroundColor,
           borderRadius: BorderRadius.circular(8.0)),
@@ -95,7 +98,8 @@ class Announcement extends StatelessWidget {
                                         fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    AnalyticsHelper.setLogEvent(Analytics.announcement);
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.announcement);
                                     openChromeSafariBrowser(url: actionUrl);
                                   })
                           ]),
@@ -105,12 +109,14 @@ class Announcement extends StatelessWidget {
                       : Html(
                           data: content,
                           style: {
-                            'body': htmlStyle != null ? htmlStyle : Style(
-                                margin: EdgeInsets.zero,
-                                color: Colors.grey[600],
-                                fontSize: FontSize(12.0),
-                                fontFamily: FontsFamily.lato,
-                                textAlign: TextAlign.justify),
+                            'body': htmlStyle != null
+                                ? htmlStyle
+                                : Style(
+                                    margin: EdgeInsets.zero,
+                                    color: Colors.grey[600],
+                                    fontSize: FontSize(12.0),
+                                    fontFamily: FontsFamily.lato,
+                                    textAlign: TextAlign.justify),
                           },
                           onLinkTap: onLinkTap)
                 ]),

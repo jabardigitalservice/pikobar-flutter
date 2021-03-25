@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
+import 'package:pikobar_flutter/components/DialogNPS.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 /// Shows a success modal material design bottom sheet.
 void showSuccessBottomSheet(
@@ -19,6 +23,7 @@ void showSuccessBottomSheet(
     bool isDismissible = true}) {
   showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -33,6 +38,17 @@ void showSuccessBottomSheet(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              /// Divider section
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: Dimens.padding),
+                  height: 6,
+                  width: 60.0,
+                  decoration: BoxDecoration(
+                      color: ColorBase.menuBorderColor,
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+              ),
               /// Image section
               ///
               /// If image null, by default it will use image:
@@ -43,8 +59,7 @@ void showSuccessBottomSheet(
               /// )
               /// ```
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 44.0),
-                margin: EdgeInsets.only(bottom: 24.0),
+                padding: EdgeInsets.symmetric(horizontal: 44.0, vertical: Dimens.verticalPadding),
                 child: image ??
                     Image.asset(
                       '${Environment.imageAssets}daily_success.png',
@@ -122,8 +137,8 @@ void showTextBottomSheet(
               Center(
                 child: Container(
                   margin: EdgeInsets.only(bottom: Dimens.padding),
-                  height: 4,
-                  width: 80.0,
+                  height: 6,
+                  width: 60.0,
                   decoration: BoxDecoration(
                       color: ColorBase.menuBorderColor,
                       borderRadius: BorderRadius.circular(30.0)),
@@ -158,10 +173,161 @@ void showTextBottomSheet(
                       fontSize: FontSize(12.0),
                       color: ColorBase.veryDarkGrey)
                 },
+                onLinkTap: (url) {
+                  Navigator.of(context).pop();
+                  openChromeSafariBrowser(url: url);
+                },
               ),
-              SizedBox(height: Dimens.sbHeight)
+              SizedBox(height: Dimens.sizedBoxHeight)
             ],
           ),
         );
       });
+}
+
+Future<void> showWidgetBottomSheet(
+    {@required BuildContext context, Widget child, bool isScrollControlled = false}) async {
+  return await showModalBottomSheet(
+      context: context,
+      isScrollControlled: isScrollControlled,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.all(Dimens.padding),
+          constraints: BoxConstraints(minHeight: 100, maxHeight: MediaQuery.of(context).size.height - 200),
+          child: Stack(
+            children: [
+              /// Divider section
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 8,
+                alignment: Alignment.center,
+                child: Container(
+                  height: 6,
+                  width: 60.0,
+                  decoration: BoxDecoration(
+                      color: ColorBase.menuBorderColor,
+                      borderRadius: BorderRadius.circular(30.0)),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 30.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      /// Title section
+                      ///
+                      /// If title null, the title section will be hidden
+                      child ?? Container(),
+
+
+                      SizedBox(height: Dimens.sizedBoxHeight)
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      });
+}
+
+
+void showLocationRequestPermission({@required BuildContext context, GestureTapCallback onAgreePressed, GestureTapCallback onCancelPressed}) {
+  showModalBottomSheet(isScrollControlled: true,
+      enableDrag: false,
+      context: context,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        ),
+      ),
+      isDismissible: false,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: Dimens.padding),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(width: 60, height: 6, decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3.0),
+                    color: Color(0xFFE0E0E0)
+                ),),
+                SizedBox(height: Dimens.padding),
+                Text(
+                  Dictionary.permissionLocationGeneral,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: Dimens.padding),
+                Text(
+                  Dictionary.permissionLocationAgreement,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12.0,
+                      color: Colors.grey[600]),
+                ),
+                SizedBox(height: Dimens.verticalPadding),
+                RoundedButton(
+                    title: Dictionary.agree,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    color: ColorBase.green,
+                    elevation: 0.0,
+                    onPressed: () {
+
+                      Navigator.of(context).pop();
+                      onAgreePressed();
+                    }),
+                SizedBox(height: Dimens.fieldMarginTop),
+                RoundedButton(
+                    title: Dictionary.later,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        color: ColorBase.darkGrey),
+                    color: Colors.white,
+                    borderSide: BorderSide(
+                        color: ColorBase.darkGrey),
+                    elevation: 0.0,
+                    onPressed: () {
+                      AnalyticsHelper.setLogEvent(
+                          Analytics.permissionDismissLocation);
+
+                      Navigator.of(context).pop();
+                      onCancelPressed();
+                    }),
+                SizedBox(height: Dimens.verticalPadding),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
+void showDialogNPS(BuildContext context) {
+  showWidgetBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      child: DialogNPS()
+  );
 }

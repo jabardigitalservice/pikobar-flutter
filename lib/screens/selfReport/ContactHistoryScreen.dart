@@ -31,7 +31,8 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.defaultAppBar(
+      appBar: CustomAppBar.animatedAppBar(
+        showTitle: false,
         title: Dictionary.contactHistory,
       ),
       backgroundColor: Colors.white,
@@ -75,7 +76,8 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
             color: Colors.white),
         onPressed: () {
           // move to form screen
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => ContactHistoryFormScreen()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => ContactHistoryFormScreen()));
         });
   }
 
@@ -90,7 +92,18 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
           child: Padding(
             padding: EdgeInsets.all(Dimens.contentPadding),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Text(
+                  Dictionary.contactHistory,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.3,
@@ -102,20 +115,25 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Text(
-                  Dictionary.emptyContactTitle,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14),
+                Center(
+                  child: Text(
+                    Dictionary.emptyContactTitle,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 14),
+                  ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  Dictionary.emptyContactDesc,
-                  style: TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
-                  textAlign: TextAlign.center,
+                Center(
+                  child: Text(
+                    Dictionary.emptyContactDesc,
+                    style:
+                        TextStyle(fontFamily: FontsFamily.lato, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
@@ -138,7 +156,18 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
     return Padding(
       padding: EdgeInsets.all(Dimens.contentPadding),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Text(
+            Dictionary.contactHistory,
+            style: TextStyle(
+                fontFamily: FontsFamily.lato,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 20,
+          ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),

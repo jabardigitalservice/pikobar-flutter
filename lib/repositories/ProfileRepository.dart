@@ -112,4 +112,8 @@ class ProfileRepository {
       throw Exception(Dictionary.somethingWrong);
     }
   }
+
+  Stream<DocumentSnapshot> getProfile(String uid) {
+    return FirebaseFirestore.instance.collection(kUsers).doc(uid).snapshots();
+  }
 }

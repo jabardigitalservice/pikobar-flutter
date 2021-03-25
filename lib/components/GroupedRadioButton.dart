@@ -221,7 +221,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
           validatorValue != null
               ? Padding(
                   padding: EdgeInsets.only(
-                      left: Dimens.contentPadding, top: Dimens.sbHeight),
+                      left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                   child: Text(
                     validatorValue,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -253,7 +253,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
           validatorValue != null
               ? Padding(
                   padding: EdgeInsets.only(
-                      left: Dimens.contentPadding, top: Dimens.sbHeight),
+                      left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                   child: Text(
                     validatorValue,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -287,7 +287,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             validatorValue != null
                 ? Padding(
                     padding: EdgeInsets.only(
-                        left: Dimens.contentPadding, top: Dimens.sbHeight),
+                        left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
                     child: Text(
                       validatorValue,
                       style: TextStyle(color: Colors.red, fontSize: 12),
@@ -308,13 +308,6 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
               ? MediaQuery.of(context).size.width / 2.5
               : null,
       height: widget.itemHeight ?? 40.0,
-      decoration: BoxDecoration(
-          borderRadius: widget.borderRadius,
-          border: Border.all(
-            color: currentSelectedIndex == index
-                ? widget.activeColor
-                : widget.color,
-          )),
       child: InkWell(
         borderRadius: widget.borderRadius,
         onTap: () {
@@ -324,38 +317,38 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             widget.onChanged(currentSelectedLabel, currentSelectedIndex);
           });
         },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: 16,
-                height: 16,
-                margin: EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30.0),
-                    border: Border.all(
-                        color: currentSelectedIndex == index
-                            ? widget.activeColor
-                            : widget.color)),
-                child: currentSelectedIndex == index
-                    ? Container(
-                        margin: EdgeInsets.all(2.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.0),
-                            color: currentSelectedIndex == index
-                                ? widget.activeColor
-                                : widget.color),
-                      )
-                    : null,
-              ),
-              Expanded(
-                child: Text(widget.itemLabelList[index],
-                    style: widget.textStyle ??
-                        TextStyle(fontFamily: FontsFamily.lato)),
-              ),
-            ],
-          ),
+        child: Row(
+          children: <Widget>[
+            Container(
+              width: 23,
+              height: 23,
+              margin: EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  border: Border.all(
+                      color: currentSelectedIndex == index
+                          ? widget.activeColor
+                          : widget.color)),
+              child: currentSelectedIndex == index
+                  ? Container(
+                      margin: EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.0),
+                          color: currentSelectedIndex == index
+                              ? widget.activeColor
+                              : widget.color),
+                    )
+                  : null,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Text(widget.itemLabelList[index],
+                  style: widget.textStyle ??
+                      TextStyle(fontFamily: FontsFamily.lato)),
+            ),
+          ],
         ),
       ),
     );
