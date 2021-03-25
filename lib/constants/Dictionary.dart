@@ -160,7 +160,7 @@ class Dictionary {
   static String errorMinimumEmptyNPS =
       'Tanggapan harus terdiri dari 6 karakter atau lebih';
   static String quarantineDateInformation =
-      'Silahkan isi tanggal terakhir kontak terlebih dahulu';
+      'Silakan isi tanggal terakhir kontak terlebih dahulu';
 
   // Toast Messages
   static String downloadingFile = 'Mengunduh file';
