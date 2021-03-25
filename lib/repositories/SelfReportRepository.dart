@@ -169,8 +169,16 @@ class SelfReportRepository {
     return doc;
   }
 
-  Stream<DocumentSnapshot> getIsReminder({@required String userId}) {
-    return _firestore.collection(kSelfReports).doc(userId).snapshots();
+  Stream<DocumentSnapshot> getIsReminder({@required String userId}) async* {
+
+    final DocumentReference selfReport = _firestore.collection(kSelfReports).doc(userId);
+    await selfReport.get().then((snapshot) async {
+      if (!snapshot.exists) {
+        await selfReport.set({'remind_me': false, 'user_id': userId});
+      }
+    });
+
+    yield* selfReport.snapshots();
   }
 
   Future updateToCollection({@required String userId, bool isReminder}) async {
