@@ -21,25 +21,17 @@ class MessageRepository {
           actionUrl: getField(record[i], 'action_url'),
           publishedAt: record[i].get('published_at').seconds,
           readAt: 0);
-      try {
-        bool dataCheck = await checkData(messageModel.id);
-        if (!dataCheck) {
+
+      if (!hasNullField(messageModel)) {
+        try {
           await db.insert(
             'Messages',
             messageModel.toJson(),
             conflictAlgorithm: ConflictAlgorithm.ignore,
           );
+        } catch (e) {
+          print(e.toString());
         }
-      } catch (e) {
-        var listMessage = await MessageRepository().getRecords();
-        if (!listMessage.contains(messageModel)) {
-          await db.insert(
-            'Messages',
-            messageModel.toJson(),
-            conflictAlgorithm: ConflictAlgorithm.ignore,
-          );
-        }
-        print(e.toString());
       }
     }
   }
@@ -63,6 +55,13 @@ class MessageRepository {
         await db.rawQuery('SELECT COUNT(*) FROM Messages'));
 
     return count > 0;
+  }
+
+  static bool hasNullField(MessageModel data) {
+    return data.id == null ||
+        data.title == null ||
+        data.content == null ||
+        data.publishedAt == null;
   }
 
   Future<bool> checkData(String id) async {
@@ -113,7 +112,7 @@ class MessageRepository {
           'action_title': data.actionTitle,
           'action_url': data.actionUrl,
           'read_at': readAt,
-          'published_at':data.publishedAt
+          'published_at': data.publishedAt
         },
         where: 'id = ?',
         whereArgs: [data.id]);
