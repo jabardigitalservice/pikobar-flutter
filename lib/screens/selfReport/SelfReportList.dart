@@ -133,28 +133,46 @@ class _SelfReportListState extends State<SelfReportList> {
                     otherUID: widget.otherUID,
                     recurrenceReport: recurrenceReport));
               } else if (state is SelfReportRecurrenceReportSaved) {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SelfReportOption(
-                          location: widget.location,
-                          cityId: widget.cityId,
-                          isHealthStatusChanged: false,
-                        )));
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SelfReportList(
-                          location: widget.location,
-                          cityId: widget.cityId,
-                          analytics: Analytics.tappedDailyReport,
-                          otherUID: widget.otherUID,
-                          otherRecurrenceReport:
-                              (int.parse(widget.otherRecurrenceReport ?? '0') +
-                                      1)
-                                  .toString(),
-                          isHealthStatusChanged: false,
-                        )));
+                if (widget.otherUID == null) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SelfReportOption(
+                            isQuarantined: true,
+                            location: widget.location,
+                            cityId: widget.cityId,
+                            isHealthStatusChanged: false,
+                          )));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SelfReportList(
+                            location: widget.location,
+                            cityId: widget.cityId,
+                            analytics: Analytics.tappedDailyReport,
+                            otherUID: widget.otherUID,
+                            otherRecurrenceReport: (int.parse(
+                                        widget.otherRecurrenceReport ?? '0') +
+                                    1)
+                                .toString(),
+                            isHealthStatusChanged: false,
+                          )));
+                } else {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => SelfReportList(
+                            location: widget.location,
+                            cityId: widget.cityId,
+                            analytics: Analytics.tappedDailyReport,
+                            otherUID: widget.otherUID,
+                            otherRecurrenceReport: (int.parse(
+                                        widget.otherRecurrenceReport ?? '0') +
+                                    1)
+                                .toString(),
+                            isHealthStatusChanged: false,
+                          )));
+                }
               } else if (state is SelfReportReminderFailure) {
                 showDialog(
                     context: context,
