@@ -324,9 +324,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               }
                             },
                             onPressedDisable: () {
-                              if (snapshot.connectionState ==
-                                      ConnectionState.done &&
-                                  snapshot.hasData &&
+                              if (checkHasData &&
                                   !_isProfileUserNotComplete(state) &&
                                   !snapshot.data) {
                                 showTextBottomSheet(
@@ -370,9 +368,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               }
                             },
                             onPressedDisable: () {
-                              if (snapshot.connectionState ==
-                                      ConnectionState.done &&
-                                  snapshot.hasData &&
+                              if (checkHasData &&
                                   !_isProfileUserNotComplete(state) &&
                                   !snapshot.data) {
                                 showTextBottomSheet(
@@ -388,9 +384,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                             },
                             isShowMenu: hasLogin &&
                                 !_isProfileUserNotComplete(state) &&
-                                (snapshot.connectionState ==
-                                            ConnectionState.done &&
-                                        snapshot.hasData
+                                (checkHasData
                                     ? (snapshot.data ||
                                         !HealthCheck().isUserHealty(
                                           getField(state, 'health_status'),
