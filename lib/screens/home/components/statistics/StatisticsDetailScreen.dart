@@ -277,7 +277,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: [
           Positioned(
@@ -332,7 +332,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
-            color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(8.0)),
+            color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -393,7 +393,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
       margin: EdgeInsets.only(
           left: Dimens.padding, right: Dimens.padding, bottom: Dimens.padding),
       decoration: BoxDecoration(
-          color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(8.0)),
+          color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

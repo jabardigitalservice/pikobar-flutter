@@ -208,7 +208,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 child: Row(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
                       child: Skeleton(
                           width: MediaQuery.of(context).size.width - 40),
                     ),
@@ -247,7 +247,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(
-                                          Dimens.dialogRadius),
+                                          Dimens.borderRadius),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.cover,
@@ -269,6 +269,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                              Dimens.borderRadius),
                           color: Colors.white,
                           gradient: LinearGradient(
                             begin: FractionalOffset.topCenter,

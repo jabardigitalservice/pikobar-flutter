@@ -335,7 +335,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             image: image != '' && image != null
                 ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
                 : null,
-            borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Column(
           children: <Widget>[
             Row(

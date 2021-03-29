@@ -212,7 +212,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
               decoration: validatorValue != null
                   ? BoxDecoration(
                       border: Border.all(color: Colors.red),
-                      borderRadius: BorderRadius.circular(8.0))
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius))
                   : null,
               padding: validatorValue != null ? EdgeInsets.all(10.0) : null,
               child: SingleChildScrollView(
@@ -245,7 +245,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             decoration: validatorValue != null
                 ? BoxDecoration(
                     border: Border.all(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8.0))
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius))
                 : null,
             padding: validatorValue != null ? EdgeInsets.all(10.0) : null,
             child: SingleChildScrollView(
@@ -275,7 +275,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
               decoration: validatorValue != null
                   ? BoxDecoration(
                       border: Border.all(color: Colors.red),
-                      borderRadius: BorderRadius.circular(8.0))
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius))
                   : null,
               padding: validatorValue != null ? EdgeInsets.all(10.0) : null,
               child: Wrap(

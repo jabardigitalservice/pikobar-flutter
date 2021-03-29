@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -395,7 +396,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       width: (MediaQuery.of(context).size.width),
       margin: const EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
-          color: ColorBase.lightRed, borderRadius: BorderRadius.circular(8.0)),
+          color: ColorBase.lightRed, borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: <Widget>[
           Image.asset('${Environment.imageAssets}red_intersect.png', width: 73),
@@ -547,7 +548,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         padding: EdgeInsets.all(0.0),
         color: ColorBase.greyContainer,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius),
         ),
         child: Container(
           width: (MediaQuery.of(context).size.width / length),

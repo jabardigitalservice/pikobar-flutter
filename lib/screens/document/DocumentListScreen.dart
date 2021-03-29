@@ -149,7 +149,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             width: MediaQuery.of(context).size.width,
                             height: 300,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(Dimens.borderRadius),
                               child: CachedNetworkImage(
                                 imageUrl: document['images'],
                                 fit: BoxFit.cover,
@@ -291,7 +291,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 child: Row(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
                       child: Skeleton(
                           width: MediaQuery.of(context).size.width - 40),
                     ),

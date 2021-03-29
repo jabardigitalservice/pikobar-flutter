@@ -46,7 +46,7 @@ class Announcement extends StatelessWidget {
       margin: margin ?? const EdgeInsets.symmetric(horizontal: Dimens.padding),
       decoration: BoxDecoration(
           color: ColorBase.announcementBackgroundColor,
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: <Widget>[
           Image.asset('${Environment.imageAssets}intersect.png', width: 73),

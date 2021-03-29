@@ -450,7 +450,7 @@ class _StatisticsState extends State<Statistics> {
           padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
           decoration: BoxDecoration(
               color: const Color(0xffFAFAFA),
-              borderRadius: BorderRadius.circular(8.0)),
+              borderRadius: BorderRadius.circular(Dimens.borderRadius)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -493,7 +493,7 @@ class _StatisticsState extends State<Statistics> {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: [
           Positioned(

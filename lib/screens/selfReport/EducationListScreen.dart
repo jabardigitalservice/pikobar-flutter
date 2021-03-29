@@ -6,6 +6,7 @@ import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
@@ -118,7 +119,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                       width: MediaQuery.of(context).size.width - 60,
                       height: 300,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
                         child: CachedNetworkImage(
                           imageUrl: educationModel.image,
                           fit: BoxFit.cover,

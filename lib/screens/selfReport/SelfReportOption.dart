@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
@@ -117,7 +118,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
         padding: EdgeInsets.all(0.0),
         color: ColorBase.greyContainer,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius),
         ),
         child: Container(
           width: (MediaQuery.of(context).size.width / length),

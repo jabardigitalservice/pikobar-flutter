@@ -67,7 +67,7 @@ class _ZonationState extends State<Zonation> {
           top: Dimens.homeCardMargin),
       decoration: BoxDecoration(
           color: ColorBase.greyContainer,
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Padding(
         padding: EdgeInsets.all(Dimens.homeCardMargin),
         child: Column(
@@ -149,7 +149,7 @@ class _ZonationState extends State<Zonation> {
             top: Dimens.homeCardMargin),
         decoration: BoxDecoration(
             color: ColorBase.greyContainer,
-            borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       ),
     );
   }
@@ -222,7 +222,7 @@ class _ZonationState extends State<Zonation> {
             top: Dimens.homeCardMargin),
         decoration: BoxDecoration(
             color: ColorBase.greyContainer,
-            borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
