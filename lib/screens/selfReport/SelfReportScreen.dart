@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -11,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
@@ -21,6 +23,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
@@ -34,6 +37,7 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class SelfReportScreen extends StatefulWidget {
   SelfReportScreen({Key key}) : super(key: key);
@@ -56,6 +60,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   ScrollController _scrollController;
   final ProfileRepository _profileRepository = ProfileRepository();
   ProfileBloc _profileBloc;
+  RemoteConfigBloc _remoteConfigBloc;
 
   @override
   void initState() {
@@ -82,6 +87,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
           BlocProvider<ProfileBloc>(
               create: (context) => _profileBloc =
                   ProfileBloc(profileRepository: _profileRepository)),
+          BlocProvider<RemoteConfigBloc>(
+              create: (BuildContext context) => _remoteConfigBloc =
+                  RemoteConfigBloc()..add(RemoteConfigLoad())),
         ],
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (BuildContext context, AuthenticationState state) {
@@ -266,119 +274,132 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               future:
                   SelfReportRepository().checkNIK(nik: getField(state, 'nik')),
               builder: (context, snapshot) {
+                final bool checkHasData =
+                    snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData;
+                final bool isQuarantined = (checkHasData && snapshot.data) ||
+                    !HealthCheck()
+                        .isUserHealty(getField(state, 'health_status'));
 
-                final bool checkHasData = snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData;
-                final bool isQuarantined = (checkHasData && snapshot.data) || !HealthCheck()
-                    .isUserHealty(getField(state, 'health_status'));
-
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _buildContainer(
-                      imageDisable:
-                          '${Environment.iconAssets}daily_self_report_disable.png',
-                      imageEnable:
-                          '${Environment.iconAssets}daily_self_report_enable.png',
-                      title: Dictionary.dailyMonitoring,
-                      length: 2,
-                      //for give condition onPressed in widget _buildContainer
-                      onPressedEnable: () {
-                        if (latLng == null ||
-                            addressMyLocation == '-' ||
-                            addressMyLocation.isEmpty ||
-                            addressMyLocation == null) {
-                          Fluttertoast.showToast(
-                              backgroundColor: ColorBase.grey500,
-                              msg: Dictionary.alertLocationSelfReport,
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              fontSize: 16.0);
-                        } else {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SelfReportOption(
-                                    location: latLng,
-                                    cityId: getField(state, 'city_id'),
-                                    isHealthStatusChanged: getField(
-                                            state, 'health_status_changed') ??
-                                        false,
-                                isQuarantined: isQuarantined,
-                                  )));
-                        }
-                      },
-                      onPressedDisable: () {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            !_isProfileUserNotComplete(state) &&
-                            !snapshot.data) {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.nikNotRegistered,
-                              message: Dictionary.nikNotRegisteredDesc);
-                        } else {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.profileNotComplete,
-                              message: Dictionary.descProfile1);
-                        }
-                      },
-                      // condition for check if user login and user complete fill that profile
-                      // and health status is not healthy user can access for press the button in _buildContainer
-                      isShowMenu: hasLogin &&
-                          !_isProfileUserNotComplete(state),
-                    ),
-                    _buildContainer(
-                      imageDisable:
-                          '${Environment.iconAssets}history_contact_disable.png',
-                      imageEnable:
-                          '${Environment.iconAssets}history_contact_enable.png',
-                      title: Dictionary.historyContact,
-                      length: 2,
-                      onPressedEnable: () {
-                        if (latLng == null ||
-                            addressMyLocation == '-' ||
-                            addressMyLocation.isEmpty ||
-                            addressMyLocation == null) {
-                          Fluttertoast.showToast(
-                              backgroundColor: ColorBase.grey500,
-                              msg: Dictionary.alertLocationSelfReport,
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              fontSize: 16.0);
-                        } else {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ContactHistoryScreen()));
-                        }
-                      },
-                      onPressedDisable: () {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            !_isProfileUserNotComplete(state) &&
-                            !snapshot.data) {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.nikNotRegistered,
-                              message: Dictionary.nikNotRegisteredDesc);
-                        } else {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.profileNotComplete,
-                              message: Dictionary.descProfile1);
-                        }
-                      },
-                      isShowMenu: hasLogin &&
-                          !_isProfileUserNotComplete(state) &&
-                          (snapshot.connectionState == ConnectionState.done &&
-                                  snapshot.hasData
-                              ? (snapshot.data ||
-                                  !HealthCheck().isUserHealty(
-                                    getField(state, 'health_status'),
-                                  ))
-                              : !HealthCheck().isUserHealty(
-                                  getField(state, 'health_status'),
-                                )),
-                    ),
-                  ],
+                return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                  builder: (context, remoteState) {
+                    if (remoteState is RemoteConfigLoaded) {
+                      final Map<String, dynamic> getLabel =
+                          RemoteConfigHelper.decode(
+                              remoteConfig: remoteState.remoteConfig,
+                              firebaseConfig: FirebaseConfig.nikMessage,
+                              defaultValue:
+                                  FirebaseConfig.nikMessageDefaultValue);
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          _buildContainer(
+                            imageDisable:
+                                '${Environment.iconAssets}daily_self_report_disable.png',
+                            imageEnable:
+                                '${Environment.iconAssets}daily_self_report_enable.png',
+                            title: Dictionary.dailyMonitoring,
+                            length: 2,
+                            //for give condition onPressed in widget _buildContainer
+                            onPressedEnable: () {
+                              if (latLng == null ||
+                                  addressMyLocation == '-' ||
+                                  addressMyLocation.isEmpty ||
+                                  addressMyLocation == null) {
+                                Fluttertoast.showToast(
+                                    backgroundColor: ColorBase.grey500,
+                                    msg: Dictionary.alertLocationSelfReport,
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    fontSize: 16.0);
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SelfReportOption(
+                                          location: latLng,
+                                          cityId: getField(state, 'city_id'),
+                                          isHealthStatusChanged: getField(state,
+                                                  'health_status_changed') ??
+                                              false,
+                                          isQuarantined: isQuarantined,
+                                        )));
+                              }
+                            },
+                            onPressedDisable: () {
+                              if (checkHasData &&
+                                  !_isProfileUserNotComplete(state) &&
+                                  !snapshot.data) {
+                                showTextBottomSheet(
+                                    context: context,
+                                    title: getLabel['title'],
+                                    message: getLabel['description']);
+                              } else {
+                                showTextBottomSheet(
+                                    context: context,
+                                    title: Dictionary.profileNotComplete,
+                                    message: Dictionary.descProfile1);
+                              }
+                            },
+                            // condition for check if user login and user complete fill that profile
+                            // and health status is not healthy user can access for press the button in _buildContainer
+                            isShowMenu:
+                                hasLogin && !_isProfileUserNotComplete(state),
+                          ),
+                          _buildContainer(
+                            imageDisable:
+                                '${Environment.iconAssets}history_contact_disable.png',
+                            imageEnable:
+                                '${Environment.iconAssets}history_contact_enable.png',
+                            title: Dictionary.historyContact,
+                            length: 2,
+                            onPressedEnable: () {
+                              if (latLng == null ||
+                                  addressMyLocation == '-' ||
+                                  addressMyLocation.isEmpty ||
+                                  addressMyLocation == null) {
+                                Fluttertoast.showToast(
+                                    backgroundColor: ColorBase.grey500,
+                                    msg: Dictionary.alertLocationSelfReport,
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    fontSize: 16.0);
+                              } else {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        ContactHistoryScreen()));
+                              }
+                            },
+                            onPressedDisable: () {
+                              if (checkHasData &&
+                                  !_isProfileUserNotComplete(state) &&
+                                  !snapshot.data) {
+                                showTextBottomSheet(
+                                    context: context,
+                                    title: getLabel['title'],
+                                    message: getLabel['description']);
+                              } else {
+                                showTextBottomSheet(
+                                    context: context,
+                                    title: Dictionary.profileNotComplete,
+                                    message: Dictionary.descProfile1);
+                              }
+                            },
+                            isShowMenu: hasLogin &&
+                                !_isProfileUserNotComplete(state) &&
+                                (checkHasData
+                                    ? (snapshot.data ||
+                                        !HealthCheck().isUserHealty(
+                                          getField(state, 'health_status'),
+                                        ))
+                                    : !HealthCheck().isUserHealty(
+                                        getField(state, 'health_status'),
+                                      )),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
                 );
               },
             ),
