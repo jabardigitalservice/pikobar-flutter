@@ -22,6 +22,7 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportFormScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
+import 'package:pikobar_flutter/utilities/NavigatorHelper.dart';
 
 // ignore: must_be_immutable
 class SelfReportList extends StatefulWidget {
@@ -134,10 +135,7 @@ class _SelfReportListState extends State<SelfReportList> {
                     recurrenceReport: recurrenceReport));
               } else if (state is SelfReportRecurrenceReportSaved) {
                 if (widget.otherUID == null) {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  popUntil(context, multiplication: 4);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => SelfReportOption(
                             isQuarantined: true,
@@ -158,8 +156,7 @@ class _SelfReportListState extends State<SelfReportList> {
                             isHealthStatusChanged: false,
                           )));
                 } else {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  popUntil(context, multiplication: 2);
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => SelfReportList(
                             location: widget.location,
