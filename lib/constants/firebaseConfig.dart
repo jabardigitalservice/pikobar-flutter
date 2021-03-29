@@ -52,6 +52,7 @@ class FirebaseConfig {
   static String geolocationEnabled = 'geolocation_enabled';
   static String emergencyNumberTab = 'emergency_number_tab';
   static String successMessageSelfReport = 'succes_message_self_report';
+  static String nikMessage = 'nik_message';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -284,5 +285,10 @@ class FirebaseConfig {
       ']'
       ' }'
       ']'
+      '}';
+
+  static String nikMessageDefaultValue = '{'
+      '"title": "NIK Tidak Terdaftar",'
+      ' "description": "<p>Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini</p><p>Apabila Anda memiliki pertanyaan atau saran mengenai Kebijakan Privasi kami, jangan ragu untuk hubungi kami melalui email</p>"'
       '}';
 }
