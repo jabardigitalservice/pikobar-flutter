@@ -66,7 +66,7 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
             top: Dimens.homeCardMargin),
         decoration: BoxDecoration(
             color: ColorBase.greyContainer,
-            borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Padding(
           padding: EdgeInsets.all(Dimens.homeCardMargin),
           child: Row(

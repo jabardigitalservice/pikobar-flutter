@@ -198,7 +198,7 @@ class _ContactHistoryDetailScreenState
               splashColor: Colors.lightGreenAccent,
               color: ColorBase.green,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(Dimens.borderRadius),
               ),
               child: Text(
                 Dictionary.back,

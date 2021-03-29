@@ -191,7 +191,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide.none,
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(Dimens.borderRadius),
                                               ),
                                               child: Row(
                                                 mainAxisAlignment:

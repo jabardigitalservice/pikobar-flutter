@@ -152,7 +152,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                       padding: EdgeInsets.all(0.0),
                       color: isAgree ? ColorBase.green : Colors.grey,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
                       ),
                       child: Text(
                         Dictionary.acceptLogin,

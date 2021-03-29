@@ -340,7 +340,7 @@ class BuildButtonMenu extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 8),
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(Dimens.borderRadius),
                 color: Colors.grey[50]),
             child: Image.asset(iconPath),
           ),

@@ -32,7 +32,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
         top: Dimens.padding,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(Dimens.borderRadius),
       ),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
@@ -44,7 +44,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
               decoration: BoxDecoration(
                   gradient:
                       LinearGradient(colors: ColorBase.gradientBlueStatistics),
-                  borderRadius: BorderRadius.circular(8.0)),
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius)),
               child: Stack(
                 children: [
                   Positioned(
@@ -129,7 +129,7 @@ class CheckDistributionCardRadius extends StatelessWidget {
         padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 15),
         margin: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
-            color: Color(0xffFAFAFA), borderRadius: BorderRadius.circular(8.0)),
+            color: Color(0xffFAFAFA), borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

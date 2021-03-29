@@ -351,7 +351,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
       child: GroupedRadioButton(
         itemWidth: MediaQuery.of(context).size.width / 2 - 21,
         itemHeight: 40.0,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(Dimens.borderRadius),
         color: ColorBase.menuBorderColor,
         activeColor: ColorBase.green,
         itemLabelList: itemList,

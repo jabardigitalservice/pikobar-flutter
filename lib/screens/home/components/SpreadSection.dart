@@ -46,7 +46,7 @@ class _SpreadSectionState extends State<SpreadSection> {
                   padding: EdgeInsets.all(0.0),
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius),
                   ),
                   child: Row(
                     children: <Widget>[

@@ -158,7 +158,7 @@ class _VideosListState extends State<VideosList> {
                 child: Row(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
                       child: Skeleton(
                           width: MediaQuery.of(context).size.width - 40),
                     ),
@@ -211,7 +211,7 @@ class _VideosListState extends State<VideosList> {
                                 width: MediaQuery.of(context).size.width,
                                 height: 300,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
                                   child: CachedNetworkImage(
                                     imageUrl: getYtThumbnail(
                                         youtubeUrl: listVideos[index].url,

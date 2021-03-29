@@ -300,7 +300,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               child: GroupedCheckBox(
                 itemHeight: 40.0,
                 indexAllDisabled: 12,
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(Dimens.borderRadius),
                 color: ColorBase.netralGrey,
                 defaultSelectedList: _checkedItemList,
                 activeColor: ColorBase.primaryGreen,
@@ -333,7 +333,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       color: _isOtherIndicationEmpty
                           ? Colors.red
                           : ColorBase.greyBorder),
-                  borderRadius: BorderRadius.circular(8.0)),
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius)),
               padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
               child: TextField(
                 controller: _otherIndicationsController,
@@ -377,7 +377,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                 decoration: BoxDecoration(
                     color: ColorBase.greyContainer,
                     border: Border.all(color: ColorBase.greyBorder),
-                    borderRadius: BorderRadius.circular(8.0)),
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius)),
                 padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
                 child: TextField(
                   controller: _bodyTempController,
@@ -407,7 +407,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             ]),
             const SizedBox(height: 32.0),
             RoundedButton(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(Dimens.borderRadius),
                 title: Dictionary.save,
                 elevation: 0.0,
                 color: isEmptyField() ? ColorBase.disableText : ColorBase.green,

@@ -57,7 +57,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 decoration: BoxDecoration(shape: BoxShape.circle),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
                   child: Skeleton(
                     width: MediaQuery.of(context).size.width,
                   ),
@@ -75,7 +75,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                 options: CarouselOptions(
                   initialPage: 0,
                   enableInfiniteScroll: state.records.length > 1 ? true : false,
-                  aspectRatio: 2.1,
+                  aspectRatio: 2.15,
                   viewportFraction: 0.8,
                   enlargeCenterPage: true,
                   autoPlay: state.records.length > 1 ? true : false,
@@ -92,7 +92,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                       child: Container(
                         decoration: BoxDecoration(shape: BoxShape.circle),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                               imageUrl: data.url ?? '',
                               imageBuilder: (context, imageProvider) =>
