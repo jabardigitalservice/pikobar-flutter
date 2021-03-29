@@ -376,8 +376,8 @@ class Dictionary {
   static String otherReportAnnouncement =
       '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
   static String previewData = 'Cek Kembali Data Anda';
-  static String reportForMySelf = 'Lapor Untuk Diri Sendiri';
-  static String reportForOther = 'Lapor Untuk Orang Lain';
+  static String reportForMySelf = 'Lapor Kesehatan Untuk Diri Sendiri';
+  static String reportForOther = 'Lapor Kesehatan Untuk Orang Lain';
   static String setLocationTravelHistory = 'Pilih Lokasi Saat Ini';
   static String selfReportTravelHistory = 'Lihat Riwayat Check-in';
   static String noLocation = 'Tidak Ada Lokasi?';
