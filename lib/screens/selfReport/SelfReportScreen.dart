@@ -248,18 +248,14 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               ),
             ),
             hasLogin
-                ? !HealthCheck()
-                            .isUserHealty(getField(state, 'health_status')) &&
-                        _isProfileUserNotComplete(state)
+                ? _isProfileUserNotComplete(state)
                     ? const SizedBox(
                         height: 20,
                       )
                     : Container()
                 : Container(),
             hasLogin
-                ? !HealthCheck()
-                            .isUserHealty(getField(state, 'health_status')) &&
-                        _isProfileUserNotComplete(state)
+                ? _isProfileUserNotComplete(state)
                     ? _buildAnnounceProfileNotComplete(state)
                     : Container()
                 : Container(),
@@ -321,6 +317,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                                                   'health_status_changed') ??
                                               false,
                                           isQuarantined: isQuarantined,
+                                          nikMessage: getLabel,
                                         )));
                               }
                             },

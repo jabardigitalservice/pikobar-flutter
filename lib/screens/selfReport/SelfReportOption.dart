@@ -8,23 +8,23 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
-import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
-import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 class SelfReportOption extends StatefulWidget {
   final LatLng location;
   final String cityId;
   final bool isHealthStatusChanged;
   final bool isQuarantined;
+  final Map<String, dynamic> nikMessage;
 
   SelfReportOption(
       {Key key,
       this.location,
       this.cityId,
       this.isHealthStatusChanged,
-      this.isQuarantined})
+      this.isQuarantined,
+      this.nikMessage})
       : super(key: key);
 
   @override
@@ -60,7 +60,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     imageEnable:
                         '${Environment.iconAssets}self_report_icon.png',
                     imageDisable:
-                    '${Environment.iconAssets}self_report_icon_disable.png',
+                        '${Environment.iconAssets}self_report_icon_disable.png',
                     title: Dictionary.reportForMySelf,
                     length: 2,
                     onPressedEnable: () {
@@ -77,8 +77,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     onPressedDisable: () {
                       showTextBottomSheet(
                           context: context,
-                          title: Dictionary.nikNotRegistered,
-                          message: Dictionary.nikNotRegisteredDesc);
+                          title: widget.nikMessage['title'],
+                          message: widget.nikMessage['description']);
                     },
                     isEnabledMenu: widget.isQuarantined),
                 _buildContainer(
