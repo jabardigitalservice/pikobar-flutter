@@ -61,6 +61,7 @@ class _SelfReportListState extends State<SelfReportList> {
   String recurrenceReport;
   SelfReportReminderBloc _selfReportReminderBloc;
   SelfReportListBloc _selfReportListBloc;
+  bool isMoreThan14days = false;
 
   @override
   void initState() {
@@ -100,19 +101,20 @@ class _SelfReportListState extends State<SelfReportList> {
             BlocListener<SelfReportListBloc, SelfReportListState>(
                 listener: (BuildContext context, SelfReportListState state) {
               if (state is SelfReportListLoaded) {
-                if (widget.isHealthStatusChanged) {
-                  setState(() {
-                    isTouchDisable = true;
-                  });
-                  showTutorial();
-                } else if (DateTime.now()
+                isMoreThan14days = DateTime.now()
                         .difference(DateTime.fromMillisecondsSinceEpoch(state
                                 .querySnapshot.docs.last
                                 .get('created_at')
                                 .seconds *
                             1000))
                         .inDays >=
-                    14) {
+                    14;
+                if (widget.isHealthStatusChanged) {
+                  setState(() {
+                    isTouchDisable = true;
+                  });
+                  showTutorial();
+                } else if (isMoreThan14days) {
                   setState(() {
                     isTouchDisable = true;
                   });
@@ -571,8 +573,6 @@ class _SelfReportListState extends State<SelfReportList> {
         children: <Widget>[
           InkWell(
             onTap: () {
-              print(i - firstData);
-
               /// Checking data is not first array
               if (i != firstData) {
                 /// Checking data if [currentDay] not null
@@ -604,18 +604,25 @@ class _SelfReportListState extends State<SelfReportList> {
                       );
                     } else {
                       if (listDocumentId.contains('$i')) {
-                        /// Move to form screen
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SelfReportFormScreen(
-                                  cityId: widget.cityId,
-                                  analytics: widget.analytics,
-                                  otherUID: widget.otherUID,
-                                  dailyId: '${i + 1}',
-                                  location: widget.location,
-                                  recurrenceReport: recurrenceReport,
-                                  firstData: firstData,
-                                  lastData: lastData,
-                                )));
+                        if (isMoreThan14days) {
+                          setState(() {
+                            isTouchDisable = true;
+                          });
+                          showTutorial();
+                        } else {
+                          /// Move to form screen
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SelfReportFormScreen(
+                                    cityId: widget.cityId,
+                                    analytics: widget.analytics,
+                                    otherUID: widget.otherUID,
+                                    dailyId: '${i + 1}',
+                                    location: widget.location,
+                                    recurrenceReport: recurrenceReport,
+                                    firstData: firstData,
+                                    lastData: lastData,
+                                  )));
+                        }
                       } else {
                         showDialog(
                             context: context,
@@ -674,18 +681,25 @@ class _SelfReportListState extends State<SelfReportList> {
                             countDay: ((i - firstData) + 1).toString())),
                   );
                 } else {
-                  // Move to form screen
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SelfReportFormScreen(
-                            cityId: widget.cityId,
-                            analytics: widget.analytics,
-                            dailyId: '${i + 1}',
-                            otherUID: widget.otherUID,
-                            location: widget.location,
-                            recurrenceReport: recurrenceReport,
-                            firstData: firstData,
-                            lastData: lastData,
-                          )));
+                  if (isMoreThan14days) {
+                    setState(() {
+                      isTouchDisable = true;
+                    });
+                    showTutorial();
+                  } else {
+                    // Move to form screen
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SelfReportFormScreen(
+                              cityId: widget.cityId,
+                              analytics: widget.analytics,
+                              dailyId: '${i + 1}',
+                              otherUID: widget.otherUID,
+                              location: widget.location,
+                              recurrenceReport: recurrenceReport,
+                              firstData: firstData,
+                              lastData: lastData,
+                            )));
+                  }
                 }
               }
             },
