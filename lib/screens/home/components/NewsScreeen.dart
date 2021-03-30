@@ -26,14 +26,13 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
-// ignore: must_be_immutable
 class NewsScreen extends StatefulWidget {
   final String news;
   final int maxLength;
   final String searchQuery;
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  NewsScreen(
+  const NewsScreen(
       {Key key,
       @required this.news,
       this.maxLength,
@@ -75,7 +74,6 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   @override
-  // ignore: must_call_super
   Widget build(BuildContext context) {
     return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
       builder: (context, remoteState) {
@@ -566,6 +564,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
                           color: Colors.white,
                           gradient: LinearGradient(
                             begin: FractionalOffset.topCenter,

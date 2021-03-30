@@ -16,14 +16,13 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class EducationListScreen extends StatefulWidget {
-  EducationListScreen({Key key}) : super(key: key);
+  const EducationListScreen({Key key}) : super(key: key);
 
   @override
   _EducationListScreenState createState() => _EducationListScreenState();
 }
 
 class _EducationListScreenState extends State<EducationListScreen> {
-  // ignore: close_sinks, unused_field
   EducationListBloc _educationListBloc;
 
   @override
@@ -139,6 +138,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                       width: MediaQuery.of(context).size.width - 60,
                       height: 300,
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
                         color: Colors.white,
                         gradient: LinearGradient(
                           begin: FractionalOffset.topCenter,
@@ -198,5 +198,13 @@ class _EducationListScreenState extends State<EducationListScreen> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_educationListBloc != null) {
+      _educationListBloc.close();
+    }
   }
 }
