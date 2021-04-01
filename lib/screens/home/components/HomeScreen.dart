@@ -231,7 +231,6 @@ class HomeScreenState extends State<HomeScreen>
           paddingBubbleTab: 10,
           titleNameLabelNew: listItemTitleTab[1],
           totalInfoUnread: totalUnreadInfo,
-          sizeLabel: 13.0,
           onTap: (index) async {
             getAllUnreadData();
             AnalyticsHelper.setLogEvent(analyticsData[index]);

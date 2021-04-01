@@ -64,7 +64,7 @@ class CustomBubbleTab extends StatefulWidget {
       this.typeTabSelected,
       this.isExpand,
       this.isScrollable,
-      this.sizeLabel,
+      this.sizeLabel = 12.0,
       this.isStickyHeader = false,
       this.showTitle,
       this.scrollController,
@@ -251,7 +251,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontFamily: FontsFamily.roboto,
-                  fontSize: widget.sizeLabel ?? 10.0),
+                  fontSize: widget.sizeLabel),
             ),
           ),
         ),

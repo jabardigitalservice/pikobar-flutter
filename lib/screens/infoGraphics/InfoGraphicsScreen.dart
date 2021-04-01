@@ -118,7 +118,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           indicatorColor: ColorBase.green,
           labelColor: Colors.white,
           showTitle: _showTitle,
-          sizeLabel: 13.0,
           isScrollable: false,
           searchBar: CustomAppBar.buildSearchField(_searchController,
               Dictionary.searchInformation, updateSearchQuery,
