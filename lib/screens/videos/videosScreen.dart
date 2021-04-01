@@ -117,6 +117,7 @@ class _VideosListState extends State<VideosList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         body: WillPopScope(
       child: CollapsingAppbar(
         searchBar: CustomAppBar.buildSearchField(
