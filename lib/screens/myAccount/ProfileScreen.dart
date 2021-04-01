@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: CustomAppBar.animatedAppBar(
-                  showTitle: true, title: Dictionary.profile),
+                  showTitle: true, title: Dictionary.profile, fontSize: 20),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,
@@ -611,16 +611,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Function to build list of group menu
   List<Widget> getGroupMenu(List<dynamic> groupMenu) {
-   final List<Widget> list = List();
+    final List<Widget> list = List();
 
     for (int i = 0; i < groupMenu.length; i++) {
-     final Column column = Column(
+      final Column column = Column(
         children: <Widget>[
           Column(
             children: <Widget>[
               InkWell(
                 onTap: () async {
-                  final String url = await userDataUrlAppend(groupMenu[i]['url']);
+                  final String url =
+                      await userDataUrlAppend(groupMenu[i]['url']);
                   openChromeSafariBrowser(url: url);
                 },
                 child: Row(

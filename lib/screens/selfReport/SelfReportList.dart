@@ -604,7 +604,7 @@ class _SelfReportListState extends State<SelfReportList> {
                       );
                     } else {
                       if (listDocumentId.contains('$i')) {
-                        if (isMoreThan14days) {
+                        if (isMoreThan14days || widget.isHealthStatusChanged) {
                           setState(() {
                             isTouchDisable = true;
                           });
@@ -681,7 +681,7 @@ class _SelfReportListState extends State<SelfReportList> {
                             countDay: ((i - firstData) + 1).toString())),
                   );
                 } else {
-                  if (isMoreThan14days) {
+                  if (isMoreThan14days || widget.isHealthStatusChanged) {
                     setState(() {
                       isTouchDisable = true;
                     });

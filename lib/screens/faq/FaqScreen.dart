@@ -74,7 +74,7 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.white,
       body: BlocProvider<RemoteConfigBloc>(
           create: (BuildContext context) =>
               _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
@@ -105,7 +105,7 @@ class _FaqScreenState extends State<FaqScreen> {
                       category:
                           listDataRemoteConfigTab[0]['category'].toString())),
                 child: CustomBubbleTab(
-                  isStickyHeader: true,
+                  isStickyHeader: false,
                   titleHeader: Dictionary.faq,
                   listItemTitleTab: listItemTitleTab,
                   indicatorColor: ColorBase.green,

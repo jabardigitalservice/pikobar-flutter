@@ -161,63 +161,85 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
           )
         : DefaultTabController(
             length: listBubbleTabItem.length,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: paddingBubleTab, right: paddingBubleTab),
-                  child: TabBar(
-                      controller: _basetabController,
-                      isScrollable: isScrollable,
-                      onTap: (index) {
-                        if (widget.titleNameLabelNew != null) {
-                          totalUnreadlabelNew = widget.totalInfoUnread;
-                          dataSelected = widget.listItemTitleTab[index];
-                          for (int i = 0;
-                              i < widget.listItemTitleTab.length;
-                              i++) {
-                            if (widget.listItemTitleTab[i] == dataSelected) {
-                              listBubbleTabItem[index] = bubbleTabItem(
-                                  widget.listItemTitleTab[index], dataSelected);
-                            } else {
-                              listBubbleTabItem[i] = bubbleTabItem(
-                                  widget.listItemTitleTab[i], dataSelected);
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  widget.searchBar != null
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Dimens.homeCardMargin,
+                              horizontal: Dimens.padding),
+                          child: Text(
+                            widget.titleHeader,
+                            style: TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                color: Colors.grey[800],
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w900),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        )
+                      : Container(),
+                  widget.searchBar != null ? widget.searchBar : Container(),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: widget.searchBar != null ? 10 : paddingBubleTab,
+                        right: widget.searchBar != null ? 10 : paddingBubleTab),
+                    child: TabBar(
+                        controller: _basetabController,
+                        isScrollable: isScrollable,
+                        onTap: (index) {
+                          if (widget.titleNameLabelNew != null) {
+                            totalUnreadlabelNew = widget.totalInfoUnread;
+                            dataSelected = widget.listItemTitleTab[index];
+                            for (int i = 0;
+                                i < widget.listItemTitleTab.length;
+                                i++) {
+                              if (widget.listItemTitleTab[i] == dataSelected) {
+                                listBubbleTabItem[index] = bubbleTabItem(
+                                    widget.listItemTitleTab[index],
+                                    dataSelected);
+                              } else {
+                                listBubbleTabItem[i] = bubbleTabItem(
+                                    widget.listItemTitleTab[i], dataSelected);
+                              }
                             }
                           }
-                        }
-                        widget.onTap(index);
-                      },
-                      labelColor: widget.labelColor,
-                      unselectedLabelColor: widget.unselectedLabelColor,
-                      indicator: BubbleTabIndicator(
-                        indicatorHeight: 37.0,
+                          widget.onTap(index);
+                        },
+                        labelColor: widget.labelColor,
+                        unselectedLabelColor: widget.unselectedLabelColor,
+                        indicator: BubbleTabIndicator(
+                          indicatorHeight: 37.0,
+                          indicatorColor: widget.indicatorColor,
+                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                        ),
                         indicatorColor: widget.indicatorColor,
-                        tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                      ),
-                      indicatorColor: widget.indicatorColor,
-                      indicatorWeight: 0.1,
-                      labelPadding: EdgeInsets.all(10),
-                      tabs: listBubbleTabItem),
-                ),
+                        indicatorWeight: 0.1,
+                        labelPadding: EdgeInsets.all(10),
+                        tabs: listBubbleTabItem),
+                  ),
 
-                ///condition for check widget is Expanded or not
-                isExpand
-                    ? Expanded(
-                        child: TabBarView(
-                          controller: _basetabController,
-                          children: widget.tabBarView,
+                  ///condition for check widget is Expanded or not
+                  isExpand
+                      ? Expanded(
+                          child: TabBarView(
+                            controller: _basetabController,
+                            children: widget.tabBarView,
+                          ),
+                        )
+                      : Container(
+                          height: widget.heightTabBarView,
+                          padding: EdgeInsets.only(top: paddingTopTabBarView),
+                          child: TabBarView(
+                            controller: _basetabController,
+                            children: widget.tabBarView,
+                          ),
                         ),
-                      )
-                    : Container(
-                        height: widget.heightTabBarView,
-                        padding: EdgeInsets.only(top: paddingTopTabBarView),
-                        child: TabBarView(
-                          controller: _basetabController,
-                          children: widget.tabBarView,
-                        ),
-                      ),
-              ],
+                ],
+              ),
             ),
           );
   }

@@ -241,7 +241,7 @@ class _DocumentsState extends State<Documents> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 16.0, right: 16.0, bottom: 16.0),
+                    left: 16.0, right: 16.0, bottom: 16.0,top:16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
