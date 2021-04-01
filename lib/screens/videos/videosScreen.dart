@@ -24,11 +24,10 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
-// ignore: must_be_immutable
 class VideosScreen extends StatelessWidget {
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  VideosScreen({Key key, this.covidInformationScreenState}) : super(key: key);
+  const VideosScreen({Key key, this.covidInformationScreenState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,18 +39,17 @@ class VideosScreen extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
-class VideosList extends StatefulWidget {
-  CovidInformationScreenState covidInformationScreenState;
 
-  VideosList({Key key, this.covidInformationScreenState}) : super(key: key);
+class VideosList extends StatefulWidget {
+  final CovidInformationScreenState covidInformationScreenState;
+
+  const VideosList({Key key, this.covidInformationScreenState}) : super(key: key);
 
   @override
   _VideosListState createState() => _VideosListState();
 }
 
 class _VideosListState extends State<VideosList> {
-  // ignore: close_sinks
   ScrollController _scrollController;
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
@@ -232,6 +230,7 @@ class _VideosListState extends State<VideosList> {
                                 width: MediaQuery.of(context).size.width,
                                 height: 300,
                                 decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
                                   color: Colors.white,
                                   gradient: LinearGradient(
                                     begin: FractionalOffset.topCenter,

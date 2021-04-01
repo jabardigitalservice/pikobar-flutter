@@ -28,11 +28,10 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 import 'DocumentViewScreen.dart';
 
-// ignore: must_be_immutable
 class DocumentListScreen extends StatefulWidget {
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  DocumentListScreen({Key key, this.covidInformationScreenState})
+  const DocumentListScreen({Key key, this.covidInformationScreenState})
       : super(key: key);
 
   @override
@@ -174,6 +173,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                               width: MediaQuery.of(context).size.width,
                               height: 300,
                               decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(Dimens.borderRadius),
                                 color: Colors.white,
                                 gradient: LinearGradient(
                                   begin: FractionalOffset.topCenter,

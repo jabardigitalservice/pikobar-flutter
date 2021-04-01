@@ -16,12 +16,11 @@ import 'package:pikobar_flutter/screens/home/components/NewsScreeen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 
-// ignore: must_be_immutable
 class NewsListScreen extends StatelessWidget {
-  String news;
-  CovidInformationScreenState covidInformationScreenState;
+  final String news;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  NewsListScreen({Key key, this.news, this.covidInformationScreenState})
+  const NewsListScreen({Key key, this.news, this.covidInformationScreenState})
       : super(key: key);
 
   @override
@@ -38,12 +37,12 @@ class NewsListScreen extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
-class News extends StatefulWidget {
-  String news;
-  CovidInformationScreenState covidInformationScreenState;
 
-  News({Key key, this.news, this.covidInformationScreenState})
+class News extends StatefulWidget {
+  final String news;
+  final CovidInformationScreenState covidInformationScreenState;
+
+  const News({Key key, this.news, this.covidInformationScreenState})
       : super(key: key);
 
   @override
