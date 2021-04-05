@@ -154,9 +154,7 @@ class _VideoListState extends State<VideoList> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-      if (data.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataVideoList = true;
-      }
+        widget.covidInformationScreenState.isEmptyDataVideoList = data.isEmpty;
     }
 
     getDataLabel();

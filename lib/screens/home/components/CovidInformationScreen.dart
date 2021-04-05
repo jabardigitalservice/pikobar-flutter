@@ -16,11 +16,10 @@ import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
-// ignore: must_be_immutable
 class CovidInformationScreen extends StatefulWidget {
-  HomeScreenState homeScreenState;
+  final HomeScreenState homeScreenState;
 
-  CovidInformationScreen({Key key, this.homeScreenState}) : super(key: key);
+  const CovidInformationScreen({Key key, this.homeScreenState}) : super(key: key);
 
   @override
   CovidInformationScreenState createState() => CovidInformationScreenState();
@@ -101,6 +100,10 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
   }
 
   void _onSearchChanged() {
+    if (getIsEmptyData()) {
+      resetEmptyData();
+    }
+
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
@@ -116,10 +119,7 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
 
   void _clearSearchQuery() {
     setState(() {
-      isEmptyDataInfoGraphic = false;
-      isEmptyDataNews = false;
-      isEmptyDataVideoList = false;
-      isEmptyDataDocument = false;
+      resetEmptyData();
       _searchController.clear();
       updateSearchQuery(null);
     });
@@ -130,6 +130,14 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
       searchQuery = newQuery;
     });
   }
+
+  void resetEmptyData() {
+    isEmptyDataInfoGraphic = false;
+    isEmptyDataNews = false;
+    isEmptyDataVideoList = false;
+    isEmptyDataDocument = false;
+  }
+
 
   @override
   void dispose() {
