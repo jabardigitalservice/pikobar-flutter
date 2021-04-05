@@ -66,6 +66,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: WillPopScope(
       child: CollapsingAppbar(
         searchBar: CustomAppBar.buildSearchField(
