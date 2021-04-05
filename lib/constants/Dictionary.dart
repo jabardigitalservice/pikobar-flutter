@@ -375,7 +375,7 @@ class Dictionary {
   static String addUserForm = 'Form Pengisian Data';
   static String otherReportAnnouncement =
       '<p>Form berikut ini bertujuan untuk memberikan informasi<br>kepada pusat agar mudah dilaporkan</p>';
-  static String previewData = 'Cek Kembali Data Anda';
+  static String previewData = 'Cek Kembali Isian Data';
   static String reportForMySelf = 'Lapor Kesehatan Untuk Diri Sendiri';
   static String reportForOther = 'Lapor Kesehatan Untuk Orang Lain';
   static String setLocationTravelHistory = 'Pilih Lokasi Saat Ini';
