@@ -117,9 +117,7 @@ class _NewsScreenState extends State<NewsScreen> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-      if (list.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataNews = true;
-      }
+        widget.covidInformationScreenState.isEmptyDataNews = list.isEmpty;
     }
     return list.isNotEmpty
         ? Container(

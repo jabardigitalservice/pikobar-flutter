@@ -240,9 +240,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
-      if (listData.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
-      }
+
+        widget.covidInformationScreenState.isEmptyDataInfoGraphic = listData.isEmpty;
     }
     return listData.isNotEmpty
         ? Column(

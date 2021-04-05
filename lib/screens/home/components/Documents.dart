@@ -228,9 +228,8 @@ class _DocumentsState extends State<Documents> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
-      if (dataDocuments.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataDocument = true;
-      }
+
+        widget.covidInformationScreenState.isEmptyDataDocument = dataDocuments.isEmpty;
     }
 
     getDataLabel();
