@@ -89,7 +89,8 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               buildTextField(
                   controller: _nikController,
                   hintText: Dictionary.placeholderNIK,
-                  isRequired: false,
+                  validation: Validations.nikValidation,
+                  isRequired: true,
                   isEdit: true,
                   title: Dictionary.nik,
                   textInputType: TextInputType.number),
