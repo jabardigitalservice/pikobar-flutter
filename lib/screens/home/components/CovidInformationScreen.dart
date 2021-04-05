@@ -62,6 +62,7 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        SizedBox(height: Dimens.sizedBoxHeight),
         CustomAppBar.buildSearchField(
             _searchController, Dictionary.searchInformation, updateSearchQuery,
             margin: EdgeInsets.symmetric(horizontal: Dimens.padding)),
