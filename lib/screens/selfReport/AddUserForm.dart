@@ -62,110 +62,118 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
         title: Dictionary.addUserForm,
       ),
       backgroundColor: Colors.white,
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            controller: _scrollController,
-            children: <Widget>[
-              AnimatedOpacity(
-                opacity: _showTitle ? 0.0 : 1.0,
-                duration: Duration(milliseconds: 250),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    Dictionary.addUserForm,
-                    style: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
+      body: Listener(
+        onPointerDown: (_) {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            currentFocus.focusedChild.unfocus();
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              controller: _scrollController,
+              children: <Widget>[
+                AnimatedOpacity(
+                  opacity: _showTitle ? 0.0 : 1.0,
+                  duration: Duration(milliseconds: 250),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      Dictionary.addUserForm,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: Dimens.padding),
-              buildAnnouncement(),
-              const SizedBox(height: Dimens.padding),
-              buildTextField(
-                  controller: _nikController,
-                  hintText: Dictionary.placeholderNIK,
-                  validation: Validations.nikValidation,
-                  isRequired: true,
-                  isEdit: true,
-                  title: Dictionary.nik,
-                  textInputType: TextInputType.number),
-              const SizedBox(height: Dimens.padding),
-              buildTextField(
-                  controller: _nameController,
-                  hintText: Dictionary.placeholderName,
-                  isEdit: true,
-                  title: Dictionary.name,
-                  validation: Validations.nameValidation,
-                  textInputType: TextInputType.text),
-              const SizedBox(height: Dimens.padding),
-              buildLabel(text: Dictionary.birthday, required: true),
-              const SizedBox(height: Dimens.padding),
-              buildDateField(
-                  title: Dictionary.birthday,
-                  placeholder: _dateController.text == ''
-                      ? Dictionary.birthdayPlaceholder
-                      : DateFormat.yMMMMd('id')
-                          .format(DateTime.parse(_dateController.text)),
-                  isEmpty: isBirthdayEmpty),
-              const SizedBox(height: Dimens.padding),
-              buildLabel(text: Dictionary.gender),
-              _buildRadioButton(
-                  title: Dictionary.gender,
-                  itemList: <String>[
-                    "Laki - Laki",
-                    "Perempuan",
-                  ],
-                  onChanged: (label, index) {
-                    setState(() {
-                      _genderController.text = index == 0 ? 'M' : 'F';
-                      isGenderEmpty = _genderController.text.isEmpty;
-                    });
-                  },
-                  validator: (value) {
-                    return isGenderEmpty
-                        ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
-                        : null;
-                  }),
-              buildLabel(text: Dictionary.relation),
-              _buildRadioButton(
-                  title: Dictionary.relationOtherSelfReport,
-                  itemList: <String>[
-                    "Orangtua",
-                    "Suami/Istri",
-                    "Anak",
-                    "Kerabat Lainnya",
-                  ],
-                  onChanged: (label, index) {
-                    setState(() {
-                      _relationController.text = label;
-                      isRelationEmpty = _relationController.text.isEmpty;
-                    });
-                  },
-                  validator: (value) {
-                    return isRelationEmpty
-                        ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
-                        : null;
-                  }),
-              const SizedBox(height: 32.0),
-              RoundedButton(
-                  title: Dictionary.nextStep,
-                  elevation: 0.0,
-                  color: ColorBase.green,
-                  textStyle: TextStyle(
-                      fontFamily: FontsFamily.roboto,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
-                  onPressed: () {
-                    _saveSelfReport();
-                  }),
-              const SizedBox(height: Dimens.padding),
-            ],
+                const SizedBox(height: Dimens.padding),
+                buildAnnouncement(),
+                const SizedBox(height: Dimens.padding),
+                buildTextField(
+                    controller: _nikController,
+                    hintText: Dictionary.placeholderNIK,
+                    validation: Validations.nikValidation,
+                    isEdit: true,
+                    title: Dictionary.nik,
+                    textInputType: TextInputType.number),
+                const SizedBox(height: Dimens.padding),
+                buildTextField(
+                    controller: _nameController,
+                    hintText: Dictionary.placeholderName,
+                    isEdit: true,
+                    title: Dictionary.name,
+                    validation: Validations.nameValidation,
+                    textInputType: TextInputType.text),
+                const SizedBox(height: Dimens.padding),
+                buildLabel(text: Dictionary.birthday, required: true),
+                const SizedBox(height: Dimens.padding),
+                buildDateField(
+                    title: Dictionary.birthday,
+                    placeholder: _dateController.text == ''
+                        ? Dictionary.birthdayPlaceholder
+                        : DateFormat.yMMMMd('id')
+                            .format(DateTime.parse(_dateController.text)),
+                    isEmpty: isBirthdayEmpty),
+                const SizedBox(height: Dimens.padding),
+                buildLabel(text: Dictionary.gender),
+                _buildRadioButton(
+                    title: Dictionary.gender,
+                    itemList: <String>[
+                      "Laki - Laki",
+                      "Perempuan",
+                    ],
+                    onChanged: (label, index) {
+                      setState(() {
+                        _genderController.text = index == 0 ? 'M' : 'F';
+                        isGenderEmpty = _genderController.text.isEmpty;
+                      });
+                    },
+                    validator: (value) {
+                      return isGenderEmpty
+                          ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
+                          : null;
+                    }),
+                buildLabel(text: Dictionary.relation),
+                _buildRadioButton(
+                    title: Dictionary.relationOtherSelfReport,
+                    itemList: <String>[
+                      "Orangtua",
+                      "Suami/Istri",
+                      "Anak",
+                      "Kerabat Lainnya",
+                    ],
+                    onChanged: (label, index) {
+                      setState(() {
+                        _relationController.text = label;
+                        isRelationEmpty = _relationController.text.isEmpty;
+                      });
+                    },
+                    validator: (value) {
+                      return isRelationEmpty
+                          ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
+                          : null;
+                    }),
+                const SizedBox(height: 32.0),
+                RoundedButton(
+                    title: Dictionary.nextStep,
+                    elevation: 0.0,
+                    color: ColorBase.green,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
+                    onPressed: () {
+                      _saveSelfReport();
+                    }),
+                const SizedBox(height: Dimens.padding),
+              ],
+            ),
           ),
         ),
       ),
@@ -287,6 +295,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       children: <Widget>[
         InkWell(
           onTap: () {
+            FocusScope.of(context).unfocus();
             _showDatePicker();
           },
           child: Container(
@@ -415,13 +424,12 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
 
   // Validate and Record data to firestore
   void _saveSelfReport() async {
-    print(isBirthdayEmpty);
     isBirthdayEmpty = _dateController.text.isEmpty;
     isRelationEmpty = _relationController.text.isEmpty;
     isGenderEmpty = _genderController.text.isEmpty;
     setState(() {
+      FocusScope.of(context).unfocus();
       if (_formKey.currentState.validate()) {
-        FocusScope.of(context).unfocus();
         if (!isBirthdayEmpty && !isRelationEmpty && !isGenderEmpty) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ConfirmUserForm(

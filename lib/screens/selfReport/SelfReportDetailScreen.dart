@@ -98,7 +98,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                               splashColor: Colors.lightGreenAccent,
                               color: ColorBase.green,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.borderRadius),
                               ),
                               child: Text(
                                 Dictionary.editDailyMonitoring,
@@ -144,6 +145,8 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                                             builder: (context) =>
                                                 SelfReportFormScreen(
                                                   cityId: widget.cityId,
+                                                  recurrenceReport:
+                                                      widget.recurrenceReport,
                                                   dailyId: state
                                                       .documentSnapshot['id'],
                                                   otherUID: widget.otherUID,

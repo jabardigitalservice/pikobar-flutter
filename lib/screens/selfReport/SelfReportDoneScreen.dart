@@ -223,7 +223,7 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
               : autoReplaceForDailyReport(
                   otherUID: widget.otherUID,
                   text: Dictionary.announcementDescIndication,
-                  replaceTo: ['Pasien', 'pasien'],
+                  replaceTo: ['pasien', 'pasien'],
                   replaceFrom: ['Anda', 'anda']),
           margin: EdgeInsets.zero,
           htmlStyle: Style(
