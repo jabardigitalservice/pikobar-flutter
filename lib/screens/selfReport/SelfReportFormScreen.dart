@@ -169,12 +169,12 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       title: autoReplaceForDailyReport(
                           otherUID: widget.otherUID,
                           text: getMessage['title'],
-                          replaceTo: ['Pasien', 'pasien'],
+                          replaceTo: ['pasien', 'pasien'],
                           replaceFrom: ['Anda', 'anda']),
                       message: autoReplaceForDailyReport(
                           otherUID: widget.otherUID,
                           text: getMessage['description'],
-                          replaceTo: ['Pasien', 'pasien'],
+                          replaceTo: ['pasien', 'pasien'],
                           replaceFrom: ['Anda', 'anda']),
                       onPressed: () async {
                         if (widget.dailyId == widget.lastData.toString()) {
@@ -255,7 +255,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           text: autoReplaceForDailyReport(
                               otherUID: widget.otherUID,
                               text: Dictionary.selfReportQuestion1,
-                              replaceTo: ['Pasien', 'pasien'],
+                              replaceTo: ['pasien', 'pasien'],
                               replaceFrom: ['Anda', 'anda'])),
                       const SizedBox(height: Dimens.padding),
                       buildDateField(
@@ -278,7 +278,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           text: autoReplaceForDailyReport(
                               otherUID: widget.otherUID,
                               text: Dictionary.quarantineQuestion,
-                              replaceTo: ['Pasien', 'pasien'],
+                              replaceTo: ['pasien', 'pasien'],
                               replaceFrom: ['Anda', 'anda'])),
                       const SizedBox(height: Dimens.padding),
                       buildDateField(
@@ -428,12 +428,12 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           title: autoReplaceForDailyReport(
                               otherUID: widget.otherUID,
                               text: getMessage['title'],
-                              replaceTo: ['Pasien', 'pasien'],
+                              replaceTo: ['pasien', 'pasien'],
                               replaceFrom: ['Anda', 'anda']),
                           message: autoReplaceForDailyReport(
                               otherUID: widget.otherUID,
                               text: getMessage['description'],
-                              replaceTo: ['Pasien', 'pasien'],
+                              replaceTo: ['pasien', 'pasien'],
                               replaceFrom: ['Anda', 'anda']),
                           onPressed: () {
                             Navigator.of(context).pop(true);

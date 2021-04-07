@@ -314,7 +314,7 @@ class Dictionary {
   static String monitoringCompleted = 'Proses pelaporan sudah terisi';
   static String inputDate = 'Tanggal Pengisian';
   static String bodyTemperature = 'Suhu Tubuh';
-  static String indications = 'Gejala yang Dirasakan';
+  static String indications = 'Gejala yang dirasakan';
   static String contactDate = 'Tanggal Terakhir Kontak';
   static String quarantineDate = 'Tanggal Awal Karantina';
   static String contactDateCovid =
@@ -326,7 +326,7 @@ class Dictionary {
   static String selfReportQuestion1 =
       'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
   static String quarantineQuestion = 'Kapan hari pertama anda karantina?';
-  static String selfReportQuestion2 = 'Gejala Yang Dirasakan';
+  static String selfReportQuestion2 = 'Gejala yang dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
   static String otherIndication = 'Gejala Lainnya';
   static String inputBodyTemperature = 'Isi jika memiliki termometer';
