@@ -16,6 +16,7 @@ class DailyReportModel {
   DailyReportModel(
       {this.id,
       this.createdAt,
+      this.updatedAt,
       this.contactDate,
       this.quarantineDate,
       this.indications,
@@ -25,6 +26,7 @@ class DailyReportModel {
 
   String id;
   DateTime createdAt;
+  DateTime updatedAt;
   DateTime contactDate;
   DateTime quarantineDate;
   String indications;
@@ -36,6 +38,7 @@ class DailyReportModel {
       DailyReportModel(
           id: json["id"],
           createdAt: DateTime.parse(json["created_at"]),
+          updatedAt: DateTime.parse(json["updated_at"]),
           contactDate: DateTime.parse(json["contact_date"]),
           quarantineDate: DateTime.parse(json["quarantine_date"]),
           indications: json["indications"],
@@ -46,6 +49,7 @@ class DailyReportModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "created_at": createdAt,
+        "updated_at":updatedAt,
         "contact_date": contactDate,
         "quarantine_date": quarantineDate,
         "indications": indications,
