@@ -324,7 +324,7 @@ class Dictionary {
   static String descTemperatureInformation =
       'Agar dapat memantau suhu tubuh secara akurat, penting bagi Anda untuk memiliki thermometer selama isolasi mandiri.';
   static String selfReportQuestion1 =
-      'Kapan terakhir kali Anda bertemu dengan terduga/ kasus terkonfirmasi COVID-19?';
+      'Kapan terakhir kali Anda bertemu dengan terduga/kasus terkonfirmasi COVID-19?';
   static String quarantineQuestion = 'Kapan hari pertama anda karantina?';
   static String selfReportQuestion2 = 'Gejala yang dirasakan';
   static String tellOtherIndication = 'Sebutkan Gejala Lainnya';
