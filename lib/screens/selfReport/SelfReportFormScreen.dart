@@ -72,7 +72,6 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   bool _isDateEmpty = false;
   bool _isquarantineDateEmpty = false;
   bool _isIndicationEmpty = false;
-  bool _isOtherIndicationEmpty = false;
   bool _isOtherIndication = false;
   dynamic getMessage;
 
@@ -330,7 +329,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
               decoration: BoxDecoration(
                   color: ColorBase.greyContainer,
                   border: Border.all(
-                      color: _isOtherIndicationEmpty
+                      color: _isOtherIndicationEmpty()
                           ? Colors.red
                           : ColorBase.greyBorder),
                   borderRadius: BorderRadius.circular(Dimens.borderRadius)),
@@ -358,7 +357,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                     ),
                   )
                 : Container(),
-            _isOtherIndicationEmpty
+            _isOtherIndicationEmpty()
                 ? Padding(
                     padding: const EdgeInsets.only(left: 15.0, top: 10.0),
                     child: Text(
@@ -567,6 +566,9 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
     }
   }
 
+  bool _isOtherIndicationEmpty() =>
+      _isOtherIndication && _otherIndicationsController.text.isEmpty;
+
   // Function to build Date Picker
   void _showDatePicker(TextEditingController controller, bool isEmpty) {
     DatePicker.showDatePicker(
@@ -599,6 +601,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
   void _saveSelfReport(dynamic successMessage) async {
     setState(() {
       _isIndicationEmpty = _checkedItemList.isEmpty;
+
       if (widget.dailyId == (widget.firstData + 1).toString()) {
         _isDateEmpty = _dateController.text.isEmpty;
         _isquarantineDateEmpty = _quarantineDateController.text.isEmpty;
@@ -607,17 +610,18 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         _isquarantineDateEmpty = false;
       }
       if (_isOtherIndication) {
-        _isOtherIndicationEmpty = _otherIndicationsController.text.isEmpty;
-        _checkedItemList.add(_otherIndicationsController.text.trim());
-      } else {
-        _isOtherIndicationEmpty = false;
+        if (!_isOtherIndicationEmpty()) {
+          _checkedItemList.add(_otherIndicationsController.text.trim());
+        }
       }
     });
 
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
 
-      if (!_isDateEmpty && !_isIndicationEmpty && !_isOtherIndicationEmpty) {
+      if (!_isDateEmpty &&
+          !_isIndicationEmpty &&
+          !_isOtherIndicationEmpty()) {
         final data = DailyReportModel(
             id: widget.dailyId,
             createdAt: DateTime.now(),
@@ -631,6 +635,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
             bodyTemperature: _bodyTempController.text,
             location: widget.location,
             recurrenceReport: widget.recurrenceReport);
+
         _dailyReportBloc.add(DailyReportSave(data,
             otherUID: widget.otherUID, successMessage: successMessage));
       }
