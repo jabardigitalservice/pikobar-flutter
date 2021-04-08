@@ -169,7 +169,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                       title: autoReplaceForDailyReport(
                           otherUID: widget.otherUID,
                           text: getMessage['title'],
-                          replaceTo: ['pasien', 'pasien'],
+                          replaceTo: ['Pasien', 'pasien'],
                           replaceFrom: ['Anda', 'anda']),
                       message: autoReplaceForDailyReport(
                           otherUID: widget.otherUID,
@@ -428,7 +428,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
                           title: autoReplaceForDailyReport(
                               otherUID: widget.otherUID,
                               text: getMessage['title'],
-                              replaceTo: ['pasien', 'pasien'],
+                              replaceTo: ['Pasien', 'pasien'],
                               replaceFrom: ['Anda', 'anda']),
                           message: autoReplaceForDailyReport(
                               otherUID: widget.otherUID,
