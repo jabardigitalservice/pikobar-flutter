@@ -144,6 +144,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 SelfReportFormScreen(
+                                                  isEdit: true,
                                                   cityId: widget.cityId,
                                                   recurrenceReport:
                                                       widget.recurrenceReport,

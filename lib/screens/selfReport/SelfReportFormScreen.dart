@@ -37,6 +37,7 @@ class SelfReportFormScreen extends StatefulWidget {
   final String recurrenceReport;
   final int firstData;
   final int lastData;
+  final bool isEdit;
 
   SelfReportFormScreen(
       {Key key,
@@ -47,6 +48,7 @@ class SelfReportFormScreen extends StatefulWidget {
       @required this.analytics,
       this.cityId,
       this.recurrenceReport,
+      this.isEdit = false,
       @required this.firstData,
       @required this.lastData})
       : assert(dailyId != null),
@@ -619,12 +621,13 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
 
-      if (!_isDateEmpty &&
-          !_isIndicationEmpty &&
-          !_isOtherIndicationEmpty()) {
+      if (!_isDateEmpty && !_isIndicationEmpty && !_isOtherIndicationEmpty()) {
         final data = DailyReportModel(
             id: widget.dailyId,
-            createdAt: DateTime.now(),
+            createdAt: widget.isEdit
+                ? widget.dailyReportModel.createdAt
+                : DateTime.now(),
+            updatedAt: widget.isEdit ? DateTime.now() : null,
             contactDate: _dateController.text.isNotEmpty
                 ? DateTime.parse(_dateController.text)
                 : null,
