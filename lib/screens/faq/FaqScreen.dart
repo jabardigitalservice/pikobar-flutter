@@ -105,7 +105,7 @@ class _FaqScreenState extends State<FaqScreen> {
                       category:
                           listDataRemoteConfigTab[0]['category'].toString())),
                 child: CustomBubbleTab(
-                  isStickyHeader: false,
+                  isStickyHeader: widget.isNewPage,
                   titleHeader: Dictionary.faq,
                   listItemTitleTab: listItemTitleTab,
                   indicatorColor: ColorBase.green,
