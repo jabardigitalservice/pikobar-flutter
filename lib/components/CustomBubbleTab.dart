@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -170,15 +172,18 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                           padding: const EdgeInsets.symmetric(
                               vertical: Dimens.homeCardMargin,
                               horizontal: Dimens.padding),
-                          child: Text(
-                            widget.titleHeader,
-                            style: TextStyle(
-                                fontFamily: FontsFamily.lato,
-                                color: Colors.grey[800],
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w900),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                          child: Container(
+                            alignment: Platform.isIOS ? Alignment.center : Alignment.centerLeft,
+                            child: Text(
+                              widget.titleHeader,
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.lato,
+                                  color: Colors.grey[800],
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w900),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         )
                       : Container(),
