@@ -127,6 +127,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           scrollController: _scrollController,
           onTap: (index) {
             setState(() {});
+            _scrollController
+                        .jumpTo(_scrollController.position.minScrollExtent);
             _infoGraphicsListBloc.add(InfoGraphicsListLoad(
                 infoGraphicsCollection: listCollectionData[index]));
             AnalyticsHelper.setLogEvent(analyticsData[index]);
