@@ -229,7 +229,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function for build widget content
   Widget _buildContent(DocumentSnapshot state) {
     return Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         child: ListView(
           controller: _scrollController,
           children: <Widget>[
