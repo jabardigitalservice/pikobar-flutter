@@ -82,7 +82,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
     'Demam',
     'Menggigil',
     'Diare',
-    'Lemah (Malaise)',
+    'Lemah (malaise)',
     'Nyeri Otot',
     'Nyeri Abdomen',
     'Mual Atau Muntah',
