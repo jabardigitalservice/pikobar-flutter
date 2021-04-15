@@ -108,7 +108,7 @@ class IndexScreenState extends State<IndexScreen> {
       },
     );
 
-    // _firebaseMessaging.getToken().then((token) => print(token));
+    _firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
@@ -285,6 +285,9 @@ class IndexScreenState extends State<IndexScreen> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
       }
+    } else if (data['target'] == 'self_reports') {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SelfReportScreen(toNextScreen: true,)));
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
