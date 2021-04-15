@@ -179,7 +179,6 @@ class _FaqScreenState extends State<FaqScreen> {
   }
 
   void updateSearchQuery(String newQuery) {
-    AnalyticsHelper.setLogEvent(Analytics.tappedFaqSearch);
     setState(() {
       searchQuery = newQuery;
     });
@@ -210,6 +209,8 @@ class _FaqScreenState extends State<FaqScreen> {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedFaqSearch);
   }
 
   Widget _buildLoading() {

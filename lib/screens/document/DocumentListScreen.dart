@@ -358,11 +358,12 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
         setState(() {
           searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSerachDocument);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSerachDocument);
   }
 
   void updateSearchQuery(String newQuery) {

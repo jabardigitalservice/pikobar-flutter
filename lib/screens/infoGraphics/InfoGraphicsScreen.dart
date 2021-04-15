@@ -388,11 +388,12 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         setState(() {
           searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSearchInfoGraphic);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchInfoGraphic);
   }
 
   void updateSearchQuery(String newQuery) {

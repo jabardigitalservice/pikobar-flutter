@@ -110,11 +110,12 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
         setState(() {
           searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSearchCovidInformation);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchCovidInformation);
   }
 
   void _clearSearchQuery() {

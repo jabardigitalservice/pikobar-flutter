@@ -195,11 +195,12 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         setState(() {
           searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSearchNews);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchNews);
   }
 
   void updateSearchQuery(String newQuery) {

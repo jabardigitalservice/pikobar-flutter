@@ -94,11 +94,12 @@ class _VideosListState extends State<VideosList> {
         setState(() {
           searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSearchVideo);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchVideo);
   }
 
   void updateSearchQuery(String newQuery) {
