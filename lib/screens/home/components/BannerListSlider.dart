@@ -75,9 +75,9 @@ class BannerListSliderState extends State<BannerListSlider> {
                 options: CarouselOptions(
                   initialPage: 0,
                   enableInfiniteScroll: state.records.length > 1 ? true : false,
-                  aspectRatio: 2.15,
-                  viewportFraction: 0.8,
-                  enlargeCenterPage: true,
+                  aspectRatio: 1.9,
+                  viewportFraction: 0.95,
+                  enlargeCenterPage: false,
                   autoPlay: state.records.length > 1 ? true : false,
                   autoPlayInterval: Duration(seconds: 5),
                   onPageChanged: (index, reason) {
@@ -96,11 +96,9 @@ class BannerListSliderState extends State<BannerListSlider> {
                           child: CachedNetworkImage(
                               imageUrl: data.url ?? '',
                               imageBuilder: (context, imageProvider) =>
-                                  Container(
+                                  Container(margin: EdgeInsets.symmetric(horizontal: 5),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(5.0),
-                                          topRight: Radius.circular(5.0)),
+                                      borderRadius: BorderRadius.all(Radius.circular(5)),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.fill,
