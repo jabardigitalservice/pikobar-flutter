@@ -205,7 +205,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                         ),
                         SizedBox(height: 10),
                         CustomBubbleTab(
-                          indicatorColor: ColorBase.green,
+                          indicatorColor: ColorBase.green, paddingBubbleTab: 5,
                           labelColor: Colors.white,
                           listItemTitleTab: listItemTitleTab,
                           unselectedLabelColor: Colors.grey,
@@ -302,6 +302,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
 
                         /// Set up for show announcement widget
                         Announcement(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           title: Dictionary.disclaimer,
                           content: Dictionary.informationLocation,
                         ),
