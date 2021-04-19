@@ -27,3 +27,39 @@ class InfoGraphicsListLoaded extends InfoGraphicsListState {
   @override
   String toString() => 'InfoGraphicsLoaded';
 }
+
+class InfoGraphicsListJabarLoaded extends InfoGraphicsListState {
+  final List<DocumentSnapshot> infoGraphicsListJabar;
+
+  InfoGraphicsListJabarLoaded(this.infoGraphicsListJabar);
+
+  @override
+  List<Object> get props => [infoGraphicsListJabar];
+
+  @override
+  String toString() => 'InfoGraphicsListJabarLoaded';
+}
+
+class InfoGraphicsListPusatLoaded extends InfoGraphicsListState {
+  final List<DocumentSnapshot> infoGraphicsListPusat;
+
+  InfoGraphicsListPusatLoaded(this.infoGraphicsListPusat);
+
+  @override
+  List<Object> get props => [infoGraphicsListPusat];
+
+  @override
+  String toString() => 'InfoGraphicsListPusatLoaded';
+}
+
+class InfoGraphicsListWHOLoaded extends InfoGraphicsListState {
+  final List<DocumentSnapshot> infoGraphicsListWHO;
+
+  InfoGraphicsListWHOLoaded(this.infoGraphicsListWHO);
+
+  @override
+  List<Object> get props => [infoGraphicsListWHO];
+
+  @override
+  String toString() => 'InfoGraphicsListWHOLoaded';
+}
