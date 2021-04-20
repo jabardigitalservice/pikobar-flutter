@@ -97,7 +97,7 @@ class InfoGraphicsListBloc
                 (b, a) => a['published_date'].compareTo(b['published_date']));
             labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
-            add(InfoGraphicsListUpdate(dataListAllinfographics));
+            add(InfoGraphicsListJabarUpdate(dataListAllinfographics));
           })
         : _repository
             .getInfoGraphics(
@@ -128,7 +128,7 @@ class InfoGraphicsListBloc
                 (b, a) => a['published_date'].compareTo(b['published_date']));
             labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
-            add(InfoGraphicsListUpdate(dataListAllinfographics));
+            add(InfoGraphicsListPusatUpdate(dataListAllinfographics));
           })
         : _repository
             .getInfoGraphics(
@@ -159,7 +159,7 @@ class InfoGraphicsListBloc
                 (b, a) => a['published_date'].compareTo(b['published_date']));
             labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
-            add(InfoGraphicsListUpdate(dataListAllinfographics));
+            add(InfoGraphicsListWHOUpdate(dataListAllinfographics));
           })
         : _repository
             .getInfoGraphics(
