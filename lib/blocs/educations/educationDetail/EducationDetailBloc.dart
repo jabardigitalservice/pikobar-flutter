@@ -5,8 +5,8 @@ import 'package:pikobar_flutter/repositories/EducationRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 import './Bloc.dart';
 
-class EducationDetailBloc extends Bloc<EducationDetailEvent, EducationDetailState> {
-
+class EducationDetailBloc
+    extends Bloc<EducationDetailEvent, EducationDetailState> {
   EducationDetailBloc() : super(InitialEducationDetailState());
 
   @override
@@ -16,10 +16,11 @@ class EducationDetailBloc extends Bloc<EducationDetailEvent, EducationDetailStat
     if (event is EducationDetailLoad) {
       try {
         yield EducationDetailLoading();
-        EducationModel record =  await EducationRepository().getEducationDetail(
-                educationCollection: event.educationCollection, educationId: event.educationId);
+        EducationModel record = await EducationRepository().getEducationDetail(
+            educationCollection: event.educationCollection,
+            educationId: event.educationId);
         yield EducationDetailLoaded(record);
-      } catch (e) {
+      } on Exception catch (e) {
         yield EducationDetailFailure(
             error: CustomException.onConnectionException(e.toString()));
       }

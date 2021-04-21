@@ -20,12 +20,13 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
     }
   }
 
-  Stream<EducationListState> _mapLoadEducationsToState(String collection) async* {
+  Stream<EducationListState> _mapLoadEducationsToState(
+      String collection) async* {
     yield EducationLisLoading();
     _subscription?.cancel();
-    _subscription =  _repository
-                .getEducationList(educationCollection: collection)
-                .listen((education) => add(EducationListUpdate(education)));
+    _subscription = _repository
+        .getEducationList(educationCollection: collection)
+        .listen((education) => add(EducationListUpdate(education)));
   }
 
   Stream<EducationListState> _mapVideosUpdateToState(

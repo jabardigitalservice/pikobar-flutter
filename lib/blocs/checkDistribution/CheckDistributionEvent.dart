@@ -1,16 +1,16 @@
-part of 'CheckdistributionBloc.dart';
+part of 'CheckDistributionBloc.dart';
 
-abstract class CheckdistributionEvent extends Equatable {
-  const CheckdistributionEvent();
+abstract class CheckDistributionEvent extends Equatable {
+  const CheckDistributionEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadCheckDistribution extends CheckdistributionEvent {
-  final lat;
-  final long;
-  final id;
+class LoadCheckDistribution extends CheckDistributionEvent {
+  final dynamic lat;
+  final dynamic long;
+  final dynamic id;
   final bool isOther;
 
   const LoadCheckDistribution(
@@ -20,7 +20,7 @@ class LoadCheckDistribution extends CheckdistributionEvent {
   List<Object> get props => [lat, long, id, isOther];
 }
 
-class CheckDistributionLoad extends CheckdistributionEvent {
+class CheckDistributionLoad extends CheckDistributionEvent {
   final CheckDistributionModel record;
 
   const CheckDistributionLoad(this.record);

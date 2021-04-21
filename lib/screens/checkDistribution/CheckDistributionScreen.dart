@@ -8,7 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -71,7 +71,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
     return Scaffold(
         appBar: CustomAppBar.defaultAppBar(title: Dictionary.checkDistribution),
         backgroundColor: Colors.white,
-        body: BlocListener<CheckDistributionBloc, CheckdistributionState>(
+        body: BlocListener<CheckDistributionBloc, CheckDistributionState>(
           listener: (context, state) {
             // Show dialog error message
             // When check distribution failed to load
@@ -175,7 +175,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                     Dimens.padding,
                                     Dimens.padding),
                                 child: BlocBuilder<CheckDistributionBloc,
-                                    CheckdistributionState>(
+                                    CheckDistributionState>(
                                   builder: (context, state) {
                                     return Column(
                                       children: <Widget>[

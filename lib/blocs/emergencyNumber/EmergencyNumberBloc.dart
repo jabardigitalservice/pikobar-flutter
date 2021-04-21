@@ -15,7 +15,8 @@ class EmergencyNumberBloc
 
   EmergencyNumberBloc({
     @required this.emergencyNumberRepository,
-  })  : assert(emergencyNumberRepository != null),
+  })  : assert(emergencyNumberRepository != null,
+            'emergencyNumberRepository must not be null'),
         super(InitialEmergencyNumberState());
 
   @override
@@ -52,7 +53,7 @@ class EmergencyNumberBloc
     await _subscription?.cancel();
     _subscription = emergencyNumberRepository
         .getReferralHospitalModelList()
-        .listen((referralHospital) {
+        .listen((List<ReferralHospitalModel> referralHospital) {
       List<ReferralHospitalModel> list = [];
       for (int i = 0; i < referralHospital.length; i++) {
         list.add(referralHospital[i]);
@@ -70,7 +71,7 @@ class EmergencyNumberBloc
     yield EmergencyNumberLoading();
     await _subscription?.cancel();
     _subscription =
-        emergencyNumberRepository.getCallCenterModelList().listen((callCenter) {
+        emergencyNumberRepository.getCallCenterModelList().listen((List<CallCenterModel> callCenter) {
       List<CallCenterModel> list = [];
       for (int i = 0; i < callCenter.length; i++) {
         list.add(callCenter[i]);
@@ -88,7 +89,7 @@ class EmergencyNumberBloc
     yield EmergencyNumberLoading();
     await _subscription?.cancel();
     _subscription =
-        emergencyNumberRepository.getGugusTugasWebList().listen((callCenter) {
+        emergencyNumberRepository.getGugusTugasWebList().listen((List<GugusTugasWebModel> callCenter) {
       List<GugusTugasWebModel> list = [];
       for (int i = 0; i < callCenter.length; i++) {
         list.add(callCenter[i]);
@@ -107,7 +108,7 @@ class EmergencyNumberBloc
     await _subscription?.cancel();
     _subscription = emergencyNumberRepository
         .getIsolationCenterModelList()
-        .listen((referralHospital) {
+        .listen((List<IsolationCenterModel> referralHospital) {
       List<IsolationCenterModel> list = [];
       for (int i = 0; i < referralHospital.length; i++) {
         list.add(referralHospital[i]);

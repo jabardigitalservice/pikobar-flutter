@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
@@ -184,7 +184,7 @@ class _ZonationState extends State<Zonation> {
         break;
     }
 
-    return BlocListener<CheckDistributionBloc, CheckdistributionState>(
+    return BlocListener<CheckDistributionBloc, CheckDistributionState>(
       listener: (context, state) async {
         if (state is CheckDistributionLoading ||
             state is CheckDistributionLoadingIsOther) {
@@ -292,7 +292,7 @@ class _ZonationState extends State<Zonation> {
                   ),
                 ),
               ),
-              BlocBuilder<CheckDistributionBloc, CheckdistributionState>(
+              BlocBuilder<CheckDistributionBloc, CheckDistributionState>(
                   builder: (context, state) {
                 return Row(
                   children: [

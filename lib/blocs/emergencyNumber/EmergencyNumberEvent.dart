@@ -10,9 +10,7 @@ abstract class EmergencyNumberEvent extends Equatable {
 
 class ReferralHospitalLoad extends EmergencyNumberEvent {
   @override
-  String toString() {
-    return 'Event ReferralHospitalLoad';
-  }
+  String toString() => 'Event ReferralHospitalLoad';
 
   @override
   List<Object> get props => ["ReferralHospitalLoad"];
@@ -29,9 +27,7 @@ class ReferralHospitalUpdated extends EmergencyNumberEvent {
 
 class CallCenterLoad extends EmergencyNumberEvent {
   @override
-  String toString() {
-    return 'Event CallCenterLoad';
-  }
+  String toString() => 'Event CallCenterLoad';
 
   @override
   List<Object> get props => ["CallCenterLoad"];
@@ -48,9 +44,7 @@ class CallCenterUpdated extends EmergencyNumberEvent {
 
 class GugusTugasWebLoad extends EmergencyNumberEvent {
   @override
-  String toString() {
-    return 'Event GugusTugasWebLoad';
-  }
+  String toString() => 'Event GugusTugasWebLoad';
 
   @override
   List<Object> get props => ["GugusTugasWebLoad"];
@@ -67,9 +61,7 @@ class GugusTugasWebUpdated extends EmergencyNumberEvent {
 
 class IsolationCenterLoad extends EmergencyNumberEvent {
   @override
-  String toString() {
-    return 'Event IsolationCenterLoad';
-  }
+  String toString() => 'Event IsolationCenterLoad';
 
   @override
   List<Object> get props => ["IsolationCenterLoad"];
