@@ -55,16 +55,32 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     }
   }
 
-  Stream<NewsListState> _mapLoadNewsToState(String collection,
-      {bool statImportantInfo = true}) async* {
-    yield NewsListLoading();
+  _loadData(String section, collection, bool statImportantInfo) {
     _subscription?.cancel();
     _subscription = collection == kImportantInfor
         ? _repository
             .getInfoImportantList(improtantInfoCollection: collection)
             .listen(
             (news) {
-              add(NewsListUpdate(news));
+              switch (section) {
+                case 'all':
+                  add(NewsListUpdate(news));
+                  break;
+                case 'important':
+                  add(NewsListImportantUpdate(news));
+                  break;
+                case 'jabar':
+                  add(NewsListJabarUpdate(news));
+                  break;
+                case 'national':
+                  add(NewsListNationalUpdate(news));
+                  break;
+                case 'world':
+                  add(NewsListWorldUpdate(news));
+                  break;
+                default:
+                  add(NewsListUpdate(news));
+              }
             },
           )
         : collection == NewsType.allArticles
@@ -76,13 +92,55 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 dataListAllNews
                     .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
                 labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
-                add(NewsListUpdate(dataListAllNews));
+                switch (section) {
+                  case 'all':
+                    add(NewsListUpdate(dataListAllNews));
+                    break;
+                  case 'important':
+                    add(NewsListImportantUpdate(dataListAllNews));
+                    break;
+                  case 'jabar':
+                    add(NewsListJabarUpdate(dataListAllNews));
+                    break;
+                  case 'national':
+                    add(NewsListNationalUpdate(dataListAllNews));
+                    break;
+                  case 'world':
+                    add(NewsListWorldUpdate(dataListAllNews));
+                    break;
+                  default:
+                    add(NewsListUpdate(dataListAllNews));
+                }
               })
             : _repository
                 .getNewsList(newsCollection: collection)
                 .listen((news) {
-                add(NewsListUpdate(news));
+                switch (section) {
+                  case 'all':
+                    add(NewsListUpdate(news));
+                    break;
+                  case 'important':
+                    add(NewsListImportantUpdate(news));
+                    break;
+                  case 'jabar':
+                    add(NewsListJabarUpdate(news));
+                    break;
+                  case 'national':
+                    add(NewsListNationalUpdate(news));
+                    break;
+                  case 'world':
+                    add(NewsListWorldUpdate(news));
+                    break;
+                  default:
+                    add(NewsListUpdate(news));
+                }
               });
+  }
+
+  Stream<NewsListState> _mapLoadNewsToState(String collection,
+      {bool statImportantInfo = true}) async* {
+    yield NewsListLoading();
+    _loadData('all', collection, statImportantInfo);
   }
 
   Stream<NewsListState> _mapNewsUpdateToState(NewsListUpdate event) async* {
@@ -92,31 +150,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   Stream<NewsListState> _mapLoadNewsImportantToState(String collection,
       {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
-    _subscription?.cancel();
-    _subscription = collection == kImportantInfor
-        ? _repository
-            .getInfoImportantList(improtantInfoCollection: collection)
-            .listen(
-            (news) {
-              add(NewsListImportantUpdate(news));
-            },
-          )
-        : collection == NewsType.allArticles
-            ? _repository.getAllNewsList(statImportantInfo).listen((event) {
-                List<NewsModel> dataListAllNews = [];
-                event.forEach((iterable) {
-                  dataListAllNews.addAll(iterable.toList());
-                });
-                dataListAllNews
-                    .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
-                labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
-                add(NewsListImportantUpdate(dataListAllNews));
-              })
-            : _repository
-                .getNewsList(newsCollection: collection)
-                .listen((news) {
-                add(NewsListImportantUpdate(news));
-              });
+    _loadData('important', collection, statImportantInfo);
   }
 
   Stream<NewsListState> _mapNewsUpdateImportantToState(
@@ -127,31 +161,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   Stream<NewsListState> _mapLoadNewsJabarToState(String collection,
       {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
-    _subscription?.cancel();
-    _subscription = collection == kImportantInfor
-        ? _repository
-            .getInfoImportantList(improtantInfoCollection: collection)
-            .listen(
-            (news) {
-              add(NewsListJabarUpdate(news));
-            },
-          )
-        : collection == NewsType.allArticles
-            ? _repository.getAllNewsList(statImportantInfo).listen((event) {
-                List<NewsModel> dataListAllNews = [];
-                event.forEach((iterable) {
-                  dataListAllNews.addAll(iterable.toList());
-                });
-                dataListAllNews
-                    .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
-                labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
-                add(NewsListJabarUpdate(dataListAllNews));
-              })
-            : _repository
-                .getNewsList(newsCollection: collection)
-                .listen((news) {
-                add(NewsListJabarUpdate(news));
-              });
+    _loadData('jabar', collection, statImportantInfo);
   }
 
   Stream<NewsListState> _mapNewsUpdateJabarToState(
@@ -162,31 +172,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   Stream<NewsListState> _mapLoadNewsNationalToState(String collection,
       {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
-    _subscription?.cancel();
-    _subscription = collection == kImportantInfor
-        ? _repository
-            .getInfoImportantList(improtantInfoCollection: collection)
-            .listen(
-            (news) {
-              add(NewsListNationalUpdate(news));
-            },
-          )
-        : collection == NewsType.allArticles
-            ? _repository.getAllNewsList(statImportantInfo).listen((event) {
-                List<NewsModel> dataListAllNews = [];
-                event.forEach((iterable) {
-                  dataListAllNews.addAll(iterable.toList());
-                });
-                dataListAllNews
-                    .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
-                labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
-                add(NewsListNationalUpdate(dataListAllNews));
-              })
-            : _repository
-                .getNewsList(newsCollection: collection)
-                .listen((news) {
-                add(NewsListNationalUpdate(news));
-              });
+    _loadData('national', collection, statImportantInfo);
   }
 
   Stream<NewsListState> _mapNewsUpdateNationalToState(
@@ -197,31 +183,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   Stream<NewsListState> _mapLoadNewsWorldToState(String collection,
       {bool statImportantInfo = true}) async* {
     yield NewsListLoading();
-    _subscription?.cancel();
-    _subscription = collection == kImportantInfor
-        ? _repository
-            .getInfoImportantList(improtantInfoCollection: collection)
-            .listen(
-            (news) {
-              add(NewsListWorldUpdate(news));
-            },
-          )
-        : collection == NewsType.allArticles
-            ? _repository.getAllNewsList(statImportantInfo).listen((event) {
-                List<NewsModel> dataListAllNews = [];
-                event.forEach((iterable) {
-                  dataListAllNews.addAll(iterable.toList());
-                });
-                dataListAllNews
-                    .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
-                labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
-                add(NewsListWorldUpdate(dataListAllNews));
-              })
-            : _repository
-                .getNewsList(newsCollection: collection)
-                .listen((news) {
-                add(NewsListWorldUpdate(news));
-              });
+    _loadData('world', collection, statImportantInfo);
   }
 
   Stream<NewsListState> _mapNewsUpdateWorldToState(
