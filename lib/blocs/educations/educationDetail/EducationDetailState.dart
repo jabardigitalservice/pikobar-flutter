@@ -12,7 +12,6 @@ class InitialEducationDetailState extends EducationDetailState {
 
 class EducationDetailLoading extends EducationDetailState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 
 }
@@ -35,9 +34,7 @@ class EducationDetailFailure extends EducationDetailState {
   EducationDetailFailure({this.error});
 
   @override
-  String toString() {
-    return 'State EducationDetailFailure{error: $error}';
-  }
+  String toString() => 'State EducationDetailFailure{error: $error}';
 
   @override
   List<Object> get props => [error];

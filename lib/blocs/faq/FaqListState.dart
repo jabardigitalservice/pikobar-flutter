@@ -13,7 +13,6 @@ class InitialFaqListState extends FaqListState {
 
 class FaqListLoading extends FaqListState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 

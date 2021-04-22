@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/infographicslist/Bloc.dart';

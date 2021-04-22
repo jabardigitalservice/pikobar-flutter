@@ -10,12 +10,10 @@ abstract class GeocoderEvent extends Equatable {
 class GeocoderGetLocation extends GeocoderEvent {
   final LatLng coordinate;
 
-  GeocoderGetLocation({@required this.coordinate}) : assert(coordinate != null);
+  GeocoderGetLocation({@required this.coordinate}) : assert(coordinate != null, 'coordinate must not be null');
 
   @override
-  String toString() {
-    return 'Event getLocation';
-  }
+  String toString() => 'Event getLocation';
 
   @override
   List<Object> get props => [coordinate];

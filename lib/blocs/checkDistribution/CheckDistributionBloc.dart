@@ -7,21 +7,24 @@ import 'package:pikobar_flutter/models/CheckDistribution.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
-part 'CheckdistributionEvent.dart';
-part 'CheckdistributionState.dart';
+part 'CheckDistributionEvent.dart';
+
+part 'CheckDistributionState.dart';
 
 class CheckDistributionBloc
-    extends Bloc<CheckdistributionEvent, CheckdistributionState> {
+    extends Bloc<CheckDistributionEvent, CheckDistributionState> {
   final CheckDistributionRepository _checkDistributionRepository;
 
   CheckDistributionBloc(
       {@required CheckDistributionRepository checkDistributionRepository})
-      : assert(checkDistributionRepository != null),
-        _checkDistributionRepository = checkDistributionRepository, super(CheckdistributionInitial());
+      : assert(checkDistributionRepository != null,
+            'checkDistributionRepository must not be null'),
+        _checkDistributionRepository = checkDistributionRepository,
+        super(CheckDistributionInitial());
 
   @override
-  Stream<CheckdistributionState> mapEventToState(
-    CheckdistributionEvent event,
+  Stream<CheckDistributionState> mapEventToState(
+    CheckDistributionEvent event,
   ) async* {
     if (event is LoadCheckDistribution) {
       if (event.isOther) {
@@ -30,10 +33,10 @@ class CheckDistributionBloc
         yield CheckDistributionLoading();
       }
       try {
-        CheckDistributionModel record =
-            await _checkDistributionRepository.fetchRecord(event.lat, event.long);
+        CheckDistributionModel record = await _checkDistributionRepository
+            .fetchRecord(event.lat, event.long);
         yield CheckDistributionLoaded(record: record);
-      } catch (e) {
+      } on Exception catch (e) {
         yield CheckDistributionFailure(
             error: CustomException.onConnectionException(e.toString()));
       }

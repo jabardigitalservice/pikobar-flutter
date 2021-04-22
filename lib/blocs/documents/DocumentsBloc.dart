@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/repositories/DocumentsRepository.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
@@ -27,7 +28,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     yield DocumentsLoading();
     _subscription?.cancel();
     _subscription = _repository.getDocuments(limit: limit).listen(
-      (data) {
+      (List<DocumentSnapshot> data) {
         labelNew.insertDataLabel(data, Dictionary.labelDocuments);
         add(DocumentsUpdate(data));
       },

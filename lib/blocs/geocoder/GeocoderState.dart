@@ -13,9 +13,7 @@ class GeocoderStateInitial extends GeocoderState {
 
 class GeocoderLoading extends GeocoderState {
   @override
-  String toString() {
-    return 'State GeocoderLoading';
-  }
+  String toString() => 'State GeocoderLoading';
 
   @override
   List<Object> get props => [];
@@ -27,9 +25,7 @@ class GeocoderLoaded extends GeocoderState {
   GeocoderLoaded({this.address});
 
   @override
-  String toString() {
-    return 'State GeocoderLoaded';
-  }
+  String toString() => 'State GeocoderLoaded';
 
   @override
   List<Object> get props => [address];
@@ -41,9 +37,7 @@ class GeocoderFailure extends GeocoderState {
   GeocoderFailure({@required this.error});
 
   @override
-  String toString() {
-    return 'State GeocoderFailure{error: $error}';
-  }
+  String toString() => 'State GeocoderFailure{error: $error}';
 
   @override
   List<Object> get props => [error];

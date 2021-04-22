@@ -11,9 +11,7 @@ class EducationListLoad extends EducationListEvent {
   EducationListLoad(this.educationCollection);
 
   @override
-  String toString() {
-    return 'Event EducationListLoad $educationCollection';
-  }
+  String toString() => 'Event EducationListLoad $educationCollection';
 
   @override
   List<Object> get props => [educationCollection];

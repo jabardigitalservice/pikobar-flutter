@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/repositories/FaqRepository.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'Bloc.dart';
@@ -30,7 +31,7 @@ class FaqListBloc extends Bloc<FaqListEvent, FaqListState> {
     _subscription = _repository
         .getFaq(faqCollection: faqCollection, category: category)
         .listen(
-      (data) {
+      (List<DocumentSnapshot> data) {
         add(FaqListUpdate(data));
       },
     );

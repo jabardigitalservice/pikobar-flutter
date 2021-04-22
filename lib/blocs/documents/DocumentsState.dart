@@ -12,7 +12,6 @@ class InitialDocumentsState extends DocumentsState {
 
 class DocumentsLoading extends DocumentsState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
 }
 
