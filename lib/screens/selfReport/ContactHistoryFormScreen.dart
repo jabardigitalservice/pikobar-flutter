@@ -128,7 +128,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           ),
           backgroundColor: Colors.white,
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding: EdgeInsets.symmetric(horizontal:Dimens.contentPadding),
             child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
                 builder: (context, state) {
               if (state is RemoteConfigLoaded) {
@@ -327,7 +327,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         error != null
             ? Padding(
                 padding: EdgeInsets.only(
-                    left: Dimens.contentPadding,
+                    left: Dimens.cardContentMargin,
                     bottom: Dimens.fieldMarginBottom),
                 child: Text(
                   error,
@@ -412,7 +412,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         isEmpty
             ? Padding(
                 padding: EdgeInsets.only(
-                    left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
+                    left: Dimens.cardContentMargin, top: Dimens.sizedBoxHeight),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),

@@ -100,12 +100,13 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Dimens.padding),
+      padding: const EdgeInsets.symmetric(vertical: Dimens.padding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: AnimatedOpacity(
               opacity: _showTitle ? 0.0 : 1.0,
               duration: Duration(milliseconds: 250),
@@ -121,11 +122,12 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(
                   unixTimeStampToDateTimeWithoutDay(
                       statisticsDoc['updated_at'].seconds),
@@ -134,7 +136,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       fontFamily: FontsFamily.roboto,
                       fontSize: 10.0),
                 ),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 _buildConfirmedBox(
                     label: labels['statistics']['confirmed'],
                     caseTotal: '${statisticsDoc['aktif']['jabar']}'),
@@ -142,9 +144,9 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                left: 8.0,
-                right: 8.0,
+            padding: const EdgeInsets.only(
+                left: 12.0,
+                right: 12.0,
                 top: Dimens.padding,
                 bottom: Dimens.padding),
             child: Row(
@@ -291,7 +293,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                 height: 60.0,
               )),
           Container(
-            margin: EdgeInsets.all(Dimens.padding),
+            margin: const EdgeInsets.all(Dimens.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -304,7 +306,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       color: Colors.white),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
@@ -329,15 +331,17 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / 3),
-        padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        padding:
+            const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
         decoration: BoxDecoration(
-            color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(Dimens.borderRadius)),
+            color: Color(0xFFFAFAFA),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-                margin: EdgeInsets.only(left: 5.0),
+                margin: const EdgeInsets.only(left: 5.0),
                 child: image != ''
                     ? Image.asset(
                         image,
@@ -345,7 +349,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       )
                     : null),
             Container(
-              margin: EdgeInsets.only(top: 10, left: 5.0),
+              margin: const EdgeInsets.only(top: 10, left: 5.0),
               child: Text(title,
                   style: TextStyle(
                       fontSize: 12.0,
@@ -353,7 +357,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       fontFamily: FontsFamily.roboto)),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, left: 5.0),
+              margin: const EdgeInsets.only(top: 10, left: 5.0),
               child: Text(count,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -389,11 +393,14 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     fourthCount = formattedStringNumber(fourthCount);
 
     return Container(
-      padding: EdgeInsets.all(Dimens.padding),
-      margin: EdgeInsets.only(
-          left: Dimens.padding, right: Dimens.padding, bottom: Dimens.padding),
+      padding: const EdgeInsets.all(Dimens.padding),
+      margin: const EdgeInsets.only(
+          left: Dimens.contentPadding,
+          right: Dimens.contentPadding,
+          bottom: Dimens.padding),
       decoration: BoxDecoration(
-          color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(Dimens.borderRadius)),
+          color: Color(0xFFFAFAFA),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -415,7 +422,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             ],
           ),
           Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10),
             child: Text(mainCount,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -425,7 +432,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                     fontFamily: FontsFamily.roboto)),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: Dimens.padding),
+            margin: const EdgeInsets.symmetric(vertical: Dimens.padding),
             width: MediaQuery.of(context).size.width,
             height: 1.0,
             color: ColorBase.menuBorderColor,
@@ -442,7 +449,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             color: ColorBase.darkGrey,
                             fontFamily: FontsFamily.roboto)),
                     Container(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Text(secondCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -478,7 +485,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Text(thirdCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -502,7 +509,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                       fontSize: 12.0,
                                       color: ColorBase.darkGrey,
                                       fontFamily: FontsFamily.roboto)),
-                              SizedBox(width: 5.0),
+                              const SizedBox(width: 5.0),
                               fourthTitleHelpOnTap != null
                                   ? GestureDetector(
                                       onTap: fourthTitleHelpOnTap,
@@ -517,7 +524,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 10),
+                            margin: const EdgeInsets.only(top: 10),
                             child: Text(fourthCount ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -557,9 +564,9 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         elevation: 0,
         color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
         child: Padding(
-          padding: EdgeInsets.all(Dimens.padding),
+          padding: const EdgeInsets.all(Dimens.padding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -574,7 +581,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             color: ColorBase.veryDarkGrey,
                             fontFamily: FontsFamily.roboto)),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Text(count,
                           style: TextStyle(
                               fontSize: 16.0,

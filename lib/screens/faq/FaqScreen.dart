@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -114,7 +115,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   searchBar: CustomAppBar.buildSearchField(_searchController,
                       Dictionary.searchInformation, updateSearchQuery,
                       margin: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, bottom: 20.0)),
+                          left: Dimens.contentPadding, right: 16.0, bottom: Dimens.contentPadding)),
                   unselectedLabelColor: Colors.grey,
                   scrollController: _scrollController,
                   onTap: (index) {
@@ -308,7 +309,7 @@ class _FaqScreenState extends State<FaqScreen> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(left: 16, right: 16),
+            margin: const EdgeInsets.only(left: Dimens.contentPadding, right: Dimens.contentPadding),
             color: Colors.grey[300],
             height: 1,
           )

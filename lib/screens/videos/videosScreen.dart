@@ -201,8 +201,8 @@ class _VideosListState extends State<VideosList> {
                       GestureDetector(
                         child: Container(
                           padding: const EdgeInsets.only(
-                              left: Dimens.padding,
-                              right: Dimens.padding,
+                              left: Dimens.contentPadding,
+                              right: Dimens.contentPadding,
                               bottom: Dimens.padding),
                           child: Stack(
                             alignment: Alignment.center,

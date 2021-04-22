@@ -61,7 +61,7 @@ class _ContactHistoryDetailScreenState
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -146,7 +146,7 @@ class _ContactHistoryDetailScreenState
         /// Gender section
         Container(
           padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,7 +172,7 @@ class _ContactHistoryDetailScreenState
                     /// Last contact date
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: Dimens.padding,
+                          horizontal: Dimens.contentPadding,
                           vertical: Dimens.verticalPadding),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -193,7 +193,7 @@ class _ContactHistoryDetailScreenState
         /// Back button section
         Container(
           height: 38.0,
-          margin: EdgeInsets.all(Dimens.padding),
+          margin: EdgeInsets.all(Dimens.contentPadding),
           child: RaisedButton(
               splashColor: Colors.lightGreenAccent,
               color: ColorBase.green,

@@ -228,7 +228,7 @@ class _SelfReportFormScreenState extends State<SelfReportFormScreen> {
         firebaseConfig: FirebaseConfig.successMessageSelfReport,
         defaultValue: FirebaseConfig.successMessageSelfReportDefaultValue);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
       child: Form(
         key: _formKey,
         child: ListView(

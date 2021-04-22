@@ -122,7 +122,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           searchBar: CustomAppBar.buildSearchField(_searchController,
               Dictionary.searchInformation, updateSearchQuery,
               margin:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 20.0)),
+                  const EdgeInsets.only(left: Dimens.contentPadding, right: Dimens.contentPadding, bottom: 20.0)),
           unselectedLabelColor: Colors.grey,
           scrollController: _scrollController,
           onTap: (index) {
@@ -277,126 +277,120 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             color: Colors.white,
             child: Container(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Stack(
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width - 35,
-                          height: 300,
-                          child: CachedNetworkImage(
-                              imageUrl: data['images'][0].toString() ?? '',
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                          Dimens.borderRadius),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+              child: Stack(
+                children: [
+                  Container(
+                      width: MediaQuery.of(context).size.width - 35,
+                      height: 300,
+                      child: CachedNetworkImage(
+                          imageUrl: data['images'][0].toString() ?? '',
+                          imageBuilder: (context, imageProvider) =>
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimens.borderRadius),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
                                   ),
-                              placeholder: (context, url) => Center(
-                                  heightFactor: 10.2,
-                                  child: const CupertinoActivityIndicator()),
-                              errorWidget: (context, url, error) => Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(5.0),
-                                        topRight: Radius.circular(5.0)),
-                                  ),
-                                  child: PikobarPlaceholder()))),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 35,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(Dimens.borderRadius),
-                          color: Colors.white,
-                          gradient: LinearGradient(
-                            begin: FractionalOffset.topCenter,
-                            end: FractionalOffset.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.8),
-                            ],
-                            stops: [0.0, 1.0],
-                          ),
-                        ),
+                                ),
+                              ),
+                          placeholder: (context, url) => Center(
+                              heightFactor: 10.2,
+                              child: const CupertinoActivityIndicator()),
+                          errorWidget: (context, url, error) => Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(5.0),
+                                    topRight: Radius.circular(5.0)),
+                              ),
+                              child: PikobarPlaceholder()))),
+                  Container(
+                    width: MediaQuery.of(context).size.width - 35,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(Dimens.borderRadius),
+                      color: Colors.white,
+                      gradient: LinearGradient(
+                        begin: FractionalOffset.topCenter,
+                        end: FractionalOffset.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.8),
+                        ],
+                        stops: [0.0, 1.0],
                       ),
-                      Positioned(
-                        left: 10,
-                        right: 10,
-                        bottom: 0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                    ),
+                  ),
+                  Positioned(
+                    left: 10,
+                    right: 10,
+                    bottom: 0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                labelNew.isLabelNew(
-                                        data.id.toString(), dataLabel)
-                                    ? LabelNewScreen()
-                                    : Container(),
-                                Expanded(
-                                  child: Text(
-                                    unixTimeStampToDateTime(
-                                        data['published_date'].seconds),
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                        fontFamily: FontsFamily.roboto),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              data['title'],
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                  fontFamily: FontsFamily.roboto),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            labelNew.isLabelNew(
+                                    data.id.toString(), dataLabel)
+                                ? LabelNewScreen()
+                                : Container(),
+                            Expanded(
+                              child: Text(
+                                unixTimeStampToDateTime(
+                                    data['published_date'].seconds),
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.white,
+                                    fontFamily: FontsFamily.roboto),
+                              ),
+                            )
                           ],
                         ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 3.0, horizontal: 8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.black12.withOpacity(0.5),
-                            shape: BoxShape.rectangle,
-                            borderRadius:
-                                BorderRadius.circular(Dimens.dialogRadius),
-                          ),
-                          child: Text(
-                            '1/${data['images'].length}',
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.white,
-                                fontFamily: FontsFamily.roboto),
-                          ),
+                        const SizedBox(
+                          height: 3,
                         ),
+                        Text(
+                          data['title'],
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontFamily: FontsFamily.roboto),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 3.0, horizontal: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.black12.withOpacity(0.5),
+                        shape: BoxShape.rectangle,
+                        borderRadius:
+                            BorderRadius.circular(Dimens.dialogRadius),
                       ),
-                    ],
-                  )
+                      child: Text(
+                        '1/${data['images'].length}',
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.white,
+                            fontFamily: FontsFamily.roboto),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

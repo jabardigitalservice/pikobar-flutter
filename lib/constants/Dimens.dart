@@ -3,7 +3,7 @@ class Dimens {
   static const double verticalPadding = 24.0;
   static const double avatarRadius = 66.0;
   static const double dialogRadius = 6.5;
-  static const double contentPadding = 15.0;
+  static const double contentPadding = 20.0;
   static const double cardContentMargin = 15.0;
   static const double homeCardMargin = 20.0;
   static const double borderRadius = 8.0;

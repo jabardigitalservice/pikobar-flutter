@@ -71,30 +71,26 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     }
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        // Tab section
-        child: CustomBubbleTab(
-          isStickyHeader: true,
-          titleHeader: Dictionary.testSummaryTitleAppbar,
-          subTitle:
-              unixTimeStampToDate(widget.document.get('last_update').seconds),
-          showTitle: _showTitle,
-          scrollController: _scrollController,
-          indicatorColor: ColorBase.green,
-          labelColor: Colors.white,
-          listItemTitleTab: listItemTitleTab,
-          unselectedLabelColor: Colors.grey,
-          onTap: (index) {
-            if (index == 0) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-            } else if (index == 1) {
-              AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-            }
-          },
-          tabBarView: <Widget>[_buildRDT(), _buildPCR()],
-          isExpand: true,
-        ),
+      body: CustomBubbleTab(
+        isStickyHeader: true,
+        titleHeader: Dictionary.testSummaryTitleAppbar,
+        subTitle:
+            unixTimeStampToDate(widget.document.get('last_update').seconds),
+        showTitle: _showTitle,
+        scrollController: _scrollController,
+        indicatorColor: ColorBase.green,
+        labelColor: Colors.white,
+        listItemTitleTab: listItemTitleTab,
+        unselectedLabelColor: Colors.grey,
+        onTap: (index) {
+          if (index == 0) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+          } else if (index == 1) {
+            AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+          }
+        },
+        tabBarView: <Widget>[_buildRDT(), _buildPCR()],
+        isExpand: true,
       ),
     );
   }
@@ -107,16 +103,16 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
             ? buildAnnouncement(0)
             : Container(),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         buildHeader(label['pcr_rdt']['rdt']['sum'],
             widget.document.get('total'), Color(0xffFAFAFA)),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         buildDetailRDT(),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
       ],
@@ -130,16 +126,16 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         widget.remoteConfig != null && dataAnnouncement[1]['enabled'] == true
             ? buildAnnouncement(1)
             : Container(),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         buildHeader(label['pcr_rdt']['pcr']['sum'],
             widget.documentPCR.get('total'), Color(0xffFAFAFA)),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         buildDetailPCR(),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
       ],
@@ -149,7 +145,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
     return Announcement(
-      margin: EdgeInsets.symmetric(horizontal: 5.0),
+      margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
       title: dataAnnouncement[i]['title'] != null
           ? dataAnnouncement[i]['title']
           : Dictionary.titleInfoTextAnnouncement,
@@ -169,11 +165,12 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     String count =
         formatter.format(int.parse(total.toString())).replaceAll(',', '.');
     return Card(
+      margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
       elevation: 0,
       color: color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.all(Dimens.padding),
+        padding: const EdgeInsets.all(Dimens.padding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +182,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                     color: Colors.black,
                     fontFamily: FontsFamily.roboto)),
             Container(
-              margin: EdgeInsets.only(top: Dimens.padding),
+              margin: const EdgeInsets.only(top: Dimens.padding),
               child: Text(count,
                   style: TextStyle(
                       fontSize: 24.0,
@@ -200,114 +197,124 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   }
 
   Widget buildDetailRDT() {
-    return Row(
-      children: <Widget>[
-        buildContainer(
-          '',
-          label['pcr_rdt']['rdt']['positif'],
-          widget.document.get('positif').toString(),
-          2,
-          Colors.black,
-          Colors.black,
-          widget.document.get('total'),
-          helpOnTap: () {
-            showTextBottomSheet(
-                context: context,
-                title: helpBottomSheet['rdt_bottom_sheet']['reaktif']['title'],
-                message: helpBottomSheet['rdt_bottom_sheet']['reaktif']
-                    ['message']);
-          },
-        ),
-        buildContainer(
-          '',
-          label['pcr_rdt']['rdt']['negatif'],
-          widget.document.get('negatif').toString(),
-          2,
-          Colors.black,
-          Colors.black,
-          widget.document.get('total'),
-          helpOnTap: () {
-            showTextBottomSheet(
-                context: context,
-                title: helpBottomSheet['rdt_bottom_sheet']['non-reaktif']
-                    ['title'],
-                message: helpBottomSheet['rdt_bottom_sheet']['non-reaktif']
-                    ['message']);
-          },
-        ),
-        buildContainer(
-          '',
-          label['pcr_rdt']['rdt']['invalid'],
-          widget.document.get('invalid').toString(),
-          2,
-          Colors.black,
-          Colors.red,
-          widget.document.get('total'),
-          helpOnTap: () {
-            showTextBottomSheet(
-                context: context,
-                title: helpBottomSheet['rdt_bottom_sheet']['invalid']['title'],
-                message: helpBottomSheet['rdt_bottom_sheet']['invalid']
-                    ['message']);
-          },
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: <Widget>[
+          buildContainer(
+            '',
+            label['pcr_rdt']['rdt']['positif'],
+            widget.document.get('positif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.document.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['rdt_bottom_sheet']['reaktif']
+                      ['title'],
+                  message: helpBottomSheet['rdt_bottom_sheet']['reaktif']
+                      ['message']);
+            },
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['rdt']['negatif'],
+            widget.document.get('negatif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.document.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['rdt_bottom_sheet']['non-reaktif']
+                      ['title'],
+                  message: helpBottomSheet['rdt_bottom_sheet']['non-reaktif']
+                      ['message']);
+            },
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['rdt']['invalid'],
+            widget.document.get('invalid').toString(),
+            2,
+            Colors.black,
+            Colors.red,
+            widget.document.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['rdt_bottom_sheet']['invalid']
+                      ['title'],
+                  message: helpBottomSheet['rdt_bottom_sheet']['invalid']
+                      ['message']);
+            },
+          )
+        ],
+      ),
     );
   }
 
   Widget buildDetailPCR() {
-    return Row(
-      children: <Widget>[
-        buildContainer(
-          '',
-          label['pcr_rdt']['pcr']['positif'],
-          widget.documentPCR.get('positif').toString(),
-          2,
-          Colors.black,
-          Colors.black,
-          widget.documentPCR.get('total'),
-          helpOnTap: () {
-            showTextBottomSheet(
-                context: context,
-                title: helpBottomSheet['pcr_bottom_sheet']['positif']['title'],
-                message: helpBottomSheet['pcr_bottom_sheet']['positif']
-                    ['message']);
-          },
-        ),
-        buildContainer(
-          '',
-          label['pcr_rdt']['pcr']['negatif'],
-          widget.documentPCR.get('negatif').toString(),
-          2,
-          Colors.black,
-          Colors.black,
-          widget.documentPCR.get('total'),
-          helpOnTap: () {
-            showTextBottomSheet(
-                context: context,
-                title: helpBottomSheet['pcr_bottom_sheet']['negatif']['title'],
-                message: helpBottomSheet['pcr_bottom_sheet']['negatif']
-                    ['message']);
-          },
-        ),
-        buildContainer(
-          '',
-          label['pcr_rdt']['pcr']['invalid'],
-          widget.documentPCR.get('invalid').toString(),
-          2,
-          Colors.black,
-          Colors.red,
-          widget.documentPCR.get('total'),
-          helpOnTap: () {
-            showTextBottomSheet(
-                context: context,
-                title: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
-                    ['title'],
-                message: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
-                    ['message']);
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: <Widget>[
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr']['positif'],
+            widget.documentPCR.get('positif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.documentPCR.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['pcr_bottom_sheet']['positif']
+                      ['title'],
+                  message: helpBottomSheet['pcr_bottom_sheet']['positif']
+                      ['message']);
+            },
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr']['negatif'],
+            widget.documentPCR.get('negatif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.documentPCR.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['pcr_bottom_sheet']['negatif']
+                      ['title'],
+                  message: helpBottomSheet['pcr_bottom_sheet']['negatif']
+                      ['message']);
+            },
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr']['invalid'],
+            widget.documentPCR.get('invalid').toString(),
+            2,
+            Colors.black,
+            Colors.red,
+            widget.documentPCR.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
+                      ['title'],
+                  message: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
+                      ['message']);
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -328,8 +335,9 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / length),
-        padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-        margin: EdgeInsets.symmetric(horizontal: 2.5),
+        padding:
+            const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
             color: Color(0xffFAFAFA),
             image: image != '' && image != null
@@ -369,8 +377,8 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
               ],
             ),
             Container(
-              margin:
-                  EdgeInsets.only(top: Dimens.padding, bottom: Dimens.padding),
+              margin: const EdgeInsets.only(
+                  top: Dimens.padding, bottom: Dimens.padding),
               child: Text(countFormatted,
                   style: TextStyle(
                       fontSize: 16.0,
