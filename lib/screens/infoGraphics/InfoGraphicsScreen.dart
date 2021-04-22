@@ -128,16 +128,30 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           onTap: (index) {
             setState(() {});
             _scrollController
-                        .jumpTo(_scrollController.position.minScrollExtent);
-            _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-                infoGraphicsCollection: listCollectionData[index]));
-            AnalyticsHelper.setLogEvent(analyticsData[index]);
+                .jumpTo(_scrollController.position.minScrollExtent);
+            if (index == 0) {
+              _infoGraphicsListBloc.add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: listCollectionData[index]));
+              AnalyticsHelper.setLogEvent(analyticsData[index]);
+            } else if (index == 1) {
+              _infoGraphicsListBloc.add(InfoGraphicsListJabarLoad(
+                  infoGraphicsCollection: listCollectionData[index]));
+              AnalyticsHelper.setLogEvent(analyticsData[index]);
+            } else if (index == 2) {
+              _infoGraphicsListBloc.add(InfoGraphicsListPusatLoad(
+                  infoGraphicsCollection: listCollectionData[index]));
+              AnalyticsHelper.setLogEvent(analyticsData[index]);
+            } else if (index == 3) {
+              _infoGraphicsListBloc.add(InfoGraphicsListWHOLoad(
+                  infoGraphicsCollection: listCollectionData[index]));
+              AnalyticsHelper.setLogEvent(analyticsData[index]);
+            }
           },
           tabBarView: <Widget>[
             _buildInfoGraphic(),
-            _buildInfoGraphic(),
-            _buildInfoGraphic(),
-            _buildInfoGraphic(),
+            _buildInfoGraphicJabar(),
+            _buildInfoGraphicPusat(),
+            _buildInfoGraphicWHO(),
           ],
           heightTabBarView: MediaQuery.of(context).size.height - 148,
         )),
@@ -155,6 +169,36 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       builder: (context, state) {
         return state is InfoGraphicsListLoaded
             ? _buildContent(state.infoGraphicsList)
+            : _buildLoading();
+      },
+    );
+  }
+
+  Widget _buildInfoGraphicJabar() {
+    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+      builder: (context, state) {
+        return state is InfoGraphicsListJabarLoaded
+            ? _buildContent(state.infoGraphicsListJabar)
+            : _buildLoading();
+      },
+    );
+  }
+
+  Widget _buildInfoGraphicPusat() {
+    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+      builder: (context, state) {
+        return state is InfoGraphicsListPusatLoaded
+            ? _buildContent(state.infoGraphicsListPusat)
+            : _buildLoading();
+      },
+    );
+  }
+
+  Widget _buildInfoGraphicWHO() {
+    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+      builder: (context, state) {
+        return state is InfoGraphicsListWHOLoaded
+            ? _buildContent(state.infoGraphicsListWHO)
             : _buildLoading();
       },
     );
@@ -270,8 +314,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           color: Colors.white,
                           gradient: LinearGradient(
                             begin: FractionalOffset.topCenter,
@@ -393,7 +437,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       }
     });
 
-    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchInfoGraphic);
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSearchInfoGraphic);
   }
 
   void updateSearchQuery(String newQuery) {

@@ -26,11 +26,33 @@ class InfoGraphicsListBloc
     } else if (event is InfoGraphicsListUpdate) {
       yield* _mapUpdateInfoGraphicListToState(event);
     }
+
+    if (event is InfoGraphicsListJabarLoad) {
+      yield* _mapLoadInfoGraphicsListJabarToState(
+          limit: event.limit,
+          infoGraphicsCollection: event.infoGraphicsCollection);
+    } else if (event is InfoGraphicsListJabarUpdate) {
+      yield* _mapUpdateInfoGraphicListJabarToState(event);
+    }
+
+    if (event is InfoGraphicsListPusatLoad) {
+      yield* _mapLoadInfoGraphicsListPusatToState(
+          limit: event.limit,
+          infoGraphicsCollection: event.infoGraphicsCollection);
+    } else if (event is InfoGraphicsListPusatUpdate) {
+      yield* _mapUpdateInfoGraphicListPusatToState(event);
+    }
+
+    if (event is InfoGraphicsListWHOLoad) {
+      yield* _mapLoadInfoGraphicsListWHOToState(
+          limit: event.limit,
+          infoGraphicsCollection: event.infoGraphicsCollection);
+    } else if (event is InfoGraphicsListWHOUpdate) {
+      yield* _mapUpdateInfoGraphicListWHOToState(event);
+    }
   }
 
-  Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListToState(
-      {int limit, String infoGraphicsCollection}) async* {
-    yield InfoGraphicsListLoading();
+  _loadData(String section, infoGraphicsCollection, int limit) {
     _subscription?.cancel();
     _subscription = infoGraphicsCollection == kAllInfographics
         ? _repository.getAllInfographicList().listen((event) {
@@ -42,21 +64,90 @@ class InfoGraphicsListBloc
                 (b, a) => a['published_date'].compareTo(b['published_date']));
             labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
-            add(InfoGraphicsListUpdate(dataListAllinfographics));
+            switch (section) {
+              case 'all':
+                add(InfoGraphicsListUpdate(dataListAllinfographics));
+                break;
+              case 'jabar':
+                add(InfoGraphicsListJabarUpdate(dataListAllinfographics));
+                break;
+              case 'pusat':
+                add(InfoGraphicsListPusatUpdate(dataListAllinfographics));
+                break;
+              case 'who':
+                add(InfoGraphicsListWHOUpdate(dataListAllinfographics));
+                break;
+              default:
+                add(InfoGraphicsListUpdate(dataListAllinfographics));
+            }
           })
         : _repository
             .getInfoGraphics(
                 limit: limit, infoGraphicsCollection: infoGraphicsCollection)
             .listen(
             (data) {
-              add(InfoGraphicsListUpdate(data));
+              switch (section) {
+                case 'all':
+                  add(InfoGraphicsListUpdate(data));
+                  break;
+                case 'jabar':
+                  add(InfoGraphicsListJabarUpdate(data));
+                  break;
+                case 'pusat':
+                  add(InfoGraphicsListPusatUpdate(data));
+                  break;
+                case 'who':
+                  add(InfoGraphicsListWHOUpdate(data));
+                  break;
+                default:
+                  add(InfoGraphicsListUpdate(data));
+              }
             },
           );
+  }
+
+  Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListToState(
+      {int limit, String infoGraphicsCollection}) async* {
+    yield InfoGraphicsListLoading();
+    _loadData('all', infoGraphicsCollection, limit);
   }
 
   Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListToState(
       InfoGraphicsListUpdate event) async* {
     yield InfoGraphicsListLoaded(event.infoGraphicsList);
+  }
+
+  Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListJabarToState(
+      {int limit, String infoGraphicsCollection}) async* {
+    yield InfoGraphicsListLoading();
+    _loadData('jabar', infoGraphicsCollection, limit);
+  }
+
+  Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListJabarToState(
+      InfoGraphicsListJabarUpdate event) async* {
+    yield InfoGraphicsListJabarLoaded(event.infoGraphicsListJabar);
+  }
+
+  Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListPusatToState(
+      {int limit, String infoGraphicsCollection}) async* {
+    yield InfoGraphicsListLoading();
+    _loadData('pusat', infoGraphicsCollection, limit);
+  }
+
+  Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListPusatToState(
+      InfoGraphicsListPusatUpdate event) async* {
+    yield InfoGraphicsListPusatLoaded(event.infoGraphicsListPusat);
+  }
+
+  Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListWHOToState(
+      {int limit, String infoGraphicsCollection}) async* {
+    yield InfoGraphicsListLoading();
+    _loadData('who', infoGraphicsCollection, limit);
+  }
+
+  Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListWHOToState(
+      InfoGraphicsListWHOUpdate event) async* {
+    yield InfoGraphicsListWHOLoaded(event.infoGraphicsListWHO);
   }
 
   @override

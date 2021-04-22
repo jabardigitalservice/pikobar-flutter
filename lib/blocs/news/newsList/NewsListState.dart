@@ -24,3 +24,38 @@ class NewsListLoaded extends NewsListState {
   List<Object> get props => [newsList];
 }
 
+class NewsListImportantLoaded extends NewsListState {
+  final List<NewsModel> newsList;
+
+  NewsListImportantLoaded(this.newsList);
+
+  @override
+  List<Object> get props => [newsList];
+}
+
+class NewsListJabarLoaded extends NewsListState {
+  final List<NewsModel> newsList;
+
+  NewsListJabarLoaded(this.newsList);
+
+  @override
+  List<Object> get props => [newsList];
+}
+
+class NewsListNationalLoaded extends NewsListState {
+  final List<NewsModel> newsList;
+
+  NewsListNationalLoaded(this.newsList);
+
+  @override
+  List<Object> get props => [newsList];
+}
+
+class NewsListWorldLoaded extends NewsListState {
+  final List<NewsModel> newsList;
+
+  NewsListWorldLoaded(this.newsList);
+
+  @override
+  List<Object> get props => [newsList];
+}
