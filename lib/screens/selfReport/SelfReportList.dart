@@ -347,7 +347,7 @@ class _SelfReportListState extends State<SelfReportList> {
                             ? Container()
                             : Container(
                                 margin:
-                                    const EdgeInsets.all(Dimens.contentPadding),
+                                    const EdgeInsets.all(Dimens.cardContentMargin),
                                 decoration: BoxDecoration(
                                     color: ColorBase.grey,
                                     borderRadius: BorderRadius.circular(8)),
@@ -356,7 +356,7 @@ class _SelfReportListState extends State<SelfReportList> {
                                     MediaQuery.of(context).size.height * 0.16,
                                 child: Padding(
                                     padding: const EdgeInsets.all(
-                                        Dimens.contentPadding),
+                                        Dimens.cardContentMargin),
                                     child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,

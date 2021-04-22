@@ -58,7 +58,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
       backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+        padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
@@ -136,7 +136,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
             }
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: ListView(
               controller: _scrollController,
               children: <Widget>[

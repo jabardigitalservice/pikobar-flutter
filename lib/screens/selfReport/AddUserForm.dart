@@ -71,7 +71,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+          padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           child: Form(
             key: _formKey,
             child: ListView(

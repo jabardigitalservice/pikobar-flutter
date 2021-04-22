@@ -61,7 +61,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   final ProfileRepository _profileRepository = ProfileRepository();
   ProfileBloc _profileBloc;
 
-
   @override
   void initState() {
     super.initState();
@@ -229,7 +228,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function for build widget content
   Widget _buildContent(DocumentSnapshot state) {
     return Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
         child: ListView(
           controller: _scrollController,
           children: <Widget>[
@@ -279,21 +278,23 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
 
                 return BlocListener<RemoteConfigBloc, RemoteConfigState>(
                   listener: (_, remoteState) {
-                    if (widget.toNextScreen && remoteState is RemoteConfigLoaded) {
-
+                    if (widget.toNextScreen &&
+                        remoteState is RemoteConfigLoaded) {
                       final Map<String, dynamic> getLabel =
-                      RemoteConfigHelper.decode(
-                          remoteConfig: remoteState.remoteConfig,
-                          firebaseConfig: FirebaseConfig.nikMessage,
-                          defaultValue:
-                          FirebaseConfig.nikMessageDefaultValue);
+                          RemoteConfigHelper.decode(
+                              remoteConfig: remoteState.remoteConfig,
+                              firebaseConfig: FirebaseConfig.nikMessage,
+                              defaultValue:
+                                  FirebaseConfig.nikMessageDefaultValue);
 
-                      if (hasLogin && !_isProfileUserNotComplete(state)){
+                      if (hasLogin && !_isProfileUserNotComplete(state)) {
                         _openSelfReportOption(state, isQuarantined, getLabel);
                       } else {
-                        _checkUserProfile(checkHasData &&
-                            !_isProfileUserNotComplete(state) &&
-                            !snapshot.data, getLabel);
+                        _checkUserProfile(
+                            checkHasData &&
+                                !_isProfileUserNotComplete(state) &&
+                                !snapshot.data,
+                            getLabel);
                       }
                     }
                   },
@@ -318,12 +319,15 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               length: 2,
                               //for give condition onPressed in widget _buildContainer
                               onPressedEnable: () {
-                                _openSelfReportOption(state, isQuarantined, getLabel);
+                                _openSelfReportOption(
+                                    state, isQuarantined, getLabel);
                               },
                               onPressedDisable: () {
-                                _checkUserProfile(checkHasData &&
-                                    !_isProfileUserNotComplete(state) &&
-                                    !snapshot.data, getLabel);
+                                _checkUserProfile(
+                                    checkHasData &&
+                                        !_isProfileUserNotComplete(state) &&
+                                        !snapshot.data,
+                                    getLabel);
                               },
                               // condition for check if user login and user complete fill that profile
                               // and health status is not healthy user can access for press the button in _buildContainer
@@ -404,7 +408,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       width: (MediaQuery.of(context).size.width),
       margin: const EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
-          color: ColorBase.lightRed, borderRadius: BorderRadius.circular(Dimens.borderRadius)),
+          color: ColorBase.lightRed,
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: <Widget>[
           Image.asset('${Environment.imageAssets}red_intersect.png', width: 73),
@@ -652,7 +657,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     }
   }
 
-  void _openSelfReportOption(DocumentSnapshot state, bool isQuarantined, Map<String, dynamic> getLabel) {
+  void _openSelfReportOption(DocumentSnapshot state, bool isQuarantined,
+      Map<String, dynamic> getLabel) {
     if (latLng == null ||
         addressMyLocation == '-' ||
         addressMyLocation.isEmpty ||
@@ -666,18 +672,18 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     } else {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SelfReportOption(
-            location: latLng,
-            cityId: getField(state, 'city_id'),
-            isHealthStatusChanged: getField(state,
-                'health_status_changed') ??
-                false,
-            isQuarantined: isQuarantined,
-            nikMessage: getLabel,
-          )));
+                location: latLng,
+                cityId: getField(state, 'city_id'),
+                isHealthStatusChanged:
+                    getField(state, 'health_status_changed') ?? false,
+                isQuarantined: isQuarantined,
+                nikMessage: getLabel,
+              )));
     }
   }
 
-  void _checkUserProfile(bool isProfileComplete, Map<String, dynamic> getLabel) {
+  void _checkUserProfile(
+      bool isProfileComplete, Map<String, dynamic> getLabel) {
     if (isProfileComplete) {
       showTextBottomSheet(
           context: context,

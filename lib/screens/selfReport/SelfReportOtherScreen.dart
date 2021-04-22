@@ -94,7 +94,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
         right: 0.0,
         top: 0.0,
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(Dimens.contentPadding),
           child: Text(
             Dictionary.reportForOther,
             style: TextStyle(
@@ -157,7 +157,8 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
   Widget buildOtherReportList(List<DocumentSnapshot> documents) {
     documents.sort((b, a) => b['created_at'].compareTo(a['created_at']));
     return Padding(
-      padding: const EdgeInsets.all(Dimens.padding),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.contentPadding, vertical: Dimens.padding),
       child: ListView.builder(
           controller: _scrollController,
           itemCount: documents.length,
@@ -171,7 +172,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                         duration: Duration(milliseconds: 250),
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              bottom: 15.0, left: 10, right: 10),
+                              bottom: 15.0,),
                           child: Text(
                             Dictionary.reportForOther,
                             style: TextStyle(
@@ -198,7 +199,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                             )));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(vertical:10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -353,7 +354,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
   /// Function to build create button
   Widget buildCreateButton() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(Dimens.contentPadding),
       child: RoundedButton(
           title: Dictionary.addOtherReport,
           elevation: 0.0,

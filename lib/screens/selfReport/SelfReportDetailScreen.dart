@@ -234,7 +234,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
       children: <Widget>[
         Container(
           padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -315,7 +315,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
             /// Divider
             Container(
               margin:
-              const EdgeInsets.symmetric(horizontal: Dimens.padding),
+              const EdgeInsets.symmetric(horizontal:Dimens.contentPadding),
               height: 1.0,
               color: ColorBase.greyBorder,
             ),
@@ -323,7 +323,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
             /// Contact date section
             Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.padding,
+                  horizontal: Dimens.contentPadding,
                   vertical: Dimens.verticalPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,7 +355,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
             /// Divider
             Container(
               margin:
-              const EdgeInsets.symmetric(horizontal: Dimens.padding),
+              const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
               height: 1.0,
               color: ColorBase.greyBorder,
             ),
@@ -363,7 +363,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
             /// Quarantine date section
             Container(
               padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.padding,
+                  horizontal: Dimens.contentPadding,
                   vertical: Dimens.verticalPadding),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -386,7 +386,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           height: 1.0,
           color: ColorBase.greyBorder,
         ),
@@ -394,7 +394,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
         /// Temperature section
         Container(
           padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,7 +411,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           height: 1.0,
           color: ColorBase.greyBorder,
         ),
@@ -419,7 +419,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
         /// The symptoms section
         Container(
           padding: const EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,

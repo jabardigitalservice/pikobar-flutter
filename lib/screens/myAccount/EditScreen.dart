@@ -17,6 +17,7 @@ import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
@@ -254,11 +255,10 @@ class _EditState extends State<Edit> {
                       },
                       child: ListView(
                         controller: _scrollController,
-                        padding: const EdgeInsets.all(10),
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 0),
+                                vertical: 10.0, horizontal: Dimens.contentPadding),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -266,7 +266,7 @@ class _EditState extends State<Edit> {
                                   opacity: _showTitle ? 0.0 : 1.0,
                                   duration: const Duration(milliseconds: 250),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
+                                    padding: const EdgeInsets.symmetric(vertical:15.0),
                                     child: Text(
                                       Dictionary.edit,
                                       style: TextStyle(
@@ -337,70 +337,66 @@ class _EditState extends State<Edit> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 16.0, right: 16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            Dictionary.locationAddress,
-                                            style: TextStyle(
-                                                fontSize: 12.0,
-                                                color: ColorBase.veryDarkGrey,
-                                                fontFamily: FontsFamily.roboto,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      ButtonTheme(
-                                        minWidth:
-                                            MediaQuery.of(context).size.width,
-                                        height: 45.0,
-                                        child: RaisedButton(
-                                          elevation: 0,
-                                          color: ColorBase.greyContainer,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Text(
-                                                Dictionary.setLocation,
-                                                style: TextStyle(
-                                                    color: ColorBase.netralGrey,
-                                                    fontSize: 14,
-                                                    fontFamily:
-                                                        FontsFamily.roboto),
-                                              ),
-                                              Image.asset(
-                                                '${Environment.iconAssets}pin_location.png',
-                                                width: 15.0,
-                                                height: 15.0,
-                                              ),
-                                            ],
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            side: BorderSide(
-                                                color: ColorBase.greyBorder,
-                                                width: 1.5),
-                                          ),
-                                          onPressed: () async {
-                                            FocusScope.of(context)
-                                                .requestFocus(FocusNode());
-                                            await _handleLocation();
-                                          },
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          Dictionary.locationAddress,
+                                          style: TextStyle(
+                                              fontSize: 12.0,
+                                              color: ColorBase.veryDarkGrey,
+                                              fontFamily: FontsFamily.roboto,
+                                              fontWeight: FontWeight.bold),
                                         ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    ButtonTheme(
+                                      minWidth:
+                                          MediaQuery.of(context).size.width,
+                                      height: 45.0,
+                                      child: RaisedButton(
+                                        elevation: 0,
+                                        color: ColorBase.greyContainer,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              Dictionary.setLocation,
+                                              style: TextStyle(
+                                                  color: ColorBase.netralGrey,
+                                                  fontSize: 14,
+                                                  fontFamily:
+                                                      FontsFamily.roboto),
+                                            ),
+                                            Image.asset(
+                                              '${Environment.iconAssets}pin_location.png',
+                                              width: 15.0,
+                                              height: 15.0,
+                                            ),
+                                          ],
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          side: BorderSide(
+                                              color: ColorBase.greyBorder,
+                                              width: 1.5),
+                                        ),
+                                        onPressed: () async {
+                                          FocusScope.of(context)
+                                              .requestFocus(FocusNode());
+                                          await _handleLocation();
+                                        },
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 20,
@@ -448,17 +444,13 @@ class _EditState extends State<Edit> {
                                               isCityFieldEmpty);
                                       }
                                     }),
-                                const SizedBox(
-                                  height: 20,
-                                ),
+                                
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                         
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding,vertical: 10),
                             child: RaisedButton(
                               color: isEmptyField()
                                   ? ColorBase.disableText
@@ -689,28 +681,25 @@ class _EditState extends State<Edit> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Row(
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                    fontSize: 12.0,
-                    color: ColorBase.veryDarkGrey,
-                    fontFamily: FontsFamily.roboto,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                Dictionary.requiredForm,
-                style: TextStyle(
-                    fontSize: 10.0,
-                    color: Colors.green,
-                    fontFamily: FontsFamily.roboto,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
+        Row(
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 12.0,
+                  color: ColorBase.veryDarkGrey,
+                  fontFamily: FontsFamily.roboto,
+                  fontWeight: FontWeight.bold),
+            ),
+            Text(
+              Dictionary.requiredForm,
+              style: TextStyle(
+                  fontSize: 10.0,
+                  color: Colors.green,
+                  fontFamily: FontsFamily.roboto,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         const SizedBox(
           height: 5,
@@ -760,7 +749,6 @@ class _EditState extends State<Edit> {
 // Funtion to build date field
   Widget buildDateField({String title, placeholder, bool isEmpty}) {
     return Container(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -857,7 +845,6 @@ class _EditState extends State<Edit> {
       bool isEdit,
       int maxLines}) {
     return Container(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -935,7 +922,6 @@ class _EditState extends State<Edit> {
       TextEditingController controller, bool isEmpty,
       [validation]) {
     return Container(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -1039,7 +1025,6 @@ class _EditState extends State<Edit> {
       TextStyle textStyle,
       bool isEdit}) {
     return Container(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

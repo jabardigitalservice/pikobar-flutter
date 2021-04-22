@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
@@ -249,7 +250,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(
-                        left: 30.0, top: 15.0, right: 15.0, bottom: 10.0),
+                        left: Dimens.contentPadding, top: 15.0, right: Dimens.contentPadding, bottom: 10.0),
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -280,13 +281,12 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 15.0, right: 15.0, bottom: 15.0),
+                        left: Dimens.contentPadding, right: Dimens.contentPadding, bottom: 15.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
+                          padding: const EdgeInsets.only( top: 15.0,  bottom: 15.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[

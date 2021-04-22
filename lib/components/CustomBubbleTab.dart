@@ -171,7 +171,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       ? Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: Dimens.homeCardMargin,
-                              horizontal: Dimens.padding),
+                              horizontal: Dimens.homeCardMargin),
                           child: Container(
                             alignment: Platform.isIOS ? Alignment.center : Alignment.centerLeft,
                             child: Text(
@@ -190,8 +190,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                   widget.searchBar != null ? widget.searchBar : Container(),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: widget.searchBar != null ? 10 : paddingBubleTab,
-                        right: widget.searchBar != null ? 10 : paddingBubleTab),
+                        left: widget.searchBar != null ? 18 : paddingBubleTab,
+                        right: widget.searchBar != null ? 18 : paddingBubleTab),
                     child: TabBar(
                         controller: _basetabController,
                         isScrollable: isScrollable,
@@ -362,7 +362,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: Dimens.homeCardMargin,
-                            horizontal: Dimens.padding),
+                            horizontal: 19),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -393,7 +393,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                         ? Container()
                         : widget.searchBar ?? Container(),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: TabBar(
                           controller: _basetabController,
                           isScrollable: isScrollable,

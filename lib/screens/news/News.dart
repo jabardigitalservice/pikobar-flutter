@@ -352,92 +352,86 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
             color: Colors.white,
             child: Container(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Stack(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width - 35,
-                        height: 300,
-                        child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(Dimens.borderRadius),
-                          child: CachedNetworkImage(
-                            imageUrl: data.image,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
-                                heightFactor: 4.2,
-                                child: CupertinoActivityIndicator()),
-                            errorWidget: (context, url, error) => Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 3.3,
-                                color: Colors.grey[200],
-                                child: Image.asset(
-                                    '${Environment.iconAssets}pikobar.png',
-                                    fit: BoxFit.fitWidth)),
-                          ),
-                        ),
+              child: Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width - 35,
+                    height: 300,
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(Dimens.borderRadius),
+                      child: CachedNetworkImage(
+                        imageUrl: data.image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Center(
+                            heightFactor: 4.2,
+                            child: CupertinoActivityIndicator()),
+                        errorWidget: (context, url, error) => Container(
+                            height:
+                                MediaQuery.of(context).size.height / 3.3,
+                            color: Colors.grey[200],
+                            child: Image.asset(
+                                '${Environment.iconAssets}pikobar.png',
+                                fit: BoxFit.fitWidth)),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 35,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(Dimens.borderRadius),
-                          color: Colors.white,
-                          gradient: LinearGradient(
-                            begin: FractionalOffset.topCenter,
-                            end: FractionalOffset.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.8),
-                            ],
-                            stops: [0.0, 1.0],
-                          ),
-                        ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width - 35,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(Dimens.borderRadius),
+                      color: Colors.white,
+                      gradient: LinearGradient(
+                        begin: FractionalOffset.topCenter,
+                        end: FractionalOffset.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.8),
+                        ],
+                        stops: [0.0, 1.0],
                       ),
-                      Positioned(
-                        left: 10,
-                        right: 10,
-                        bottom: 0,
-                        top: 215,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  Positioned(
+                    left: 10,
+                    right: 10,
+                    bottom: 0,
+                    top: 215,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                labelNew.isLabelNew(
-                                        data.id.toString(), dataLabel)
-                                    ? LabelNewScreen()
-                                    : Container(),
-                                Expanded(
-                                  child: Text(
-                                    unixTimeStampToDateTime(data.publishedAt),
-                                    style: TextStyle(
-                                        fontSize: 16.0, color: Colors.white),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              data.title,
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white),
-                              textAlign: TextAlign.left,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            labelNew.isLabelNew(
+                                    data.id.toString(), dataLabel)
+                                ? LabelNewScreen()
+                                : Container(),
+                            Expanded(
+                              child: Text(
+                                unixTimeStampToDateTime(data.publishedAt),
+                                style: TextStyle(
+                                    fontSize: 16.0, color: Colors.white),
+                              ),
+                            )
                           ],
                         ),
-                      )
-                    ],
+                        const SizedBox(
+                          height: 3,
+                        ),
+                        Text(
+                          data.title,
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
