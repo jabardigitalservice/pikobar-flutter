@@ -393,7 +393,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                         ? Container()
                         : widget.searchBar ?? Container(),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: TabBar(
                           controller: _basetabController,
                           isScrollable: isScrollable,

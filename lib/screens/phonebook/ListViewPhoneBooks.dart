@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
@@ -429,7 +430,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         children: <Widget>[
           Card(
               elevation: 0,
-              margin: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+              margin: EdgeInsets.symmetric(vertical: 12, horizontal: Dimens.contentPadding),
               child: itemCard(
                   referralHospitalModel: listReferralHospitalModel != null
                       ? listReferralHospitalModel[listCityName[i]]
@@ -541,6 +542,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
     ListTile _cardTile(EmergencyNumberModel document) {
       return ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
         leading: Container(
           decoration: BoxDecoration(
               color: ColorBase.greyContainer,
