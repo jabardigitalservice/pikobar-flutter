@@ -75,7 +75,8 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: BlocProvider<RemoteConfigBloc>(
           create: (BuildContext context) =>
               _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
@@ -115,7 +116,9 @@ class _FaqScreenState extends State<FaqScreen> {
                   searchBar: CustomAppBar.buildSearchField(_searchController,
                       Dictionary.searchInformation, updateSearchQuery,
                       margin: const EdgeInsets.only(
-                          left: Dimens.contentPadding, right: 16.0, bottom: Dimens.contentPadding)),
+                          left: Dimens.contentPadding,
+                          right: 16.0,
+                          bottom: Dimens.contentPadding)),
                   unselectedLabelColor: Colors.grey,
                   scrollController: _scrollController,
                   onTap: (index) {
@@ -153,7 +156,8 @@ class _FaqScreenState extends State<FaqScreen> {
     if (searchQuery != null) {
       listDataFaq = listData
           .where((test) =>
-              test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
+              test['title'].toLowerCase().contains(searchQuery.toLowerCase()) ||
+              test['content'].toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
     } else {
       listDataFaq = listData;
@@ -211,7 +215,8 @@ class _FaqScreenState extends State<FaqScreen> {
       }
     });
 
-    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedFaqSearch);
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController, event: Analytics.tappedFaqSearch);
   }
 
   Widget _buildLoading() {
@@ -309,7 +314,8 @@ class _FaqScreenState extends State<FaqScreen> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(left: Dimens.contentPadding, right: Dimens.contentPadding),
+            margin: const EdgeInsets.only(
+                left: Dimens.contentPadding, right: Dimens.contentPadding),
             color: Colors.grey[300],
             height: 1,
           )
