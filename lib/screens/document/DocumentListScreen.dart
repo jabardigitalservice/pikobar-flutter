@@ -68,46 +68,46 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     return Scaffold(
         backgroundColor: Colors.white,
         body: WillPopScope(
-      child: CollapsingAppbar(
-        searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
-        showTitle: _showTitle,
-        titleAppbar: Dictionary.document,
-        scrollController: _scrollController,
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection(kDocuments)
-              .orderBy('published_at', descending: true)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              List<DocumentSnapshot> data = [];
+          child: CollapsingAppbar(
+            searchBar: CustomAppBar.buildSearchField(_searchController,
+                Dictionary.searchInformation, updateSearchQuery),
+            showTitle: _showTitle,
+            titleAppbar: Dictionary.document,
+            scrollController: _scrollController,
+            body: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection(kDocuments)
+                  .orderBy('published_at', descending: true)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  List<DocumentSnapshot> data = [];
 
-              snapshot.data.docs.forEach((record) {
-                if (record['published']) {
-                  data.add(record);
+                  snapshot.data.docs.forEach((record) {
+                    if (record['published']) {
+                      data.add(record);
+                    }
+                  });
+
+                  if (data.isNotEmpty) {
+                    return _buildContent(data);
+                  } else {
+                    return EmptyData(
+                      message: Dictionary.emptyData,
+                      desc: '',
+                      isFlare: false,
+                      image: "${Environment.imageAssets}not_found.png",
+                    );
+                  }
+                } else {
+                  return _buildLoading();
                 }
-              });
-
-              if (data.isNotEmpty) {
-                return _buildContent(data);
-              } else {
-                return EmptyData(
-                  message: Dictionary.emptyData,
-                  desc: '',
-                  isFlare: false,
-                  image: "${Environment.imageAssets}not_found.png",
-                );
-              }
-            } else {
-              return _buildLoading();
-            }
-          },
-        ),
-      ),
-      onWillPop: _onWillPop,
-    ));
+              },
+            ),
+          ),
+          onWillPop: _onWillPop,
+        ));
     //   body:
   }
 
@@ -130,6 +130,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
         ? ListView.builder(
             padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
             shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: dataDocuments.length,
             itemBuilder: (context, index) {
               final DocumentSnapshot document = dataDocuments[index];
@@ -149,7 +150,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             width: MediaQuery.of(context).size.width,
                             height: 300,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.borderRadius),
                               child: CachedNetworkImage(
                                 imageUrl: document['images'],
                                 fit: BoxFit.cover,
@@ -174,7 +176,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                               width: MediaQuery.of(context).size.width,
                               height: 300,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.borderRadius),
                                 color: Colors.white,
                                 gradient: LinearGradient(
                                   begin: FractionalOffset.topCenter,
@@ -363,7 +366,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       }
     });
 
-    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSerachDocument);
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSerachDocument);
   }
 
   void updateSearchQuery(String newQuery) {
