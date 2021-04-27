@@ -112,7 +112,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
       @required bool isEnabledMenu}) {
     return Expanded(
         child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(
+          vertical: 10, horizontal: Dimens.contentPadding),
       child: RaisedButton(
         elevation: 0,
         padding: EdgeInsets.all(0.0),

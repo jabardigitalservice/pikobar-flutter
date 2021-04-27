@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
@@ -49,11 +50,11 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
         scrollDirection: Axis.vertical,
         child: Container(
           color: Colors.white,
-          margin: EdgeInsets.only(bottom: 20.0),
+          margin: const EdgeInsets.only(bottom: 20.0),
           child: Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 20),
+                padding: const EdgeInsets.only(top: 20, bottom: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -81,7 +82,7 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(
@@ -92,10 +93,10 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                   fontSize: 14.0,
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
                 child: Html(
                     data: widget.termsConfig['description'],
                     style: {

@@ -263,7 +263,7 @@ class _FaqScreenState extends State<FaqScreen> {
               scrollOnExpand: false,
               scrollOnCollapse: true,
               child: Container(
-                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
                 child: ScrollOnExpand(
                   scrollOnExpand: false,
                   scrollOnCollapse: false,
