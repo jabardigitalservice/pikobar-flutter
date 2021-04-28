@@ -67,10 +67,10 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
           showTitle: _showTitle, title: Dictionary.checkDistribution),
       backgroundColor: Colors.white,
       body: BlocProvider<RemoteConfigBloc>(
-        create: (BuildContext context) =>
+        create: (context) =>
             _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
         child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-          builder: (context, remoteState) {
+          builder: (BuildContext context, RemoteConfigState remoteState) {
             return remoteState is RemoteConfigLoaded
                 ? _buildContent(remoteState.remoteConfig)
                 : Container();
@@ -87,16 +87,16 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
         firebaseConfig: FirebaseConfig.labels,
         defaultValue: FirebaseConfig.labelsDefaultValue);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: ListView(
           controller: _scrollController,
-          padding: EdgeInsets.only(top: Dimens.padding, bottom: Dimens.padding),
+          padding: const EdgeInsets.only(bottom: Dimens.padding),
           children: <Widget>[
             AnimatedOpacity(
               opacity: _showTitle ? 0.0 : 1.0,
               duration: Duration(milliseconds: 250),
               child: Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Text(
                   Dictionary.checkDistribution,
                   style: TextStyle(
@@ -133,7 +133,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                     children: <Widget>[
                         // Current location section
                         Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +148,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                   fontSize: 12.0,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Text(
@@ -171,11 +171,11 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           getLabel: getLabel,
                           remoteConfig: remoteConfig,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 40,
                         ),
                         Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -190,7 +190,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                                   height: 1.2,
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text(
                                 Dictionary.locationKecamatanDesc,
                                 style: TextStyle(
@@ -203,7 +203,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         CustomBubbleTab(
                           indicatorColor: ColorBase.green, paddingBubbleTab: 5,
                           labelColor: Colors.white,
@@ -296,7 +296,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                               55,
                         ),
 
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
 
@@ -343,7 +343,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 22),
+                        const SizedBox(height: 22),
                       ])
           ]),
     );
