@@ -126,7 +126,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
 
     getDataLabel();
 
-    return dataDocuments.length > 0
+    return dataDocuments.isNotEmpty
         ? ListView.builder(
             padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
             shrinkWrap: true,
@@ -265,15 +265,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 ],
               );
             })
-        : ListView(
-            children: [
-              EmptyData(
-                message: Dictionary.emptyData,
-                desc: Dictionary.descEmptyData,
-                isFlare: false,
-                image: "${Environment.imageAssets}not_found.png",
-              ),
-            ],
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: Dictionary.descEmptyData,
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
           );
   }
 
