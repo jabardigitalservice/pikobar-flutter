@@ -173,7 +173,9 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                               vertical: Dimens.homeCardMargin,
                               horizontal: Dimens.homeCardMargin),
                           child: Container(
-                            alignment: Platform.isIOS ? Alignment.center : Alignment.centerLeft,
+                            alignment: Platform.isIOS
+                                ? Alignment.center
+                                : Alignment.centerLeft,
                             child: Text(
                               widget.titleHeader,
                               style: TextStyle(
@@ -190,8 +192,12 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                   widget.searchBar != null ? widget.searchBar : Container(),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: widget.searchBar != null ? 18 : paddingBubleTab,
-                        right: widget.searchBar != null ? 18 : paddingBubleTab),
+                        left: widget.searchBar != null
+                            ? Dimens.contentPadding
+                            : paddingBubleTab,
+                        right: widget.searchBar != null
+                            ? Dimens.contentPadding
+                            : paddingBubleTab),
                     child: TabBar(
                         controller: _basetabController,
                         isScrollable: isScrollable,
@@ -361,8 +367,7 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                       duration: const Duration(milliseconds: 250),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            vertical: Dimens.homeCardMargin,
-                            horizontal: 19),
+                            vertical: Dimens.homeCardMargin, horizontal: 19),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -393,7 +398,8 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                         ? Container()
                         : widget.searchBar ?? Container(),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Dimens.contentPadding),
                       child: TabBar(
                           controller: _basetabController,
                           isScrollable: isScrollable,
