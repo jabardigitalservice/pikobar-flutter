@@ -27,7 +27,8 @@ import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 class VideosScreen extends StatelessWidget {
   final CovidInformationScreenState covidInformationScreenState;
 
-  const VideosScreen({Key key, this.covidInformationScreenState}) : super(key: key);
+  const VideosScreen({Key key, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +40,11 @@ class VideosScreen extends StatelessWidget {
   }
 }
 
-
 class VideosList extends StatefulWidget {
   final CovidInformationScreenState covidInformationScreenState;
 
-  const VideosList({Key key, this.covidInformationScreenState}) : super(key: key);
+  const VideosList({Key key, this.covidInformationScreenState})
+      : super(key: key);
 
   @override
   _VideosListState createState() => _VideosListState();
@@ -53,7 +54,6 @@ class _VideosListState extends State<VideosList> {
   ScrollController _scrollController;
   TextEditingController _searchController = TextEditingController();
   Timer _debounce;
-  List<VideoModel> listVideos;
   String searchQuery;
   List<LabelNewModel> dataLabel = [];
   bool isGetDataLabel = true;
@@ -62,10 +62,10 @@ class _VideosListState extends State<VideosList> {
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.video);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     _searchController.addListener((() {
       _onSearchChanged();
     }));
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -99,7 +99,9 @@ class _VideosListState extends State<VideosList> {
       }
     });
 
-    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchVideo);
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSearchVideo);
   }
 
   void updateSearchQuery(String newQuery) {
@@ -118,56 +120,57 @@ class _VideosListState extends State<VideosList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: WillPopScope(
-      child: CollapsingAppbar(
-        searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
-        showTitle: _showTitle,
-        titleAppbar: Dictionary.videoUpToDate,
-        scrollController: _scrollController,
-        body: BlocBuilder<VideoListBloc, VideoListState>(
-          builder: (context, state) {
-            return state is VideosLoading
-                ? _buildLoading()
-                : state is VideosLoaded
-                    ? _buildContent(state)
-                    : Container();
-          },
-        ),
-      ),
-      onWillPop: _onWillPop,
-    ));
+          child: CollapsingAppbar(
+            searchBar: CustomAppBar.buildSearchField(_searchController,
+                Dictionary.searchInformation, updateSearchQuery),
+            showTitle: _showTitle,
+            titleAppbar: Dictionary.videoUpToDate,
+            scrollController: _scrollController,
+            body: BlocListener<VideoListBloc, VideoListState>(
+              listener: (_, state) {
+                getDataLabel();
+              },
+              child: BlocBuilder<VideoListBloc, VideoListState>(
+                builder: (context, state) {
+                  return state is VideosLoading
+                      ? _buildLoading()
+                      : state is VideosLoaded
+                          ? _buildContent(state.videos)
+                          : Container();
+                },
+              ),
+            ),
+          ),
+          onWillPop: _onWillPop,
+        ));
   }
 
   _buildLoading() {
-    return SingleChildScrollView(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 6,
-            padding: const EdgeInsets.all(10.0),
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                height: 300.0,
-                child: Row(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                      child: Skeleton(
-                          width: MediaQuery.of(context).size.width - 40),
-                    ),
-                  ],
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(bottom: 10.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: 6,
+        padding: const EdgeInsets.all(10.0),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
+            height: 300.0,
+            child: Row(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  child:
+                      Skeleton(width: MediaQuery.of(context).size.width - 40),
                 ),
-              );
-            },
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -177,159 +180,146 @@ class _VideosListState extends State<VideosList> {
     return Future.value();
   }
 
-  _buildContent(VideosLoaded state) {
+  _buildContent(List<VideoModel> listVideos) {
     if (searchQuery != null) {
-      listVideos = state.videos
+      listVideos = listVideos
           .where((test) =>
               test.title.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList();
-    } else {
-      listVideos = state.videos;
     }
 
-    getDataLabel();
-
-    return Container(
-        child: listVideos.isNotEmpty
-            ? ListView.builder(
-                itemCount: listVideos.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return listVideos.isNotEmpty
+        ? ListView.builder(
+            itemCount: listVideos.length > 100 ? 100 : listVideos.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: Dimens.contentPadding,
+                      right: Dimens.contentPadding,
+                      bottom: Dimens.padding),
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              left: Dimens.contentPadding,
-                              right: Dimens.contentPadding,
-                              bottom: Dimens.padding),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                                  child: CachedNetworkImage(
-                                    imageUrl: getYtThumbnail(
-                                        youtubeUrl: listVideos[index].url,
-                                        error: false),
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(
-                                      heightFactor: 4.2,
-                                      child: CupertinoActivityIndicator(),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                            height: 200,
-                                            color: Colors.grey[200]),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                                  color: Colors.white,
-                                  gradient: LinearGradient(
-                                    begin: FractionalOffset.topCenter,
-                                    end: FractionalOffset.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.8),
-                                    ],
-                                    stops: [0.0, 1.0],
-                                  ),
-                                ),
-                              ),
-                              Image.asset(
-                                '${Environment.iconAssets}play_button_black.png',
-                                scale: 3,
-                              ),
-                              Positioned(
-                                left: 10,
-                                right: 10,
-                                bottom: 0,
-                                top: 215,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        labelNew.isLabelNew(
-                                                listVideos[index].id.toString(),
-                                                dataLabel)
-                                            ? LabelNewScreen()
-                                            : Container(),
-                                        Expanded(
-                                          child: Text(
-                                            unixTimeStampToDateTime(
-                                                listVideos[index].publishedAt),
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                                fontFamily: FontsFamily.roboto),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                   const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Text(
-                                      listVideos[index].title,
-                                      style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                          fontFamily: FontsFamily.roboto),
-                                      textAlign: TextAlign.left,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          child: CachedNetworkImage(
+                            imageUrl: getYtThumbnail(
+                                youtubeUrl: listVideos[index].url,
+                                error: false),
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                              heightFactor: 4.2,
+                              child: CupertinoActivityIndicator(),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Container(
+                                    height: 200,
+                                    color: Colors.grey[200]),
                           ),
                         ),
-                        onTap: () {
-                          setState(() {
-                            labelNew.readNewInfo(
-                                listVideos[index].id,
-                                listVideos[index].publishedAt.toString(),
-                                dataLabel,
-                                Dictionary.labelVideos);
-                            if (widget.covidInformationScreenState != null) {
-                              widget.covidInformationScreenState.widget
-                                  .homeScreenState
-                                  .getAllUnreadData();
-                            }
-                          });
-                          launchExternal(listVideos[index].url);
-
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedVideo, <String, dynamic>{
-                            'title': listVideos[index].title
-                          });
-                        },
                       ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.8),
+                            ],
+                            stops: [0.0, 1.0],
+                          ),
+                        ),
+                      ),
+                      Image.asset(
+                        '${Environment.iconAssets}play_button_black.png',
+                        scale: 3,
+                      ),
+                      Positioned(
+                        left: 10,
+                        right: 10,
+                        bottom: 0,
+                        top: 215,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                labelNew.isLabelNew(
+                                        listVideos[index].id.toString(),
+                                        dataLabel)
+                                    ? LabelNewScreen()
+                                    : Container(),
+                                Expanded(
+                                  child: Text(
+                                    unixTimeStampToDateTime(
+                                        listVideos[index].publishedAt),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        color: Colors.white,
+                                        fontFamily: FontsFamily.roboto),
+                                  ),
+                                )
+                              ],
+                            ),
+                           const SizedBox(
+                              height: 3,
+                            ),
+                            Text(
+                              listVideos[index].title,
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  fontFamily: FontsFamily.roboto),
+                              textAlign: TextAlign.left,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      )
                     ],
-                  );
-                })
-            : ListView(
-                children: [
-                  EmptyData(
-                    message: Dictionary.emptyData,
-                    desc: Dictionary.descEmptyData,
-                    isFlare: false,
-                    image: "${Environment.imageAssets}not_found.png",
                   ),
-                ],
-              ));
+                ),
+                onTap: () {
+                  setState(() {
+                    labelNew.readNewInfo(
+                        listVideos[index].id,
+                        listVideos[index].publishedAt.toString(),
+                        dataLabel,
+                        Dictionary.labelVideos);
+                    if (widget.covidInformationScreenState != null) {
+                      widget.covidInformationScreenState.widget
+                          .homeScreenState
+                          .getAllUnreadData();
+                    }
+                  });
+                  launchExternal(listVideos[index].url);
+
+              AnalyticsHelper.setLogEvent(
+              Analytics.tappedVideo, <String, dynamic>{
+                'title': listVideos[index].title
+              });
+            },
+          );
+        })
+    : EmptyData(
+      message: Dictionary.emptyData,
+      desc: Dictionary.descEmptyData,
+      isFlare: false,
+      image: "${Environment.imageAssets}not_found.png",
+    );
   }
 
   @override
