@@ -410,6 +410,8 @@ class Dictionary {
   static const String zoneGreenDescription =
       'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
+  static const String introZoneTitle =
+      'Berada di zona mana Anda saat ini?';
   static const String shareZonationInfo =
       'Cek dengan klik tombol di bawah ini';
   static const String sourceZonationInfo =
