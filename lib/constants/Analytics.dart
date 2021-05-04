@@ -183,6 +183,6 @@ class Analytics {
   static String tappedTermsAndConditions = "tapped_terms_and_conditions";
 
   //event zonation
-  static String tappedShareLocation = "tapped_bagikan_lokasi";
+  static String tappedCheckZone = "tapped_cek_zonasi";
   static String tappedArroundYouLocation = "tapped_lokasi_sekitar_anda";
 }

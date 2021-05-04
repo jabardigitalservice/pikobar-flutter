@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
@@ -16,6 +17,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
@@ -36,6 +38,7 @@ class _ZonationState extends State<Zonation> {
   String _address = '-';
 
   CheckDistributionBloc _checkDistributionBloc;
+  ZonationCubit _zonationCubit;
   Flushbar _flushbar = Flushbar();
 
   @override
@@ -46,17 +49,18 @@ class _ZonationState extends State<Zonation> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocationPermissionBloc, LocationPermissionState>(
-        builder: (context, state) {
-      return state is LocationPermissionLoaded
-          ? state.isGranted
-              ? _buildZonationBloc(context)
-              : _buildDeniedContent()
-          : Container();
-    });
+    return BlocProvider<ZonationCubit>(
+      create: (_) => _zonationCubit = ZonationCubit(),
+      child: BlocBuilder<ZonationCubit, ZonationState>(
+          builder: (context, state) {
+            return state is ZonationLoaded
+                ? _buildContent(state)
+                : _buildIntroContent();
+          }),
+    );
   }
 
-  _buildDeniedContent() {
+  _buildIntroContent() {
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -74,25 +78,45 @@ class _ZonationState extends State<Zonation> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              Dictionary.zonation,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: FontsFamily.roboto,
-                  fontWeight: FontWeight.w700),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimens.padding),
-              child: Text(
-                Dictionary.shareZonationInfo,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: FontsFamily.roboto,
-                    color: ColorBase.netralGrey),
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    width: 16.0,
+                    height: 16.0,
+                    margin: EdgeInsets.only(top: 6.0),
+                    child: Icon(
+                      Icons.location_on,
+                      color: ColorBase.netralGrey,
+                    )),
+                SizedBox(
+                  width: Dimens.padding,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(Dictionary.introZoneTitle,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: FontsFamily.roboto,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(Dictionary.shareZonationInfo,
+                        style: TextStyle(
+                            fontSize: 12.0,
+                            fontFamily: FontsFamily.roboto,
+                            color: ColorBase.netralGrey)),
+                    SizedBox(
+                      height: Dimens.padding,
+                    ),
+                  ],
+                ),
+              ],
             ),
             RoundedButton(
-                title: Dictionary.shareLocation,
+                title: Dictionary.checkZone,
                 textStyle: TextStyle(
                     fontFamily: FontsFamily.lato,
                     fontSize: 12.0,
@@ -101,39 +125,20 @@ class _ZonationState extends State<Zonation> {
                 color: ColorBase.green,
                 elevation: 0.0,
                 onPressed: () async {
-                  AnalyticsHelper.setLogEvent(Analytics.tappedShareLocation);
-                  await LocationService.initializeBackgroundLocation(context);
+                  bool isGranted = await Permission.locationAlways.status.isGranted ||
+                      await Permission.locationWhenInUse.status.isGranted;
+
+                  AnalyticsHelper.setLogEvent(Analytics.tappedCheckZone);
+
+                  if (isGranted) {
+                   _zonationCubit.loadZonation();
+                  } else {
+                    await LocationService.initializeBackgroundLocation(context);
+                  }
                 })
           ],
         ),
       ),
-    );
-  }
-
-  _buildZonationBloc(BuildContext context) {
-    return FutureBuilder<Position>(
-      future:
-          Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          _getAddress(snapshot.data);
-
-          return BlocProvider<ZonationCubit>(
-            create: (_) => ZonationCubit()..loadZonation(snapshot.data),
-            child: BlocBuilder<ZonationCubit, ZonationState>(
-                builder: (context, state) {
-              return state is ZonationLoading
-                  ? _buildLoading()
-                  : state is ZonationLoaded
-                      ? _buildContent(state, snapshot.data)
-                      : Container();
-            }),
-          );
-        } else {
-          return Container();
-        }
-      },
     );
   }
 
@@ -154,9 +159,10 @@ class _ZonationState extends State<Zonation> {
     );
   }
 
-  _buildContent(ZonationLoaded state, Position position) {
+  _buildContent(ZonationLoaded state) {
     Size size = MediaQuery.of(context).size;
     CheckDistributionModel data = state.record;
+    Position position = state.position;
     Color dotColor = Colors.transparent;
     String zone = '';
     String description;

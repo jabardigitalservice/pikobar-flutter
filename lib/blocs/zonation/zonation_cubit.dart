@@ -10,14 +10,15 @@ part 'zonation_state.dart';
 class ZonationCubit extends Cubit<ZonationState> {
   ZonationCubit() : super(ZonationInitial());
   
-  void loadZonation(Position position) async {
+  void loadZonation() async {
     emit(ZonationLoading());
     try {
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       CheckDistributionModel record =
       await CheckDistributionRepository().fetchRecord(
           position.latitude, position.longitude);
-      emit(ZonationLoaded(record: record));
-    } catch (e) {
+      emit(ZonationLoaded(record: record, position: position));
+    } on Exception catch (e) {
       emit(ZonationFailure(e.toString()));
     }
   }

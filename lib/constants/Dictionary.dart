@@ -114,6 +114,7 @@ class Dictionary {
   static String skip = 'Skip';
   static String resetReport = 'Reset Laporan';
   static String reset = 'Reset';
+  static String checkZone = 'Cek Zona Risiko';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -410,7 +411,7 @@ class Dictionary {
       'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
   static const String shareZonationInfo =
-      'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
+      'Cek dengan klik tombol di bawah ini';
   static const String sourceZonationInfo =
       'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
 
