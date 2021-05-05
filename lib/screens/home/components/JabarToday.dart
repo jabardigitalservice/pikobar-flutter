@@ -3,6 +3,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/BannerListSlider.dart';
+import 'package:pikobar_flutter/screens/home/components/DailyChart.dart';
 import 'package:pikobar_flutter/screens/home/components/DailyUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/screens/home/components/Zonation.dart';
@@ -42,8 +43,31 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
           /// Statistics Section
           Container(
               color: ColorBase.grey,
-              margin: EdgeInsets.only(top: 10.0),
-              child: Statistics()),
+              margin: EdgeInsets.only(top: 20.0),
+              child: Column(
+                children: [
+                  Container(
+                    color: Colors.grey[50],
+                    width: MediaQuery.of(context).size.width,
+                    height: 10,
+                  ),
+                  Statistics(),
+                ],
+              )),
+
+          Container(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.grey[50],
+                  width: MediaQuery.of(context).size.width,
+                  height: 10,
+                ),
+                DailyChart(),
+              ],
+            ),
+          ),
 
           Container(
             padding: EdgeInsets.only(top: 25.0),

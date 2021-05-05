@@ -10,6 +10,7 @@ class Dictionary {
   static String pikobar = 'Data Jabar';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Data Kasus Jabar';
+  static String dailyChart = 'Chart Harian';
   static String menus = 'Pusat Layanan & Informasi';
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
@@ -70,8 +71,10 @@ class Dictionary {
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
-  static String rdt = 'Rapid Diagnostic Test (RDT)';
-  static String pcr = 'Polymerase Chain Reaction (PCR)';
+  static String rdtAntibodi = 'RDT Antibodi';
+  static String rdtAntigen = 'RDT Antigen';
+  static String pcrSpesimen = 'PCR Spesimen';
+  static String pcrNewCase = 'PCR Orang Kasus Baru';
   static String emergencyNumber = 'No Darurat';
   static String referralHospital = 'RS Rujukan COVID-19';
   static String callCenterArea = 'Call Center Kota/Kab';
