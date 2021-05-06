@@ -185,9 +185,9 @@ class HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(20.0),
+          preferredSize: Size.fromHeight(20),
           child: AppBar(
-            elevation: 0.0,
+            elevation: 0,
             backgroundColor: Colors.white,
           ),
         ),
@@ -271,8 +271,14 @@ class HomeScreenState extends State<HomeScreen>
     if (_rapidTestBloc != null) {
       _rapidTestBloc.close();
     }
+    if (_rapidTestAntigenBloc != null) {
+      _rapidTestAntigenBloc.close();
+    }
     if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
+    }
+    if (_pcrTestIndividuBloc != null) {
+      _pcrTestIndividuBloc.close();
     }
     if (_newsListBloc != null) {
       _newsListBloc.close();

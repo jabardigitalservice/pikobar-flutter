@@ -222,14 +222,14 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             Text(title,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 12.0,
+                    fontSize: 12,
                     color: Colors.black,
                     fontFamily: FontsFamily.roboto)),
             Container(
               margin: const EdgeInsets.only(top: Dimens.padding),
               child: Text(count,
                   style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 24,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontFamily: FontsFamily.roboto)),
@@ -468,8 +468,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / length),
-        padding:
-            const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 15, bottom: 15),
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
             color: Color(0xffFAFAFA),
@@ -491,7 +490,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                           Text(title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                  fontSize: 12.0,
+                                  fontSize: 12,
                                   color: colorTextTitle,
                                   fontFamily: FontsFamily.roboto)),
                           helpOnTap != null
@@ -500,7 +499,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                                   child: SizedBox(
                                     width: 20,
                                     child: Icon(Icons.help_outline,
-                                        size: 13.0, color: ColorBase.darkGrey),
+                                        size: 13, color: ColorBase.darkGrey),
                                   ),
                                 )
                               : SizedBox()
@@ -515,7 +514,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                     top: Dimens.padding, bottom: Dimens.padding),
                 child: Text(countFormatted,
                     style: TextStyle(
-                        fontSize: 16.0,
+                        fontSize: 16,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
@@ -527,7 +526,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       child: Text('(${percent.toStringAsFixed(2)})%',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 10.0,
+                              fontSize: 10,
                               color: ColorBase.netralGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),

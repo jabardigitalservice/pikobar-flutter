@@ -43,13 +43,13 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       color: Colors.white,
       child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, remoteState) {
         return remoteState is RemoteConfigLoaded
-            ? BlocBuilder<StatisticsBloc, StatisticsState>(
-                builder: (context, statisticState) {
+            ? BlocBuilder<StatisticsBloc, StatisticsState>(builder:
+                (BuildContext context, StatisticsState statisticState) {
                 return statisticState is StatisticsLoaded
                     ? Column(
                         children: <Widget>[
@@ -71,7 +71,7 @@ class _StatisticsState extends State<Statistics> {
   _buildMore(StatisticsLoaded statisticState) {
     return InkWell(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -106,7 +106,7 @@ class _StatisticsState extends State<Statistics> {
         ? MultiBlocListener(
             listeners: [
               BlocListener<RapidTestBloc, RapidTestState>(
-                  listener: (context, rapidState) {
+                  listener: (BuildContext context, RapidTestState rapidState) {
                 if (rapidState is RapidTestLoaded) {
                   setState(() {
                     this.rapidTestLoaded = rapidState;
@@ -114,7 +114,8 @@ class _StatisticsState extends State<Statistics> {
                 }
               }),
               BlocListener<RapidTestAntigenBloc, RapidTestAntigenState>(
-                  listener: (context, rapidAntigenState) {
+                  listener: (BuildContext context,
+                      RapidTestAntigenState rapidAntigenState) {
                 if (rapidAntigenState is RapidTestAntigenLoaded) {
                   setState(() {
                     this.rapidTestAntigenLoaded = rapidAntigenState;
@@ -122,15 +123,16 @@ class _StatisticsState extends State<Statistics> {
                 }
               }),
               BlocListener<PcrTestBloc, PcrTestState>(
-                  listener: (context, pcrState) {
+                  listener: (BuildContext context, PcrTestState pcrState) {
                 if (pcrState is PcrTestLoaded) {
                   setState(() {
                     this.pcrTestLoaded = pcrState;
                   });
                 }
               }),
-              BlocListener<PcrTestIndividuBloc, PcrTestIndividuState>(
-                  listener: (context, pcrIndividuState) {
+              BlocListener<PcrTestIndividuBloc, PcrTestIndividuState>(listener:
+                  (BuildContext context,
+                      PcrTestIndividuState pcrIndividuState) {
                 if (pcrIndividuState is PcrTestIndividuLoaded) {
                   setState(() {
                     this.pcrTestIndividuLoaded = pcrIndividuState;
@@ -139,25 +141,27 @@ class _StatisticsState extends State<Statistics> {
               })
             ],
             child: BlocBuilder<RapidTestBloc, RapidTestState>(
-              builder: (context, rapidState) {
+              builder: (BuildContext context, RapidTestState rapidState) {
                 urlStatistic = remoteState.remoteConfig
                     .getString(FirebaseConfig.pikobarUrl);
                 return rapidState is RapidTestLoaded
                     ? BlocBuilder<PcrTestBloc, PcrTestState>(
-                        builder: (context, pcrState) {
+                        builder: (BuildContext context, PcrTestState pcrState) {
                           this.rapidTestLoaded = rapidState;
                           return pcrState is PcrTestLoaded
                               ? BlocBuilder<RapidTestAntigenBloc,
                                   RapidTestAntigenState>(
-                                  builder: (context, rapidAntigenState) {
+                                  builder: (BuildContext context,
+                                      RapidTestAntigenState rapidAntigenState) {
                                     this.rapidTestAntigenLoaded =
                                         rapidAntigenState;
                                     return rapidAntigenState
                                             is RapidTestAntigenLoaded
                                         ? BlocBuilder<PcrTestIndividuBloc,
                                             PcrTestIndividuState>(
-                                            builder:
-                                                (context, pcrIndividuState) {
+                                            builder: (BuildContext context,
+                                                PcrTestIndividuState
+                                                    pcrIndividuState) {
                                               this.pcrTestIndividuLoaded =
                                                   pcrIndividuState;
                                               return pcrIndividuState
@@ -367,7 +371,7 @@ class _StatisticsState extends State<Statistics> {
       color: const Color(0xffFAFAFA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -377,11 +381,11 @@ class _StatisticsState extends State<Statistics> {
               children: <Widget>[
                 Skeleton(
                   child: Container(
-                    margin: const EdgeInsets.only(left: 5.0),
+                    margin: const EdgeInsets.only(left: 5),
                     child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: const Color(0xff828282),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -389,11 +393,10 @@ class _StatisticsState extends State<Statistics> {
                 ),
                 Skeleton(
                   child: Container(
-                    margin:
-                        const EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5),
                     child: Text('0',
                         style: TextStyle(
-                            fontSize: 22.0,
+                            fontSize: 22,
                             color: const Color(0xff828282),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -455,8 +458,8 @@ class _StatisticsState extends State<Statistics> {
         color: const Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: const EdgeInsets.only(
-              left: 5.0, right: 20.0, top: 15, bottom: 15),
+          padding:
+              const EdgeInsets.only(left: 5, right: 20, top: 15, bottom: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -465,20 +468,19 @@ class _StatisticsState extends State<Statistics> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    margin: const EdgeInsets.only(left: 5.0),
+                    margin: const EdgeInsets.only(left: 5),
                     child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: const Color(0xff333333),
                             fontFamily: FontsFamily.roboto)),
                   ),
                   Container(
-                    margin:
-                        const EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5),
                     child: Text(count,
                         style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 16,
                             color: const Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
@@ -514,7 +516,7 @@ class _StatisticsState extends State<Statistics> {
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
           padding:
-              const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+              const EdgeInsets.only(left: 5, right: 5, top: 15, bottom: 15),
           decoration: BoxDecoration(
               color: const Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(Dimens.borderRadius)),
@@ -522,27 +524,27 @@ class _StatisticsState extends State<Statistics> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  margin: const EdgeInsets.only(left: 5.0),
+                  margin: const EdgeInsets.only(left: 5),
                   child: image != ''
                       ? Image.asset(
                           image,
-                          height: 15.0,
+                          height: 15,
                         )
                       : null),
               Container(
-                margin: const EdgeInsets.only(top: 10, left: 5.0),
+                margin: const EdgeInsets.only(top: 10, left: 5),
                 child: Text(title,
                     style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 12,
                         color: colorTextTitle,
                         fontFamily: FontsFamily.roboto)),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 10, left: 5.0),
+                margin: const EdgeInsets.only(top: 10, left: 5),
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 15.0,
+                        fontSize: 15,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
@@ -564,14 +566,14 @@ class _StatisticsState extends State<Statistics> {
       child: Stack(
         children: [
           Positioned(
-              width: 60.0,
-              height: 60.0,
-              right: 0.0,
-              top: 0.0,
+              width: 60,
+              height: 60,
+              right: 0,
+              top: 0,
               child: Image.asset(
                 '${Environment.iconAssets}virus_purple.png',
-                width: 60.0,
-                height: 60.0,
+                width: 60,
+                height: 60,
               )),
           Container(
             margin: const EdgeInsets.all(Dimens.padding),
@@ -582,17 +584,17 @@ class _StatisticsState extends State<Statistics> {
                   label,
                   style: TextStyle(
                       fontFamily: FontsFamily.roboto,
-                      fontSize: 12.0,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
                         fontFamily: FontsFamily.roboto,
-                        fontSize: 20.0,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
