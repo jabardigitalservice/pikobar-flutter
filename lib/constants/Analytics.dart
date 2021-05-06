@@ -145,7 +145,9 @@ class Analytics {
 
   //event test
   static String tappedRDT = 'tapped_rapid_test';
+  static String tappedRDTAntigen = 'tapped_rapid_test_antigen';
   static String tappedPCR = 'tapped_pcr';
+  static String tappedPCRNewCase = 'tapped_pcr_orang_kasus_baru';
   static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
 
   //event education

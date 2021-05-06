@@ -18,4 +18,15 @@ class StatisticsRepository {
   Stream<DocumentSnapshot> getPCRTest() {
     return firestore.collection(kStatistics).doc('pcr').snapshots();
   }
+
+  Stream<DocumentSnapshot> getRapidTestAntigen() {
+    return firestore.collection(kStatistics).doc('rdt-antigen').snapshots();
+  }
+
+  Stream<DocumentSnapshot> getPcrTestIndividu() {
+    return firestore
+        .collection(kStatistics)
+        .doc('pcr-orang-kasus-baru')
+        .snapshots();
+  }
 }
