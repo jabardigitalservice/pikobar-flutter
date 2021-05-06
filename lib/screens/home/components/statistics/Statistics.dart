@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcrIndividu/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdtAntigen/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -34,7 +36,9 @@ class _StatisticsState extends State<Statistics> {
   String urlStatistic = "";
   RemoteConfigLoaded remoteConfigLoaded;
   RapidTestLoaded rapidTestLoaded;
+  RapidTestAntigenLoaded rapidTestAntigenLoaded;
   PcrTestLoaded pcrTestLoaded;
+  PcrTestIndividuLoaded pcrTestIndividuLoaded;
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +90,13 @@ class _StatisticsState extends State<Statistics> {
         AnalyticsHelper.setLogEvent(Analytics.tappedMoreCaseDataJabar);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => StatisticsDetailScreen(
-                remoteConfigLoaded: remoteConfigLoaded,
-                statisticsLoaded: statisticState,
-                rapidTestLoaded: rapidTestLoaded,
-                pcrTestLoaded: pcrTestLoaded)));
+                  remoteConfigLoaded: remoteConfigLoaded,
+                  statisticsLoaded: statisticState,
+                  rapidTestLoaded: rapidTestLoaded,
+                  pcrTestLoaded: pcrTestLoaded,
+                  pcrTestIndividuLoaded: pcrTestIndividuLoaded,
+                  rapidTestAntigenLoaded: rapidTestAntigenLoaded,
+                )));
       },
     );
   }
@@ -106,11 +113,27 @@ class _StatisticsState extends State<Statistics> {
                   });
                 }
               }),
+              BlocListener<RapidTestAntigenBloc, RapidTestAntigenState>(
+                  listener: (context, rapidAntigenState) {
+                if (rapidAntigenState is RapidTestAntigenLoaded) {
+                  setState(() {
+                    this.rapidTestAntigenLoaded = rapidAntigenState;
+                  });
+                }
+              }),
               BlocListener<PcrTestBloc, PcrTestState>(
                   listener: (context, pcrState) {
                 if (pcrState is PcrTestLoaded) {
                   setState(() {
                     this.pcrTestLoaded = pcrState;
+                  });
+                }
+              }),
+              BlocListener<PcrTestIndividuBloc, PcrTestIndividuState>(
+                  listener: (context, pcrIndividuState) {
+                if (pcrIndividuState is PcrTestIndividuLoaded) {
+                  setState(() {
+                    this.pcrTestIndividuLoaded = pcrIndividuState;
                   });
                 }
               })
@@ -124,8 +147,33 @@ class _StatisticsState extends State<Statistics> {
                         builder: (context, pcrState) {
                           this.rapidTestLoaded = rapidState;
                           return pcrState is PcrTestLoaded
-                              ? buildContentRapidTest(remoteState.remoteConfig,
-                                  rapidState.snapshot, pcrState)
+                              ? BlocBuilder<RapidTestAntigenBloc,
+                                  RapidTestAntigenState>(
+                                  builder: (context, rapidAntigenState) {
+                                    this.rapidTestAntigenLoaded =
+                                        rapidAntigenState;
+                                    return rapidAntigenState
+                                            is RapidTestAntigenLoaded
+                                        ? BlocBuilder<PcrTestIndividuBloc,
+                                            PcrTestIndividuState>(
+                                            builder:
+                                                (context, pcrIndividuState) {
+                                              this.pcrTestIndividuLoaded =
+                                                  pcrIndividuState;
+                                              return pcrIndividuState
+                                                      is PcrTestIndividuLoaded
+                                                  ? buildContentRapidTest(
+                                                      remoteState.remoteConfig,
+                                                      rapidState.snapshot,
+                                                      pcrState,
+                                                      rapidAntigenState,
+                                                      pcrIndividuState)
+                                                  : buildLoadingRapidTest();
+                                            },
+                                          )
+                                        : buildLoadingRapidTest();
+                                  },
+                                )
                               : buildLoadingRapidTest();
                         },
                       )
@@ -341,7 +389,8 @@ class _StatisticsState extends State<Statistics> {
                 ),
                 Skeleton(
                   child: Container(
-                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin:
+                        const EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text('0',
                         style: TextStyle(
                             fontSize: 22.0,
@@ -365,13 +414,25 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(RemoteConfig remoteConfig,
-      DocumentSnapshot document, PcrTestLoaded pcrTestLoaded) {
-    DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+  Widget buildContentRapidTest(
+      RemoteConfig remoteConfig,
+      DocumentSnapshot document,
+      PcrTestLoaded pcrTestLoaded,
+      RapidTestAntigenLoaded rapidTestAntigenLoaded,
+      PcrTestIndividuLoaded pcrTestIndividuLoaded) {
+    final DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+    final DocumentSnapshot documentPCRIndividu = pcrTestIndividuLoaded.snapshot;
+    final DocumentSnapshot documentRDTAntigen = rapidTestAntigenLoaded.snapshot;
+
     this.pcrTestLoaded = pcrTestLoaded;
+    this.rapidTestAntigenLoaded = rapidTestAntigenLoaded;
+    this.pcrTestIndividuLoaded = pcrTestIndividuLoaded;
 
     final String count = formatter
-        .format(document.get('total') + documentPCR.get('total'))
+        .format(document.get('total') +
+            documentPCR.get('total') +
+            documentPCRIndividu.get('total') +
+            documentRDTAntigen.get('total'))
         .replaceAll(',', '.');
 
     return InkWell(
@@ -380,9 +441,12 @@ class _StatisticsState extends State<Statistics> {
           context,
           MaterialPageRoute(
               builder: (context) => RapidTestDetail(
-                  remoteConfig: remoteConfig,
-                  document: document,
-                  documentPCR: documentPCR)),
+                    remoteConfig: remoteConfig,
+                    document: document,
+                    documentPCR: documentPCR,
+                    documentPCRIndividu: documentPCRIndividu,
+                    documentRdtAntigen: documentRDTAntigen,
+                  )),
         );
       },
       child: Card(
@@ -391,7 +455,8 @@ class _StatisticsState extends State<Statistics> {
         color: const Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: const EdgeInsets.only(left: 5.0, right: 20.0, top: 15, bottom: 15),
+          padding: const EdgeInsets.only(
+              left: 5.0, right: 20.0, top: 15, bottom: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -409,7 +474,8 @@ class _StatisticsState extends State<Statistics> {
                             fontFamily: FontsFamily.roboto)),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin:
+                        const EdgeInsets.only(top: Dimens.padding, left: 5.0),
                     child: Text(count,
                         style: TextStyle(
                             fontSize: 16.0,
@@ -447,7 +513,8 @@ class _StatisticsState extends State<Statistics> {
       child: InkWell(
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
-          padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          padding:
+              const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
           decoration: BoxDecoration(
               color: const Color(0xffFAFAFA),
               borderRadius: BorderRadius.circular(Dimens.borderRadius)),

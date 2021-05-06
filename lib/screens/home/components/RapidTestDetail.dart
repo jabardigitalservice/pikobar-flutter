@@ -22,9 +22,18 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class RapidTestDetail extends StatefulWidget {
   final RemoteConfig remoteConfig;
-  final DocumentSnapshot document, documentPCR;
+  final DocumentSnapshot document,
+      documentPCR,
+      documentRdtAntigen,
+      documentPCRIndividu;
 
-  RapidTestDetail({Key key, this.remoteConfig, this.document, this.documentPCR})
+  RapidTestDetail(
+      {Key key,
+      this.remoteConfig,
+      this.document,
+      this.documentPCR,
+      this.documentRdtAntigen,
+      this.documentPCRIndividu})
       : super(key: key);
 
   @override
@@ -35,13 +44,21 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   ScrollController _scrollController;
   List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
-  List<String> listItemTitleTab = [Dictionary.rdt, Dictionary.pcr];
+  List<String> listItemTitleTab = [
+    Dictionary.rdtAntibodi,
+    Dictionary.rdtAntigen,
+    Dictionary.pcrSpesimen,
+    Dictionary.pcrNewCase
+  ];
   Map<String, dynamic> label;
   Map<String, dynamic> helpBottomSheet;
+  String lastUpdate;
 
   @override
   void initState() {
     super.initState();
+    lastUpdate =
+        unixTimeStampToDate(widget.document.get('last_update').seconds);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
   }
 
@@ -74,8 +91,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       body: CustomBubbleTab(
         isStickyHeader: true,
         titleHeader: Dictionary.testSummaryTitleAppbar,
-        subTitle:
-            unixTimeStampToDate(widget.document.get('last_update').seconds),
+        subTitle: lastUpdate,
         showTitle: _showTitle,
         scrollController: _scrollController,
         indicatorColor: ColorBase.green,
@@ -84,57 +100,88 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
         unselectedLabelColor: Colors.grey,
         onTap: (index) {
           if (index == 0) {
+            setState(() {
+              lastUpdate = unixTimeStampToDate(
+                  widget.document.get('last_update').seconds);
+            });
             AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
           } else if (index == 1) {
+            setState(() {
+              lastUpdate = unixTimeStampToDate(
+                  widget.documentRdtAntigen.get('last_update').seconds);
+            });
+            AnalyticsHelper.setLogEvent(Analytics.tappedRDTAntigen);
+          } else if (index == 2) {
+            setState(() {
+              lastUpdate = unixTimeStampToDate(
+                  widget.documentPCR.get('last_update').seconds);
+            });
             AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+          } else if (index == 3) {
+            setState(() {
+              lastUpdate = unixTimeStampToDate(
+                  widget.documentPCRIndividu.get('last_update').seconds);
+            });
+            AnalyticsHelper.setLogEvent(Analytics.tappedPCRNewCase);
           }
         },
-        tabBarView: <Widget>[_buildRDT(), _buildPCR()],
+        tabBarView: <Widget>[
+          _buildContent(
+              titleHeader: label['pcr_rdt']['rdt_antibodi']['sum'],
+              total: widget.document.get('total'),
+              announcementArray: 0),
+          _buildContent(
+              titleHeader: label['pcr_rdt']['rdt_antigen']['sum'],
+              total: widget.documentRdtAntigen.get('total'),
+              announcementArray: 1),
+          _buildContent(
+              titleHeader: label['pcr_rdt']['pcr_spesimen']['sum'],
+              total: widget.documentPCR.get('total'),
+              announcementArray: 2),
+          _buildContent(
+              titleHeader: label['pcr_rdt']['pcr_kasus_baru']['sum'],
+              total: widget.documentPCRIndividu.get('total'),
+              announcementArray: 3),
+        ],
         isExpand: true,
       ),
     );
   }
 
-  // Function to build RDT Screen
-  Widget _buildRDT() {
+  // Function to build content
+  Widget _buildContent({String titleHeader, int total, announcementArray}) {
+    Widget detailContent;
+    switch (announcementArray) {
+      case 0:
+        detailContent = buildDetailRDTAntibodi();
+        break;
+      case 1:
+        detailContent = buildDetailRDTAntigen();
+        break;
+      case 2:
+        detailContent = buildDetailPCRSpesimen();
+        break;
+      case 3:
+        detailContent = buildDetailPCRIndividu();
+        break;
+      default:
+        detailContent = buildDetailRDTAntibodi();
+    }
     return ListView(
       children: <Widget>[
         // Announcement section
-        widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
-            ? buildAnnouncement(0)
+        widget.remoteConfig != null &&
+                dataAnnouncement[announcementArray]['enabled'] == true
+            ? buildAnnouncement(announcementArray)
             : Container(),
         const SizedBox(
           height: 20,
         ),
-        buildHeader(label['pcr_rdt']['rdt']['sum'],
-            widget.document.get('total'), Color(0xffFAFAFA)),
+        buildHeader(titleHeader, total, Color(0xffFAFAFA)),
         const SizedBox(
           height: 15,
         ),
-        buildDetailRDT(),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
-    );
-  }
-
-  // Function to build PCR Screen
-  Widget _buildPCR() {
-    return ListView(
-      children: <Widget>[
-        widget.remoteConfig != null && dataAnnouncement[1]['enabled'] == true
-            ? buildAnnouncement(1)
-            : Container(),
-        const SizedBox(
-          height: 20,
-        ),
-        buildHeader(label['pcr_rdt']['pcr']['sum'],
-            widget.documentPCR.get('total'), Color(0xffFAFAFA)),
-        const SizedBox(
-          height: 15,
-        ),
-        buildDetailPCR(),
+        detailContent,
         const SizedBox(
           height: 20,
         ),
@@ -146,9 +193,6 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   Widget buildAnnouncement(int i) {
     return Announcement(
       margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
-      title: dataAnnouncement[i]['title'] != null
-          ? dataAnnouncement[i]['title']
-          : Dictionary.titleInfoTextAnnouncement,
       content: dataAnnouncement[i]['content'],
       context: context,
       onLinkTap: (url) {
@@ -196,14 +240,14 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
-  Widget buildDetailRDT() {
+  Widget buildDetailRDTAntibodi() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: <Widget>[
           buildContainer(
             '',
-            label['pcr_rdt']['rdt']['positif'],
+            label['pcr_rdt']['rdt_antibodi']['positif'],
             widget.document.get('positif').toString(),
             2,
             Colors.black,
@@ -220,7 +264,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           ),
           buildContainer(
             '',
-            label['pcr_rdt']['rdt']['negatif'],
+            label['pcr_rdt']['rdt_antibodi']['negatif'],
             widget.document.get('negatif').toString(),
             2,
             Colors.black,
@@ -237,7 +281,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           ),
           buildContainer(
             '',
-            label['pcr_rdt']['rdt']['invalid'],
+            label['pcr_rdt']['rdt_antibodi']['invalid'],
             widget.document.get('invalid').toString(),
             2,
             Colors.black,
@@ -257,14 +301,42 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     );
   }
 
-  Widget buildDetailPCR() {
+  Widget buildDetailRDTAntigen() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: <Widget>[
           buildContainer(
             '',
-            label['pcr_rdt']['pcr']['positif'],
+            label['pcr_rdt']['rdt_antigen']['positif'],
+            widget.documentRdtAntigen.get('positif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.documentRdtAntigen.get('total'),
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['rdt_antigen']['negatif'],
+            widget.documentRdtAntigen.get('negatif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.documentRdtAntigen.get('total'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDetailPCRSpesimen() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: <Widget>[
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr_spesimen']['positif'],
             widget.documentPCR.get('positif').toString(),
             2,
             Colors.black,
@@ -281,7 +353,7 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           ),
           buildContainer(
             '',
-            label['pcr_rdt']['pcr']['negatif'],
+            label['pcr_rdt']['pcr_spesimen']['negatif'],
             widget.documentPCR.get('negatif').toString(),
             2,
             Colors.black,
@@ -298,12 +370,73 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           ),
           buildContainer(
             '',
-            label['pcr_rdt']['pcr']['invalid'],
+            label['pcr_rdt']['pcr_spesimen']['invalid'],
             widget.documentPCR.get('invalid').toString(),
             2,
             Colors.black,
             Colors.red,
             widget.documentPCR.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
+                      ['title'],
+                  message: helpBottomSheet['pcr_bottom_sheet']['inkonklusif']
+                      ['message']);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDetailPCRIndividu() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: <Widget>[
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr_spesimen']['positif'],
+            widget.documentPCRIndividu.get('positif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.documentPCRIndividu.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['pcr_bottom_sheet']['positif']
+                      ['title'],
+                  message: helpBottomSheet['pcr_bottom_sheet']['positif']
+                      ['message']);
+            },
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr_spesimen']['negatif'],
+            widget.documentPCRIndividu.get('negatif').toString(),
+            2,
+            Colors.black,
+            Colors.black,
+            widget.documentPCRIndividu.get('total'),
+            helpOnTap: () {
+              showTextBottomSheet(
+                  context: context,
+                  title: helpBottomSheet['pcr_bottom_sheet']['negatif']
+                      ['title'],
+                  message: helpBottomSheet['pcr_bottom_sheet']['negatif']
+                      ['message']);
+            },
+          ),
+          buildContainer(
+            '',
+            label['pcr_rdt']['pcr_spesimen']['invalid'],
+            widget.documentPCRIndividu.get('invalid').toString(),
+            2,
+            Colors.black,
+            Colors.red,
+            widget.documentPCRIndividu.get('total'),
             helpOnTap: () {
               showTextBottomSheet(
                   context: context,
@@ -344,12 +477,14 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                 ? DecorationImage(fit: BoxFit.fill, image: AssetImage(image))
                 : null,
             borderRadius: BorderRadius.circular(Dimens.borderRadius)),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
                     child: Container(
                       child: Wrap(
                         children: [
@@ -373,23 +508,21 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                  top: Dimens.padding, bottom: Dimens.padding),
-              child: Text(countFormatted,
-                  style: TextStyle(
-                      fontSize: 16.0,
-                      color: colorNumber,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: FontsFamily.roboto)),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Center(
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                    top: Dimens.padding, bottom: Dimens.padding),
+                child: Text(countFormatted,
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        color: colorNumber,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.roboto)),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
                     child: Container(
                       child: Text('(${percent.toStringAsFixed(2)})%',
                           overflow: TextOverflow.ellipsis,
@@ -400,10 +533,10 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
                               fontFamily: FontsFamily.roboto)),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

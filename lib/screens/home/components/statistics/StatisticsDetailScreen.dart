@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcrIndividu/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdtAntigen/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -27,17 +29,23 @@ class StatisticsDetailScreen extends StatefulWidget {
   final StatisticsLoaded statisticsLoaded;
   final RapidTestLoaded rapidTestLoaded;
   final PcrTestLoaded pcrTestLoaded;
+  final RapidTestAntigenLoaded rapidTestAntigenLoaded;
+  final PcrTestIndividuLoaded pcrTestIndividuLoaded;
 
   StatisticsDetailScreen(
       {Key key,
       @required this.remoteConfigLoaded,
       @required this.statisticsLoaded,
       @required this.rapidTestLoaded,
-      @required this.pcrTestLoaded})
+      @required this.pcrTestLoaded,
+      @required this.rapidTestAntigenLoaded,
+      @required this.pcrTestIndividuLoaded})
       : assert(remoteConfigLoaded != null),
         assert(statisticsLoaded != null),
         assert(rapidTestLoaded != null),
         assert(pcrTestLoaded != null),
+        assert(rapidTestAntigenLoaded != null),
+        assert(pcrTestIndividuLoaded != null),
         super(key: key);
 
   @override
@@ -54,6 +62,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
   DocumentSnapshot get rapidDoc => widget.rapidTestLoaded.snapshot;
 
   DocumentSnapshot get pcrDoc => widget.pcrTestLoaded.snapshot;
+
+  DocumentSnapshot get rapidAntigenDoc =>
+      widget.rapidTestAntigenLoaded.snapshot;
+
+  DocumentSnapshot get pcrIndividuDoc => widget.pcrTestIndividuLoaded.snapshot;
 
   @override
   void initState() {
@@ -545,8 +558,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
   }
 
   _buildContentRapidTest() {
-    String count =
-        formattedStringNumber('${rapidDoc['total'] + pcrDoc['total']}');
+    final String count = formattedStringNumber(
+        '${rapidDoc['total'] + pcrDoc['total'] + rapidAntigenDoc['total'] + pcrIndividuDoc['total']}');
 
     return InkWell(
       onTap: () {
@@ -555,9 +568,12 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => RapidTestDetail(
-                  remoteConfig: remoteConfig,
-                  document: rapidDoc,
-                  documentPCR: pcrDoc)),
+                    remoteConfig: remoteConfig,
+                    document: rapidDoc,
+                    documentPCR: pcrDoc,
+                    documentPCRIndividu: pcrIndividuDoc,
+                    documentRdtAntigen: rapidAntigenDoc,
+                  )),
         );
       },
       child: Card(
