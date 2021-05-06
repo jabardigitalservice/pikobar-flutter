@@ -12,7 +12,7 @@ class FlushHelper {
       blockBackgroundInteraction: true,
       routeBlur: 5.0,
       routeColor: Colors.grey[600].withOpacity(0.5),
-      duration: Duration(seconds: 15),
+      duration: Duration(seconds: 30),
       messageText: Container(
         child: Row(
           children: [
