@@ -1,10 +1,18 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/DialogTextOnly.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DailyChart extends StatefulWidget {
@@ -18,156 +26,508 @@ class DailyChart extends StatefulWidget {
 
 class _DailyChartState extends State<DailyChart> {
   Map<String, dynamic> dataDummy = {
-    "status_code": 200,
-    "data": {
-      "metadata": {"last_update": null},
-      "content": [
-        {
-          "tanggal": "2021-04-22",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 542,
-          "suspect_diisolasi": 37,
-          "suspect_discarded": 505,
-          "CLOSECONTACT": 1394,
-          "closecontact_dikarantina": 69,
-          "closecontact_discarded": 1325,
-          "probable_discarded": 12,
-          "probable_diisolasi": 0,
-          "probable_meninggal": 1,
-          "CONFIRMATION": 1358,
-          "confirmation_diisolasi": 0,
-          "confirmation_selesai": 1338,
-          "confirmation_meninggal": 28,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
-        },
-        {
-          "tanggal": "2021-04-23",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 414,
-          "suspect_diisolasi": 48,
-          "suspect_discarded": 366,
-          "CLOSECONTACT": 368,
-          "closecontact_dikarantina": 14,
-          "closecontact_discarded": 354,
-          "probable_discarded": 6,
-          "probable_diisolasi": 0,
-          "probable_meninggal": 1,
-          "CONFIRMATION": 1066,
-          "confirmation_diisolasi": 12,
-          "confirmation_selesai": 1031,
-          "confirmation_meninggal": 23,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
-        },
-        {
-          "tanggal": "2021-04-24",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 0,
-          "suspect_diisolasi": 0,
-          "suspect_discarded": 0,
-          "CLOSECONTACT": 0,
-          "closecontact_dikarantina": 0,
-          "closecontact_discarded": 0,
-          "probable_discarded": 0,
-          "probable_diisolasi": 0,
-          "probable_meninggal": 0,
-          "CONFIRMATION": 630,
-          "confirmation_diisolasi": 0,
-          "confirmation_selesai": 990,
-          "confirmation_meninggal": 23,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
-        },
-        {
-          "tanggal": "2021-04-25",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 274,
-          "suspect_diisolasi": 21,
-          "suspect_discarded": 253,
-          "CLOSECONTACT": 1074,
-          "closecontact_dikarantina": 126,
-          "closecontact_discarded": 948,
-          "probable_discarded": 13,
-          "probable_diisolasi": 0,
-          "probable_meninggal": 0,
-          "CONFIRMATION": 683,
-          "confirmation_diisolasi": 279,
-          "confirmation_selesai": 397,
-          "confirmation_meninggal": 7,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
-        },
-        {
-          "tanggal": "2021-04-26",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 874,
-          "suspect_diisolasi": 0,
-          "suspect_discarded": 876,
-          "CLOSECONTACT": 1308,
-          "closecontact_dikarantina": 77,
-          "closecontact_discarded": 1231,
-          "probable_discarded": 7,
-          "probable_diisolasi": 3,
-          "probable_meninggal": 4,
-          "CONFIRMATION": 1941,
-          "confirmation_diisolasi": 1090,
-          "confirmation_selesai": 835,
-          "confirmation_meninggal": 16,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
-        },
-        {
-          "tanggal": "2021-04-27",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 142,
-          "suspect_diisolasi": 19,
-          "suspect_discarded": 123,
-          "CLOSECONTACT": 430,
-          "closecontact_dikarantina": 0,
-          "closecontact_discarded": 622,
-          "probable_discarded": 5,
-          "probable_diisolasi": 0,
-          "probable_meninggal": 1,
-          "CONFIRMATION": 1164,
-          "confirmation_diisolasi": 301,
-          "confirmation_selesai": 846,
-          "confirmation_meninggal": 17,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
-        },
-        {
-          "tanggal": "2021-04-28",
-          "kode_prov": "32",
-          "nama_prov": "Jawa Barat",
-          "SUSPECT": 319,
-          "suspect_diisolasi": 205,
-          "suspect_discarded": 114,
-          "CLOSECONTACT": 725,
-          "closecontact_dikarantina": 112,
-          "closecontact_discarded": 613,
-          "probable_discarded": 5,
-          "probable_diisolasi": 0,
-          "probable_meninggal": 1,
-          "CONFIRMATION": 1354,
-          "confirmation_diisolasi": 309,
-          "confirmation_selesai": 1031,
-          "confirmation_meninggal": 14,
-          "suspect_meninggal_harian": 0,
-          "closecontact_meninggal_harian": 0
+    "message": "Get data successfull",
+    "error": 0,
+    "metadata": {
+      "data_source": "Dinas Kesehatan Provinsi Jawa Barat",
+      "parameter": {
+        "kode_kab": "3273",
+        "kode_kec": "32730101",
+        "sort": [
+          "kode_kab:asc",
+          "nama_kab:asc",
+          "persentasi:desc",
+          "persentasi_confirmation_total:asc",
+          "persentasi_confirmation_diisolasi:asc",
+          "persentasi_confirmation_meninggal:asc",
+          "persentasi_confirmation_selesai:asc"
+        ],
+        "wilayah": ["provinsi", "kota", "kecamatan", "kelurahan"],
+        "kode_kel": "3273010001",
+        "tanggal": ["pusat", "lab"]
+      },
+      "last_update": "2021-05-04"
+    },
+    "tren": {},
+    "data": [
+      {
+        "series": [
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3408,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9016,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3287,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1103,
+              "confirmation_total": 10162
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 47,
+              "confirmation_ratarata": 36.0,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 39,
+              "confirmation_selesai": 8
+            },
+            "tanggal": "2021-04-29"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3408,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9032,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3287,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1103,
+              "confirmation_total": 10178
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 16,
+              "confirmation_ratarata": 36.0,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 0,
+              "confirmation_selesai": 16
+            },
+            "tanggal": "2021-04-30"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3408,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9037,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3287,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1107,
+              "confirmation_total": 10187
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 9,
+              "confirmation_ratarata": 29.43,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 4,
+              "confirmation_selesai": 5
+            },
+            "tanggal": "2021-05-01"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3410,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9061,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3289,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1118,
+              "confirmation_total": 10222
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": -2,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 35,
+              "confirmation_ratarata": 34.43,
+              "probable_discarded": 0,
+              "suspect_discarded": 2,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 11,
+              "confirmation_selesai": 24
+            },
+            "tanggal": "2021-05-02"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3410,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9067,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3289,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1137,
+              "confirmation_total": 10247
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 25,
+              "confirmation_ratarata": 36.57,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 19,
+              "confirmation_selesai": 6
+            },
+            "tanggal": "2021-05-03"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3410,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9090,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3289,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1118,
+              "confirmation_total": 10251
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 4,
+              "confirmation_ratarata": 28.14,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": -19,
+              "confirmation_selesai": 23
+            },
+            "tanggal": "2021-05-04"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3410,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9090,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3289,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1118,
+              "confirmation_total": 10251
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 0,
+              "confirmation_ratarata": 19.43,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 0,
+              "confirmation_selesai": 0
+            },
+            "tanggal": "2021-05-05"
+          },
+          {
+            "kumulatif": {
+              "suspect_diisolasi": -3410,
+              "probable_meninggal": 29,
+              "suspect_meninggal": 121,
+              "closecontact_discarded": 15181,
+              "closecontact_total": 0,
+              "confirmation_meninggal": 43,
+              "confirmation_selesai": 9090,
+              "probable_total": 0,
+              "probable_discarded": 0,
+              "suspect_discarded": 3289,
+              "closecontact_dikarantina": -15181,
+              "probable_diisolasi": -29,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 1118,
+              "confirmation_total": 10251
+            },
+            "kode_kab": "3204",
+            "nama_kab": "KAB. BANDUNG",
+            "harian": {
+              "suspect_diisolasi": 0,
+              "probable_total": 0,
+              "probable_meninggal": 0,
+              "suspect_meninggal": 0,
+              "closecontact_discarded": 0,
+              "probable_ratarata": 0.0,
+              "closecontact_ratarata": 0.0,
+              "closecontact_total": 0,
+              "suspect_ratarata": 0.0,
+              "confirmation_meninggal": 0,
+              "confirmation_total": 0,
+              "confirmation_ratarata": 12.71,
+              "probable_discarded": 0,
+              "suspect_discarded": 0,
+              "closecontact_dikarantina": 0,
+              "probable_diisolasi": 0,
+              "suspect_total": 0,
+              "confirmation_diisolasi": 0,
+              "confirmation_selesai": 0
+            },
+            "tanggal": "2021-05-06"
+          }
+        ],
+        "kode_kab": "3204",
+        "nama_kab": "KAB. BANDUNG",
+        "tren": {
+          "confirmation_meninggal": {
+            "conclusion": "Sama",
+            "selisih": 0,
+            "kemarin": 0,
+            "sekarang": 0,
+            "persentasi": 0.0
+          },
+          "confirmation_ratarata_minggu_kemarin": 4,
+          "persentasi": -100.0,
+          "conclusion": "Baik",
+          "confirmation_total": {
+            "conclusion": "Baik",
+            "selisih": -4,
+            "kemarin": 4,
+            "sekarang": 0,
+            "persentasi": -100.0
+          },
+          "selisih": -4,
+          "confirmation_selesai": {
+            "conclusion": "Sama",
+            "selisih": 0,
+            "kemarin": 23,
+            "sekarang": 23,
+            "persentasi": 0.0
+          },
+          "confirmation_diisolasi": {
+            "conclusion": "Baik",
+            "selisih": 19,
+            "kemarin": -19,
+            "sekarang": 0,
+            "persentasi": -100.0
+          },
+          "confirmation_ratarata_minggu_ini": 0
         }
-      ]
-    }
+      }
+    ]
   };
+
+  Flushbar _flushbar;
+  List<dynamic> filterData;
+  @override
+  void initState() {
+    filterData = dataDummy['data'][0]['series']
+        .where((element) => DateTime.parse(element['tanggal'])
+            .isAfter(DateTime.now().add(Duration(days: -7))))
+        .toList();
+    print(filterData.length);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return buildChart();
+  }
+
+  Widget _buildIntroContent() {
+    final Size size = MediaQuery.of(context).size;
+
+    return Container(
+      width: size.width,
+      margin: const EdgeInsets.only(
+          left: Dimens.padding,
+          right: Dimens.padding,
+          top: Dimens.homeCardMargin),
+      decoration: BoxDecoration(
+          color: ColorBase.greyContainer,
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
+      child: Padding(
+        padding: const EdgeInsets.all(Dimens.homeCardMargin),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    width: 16,
+                    height: 16,
+                    margin: const EdgeInsets.only(top: 6),
+                    child: Icon(
+                      Icons.bar_chart,
+                      color: ColorBase.netralGrey,
+                    )),
+                const SizedBox(
+                  width: Dimens.padding,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(Dictionary.introChartTitle,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: FontsFamily.roboto,
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(Dictionary.shareChartInfo,
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: FontsFamily.roboto,
+                            color: ColorBase.netralGrey)),
+                    const SizedBox(
+                      height: Dimens.padding,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            RoundedButton(
+                title: Dictionary.shareLocation,
+                textStyle: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                color: ColorBase.green,
+                elevation: 0,
+                onPressed: null)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildChart() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -249,13 +609,12 @@ class _DailyChartState extends State<DailyChart> {
                       topRight: Radius.circular(4),
                       topLeft: Radius.circular(4)),
                   width: 0.6,
-                  dataSource: dataDummy['data']['content'],
+                  dataSource: filterData,
                   xValueMapper: (dynamic, index) => DateFormat('dd MMM', 'id')
-                      .format(DateTime.parse(
-                          dataDummy['data']['content'][index]['tanggal']))
+                      .format(DateTime.parse(filterData[index]['tanggal']))
                       .toString(),
                   yValueMapper: (dynamic, index) => double.parse(
-                      dataDummy['data']['content'][index]['CLOSECONTACT']
+                      filterData[index]['harian']['confirmation_total']
                           .toString()))
             ],
             margin: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),

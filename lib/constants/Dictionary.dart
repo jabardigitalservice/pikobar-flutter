@@ -441,4 +441,10 @@ class Dictionary {
   static const String psbb = 'PSBB';
   static const String otherTabFaq3 = 'Tab FAQ 3';
   static const String otherTabFaq4 = 'Tab FAQ 4';
+
+  //daily chart
+  static const String introChartTitle =
+      'Ingin melihat data perkembangan harian?';
+  static const String shareChartInfo =
+      'Bagikan lokasi dengan klik di bawah ini';
 }
