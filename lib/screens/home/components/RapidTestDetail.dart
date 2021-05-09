@@ -69,96 +69,93 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           firebaseConfig: FirebaseConfig.bottomSheetContent,
           defaultValue: FirebaseConfig.bottomSheetDefaultValue);
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: CustomBubbleTab(
-        isStickyHeader: true,
-        titleHeader: Dictionary.testSummaryTitleAppbar,
-        subTitle:
-            unixTimeStampToDate(widget.document.get('last_update').seconds),
-        showTitle: _showTitle,
-        scrollController: _scrollController,
-        indicatorColor: ColorBase.green,
-        labelColor: Colors.white,
-        listItemTitleTab: listItemTitleTab,
-        unselectedLabelColor: Colors.grey,
-        onTap: (index) {
-          if (index == 0) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-          } else if (index == 1) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-          }
-        },
-        tabBarView: <Widget>[_buildRDT(), _buildPCR()],
-        isExpand: true,
-      ),
+    return CustomBubbleTab(
+      isStickyHeader: true,
+      titleHeader: Dictionary.testSummaryTitleAppbar,
+      subTitle: unixTimeStampToDate(widget.document.get('last_update').seconds),
+      showTitle: _showTitle,
+      scrollController: _scrollController,
+      indicatorColor: ColorBase.green,
+      labelColor: Colors.white,
+      listItemTitleTab: listItemTitleTab,
+      unselectedLabelColor: Colors.grey,
+      onTap: (index) {
+        if (index == 0) {
+          AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+        } else if (index == 1) {
+          AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+        }
+      },
+      tabBarView: <Widget>[_buildContent('rdt'), _buildContent('pcr')],
+      isExpand: true,
     );
   }
 
   // Function to build RDT Screen
-  Widget _buildRDT() {
-    return ListView(
-      children: <Widget>[
-        // Announcement section
-        widget.remoteConfig != null && dataAnnouncement[0]['enabled'] == true
-            ? buildAnnouncement(0)
-            : Container(),
-        const SizedBox(
-          height: 20,
-        ),
-        buildHeader(label['pcr_rdt']['rdt']['sum'],
-            widget.document.get('total'), Color(0xffFAFAFA)),
-        const SizedBox(
-          height: 15,
-        ),
-        buildDetailRDT(),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
-    );
-  }
-
-  // Function to build PCR Screen
-  Widget _buildPCR() {
-    return ListView(
-      children: <Widget>[
-        widget.remoteConfig != null && dataAnnouncement[1]['enabled'] == true
-            ? buildAnnouncement(1)
-            : Container(),
-        const SizedBox(
-          height: 20,
-        ),
-        buildHeader(label['pcr_rdt']['pcr']['sum'],
-            widget.documentPCR.get('total'), Color(0xffFAFAFA)),
-        const SizedBox(
-          height: 15,
-        ),
-        buildDetailPCR(),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+  Widget _buildContent(String type) {
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Builder(builder: (BuildContext context) {
+        return CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverToBoxAdapter(
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  // Announcement section
+                  type == 'rdt' ? buildAnnouncement(0) : buildAnnouncement(1),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  type == 'rdt'
+                      ? buildHeader(label['pcr_rdt']['rdt']['sum'],
+                          widget.document.get('total'), Color(0xffFAFAFA))
+                      : buildHeader(label['pcr_rdt']['pcr']['sum'],
+                          widget.documentPCR.get('total'), Color(0xffFAFAFA)),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  type == 'rdt' ? buildDetailRDT() : buildDetailPCR(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
   /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
-    return Announcement(
-      margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
-      title: dataAnnouncement[i]['title'] != null
-          ? dataAnnouncement[i]['title']
-          : Dictionary.titleInfoTextAnnouncement,
-      content: dataAnnouncement[i]['content'],
-      context: context,
-      onLinkTap: (url) {
-        _launchURL(
-            url,
-            dataAnnouncement[i]['title'] != null
+    bool isEnabled =
+        widget.remoteConfig != null && dataAnnouncement[i]['enabled'] == true;
+
+    return isEnabled
+        ? Announcement(
+            margin:
+                const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+            title: dataAnnouncement[i]['title'] != null
                 ? dataAnnouncement[i]['title']
-                : Dictionary.titleInfoTextAnnouncement);
-      },
-    );
+                : Dictionary.titleInfoTextAnnouncement,
+            content: dataAnnouncement[i]['content'],
+            context: context,
+            onLinkTap: (url) {
+              _launchURL(
+                  url,
+                  dataAnnouncement[i]['title'] != null
+                      ? dataAnnouncement[i]['title']
+                      : Dictionary.titleInfoTextAnnouncement);
+            },
+          )
+        : Container();
   }
 
   Widget buildHeader(String title, int total, Color color) {

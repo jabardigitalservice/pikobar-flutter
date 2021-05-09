@@ -194,36 +194,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
     });
   }
 
-  Widget _buildInfoGraphicJabar() {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListJabarLoaded
-            ? _buildContent(state.infoGraphicsListJabar)
-            : _buildLoading();
-      },
-    );
-  }
-
-  Widget _buildInfoGraphicPusat() {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListPusatLoaded
-            ? _buildContent(state.infoGraphicsListPusat)
-            : _buildLoading();
-      },
-    );
-  }
-
-  Widget _buildInfoGraphicWHO() {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListWHOLoaded
-            ? _buildContent(state.infoGraphicsListWHO)
-            : _buildLoading();
-      },
-    );
-  }
-
   Widget _buildContent(List<DocumentSnapshot> listData) {
     if (searchQuery != null) {
       listData = listData
