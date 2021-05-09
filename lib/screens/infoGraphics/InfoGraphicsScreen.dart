@@ -104,7 +104,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         BlocProvider<InfoGraphicsListBloc>(
           create: (context) => _infoGraphicsListBloc
             ..add(InfoGraphicsListLoad(
-                infoGraphicsCollection: kAllInfographics, limit: 10)),
+                infoGraphicsCollection: kAllInfographics, limit: 100)),
         ),
       ],
       child: CustomBubbleTab(
@@ -131,22 +131,22 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           switch(index) {
             case 1:
               _infoGraphicsListBloc.add(InfoGraphicsListJabarLoad(
-                  infoGraphicsCollection: listCollectionData[index], limit: 10));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
               break;
             case 2:
               _infoGraphicsListBloc.add(InfoGraphicsListPusatLoad(
-                  infoGraphicsCollection: listCollectionData[index], limit: 10));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
               break;
             case 3:
               _infoGraphicsListBloc.add(InfoGraphicsListWHOLoad(
-                  infoGraphicsCollection: listCollectionData[index], limit: 10));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
               break;
             default:
               _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: listCollectionData[index], limit: 10));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
           }
         },
