@@ -151,12 +151,12 @@ class HomeScreenState extends State<HomeScreen>
         BlocProvider<RapidTestBloc>(
             create: (context) =>
                 _rapidTestBloc = RapidTestBloc()..add(RapidTestLoad())),
-        BlocProvider<RapidTestAntigenBloc>(
-            create: (context) => _rapidTestAntigenBloc = RapidTestAntigenBloc()
-              ..add(RapidTestAntigenLoad())),
         BlocProvider<PcrTestBloc>(
             create: (context) =>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
+        BlocProvider<RapidTestAntigenBloc>(
+            create: (context) => _rapidTestAntigenBloc = RapidTestAntigenBloc()
+              ..add(RapidTestAntigenLoad())),
         BlocProvider<PcrTestIndividuBloc>(
             create: (context) => _pcrTestIndividuBloc = PcrTestIndividuBloc()
               ..add(PcrTestIndividuLoad())),
