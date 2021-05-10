@@ -36,6 +36,7 @@ class ListViewPhoneBooks extends StatefulWidget {
   String searchQuery;
   TextEditingController searchController = TextEditingController();
   ValueChanged<String> onChanged;
+
   ListViewPhoneBooks(
       {Key key, this.searchQuery, this.searchController, this.onChanged})
       : super(key: key);
@@ -51,6 +52,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
   final EmergencyNumberRepository _emergencyNumberRepository =
       EmergencyNumberRepository();
   List<String> listItemTitleTab = [];
+
   @override
   void initState() {
     super.initState();
@@ -162,102 +164,142 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
     } else {
       getEmergencyCallFilter = getEmergencyCall;
     }
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: <Widget>[
-        getEmergencyCallFilter.isEmpty
-            ? isConnected
-                ? EmptyData(
-                    message: Dictionary.emptyData,
-                    desc: Dictionary.descEmptyData,
-                    isFlare: false,
-                    image: "${Environment.imageAssets}not_found.png",
-                  )
-                : EmptyData(
-                    message: Dictionary.errorConnection,
-                    desc: '',
-                    isFlare: false,
-                    image: "${Environment.imageAssets}not_found.png",
-                  )
-            : Column(
-                children: getListEmergencyCall(getEmergencyCallFilter),
+
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Builder(
+        builder: (BuildContext context) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               ),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+              SliverToBoxAdapter(
+                child: getEmergencyCallFilter.isEmpty
+                    ? isConnected
+                        ? EmptyData(
+                            message: Dictionary.emptyData,
+                            desc: Dictionary.descEmptyData,
+                            isFlare: false,
+                            image: "${Environment.imageAssets}not_found.png",
+                          )
+                        : EmptyData(
+                            message: Dictionary.errorConnection,
+                            desc: '',
+                            isFlare: false,
+                            image: "${Environment.imageAssets}not_found.png",
+                          )
+                    : ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(0),
+                        children: <Widget>[
+                          Column(
+                            children:
+                                getListEmergencyCall(getEmergencyCallFilter),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
+              )
+            ],
+          );
+        },
+      ),
     );
   }
 
   /// Function to build Referral Hospital Screen
   Widget buildReferralHospitalTab() {
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: <Widget>[
-        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (BuildContext context, EmergencyNumberState state) {
-            if (state is ReferralHospitalLoaded) {
-              Map<dynamic, List<ReferralHospitalModel>> dataNomorDarurat;
-              final Map<dynamic, List<ReferralHospitalModel>> groupByCity =
-                  groupBy(state.referralHospitalList, (obj) => obj.city);
-              dynamic tempListCityName;
+        Map<dynamic, List<ReferralHospitalModel>> dataNomorDarurat;
+        dynamic tempListCityName;
 
-              /// Checking search field
-              if (widget.searchQuery != null) {
-                /// Filtering data by search
-                final List<ReferralHospitalModel> tempList = state
-                    .referralHospitalList
-                    .where((test) => test.name
-                        .toLowerCase()
-                        .contains(widget.searchQuery.toLowerCase()))
-                    .toList();
-                dataNomorDarurat = groupBy(tempList, (obj) => obj.city);
-                tempListCityName = dataNomorDarurat.keys.toList();
-              } else {
-                dataNomorDarurat = groupByCity;
-                tempListCityName = dataNomorDarurat.keys.toList();
-              }
-              return dataNomorDarurat.isEmpty
-                  ? isConnected
-                      ? EmptyData(
-                          message: Dictionary.emptyData,
-                          desc: Dictionary.descEmptyData,
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
+        if (state is ReferralHospitalLoaded) {
+          final Map<dynamic, List<ReferralHospitalModel>> groupByCity =
+              groupBy(state.referralHospitalList, (obj) => obj.city);
+
+          /// Checking search field
+          if (widget.searchQuery != null) {
+            /// Filtering data by search
+            final List<ReferralHospitalModel> tempList = state
+                .referralHospitalList
+                .where((test) => test.name
+                    .toLowerCase()
+                    .contains(widget.searchQuery.toLowerCase()))
+                .toList();
+            dataNomorDarurat = groupBy(tempList, (obj) => obj.city);
+            tempListCityName = dataNomorDarurat.keys.toList();
+          } else {
+            dataNomorDarurat = groupByCity;
+            tempListCityName = dataNomorDarurat.keys.toList();
+          }
+        }
+
+        return CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverToBoxAdapter(
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                children: <Widget>[
+                  state is ReferralHospitalLoaded
+                      ? dataNomorDarurat.isEmpty
+                          ? isConnected
+                              ? EmptyData(
+                                  message: Dictionary.emptyData,
+                                  desc: Dictionary.descEmptyData,
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                              : EmptyData(
+                                  message: Dictionary.errorConnection,
+                                  desc: '',
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                          : Column(
+                              children: getListContent(
+                                  listReferralHospitalModel: dataNomorDarurat,
+                                  nameModel: Dictionary.referralHospitalModel,
+                                  listCityName: tempListCityName),
+                            )
+                      : Column(
+                          children: _buildLoading(),
                         )
-                      : EmptyData(
-                          message: Dictionary.errorConnection,
-                          desc: '',
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
-                        )
-                  : Column(
-                      children: getListContent(
-                          listReferralHospitalModel: dataNomorDarurat,
-                          nameModel: Dictionary.referralHospitalModel,
-                          listCityName: tempListCityName),
-                    );
-            } else {
-              return Column(
-                children: _buildLoading(),
-              );
-            }
-          },
-        )
-      ],
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
   /// Function to build Call Center Screen
   Widget buildCallCenterTab() {
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: <Widget>[
-        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+    return SafeArea(
+        top: false,
+        bottom: false,
+        child: BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (BuildContext context, EmergencyNumberState state) {
-            if (state is CallCenterLoaded) {
-              List<CallCenterModel> dataCallCenter;
+            List<CallCenterModel> dataCallCenter;
 
+            if (state is CallCenterLoaded) {
               /// Checking search field
               if (widget.searchQuery != null) {
                 /// Filtering data by search
@@ -269,145 +311,198 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               } else {
                 dataCallCenter = state.callCenterList;
               }
-              return dataCallCenter.isEmpty
-                  ? isConnected
-                      ? EmptyData(
-                          message: Dictionary.emptyData,
-                          desc: Dictionary.descEmptyData,
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
-                        )
-                      : EmptyData(
-                          message: Dictionary.errorConnection,
-                          desc: '',
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
-                        )
-                  : Column(
-                      children: getListContent(
-                          callCenterModel: dataCallCenter,
-                          nameModel: Dictionary.callCenterModel,
-                          listCityName: null),
-                    );
-            } else {
-              return Column(
-                children: _buildLoading(),
-              );
             }
+
+            return CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(0),
+                    children: <Widget>[
+                      state is CallCenterLoaded
+                          ? dataCallCenter.isEmpty
+                              ? isConnected
+                                  ? EmptyData(
+                                      message: Dictionary.emptyData,
+                                      desc: Dictionary.descEmptyData,
+                                      isFlare: false,
+                                      image:
+                                          "${Environment.imageAssets}not_found.png",
+                                    )
+                                  : EmptyData(
+                                      message: Dictionary.errorConnection,
+                                      desc: '',
+                                      isFlare: false,
+                                      image:
+                                          "${Environment.imageAssets}not_found.png",
+                                    )
+                              : Column(
+                                  children: getListContent(
+                                      callCenterModel: dataCallCenter,
+                                      nameModel: Dictionary.callCenterModel,
+                                      listCityName: null),
+                                )
+                          : Column(
+                              children: _buildLoading(),
+                            )
+                    ],
+                  ),
+                )
+              ],
+            );
           },
-        )
-      ],
-    );
+        ));
   }
 
   /// Function to build Web Gugus Tugas Screen
   Widget buildWebGugusTugasTab() {
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: <Widget>[
-        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (BuildContext context, EmergencyNumberState state) {
-            if (state is GugusTugasWebLoaded) {
-              List<GugusTugasWebModel> dataWebGugusTugas;
+        List<GugusTugasWebModel> dataWebGugusTugas;
 
-              /// Checking search field
-              if (widget.searchQuery != null) {
-                /// Filtering data by search
-                dataWebGugusTugas = state.gugusTugasWebModel
-                    .where((test) => test.name
-                        .toLowerCase()
-                        .contains(widget.searchQuery.toLowerCase()))
-                    .toList();
-              } else {
-                dataWebGugusTugas = state.gugusTugasWebModel;
-              }
-              return dataWebGugusTugas.isEmpty
-                  ? isConnected
-                      ? EmptyData(
-                          message: Dictionary.emptyData,
-                          desc: Dictionary.descEmptyData,
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
+        if (state is GugusTugasWebLoaded) {
+          /// Checking search field
+          if (widget.searchQuery != null) {
+            /// Filtering data by search
+            dataWebGugusTugas = state.gugusTugasWebModel
+                .where((test) => test.name
+                    .toLowerCase()
+                    .contains(widget.searchQuery.toLowerCase()))
+                .toList();
+          } else {
+            dataWebGugusTugas = state.gugusTugasWebModel;
+          }
+        }
+
+        return CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverToBoxAdapter(
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                children: <Widget>[
+                  state is GugusTugasWebLoaded
+                      ? dataWebGugusTugas.isEmpty
+                          ? isConnected
+                              ? EmptyData(
+                                  message: Dictionary.emptyData,
+                                  desc: Dictionary.descEmptyData,
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                              : EmptyData(
+                                  message: Dictionary.errorConnection,
+                                  desc: '',
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                          : Column(
+                              children: getListContent(
+                                  gugusTugasWebModel: dataWebGugusTugas,
+                                  nameModel: Dictionary.gugusTugasWebModel,
+                                  listCityName: null),
+                            )
+                      : Column(
+                          children: _buildLoading(),
                         )
-                      : EmptyData(
-                          message: Dictionary.errorConnection,
-                          desc: '',
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
-                        )
-                  : Column(
-                      children: getListContent(
-                          gugusTugasWebModel: dataWebGugusTugas,
-                          nameModel: Dictionary.gugusTugasWebModel,
-                          listCityName: null),
-                    );
-            } else {
-              return Column(
-                children: _buildLoading(),
-              );
-            }
-          },
-        )
-      ],
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
   /// Function to build Referral Isolation Center Screen
   Widget buildIsolationCenterTab() {
-    return ListView(
-      padding: const EdgeInsets.all(0),
-      children: <Widget>[
-        BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: BlocBuilder<EmergencyNumberBloc, EmergencyNumberState>(
           builder: (BuildContext context, EmergencyNumberState state) {
-            if (state is IsolationCenterLoaded) {
-              Map<dynamic, List<IsolationCenterModel>> dataIsolationCenter;
-              final Map<dynamic, List<IsolationCenterModel>> groupByCity =
-                  groupBy(state.isolationCenterModel, (obj) => obj.city);
-              dynamic tempListCityName;
+        Map<dynamic, List<IsolationCenterModel>> dataIsolationCenter;
+        dynamic tempListCityName;
 
-              /// Checking search field
-              if (widget.searchQuery != null) {
-                /// Filtering data by search
-                final List<IsolationCenterModel> tempList = state
-                    .isolationCenterModel
-                    .where((test) => test.name
-                        .toLowerCase()
-                        .contains(widget.searchQuery.toLowerCase()))
-                    .toList();
-                dataIsolationCenter = groupBy(tempList, (obj) => obj.city);
-                tempListCityName = dataIsolationCenter.keys.toList();
-              } else {
-                dataIsolationCenter = groupByCity;
-                tempListCityName = dataIsolationCenter.keys.toList();
-              }
-              return dataIsolationCenter.isEmpty
-                  ? isConnected
-                      ? EmptyData(
-                          message: Dictionary.emptyData,
-                          desc: Dictionary.descEmptyData,
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
+        if (state is IsolationCenterLoaded) {
+          final Map<dynamic, List<IsolationCenterModel>> groupByCity =
+              groupBy(state.isolationCenterModel, (obj) => obj.city);
+
+          /// Checking search field
+          if (widget.searchQuery != null) {
+            /// Filtering data by search
+            final List<IsolationCenterModel> tempList = state
+                .isolationCenterModel
+                .where((test) => test.name
+                    .toLowerCase()
+                    .contains(widget.searchQuery.toLowerCase()))
+                .toList();
+            dataIsolationCenter = groupBy(tempList, (obj) => obj.city);
+            tempListCityName = dataIsolationCenter.keys.toList();
+          } else {
+            dataIsolationCenter = groupByCity;
+            tempListCityName = dataIsolationCenter.keys.toList();
+          }
+        }
+
+        return CustomScrollView(
+          slivers: [
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverToBoxAdapter(
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                children: <Widget>[
+                  state is IsolationCenterLoaded
+                      ? dataIsolationCenter.isEmpty
+                          ? isConnected
+                              ? EmptyData(
+                                  message: Dictionary.emptyData,
+                                  desc: Dictionary.descEmptyData,
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                              : EmptyData(
+                                  message: Dictionary.errorConnection,
+                                  desc: '',
+                                  isFlare: false,
+                                  image:
+                                      "${Environment.imageAssets}not_found.png",
+                                )
+                          : Column(
+                              children: getListContent(
+                                  listIsolationCenterModel: dataIsolationCenter,
+                                  nameModel: Dictionary.isolationCenterModel,
+                                  listCityName: tempListCityName),
+                            )
+                      : Column(
+                          children: _buildLoading(),
                         )
-                      : EmptyData(
-                          message: Dictionary.errorConnection,
-                          desc: '',
-                          isFlare: false,
-                          image: "${Environment.imageAssets}not_found.png",
-                        )
-                  : Column(
-                      children: getListContent(
-                          listIsolationCenterModel: dataIsolationCenter,
-                          nameModel: Dictionary.isolationCenterModel,
-                          listCityName: tempListCityName),
-                    );
-            } else {
-              return Column(
-                children: _buildLoading(),
-              );
-            }
-          },
-        )
-      ],
+                ],
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
@@ -430,7 +525,8 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         children: <Widget>[
           Card(
               elevation: 0,
-              margin: EdgeInsets.symmetric(vertical: 12, horizontal: Dimens.contentPadding),
+              margin: EdgeInsets.symmetric(
+                  vertical: 12, horizontal: Dimens.contentPadding),
               child: itemCard(
                   referralHospitalModel: listReferralHospitalModel != null
                       ? listReferralHospitalModel[listCityName[i]]
