@@ -8,11 +8,13 @@ class Environment {
 
   // production
   static String baseUrl = 'https://covid19-public.digitalservice.id/api/v1';
+  static String dahsboardPikobarUrl =
+      'https://dashboard-pikobar-api.digitalservice.id/v2';
 
   static String databaseNameProd = 'PikobarDB.db';
 
   // android download storage
   static String downloadStorage = '/storage/emulated/0/Download';
 
-  static String idDailyUpdate='BvBSkBV5pLWKoBjISaX0';
+  static String idDailyUpdate = 'BvBSkBV5pLWKoBjISaX0';
 }

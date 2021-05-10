@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/blocs/dailyChart/DailyChartBloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -11,6 +13,8 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/models/DailyChartModel.dart';
+import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -442,17 +446,31 @@ class _DailyChartState extends State<DailyChart> {
   List<dynamic> filterData;
   @override
   void initState() {
-    filterData = dataDummy['data'][0]['series']
-        .where((element) => DateTime.parse(element['tanggal'])
-            .isAfter(DateTime.now().add(Duration(days: -7))))
-        .toList();
-    print(filterData.length);
+    // filterData = dataDummy['data'][0]['series']
+    //     .where((element) => DateTime.parse(element['tanggal'])
+    //         .isAfter(DateTime.now().add(Duration(days: -7))))
+    //     .toList();
+    // print(filterData.length);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return buildChart();
+    return BlocProvider<DailyChartBloc>(
+      create: (BuildContext context) =>
+          DailyChartBloc(dailyChartRepository: DailyChartRepository())
+            ..add(LoadDailyChart(cityId: '3273')),
+      child: BlocBuilder<DailyChartBloc, DailyChartState>(
+          builder: (context, state) {
+        return state is DailyChartLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : state is DailyChartLoaded
+                ? buildChart(state.record)
+                : Container();
+      }),
+    );
   }
 
   Widget _buildIntroContent() {
@@ -527,7 +545,11 @@ class _DailyChartState extends State<DailyChart> {
     );
   }
 
-  Widget buildChart() {
+  Widget buildChart(DailyChartModel dailyChartModel) {
+    filterData = dailyChartModel.data[0].series
+        .where((element) => DateTime.parse(element.tanggal)
+            .isAfter(DateTime.now().add(Duration(days: -7))))
+        .toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -611,11 +633,10 @@ class _DailyChartState extends State<DailyChart> {
                   width: 0.6,
                   dataSource: filterData,
                   xValueMapper: (dynamic, index) => DateFormat('dd MMM', 'id')
-                      .format(DateTime.parse(filterData[index]['tanggal']))
+                      .format(DateTime.parse(filterData[index].tanggal))
                       .toString(),
                   yValueMapper: (dynamic, index) => double.parse(
-                      filterData[index]['harian']['confirmation_total']
-                          .toString()))
+                      filterData[index].harian.confirmationTotal.toString()))
             ],
             margin: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           ),
