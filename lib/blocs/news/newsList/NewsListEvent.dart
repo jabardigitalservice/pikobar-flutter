@@ -32,21 +32,6 @@ class NewsListUpdate extends NewsListEvent {
   List<Object> get props => [newsList];
 }
 
-class NewsListImportantLoad extends NewsListEvent {
-  final String newsCollection;
-  final bool statImportantInfo;
-
-  NewsListImportantLoad(this.newsCollection, {this.statImportantInfo});
-
-  @override
-  String toString() {
-    return 'Event NewsListImportantLoad $newsCollection';
-  }
-
-  @override
-  List<Object> get props => [newsCollection];
-}
-
 class NewsListImportantUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
@@ -57,21 +42,6 @@ class NewsListImportantUpdate extends NewsListEvent {
 
   @override
   List<Object> get props => [newsList];
-}
-
-class NewsListJabarLoad extends NewsListEvent {
-  final String newsCollection;
-  final bool statImportantInfo;
-
-  NewsListJabarLoad(this.newsCollection, {this.statImportantInfo});
-
-  @override
-  String toString() {
-    return 'Event NewsListJabarLoad $newsCollection';
-  }
-
-  @override
-  List<Object> get props => [newsCollection];
 }
 
 class NewsListJabarUpdate extends NewsListEvent {
@@ -86,21 +56,6 @@ class NewsListJabarUpdate extends NewsListEvent {
   List<Object> get props => [newsList];
 }
 
-class NewsListNationalLoad extends NewsListEvent {
-  final String newsCollection;
-  final bool statImportantInfo;
-
-  NewsListNationalLoad(this.newsCollection, {this.statImportantInfo});
-
-  @override
-  String toString() {
-    return 'Event NewsListNationalLoad $newsCollection';
-  }
-
-  @override
-  List<Object> get props => [newsCollection];
-}
-
 class NewsListNationalUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
@@ -111,21 +66,6 @@ class NewsListNationalUpdate extends NewsListEvent {
 
   @override
   List<Object> get props => [newsList];
-}
-
-class NewsListWorldLoad extends NewsListEvent {
-  final String newsCollection;
-  final bool statImportantInfo;
-
-  NewsListWorldLoad(this.newsCollection, {this.statImportantInfo});
-
-  @override
-  String toString() {
-    return 'Event NewsListWorldLoad $newsCollection';
-  }
-
-  @override
-  List<Object> get props => [newsCollection];
 }
 
 class NewsListWorldUpdate extends NewsListEvent {
