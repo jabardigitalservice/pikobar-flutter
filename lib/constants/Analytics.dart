@@ -145,7 +145,9 @@ class Analytics {
 
   //event test
   static String tappedRDT = 'tapped_rapid_test';
+  static String tappedRDTAntigen = 'tapped_rapid_test_antigen';
   static String tappedPCR = 'tapped_pcr';
+  static String tappedPCRNewCase = 'tapped_pcr_orang_kasus_baru';
   static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
 
   //event education
@@ -183,6 +185,6 @@ class Analytics {
   static String tappedTermsAndConditions = "tapped_terms_and_conditions";
 
   //event zonation
-  static String tappedShareLocation = "tapped_bagikan_lokasi";
+  static String tappedCheckZone = "tapped_cek_zonasi";
   static String tappedArroundYouLocation = "tapped_lokasi_sekitar_anda";
 }

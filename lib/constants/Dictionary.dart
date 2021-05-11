@@ -70,8 +70,10 @@ class Dictionary {
   static String inputOTP = 'Silahkan masukan 6-digit kode disini';
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
-  static String rdt = 'Rapid Diagnostic Test (RDT)';
-  static String pcr = 'Polymerase Chain Reaction (PCR)';
+  static String rdtAntibodi = 'RDT Antibodi';
+  static String rdtAntigen = 'RDT Antigen';
+  static String pcrSpesimen = 'PCR Spesimen';
+  static String pcrNewCase = 'PCR Orang Kasus Baru';
   static String emergencyNumber = 'No Darurat';
   static String referralHospital = 'RS Rujukan COVID-19';
   static String callCenterArea = 'Call Center Kota/Kab';
@@ -114,6 +116,7 @@ class Dictionary {
   static String skip = 'Skip';
   static String resetReport = 'Reset Laporan';
   static String reset = 'Reset';
+  static String checkZone = 'Cek Zona Risiko';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -409,8 +412,10 @@ class Dictionary {
   static const String zoneGreenDescription =
       'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
+  static const String introZoneTitle =
+      'Berada di zona mana Anda saat ini?';
   static const String shareZonationInfo =
-      'Bagikan lokasimu jika ingin mengetahui deteksi zona risiko di tempatmu saat ini.';
+      'Cek dengan klik tombol di bawah ini';
   static const String sourceZonationInfo =
       'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
 

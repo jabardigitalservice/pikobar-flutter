@@ -121,6 +121,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       listItemTitleTab: listItemTitleTab,
       unselectedLabelColor: ColorBase.netralGrey,
       onTap: (index) {
+        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
         if (index == 0) {
           AnalyticsHelper.setLogEvent(getLabel[0]['analytics']);
         } else if (index == 1) {
@@ -525,7 +526,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
         children: <Widget>[
           Card(
               elevation: 0,
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                   vertical: 12, horizontal: Dimens.contentPadding),
               child: itemCard(
                   referralHospitalModel: listReferralHospitalModel != null

@@ -15,8 +15,9 @@ class ZonationLoading extends ZonationState {
 
 class ZonationLoaded extends ZonationState {
   final CheckDistributionModel record;
+  final Position position;
 
-  const ZonationLoaded({@required this.record});
+  const ZonationLoaded({@required this.record, @required this.position});
 }
 
 class ZonationFailure extends ZonationState {

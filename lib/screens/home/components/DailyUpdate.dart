@@ -75,11 +75,12 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
                 Row(
                   children: [
                     Container(
-                        height: 13,
+                        width: 16,
+                        height: 16,
                         child: Image.asset(
                             '${Environment.iconAssets}email_icon.png')),
                     SizedBox(
-                      width: 20,
+                      width: Dimens.padding,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

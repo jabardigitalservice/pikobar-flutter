@@ -34,7 +34,7 @@ class CheckDistributionBloc
       }
       try {
         CheckDistributionModel record = await _checkDistributionRepository
-            .fetchRecord(event.lat, event.long);
+            .fetchRecord(lat: event.lat, long: event.long);
         yield CheckDistributionLoaded(record: record);
       } on Exception catch (e) {
         yield CheckDistributionFailure(

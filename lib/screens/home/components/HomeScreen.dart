@@ -10,7 +10,9 @@ import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcrIndividu/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdtAntigen/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/HistoryTabHome.dart';
@@ -45,7 +47,9 @@ class HomeScreenState extends State<HomeScreen>
   BannersBloc _bannersBloc;
   StatisticsBloc _statisticsBloc;
   RapidTestBloc _rapidTestBloc;
+  RapidTestAntigenBloc _rapidTestAntigenBloc;
   PcrTestBloc _pcrTestBloc;
+  PcrTestIndividuBloc _pcrTestIndividuBloc;
   NewsListBloc _newsListBloc = NewsListBloc();
   ImportantInfoListBloc _importantInfoListBloc;
   VideoListBloc _videoListBloc = VideoListBloc();
@@ -150,6 +154,12 @@ class HomeScreenState extends State<HomeScreen>
         BlocProvider<PcrTestBloc>(
             create: (context) =>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
+        BlocProvider<RapidTestAntigenBloc>(
+            create: (context) => _rapidTestAntigenBloc = RapidTestAntigenBloc()
+              ..add(RapidTestAntigenLoad())),
+        BlocProvider<PcrTestIndividuBloc>(
+            create: (context) => _pcrTestIndividuBloc = PcrTestIndividuBloc()
+              ..add(PcrTestIndividuLoad())),
         BlocProvider<NewsListBloc>(
             create: (context) => _newsListBloc = NewsListBloc()
               ..add(
@@ -175,9 +185,9 @@ class HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(20.0),
+          preferredSize: Size.fromHeight(20),
           child: AppBar(
-            elevation: 0.0,
+            elevation: 0,
             backgroundColor: Colors.white,
           ),
         ),
@@ -261,8 +271,14 @@ class HomeScreenState extends State<HomeScreen>
     if (_rapidTestBloc != null) {
       _rapidTestBloc.close();
     }
+    if (_rapidTestAntigenBloc != null) {
+      _rapidTestAntigenBloc.close();
+    }
     if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
+    }
+    if (_pcrTestIndividuBloc != null) {
+      _pcrTestIndividuBloc.close();
     }
     if (_newsListBloc != null) {
       _newsListBloc.close();
