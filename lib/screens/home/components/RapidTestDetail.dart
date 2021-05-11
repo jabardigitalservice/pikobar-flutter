@@ -192,26 +192,17 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   /// Set up for show announcement widget
   Widget buildAnnouncement(int i) {
     return Announcement(
-      margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
-      content: dataAnnouncement[i]['content'],
-      context: context,
-      onLinkTap: (url) {
-        _launchURL(
+        margin: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+        content: dataAnnouncement[i]['content'],
+        context: context,
+        onLinkTap: (url) {
+          _launchURL(
             url,
             dataAnnouncement[i]['title'] != null
                 ? dataAnnouncement[i]['title']
                 : Dictionary.titleInfoTextAnnouncement,
-            content: dataAnnouncement[i]['content'],
-            context: context,
-            onLinkTap: (url) {
-              _launchURL(
-                  url,
-                  dataAnnouncement[i]['title'] != null
-                      ? dataAnnouncement[i]['title']
-                      : Dictionary.titleInfoTextAnnouncement);
-            },
-          )
-        : Container();
+          );
+        });
   }
 
   Widget buildHeader(String title, int total, Color color) {
