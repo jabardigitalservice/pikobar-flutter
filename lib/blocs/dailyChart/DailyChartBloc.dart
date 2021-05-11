@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
 import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
@@ -28,8 +29,10 @@ class DailyChartBloc extends Bloc<DailyChartEvent, DailyChartState> {
       yield DailyChartLoading();
 
       try {
+        String cityId = await _dailyChartRepository.getCityId(
+            event.cityId, event.listCityId);
         DailyChartModel record =
-            await _dailyChartRepository.fetchRecord(event.cityId);
+            await _dailyChartRepository.fetchRecord(cityId.replaceAll('.', ''));
         yield DailyChartLoaded(record: record);
       } on Exception catch (e) {
         yield DailyChartFailure(

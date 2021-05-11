@@ -8,10 +8,11 @@ abstract class DailyChartEvent extends Equatable {
 }
 
 class LoadDailyChart extends DailyChartEvent {
-  final String cityId;
+  final Position cityId;
+  final dynamic listCityId;
 
-  const LoadDailyChart({@required this.cityId});
+  const LoadDailyChart({@required this.cityId, @required this.listCityId});
 
   @override
-  List<Object> get props => [cityId];
+  List<Object> get props => [cityId, listCityId];
 }
