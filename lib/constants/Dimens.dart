@@ -18,4 +18,5 @@ class Dimens {
   static const double buttonTopMargin = 24.0;
 
   static const double sizedBoxHeight = 10.0;
+  static const double iconImageSize = 24.0;
 }

@@ -23,6 +23,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/LocationsRepository.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
+import 'package:pikobar_flutter/screens/onBoarding/Onboarding.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 import 'AnalyticsHelper.dart';
@@ -46,6 +47,17 @@ class LocationService {
         await stopBackgroundLocation();
       }
     } else {
+     isGranted = await _buildPermissionWidget(context, locationBloc);
+    }
+
+    return isGranted;
+  }
+
+  static Future<bool> _buildPermissionWidget(BuildContext context, LocationPermissionBloc locationBloc) async {
+    bool isGranted;
+
+    if (Platform.isAndroid) {
+
       showLocationRequestPermission(
           context: context,
           onCancelPressed: () async {
@@ -58,9 +70,7 @@ class LocationService {
               isGranted = false;
               locationBloc.add(LocationPermissionLoad(isGranted));
 
-              Platform.isAndroid
-                  ? await AppSettings.openAppSettings()
-                  : await AppSettings.openLocationSettings();
+              await AppSettings.openAppSettings();
             } else {
               [Permission.locationAlways, Permission.locationWhenInUse]
                   .request()
@@ -76,6 +86,26 @@ class LocationService {
               });
             }
           });
+
+    } else {
+
+      final result = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PermissionScreen())) as Map<Permission, PermissionStatus>;
+
+      if (result != null) {
+        isGranted = result[Permission.locationAlways].isGranted ||
+            result[Permission.locationWhenInUse].isGranted;
+        locationBloc.add(LocationPermissionLoad(isGranted));
+        if (isGranted) {
+          locationBloc.close();
+        }
+
+        _onStatusRequested(context, result);
+      } else {
+        isGranted = false;
+        locationBloc.add(LocationPermissionLoad(isGranted));
+      }
+
     }
 
     return isGranted;
