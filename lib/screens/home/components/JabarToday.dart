@@ -28,7 +28,7 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
         ListView(children: [
           /// Banners Section
           Container(
-              margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+              margin: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
               child: BannerListSlider()),
 
           /// Statistics Announcement
@@ -43,7 +43,7 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
           /// Statistics Section
           Container(
               color: ColorBase.grey,
-              margin: EdgeInsets.only(top: 20.0),
+              margin: const EdgeInsets.only(top: 20.0),
               child: Column(
                 children: [
                   Container(
@@ -56,7 +56,7 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
               )),
 
           Container(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: const EdgeInsets.only(top: 10.0),
             child: Column(
               children: [
                 Container(
@@ -70,7 +70,7 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
           ),
 
           Container(
-            padding: EdgeInsets.only(top: 25.0),
+            padding: const EdgeInsets.only(top: 25.0),
             child: SocialMedia(),
           ),
         ]),
