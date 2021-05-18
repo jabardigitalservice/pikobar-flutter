@@ -220,6 +220,8 @@ class Dictionary {
       'Izinkan PIKOBAR mengakses lokasi Anda';
   static String permissionGeolocationDesc =
       'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
+  static String permissionLocationTitleIOS = 'Membagikan lokasi pada layar selanjutnya dapat membuka fitur-fitur seperti:';
+  static String permissionLocationInfoIOS = 'Anda dapat mengubah Bagikan Lokasi ini pada menu Settings/Pengaturan pada ponsel Anda';
 
   // text
   static String loading = 'Tunggu Sebentar...';
@@ -240,6 +242,7 @@ class Dictionary {
   static String isolationCenterModel = 'IsolationCenterModel';
   static String callCenterModel = 'CallCenterModel';
   static String gugusTugasWebModel = 'GugusTugasWebModel';
+  static String chooseLocationEditProfile = 'Pilih Lokasi pada Edit Profil';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -418,6 +421,7 @@ class Dictionary {
       'Cek dengan klik tombol di bawah ini';
   static const String sourceZonationInfo =
       'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
+  static const String zonationCheck = 'Cek Zona Resiko';
 
   // Net Promote Score
   static const String npsTitle =
