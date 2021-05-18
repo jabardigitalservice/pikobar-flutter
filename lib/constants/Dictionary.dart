@@ -447,4 +447,8 @@ class Dictionary {
       'Ingin melihat data perkembangan harian?';
   static const String shareChartInfo =
       'Bagikan lokasi dengan klik di bawah ini';
+  static const String westJava = 'Jawa Barat';
+  static const String confirmedData = 'Data Terkonfirmasi ';
+  static const String last7DaysConfirmedData =
+      'Data Terkonfirmasi 7 Hari Terakhir';
 }

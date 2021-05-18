@@ -105,6 +105,7 @@ dependencies:
   flutter_background_geolocation: ^1.11.0
   flushbar: ^1.10.4
   syncfusion_flutter_charts: ^18.4.44
+  recase: ^3.0.1
   
 
 dev_dependencies:

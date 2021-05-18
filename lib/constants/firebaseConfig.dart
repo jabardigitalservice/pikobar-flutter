@@ -53,6 +53,7 @@ class FirebaseConfig {
   static String emergencyNumberTab = 'emergency_number_tab';
   static String successMessageSelfReport = 'succes_message_self_report';
   static String nikMessage = 'nik_message';
+  static String dashboardPikobarApiKey = 'dashboard_pikobar_api_key';
 
   /// Remote config parameter key
   /// Access requires a login
