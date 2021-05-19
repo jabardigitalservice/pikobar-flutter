@@ -12,7 +12,7 @@ class InfoGraphicsListLoad extends InfoGraphicsListEvent {
   InfoGraphicsListLoad({this.limit, this.infoGraphicsCollection});
 
   @override
-  List<Object> get props => [limit];
+  List<Object> get props => [limit, infoGraphicsCollection];
 }
 
 class InfoGraphicsListUpdate extends InfoGraphicsListEvent {

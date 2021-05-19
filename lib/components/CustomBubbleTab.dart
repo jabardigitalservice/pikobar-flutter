@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
-// ignore: must_be_immutable
 class CustomBubbleTab extends StatefulWidget {
   /// [listItemTitleTab] variable for set list each title in tabbar
   /// [indicatorColor] variable for set color when tab is selected
@@ -40,17 +39,18 @@ class CustomBubbleTab extends StatefulWidget {
   final TabController tabController;
   final String typeTabSelected;
   final String titleNameLabelNew;
-  int totalInfoUnread;
-  double paddingBubbleTab;
-  bool isExpand;
-  bool isScrollable;
-  double sizeLabel;
-  bool isStickyHeader;
-  bool showTitle;
-  ScrollController scrollController;
-  Widget searchBar;
-  String titleHeader;
-  String subTitle;
+  final int totalInfoUnread;
+  final double paddingBubbleTab;
+  final bool isExpand;
+  final bool isScrollable;
+  final double sizeLabel;
+  final bool isStickyHeader;
+  final bool showTitle;
+  final ScrollController scrollController;
+  final Widget searchBar;
+  final String titleHeader;
+  final String subTitle;
+  final WillPopCallback onWillPop;
 
   CustomBubbleTab(
       {Key key,
@@ -75,7 +75,8 @@ class CustomBubbleTab extends StatefulWidget {
       this.subTitle,
       this.paddingBubbleTab,
       this.titleNameLabelNew,
-      this.totalInfoUnread})
+      this.totalInfoUnread,
+      this.onWillPop})
       : super(key: key);
 
   @override
@@ -150,15 +151,25 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
             length: listBubbleTabItem.length,
             child: Scaffold(
               backgroundColor: Colors.white,
-              body: NestedScrollView(
-                  controller: widget.scrollController,
-                  headerSliverBuilder: (context, innerBoxIsScrolled) {
-                    return <Widget>[_buildSliverAppBar(context)];
-                  },
-                  body: TabBarView(
-                    controller: _basetabController,
-                    children: widget.tabBarView,
-                  )),
+              body: WillPopScope(
+                onWillPop: widget.onWillPop,
+                child: NestedScrollView(
+                    controller: widget.scrollController,
+                    headerSliverBuilder: (context, innerBoxIsScrolled) {
+                      return <Widget>[
+                        SliverOverlapAbsorber(
+                            handle:
+                                NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                    context),
+                            sliver:
+                                _buildSliverAppBar(context, innerBoxIsScrolled))
+                      ];
+                    },
+                    body: TabBarView(
+                      controller: _basetabController,
+                      children: widget.tabBarView,
+                    )),
+              ),
             ),
           )
         : DefaultTabController(
@@ -306,10 +317,119 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
     );
   }
 
-  Widget _buildSliverAppBar(BuildContext context) {
+  Widget _buildSliverAppBar(BuildContext context, bool innerBoxIsScrolled) {
     return SliverAppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      pinned: true,
+      forceElevated: innerBoxIsScrolled,
+      expandedHeight: widget.searchBar != null
+          ? 250.0
+          : widget.subTitle != null
+              ? 200
+              : 150,
+      title: AnimatedOpacity(
+        opacity: widget.showTitle ? 1.0 : 0.0,
+        duration: const Duration(seconds: 1),
+        child: Text(
+          widget.showTitle ? widget.titleHeader : '',
+          style: TextStyle(
+              fontFamily: FontsFamily.lato,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      bottom: widget.showTitle
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(65),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Dimens.padding),
+                child: TabBar(
+                    controller: _basetabController,
+                    isScrollable: isScrollable,
+                    onTap: (index) {
+                      widget.onTap(index);
+                    },
+                    labelColor: widget.labelColor,
+                    unselectedLabelColor: widget.unselectedLabelColor,
+                    indicator: BubbleTabIndicator(
+                      indicatorHeight: 37.0,
+                      indicatorColor: widget.indicatorColor,
+                      tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                    ),
+                    indicatorColor: widget.indicatorColor,
+                    indicatorWeight: 0.1,
+                    labelPadding: const EdgeInsets.all(10),
+                    tabs: listBubbleTabItem),
+              ),
+            )
+          : PreferredSize(
+              preferredSize: Size.fromHeight(widget.showTitle ? 0 : 130.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.homeCardMargin, horizontal: 19),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.titleHeader,
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        widget.subTitle != null
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  widget.subTitle,
+                                  style: TextStyle(
+                                    fontFamily: FontsFamily.roboto,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                  widget.showTitle
+                      ? Container()
+                      : widget.searchBar ?? Container(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.padding),
+                    child: TabBar(
+                        controller: _basetabController,
+                        isScrollable: isScrollable,
+                        onTap: (index) {
+                          widget.onTap(index);
+                        },
+                        labelColor: widget.labelColor,
+                        unselectedLabelColor: widget.unselectedLabelColor,
+                        indicator: BubbleTabIndicator(
+                          indicatorHeight: 37.0,
+                          indicatorColor: widget.indicatorColor,
+                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
+                        ),
+                        indicatorColor: widget.indicatorColor,
+                        indicatorWeight: 0.1,
+                        labelPadding: const EdgeInsets.all(10),
+                        tabs: listBubbleTabItem),
+                  ),
+                ],
+              ),
+            ),
+    );
+    /*return SliverAppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        forceElevated: innerBoxIsScrolled,
         pinned: true,
         expandedHeight: widget.showTitle
             ? 150
@@ -420,6 +540,6 @@ class _CustomBubbleTabState extends State<CustomBubbleTab>
                     ),
                   ],
                 ),
-              ));
+              ));*/
   }
 }
