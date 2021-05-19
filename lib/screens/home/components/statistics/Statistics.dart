@@ -145,47 +145,52 @@ class _StatisticsState extends State<Statistics> {
                 urlStatistic = remoteState.remoteConfig
                     .getString(FirebaseConfig.pikobarUrl);
                 return rapidState is RapidTestLoaded
-                    ? BlocBuilder<PcrTestBloc, PcrTestState>(
-                        builder: (BuildContext context, PcrTestState pcrState) {
-                          this.rapidTestLoaded = rapidState;
-                          return pcrState is PcrTestLoaded
-                              ? BlocBuilder<RapidTestAntigenBloc,
-                                  RapidTestAntigenState>(
-                                  builder: (BuildContext context,
-                                      RapidTestAntigenState rapidAntigenState) {
-                                    this.rapidTestAntigenLoaded =
-                                        rapidAntigenState;
-                                    return rapidAntigenState
-                                            is RapidTestAntigenLoaded
-                                        ? BlocBuilder<PcrTestIndividuBloc,
-                                            PcrTestIndividuState>(
-                                            builder: (BuildContext context,
-                                                PcrTestIndividuState
-                                                    pcrIndividuState) {
-                                              this.pcrTestIndividuLoaded =
-                                                  pcrIndividuState;
-                                              return pcrIndividuState
-                                                      is PcrTestIndividuLoaded
-                                                  ? buildContentRapidTest(
-                                                      remoteState.remoteConfig,
-                                                      rapidState.snapshot,
-                                                      pcrState,
-                                                      rapidAntigenState,
-                                                      pcrIndividuState)
-                                                  : buildLoadingRapidTest();
-                                            },
-                                          )
-                                        : buildLoadingRapidTest();
-                                  },
-                                )
-                              : buildLoadingRapidTest();
-                        },
-                      )
+                    ? _buildPcrTestBloc(remoteState, rapidState)
                     : buildLoadingRapidTest();
               },
             ),
           )
         : Container();
+  }
+
+  _buildPcrTestBloc(RemoteConfigLoaded remoteState, RapidTestState rapidState) {
+    return BlocBuilder<PcrTestBloc, PcrTestState>(
+      builder: (BuildContext context, PcrTestState pcrState) {
+        this.rapidTestLoaded = rapidState;
+        return pcrState is PcrTestLoaded
+            ? _buildRapidTestAntigenBloc(remoteState, rapidState, pcrState)
+            : buildLoadingRapidTest();
+      },
+    );
+  }
+
+  _buildRapidTestAntigenBloc(RemoteConfigLoaded remoteState,
+      RapidTestState rapidState, PcrTestState pcrState) {
+    return BlocBuilder<RapidTestAntigenBloc, RapidTestAntigenState>(
+      builder: (BuildContext context, RapidTestAntigenState rapidAntigenState) {
+        this.rapidTestAntigenLoaded = rapidAntigenState;
+        return rapidAntigenState is RapidTestAntigenLoaded
+            ? _buildPcrTestIndividuBloc(
+                remoteState, rapidState, pcrState, rapidAntigenState)
+            : buildLoadingRapidTest();
+      },
+    );
+  }
+
+  _buildPcrTestIndividuBloc(
+      RemoteConfigLoaded remoteState,
+      RapidTestState rapidState,
+      PcrTestState pcrState,
+      RapidTestAntigenState rapidAntigenState) {
+    return BlocBuilder<PcrTestIndividuBloc, PcrTestIndividuState>(
+      builder: (BuildContext context, PcrTestIndividuState pcrIndividuState) {
+        this.pcrTestIndividuLoaded = pcrIndividuState;
+        return pcrIndividuState is PcrTestIndividuLoaded
+            ? buildContentRapidTest(remoteState.remoteConfig, rapidState,
+                pcrState, rapidAntigenState, pcrIndividuState)
+            : buildLoadingRapidTest();
+      },
+    );
   }
 
   _buildLoading() {
@@ -419,10 +424,11 @@ class _StatisticsState extends State<Statistics> {
 
   Widget buildContentRapidTest(
       RemoteConfig remoteConfig,
-      DocumentSnapshot document,
+      RapidTestLoaded rapidTestLoaded,
       PcrTestLoaded pcrTestLoaded,
       RapidTestAntigenLoaded rapidTestAntigenLoaded,
       PcrTestIndividuLoaded pcrTestIndividuLoaded) {
+    final DocumentSnapshot documentRapidTest = rapidTestLoaded.snapshot;
     final DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
     final DocumentSnapshot documentPCRIndividu = pcrTestIndividuLoaded.snapshot;
     final DocumentSnapshot documentRDTAntigen = rapidTestAntigenLoaded.snapshot;
@@ -432,7 +438,7 @@ class _StatisticsState extends State<Statistics> {
     this.pcrTestIndividuLoaded = pcrTestIndividuLoaded;
 
     final String count = formatter
-        .format(document.get('total') +
+        .format(documentRapidTest.get('total') +
             documentPCR.get('total') +
             documentPCRIndividu.get('total') +
             documentRDTAntigen.get('total'))
@@ -445,7 +451,7 @@ class _StatisticsState extends State<Statistics> {
           MaterialPageRoute(
               builder: (context) => RapidTestDetail(
                     remoteConfig: remoteConfig,
-                    document: document,
+                    document: documentRapidTest,
                     documentPCR: documentPCR,
                     documentPCRIndividu: documentPCRIndividu,
                     documentRdtAntigen: documentRDTAntigen,
