@@ -10,6 +10,7 @@ class Dictionary {
   static String pikobar = 'Data Jabar';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Data Kasus Jabar';
+  static String dailyChart = 'Chart Harian';
   static String menus = 'Pusat Layanan & Informasi';
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
@@ -449,4 +450,14 @@ class Dictionary {
   static const String psbb = 'PSBB';
   static const String otherTabFaq3 = 'Tab FAQ 3';
   static const String otherTabFaq4 = 'Tab FAQ 4';
+
+  //daily chart
+  static const String introChartTitle =
+      'Ingin melihat data perkembangan harian?';
+  static const String shareChartInfo =
+      'Bagikan lokasi dengan klik di bawah ini';
+  static const String westJava = 'Jawa Barat';
+  static const String confirmedData = 'Data Terkonfirmasi ';
+  static const String last7DaysConfirmedData =
+      'Data Terkonfirmasi 7 Hari Terakhir';
 }
