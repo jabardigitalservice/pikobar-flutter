@@ -26,24 +26,27 @@ import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
 class VideosScreen extends StatelessWidget {
   final CovidInformationScreenState covidInformationScreenState;
-
-  const VideosScreen({Key key, this.covidInformationScreenState})
+  final String title;
+  const VideosScreen({Key key, this.covidInformationScreenState, this.title})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
       create: (context) => VideoListBloc()..add(LoadVideos()),
-      child:
-          VideosList(covidInformationScreenState: covidInformationScreenState),
+      child: VideosList(
+        covidInformationScreenState: covidInformationScreenState,
+        title: title,
+      ),
     );
   }
 }
 
 class VideosList extends StatefulWidget {
   final CovidInformationScreenState covidInformationScreenState;
+  final String title;
 
-  const VideosList({Key key, this.covidInformationScreenState})
+  const VideosList({Key key, this.covidInformationScreenState, this.title})
       : super(key: key);
 
   @override
@@ -126,7 +129,7 @@ class _VideosListState extends State<VideosList> {
             searchBar: CustomAppBar.buildSearchField(_searchController,
                 Dictionary.searchInformation, updateSearchQuery),
             showTitle: _showTitle,
-            titleAppbar: Dictionary.videoUpToDate,
+            titleAppbar: widget.title,
             scrollController: _scrollController,
             body: BlocListener<VideoListBloc, VideoListState>(
               listener: (_, state) {
@@ -207,7 +210,8 @@ class _VideosListState extends State<VideosList> {
                         width: MediaQuery.of(context).size.width,
                         height: 300,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                             imageUrl: getYtThumbnail(
                                 youtubeUrl: listVideos[index].url,
@@ -218,9 +222,7 @@ class _VideosListState extends State<VideosList> {
                               child: CupertinoActivityIndicator(),
                             ),
                             errorWidget: (context, url, error) =>
-                                Container(
-                                    height: 200,
-                                    color: Colors.grey[200]),
+                                Container(height: 200, color: Colors.grey[200]),
                           ),
                         ),
                       ),
@@ -228,7 +230,8 @@ class _VideosListState extends State<VideosList> {
                         width: MediaQuery.of(context).size.width,
                         height: 300,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           color: Colors.white,
                           gradient: LinearGradient(
                             begin: FractionalOffset.topCenter,
@@ -272,7 +275,7 @@ class _VideosListState extends State<VideosList> {
                                 )
                               ],
                             ),
-                           const SizedBox(
+                            const SizedBox(
                               height: 3,
                             ),
                             Text(
@@ -300,26 +303,23 @@ class _VideosListState extends State<VideosList> {
                         dataLabel,
                         Dictionary.labelVideos);
                     if (widget.covidInformationScreenState != null) {
-                      widget.covidInformationScreenState.widget
-                          .homeScreenState
+                      widget.covidInformationScreenState.widget.homeScreenState
                           .getAllUnreadData();
                     }
                   });
                   launchExternal(listVideos[index].url);
 
-              AnalyticsHelper.setLogEvent(
-              Analytics.tappedVideo, <String, dynamic>{
-                'title': listVideos[index].title
-              });
-            },
+                  AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
+                      <String, dynamic>{'title': listVideos[index].title});
+                },
+              );
+            })
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: Dictionary.descEmptyData,
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
           );
-        })
-    : EmptyData(
-      message: Dictionary.emptyData,
-      desc: Dictionary.descEmptyData,
-      isFlare: false,
-      image: "${Environment.imageAssets}not_found.png",
-    );
   }
 
   @override
