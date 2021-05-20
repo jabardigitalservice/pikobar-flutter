@@ -52,51 +52,46 @@ class InfoGraphicsListBloc
     }
   }
 
-  _loadData(String section, infoGraphicsCollection, int limit) {
+  _loadData(infoGraphicsCollection, int limit) {
     _subscription?.cancel();
     _subscription = infoGraphicsCollection == kAllInfographics
         ? _repository.getAllInfographicList().listen((event) {
+
             List<DocumentSnapshot> dataListAllinfographics = [];
+
             event.forEach((iterable) {
               dataListAllinfographics.addAll(iterable.toList());
             });
+
             dataListAllinfographics.sort(
                 (b, a) => a['published_date'].compareTo(b['published_date']));
+
             labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
-            switch (section) {
-              case 'all':
-                add(InfoGraphicsListUpdate(dataListAllinfographics));
-                break;
-              case 'jabar':
-                add(InfoGraphicsListJabarUpdate(dataListAllinfographics));
-                break;
-              case 'pusat':
-                add(InfoGraphicsListPusatUpdate(dataListAllinfographics));
-                break;
-              case 'who':
-                add(InfoGraphicsListWHOUpdate(dataListAllinfographics));
-                break;
-              default:
-                add(InfoGraphicsListUpdate(dataListAllinfographics));
+
+            if (limit != null) {
+              dataListAllinfographics = dataListAllinfographics.getRange(0, limit).toList();
             }
+
+            add(InfoGraphicsListUpdate(dataListAllinfographics));
+
           })
         : _repository
             .getInfoGraphics(
                 limit: limit, infoGraphicsCollection: infoGraphicsCollection)
             .listen(
             (data) {
-              switch (section) {
-                case 'all':
+              switch (infoGraphicsCollection) {
+                case kAllInfographics:
                   add(InfoGraphicsListUpdate(data));
                   break;
-                case 'jabar':
+                case kInfographics:
                   add(InfoGraphicsListJabarUpdate(data));
                   break;
-                case 'pusat':
+                case kInfographicsCenter:
                   add(InfoGraphicsListPusatUpdate(data));
                   break;
-                case 'who':
+                case kInfographicsWho:
                   add(InfoGraphicsListWHOUpdate(data));
                   break;
                 default:
@@ -109,7 +104,7 @@ class InfoGraphicsListBloc
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListToState(
       {int limit, String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
-    _loadData('all', infoGraphicsCollection, limit);
+    _loadData(infoGraphicsCollection, limit);
   }
 
   Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListToState(
@@ -120,7 +115,7 @@ class InfoGraphicsListBloc
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListJabarToState(
       {int limit, String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
-    _loadData('jabar', infoGraphicsCollection, limit);
+    _loadData(infoGraphicsCollection, limit);
   }
 
   Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListJabarToState(
@@ -131,7 +126,7 @@ class InfoGraphicsListBloc
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListPusatToState(
       {int limit, String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
-    _loadData('pusat', infoGraphicsCollection, limit);
+    _loadData(infoGraphicsCollection, limit);
   }
 
   Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListPusatToState(
@@ -142,7 +137,7 @@ class InfoGraphicsListBloc
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListWHOToState(
       {int limit, String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
-    _loadData('who', infoGraphicsCollection, limit);
+    _loadData(infoGraphicsCollection, limit);
   }
 
   Stream<InfoGraphicsListState> _mapUpdateInfoGraphicListWHOToState(

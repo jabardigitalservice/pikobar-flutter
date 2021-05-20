@@ -99,66 +99,66 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: WillPopScope(
-      onWillPop: _onWillPop,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<InfoGraphicsListBloc>(
-            create: (context) => _infoGraphicsListBloc
-              ..add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: kAllInfographics)),
-          ),
-        ],
-        child: Container(
-            child: CustomBubbleTab(
-          isStickyHeader: true,
-          titleHeader: Dictionary.infoGraphics,
-          listItemTitleTab: listItemTitleTab,
-          indicatorColor: ColorBase.green,
-          labelColor: Colors.white,
-          showTitle: _showTitle,
-          isScrollable: false,
-          searchBar: CustomAppBar.buildSearchField(_searchController,
-              Dictionary.searchInformation, updateSearchQuery,
-              margin: const EdgeInsets.only(
-                  left: Dimens.contentPadding,
-                  right: Dimens.contentPadding,
-                  bottom: 20.0)),
-          unselectedLabelColor: Colors.grey,
-          scrollController: _scrollController,
-          onTap: (index) {
-            setState(() {});
-            _scrollController
-                .jumpTo(_scrollController.position.minScrollExtent);
-            if (index == 0) {
-              _infoGraphicsListBloc.add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: listCollectionData[index]));
-              AnalyticsHelper.setLogEvent(analyticsData[index]);
-            } else if (index == 1) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<InfoGraphicsListBloc>(
+          create: (context) => _infoGraphicsListBloc
+            ..add(InfoGraphicsListLoad(
+                infoGraphicsCollection: kAllInfographics, limit: 100)),
+        ),
+      ],
+      child: CustomBubbleTab(
+        onWillPop: _onWillPop,
+        isStickyHeader: true,
+        titleHeader: Dictionary.infoGraphics,
+        listItemTitleTab: listItemTitleTab,
+        indicatorColor: ColorBase.green,
+        labelColor: Colors.white,
+        showTitle: _showTitle,
+        isScrollable: false,
+        searchBar: CustomAppBar.buildSearchField(
+            _searchController, Dictionary.searchInformation, updateSearchQuery,
+            margin: const EdgeInsets.only(
+                left: Dimens.contentPadding,
+                right: Dimens.contentPadding,
+                bottom: 20.0)),
+        unselectedLabelColor: Colors.grey,
+        scrollController: _scrollController,
+        onTap: (index) {
+          setState(() {});
+          _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+
+          switch(index) {
+            case 1:
               _infoGraphicsListBloc.add(InfoGraphicsListJabarLoad(
-                  infoGraphicsCollection: listCollectionData[index]));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
-            } else if (index == 2) {
+              break;
+            case 2:
               _infoGraphicsListBloc.add(InfoGraphicsListPusatLoad(
-                  infoGraphicsCollection: listCollectionData[index]));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
-            } else if (index == 3) {
+              break;
+            case 3:
               _infoGraphicsListBloc.add(InfoGraphicsListWHOLoad(
-                  infoGraphicsCollection: listCollectionData[index]));
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
               AnalyticsHelper.setLogEvent(analyticsData[index]);
-            }
-          },
-          tabBarView: <Widget>[
-            _buildInfoGraphic(),
-            _buildInfoGraphicJabar(),
-            _buildInfoGraphicPusat(),
-            _buildInfoGraphicWHO(),
-          ],
-          heightTabBarView: MediaQuery.of(context).size.height - 148,
-        )),
+              break;
+            default:
+              _infoGraphicsListBloc.add(InfoGraphicsListLoad(
+                  infoGraphicsCollection: listCollectionData[index], limit: 100));
+              AnalyticsHelper.setLogEvent(analyticsData[index]);
+          }
+        },
+        tabBarView: <Widget>[
+          _buildInfoGraphic(),
+          _buildInfoGraphic(),
+          _buildInfoGraphic(),
+          _buildInfoGraphic(),
+        ],
+        heightTabBarView: MediaQuery.of(context).size.height - 148,
       ),
-    ));
+    );
   }
 
   Future<bool> _onWillPop() {
@@ -168,42 +168,30 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
 
   Widget _buildInfoGraphic() {
     return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListLoaded
-            ? _buildContent(state.infoGraphicsList)
-            : _buildLoading();
-      },
-    );
-  }
-
-  Widget _buildInfoGraphicJabar() {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListJabarLoaded
-            ? _buildContent(state.infoGraphicsListJabar)
-            : _buildLoading();
-      },
-    );
-  }
-
-  Widget _buildInfoGraphicPusat() {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListPusatLoaded
-            ? _buildContent(state.infoGraphicsListPusat)
-            : _buildLoading();
-      },
-    );
-  }
-
-  Widget _buildInfoGraphicWHO() {
-    return BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
-      builder: (context, state) {
-        return state is InfoGraphicsListWHOLoaded
-            ? _buildContent(state.infoGraphicsListWHO)
-            : _buildLoading();
-      },
-    );
+        builder: (context, state) {
+      return SafeArea(
+          top: false,
+          bottom: false,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              SliverToBoxAdapter(
+                child: state is InfoGraphicsListLoaded
+                    ? _buildContent(state.infoGraphicsList)
+                    : state is InfoGraphicsListJabarLoaded
+                        ? _buildContent(state.infoGraphicsListJabar)
+                        : state is InfoGraphicsListPusatLoaded
+                            ? _buildContent(state.infoGraphicsListPusat)
+                            : state is InfoGraphicsListWHOLoaded
+                                ? _buildContent(state.infoGraphicsListWHO)
+                                : _buildLoading(),
+              )
+            ],
+          ));
+    });
   }
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
@@ -219,52 +207,45 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
     return listData.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: listData.length,
             padding: const EdgeInsets.only(bottom: 20.0),
             itemBuilder: (_, int index) {
               return _cardContent(listData[index], index);
             },
           )
-        : ListView(
-            children: [
-              EmptyData(
-                message: Dictionary.emptyData,
-                desc: Dictionary.descEmptyData,
-                isFlare: false,
-                image: "${Environment.imageAssets}not_found.png",
-              )
-            ],
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: Dictionary.descEmptyData,
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
           );
   }
 
   _buildLoading() {
-    return SingleChildScrollView(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 10.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 6,
-            padding: const EdgeInsets.all(10.0),
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                height: 300.0,
-                child: Row(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                      child: Skeleton(
-                          width: MediaQuery.of(context).size.width - 40),
-                    ),
-                  ],
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(bottom: 10.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 6,
+        padding: const EdgeInsets.all(10.0),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
+            height: 300.0,
+            child: Row(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  child:
+                      Skeleton(width: MediaQuery.of(context).size.width - 40),
                 ),
-              );
-            },
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -280,6 +261,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 width: MediaQuery.of(context).size.width - 35,
                 height: 300,
                 child: CachedNetworkImage(
+                    maxHeightDiskCache: 300,
+                    memCacheHeight: 300,
                     imageUrl: data['images'][0].toString() ?? '',
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(

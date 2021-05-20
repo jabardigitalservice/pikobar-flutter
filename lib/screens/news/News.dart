@@ -128,14 +128,10 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: WillPopScope(
-      onWillPop: _onWillPop,
-      child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-          builder: (context, state) {
-        return state is RemoteConfigLoaded ? buildContent(state) : Container();
-      }),
-    ));
+    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+        builder: (context, state) {
+      return state is RemoteConfigLoaded ? buildContent(state) : Container();
+    });
   }
 
   buildContent(RemoteConfigLoaded state) {
@@ -152,6 +148,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       checkStatImportantInfo = false;
     }
     return CustomBubbleTab(
+      onWillPop: _onWillPop,
       isStickyHeader: true,
       titleHeader: Dictionary.news,
       listItemTitleTab: listItemTitleTab,
@@ -166,27 +163,9 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       typeTabSelected: widget.news,
       onTap: (index) {
         _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-        if (index == 0) {
-          _newsListBloc.add(NewsListLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        } else if (index == 1) {
-          _newsListBloc.add(NewsListImportantLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        } else if (index == 2) {
-          _newsListBloc.add(NewsListJabarLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        } else if (index == 3) {
-          _newsListBloc.add(NewsListNationalLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        } else if (index == 4) {
-          _newsListBloc.add(NewsListWorldLoad(listCollectionData[index],
-              statImportantInfo: statImportantInfo));
-          AnalyticsHelper.setLogEvent(analyticsData[index]);
-        }
+        _newsListBloc.add(NewsListLoad(listCollectionData[index],
+            statImportantInfo: statImportantInfo));
+        AnalyticsHelper.setLogEvent(analyticsData[index]);
       },
       tabBarView: <Widget>[
         _buildNews(searchQuery, Dictionary.allNews),
@@ -211,10 +190,26 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       },
       child: BlocBuilder<NewsListBloc, NewsListState>(
         builder: (context, state) {
-          return state is NewsListLoaded
-              ? _buildContent(
-                  list: state.newsList, searchQuery: searchQuery, news: news)
-              : _buildLoading();
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListLoaded
+                      ? _buildContent(
+                          list: state.newsList,
+                          searchQuery: searchQuery,
+                          news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
         },
       ),
     );
@@ -231,10 +226,26 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       },
       child: BlocBuilder<NewsListBloc, NewsListState>(
         builder: (context, state) {
-          return state is NewsListImportantLoaded
-              ? _buildContent(
-                  list: state.newsList, searchQuery: searchQuery, news: news)
-              : _buildLoading();
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListImportantLoaded
+                      ? _buildContent(
+                      list: state.newsList,
+                      searchQuery: searchQuery,
+                      news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
         },
       ),
     );
@@ -251,10 +262,26 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       },
       child: BlocBuilder<NewsListBloc, NewsListState>(
         builder: (context, state) {
-          return state is NewsListJabarLoaded
-              ? _buildContent(
-                  list: state.newsList, searchQuery: searchQuery, news: news)
-              : _buildLoading();
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListJabarLoaded
+                      ? _buildContent(
+                      list: state.newsList,
+                      searchQuery: searchQuery,
+                      news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
         },
       ),
     );
@@ -271,10 +298,26 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       },
       child: BlocBuilder<NewsListBloc, NewsListState>(
         builder: (context, state) {
-          return state is NewsListNationalLoaded
-              ? _buildContent(
-                  list: state.newsList, searchQuery: searchQuery, news: news)
-              : _buildLoading();
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListNationalLoaded
+                      ? _buildContent(
+                      list: state.newsList,
+                      searchQuery: searchQuery,
+                      news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
         },
       ),
     );
@@ -291,10 +334,26 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       },
       child: BlocBuilder<NewsListBloc, NewsListState>(
         builder: (context, state) {
-          return state is NewsListWorldLoaded
-              ? _buildContent(
-                  list: state.newsList, searchQuery: searchQuery, news: news)
-              : _buildLoading();
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListWorldLoaded
+                      ? _buildContent(
+                      list: state.newsList,
+                      searchQuery: searchQuery,
+                      news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
         },
       ),
     );
@@ -323,21 +382,19 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     getDataLabel();
     return list.isNotEmpty
         ? ListView.builder(
-            itemCount: list.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: list.length > 100 ? 100 : list.length,
             padding: const EdgeInsets.only(bottom: 10.0),
             itemBuilder: (BuildContext context, int index) {
               return designListNews(list[index], news);
             },
           )
-        : ListView(
-            children: [
-              EmptyData(
-                message: Dictionary.emptyData,
-                desc: Dictionary.descEmptyData,
-                isFlare: false,
-                image: "${Environment.imageAssets}not_found.png",
-              )
-            ],
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: Dictionary.descEmptyData,
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
           );
   }
 
