@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +15,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:background_fetch/background_fetch.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'configs/Routes.dart';
 
@@ -106,9 +106,9 @@ void main() async {
 
   runZonedGuarded(() {
     runApp(App());
-  }, (error, stackTrace) {
+  }, (error, stackTrace) async {
     print('runZonedGuarded: Caught error in my root zone.');
-    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+    await Sentry.captureException(error, stackTrace: stackTrace);
   });
 
   /// Register BackgroundGeolocation headless-task.
@@ -132,19 +132,21 @@ class _AppState extends State<App> {
     /// Wait for Firebase to initialize
     await Firebase.initializeApp();
 
-    /// Else only enable it in non-debug builds.
-    /// You could additionally extend this to allow users to opt-in.
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(!kDebugMode);
+    /// Wait for Sentry to initialize
+    await SentryFlutter.init(
+      (options) {
 
-    /// Pass all uncaught errors to Crashlytics.
-    Function originalOnError = FlutterError.onError;
-    FlutterError.onError = (FlutterErrorDetails errorDetails) async {
-      await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+        /// If these values are not provided,
+        /// the SDK will try to read them from the environment variable.
+        /// (SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_RELEASE)
 
-      /// Forward to original handler.
-      originalOnError(errorDetails);
-    };
+        /*
+        options.dsn = 'https://example@sentry.io/add-your-dsn-here';
+        options.release = 'my-project-name@2.3.12';
+        options.environment = 'staging';
+        */
+      },
+    );
 
     await Future.delayed(Duration(seconds: 1));
   }

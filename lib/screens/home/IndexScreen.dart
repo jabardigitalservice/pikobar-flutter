@@ -108,7 +108,7 @@ class IndexScreenState extends State<IndexScreen> {
       },
     );
 
-    _firebaseMessaging.getToken().then((token) => print(token));
+    // _firebaseMessaging.getToken().then((token) => print(token));
 
     _firebaseMessaging.subscribeToTopic('general');
 
