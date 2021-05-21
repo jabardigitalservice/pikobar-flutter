@@ -86,65 +86,62 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
           firebaseConfig: FirebaseConfig.bottomSheetContent,
           defaultValue: FirebaseConfig.bottomSheetDefaultValue);
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: CustomBubbleTab(
-        isStickyHeader: true,
-        titleHeader: Dictionary.testSummaryTitleAppbar,
-        subTitle: lastUpdate,
-        showTitle: _showTitle,
-        scrollController: _scrollController,
-        indicatorColor: ColorBase.green,
-        labelColor: Colors.white,
-        listItemTitleTab: listItemTitleTab,
-        unselectedLabelColor: Colors.grey,
-        onTap: (index) {
-          if (index == 0) {
-            setState(() {
-              lastUpdate = unixTimeStampToDate(
-                  widget.document.get('last_update').seconds);
-            });
-            AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-          } else if (index == 1) {
-            setState(() {
-              lastUpdate = unixTimeStampToDate(
-                  widget.documentRdtAntigen.get('last_update').seconds);
-            });
-            AnalyticsHelper.setLogEvent(Analytics.tappedRDTAntigen);
-          } else if (index == 2) {
-            setState(() {
-              lastUpdate = unixTimeStampToDate(
-                  widget.documentPCR.get('last_update').seconds);
-            });
-            AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-          } else if (index == 3) {
-            setState(() {
-              lastUpdate = unixTimeStampToDate(
-                  widget.documentPCRIndividu.get('last_update').seconds);
-            });
-            AnalyticsHelper.setLogEvent(Analytics.tappedPCRNewCase);
-          }
-        },
-        tabBarView: <Widget>[
-          _buildContent(
-              titleHeader: label['pcr_rdt']['rdt_antibodi']['sum'],
-              total: widget.document.get('total'),
-              announcementArray: 0),
-          _buildContent(
-              titleHeader: label['pcr_rdt']['rdt_antigen']['sum'],
-              total: widget.documentRdtAntigen.get('total'),
-              announcementArray: 1),
-          _buildContent(
-              titleHeader: label['pcr_rdt']['pcr_spesimen']['sum'],
-              total: widget.documentPCR.get('total'),
-              announcementArray: 2),
-          _buildContent(
-              titleHeader: label['pcr_rdt']['pcr_kasus_baru']['sum'],
-              total: widget.documentPCRIndividu.get('total'),
-              announcementArray: 3),
-        ],
-        isExpand: true,
-      ),
+    return CustomBubbleTab(
+      isStickyHeader: true,
+      titleHeader: Dictionary.testSummaryTitleAppbar,
+      subTitle: lastUpdate,
+      showTitle: _showTitle,
+      scrollController: _scrollController,
+      indicatorColor: ColorBase.green,
+      labelColor: Colors.white,
+      listItemTitleTab: listItemTitleTab,
+      unselectedLabelColor: Colors.grey,
+      onTap: (index) {
+        if (index == 0) {
+          setState(() {
+            lastUpdate = unixTimeStampToDate(
+                widget.document.get('last_update').seconds);
+          });
+          AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+        } else if (index == 1) {
+          setState(() {
+            lastUpdate = unixTimeStampToDate(
+                widget.documentRdtAntigen.get('last_update').seconds);
+          });
+          AnalyticsHelper.setLogEvent(Analytics.tappedRDTAntigen);
+        } else if (index == 2) {
+          setState(() {
+            lastUpdate = unixTimeStampToDate(
+                widget.documentPCR.get('last_update').seconds);
+          });
+          AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+        } else if (index == 3) {
+          setState(() {
+            lastUpdate = unixTimeStampToDate(
+                widget.documentPCRIndividu.get('last_update').seconds);
+          });
+          AnalyticsHelper.setLogEvent(Analytics.tappedPCRNewCase);
+        }
+      },
+      tabBarView: <Widget>[
+        _buildContent(
+            titleHeader: label['pcr_rdt']['rdt_antibodi']['sum'],
+            total: widget.document.get('total'),
+            announcementArray: 0),
+        _buildContent(
+            titleHeader: label['pcr_rdt']['rdt_antigen']['sum'],
+            total: widget.documentRdtAntigen.get('total'),
+            announcementArray: 1),
+        _buildContent(
+            titleHeader: label['pcr_rdt']['pcr_spesimen']['sum'],
+            total: widget.documentPCR.get('total'),
+            announcementArray: 2),
+        _buildContent(
+            titleHeader: label['pcr_rdt']['pcr_kasus_baru']['sum'],
+            total: widget.documentPCRIndividu.get('total'),
+            announcementArray: 3),
+      ],
+      isExpand: true,
     );
   }
 
@@ -167,25 +164,46 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       default:
         detailContent = buildDetailRDTAntibodi();
     }
-    return ListView(
-      children: <Widget>[
-        // Announcement section
-        widget.remoteConfig != null &&
-                dataAnnouncement[announcementArray]['enabled'] == true
-            ? buildAnnouncement(announcementArray)
-            : Container(),
-        const SizedBox(
-          height: 20,
-        ),
-        buildHeader(titleHeader, total, Color(0xffFAFAFA)),
-        const SizedBox(
-          height: 15,
-        ),
-        detailContent,
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: Builder(
+          builder: (BuildContext context) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle:
+                NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+
+              SliverToBoxAdapter(
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    // Announcement section
+                    widget.remoteConfig != null &&
+                            dataAnnouncement[announcementArray]['enabled'] == true
+                        ? buildAnnouncement(announcementArray)
+                        : Container(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    buildHeader(titleHeader, total, Color(0xffFAFAFA)),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    detailContent,
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+      ),
     );
   }
 
