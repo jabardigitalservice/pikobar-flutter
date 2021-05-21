@@ -31,8 +31,9 @@ import 'package:pikobar_flutter/utilities/StatShowImportantInfo.dart';
 class NewsListScreen extends StatelessWidget {
   final String news;
   final CovidInformationScreenState covidInformationScreenState;
-
-  const NewsListScreen({Key key, this.news, this.covidInformationScreenState})
+  final String title;
+  const NewsListScreen(
+      {Key key, this.news, this.covidInformationScreenState, this.title})
       : super(key: key);
 
   @override
@@ -44,7 +45,10 @@ class NewsListScreen extends StatelessWidget {
         BlocProvider<NewsListBloc>(create: (context) => NewsListBloc())
       ],
       child: News(
-          news: news, covidInformationScreenState: covidInformationScreenState),
+        news: news,
+        covidInformationScreenState: covidInformationScreenState,
+        title: title,
+      ),
     );
   }
 }
@@ -52,8 +56,9 @@ class NewsListScreen extends StatelessWidget {
 class News extends StatefulWidget {
   final String news;
   final CovidInformationScreenState covidInformationScreenState;
+  final String title;
 
-  const News({Key key, this.news, this.covidInformationScreenState})
+  const News({Key key, this.news, this.covidInformationScreenState, this.title})
       : super(key: key);
 
   @override
@@ -150,7 +155,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
     return CustomBubbleTab(
       onWillPop: _onWillPop,
       isStickyHeader: true,
-      titleHeader: Dictionary.news,
+      titleHeader: widget.title,
       listItemTitleTab: listItemTitleTab,
       indicatorColor: ColorBase.green,
       searchBar: CustomAppBar.buildSearchField(
@@ -233,14 +238,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListImportantLoaded
                       ? _buildContent(
-                      list: state.newsList,
-                      searchQuery: searchQuery,
-                      news: news)
+                          list: state.newsList,
+                          searchQuery: searchQuery,
+                          news: news)
                       : _buildLoading(),
                 )
               ],
@@ -269,14 +274,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListJabarLoaded
                       ? _buildContent(
-                      list: state.newsList,
-                      searchQuery: searchQuery,
-                      news: news)
+                          list: state.newsList,
+                          searchQuery: searchQuery,
+                          news: news)
                       : _buildLoading(),
                 )
               ],
@@ -305,14 +310,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListNationalLoaded
                       ? _buildContent(
-                      list: state.newsList,
-                      searchQuery: searchQuery,
-                      news: news)
+                          list: state.newsList,
+                          searchQuery: searchQuery,
+                          news: news)
                       : _buildLoading(),
                 )
               ],
@@ -341,14 +346,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListWorldLoaded
                       ? _buildContent(
-                      list: state.newsList,
-                      searchQuery: searchQuery,
-                      news: news)
+                          list: state.newsList,
+                          searchQuery: searchQuery,
+                          news: news)
                       : _buildLoading(),
                 )
               ],

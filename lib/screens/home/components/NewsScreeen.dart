@@ -117,7 +117,7 @@ class _NewsScreenState extends State<NewsScreen> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-        widget.covidInformationScreenState.isEmptyDataNews = list.isEmpty;
+      widget.covidInformationScreenState.isEmptyDataNews = list.isEmpty;
     }
     return list.isNotEmpty
         ? Container(
@@ -150,10 +150,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                 fontSize: Dimens.textSubtitleSize),
                           ),
                           onTap: () async {
-                            final result = await Navigator.push(
+                            final bool result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NewsListScreen(
+                                    title: getLabel['news']['title'],
                                     news: Dictionary.allNews,
                                     covidInformationScreenState:
                                         widget.covidInformationScreenState),
@@ -194,7 +195,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                   height: 140,
                                   width: 150,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                                    borderRadius: BorderRadius.circular(
+                                        Dimens.borderRadius),
                                     child: CachedNetworkImage(
                                       imageUrl: newsmodel.image ?? '',
                                       alignment: Alignment.topCenter,
@@ -392,7 +394,8 @@ class _NewsScreenState extends State<NewsScreen> {
                             width: 70,
                             height: 70,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.borderRadius),
                               child: CachedNetworkImage(
                                 imageUrl: data.image,
                                 fit: BoxFit.cover,
@@ -436,7 +439,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: 70,
                         height: 70,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                             imageUrl: data.image,
                             fit: BoxFit.cover,
@@ -541,7 +545,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                             imageUrl: data.image,
                             fit: BoxFit.cover,
@@ -562,7 +567,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           color: Colors.white,
                           gradient: LinearGradient(
                             begin: FractionalOffset.topCenter,
@@ -730,7 +736,8 @@ class _NewsScreenState extends State<NewsScreen> {
                       height: 140,
                       width: 150,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                         child: Skeleton(
                           width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,

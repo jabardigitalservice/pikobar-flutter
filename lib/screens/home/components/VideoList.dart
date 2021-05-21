@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
+import 'package:pikobar_flutter/screens/videos/videosScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
@@ -100,7 +101,8 @@ class _VideoListState extends State<VideoList> {
                       height: 140,
                       width: 150,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                         child: Skeleton(
                           width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
@@ -154,7 +156,7 @@ class _VideoListState extends State<VideoList> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-        widget.covidInformationScreenState.isEmptyDataVideoList = data.isEmpty;
+      widget.covidInformationScreenState.isEmptyDataVideoList = data.isEmpty;
     }
 
     getDataLabel();
@@ -188,10 +190,15 @@ class _VideoListState extends State<VideoList> {
                             fontSize: Dimens.textSubtitleSize),
                       ),
                       onTap: () async {
-                        final result = await Navigator.pushNamed(
-                                context, NavigationConstrants.VideoList,
-                                arguments: widget.covidInformationScreenState)
-                            as bool;
+                        final bool result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideosScreen(
+                                title: getLabel['video']['title'],
+                                covidInformationScreenState:
+                                    widget.covidInformationScreenState),
+                          ),
+                        ) as bool;
 
                         if (result) {
                           isGetDataLabel = result;
