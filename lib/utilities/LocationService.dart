@@ -1,6 +1,4 @@
-import 'dart:io';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -10,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
-import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/Location.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -47,65 +44,32 @@ class LocationService {
         await stopBackgroundLocation();
       }
     } else {
-     isGranted = await _buildPermissionWidget(context, locationBloc);
+      isGranted = await _buildPermissionWidget(context, locationBloc);
     }
 
     return isGranted;
   }
 
-  static Future<bool> _buildPermissionWidget(BuildContext context, LocationPermissionBloc locationBloc) async {
+  static Future<bool> _buildPermissionWidget(
+      BuildContext context, LocationPermissionBloc locationBloc) async {
     bool isGranted;
 
-    if (Platform.isAndroid) {
+    final result = await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PermissionScreen()))
+        as Map<Permission, PermissionStatus>;
 
-      showLocationRequestPermission(
-          context: context,
-          onCancelPressed: () async {
-            isGranted = false;
-            locationBloc.add(LocationPermissionLoad(isGranted));
-          },
-          onAgreePressed: () async {
-            if (await Permission.locationAlways.status.isPermanentlyDenied &&
-                await Permission.locationWhenInUse.status.isPermanentlyDenied) {
-              isGranted = false;
-              locationBloc.add(LocationPermissionLoad(isGranted));
-
-              await AppSettings.openAppSettings();
-            } else {
-              [Permission.locationAlways, Permission.locationWhenInUse]
-                  .request()
-                  .then((status) async {
-                isGranted = status[Permission.locationAlways].isGranted ||
-                    status[Permission.locationWhenInUse].isGranted;
-                locationBloc.add(LocationPermissionLoad(isGranted));
-                if (isGranted) {
-                  locationBloc.close();
-                }
-
-                _onStatusRequested(context, status);
-              });
-            }
-          });
-
-    } else {
-
-      final result = await Navigator.push(
-          context, MaterialPageRoute(builder: (context) => PermissionScreen())) as Map<Permission, PermissionStatus>;
-
-      if (result != null) {
-        isGranted = result[Permission.locationAlways].isGranted ||
-            result[Permission.locationWhenInUse].isGranted;
-        locationBloc.add(LocationPermissionLoad(isGranted));
-        if (isGranted) {
-          locationBloc.close();
-        }
-
-        _onStatusRequested(context, result);
-      } else {
-        isGranted = false;
-        locationBloc.add(LocationPermissionLoad(isGranted));
+    if (result != null) {
+      isGranted = result[Permission.locationAlways].isGranted ||
+          result[Permission.locationWhenInUse].isGranted;
+      locationBloc.add(LocationPermissionLoad(isGranted));
+      if (isGranted) {
+        locationBloc.close();
       }
 
+      _onStatusRequested(context, result);
+    } else {
+      isGranted = false;
+      locationBloc.add(LocationPermissionLoad(isGranted));
     }
 
     return isGranted;
