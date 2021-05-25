@@ -106,7 +106,6 @@ dependencies:
   sentry_flutter: ^4.0.6
   syncfusion_flutter_charts: ^18.4.44
   recase: ^3.0.1
-  dropdown_search: ^0.4.9
 
 dev_dependencies:
   flutter_test:

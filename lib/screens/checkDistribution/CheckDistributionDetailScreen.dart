@@ -132,38 +132,40 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                         // Current location section
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                '${Dictionary.currentLocationTitle}',
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.roboto,
-                                  color: ColorBase.netralGrey,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1.2,
-                                  fontSize: 12.0,
+                        widget.address != null
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      '${Dictionary.currentLocationTitle}',
+                                      style: TextStyle(
+                                        fontFamily: FontsFamily.roboto,
+                                        color: ColorBase.netralGrey,
+                                        fontWeight: FontWeight.normal,
+                                        height: 1.2,
+                                        fontSize: 12.0,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      widget.address,
+                                      style: TextStyle(
+                                        fontFamily: FontsFamily.roboto,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                widget.address,
-                                style: TextStyle(
-                                  fontFamily: FontsFamily.roboto,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14.0,
-                                  height: 1.2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                              )
+                            : Container(),
 
                         // build Section Location by radius
                         CheckDistributionCardRadius(
@@ -204,97 +206,100 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        CustomBubbleTab(
-                          indicatorColor: ColorBase.green, paddingBubbleTab: 5,
-                          labelColor: Colors.white,
-                          listItemTitleTab: listItemTitleTab,
-                          unselectedLabelColor: Colors.grey,
-                          onTap: (index) {
-                            if (index == 0) {
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedConfirmedByDistricts);
-                            } else if (index == 1) {
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedCloseContactByDistricts);
-                            } else if (index == 2) {
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedSuspectByDistricts);
-                            } else if (index == 3) {
-                              AnalyticsHelper.setLogEvent(
-                                  Analytics.tappedProbableByDistricts);
-                            }
-                          },
-                          tabBarView: <Widget>[
-                            CheckDistributionCardFilter(
-                              region:
-                                  widget.state.record.currentLocation.namaKel,
-                              countPositif:
-                                  widget.state.record.detected.desa.positif,
-                              countOdp:
-                                  widget.state.record.detected.desa.odpProses,
-                              countPdp:
-                                  widget.state.record.detected.desa.pdpProses,
-                              typeRegion: Dictionary.village,
-                              listOtherVillage:
-                                  widget.state.record.detected.desaLainnya,
-                              statusType: listItemTitleTab[0],
-                              getLabel: getLabel,
-                            ),
+                        widget.address != null
+                            ? CustomBubbleTab(
+                                indicatorColor: ColorBase.green,
+                                paddingBubbleTab: 5,
+                                labelColor: Colors.white,
+                                listItemTitleTab: listItemTitleTab,
+                                unselectedLabelColor: Colors.grey,
+                                onTap: (index) {
+                                  if (index == 0) {
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.tappedConfirmedByDistricts);
+                                  } else if (index == 1) {
+                                    AnalyticsHelper.setLogEvent(Analytics
+                                        .tappedCloseContactByDistricts);
+                                  } else if (index == 2) {
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.tappedSuspectByDistricts);
+                                  } else if (index == 3) {
+                                    AnalyticsHelper.setLogEvent(
+                                        Analytics.tappedProbableByDistricts);
+                                  }
+                                },
+                                tabBarView: <Widget>[
+                                  CheckDistributionCardFilter(
+                                    region: widget
+                                        .state.record.currentLocation.namaKel,
+                                    countPositif: widget
+                                        .state.record.detected.desa.positif,
+                                    countOdp: widget
+                                        .state.record.detected.desa.odpProses,
+                                    countPdp: widget
+                                        .state.record.detected.desa.pdpProses,
+                                    typeRegion: Dictionary.village,
+                                    listOtherVillage: widget
+                                        .state.record.detected.desaLainnya,
+                                    statusType: listItemTitleTab[0],
+                                    getLabel: getLabel,
+                                  ),
 
-                            // show kecamatan
-                            CheckDistributionCardFilter(
-                                region:
-                                    widget.state.record.currentLocation.namaKec,
-                                countPositif:
-                                    widget.state.record.detected.kec.positif,
-                                countOdp:
-                                    widget.state.record.detected.kec.odpProses,
-                                countPdp:
-                                    widget.state.record.detected.kec.pdpProses,
-                                typeRegion: Dictionary.districts,
-                                listOtherVillage:
-                                    widget.state.record.detected.desaLainnya,
-                                statusType: listItemTitleTab[1],
-                                getLabel: getLabel),
+                                  // show kecamatan
+                                  CheckDistributionCardFilter(
+                                      region: widget
+                                          .state.record.currentLocation.namaKec,
+                                      countPositif: widget
+                                          .state.record.detected.kec.positif,
+                                      countOdp: widget
+                                          .state.record.detected.kec.odpProses,
+                                      countPdp: widget
+                                          .state.record.detected.kec.pdpProses,
+                                      typeRegion: Dictionary.districts,
+                                      listOtherVillage: widget
+                                          .state.record.detected.desaLainnya,
+                                      statusType: listItemTitleTab[1],
+                                      getLabel: getLabel),
 
-                            CheckDistributionCardFilter(
-                              region:
-                                  widget.state.record.currentLocation.namaKel,
-                              countPositif:
-                                  widget.state.record.detected.desa.positif,
-                              countOdp:
-                                  widget.state.record.detected.desa.odpProses,
-                              countPdp:
-                                  widget.state.record.detected.desa.pdpProses,
-                              typeRegion: Dictionary.village,
-                              listOtherVillage:
-                                  widget.state.record.detected.desaLainnya,
-                              statusType: listItemTitleTab[2],
-                              getLabel: getLabel,
-                            ),
+                                  CheckDistributionCardFilter(
+                                    region: widget
+                                        .state.record.currentLocation.namaKel,
+                                    countPositif: widget
+                                        .state.record.detected.desa.positif,
+                                    countOdp: widget
+                                        .state.record.detected.desa.odpProses,
+                                    countPdp: widget
+                                        .state.record.detected.desa.pdpProses,
+                                    typeRegion: Dictionary.village,
+                                    listOtherVillage: widget
+                                        .state.record.detected.desaLainnya,
+                                    statusType: listItemTitleTab[2],
+                                    getLabel: getLabel,
+                                  ),
 
-                            CheckDistributionCardFilter(
-                              region:
-                                  widget.state.record.currentLocation.namaKel,
-                              countPositif:
-                                  widget.state.record.detected.desa.positif,
-                              countOdp:
-                                  widget.state.record.detected.desa.odpProses,
-                              countPdp:
-                                  widget.state.record.detected.desa.pdpProses,
-                              typeRegion: Dictionary.village,
-                              listOtherVillage:
-                                  widget.state.record.detected.desaLainnya,
-                              statusType: listItemTitleTab[3],
-                              getLabel: getLabel,
-                            ),
-                          ],
-                          // isExpand: true,
-                          heightTabBarView: widget
-                                  .state.record.detected.desaLainnya.length
-                                  .toDouble() *
-                              55,
-                        ),
+                                  CheckDistributionCardFilter(
+                                    region: widget
+                                        .state.record.currentLocation.namaKel,
+                                    countPositif: widget
+                                        .state.record.detected.desa.positif,
+                                    countOdp: widget
+                                        .state.record.detected.desa.odpProses,
+                                    countPdp: widget
+                                        .state.record.detected.desa.pdpProses,
+                                    typeRegion: Dictionary.village,
+                                    listOtherVillage: widget
+                                        .state.record.detected.desaLainnya,
+                                    statusType: listItemTitleTab[3],
+                                    getLabel: getLabel,
+                                  ),
+                                ],
+                                // isExpand: true,
+                                heightTabBarView: widget.state.record.detected
+                                        .desaLainnya.length
+                                        .toDouble() *
+                                    55,
+                              )
+                            : Container(),
 
                         const SizedBox(
                           height: 20,
