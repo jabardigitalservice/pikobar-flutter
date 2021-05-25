@@ -69,7 +69,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
         backgroundColor: Colors.white,
         body: WillPopScope(
           child: CollapsingAppbar(
-            searchBar: CustomAppBar.buildSearchField(_searchController,
+            searchBar: CustomAppBar.buildSearchField(context, _searchController,
                 Dictionary.searchInformation, updateSearchQuery),
             showTitle: _showTitle,
             titleAppbar: Dictionary.document,

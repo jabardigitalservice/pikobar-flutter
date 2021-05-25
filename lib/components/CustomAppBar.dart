@@ -58,7 +58,7 @@ class CustomAppBar {
     );
   }
 
-  static AppBar bottomSearchAppBar(
+  static AppBar bottomSearchAppBar(BuildContext context,
       {@required TextEditingController searchController,
       @required String title,
       @required String hintText,
@@ -68,7 +68,7 @@ class CustomAppBar {
         backgroundColor: Colors.white,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
-          child: buildSearchField(searchController, hintText, onChanged),
+          child: buildSearchField(context, searchController, hintText, onChanged),
         ),
         elevation: elevation ?? 0.0,
         title: CustomAppBar.setTitleAppBar(title));
@@ -84,7 +84,7 @@ class CustomAppBar {
         overflow: TextOverflow.ellipsis);
   }
 
-  static Widget buildSearchField(TextEditingController searchController,
+  static Widget buildSearchField(BuildContext context, TextEditingController searchController,
       String hintText, ValueChanged<String> onChanged,
       {EdgeInsetsGeometry margin}) {
     return Container(
@@ -109,6 +109,7 @@ class CustomAppBar {
                     color: ColorBase.darkGrey,
                     onPressed: () {
                       searchController.text = '';
+                      FocusScope.of(context).unfocus();
                     },
                   )
                 : null,

@@ -113,7 +113,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   indicatorColor: ColorBase.green,
                   labelColor: Colors.white,
                   showTitle: _showTitle,
-                  searchBar: CustomAppBar.buildSearchField(_searchController,
+                  searchBar: CustomAppBar.buildSearchField(context, _searchController,
                       Dictionary.searchInformation, updateSearchQuery,
                       margin: const EdgeInsets.only(
                           left: Dimens.contentPadding,

@@ -116,7 +116,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         labelColor: Colors.white,
         showTitle: _showTitle,
         isScrollable: false,
-        searchBar: CustomAppBar.buildSearchField(
+        searchBar: CustomAppBar.buildSearchField(context,
             _searchController, Dictionary.searchInformation, updateSearchQuery,
             margin: const EdgeInsets.only(
                 left: Dimens.contentPadding,

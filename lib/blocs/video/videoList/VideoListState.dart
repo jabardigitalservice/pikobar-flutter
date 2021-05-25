@@ -21,7 +21,7 @@ class VideosLoading extends VideoListState {
 class VideosLoaded extends VideoListState {
   final List<VideoModel> videos;
 
-  const VideosLoaded([this.videos = const []]);
+  const VideosLoaded(this.videos);
 
   @override
   List<Object> get props => [videos];

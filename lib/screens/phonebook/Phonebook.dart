@@ -79,7 +79,7 @@ class _PhonebookState extends State<Phonebook> {
                 fontWeight: FontWeight.w900),
           ),
         ),
-        CustomAppBar.buildSearchField(
+        CustomAppBar.buildSearchField(context,
             _searchController, Dictionary.findEmergencyPhone, updateSearchQuery)
       ],
     );
