@@ -60,7 +60,8 @@ class Dictionary {
   static String testSummaryTitleAppbar = 'Total Pemeriksaan';
   static String checkLocationSpread = 'Cek Sebaran Lokasi Anda';
   static String checkLocationSpreadDesc =
-      'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, silahkan tekan tombol Cek Lokasi Saat Ini';
+      'Untuk ketahui sebaran kasus COVID-19 disekitar lokasi Anda, '
+      'silahkan tekan tombol Cek Lokasi Saat Ini';
   static String phoneNumberHasBeenUsed = 'No telepon sudah digunakan';
   static String qrCodeMenu = 'Tampilkan QR Code';
   static String qrCode = 'QR Code';
@@ -80,13 +81,13 @@ class Dictionary {
   static String callCenterArea = 'Call Center Kota/Kab';
   static String gugusTugasWeb = 'Website Gugus Tugas Kota/Kabupaten Jawa Barat';
   static String locationAddress = 'Lokasi Tempat Tinggal';
-  static String center = "Pusat";
-  static String who = "WHO";
-  static String sayThanks = "Terima kasih sudah membaca";
-  static String followOurSosmed = "Follow juga sosmed kami";
-  static String dailyUpdateSatgasJabar = "Update Harian Satgas Jabar";
-  static String jabarToday = "Jabar Hari Ini";
-  static String covidInformation = "Informasi COVID-19";
+  static String center = 'Pusat';
+  static String who = 'WHO';
+  static String sayThanks = 'Terima kasih sudah membaca';
+  static String followOurSosmed = 'Follow juga sosmed kami';
+  static String dailyUpdateSatgasJabar = 'Update Harian Satgas Jabar';
+  static String jabarToday = 'Jabar Hari Ini';
+  static String covidInformation = 'Informasi COVID-19';
   static String requiredForm = ' • Harus Diisi';
   static String verificationNumber = 'Verifikasi Nomor';
   static String newLabel = 'Baru';
@@ -221,8 +222,10 @@ class Dictionary {
       'Izinkan PIKOBAR mengakses lokasi Anda';
   static String permissionGeolocationDesc =
       'Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal. Akses lokasi mungkin tetap berjalan bahkan jika aplikasi ditutup atau tidak digunakan.';
-  static String permissionLocationTitleIOS = 'Membagikan lokasi pada layar selanjutnya dapat membuka fitur-fitur seperti:';
-  static String permissionLocationInfoIOS = 'Anda dapat mengubah Bagikan Lokasi ini pada menu Settings/Pengaturan pada ponsel Anda';
+  static String permissionLocationTitleIOS =
+      'Membagikan lokasi pada layar selanjutnya dapat membuka fitur-fitur seperti:';
+  static String permissionLocationInfoIOS =
+      'Anda dapat mengubah Bagikan Lokasi ini pada menu Settings/Pengaturan pada ponsel Anda';
 
   // text
   static String loading = 'Tunggu Sebentar...';
@@ -275,20 +278,21 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      '<p>Data yang ditampilkan adalah data 24 jam terakhir. Jika ada perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi Jawa Barat atau Dinas Kesehatan masing-masing Kabupaten/Kota di Jawa Barat.</p> <p>Sumber Data:<br>Terkonfirmasi: Pusdatin Kemenkes<br>Kontak Erat, Suspek dan Probable: Aplikasi Pelaporan Covid-19 Jawa Barat</p>';
+      '<p>Data yang ditampilkan adalah data 24 jam terakhir. '
+      'Jika ada perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi Jawa Barat atau Dinas Kesehatan masing-masing Kabupaten/Kota di Jawa Barat.</p> <p>Sumber Data:<br>Terkonfirmasi: Pusdatin Kemenkes<br>Kontak Erat, Suspek dan Probable: Aplikasi Pelaporan Covid-19 Jawa Barat</p>';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String downloadAttachment = 'Unduh Lampiran';
   static String downloadImage = 'Unduh Gambar';
 
   //message
-  static String markAsRead = "Tandai Semua Dibaca";
+  static String markAsRead = 'Tandai Semua Dibaca';
 
   //survey
   static String surveyEmpty = 'Tidak ada data survei';
 
   //document
-  static String document = "Dokumen";
-  static String documentPreview = "Preview Dokumen";
+  static String document = 'Dokumen';
+  static String documentPreview = 'Preview Dokumen';
   static String permissionDownloadAttachment =
       'Untuk mengunduh dokumen, izinkan aplikasi Pikobar untuk mengakses penyimpanan Anda.';
   static String descDocument =
@@ -299,7 +303,7 @@ class Dictionary {
 
   static String all = 'Semua';
 
-  static String labelImportantInfo = "PENTING";
+  static String labelImportantInfo = 'PENTING';
 
   // Self Report
   static String selfReportDetail = 'Detail Kesehatan Harian';
@@ -356,7 +360,8 @@ class Dictionary {
   static String sumContactHistory = 'Total Riwayat Kontak';
   static String emptyContact = 'Belum Ada Kontak';
   static String emptyContactDesc =
-      'Terima kasih sudah membantu \nmempercepat pelacakan kasus dengan \nmengisi laporan ini secara jujur.';
+      'Terima kasih sudah membantu \nmempercepat pelacakan kasus dengan '
+      '\nmengisi laporan ini secara jujur.';
   static String nikNotRegistered = 'NIK Tidak Terdaftar';
   static String nikNotRegisteredDesc =
       'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
@@ -416,13 +421,11 @@ class Dictionary {
   static const String zoneGreenDescription =
       'Adalah wilayah yang tidak ada kasus yang dikonfirmasi namun tetap memiliki risiko penyebaran.';
   static const String zoneOther = ' Tap di bawah untuk lihat sebaran kasus';
-  static const String introZoneTitle =
-      'Berada di zona mana Anda saat ini?';
-  static const String shareZonationInfo =
-      'Cek dengan klik tombol di bawah ini';
+  static const String introZoneTitle = 'Berada di zona mana Anda saat ini?';
+  static const String shareZonationInfo = 'Cek dengan klik tombol di bawah ini';
   static const String sourceZonationInfo =
       'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
-  static const String zonationCheck = 'Cek Zona Resiko';
+  static const String zonationCheck = 'Cek Zona Risiko';
 
   // Net Promote Score
   static const String npsTitle =
