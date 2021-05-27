@@ -24,10 +24,11 @@ class _CheckDistributionOtherScrennState
   ScrollController _scrollController;
   final _cityIdController = TextEditingController();
   final _subCityIdController = TextEditingController();
-  List<dynamic> listCity;
-  List<dynamic> listCityFiltered;
+  List<dynamic> listCity, listSubCity;
+  List<dynamic> listCityFiltered, listSubCityFiltered;
   String cityKeyword, subCityKeyword, cityId, subCityId;
   bool showListCity = false;
+  bool showListSubCity = false;
   CheckDistributionBloc _checkdistributionBloc;
 
   @override
@@ -52,30 +53,46 @@ class _CheckDistributionOtherScrennState
         appBar: CustomAppBar.animatedAppBar(
             title: Dictionary.otherLocation, showTitle: _showTitle),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              RoundedButton(
-                  title: Dictionary.checkLocationSpread,
-                  borderRadius: BorderRadius.circular(8),
-                  elevation: 0.0,
-                  color: ColorBase.green,
-                  textStyle: TextStyle(
-                      fontFamily: FontsFamily.roboto,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white),
-                  onPressed: () {
-                    _checkdistributionBloc.add(LoadCheckDistribution(
-                        isOther: true, cityId: cityId, subCityId: subCityId));
-                  }),
-            ],
-          ),
-        ),
+        floatingActionButton:
+            BlocBuilder<CheckDistributionBloc, CheckDistributionState>(
+                builder: (BuildContext context, CheckDistributionState state) {
+          final bool showFab = MediaQuery.of(context).viewInsets.bottom == 0.0;
+          return showFab
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.contentPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      RoundedButton(
+                          title: state is CheckDistributionLoadingIsOther
+                              ? Dictionary.loading
+                              : Dictionary.checkLocationSpread,
+                          borderRadius: BorderRadius.circular(8),
+                          elevation: 0.0,
+                          color: ColorBase.green,
+                          textStyle: TextStyle(
+                              fontFamily: FontsFamily.roboto,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white),
+                          onPressed: state is CheckDistributionLoadingIsOther ||
+                                  subCityId == null ||
+                                  cityId == null
+                              ? null
+                              : () {
+                                  _checkdistributionBloc.add(
+                                      LoadCheckDistribution(
+                                          isOther: true,
+                                          cityId: cityId.replaceAll('.', ''),
+                                          subCityId: subCityId));
+                                }),
+                    ],
+                  ),
+                )
+              : Container();
+        }),
         body: BlocListener<CheckDistributionBloc, CheckDistributionState>(
           listener: (context, state) {
             // Show dialog error message
@@ -154,6 +171,7 @@ class _CheckDistributionOtherScrennState
                 ),
                 _buildSearchDropdownField(
                     title: 'Kota/Kabupaten',
+                    hintText: Dictionary.cityPlaceholder,
                     controller: _cityIdController,
                     isEdit: true,
                     onTap: () {
@@ -164,6 +182,11 @@ class _CheckDistributionOtherScrennState
                     onChanged: (String newQuery) {
                       setState(() {
                         cityKeyword = newQuery;
+                      });
+                    },
+                    onFieldSubmitted: (String value) {
+                      setState(() {
+                        showListCity = false;
                       });
                     }),
                 showListCity
@@ -195,10 +218,52 @@ class _CheckDistributionOtherScrennState
                   height: 20,
                 ),
                 _buildSearchDropdownField(
-                  title: 'Kecamatan/Desa',
-                  controller: _subCityIdController,
-                  isEdit: true,
-                )
+                    title: 'Kecamatan',
+                    controller: _subCityIdController,
+                    hintText: Dictionary.subCityPlaceholder,
+                    isEdit: cityId == null ? false : true,
+                    onTap: cityId == null
+                        ? null
+                        : () {
+                            setState(() {
+                              showListSubCity = true;
+                            });
+                          },
+                    onChanged: (String newQuery) {
+                      setState(() {
+                        subCityKeyword = newQuery;
+                      });
+                    },
+                    onFieldSubmitted: (String value) {
+                      setState(() {
+                        showListSubCity = false;
+                      });
+                    }),
+                showListSubCity
+                    ? SizedBox(
+                        height: 15,
+                      )
+                    : Container(),
+                showListSubCity
+                    ? StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection(kSubAreas)
+                            .orderBy('name')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) return Container();
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            default:
+                              listSubCity = snapshot.data.docs.toList();
+                              return _buildListSubCity();
+                          }
+                        })
+                    : Container(),
               ],
             ),
           ),
@@ -228,8 +293,11 @@ class _CheckDistributionOtherScrennState
             return InkWell(
               onTap: () {
                 setState(() {
+                  FocusScope.of(context).unfocus();
                   _cityIdController.text = listCityFiltered[i]['name'];
                   cityId = listCityFiltered[i]['code'];
+                  _subCityIdController.text = '';
+                  subCityId = null;
                   showListCity = false;
                 });
               },
@@ -255,6 +323,63 @@ class _CheckDistributionOtherScrennState
     );
   }
 
+  Widget _buildListSubCity() {
+    if (cityId != null) {
+      listSubCityFiltered = listSubCity
+          .where((test) =>
+              test['code'].toLowerCase().contains(cityId.replaceAll('.', '')))
+          .toList();
+      if (subCityKeyword != null) {
+        listSubCityFiltered = listSubCityFiltered
+            .where((test) => test['name']
+                .toLowerCase()
+                .contains(subCityKeyword.toLowerCase()))
+            .toList();
+      }
+    } else {
+      listSubCityFiltered = listSubCity;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+          color: ColorBase.greyContainer,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: ColorBase.greyBorder, width: 1.5)),
+      height: MediaQuery.of(context).size.height * 0.3,
+      child: ListView.builder(
+          itemCount: listSubCityFiltered.length,
+          itemBuilder: (BuildContext context, int i) {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  FocusScope.of(context).unfocus();
+                  _subCityIdController.text = listSubCityFiltered[i]['name'];
+                  subCityId = listSubCityFiltered[i]['code'];
+                  showListSubCity = false;
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(color: Colors.grey[200], width: 1),
+                )),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    listSubCityFiltered[i]['name'],
+                    style: TextStyle(
+                        color: Colors.grey[800],
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 14),
+                  ),
+                ),
+              ),
+            );
+          }),
+    );
+  }
+
   Widget _buildSearchDropdownField(
       {String title,
       TextEditingController controller,
@@ -264,6 +389,7 @@ class _CheckDistributionOtherScrennState
       bool isEdit,
       ValueChanged<String> onChanged,
       Function onTap,
+      Function onFieldSubmitted,
       int maxLines}) {
     return Container(
       child: Column(
@@ -327,6 +453,7 @@ class _CheckDistributionOtherScrennState
                 textInputType != null ? textInputType : TextInputType.text,
             onChanged: onChanged,
             onTap: onTap,
+            onFieldSubmitted: onFieldSubmitted,
           )
         ],
       ),

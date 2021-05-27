@@ -10,10 +10,10 @@ import 'package:pikobar_flutter/models/CheckDistribution.dart';
 
 class CheckDistributionRepository {
   Future<CheckDistributionModel> fetchRecord(
-      {lat, long, cityId, subCityId, isOther}) async {
+      {lat, long, cityId, subCityId, isOther = false}) async {
     String param;
     if (isOther) {
-      param = '?bps_kecamatan=3204260&bps_kabupaten=3204';
+      param = '?bps_kecamatan=$subCityId&bps_kabupaten=$cityId';
     } else {
       param = '?lat=$lat&long=$long';
     }

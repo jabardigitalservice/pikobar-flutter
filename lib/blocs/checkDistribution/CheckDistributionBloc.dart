@@ -39,7 +39,7 @@ class CheckDistributionBloc
                 long: event.long,
                 isOther: event.isOther,
                 cityId: event.cityId,
-                subCityId: event.cityId);
+                subCityId: event.subCityId);
         yield CheckDistributionLoaded(record: record);
       } on Exception catch (e) {
         yield CheckDistributionFailure(

@@ -202,7 +202,8 @@ class Dictionary {
   static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
   static String quarantineDatePlaceholder = 'Pilih Tanggal Awal Karantina';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
-  static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
+  static String cityPlaceholder = 'Pilih Kabupaten/Kota Domisili Anda';
+  static String subCityPlaceholder = 'Pilih Kecamatan Domisili Anda';
   static String placeholderYourName = 'Masukkan Nama Anda';
   static String placeholderYourNIK = 'Masukkan NIK Anda';
   static String placeholderNIK = 'Masukkan NIK';

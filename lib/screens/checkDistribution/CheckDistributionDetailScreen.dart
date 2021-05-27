@@ -172,6 +172,7 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           state: widget.state,
                           getLabel: getLabel,
                           remoteConfig: remoteConfig,
+                          isFromOther: widget.address != null ? false : true,
                         ),
                         const SizedBox(
                           height: 40,
@@ -206,100 +207,59 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        widget.address != null
-                            ? CustomBubbleTab(
-                                indicatorColor: ColorBase.green,
-                                paddingBubbleTab: 5,
-                                labelColor: Colors.white,
-                                listItemTitleTab: listItemTitleTab,
-                                unselectedLabelColor: Colors.grey,
-                                onTap: (index) {
-                                  if (index == 0) {
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.tappedConfirmedByDistricts);
-                                  } else if (index == 1) {
-                                    AnalyticsHelper.setLogEvent(Analytics
-                                        .tappedCloseContactByDistricts);
-                                  } else if (index == 2) {
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.tappedSuspectByDistricts);
-                                  } else if (index == 3) {
-                                    AnalyticsHelper.setLogEvent(
-                                        Analytics.tappedProbableByDistricts);
-                                  }
-                                },
-                                tabBarView: <Widget>[
-                                  CheckDistributionCardFilter(
-                                    region: widget
-                                        .state.record.currentLocation.namaKel,
-                                    countPositif: widget
-                                        .state.record.detected.desa.positif,
-                                    countOdp: widget
-                                        .state.record.detected.desa.odpProses,
-                                    countPdp: widget
-                                        .state.record.detected.desa.pdpProses,
-                                    typeRegion: Dictionary.village,
-                                    listOtherVillage: widget
-                                        .state.record.detected.desaLainnya,
-                                    statusType: listItemTitleTab[0],
-                                    getLabel: getLabel,
-                                  ),
+                        CustomBubbleTab(
+                          indicatorColor: ColorBase.green,
+                          paddingBubbleTab: 5,
+                          labelColor: Colors.white,
+                          listItemTitleTab: listItemTitleTab,
+                          unselectedLabelColor: Colors.grey,
+                          onTap: (index) {
+                            if (index == 0) {
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedConfirmedByDistricts);
+                            } else if (index == 1) {
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedCloseContactByDistricts);
+                            } else if (index == 2) {
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedSuspectByDistricts);
+                            } else if (index == 3) {
+                              AnalyticsHelper.setLogEvent(
+                                  Analytics.tappedProbableByDistricts);
+                            }
+                          },
+                          tabBarView: <Widget>[
+                            CheckDistributionCardFilter(
+                              listOtherVillage:
+                                  widget.state.record.detected.desaLainnya,
+                              statusType: listItemTitleTab[0],
+                            ),
 
-                                  // show kecamatan
-                                  CheckDistributionCardFilter(
-                                      region: widget
-                                          .state.record.currentLocation.namaKec,
-                                      countPositif: widget
-                                          .state.record.detected.kec.positif,
-                                      countOdp: widget
-                                          .state.record.detected.kec.odpProses,
-                                      countPdp: widget
-                                          .state.record.detected.kec.pdpProses,
-                                      typeRegion: Dictionary.districts,
-                                      listOtherVillage: widget
-                                          .state.record.detected.desaLainnya,
-                                      statusType: listItemTitleTab[1],
-                                      getLabel: getLabel),
+                            // show kecamatan
+                            CheckDistributionCardFilter(
+                              listOtherVillage:
+                                  widget.state.record.detected.desaLainnya,
+                              statusType: listItemTitleTab[1],
+                            ),
 
-                                  CheckDistributionCardFilter(
-                                    region: widget
-                                        .state.record.currentLocation.namaKel,
-                                    countPositif: widget
-                                        .state.record.detected.desa.positif,
-                                    countOdp: widget
-                                        .state.record.detected.desa.odpProses,
-                                    countPdp: widget
-                                        .state.record.detected.desa.pdpProses,
-                                    typeRegion: Dictionary.village,
-                                    listOtherVillage: widget
-                                        .state.record.detected.desaLainnya,
-                                    statusType: listItemTitleTab[2],
-                                    getLabel: getLabel,
-                                  ),
+                            CheckDistributionCardFilter(
+                              listOtherVillage:
+                                  widget.state.record.detected.desaLainnya,
+                              statusType: listItemTitleTab[2],
+                            ),
 
-                                  CheckDistributionCardFilter(
-                                    region: widget
-                                        .state.record.currentLocation.namaKel,
-                                    countPositif: widget
-                                        .state.record.detected.desa.positif,
-                                    countOdp: widget
-                                        .state.record.detected.desa.odpProses,
-                                    countPdp: widget
-                                        .state.record.detected.desa.pdpProses,
-                                    typeRegion: Dictionary.village,
-                                    listOtherVillage: widget
-                                        .state.record.detected.desaLainnya,
-                                    statusType: listItemTitleTab[3],
-                                    getLabel: getLabel,
-                                  ),
-                                ],
-                                // isExpand: true,
-                                heightTabBarView: widget.state.record.detected
-                                        .desaLainnya.length
-                                        .toDouble() *
-                                    55,
-                              )
-                            : Container(),
+                            CheckDistributionCardFilter(
+                              listOtherVillage:
+                                  widget.state.record.detected.desaLainnya,
+                              statusType: listItemTitleTab[3],
+                            ),
+                          ],
+                          // isExpand: true,
+                          heightTabBarView: widget
+                                  .state.record.detected.desaLainnya.length
+                                  .toDouble() *
+                              55,
+                        ),
 
                         const SizedBox(
                           height: 20,
