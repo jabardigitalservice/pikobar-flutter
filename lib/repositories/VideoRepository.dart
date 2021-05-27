@@ -5,7 +5,7 @@ import 'package:pikobar_flutter/models/VideoModel.dart';
 class VideoRepository {
   final videoCollection = FirebaseFirestore.instance.collection(kVideos);
 
-  Stream<List<VideoModel>> getVideo({int limit}) {
+  Future<List<VideoModel>> getVideo({int limit}) {
     Query videoQuery =
         videoCollection.orderBy('published_at', descending: true);
 
@@ -13,9 +13,7 @@ class VideoRepository {
       videoQuery = videoQuery.limit(limit);
     }
 
-    return videoQuery.snapshots().map((QuerySnapshot snapshot) => snapshot
-        .docs
-        .map((doc) => VideoModel.fromFirestore(doc))
-        .toList());
+    return videoQuery.get().then((QuerySnapshot snapshot) =>
+        snapshot.docs.map((doc) => VideoModel.fromFirestore(doc)).toList());
   }
 }
