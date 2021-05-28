@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/area/cityListBloc/Bloc.dart';
+import 'package:pikobar_flutter/blocs/area/subCityListBloc/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
@@ -24,11 +26,11 @@ class _CheckDistributionOtherScrennState
   ScrollController _scrollController;
   final _cityIdController = TextEditingController();
   final _subCityIdController = TextEditingController();
-  List<dynamic> listCity, listSubCity;
-  List<dynamic> listCityFiltered, listSubCityFiltered;
+  List<dynamic> cityList, subCityList;
+  List<dynamic> cityListFiltered, subCityListFiltered;
   String cityKeyword, subCityKeyword, cityId, subCityId;
-  bool showListCity = false;
-  bool showListSubCity = false;
+  bool showCityList = false;
+  bool showSubCityList = false;
   CheckDistributionBloc _checkdistributionBloc;
 
   @override
@@ -45,9 +47,16 @@ class _CheckDistributionOtherScrennState
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CheckDistributionBloc>(
-      create: (context) => _checkdistributionBloc = CheckDistributionBloc(
-          checkDistributionRepository: CheckDistributionRepository()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CheckDistributionBloc>(
+            create: (context) => _checkdistributionBloc = CheckDistributionBloc(
+                checkDistributionRepository: CheckDistributionRepository())),
+        BlocProvider<CityListBloc>(
+            create: (context) => CityListBloc()..add(CityListLoad())),
+        BlocProvider<SubCityListBloc>(
+            create: (context) => SubCityListBloc()..add(SubCityListLoad())),
+      ],
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: CustomAppBar.animatedAppBar(
@@ -56,7 +65,7 @@ class _CheckDistributionOtherScrennState
         floatingActionButton:
             BlocBuilder<CheckDistributionBloc, CheckDistributionState>(
                 builder: (BuildContext context, CheckDistributionState state) {
-          final bool showFab = MediaQuery.of(context).viewInsets.bottom == 0.0;
+          final bool showFab = MediaQuery.of(context).viewInsets.bottom == 0;
           return showFab
               ? Padding(
                   padding: const EdgeInsets.symmetric(
@@ -70,16 +79,18 @@ class _CheckDistributionOtherScrennState
                               ? Dictionary.loading
                               : Dictionary.checkLocationSpread,
                           borderRadius: BorderRadius.circular(8),
-                          elevation: 0.0,
+                          elevation: 0,
                           color: ColorBase.green,
                           textStyle: TextStyle(
                               fontFamily: FontsFamily.roboto,
-                              fontSize: 12.0,
+                              fontSize: 12,
                               fontWeight: FontWeight.w900,
                               color: Colors.white),
                           onPressed: state is CheckDistributionLoadingIsOther ||
                                   subCityId == null ||
-                                  cityId == null
+                                  cityId == null ||
+                                  _cityIdController.text == '' ||
+                                  _subCityIdController.text == ''
                               ? null
                               : () {
                                   _checkdistributionBloc.add(
@@ -94,7 +105,7 @@ class _CheckDistributionOtherScrennState
               : Container();
         }),
         body: BlocListener<CheckDistributionBloc, CheckDistributionState>(
-          listener: (context, state) {
+          listener: (BuildContext context, CheckDistributionState state) {
             // Show dialog error message
             // When check distribution failed to load
             if (state is CheckDistributionFailure) {
@@ -159,111 +170,21 @@ class _CheckDistributionOtherScrennState
               children: [
                 const SizedBox(height: 20),
                 Text(
-                  'Pilih lokasi sesuai dengan yang ingin Anda cari di bawah ini',
+                  Dictionary.chooseOtherLocation,
                   style: TextStyle(
                       color: Colors.grey[600],
                       fontFamily: FontsFamily.roboto,
                       height: 1.5,
                       fontSize: 14),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
-                _buildSearchDropdownField(
-                    title: 'Kota/Kabupaten',
-                    hintText: Dictionary.cityPlaceholder,
-                    controller: _cityIdController,
-                    isEdit: true,
-                    onTap: () {
-                      setState(() {
-                        showListCity = true;
-                      });
-                    },
-                    onChanged: (String newQuery) {
-                      setState(() {
-                        cityKeyword = newQuery;
-                      });
-                    },
-                    onFieldSubmitted: (String value) {
-                      setState(() {
-                        showListCity = false;
-                      });
-                    }),
-                showListCity
-                    ? SizedBox(
-                        height: 15,
-                      )
-                    : Container(),
-                showListCity
-                    ? StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection(kAreas)
-                            .orderBy('name')
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) return Container();
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            default:
-                              listCity = snapshot.data.docs.toList();
-                              return _buildListCity();
-                          }
-                        })
-                    : Container(),
-                SizedBox(
+                _buildCityListBloc(),
+                const SizedBox(
                   height: 20,
                 ),
-                _buildSearchDropdownField(
-                    title: 'Kecamatan',
-                    controller: _subCityIdController,
-                    hintText: Dictionary.subCityPlaceholder,
-                    isEdit: cityId == null ? false : true,
-                    onTap: cityId == null
-                        ? null
-                        : () {
-                            setState(() {
-                              showListSubCity = true;
-                            });
-                          },
-                    onChanged: (String newQuery) {
-                      setState(() {
-                        subCityKeyword = newQuery;
-                      });
-                    },
-                    onFieldSubmitted: (String value) {
-                      setState(() {
-                        showListSubCity = false;
-                      });
-                    }),
-                showListSubCity
-                    ? SizedBox(
-                        height: 15,
-                      )
-                    : Container(),
-                showListSubCity
-                    ? StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection(kSubAreas)
-                            .orderBy('name')
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) return Container();
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            default:
-                              listSubCity = snapshot.data.docs.toList();
-                              return _buildListSubCity();
-                          }
-                        })
-                    : Container(),
+                _buildSubCityListBloc(),
               ],
             ),
           ),
@@ -272,15 +193,58 @@ class _CheckDistributionOtherScrennState
     );
   }
 
-  Widget _buildListCity() {
-    if (cityKeyword != null) {
-      listCityFiltered = listCity
-          .where((test) =>
-              test['name'].toLowerCase().contains(cityKeyword.toLowerCase()))
-          .toList();
-    } else {
-      listCityFiltered = listCity;
+  Widget _buildCityListBloc() {
+    return BlocBuilder<CityListBloc, CityListState>(
+      builder: (BuildContext context, CityListState cityState) {
+        return Column(
+          children: [
+            _buildSearchDropdownField(
+                title: Dictionary.city,
+                hintText: cityState is CityListLoading
+                    ? Dictionary.loading
+                    : Dictionary.cityPlaceholder,
+                controller: _cityIdController,
+                isEdit: true,
+                onTap: () {
+                  setState(() {
+                    showCityList = true;
+                  });
+                },
+                onChanged: (String newQuery) {
+                  setState(() {
+                    cityKeyword = newQuery;
+                  });
+                },
+                onFieldSubmitted: (String value) {
+                  setState(() {
+                    showCityList = false;
+                  });
+                }),
+            showCityList
+                ? const SizedBox(
+                    height: 15,
+                  )
+                : Container(),
+            showCityList ? _buildCityList(cityState) : Container(),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCityList(CityListState cityState) {
+    if (cityState is CityListLoaded) {
+      cityList = cityState.cityList;
+      if (cityKeyword != null) {
+        cityListFiltered = cityList
+            .where((test) =>
+                test['name'].toLowerCase().contains(cityKeyword.toLowerCase()))
+            .toList();
+      } else {
+        cityListFiltered = cityList;
+      }
     }
+
     return Container(
       decoration: BoxDecoration(
           color: ColorBase.greyContainer,
@@ -288,21 +252,21 @@ class _CheckDistributionOtherScrennState
           border: Border.all(color: ColorBase.greyBorder, width: 1.5)),
       height: MediaQuery.of(context).size.height * 0.3,
       child: ListView.builder(
-          itemCount: listCityFiltered.length,
+          itemCount: cityListFiltered.length,
           itemBuilder: (BuildContext context, int i) {
             return InkWell(
               onTap: () {
                 setState(() {
                   FocusScope.of(context).unfocus();
-                  _cityIdController.text = listCityFiltered[i]['name'];
-                  cityId = listCityFiltered[i]['code'];
+                  _cityIdController.text = cityListFiltered[i]['name'];
+                  cityId = cityListFiltered[i]['code'];
                   _subCityIdController.text = '';
                   subCityId = null;
-                  showListCity = false;
+                  showCityList = false;
                 });
               },
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
+                margin: const EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                     border: Border(
                   bottom: BorderSide(color: Colors.grey[200], width: 1),
@@ -310,7 +274,7 @@ class _CheckDistributionOtherScrennState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
-                    listCityFiltered[i]['name'],
+                    cityListFiltered[i]['name'],
                     style: TextStyle(
                         color: Colors.grey[800],
                         fontFamily: FontsFamily.roboto,
@@ -323,21 +287,64 @@ class _CheckDistributionOtherScrennState
     );
   }
 
-  Widget _buildListSubCity() {
-    if (cityId != null) {
-      listSubCityFiltered = listSubCity
-          .where((test) =>
-              test['code'].toLowerCase().contains(cityId.replaceAll('.', '')))
-          .toList();
-      if (subCityKeyword != null) {
-        listSubCityFiltered = listSubCityFiltered
-            .where((test) => test['name']
-                .toLowerCase()
-                .contains(subCityKeyword.toLowerCase()))
+  Widget _buildSubCityListBloc() {
+    return BlocBuilder<SubCityListBloc, SubCityListState>(
+        builder: (BuildContext context, SubCityListState subCityState) {
+      return Column(
+        children: [
+          _buildSearchDropdownField(
+              title: Dictionary.districts,
+              controller: _subCityIdController,
+              hintText: subCityState is SubCityListLoading
+                  ? Dictionary.loading
+                  : Dictionary.subCityPlaceholder,
+              isEdit: cityId == null ? false : true,
+              onTap: cityId == null
+                  ? null
+                  : () {
+                      setState(() {
+                        showSubCityList = true;
+                      });
+                    },
+              onChanged: (String newQuery) {
+                setState(() {
+                  subCityKeyword = newQuery;
+                });
+              },
+              onFieldSubmitted: (String value) {
+                setState(() {
+                  showSubCityList = false;
+                });
+              }),
+          showSubCityList
+              ? const SizedBox(
+                  height: 15,
+                )
+              : Container(),
+          showSubCityList ? _buildSubCityList(subCityState) : Container(),
+        ],
+      );
+    });
+  }
+
+  Widget _buildSubCityList(SubCityListState subCityState) {
+    if (subCityState is SubCityListLoaded) {
+      subCityList = subCityState.subcityList;
+      if (cityId != null || cityId != '') {
+        subCityListFiltered = subCityList
+            .where((test) =>
+                test['code'].toLowerCase().contains(cityId.replaceAll('.', '')))
             .toList();
+        if (subCityKeyword != null) {
+          subCityListFiltered = subCityListFiltered
+              .where((test) => test['name']
+                  .toLowerCase()
+                  .contains(subCityKeyword.toLowerCase()))
+              .toList();
+        }
+      } else {
+        subCityListFiltered = subCityList;
       }
-    } else {
-      listSubCityFiltered = listSubCity;
     }
 
     return Container(
@@ -347,19 +354,19 @@ class _CheckDistributionOtherScrennState
           border: Border.all(color: ColorBase.greyBorder, width: 1.5)),
       height: MediaQuery.of(context).size.height * 0.3,
       child: ListView.builder(
-          itemCount: listSubCityFiltered.length,
+          itemCount: subCityListFiltered.length,
           itemBuilder: (BuildContext context, int i) {
             return InkWell(
               onTap: () {
                 setState(() {
                   FocusScope.of(context).unfocus();
-                  _subCityIdController.text = listSubCityFiltered[i]['name'];
-                  subCityId = listSubCityFiltered[i]['code'];
-                  showListSubCity = false;
+                  _subCityIdController.text = subCityListFiltered[i]['name'];
+                  subCityId = subCityListFiltered[i]['code'];
+                  showSubCityList = false;
                 });
               },
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
+                margin: const EdgeInsets.symmetric(horizontal: 15),
                 decoration: BoxDecoration(
                     border: Border(
                   bottom: BorderSide(color: Colors.grey[200], width: 1),
@@ -367,7 +374,7 @@ class _CheckDistributionOtherScrennState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Text(
-                    listSubCityFiltered[i]['name'],
+                    subCityListFiltered[i]['name'],
                     style: TextStyle(
                         color: Colors.grey[800],
                         fontFamily: FontsFamily.roboto,
@@ -398,7 +405,7 @@ class _CheckDistributionOtherScrennState
           Text(
             title,
             style: TextStyle(
-                fontSize: 12.0,
+                fontSize: 12,
                 color: Colors.grey[800],
                 fontFamily: FontsFamily.roboto,
                 fontWeight: FontWeight.bold),
