@@ -110,10 +110,11 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             _allDocs = state.infoGraphicsListWHO;
           }
 
-          if (state is! InitialInfoGraphicsListState && state is! InfoGraphicsListLoading)
-          _limitedDocs = _allDocs.getRange(0, _limitPerPage).toList();
-
-          _getDataLabel();
+          if (state is! InitialInfoGraphicsListState && state is! InfoGraphicsListLoading) {
+            int limit = _allDocs.length > _limitPerPage ? _limitPerPage : _allDocs.length;
+            _limitedDocs = _allDocs.getRange(0, limit).toList();
+            _getDataLabel();
+          }
         },
         child: _buildMain(),
       ),
@@ -222,12 +223,13 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           .toList();
     }
 
+    int itemCount = _searchQuery == null && listData.length != _allDocs.length ? listData.length + 1 : listData.length;
+
     return listData.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount:
-                _searchQuery == null ? listData.length + 1 : listData.length,
+            itemCount: itemCount,
             padding: const EdgeInsets.only(bottom: Dimens.contentPadding),
             itemBuilder: (_, int index) {
               if (index == listData.length) {
@@ -483,8 +485,11 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
 
   Future<void> _getMoreData() async {
     if (_searchQuery == null) {
+      final nextPage = _limitedDocs.length + _limitPerPage;
+      final limit = _allDocs.length > nextPage ? nextPage : _limitedDocs.length;
+
       _limitedDocs.addAll(_allDocs
-          .getRange(_limitedDocs.length, _limitedDocs.length + _limitPerPage)
+          .getRange(_limitedDocs.length, limit)
           .toList());
       await Future.delayed(Duration(milliseconds: 500));
       setState(() {});

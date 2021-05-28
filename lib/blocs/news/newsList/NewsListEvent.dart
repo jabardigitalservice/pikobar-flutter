@@ -8,8 +8,9 @@ abstract class NewsListEvent extends Equatable {
 class NewsListLoad extends NewsListEvent {
   final String newsCollection;
   final bool statImportantInfo;
+  final int limit;
 
-  NewsListLoad(this.newsCollection, {this.statImportantInfo});
+  NewsListLoad(this.newsCollection, {this.statImportantInfo, this.limit});
 
   @override
   String toString() {
@@ -17,7 +18,7 @@ class NewsListLoad extends NewsListEvent {
   }
 
   @override
-  List<Object> get props => [newsCollection];
+  List<Object> get props => [newsCollection, limit];
 }
 
 class NewsListUpdate extends NewsListEvent {
