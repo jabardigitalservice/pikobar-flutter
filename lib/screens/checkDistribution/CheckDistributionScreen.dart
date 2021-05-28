@@ -23,7 +23,6 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionOtherScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
@@ -281,12 +280,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                     BorderRadius.circular(8)),
                                             color: Colors.white,
                                             onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CheckDistributionOtherScrenn()),
-                                              );
+                                              /// Get user location
+                                              _handleLocation(isOther: true);
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.all(15),
