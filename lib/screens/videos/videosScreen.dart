@@ -171,7 +171,10 @@ class _VideosListState extends State<VideosList> {
           .toList();
     }
 
-    int itemCount = _searchQuery == null && listVideos.length != _allVideos.length ? listVideos.length + 1 : listVideos.length;
+    int itemCount =
+        _searchQuery == null && listVideos.length != _allVideos.length
+            ? listVideos.length + 1
+            : listVideos.length;
 
     return listVideos.isNotEmpty
         ? ListView.builder(
@@ -316,11 +319,11 @@ class _VideosListState extends State<VideosList> {
   Future<void> _getMoreData() async {
     if (_searchQuery == null) {
       final nextPage = _limitedVideos.length + _limitPerPage;
-      final limit = _allVideos.length > nextPage ? nextPage : _limitedVideos.length;
+      final limit =
+          _allVideos.length > nextPage ? nextPage : _limitedVideos.length;
 
-      _limitedVideos.addAll(_allVideos
-          .getRange(_limitedVideos.length, limit)
-          .toList());
+      _limitedVideos
+          .addAll(_allVideos.getRange(_limitedVideos.length, limit).toList());
       await Future.delayed(Duration(milliseconds: 500));
     }
   }
