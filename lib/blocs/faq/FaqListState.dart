@@ -3,27 +3,24 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 abstract class FaqListState extends Equatable {
-  const FaqListState([List props = const <dynamic>[]]);
+  const FaqListState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class InitialFaqListState extends FaqListState {
-  @override
-  List<Object> get props => [];
-}
+class InitialFaqListState extends FaqListState {}
 
-class FaqListLoading extends FaqListState {
-  @override
-  List<Object> get props => [];
-}
+class FaqListLoading extends FaqListState {}
 
 @immutable
 class FaqListLoaded extends FaqListState {
   final List<DocumentSnapshot> faqList;
 
-  FaqListLoaded(this.faqList);
+  const FaqListLoaded(this.faqList);
 
   @override
-  List<Object> get props => [faqList];
+  List<Object> get props => <Object>[faqList];
 
   @override
   String toString() => 'FaqListLoaded';

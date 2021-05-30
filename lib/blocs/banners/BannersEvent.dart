@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/BannerModel.dart';
 
 abstract class BannersEvent extends Equatable {
-  const BannersEvent([List props = const <dynamic>[]]);
+  const BannersEvent();
 }
 
 class BannersLoad extends BannersEvent {
@@ -10,7 +10,7 @@ class BannersLoad extends BannersEvent {
   String toString() => 'BannersLoad';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class BannersUpdate extends BannersEvent {
@@ -22,7 +22,5 @@ class BannersUpdate extends BannersEvent {
   String toString() => 'BannersUpdate';
 
   @override
-  List<Object> get props => [records];
+  List<Object> get props => <Object>[records];
 }
-
-

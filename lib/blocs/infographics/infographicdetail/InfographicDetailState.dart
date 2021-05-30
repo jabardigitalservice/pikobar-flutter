@@ -2,19 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class InfoGraphicDetailState extends Equatable {
-  const InfoGraphicDetailState([List props = const <dynamic>[]]);
+  const InfoGraphicDetailState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class InitialInfoGraphicDetailState extends InfoGraphicDetailState {
-  @override
-  List<Object> get props => [];
-}
+class InitialInfoGraphicDetailState extends InfoGraphicDetailState {}
 
-class InfoGraphicDetailLoading extends InfoGraphicDetailState {
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
-}
+class InfoGraphicDetailLoading extends InfoGraphicDetailState {}
 
 class InfoGraphicDetailLoaded extends InfoGraphicDetailState {
   final DocumentSnapshot record;
@@ -22,7 +18,7 @@ class InfoGraphicDetailLoaded extends InfoGraphicDetailState {
   const InfoGraphicDetailLoaded(this.record);
 
   @override
-  List<Object> get props => [record];
+  List<Object> get props => <Object>[record];
 
   @override
   String toString() => 'InfoGraphicDetailLoaded { record: $record }';
@@ -31,7 +27,7 @@ class InfoGraphicDetailLoaded extends InfoGraphicDetailState {
 class InfoGraphicDetailFailure extends InfoGraphicDetailState {
   final String error;
 
-  InfoGraphicDetailFailure({this.error});
+  const InfoGraphicDetailFailure({this.error});
 
   @override
   String toString() {
@@ -39,5 +35,5 @@ class InfoGraphicDetailFailure extends InfoGraphicDetailState {
   }
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

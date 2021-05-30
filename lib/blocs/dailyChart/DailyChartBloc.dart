@@ -29,9 +29,9 @@ class DailyChartBloc extends Bloc<DailyChartEvent, DailyChartState> {
       yield DailyChartLoading();
 
       try {
-        final String cityId = await _dailyChartRepository.getCityId(
+        String cityId = await _dailyChartRepository.getCityId(
             event.cityId, event.listCityId);
-        final DailyChartModel record = await _dailyChartRepository.fetchRecord(
+        DailyChartModel record = await _dailyChartRepository.fetchRecord(
             cityId.replaceAll('.', ''), event.apiKey);
         yield DailyChartLoaded(record: record);
       } on Exception catch (e) {

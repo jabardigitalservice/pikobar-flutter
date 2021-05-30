@@ -7,7 +7,7 @@ import 'Bloc.dart';
 class ImportantInfoListBloc
     extends Bloc<ImportantInfoListEvent, ImportantInfoListState> {
   final ImportantInfoRepository _repository = ImportantInfoRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   ImportantInfoListBloc() : super(InitialImportantInfoListState());
 
@@ -29,7 +29,7 @@ class ImportantInfoListBloc
     _subscription = _repository
         .getInfoImportantList(improtantInfoCollection: collection)
         .listen((importantInfo) {
-      List<NewsModel> list = [];
+      List<NewsModel> list = <NewsModel>[];
       for (int i = 0; i < importantInfo.length; i++) {
         if (importantInfo[i].published) {
           list.add(importantInfo[i]);
@@ -41,7 +41,7 @@ class ImportantInfoListBloc
 
   Stream<ImportantInfoListState> _mapVideosUpdateToState(
       ImportantInfoListUpdate event) async* {
-    yield ImpoftantInfoListLoaded(event.importantInfoList);
+    yield ImportantInfoListLoaded(event.importantInfoList);
   }
 
   @override

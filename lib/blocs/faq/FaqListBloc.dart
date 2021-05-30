@@ -8,7 +8,7 @@ import 'Bloc.dart';
 class FaqListBloc extends Bloc<FaqListEvent, FaqListState> {
   final FaqRepository _repository = FaqRepository();
   LabelNew labelNew = LabelNew();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   FaqListBloc() : super(InitialFaqListState());
 

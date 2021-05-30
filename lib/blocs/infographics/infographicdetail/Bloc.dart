@@ -1,3 +1,3 @@
 export 'InfographicDetailBloc.dart';
-export 'InfoGraphicDetailEvent.dart';
-export 'InfoGraphicDetailState.dart';
+export 'InfographicDetailEvent.dart';
+export 'InfographicDetailState.dart';

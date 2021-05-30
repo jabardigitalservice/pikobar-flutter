@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class AuthenticationEvent extends Equatable {
-  AuthenticationEvent([List props = const <dynamic>[]]);
+  const AuthenticationEvent();
 }
 
 class AppStarted extends AuthenticationEvent {
@@ -11,20 +11,20 @@ class AppStarted extends AuthenticationEvent {
   String toString() => 'AppStarted';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoggedIn extends AuthenticationEvent {
 
   final bool isApple;
 
-  LoggedIn({this.isApple = false});
+  const LoggedIn({this.isApple = false});
 
   @override
   String toString() => 'LoggedIn';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LoggedOut extends AuthenticationEvent {
@@ -32,5 +32,5 @@ class LoggedOut extends AuthenticationEvent {
   String toString() => 'LoggedOut';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }

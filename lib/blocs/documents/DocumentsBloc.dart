@@ -8,7 +8,7 @@ import './Bloc.dart';
 
 class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
   DocumentsRepository _repository = DocumentsRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
   LabelNew labelNew = LabelNew();
 
   DocumentsBloc() : super(InitialDocumentsState());

@@ -4,7 +4,7 @@ import 'package:pikobar_flutter/models/UserModel.dart';
 
 @immutable
 abstract class AuthenticationState extends Equatable {
-  AuthenticationState([List props = const <dynamic>[]]);
+  const AuthenticationState();
 }
 
 class AuthenticationUninitialized extends AuthenticationState {
@@ -12,17 +12,19 @@ class AuthenticationUninitialized extends AuthenticationState {
   String toString() => 'AuthenticationUninitialized';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class AuthenticationAuthenticated extends AuthenticationState {
-  final   UserModel record;
-  AuthenticationAuthenticated({this.record});
+  final UserModel record;
+
+  const AuthenticationAuthenticated({this.record});
+
   @override
   String toString() => 'AuthenticationAuthenticated';
 
   @override
-  List<Object> get props => [record];
+  List<Object> get props => <Object>[record];
 }
 
 class AuthenticationUnauthenticated extends AuthenticationState {
@@ -30,7 +32,7 @@ class AuthenticationUnauthenticated extends AuthenticationState {
   String toString() => 'AuthenticationUnauthenticated';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class AuthenticationLoading extends AuthenticationState {
@@ -38,17 +40,17 @@ class AuthenticationLoading extends AuthenticationState {
   String toString() => 'AuthenticationLoading';
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class AuthenticationFailure extends AuthenticationState {
   final String error;
 
-  AuthenticationFailure({@required this.error});
+  const AuthenticationFailure({@required this.error});
 
   @override
   String toString() => 'Authentication { error: $error }';
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }
