@@ -1,17 +1,20 @@
 import 'package:equatable/equatable.dart';
 
 abstract class SubCityListState extends Equatable {
-  const SubCityListState([List props = const <dynamic>[]]);
+  const SubCityListState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class InitialSubCityListState extends SubCityListState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class SubCityListLoading extends SubCityListState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class SubCityListLoaded extends SubCityListState {
@@ -20,5 +23,5 @@ class SubCityListLoaded extends SubCityListState {
   SubCityListLoaded(this.subcityList);
 
   @override
-  List<Object> get props => [subcityList];
+  List<Object> get props => <Object>[subcityList];
 }

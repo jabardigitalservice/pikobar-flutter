@@ -1,16 +1,13 @@
 import 'package:equatable/equatable.dart';
 
 abstract class SubCityListEvent extends Equatable {
-  const SubCityListEvent([List props = const <dynamic>[]]);
-}
-
-class SubCityListLoad extends SubCityListEvent {
-  @override
-  String toString() => 'Event SubCityListLoad ';
+  const SubCityListEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
+
+class SubCityListLoad extends SubCityListEvent {}
 
 class SubCityListUpdate extends SubCityListEvent {
   final List<dynamic> subCityList;
@@ -21,5 +18,5 @@ class SubCityListUpdate extends SubCityListEvent {
   String toString() => 'Event SubCityListUpdate';
 
   @override
-  List<Object> get props => [subCityList];
+  List<Object> get props => <Object>[subCityList];
 }

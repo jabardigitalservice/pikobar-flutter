@@ -5,7 +5,7 @@ import 'Bloc.dart';
 
 class SubCityListBloc extends Bloc<SubCityListEvent, SubCityListState> {
   final AreaRepository _repository = AreaRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   SubCityListBloc() : super(InitialSubCityListState());
 
