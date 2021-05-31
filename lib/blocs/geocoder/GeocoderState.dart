@@ -19,9 +19,6 @@ class GeocoderLoaded extends GeocoderState {
   const GeocoderLoaded({this.address});
 
   @override
-  String toString() => 'State GeocoderLoaded';
-
-  @override
   List<Object> get props => <Object>[address];
 }
 

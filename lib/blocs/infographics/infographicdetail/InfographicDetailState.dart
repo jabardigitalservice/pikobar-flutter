@@ -19,9 +19,6 @@ class InfoGraphicDetailLoaded extends InfoGraphicDetailState {
 
   @override
   List<Object> get props => <Object>[record];
-
-  @override
-  String toString() => 'InfoGraphicDetailLoaded { record: $record }';
 }
 
 class InfoGraphicDetailFailure extends InfoGraphicDetailState {

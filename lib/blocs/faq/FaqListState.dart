@@ -21,7 +21,4 @@ class FaqListLoaded extends FaqListState {
 
   @override
   List<Object> get props => <Object>[faqList];
-
-  @override
-  String toString() => 'FaqListLoaded';
 }

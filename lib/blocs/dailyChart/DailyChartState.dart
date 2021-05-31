@@ -20,9 +20,6 @@ class DailyChartLoaded extends DailyChartState {
 
   @override
   List<Object> get props => <Object>[record];
-
-  @override
-  String toString() => 'DailyChartLoaded { record: $record }';
 }
 
 class DailyChartFailure extends DailyChartState {

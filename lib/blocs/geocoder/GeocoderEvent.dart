@@ -14,8 +14,5 @@ class GeocoderGetLocation extends GeocoderEvent {
       : assert(coordinate != null, 'coordinate must not be null');
 
   @override
-  String toString() => 'Event getLocation';
-
-  @override
   List<Object> get props => <Object>[coordinate];
 }

@@ -7,10 +7,7 @@ abstract class CheckDistributionState extends Equatable {
   List<Object> get props => <Object>[];
 }
 
-class CheckDistributionInitial extends CheckDistributionState {
-  @override
-  List<Object> get props => <Object>[];
-}
+class CheckDistributionInitial extends CheckDistributionState {}
 
 class CheckDistributionLoading extends CheckDistributionState {}
 class CheckDistributionLoadingIsOther extends CheckDistributionState {}
@@ -23,9 +20,6 @@ class CheckDistributionLoaded extends CheckDistributionState {
 
   @override
   List<Object> get props => <Object>[record];
-
-  @override
-  String toString() => 'CheckDistributionLoaded { record: $record }';
 }
 
 class CheckDistributionFailure extends CheckDistributionState {

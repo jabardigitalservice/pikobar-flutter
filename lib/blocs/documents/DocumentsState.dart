@@ -19,7 +19,4 @@ class DocumentsLoaded extends DocumentsState {
 
   @override
   List<Object> get props => <Object>[documents];
-
-  @override
-  String toString() => 'DocumentLoaded';
 }

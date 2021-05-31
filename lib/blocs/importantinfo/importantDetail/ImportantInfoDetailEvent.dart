@@ -12,7 +12,6 @@ class ImportantInfoDetailLoad extends ImportantInfoDetailEvent {
   const ImportantInfoDetailLoad({ @required this.importantInfoId});
 
   @override
-  // TODO: implement props
   List<Object> get props => <Object>[ importantInfoId];
 
 }

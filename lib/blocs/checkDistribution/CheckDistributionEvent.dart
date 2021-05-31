@@ -2,9 +2,6 @@ part of 'CheckDistributionBloc.dart';
 
 abstract class CheckDistributionEvent extends Equatable {
   const CheckDistributionEvent();
-
-  @override
-  List<Object> get props => <Object>[];
 }
 
 class LoadCheckDistribution extends CheckDistributionEvent {

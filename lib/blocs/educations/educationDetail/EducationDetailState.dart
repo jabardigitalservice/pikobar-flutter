@@ -19,9 +19,6 @@ class EducationDetailLoaded extends EducationDetailState {
 
   @override
   List<Object> get props => <Object>[record];
-
-  @override
-  String toString() => 'EducationDetailLoaded { record: $record }';
 }
 
 class EducationDetailFailure extends EducationDetailState {
