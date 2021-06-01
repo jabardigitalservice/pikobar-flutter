@@ -10,7 +10,7 @@ import 'Bloc.dart';
 
 class EmergencyNumberBloc
     extends Bloc<EmergencyNumberEvent, EmergencyNumberState> {
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
   final EmergencyNumberRepository emergencyNumberRepository;
 
   EmergencyNumberBloc({
@@ -54,7 +54,7 @@ class EmergencyNumberBloc
     _subscription = emergencyNumberRepository
         .getReferralHospitalModelList()
         .listen((List<ReferralHospitalModel> referralHospital) {
-      List<ReferralHospitalModel> list = [];
+      List<ReferralHospitalModel> list = <ReferralHospitalModel>[];
       for (int i = 0; i < referralHospital.length; i++) {
         list.add(referralHospital[i]);
       }
@@ -70,9 +70,10 @@ class EmergencyNumberBloc
   Stream<EmergencyNumberState> _mapLoadCallCenterToState() async* {
     yield EmergencyNumberLoading();
     await _subscription?.cancel();
-    _subscription =
-        emergencyNumberRepository.getCallCenterModelList().listen((List<CallCenterModel> callCenter) {
-      List<CallCenterModel> list = [];
+    _subscription = emergencyNumberRepository
+        .getCallCenterModelList()
+        .listen((List<CallCenterModel> callCenter) {
+      List<CallCenterModel> list = <CallCenterModel>[];
       for (int i = 0; i < callCenter.length; i++) {
         list.add(callCenter[i]);
       }
@@ -88,9 +89,10 @@ class EmergencyNumberBloc
   Stream<EmergencyNumberState> _mapLoadGugusTugasWebToState() async* {
     yield EmergencyNumberLoading();
     await _subscription?.cancel();
-    _subscription =
-        emergencyNumberRepository.getGugusTugasWebList().listen((List<GugusTugasWebModel> callCenter) {
-      List<GugusTugasWebModel> list = [];
+    _subscription = emergencyNumberRepository
+        .getGugusTugasWebList()
+        .listen((List<GugusTugasWebModel> callCenter) {
+      List<GugusTugasWebModel> list = <GugusTugasWebModel>[];
       for (int i = 0; i < callCenter.length; i++) {
         list.add(callCenter[i]);
       }
@@ -109,7 +111,7 @@ class EmergencyNumberBloc
     _subscription = emergencyNumberRepository
         .getIsolationCenterModelList()
         .listen((List<IsolationCenterModel> referralHospital) {
-      List<IsolationCenterModel> list = [];
+      List<IsolationCenterModel> list = <IsolationCenterModel>[];
       for (int i = 0; i < referralHospital.length; i++) {
         list.add(referralHospital[i]);
       }
