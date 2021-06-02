@@ -16,7 +16,9 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class EducationListScreen extends StatefulWidget {
-  const EducationListScreen({Key key}) : super(key: key);
+  final ScrollController scrollController;
+
+  const EducationListScreen({Key key, this.scrollController}) : super(key: key);
 
   @override
   _EducationListScreenState createState() => _EducationListScreenState();
@@ -25,22 +27,44 @@ class EducationListScreen extends StatefulWidget {
 class _EducationListScreenState extends State<EducationListScreen> {
   EducationListBloc _educationListBloc;
 
+  ScrollController get _scrollController => widget.scrollController;
+
+  final int _limitMax = 500;
+  final int _limitPerPage = 10;
+
+  List<EducationModel> _allDocs = [];
+  List<EducationModel> _limitedDocs = [];
+
   @override
   void initState() {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
+
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        await _getMoreData();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<EducationListBloc>(
-            create: (BuildContext context) => _educationListBloc =
-                EducationListBloc()..add(EducationListLoad(kEducationContent))),
-      ],
+    return BlocProvider<EducationListBloc>(
+      create: (BuildContext context) => _educationListBloc = EducationListBloc()
+        ..add(EducationListLoad(kEducationContent, limit: _limitMax)),
       child: BlocListener<EducationListBloc, EducationListState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is EducationListLoaded) {
+            _allDocs = state.educationList;
+
+            int limit = _allDocs.length > _limitPerPage
+                ? _limitPerPage
+                : _allDocs.length;
+
+            _limitedDocs = _allDocs.getRange(0, limit).toList();
+          }
+        },
         child: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +88,7 @@ class _EducationListScreenState extends State<EducationListScreen> {
                 EducationListState state,
               ) {
                 if (state is EducationListLoaded) {
-                  return _buildContent(state);
+                  return _buildContent(_limitedDocs);
                 } else if (state is EducationLisLoading) {
                   return _buildLoading();
                 } else {
@@ -86,15 +110,22 @@ class _EducationListScreenState extends State<EducationListScreen> {
   }
 
   /// Widget data for show data when loaded from server
-  Widget _buildContent(EducationListLoaded state) {
-    //Create list education content
+  Widget _buildContent(List<EducationModel> listData) {
+    int itemCount = listData.length != _allDocs.length
+        ? listData.length + 1
+        : listData.length;
+
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: state.educationList.length,
+      itemCount: itemCount,
       padding: const EdgeInsets.only(bottom: 10.0),
       itemBuilder: (BuildContext context, int index) {
-        return _educationItem(state.educationList[index]);
+        if (index == listData.length) {
+          return CupertinoActivityIndicator();
+        }
+
+        return _educationItem(listData[index]);
       },
     );
   }
@@ -115,13 +146,11 @@ class _EducationListScreenState extends State<EducationListScreen> {
                   imageUrl: educationModel.image,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Center(
-                      heightFactor: 4.2,
-                      child: CupertinoActivityIndicator()),
+                      heightFactor: 4.2, child: CupertinoActivityIndicator()),
                   errorWidget: (context, url, error) => Container(
                       height: MediaQuery.of(context).size.height / 3.3,
                       color: Colors.grey[200],
-                      child: Image.asset(
-                          '${Environment.iconAssets}pikobar.png',
+                      child: Image.asset('${Environment.iconAssets}pikobar.png',
                           fit: BoxFit.fitWidth)),
                 ),
               ),
@@ -188,6 +217,17 @@ class _EducationListScreenState extends State<EducationListScreen> {
         },
       ),
     );
+  }
+
+  /// Load more data to list
+  Future<void> _getMoreData() async {
+    final nextPage = _limitedDocs.length + _limitPerPage;
+    final remains =
+        _limitedDocs.length + (_allDocs.length - _limitedDocs.length);
+    final limit = _allDocs.length > nextPage ? nextPage : remains;
+
+    _limitedDocs.addAll(_allDocs.getRange(_limitedDocs.length, limit).toList());
+    await Future.delayed(Duration(milliseconds: 500));
   }
 
   @override

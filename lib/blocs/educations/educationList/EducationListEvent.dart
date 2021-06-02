@@ -7,6 +7,7 @@ abstract class EducationListEvent extends Equatable {
 
 class EducationListLoad extends EducationListEvent {
   final String educationCollection;
+  final int limit;
 
   const EducationListLoad(this.educationCollection);
 

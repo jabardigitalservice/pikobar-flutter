@@ -21,7 +21,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   ) async* {
     if (event is NewsListLoad) {
       yield* _mapLoadNewsToState(event.newsCollection,
-          statImportantInfo: event.statImportantInfo);
+          statImportantInfo: event.statImportantInfo, limit: event.limit);
     } else if (event is NewsListUpdate) {
       yield* _mapNewsUpdateToState(event);
     } else if (event is NewsListImportantUpdate) {
@@ -35,11 +35,14 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     }
   }
 
-  _loadData(collection, bool statImportantInfo) {
+
+
+  _loadData(collection, bool statImportantInfo, int limit) {
     _subscription?.cancel();
     _subscription = collection == NewsType.articlesImportantInfo
         ? _repository
-            .getInfoImportantList(improtantInfoCollection: collection)
+            .getInfoImportantList(
+                improtantInfoCollection: collection, limit: limit)
             .listen(
             (news) {
               add(NewsListImportantUpdate(news));
@@ -53,13 +56,17 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 });
                 dataListAllNews
                     .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
+
                 labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
 
-                add(NewsListUpdate(dataListAllNews));
+                if (limit != null) {
+                  dataListAllNews = dataListAllNews.getRange(0, limit).toList();
+                }
 
+                add(NewsListUpdate(dataListAllNews));
               })
             : _repository
-                .getNewsList(newsCollection: collection)
+                .getNewsList(newsCollection: collection, limit: limit)
                 .listen((news) {
                 switch (collection) {
                   case NewsType.articlesImportantInfo:
@@ -81,9 +88,9 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   }
 
   Stream<NewsListState> _mapLoadNewsToState(String collection,
-      {bool statImportantInfo = true}) async* {
+      {bool statImportantInfo = true, int limit}) async* {
     yield NewsListLoading();
-    _loadData(collection, statImportantInfo);
+    _loadData(collection, statImportantInfo, limit);
   }
 
   Stream<NewsListState> _mapNewsUpdateToState(NewsListUpdate event) async* {
