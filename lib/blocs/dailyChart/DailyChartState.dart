@@ -4,7 +4,7 @@ abstract class DailyChartState extends Equatable {
   const DailyChartState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class DailyChartInitial extends DailyChartState {
@@ -22,7 +22,7 @@ class DailyChartLoaded extends DailyChartState {
   const DailyChartLoaded({@required this.record});
 
   @override
-  List<Object> get props => [record];
+  List<Object> get props => <Object>[record];
 
   @override
   String toString() => 'DailyChartLoaded { record: $record }';
@@ -37,5 +37,5 @@ class DailyChartFailure extends DailyChartState {
   String toString() => 'State DailyChartFailure{error: $error}';
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

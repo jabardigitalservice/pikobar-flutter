@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:pikobar_flutter/blocs/dailyChart/DailyChartBloc.dart';
 import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
@@ -12,17 +10,12 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
-import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:recase/recase.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:geolocator_platform_interface/src/models/position.dart'
-    as position;
 
 class DailyChart extends StatefulWidget {
   DailyChart({
@@ -41,35 +34,19 @@ class _DailyChartState extends State<DailyChart> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-        builder: (BuildContext context, RemoteConfigState remoteState) {
-      return remoteState is RemoteConfigLoaded
-          ? StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection(kAreas)
-                  .orderBy('name')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) return Container();
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return _buildLoading();
-                  default:
-                    listCity = snapshot.data.docs.toList();
-                    return BlocBuilder<LocationPermissionBloc,
-                            LocationPermissionState>(
-                        builder: (BuildContext context,
-                            LocationPermissionState state) {
-                      return state is LocationPermissionLoaded
-                          ? state.isGranted
-                              ? _buildDailyChartBloc(context, remoteState)
-                              : _buildIntroContent()
-                          : Container();
-                    });
-                }
-              })
-          : _buildLoading();
+    return _buildLocationBloc();
+  }
+
+  _buildLocationBloc() {
+    return BlocBuilder<LocationPermissionBloc, LocationPermissionState>(
+        builder: (BuildContext context, LocationPermissionState state) {
+      return state is LocationPermissionLoaded
+          ? state.isGranted
+              ? _buildDailyChartBloc(
+                  context,
+                )
+              : _buildIntroContent()
+          : Container();
     });
   }
 
@@ -113,40 +90,16 @@ class _DailyChartState extends State<DailyChart> {
   }
 
   Widget _buildDailyChartBloc(
-      BuildContext context, RemoteConfigLoaded remoteState) {
-    // Retrieve api key data from remote config
-    final String apiKey = remoteState.remoteConfig
-        .getString(FirebaseConfig.dashboardPikobarApiKey);
-    return FutureBuilder<position.Position>(
-      future:
-          Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
-      builder:
-          (BuildContext context, AsyncSnapshot<position.Position> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          return BlocProvider<DailyChartBloc>(
-            create: (BuildContext context) =>
-                DailyChartBloc(dailyChartRepository: DailyChartRepository())
-                  ..add(LoadDailyChart(
-                      cityId: snapshot.data,
-                      listCityId: listCity,
-                      apiKey: apiKey)),
-            child: BlocBuilder<DailyChartBloc, DailyChartState>(
-                builder: (BuildContext context, DailyChartState state) {
-              return state is DailyChartLoading
-                  ? _buildLoading()
-                  : state is DailyChartLoaded
-                      ? buildChart(state.record)
-                      : Container();
-            }),
-          );
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildLoading();
-        } else {
-          return Container();
-        }
-      },
-    );
+    BuildContext context,
+  ) {
+    return BlocBuilder<DailyChartBloc, DailyChartState>(
+        builder: (BuildContext context, DailyChartState state) {
+      return state is DailyChartLoading
+          ? _buildLoading()
+          : state is DailyChartLoaded
+              ? buildChart(state.record)
+              : Container();
+    });
   }
 
   Widget _buildIntroContent() {

@@ -186,11 +186,13 @@ class _StatisticsState extends State<Statistics> {
       RapidTestAntigenState rapidAntigenState) {
     return BlocBuilder<PcrTestIndividuBloc, PcrTestIndividuState>(
       builder: (BuildContext context, PcrTestIndividuState pcrIndividuState) {
-        this.pcrTestIndividuLoaded = pcrIndividuState;
-        return pcrIndividuState is PcrTestIndividuLoaded
-            ? buildContentRapidTest(remoteState.remoteConfig, rapidState,
-                pcrState, rapidAntigenState, pcrIndividuState)
-            : buildLoadingRapidTest();
+        if (pcrIndividuState is PcrTestIndividuLoaded) {
+          this.pcrTestIndividuLoaded = pcrIndividuState;
+          return buildContentRapidTest(remoteState.remoteConfig, rapidState,
+              pcrState, rapidAntigenState, pcrIndividuState);
+        } else {
+          return buildLoadingRapidTest();
+        }
       },
     );
   }

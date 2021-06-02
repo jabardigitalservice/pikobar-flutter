@@ -1,14 +1,18 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/EndPointPath.dart';
 import 'package:pikobar_flutter/constants/ErrorException.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 
 class DailyChartRepository {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Future<DailyChartModel> fetchRecord(kodeKab, apiKey) async {
     final dynamic response = await http.get(
         '${EndPointPath.dailyChart}?wilayah=kota&kode_kab=$kodeKab',
@@ -61,5 +65,11 @@ class DailyChartRepository {
       cityId = tempCityId['code'];
     }
     return cityId;
+  }
+
+  Future<List<Map<String, dynamic>>> getCityList() {
+    return firestore.collection(kAreas).orderBy('name').get().then(
+        (QuerySnapshot snapshot) =>
+            snapshot.docs.map((doc) => doc.data()).toList());
   }
 }
