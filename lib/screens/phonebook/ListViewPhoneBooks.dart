@@ -114,7 +114,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
       titleHeader: Dictionary.phoneBookEmergency,
       scrollController: _scrollController,
       showTitle: _showTitle,
-      searchBar: CustomAppBar.buildSearchField(widget.searchController,
+      searchBar: CustomAppBar.buildSearchField(context, widget.searchController,
           Dictionary.findEmergencyPhone, widget.onChanged),
       indicatorColor: ColorBase.green,
       labelColor: Colors.white,

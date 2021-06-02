@@ -56,7 +56,7 @@ class _NewsScreenState extends State<NewsScreen> {
     if (widget.maxLength != null) {
       newsListBloc = BlocProvider.of<NewsListBloc>(context);
       newsListBloc
-          .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+          .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true, limit: 10));
     }
     super.initState();
   }

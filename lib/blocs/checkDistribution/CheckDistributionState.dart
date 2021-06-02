@@ -4,13 +4,10 @@ abstract class CheckDistributionState extends Equatable {
   const CheckDistributionState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
-class CheckDistributionInitial extends CheckDistributionState {
-  @override
-  List<Object> get props => [];
-}
+class CheckDistributionInitial extends CheckDistributionState {}
 
 class CheckDistributionLoading extends CheckDistributionState {}
 class CheckDistributionLoadingIsOther extends CheckDistributionState {}
@@ -22,10 +19,7 @@ class CheckDistributionLoaded extends CheckDistributionState {
   const CheckDistributionLoaded({@required this.record});
 
   @override
-  List<Object> get props => [record];
-
-  @override
-  String toString() => 'CheckDistributionLoaded { record: $record }';
+  List<Object> get props => <Object>[record];
 }
 
 class CheckDistributionFailure extends CheckDistributionState {
@@ -37,5 +31,5 @@ class CheckDistributionFailure extends CheckDistributionState {
   String toString() => 'State CheckDistributionFailure{error: $error}';
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

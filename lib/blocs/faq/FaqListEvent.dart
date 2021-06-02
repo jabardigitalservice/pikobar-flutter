@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 abstract class FaqListEvent extends Equatable {
-  const FaqListEvent([List props = const <dynamic>[]]);
+  const FaqListEvent();
 }
 
 @immutable
@@ -14,7 +14,7 @@ class FaqListLoad extends FaqListEvent {
   FaqListLoad({this.faqCollection, this.category});
 
   @override
-  List<Object> get props => [faqCollection, category];
+  List<Object> get props => <Object>[faqCollection, category];
 }
 
 @immutable
@@ -24,5 +24,5 @@ class FaqListUpdate extends FaqListEvent {
   FaqListUpdate(this.faqList);
 
   @override
-  List<Object> get props => [faqList];
+  List<Object> get props => <Object>[faqList];
 }

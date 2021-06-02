@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/repositories/EducationRepository.dart';
 import 'Bloc.dart';
 
 class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   final EducationRepository _repository = EducationRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   EducationListBloc() : super(InitialEducationListState());
 
@@ -14,19 +15,19 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
     EducationListEvent event,
   ) async* {
     if (event is EducationListLoad) {
-      yield* _mapLoadEducationsToState(event.educationCollection);
+      yield* _mapLoadEducationsToState(event.educationCollection, event.limit);
     } else if (event is EducationListUpdate) {
       yield* _mapVideosUpdateToState(event);
     }
   }
 
   Stream<EducationListState> _mapLoadEducationsToState(
-      String collection) async* {
+      String collection, int limit) async* {
     yield EducationLisLoading();
     _subscription?.cancel();
     _subscription = _repository
         .getEducationList(educationCollection: collection)
-        .listen((education) => add(EducationListUpdate(education)));
+        .listen((List<EducationModel> education) => add(EducationListUpdate(education)));
   }
 
   Stream<EducationListState> _mapVideosUpdateToState(
