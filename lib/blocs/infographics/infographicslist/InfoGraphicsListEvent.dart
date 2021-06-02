@@ -2,55 +2,55 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class InfoGraphicsListEvent extends Equatable {
-  const InfoGraphicsListEvent([List props = const <dynamic>[]]);
+  const InfoGraphicsListEvent();
 }
 
 class InfoGraphicsListLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  InfoGraphicsListLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListLoad({this.limit, this.infoGraphicsCollection});
 
   @override
-  List<Object> get props => [limit, infoGraphicsCollection];
+  List<Object> get props => <Object>[limit, infoGraphicsCollection];
 }
 
 class InfoGraphicsListUpdate extends InfoGraphicsListEvent {
   final List<DocumentSnapshot> infoGraphicsList;
 
-  InfoGraphicsListUpdate(this.infoGraphicsList);
+  const InfoGraphicsListUpdate(this.infoGraphicsList);
 
   @override
-  List<Object> get props => [infoGraphicsList];
+  List<Object> get props => <Object>[infoGraphicsList];
 }
 
 class InfoGraphicsListJabarLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  InfoGraphicsListJabarLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListJabarLoad({this.limit, this.infoGraphicsCollection});
 
   @override
-  List<Object> get props => [limit];
+  List<Object> get props => <Object>[limit];
 }
 
 class InfoGraphicsListJabarUpdate extends InfoGraphicsListEvent {
   final List<DocumentSnapshot> infoGraphicsListJabar;
 
-  InfoGraphicsListJabarUpdate(this.infoGraphicsListJabar);
+  const InfoGraphicsListJabarUpdate(this.infoGraphicsListJabar);
 
   @override
-  List<Object> get props => [infoGraphicsListJabar];
+  List<Object> get props => <Object>[infoGraphicsListJabar];
 }
 
 class InfoGraphicsListPusatLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  InfoGraphicsListPusatLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListPusatLoad({this.limit, this.infoGraphicsCollection});
 
   @override
-  List<Object> get props => [limit];
+  List<Object> get props => <Object>[limit];
 }
 
 class InfoGraphicsListPusatUpdate extends InfoGraphicsListEvent {

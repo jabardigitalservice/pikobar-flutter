@@ -2,9 +2,6 @@ part of 'CheckDistributionBloc.dart';
 
 abstract class CheckDistributionEvent extends Equatable {
   const CheckDistributionEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class LoadCheckDistribution extends CheckDistributionEvent {
@@ -17,7 +14,7 @@ class LoadCheckDistribution extends CheckDistributionEvent {
       {@required this.lat, @required this.long, this.id, this.isOther});
 
   @override
-  List<Object> get props => [lat, long, id, isOther];
+  List<Object> get props => <Object>[lat, long, id, isOther];
 }
 
 class CheckDistributionLoad extends CheckDistributionEvent {
@@ -26,5 +23,5 @@ class CheckDistributionLoad extends CheckDistributionEvent {
   const CheckDistributionLoad(this.record);
 
   @override
-  List<Object> get props => [record];
+  List<Object> get props => <Object>[record];
 }

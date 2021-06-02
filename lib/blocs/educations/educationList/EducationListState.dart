@@ -2,24 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 
 abstract class EducationListState extends Equatable {
-  const EducationListState([List props = const <dynamic>[]]);
+  const EducationListState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class InitialEducationListState extends EducationListState {
-  @override
-  List<Object> get props => [];
-}
+class InitialEducationListState extends EducationListState {}
 
-class EducationLisLoading extends EducationListState {
-  @override
-  List<Object> get props => [];
-}
+class EducationLisLoading extends EducationListState {}
 
 class EducationListLoaded extends EducationListState {
   final List<EducationModel> educationList;
 
-  EducationListLoaded(this.educationList);
+  const EducationListLoaded(this.educationList);
 
   @override
-  List<Object> get props => [educationList];
+  List<Object> get props => <Object>[educationList];
 }

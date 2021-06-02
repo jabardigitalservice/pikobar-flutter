@@ -35,8 +35,8 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
       builder: (context, state) {
-        return state is ImpoftantInfoListLoaded
-            ? _buildContent(state.imporntantinfoList)
+        return state is ImportantInfoListLoaded
+            ? _buildContent(state.importantInfoList)
             : Container();
       },
     );

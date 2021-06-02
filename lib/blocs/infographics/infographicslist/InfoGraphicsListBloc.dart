@@ -11,7 +11,7 @@ class InfoGraphicsListBloc
     extends Bloc<InfoGraphicsListEvent, InfoGraphicsListState> {
   final InfoGraphicsRepository _repository = InfoGraphicsRepository();
   LabelNew labelNew = LabelNew();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   InfoGraphicsListBloc() : super(InitialInfoGraphicsListState());
 
@@ -52,29 +52,30 @@ class InfoGraphicsListBloc
     }
   }
 
-  _loadData(infoGraphicsCollection, int limit) {
+  void _loadData(infoGraphicsCollection, int limit) {
     _subscription?.cancel();
     _subscription = infoGraphicsCollection == kAllInfographics
         ? _repository.getAllInfographicList().listen((event) {
+            List<DocumentSnapshot> dataListAllinfographics =
+                <DocumentSnapshot>[];
 
-            List<DocumentSnapshot> dataListAllinfographics = [];
-
-            event.forEach((iterable) {
+            for (var iterable in event) {
               dataListAllinfographics.addAll(iterable.toList());
-            });
+            }
 
             dataListAllinfographics.sort(
-                (b, a) => a['published_date'].compareTo(b['published_date']));
+                (DocumentSnapshot b, DocumentSnapshot a) =>
+                    a['published_date'].compareTo(b['published_date']));
 
             labelNew.insertDataLabel(
                 dataListAllinfographics, Dictionary.labelInfoGraphic);
 
             if (limit != null) {
-              dataListAllinfographics = dataListAllinfographics.getRange(0, limit).toList();
+              dataListAllinfographics =
+                  dataListAllinfographics.getRange(0, limit).toList();
             }
 
             add(InfoGraphicsListUpdate(dataListAllinfographics));
-
           })
         : _repository
             .getInfoGraphics(
