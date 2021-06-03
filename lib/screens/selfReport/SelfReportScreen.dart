@@ -397,7 +397,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             const SizedBox(
               height: 30,
             ),
-            EducationListScreen()
+            EducationListScreen(scrollController: _scrollController)
           ],
         ));
   }

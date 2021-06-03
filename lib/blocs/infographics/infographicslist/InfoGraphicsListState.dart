@@ -2,27 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class InfoGraphicsListState extends Equatable {
-  const InfoGraphicsListState([List props = const <dynamic>[]]);
+  const InfoGraphicsListState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class InitialInfoGraphicsListState extends InfoGraphicsListState {
-  @override
-  List<Object> get props => [];
-}
+class InitialInfoGraphicsListState extends InfoGraphicsListState {}
 
-class InfoGraphicsListLoading extends InfoGraphicsListState {
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
-}
+class InfoGraphicsListLoading extends InfoGraphicsListState {}
 
 class InfoGraphicsListLoaded extends InfoGraphicsListState {
   final List<DocumentSnapshot> infoGraphicsList;
 
-  InfoGraphicsListLoaded(this.infoGraphicsList);
+  const InfoGraphicsListLoaded(this.infoGraphicsList);
 
   @override
-  List<Object> get props => [infoGraphicsList];
+  List<Object> get props => <Object>[infoGraphicsList];
 
   @override
   String toString() => 'InfoGraphicsLoaded';
@@ -31,10 +27,10 @@ class InfoGraphicsListLoaded extends InfoGraphicsListState {
 class InfoGraphicsListJabarLoaded extends InfoGraphicsListState {
   final List<DocumentSnapshot> infoGraphicsListJabar;
 
-  InfoGraphicsListJabarLoaded(this.infoGraphicsListJabar);
+  const InfoGraphicsListJabarLoaded(this.infoGraphicsListJabar);
 
   @override
-  List<Object> get props => [infoGraphicsListJabar];
+  List<Object> get props => <Object>[infoGraphicsListJabar];
 
   @override
   String toString() => 'InfoGraphicsListJabarLoaded';
@@ -43,10 +39,10 @@ class InfoGraphicsListJabarLoaded extends InfoGraphicsListState {
 class InfoGraphicsListPusatLoaded extends InfoGraphicsListState {
   final List<DocumentSnapshot> infoGraphicsListPusat;
 
-  InfoGraphicsListPusatLoaded(this.infoGraphicsListPusat);
+  const InfoGraphicsListPusatLoaded(this.infoGraphicsListPusat);
 
   @override
-  List<Object> get props => [infoGraphicsListPusat];
+  List<Object> get props => <Object>[infoGraphicsListPusat];
 
   @override
   String toString() => 'InfoGraphicsListPusatLoaded';
@@ -55,10 +51,10 @@ class InfoGraphicsListPusatLoaded extends InfoGraphicsListState {
 class InfoGraphicsListWHOLoaded extends InfoGraphicsListState {
   final List<DocumentSnapshot> infoGraphicsListWHO;
 
-  InfoGraphicsListWHOLoaded(this.infoGraphicsListWHO);
+  const InfoGraphicsListWHOLoaded(this.infoGraphicsListWHO);
 
   @override
-  List<Object> get props => [infoGraphicsListWHO];
+  List<Object> get props => <Object>[infoGraphicsListWHO];
 
   @override
   String toString() => 'InfoGraphicsListWHOLoaded';

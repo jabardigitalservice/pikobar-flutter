@@ -5,18 +5,15 @@ import 'package:pikobar_flutter/models/IsolationCenterModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 
 abstract class EmergencyNumberState extends Equatable {
-  const EmergencyNumberState([List props = const <dynamic>[]]);
+  const EmergencyNumberState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class InitialEmergencyNumberState extends EmergencyNumberState {
-  @override
-  List<Object> get props => [];
-}
+class InitialEmergencyNumberState extends EmergencyNumberState {}
 
-class EmergencyNumberLoading extends EmergencyNumberState {
-  @override
-  List<Object> get props => [];
-}
+class EmergencyNumberLoading extends EmergencyNumberState {}
 
 class ReferralHospitalLoaded extends EmergencyNumberState {
   final List<ReferralHospitalModel> referralHospitalList;
@@ -24,7 +21,7 @@ class ReferralHospitalLoaded extends EmergencyNumberState {
   const ReferralHospitalLoaded(this.referralHospitalList);
 
   @override
-  List<Object> get props => [referralHospitalList];
+  List<Object> get props => <Object>[referralHospitalList];
 }
 
 class CallCenterLoaded extends EmergencyNumberState {
@@ -33,7 +30,7 @@ class CallCenterLoaded extends EmergencyNumberState {
   const CallCenterLoaded(this.callCenterList);
 
   @override
-  List<Object> get props => [callCenterList];
+  List<Object> get props => <Object>[callCenterList];
 }
 
 class GugusTugasWebLoaded extends EmergencyNumberState {
@@ -42,7 +39,7 @@ class GugusTugasWebLoaded extends EmergencyNumberState {
   const GugusTugasWebLoaded(this.gugusTugasWebModel);
 
   @override
-  List<Object> get props => [gugusTugasWebModel];
+  List<Object> get props => <Object>[gugusTugasWebModel];
 }
 
 class IsolationCenterLoaded extends EmergencyNumberState {
@@ -51,5 +48,5 @@ class IsolationCenterLoaded extends EmergencyNumberState {
   const IsolationCenterLoaded(this.isolationCenterModel);
 
   @override
-  List<Object> get props => [isolationCenterModel];
+  List<Object> get props => <Object>[isolationCenterModel];
 }

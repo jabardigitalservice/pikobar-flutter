@@ -27,13 +27,14 @@ import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 class VideosScreen extends StatelessWidget {
   final CovidInformationScreenState covidInformationScreenState;
   final String title;
+
   const VideosScreen({Key key, this.covidInformationScreenState, this.title})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
-      create: (context) => VideoListBloc()..add(LoadVideos()),
+      create: (context) => VideoListBloc(),
       child: VideosList(
         covidInformationScreenState: covidInformationScreenState,
         title: title,
@@ -54,70 +55,44 @@ class VideosList extends StatefulWidget {
 }
 
 class _VideosListState extends State<VideosList> {
-  ScrollController _scrollController;
-  TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+
+  final int _limitMax = 500;
+  final int _limitPerPage = 10;
+  final int _limitPerSearch = 25;
+
+  List<LabelNewModel> _dataLabel = [];
+  List<VideoModel> _allVideos;
+  List<VideoModel> _limitedVideos = [];
+
+  bool _isGetDataLabel = true;
+  LabelNew _labelNew = LabelNew();
+  VideoListBloc _videoListBloc;
   Timer _debounce;
-  String searchQuery;
-  List<LabelNewModel> dataLabel = [];
-  bool isGetDataLabel = true;
-  LabelNew labelNew = LabelNew();
+  String _searchQuery;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.video);
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
+    _videoListBloc = BlocProvider.of<VideoListBloc>(context);
+    _videoListBloc.add(LoadVideos(limit: _limitMax));
+
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        await _getMoreData();
+      }
+
+      setState(() {});
+    });
+
     _searchController.addListener((() {
       _onSearchChanged();
     }));
+
     super.initState();
-  }
-
-  bool get _showTitle {
-    return _scrollController.hasClients &&
-        _scrollController.offset >
-            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
-  }
-
-  getDataLabel() {
-    if (isGetDataLabel) {
-      labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
-        if (!mounted) return;
-        setState(() {
-          dataLabel = value;
-        });
-      });
-      isGetDataLabel = false;
-    }
-  }
-
-  void _onSearchChanged() {
-    if (_debounce?.isActive ?? false) _debounce.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (_searchController.text.trim().isNotEmpty) {
-        setState(() {
-          searchQuery = _searchController.text;
-        });
-      } else {
-        _clearSearchQuery();
-      }
-    });
-
-    AnalyticsHelper.analyticSearch(
-        searchController: _searchController,
-        event: Analytics.tappedSearchVideo);
-  }
-
-  void updateSearchQuery(String newQuery) {
-    setState(() {
-      searchQuery = newQuery;
-    });
-  }
-
-  void _clearSearchQuery() {
-    setState(() {
-      _searchController.clear();
-      updateSearchQuery(null);
-    });
   }
 
   @override
@@ -126,21 +101,30 @@ class _VideosListState extends State<VideosList> {
         backgroundColor: Colors.white,
         body: WillPopScope(
           child: CollapsingAppbar(
-            searchBar: CustomAppBar.buildSearchField(_searchController,
-                Dictionary.searchInformation, updateSearchQuery),
+            searchBar: CustomAppBar.buildSearchField(context, _searchController,
+                Dictionary.searchInformation, _updateSearchQuery),
             showTitle: _showTitle,
             titleAppbar: widget.title,
             scrollController: _scrollController,
             body: BlocListener<VideoListBloc, VideoListState>(
               listener: (_, state) {
-                getDataLabel();
+                if (state is VideosLoaded) {
+                  _allVideos = state.videos;
+
+                  int limit = _allVideos.length > _limitPerPage
+                      ? _limitPerPage
+                      : _allVideos.length;
+
+                  _limitedVideos.addAll(_allVideos.getRange(0, limit).toList());
+                }
+                _getDataLabel();
               },
               child: BlocBuilder<VideoListBloc, VideoListState>(
                 builder: (context, state) {
                   return state is VideosLoading
                       ? _buildLoading()
                       : state is VideosLoaded
-                          ? _buildContent(state.videos)
+                          ? _buildContent(_limitedVideos)
                           : Container();
                 },
               ),
@@ -178,25 +162,30 @@ class _VideosListState extends State<VideosList> {
     );
   }
 
-  Future<bool> _onWillPop() {
-    Navigator.pop(context, true);
-    return Future.value();
-  }
-
   _buildContent(List<VideoModel> listVideos) {
-    if (searchQuery != null) {
-      listVideos = listVideos
+    if (_searchQuery != null) {
+      listVideos = _allVideos
           .where((test) =>
-              test.title.toLowerCase().contains(searchQuery.toLowerCase()))
+              test.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .take(_limitPerSearch)
           .toList();
     }
 
+    int itemCount =
+        _searchQuery == null && listVideos.length != _allVideos.length
+            ? listVideos.length + 1
+            : listVideos.length;
+
     return listVideos.isNotEmpty
         ? ListView.builder(
-            itemCount: listVideos.length > 100 ? 100 : listVideos.length,
+            itemCount: itemCount,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
+              if (index == listVideos.length) {
+                return CupertinoActivityIndicator();
+              }
+
               return GestureDetector(
                 child: Container(
                   padding: const EdgeInsets.only(
@@ -258,9 +247,9 @@ class _VideosListState extends State<VideosList> {
                           children: [
                             Row(
                               children: [
-                                labelNew.isLabelNew(
+                                _labelNew.isLabelNew(
                                         listVideos[index].id.toString(),
-                                        dataLabel)
+                                        _dataLabel)
                                     ? LabelNewScreen()
                                     : Container(),
                                 Expanded(
@@ -297,10 +286,10 @@ class _VideosListState extends State<VideosList> {
                 ),
                 onTap: () {
                   setState(() {
-                    labelNew.readNewInfo(
+                    _labelNew.readNewInfo(
                         listVideos[index].id,
                         listVideos[index].publishedAt.toString(),
-                        dataLabel,
+                        _dataLabel,
                         Dictionary.labelVideos);
                     if (widget.covidInformationScreenState != null) {
                       widget.covidInformationScreenState.widget.homeScreenState
@@ -320,6 +309,71 @@ class _VideosListState extends State<VideosList> {
             isFlare: false,
             image: "${Environment.imageAssets}not_found.png",
           );
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
+  }
+
+  Future<void> _getMoreData() async {
+    if (_searchQuery == null) {
+      final nextPage = _limitedVideos.length + _limitPerPage;
+      final limit =
+          _allVideos.length > nextPage ? nextPage : _limitedVideos.length;
+
+      _limitedVideos
+          .addAll(_allVideos.getRange(_limitedVideos.length, limit).toList());
+      await Future.delayed(Duration(milliseconds: 500));
+    }
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
+  }
+
+  void _getDataLabel() {
+    if (_isGetDataLabel) {
+      _labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
+        if (!mounted) return;
+        setState(() {
+          _dataLabel = value;
+        });
+      });
+      _isGetDataLabel = false;
+    }
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.trim().isNotEmpty) {
+        setState(() {
+          _searchQuery = _searchController.text;
+        });
+      } else {
+        _clearSearchQuery();
+      }
+    });
+
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSearchVideo);
+  }
+
+  void _updateSearchQuery(String newQuery) {
+    setState(() {
+      _searchQuery = newQuery;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchController.clear();
+      _updateSearchQuery(null);
+    });
   }
 
   @override

@@ -7,12 +7,14 @@ import 'package:async/async.dart';
 class NewsRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Stream<List<NewsModel>> getNewsList({@required String newsCollection}) {
+  Stream<List<NewsModel>> getNewsList({@required String newsCollection, int limit}) {
     return firestore
         .collection(newsCollection)
+        .limit(limit)
         .orderBy('published_at', descending: true)
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.docs
+        .map((QuerySnapshot snapshot) =>
+        snapshot.docs
             .map((doc) => NewsModel.fromFirestore(doc))
             .toList());
   }
@@ -20,17 +22,19 @@ class NewsRepository {
   Future<NewsModel> getNewsDetail(
       {@required String newsCollection, @required String newsId}) async {
     DocumentSnapshot doc =
-        await firestore.collection(newsCollection).doc(newsId).get();
+    await firestore.collection(newsCollection).doc(newsId).get();
     return NewsModel.fromFirestore(doc);
   }
 
   Stream<List<NewsModel>> getInfoImportantList(
-      {@required String improtantInfoCollection}) {
+      {@required String improtantInfoCollection, int limit}) {
     return firestore
         .collection(improtantInfoCollection)
+        .limit(limit)
         .orderBy('published_at', descending: true)
         .snapshots()
-        .map((QuerySnapshot snapshot) => snapshot.docs
+        .map((QuerySnapshot snapshot) =>
+        snapshot.docs
             .map((doc) => NewsModel.fromFirestore(doc))
             .toList());
   }
