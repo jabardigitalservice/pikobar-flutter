@@ -9,7 +9,7 @@ class EducationListLoad extends EducationListEvent {
   final String educationCollection;
   final int limit;
 
-  const EducationListLoad(this.educationCollection);
+  const EducationListLoad(this.educationCollection, {this.limit});
 
   @override
   List<Object> get props => <Object>[educationCollection];
