@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/area/cityListBloc/Bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/dailyChart/DailyChartBloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';

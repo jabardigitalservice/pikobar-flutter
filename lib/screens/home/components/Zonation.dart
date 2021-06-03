@@ -5,7 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
