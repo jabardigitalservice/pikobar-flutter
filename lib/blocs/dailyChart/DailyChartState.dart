@@ -18,6 +18,9 @@ class DailyChartLoaded extends DailyChartState {
 
   const DailyChartLoaded({@required this.record});
 
+   @override
+  String toString() => 'DailyChartLoaded { record: $record }';
+  
   @override
   List<Object> get props => <Object>[record];
 }

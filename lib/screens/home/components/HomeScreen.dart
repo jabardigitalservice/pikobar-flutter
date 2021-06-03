@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/area/cityListBloc/Bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
 import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/dailyChart/DailyChartBloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/infographics/infographicslist/Bloc.dart';
@@ -23,6 +25,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
+import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
@@ -180,7 +183,13 @@ class HomeScreenState extends State<HomeScreen>
                 _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
         BlocProvider<CheckDistributionBloc>(
             create: (context) => CheckDistributionBloc(
-                checkDistributionRepository: CheckDistributionRepository()))
+                checkDistributionRepository: CheckDistributionRepository())),
+        BlocProvider<CityListBloc>(
+            create: (context) => CityListBloc()..add(CityListLoad())),
+        BlocProvider<DailyChartBloc>(
+            create: (context) =>
+                DailyChartBloc(dailyChartRepository: DailyChartRepository())
+                  ..add(LoadDailyChart())),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -194,25 +203,25 @@ class HomeScreenState extends State<HomeScreen>
         body: MultiBlocListener(
           listeners: [
             BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
-                listener: (context, state) {
+                listener: (BuildContext context, InfoGraphicsListState state) {
               if (state is InfoGraphicsListLoaded) {
                 getAllUnreadData();
               }
             }),
             BlocListener<NewsListBloc, NewsListState>(
-                listener: (context, state) {
+                listener: (BuildContext context, NewsListState state) {
               if (state is NewsListLoaded) {
                 getAllUnreadData();
               }
             }),
             BlocListener<VideoListBloc, VideoListState>(
-                listener: (context, state) {
+                listener: (BuildContext context, VideoListState state) {
               if (state is VideosLoaded) {
                 getAllUnreadData();
               }
             }),
             BlocListener<DocumentsBloc, DocumentsState>(
-                listener: (context, state) {
+                listener: (BuildContext context, DocumentsState state) {
               if (state is DocumentsLoaded) {
                 getAllUnreadData();
               }
