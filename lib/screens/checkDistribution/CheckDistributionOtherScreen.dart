@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/area/cityListBloc/Bloc.dart';
 import 'package:pikobar_flutter/blocs/area/subCityListBloc/Bloc.dart';
+import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
@@ -10,8 +10,6 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
 
