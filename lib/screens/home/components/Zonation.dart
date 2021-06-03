@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionOtherScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
@@ -355,7 +356,14 @@ class _ZonationState extends State<Zonation> {
                           elevation: 0,
                           onPressed: state is CheckDistributionLoadingIsOther
                               ? null
-                              : _otherLocation),
+                              : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CheckDistributionOtherScrenn()),
+                                  );
+                                }),
                     ),
                   ],
                 );

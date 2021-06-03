@@ -6,23 +6,11 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
 
 class CheckDistributionCardFilter extends StatelessWidget {
-  final String region;
-  final int countPositif;
-  final int countOdp;
-  final int countPdp;
-  final String typeRegion;
-  final Map<String, dynamic> getLabel;
   final String statusType;
   final List<DesaLainnya> listOtherVillage;
 
   const CheckDistributionCardFilter({
     Key key,
-    @required this.region,
-    @required this.countPositif,
-    @required this.countOdp,
-    @required this.countPdp,
-    @required this.typeRegion,
-    @required this.getLabel,
     @required this.listOtherVillage,
     @required this.statusType,
   }) : super(key: key);
@@ -53,57 +41,59 @@ class CheckDistributionCardFilter extends StatelessWidget {
         itemCount: listOtherVillage.length,
         itemBuilder: (context, index) {
           final DesaLainnya dataOtherVillage = listOtherVillage[index];
-          return Column(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(left: 10, right: 10),
-                child: Row(
+          return dataOtherVillage.namaDesa == ''
+              ? Container()
+              : Column(
                   children: <Widget>[
-                    Image.asset(
-                      '${Environment.iconAssets}pin_location_red.png',
-                      scale: 2.5,
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        children: <Widget>[
+                          Image.asset(
+                            '${Environment.iconAssets}pin_location_red.png',
+                            scale: 2.5,
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              "Kel. " + dataOtherVillage.namaDesa,
+                              style: TextStyle(
+                                fontFamily: FontsFamily.lato,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12.0,
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            statusCount(dataOtherVillage),
+                            style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.0,
+                              height: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        "Kel. " + dataOtherVillage.namaDesa,
-                        style: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                          height: 1.2,
+                    Container(
+                      padding: const EdgeInsets.only(
+                          top: Dimens.padding,
+                          bottom: Dimens.padding,
+                          left: Dimens.padding,
+                          right: Dimens.padding),
+                      child: SizedBox(
+                        height: 1,
+                        child: Container(
+                          color: Colors.grey[200],
                         ),
                       ),
-                    ),
-                    Text(
-                      statusCount(dataOtherVillage),
-                      style: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                        height: 1.2,
-                      ),
-                    ),
+                    )
                   ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(
-                    top: Dimens.padding,
-                    bottom: Dimens.padding,
-                    left: Dimens.padding,
-                    right: Dimens.padding),
-                child: SizedBox(
-                  height: 1,
-                  child: Container(
-                    color: Colors.grey[200],
-                  ),
-                ),
-              )
-            ],
-          );
+                );
         });
   }
 }

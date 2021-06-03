@@ -93,6 +93,7 @@ class Dictionary {
   static String newLabel = 'Baru';
   static String travelHistoryReport = 'Lapor Aktivitas Berpegian';
   static String isolationCenter = 'Pusat Isolasi';
+  static String city =  'Kota/Kabupaten';
 
   // Button Text
   static String cancel = 'Batal';
@@ -203,7 +204,8 @@ class Dictionary {
   static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
   static String quarantineDatePlaceholder = 'Pilih Tanggal Awal Karantina';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
-  static String cityPlaceholder = 'Masukan Kabupaten/Kota Domisili Anda';
+  static String cityPlaceholder = 'Pilih Kabupaten/Kota Domisili Anda';
+  static String subCityPlaceholder = 'Pilih Kecamatan Domisili Anda';
   static String placeholderYourName = 'Masukkan Nama Anda';
   static String placeholderYourNIK = 'Masukkan NIK Anda';
   static String placeholderNIK = 'Masukkan NIK';
@@ -266,10 +268,11 @@ class Dictionary {
   static String suspect = 'Suspek';
   static String probable = 'Probable';
   static String checkOtherLocation = 'Cek Lokasi Lain';
+  static String otherLocation = 'Lokasi Lain';
   static String checkDistributionInfo =
       'Tetap tenang dan kenali lebih dekat apa itu COVID-19. \n Klik selengkapnya ';
   static String unreachableLocation = 'Lokasi Tidak Terjangkau';
-  static String locationKecamatanTitle = 'Kelurahan lain dalam Kec. ';
+  static String locationKecamatanTitle = 'Kelurahan/Desa lain dalam Kec. ';
   static String locationKecamatanDesc =
       'Data di bawah ini merupakan jumlah kasus aktif';
   static String village = 'Kelurahan';
@@ -283,6 +286,8 @@ class Dictionary {
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String downloadAttachment = 'Unduh Lampiran';
   static String downloadImage = 'Unduh Gambar';
+  static String chooseOtherLocation =
+      'Pilih lokasi sesuai dengan yang ingin Anda cari di bawah ini';
 
   //message
   static String markAsRead = 'Tandai Semua Dibaca';
