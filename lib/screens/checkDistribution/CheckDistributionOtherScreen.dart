@@ -211,6 +211,8 @@ class _CheckDistributionOtherScrennState
                 onChanged: (String newQuery) {
                   setState(() {
                     cityKeyword = newQuery;
+                    cityId = null;
+                    showSubCityList = false;
                   });
                 },
                 onFieldSubmitted: (String value) {
@@ -248,40 +250,53 @@ class _CheckDistributionOtherScrennState
           color: ColorBase.greyContainer,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: ColorBase.greyBorder, width: 1.5)),
-      height: MediaQuery.of(context).size.height * 0.3,
-      child: ListView.builder(
-          itemCount: cityListFiltered.length,
-          itemBuilder: (BuildContext context, int i) {
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  FocusScope.of(context).unfocus();
-                  _cityIdController.text = cityListFiltered[i]['name'];
-                  cityId = cityListFiltered[i]['code'];
-                  _subCityIdController.text = '';
-                  subCityId = null;
-                  showCityList = false;
-                });
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.grey[200], width: 1),
-                )),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    cityListFiltered[i]['name'],
-                    style: TextStyle(
-                        color: Colors.grey[800],
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 14),
-                  ),
-                ),
+      height: cityListFiltered.isEmpty
+          ? MediaQuery.of(context).size.height * 0.1
+          : MediaQuery.of(context).size.height * 0.3,
+      child: cityListFiltered.isEmpty
+          ? Center(
+              child: Text(
+                Dictionary.emptyDataArea,
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14),
               ),
-            );
-          }),
+            )
+          : ListView.builder(
+              itemCount: cityListFiltered.length,
+              itemBuilder: (BuildContext context, int i) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      FocusScope.of(context).unfocus();
+                      _cityIdController.text = cityListFiltered[i]['name'];
+                      cityId = cityListFiltered[i]['code'];
+                      _subCityIdController.text = '';
+                      subCityId = null;
+                      showCityList = false;
+                      showSubCityList = false;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                        border: Border(
+                      bottom: BorderSide(color: Colors.grey[200], width: 1),
+                    )),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Text(
+                        cityListFiltered[i]['name'],
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontFamily: FontsFamily.roboto,
+                            fontSize: 14),
+                      ),
+                    ),
+                  ),
+                );
+              }),
     );
   }
 
@@ -307,6 +322,7 @@ class _CheckDistributionOtherScrennState
               onChanged: (String newQuery) {
                 setState(() {
                   subCityKeyword = newQuery;
+                  subCityId = null;
                 });
               },
               onFieldSubmitted: (String value) {
@@ -350,38 +366,51 @@ class _CheckDistributionOtherScrennState
           color: ColorBase.greyContainer,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: ColorBase.greyBorder, width: 1.5)),
-      height: MediaQuery.of(context).size.height * 0.3,
-      child: ListView.builder(
-          itemCount: subCityListFiltered.length,
-          itemBuilder: (BuildContext context, int i) {
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  FocusScope.of(context).unfocus();
-                  _subCityIdController.text = subCityListFiltered[i]['name'];
-                  subCityId = subCityListFiltered[i]['code'];
-                  showSubCityList = false;
-                });
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                    border: Border(
-                  bottom: BorderSide(color: Colors.grey[200], width: 1),
-                )),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    subCityListFiltered[i]['name'],
-                    style: TextStyle(
-                        color: Colors.grey[800],
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 14),
-                  ),
-                ),
+      height: subCityListFiltered.isEmpty
+          ? MediaQuery.of(context).size.height * 0.1
+          : MediaQuery.of(context).size.height * 0.3,
+      child: subCityListFiltered.isEmpty
+          ? Center(
+              child: Text(
+                Dictionary.emptyDataArea,
+                style: TextStyle(
+                    color: Colors.grey[600],
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14),
               ),
-            );
-          }),
+            )
+          : ListView.builder(
+              itemCount: subCityListFiltered.length,
+              itemBuilder: (BuildContext context, int i) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      FocusScope.of(context).unfocus();
+                      _subCityIdController.text =
+                          subCityListFiltered[i]['name'];
+                      subCityId = subCityListFiltered[i]['code'];
+                      showSubCityList = false;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                        border: Border(
+                      bottom: BorderSide(color: Colors.grey[200], width: 1),
+                    )),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Text(
+                        subCityListFiltered[i]['name'],
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontFamily: FontsFamily.roboto,
+                            fontSize: 14),
+                      ),
+                    ),
+                  ),
+                );
+              }),
     );
   }
 
