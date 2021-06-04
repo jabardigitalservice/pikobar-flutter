@@ -288,6 +288,8 @@ class Dictionary {
   static String downloadImage = 'Unduh Gambar';
   static String chooseOtherLocation =
       'Pilih lokasi sesuai dengan yang ingin Anda cari di bawah ini';
+  static String emptyDataArea = 'Maaf data tidak ditemukan';
+
 
   //message
   static String markAsRead = 'Tandai Semua Dibaca';
