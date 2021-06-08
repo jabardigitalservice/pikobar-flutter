@@ -93,7 +93,8 @@ class Dictionary {
   static String newLabel = 'Baru';
   static String travelHistoryReport = 'Lapor Aktivitas Berpegian';
   static String isolationCenter = 'Pusat Isolasi';
-  static String city =  'Kota/Kabupaten';
+  static String city = 'Kota/Kabupaten';
+  static String portalBansos = 'Portal Bansos Kemensos';
 
   // Button Text
   static String cancel = 'Batal';
@@ -290,7 +291,6 @@ class Dictionary {
       'Pilih lokasi sesuai dengan yang ingin Anda cari di bawah ini';
   static String emptyDataArea = 'Maaf data tidak ditemukan';
 
-
   //message
   static String markAsRead = 'Tandai Semua Dibaca';
 
@@ -470,4 +470,16 @@ class Dictionary {
   static const String confirmedData = 'Data Terkonfirmasi ';
   static const String last7DaysConfirmedData =
       'Data Terkonfirmasi 7 Hari Terakhir';
+
+  ///bansos
+  static const String bansosWelcomeText =
+      'Selamat datang di Portal Informasi Data Penerima Bantuan Sosial Kemensos';
+  static const String bansosDescriptionText =
+      'Laman ini berguna untuk mengetahui tata cara mengakses data penerima bantuan sosial yang telah disalurkan atau masih dalam proses penyaluran melalui Website Kemensos. ';
+  static const String bansosDisclaimerText =
+      '*Laman ini tidak ditujukan untuk melakukan pengajuan bantuan sosial';
+  static const String findBansosData =
+      'Kini, cari data penerima bantuan Kemensos bisa lebih cepat dan praktis! Cek di sini';
+  static const String checkBansosData =
+      'Informasi detail seputar Data Penerima Bansos Kementerian Sosial RI dapat hubungi di sini';
 }
