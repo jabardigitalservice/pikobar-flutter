@@ -1,20 +1,17 @@
 part of 'NPSCubit.dart';
 
 abstract class NPSState extends Equatable {
-  const NPSState([List props = const <dynamic>[]]);
+  const NPSState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
-class NPSInitial extends NPSState {
-}
+class NPSInitial extends NPSState {}
 
-class NPSLoading extends NPSState {
-}
+class NPSLoading extends NPSState {}
 
-class NPSSaved extends NPSState {
-}
+class NPSSaved extends NPSState {}
 
 class NPSFailed extends NPSState {
   final String error;
@@ -22,5 +19,5 @@ class NPSFailed extends NPSState {
   const NPSFailed(this.error);
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

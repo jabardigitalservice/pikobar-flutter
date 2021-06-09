@@ -1,29 +1,23 @@
 part of 'ContactHistorySaveBloc.dart';
 
 abstract class ContactHistorySaveState extends Equatable {
-  const ContactHistorySaveState([List props = const <dynamic>[]]);
+  const ContactHistorySaveState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class ContactHistorySaveInitial extends ContactHistorySaveState {
-  @override
-  List<Object> get props => [];
-}
+class ContactHistorySaveInitial extends ContactHistorySaveState {}
 
-class ContactHistorySaveLoading extends ContactHistorySaveState {
-  @override
-  List<Object> get props => [];
-}
+class ContactHistorySaveLoading extends ContactHistorySaveState {}
 
-class ContactHistorySaved extends ContactHistorySaveState {
-  @override
-  List<Object> get props => [];
-}
+class ContactHistorySaved extends ContactHistorySaveState {}
 
 class ContactHistorySaveFailure extends ContactHistorySaveState {
   final String error;
 
-  ContactHistorySaveFailure({this.error});
+  const ContactHistorySaveFailure({this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

@@ -2,24 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 
 abstract class MessageDetailState extends Equatable {
-  const MessageDetailState([List props = const <dynamic>[]]);
+  const MessageDetailState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class InitialMessageDetailState extends MessageDetailState {
-  @override
-  List<Object> get props => [];
-}
+class InitialMessageDetailState extends MessageDetailState {}
 
-class MessageDetailLoading extends MessageDetailState {
-  @override
-  List<Object> get props => [];
-}
+class MessageDetailLoading extends MessageDetailState {}
 
 class MessageDetailLoaded extends MessageDetailState {
   final MessageModel data;
 
-  MessageDetailLoaded({this.data});
+  const MessageDetailLoaded({this.data});
 
   @override
-  List<Object> get props => [data];
+  List<Object> get props => <Object>[data];
 }

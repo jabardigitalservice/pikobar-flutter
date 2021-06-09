@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -32,15 +31,15 @@ class DailyChartBloc extends Bloc<DailyChartEvent, DailyChartState> {
     if (event is LoadDailyChart) {
       yield DailyChartLoading();
       try {
-        final Position position = await Geolocator.getCurrentPosition(
+        Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
-        final List<Map<String, dynamic>> listCity =
+        List<Map<String, dynamic>> listCity =
             await _dailyChartRepository.getCityList();
-        final String cityId =
+        String cityId =
             await _dailyChartRepository.getCityId(position, listCity);
-        final RemoteConfig remoteConfig =
+        RemoteConfig remoteConfig =
             await RemoteConfigRepository().setupRemoteConfig();
-        final DailyChartModel record = await _dailyChartRepository.fetchRecord(
+        DailyChartModel record = await _dailyChartRepository.fetchRecord(
             cityId.replaceAll('.', ''),
             remoteConfig.getString(FirebaseConfig.dashboardPikobarApiKey));
         yield DailyChartLoaded(record: record);

@@ -1,33 +1,30 @@
 part of 'ContactHistoryDetailBloc.dart';
 
 abstract class ContactHistoryDetailState extends Equatable {
-  const ContactHistoryDetailState([List props = const <dynamic>[]]);
+  const ContactHistoryDetailState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class ContactHistoryDetailInitial extends ContactHistoryDetailState {
-  @override
-  List<Object> get props => [];
-}
+class ContactHistoryDetailInitial extends ContactHistoryDetailState {}
 
-class ContactHistoryDetailLoading extends ContactHistoryDetailState {
-  @override
-  List<Object> get props => [];
-}
+class ContactHistoryDetailLoading extends ContactHistoryDetailState {}
 
 class ContactHistoryDetailLoaded extends ContactHistoryDetailState {
   final DocumentSnapshot documentSnapshot;
 
-  ContactHistoryDetailLoaded({@required this.documentSnapshot});
+  const ContactHistoryDetailLoaded({@required this.documentSnapshot});
 
   @override
-  List<Object> get props => [documentSnapshot];
+  List<Object> get props => <Object>[documentSnapshot];
 }
 
 class ContactHistoryDetailFailure extends ContactHistoryDetailState {
   final String error;
 
-  ContactHistoryDetailFailure({@required this.error});
+  const ContactHistoryDetailFailure({@required this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

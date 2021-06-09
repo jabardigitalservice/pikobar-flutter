@@ -9,12 +9,13 @@ import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 part 'ContactHistorySaveEvent.dart';
+
 part 'ContactHistorySaveState.dart';
 
-class ContactHistorySaveBloc extends Bloc<ContactHistorySaveEvent, ContactHistorySaveState> {
-
+class ContactHistorySaveBloc
+    extends Bloc<ContactHistorySaveEvent, ContactHistorySaveState> {
   ContactHistorySaveBloc() : super(ContactHistorySaveInitial());
-  
+
   @override
   Stream<ContactHistorySaveState> mapEventToState(
     ContactHistorySaveEvent event,
@@ -24,14 +25,14 @@ class ContactHistorySaveBloc extends Bloc<ContactHistorySaveEvent, ContactHistor
 
       try {
         String userId = await AuthRepository().getToken();
-        await SelfReportRepository().saveContactHistory(
-            userId: userId, data: event.data);
+        await SelfReportRepository()
+            .saveContactHistory(userId: userId, data: event.data);
 
         yield ContactHistorySaved();
-      } catch (e) {
-        yield ContactHistorySaveFailure(error: CustomException.onConnectionException(e.toString()));
+      } on Exception catch (e) {
+        yield ContactHistorySaveFailure(
+            error: CustomException.onConnectionException(e.toString()));
       }
     }
   }
-
 }

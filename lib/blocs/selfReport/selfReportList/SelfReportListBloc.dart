@@ -13,7 +13,7 @@ part 'SelfReportListState.dart';
 
 class SelfReportListBloc
     extends Bloc<SelfReportListEvent, SelfReportListState> {
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   SelfReportListBloc() : super(SelfReportListInitial());
 
@@ -29,10 +29,10 @@ class SelfReportListBloc
   }
 
   Stream<SelfReportListState> _loadSelfReportListToState(
-      String otherUID, recurrenceReport) async* {
+      String otherUID, String recurrenceReport) async* {
     yield SelfReportListLoading();
     await _subscription?.cancel();
-    final String userId = await AuthRepository().getToken();
+    String userId = await AuthRepository().getToken();
 
     _subscription = SelfReportRepository()
         .getSelfReportList(

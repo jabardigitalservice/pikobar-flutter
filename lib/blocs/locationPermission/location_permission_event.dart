@@ -4,7 +4,7 @@ abstract class LocationPermissionEvent extends Equatable {
   const LocationPermissionEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LocationPermissionLoad extends LocationPermissionEvent {

@@ -27,9 +27,7 @@ class InfoGraphicDetailFailure extends InfoGraphicDetailState {
   const InfoGraphicDetailFailure({this.error});
 
   @override
-  String toString() {
-    return 'State InfoGraphicDetailFailure{error: $error}';
-  }
+  String toString() => 'State InfoGraphicDetailFailure{error: $error}';
 
   @override
   List<Object> get props => <Object>[error];

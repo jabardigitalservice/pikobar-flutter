@@ -13,7 +13,6 @@ part 'ContactHistoryDetailState.dart';
 
 class ContactHistoryDetailBloc
     extends Bloc<ContactHistoryDetailEvent, ContactHistoryDetailState> {
-
   ContactHistoryDetailBloc() : super(ContactHistoryDetailInitial());
 
   @override
@@ -25,11 +24,12 @@ class ContactHistoryDetailBloc
 
       try {
         String userId = await AuthRepository().getToken();
-        DocumentSnapshot doc = await SelfReportRepository().getContactHistoryDetail(
-            userId: userId, contactHistoryId: event.contactHistoryId);
+        DocumentSnapshot doc = await SelfReportRepository()
+            .getContactHistoryDetail(
+                userId: userId, contactHistoryId: event.contactHistoryId);
 
         yield ContactHistoryDetailLoaded(documentSnapshot: doc);
-      } catch (error) {
+      } on Exception catch (error) {
         yield ContactHistoryDetailFailure(error: error.toString());
       }
     }

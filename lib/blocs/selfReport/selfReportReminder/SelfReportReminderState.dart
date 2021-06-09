@@ -1,43 +1,34 @@
 part of 'SelfReportReminderBloc.dart';
 
 abstract class SelfReportReminderState extends Equatable {
-  const SelfReportReminderState([List props = const <dynamic>[]]);
+  const SelfReportReminderState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class SelfReportReminderInitial extends SelfReportReminderState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportReminderInitial extends SelfReportReminderState {}
 
-class SelfReportReminderLoading extends SelfReportReminderState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportReminderLoading extends SelfReportReminderState {}
 
-class SelfReportIsreminderSaved extends SelfReportReminderState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportIsreminderSaved extends SelfReportReminderState {}
 
-class SelfReportRecurrenceReportSaved extends SelfReportReminderState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportRecurrenceReportSaved extends SelfReportReminderState {}
 
 class SelfReportIsReminderLoaded extends SelfReportReminderState {
   final DocumentSnapshot querySnapshot;
 
-  SelfReportIsReminderLoaded({@required this.querySnapshot});
+  const SelfReportIsReminderLoaded({@required this.querySnapshot});
 
   @override
-  List<Object> get props => [querySnapshot];
+  List<Object> get props => <Object>[querySnapshot];
 }
 
 class SelfReportReminderFailure extends SelfReportReminderState {
   final String error;
 
-  SelfReportReminderFailure({@required this.error});
+  const SelfReportReminderFailure({@required this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

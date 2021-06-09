@@ -13,7 +13,7 @@ part 'OtherSelfReportState.dart';
 
 class OtherSelfReportBloc
     extends Bloc<OtherSelfReportEvent, OtherSelfReportState> {
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   OtherSelfReportBloc() : super(OtherSelfReportInitial());
 

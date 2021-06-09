@@ -2,7 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 
 abstract class NewsListEvent extends Equatable {
-  const NewsListEvent([List props = const <dynamic>[]]);
+  const NewsListEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class NewsListLoad extends NewsListEvent {
@@ -10,73 +13,53 @@ class NewsListLoad extends NewsListEvent {
   final bool statImportantInfo;
   final int limit;
 
-  NewsListLoad(this.newsCollection, {this.statImportantInfo, this.limit});
+  const NewsListLoad(this.newsCollection, {this.statImportantInfo, this.limit});
 
   @override
-  String toString() {
-    return 'Event NewsListLoad $newsCollection';
-  }
-
-  @override
-  List<Object> get props => [newsCollection, limit];
+  List<Object> get props => <Object>[newsCollection, limit];
 }
 
 class NewsListUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
-  NewsListUpdate(this.newsList);
+  const NewsListUpdate(this.newsList);
 
   @override
-  String toString() => 'Event NewsListUpdate';
-
-  @override
-  List<Object> get props => [newsList];
+  List<Object> get props => <Object>[newsList];
 }
 
 class NewsListImportantUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
-  NewsListImportantUpdate(this.newsList);
+  const NewsListImportantUpdate(this.newsList);
 
   @override
-  String toString() => 'Event NewsListImportantUpdate';
-
-  @override
-  List<Object> get props => [newsList];
+  List<Object> get props => <Object>[newsList];
 }
 
 class NewsListJabarUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
-  NewsListJabarUpdate(this.newsList);
+  const NewsListJabarUpdate(this.newsList);
 
   @override
-  String toString() => 'Event NewsListJabarUpdate';
-
-  @override
-  List<Object> get props => [newsList];
+  List<Object> get props => <Object>[newsList];
 }
 
 class NewsListNationalUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
-  NewsListNationalUpdate(this.newsList);
+  const NewsListNationalUpdate(this.newsList);
 
   @override
-  String toString() => 'Event NewsListNationalUpdate';
-
-  @override
-  List<Object> get props => [newsList];
+  List<Object> get props => <Object>[newsList];
 }
 
 class NewsListWorldUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
-  NewsListWorldUpdate(this.newsList);
+  const NewsListWorldUpdate(this.newsList);
 
   @override
-  String toString() => 'Event NewsListWorldUpdate';
-
-  @override
-  List<Object> get props => [newsList];
+  List<Object> get props => <Object>[newsList];
 }

@@ -5,7 +5,7 @@ import './Bloc.dart';
 
 class PcrTestBloc extends Bloc<PcrTestEvent, PcrTestState> {
   StatisticsRepository statisticsRepository = StatisticsRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   PcrTestBloc() : super(InitialPcrTestState());
 
