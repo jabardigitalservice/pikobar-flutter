@@ -53,11 +53,6 @@ class HomeScreenState extends State<HomeScreen>
   RapidTestAntigenBloc _rapidTestAntigenBloc;
   PcrTestBloc _pcrTestBloc;
   PcrTestIndividuBloc _pcrTestIndividuBloc;
-  NewsListBloc _newsListBloc = NewsListBloc();
-  ImportantInfoListBloc _importantInfoListBloc;
-  VideoListBloc _videoListBloc = VideoListBloc();
-  InfoGraphicsListBloc _infoGraphicsListBloc = InfoGraphicsListBloc();
-  DocumentsBloc _documentsBloc = DocumentsBloc();
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
   List<String> listItemTitleTab = [
@@ -164,23 +159,16 @@ class HomeScreenState extends State<HomeScreen>
             create: (context) => _pcrTestIndividuBloc = PcrTestIndividuBloc()
               ..add(PcrTestIndividuLoad())),
         BlocProvider<NewsListBloc>(
-            create: (context) => _newsListBloc = NewsListBloc()
-              ..add(
-                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
+            create: (context) => NewsListBloc()),
         BlocProvider<ImportantInfoListBloc>(
             create: (context) =>
-                _importantInfoListBloc = ImportantInfoListBloc()
-                  ..add(ImportantInfoListLoad(kImportantInfor))),
+                ImportantInfoListBloc()),
         BlocProvider<VideoListBloc>(
-            create: (context) =>
-                _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
+            create: (context) => VideoListBloc()),
         BlocProvider<InfoGraphicsListBloc>(
-            create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-              ..add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: kInfographics, limit: 3))),
+            create: (context) => InfoGraphicsListBloc()),
         BlocProvider<DocumentsBloc>(
-            create: (context) =>
-                _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
+            create: (context) => DocumentsBloc()),
         BlocProvider<CheckDistributionBloc>(
             create: (context) => CheckDistributionBloc(
                 checkDistributionRepository: CheckDistributionRepository())),
@@ -288,21 +276,6 @@ class HomeScreenState extends State<HomeScreen>
     }
     if (_pcrTestIndividuBloc != null) {
       _pcrTestIndividuBloc.close();
-    }
-    if (_newsListBloc != null) {
-      _newsListBloc.close();
-    }
-    if (_importantInfoListBloc != null) {
-      _importantInfoListBloc.close();
-    }
-    if (_videoListBloc != null) {
-      _videoListBloc.close();
-    }
-    if (_infoGraphicsListBloc != null) {
-      _infoGraphicsListBloc.close();
-    }
-    if (_documentsBloc != null) {
-      _documentsBloc.close();
     }
     super.dispose();
   }

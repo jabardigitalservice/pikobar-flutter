@@ -43,10 +43,18 @@ class Documents extends StatefulWidget {
 }
 
 class _DocumentsState extends State<Documents> {
+  DocumentsBloc _documentsBloc;
   List<DocumentSnapshot> dataDocuments = [];
   List<LabelNewModel> dataLabel = [];
   bool isGetDataLabel = true;
   LabelNew labelNew = LabelNew();
+
+  @override
+  void initState() {
+    _documentsBloc = BlocProvider.of<DocumentsBloc>(context);
+    _documentsBloc.add(DocumentsLoad(limit: 5));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

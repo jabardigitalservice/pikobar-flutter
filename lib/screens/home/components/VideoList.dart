@@ -39,9 +39,17 @@ class VideoList extends StatefulWidget {
 }
 
 class _VideoListState extends State<VideoList> {
+  VideoListBloc _videoListBloc;
   List<LabelNewModel> dataLabel = [];
   bool isGetDataLabel = true;
   LabelNew labelNew = LabelNew();
+
+  @override
+  void initState() {
+    _videoListBloc = BlocProvider.of<VideoListBloc>(context);
+    _videoListBloc.add(LoadVideos(limit: 5));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
