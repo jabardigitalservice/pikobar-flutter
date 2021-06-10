@@ -175,9 +175,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       },
       tabBarView: <Widget>[
         _buildInfoGraphic(),
-        _buildInfoGraphic(),
-        _buildInfoGraphic(),
-        _buildInfoGraphic(),
+        _buildInfoGraphicJabar(),
+        _buildInfoGraphicPusat(),
+        _buildInfoGraphicWHO(),
       ],
     );
   }
@@ -202,14 +202,103 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
-                  child: state is! InitialInfoGraphicsListState &&
-                          state is! InfoGraphicsListLoading
+                  child: state is InfoGraphicsListLoaded
                       ? _buildContent(_limitedDocs)
                       : _buildLoading(),
                 )
               ],
             ));
       }),
+    );
+  }
+
+  Widget _buildInfoGraphicJabar() {
+    return BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+      listener: (context, state) {
+        if (state is! InitialInfoGraphicsListState &&
+            state is! InfoGraphicsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+          builder: (context, state) {
+            return SafeArea(
+                top: false,
+                bottom: false,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverOverlapInjector(
+                      handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverToBoxAdapter(
+                      child: state is InfoGraphicsListJabarLoaded
+                          ? _buildContent(_limitedDocs)
+                          : _buildLoading(),
+                    )
+                  ],
+                ));
+          }),
+    );
+  }
+
+  Widget _buildInfoGraphicPusat() {
+    return BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+      listener: (context, state) {
+        if (state is! InitialInfoGraphicsListState &&
+            state is! InfoGraphicsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+          builder: (context, state) {
+            return SafeArea(
+                top: false,
+                bottom: false,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverOverlapInjector(
+                      handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverToBoxAdapter(
+                      child: state is InfoGraphicsListPusatLoaded
+                          ? _buildContent(_limitedDocs)
+                          : _buildLoading(),
+                    )
+                  ],
+                ));
+          }),
+    );
+  }
+
+  Widget _buildInfoGraphicWHO() {
+    return BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
+      listener: (context, state) {
+        if (state is! InitialInfoGraphicsListState &&
+            state is! InfoGraphicsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
+          builder: (context, state) {
+            return SafeArea(
+                top: false,
+                bottom: false,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverOverlapInjector(
+                      handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                    ),
+                    SliverToBoxAdapter(
+                      child: state is InfoGraphicsListWHOLoaded
+                          ? _buildContent(_limitedDocs)
+                          : _buildLoading(),
+                    )
+                  ],
+                ));
+          }),
     );
   }
 
@@ -289,8 +378,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
                 width: MediaQuery.of(context).size.width - 35,
                 height: 300,
                 child: CachedNetworkImage(
-                    maxHeightDiskCache: 300,
-                    memCacheHeight: 300,
                     imageUrl: data['images'][0].toString() ?? '',
                     imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
