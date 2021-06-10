@@ -2,18 +2,15 @@ part of 'OtherSelfReportBloc.dart';
 
 
 abstract class OtherSelfReportState extends Equatable {
-  const OtherSelfReportState([List props = const <dynamic>[]]);
+  const OtherSelfReportState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class OtherSelfReportInitial extends OtherSelfReportState {
-  @override
-  List<Object> get props => [];
-}
+class OtherSelfReportInitial extends OtherSelfReportState {}
 
-class OtherSelfReportLoading extends OtherSelfReportState {
-  @override
-  List<Object> get props => [];
-}
+class OtherSelfReportLoading extends OtherSelfReportState {}
 
 
 
@@ -21,18 +18,18 @@ class OtherSelfReportLoaded extends OtherSelfReportState {
   final QuerySnapshot querySnapshot;
 
 
-  OtherSelfReportLoaded({@required this.querySnapshot});
+  const OtherSelfReportLoaded({@required this.querySnapshot});
 
   @override
-  List<Object> get props => [querySnapshot];
+  List<Object> get props => <Object>[querySnapshot];
 }
 
 
 class OtherSelfReportFailure extends OtherSelfReportState {
   final String error;
 
-  OtherSelfReportFailure({@required this.error});
+  const OtherSelfReportFailure({@required this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

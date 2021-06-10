@@ -56,27 +56,27 @@ class InfoGraphicsListPusatLoad extends InfoGraphicsListEvent {
 class InfoGraphicsListPusatUpdate extends InfoGraphicsListEvent {
   final List<DocumentSnapshot> infoGraphicsListPusat;
 
-  InfoGraphicsListPusatUpdate(this.infoGraphicsListPusat);
+  const InfoGraphicsListPusatUpdate(this.infoGraphicsListPusat);
 
   @override
-  List<Object> get props => [infoGraphicsListPusat];
+  List<Object> get props => <Object>[infoGraphicsListPusat];
 }
 
 class InfoGraphicsListWHOLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  InfoGraphicsListWHOLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListWHOLoad({this.limit, this.infoGraphicsCollection});
 
   @override
-  List<Object> get props => [limit];
+  List<Object> get props => <Object>[limit];
 }
 
 class InfoGraphicsListWHOUpdate extends InfoGraphicsListEvent {
   final List<DocumentSnapshot> infoGraphicsListWHO;
 
-  InfoGraphicsListWHOUpdate(this.infoGraphicsListWHO);
+  const InfoGraphicsListWHOUpdate(this.infoGraphicsListWHO);
 
   @override
-  List<Object> get props => [infoGraphicsListWHO];
+  List<Object> get props => <Object>[infoGraphicsListWHO];
 }

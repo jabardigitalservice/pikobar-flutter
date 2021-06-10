@@ -22,7 +22,7 @@ class RapidTestBloc extends Bloc<RapidTestEvent, RapidTestState> {
       try {
         RapidTestModel record = await _rapidTestReposity.fetchRecord();
         yield RapidTestLoaded(record: record);
-      } catch (e) {
+      } on Exception catch (e) {
         yield RapidTestFailure(
             error: CustomException.onConnectionException(e.toString()));
       }

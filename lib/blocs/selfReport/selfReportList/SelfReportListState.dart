@@ -1,34 +1,31 @@
 part of 'SelfReportListBloc.dart';
 
 abstract class SelfReportListState extends Equatable {
-  const SelfReportListState([List props = const <dynamic>[]]);
+  const SelfReportListState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class SelfReportListInitial extends SelfReportListState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportListInitial extends SelfReportListState {}
 
-class SelfReportListLoading extends SelfReportListState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportListLoading extends SelfReportListState {}
 
 @immutable
 class SelfReportListLoaded extends SelfReportListState {
   final QuerySnapshot querySnapshot;
 
-  SelfReportListLoaded({@required this.querySnapshot});
+  const SelfReportListLoaded({@required this.querySnapshot});
 
   @override
-  List<Object> get props => [querySnapshot];
+  List<Object> get props => <Object>[querySnapshot];
 }
 
 class SelfReportListFailure extends SelfReportListState {
   final String error;
 
-  SelfReportListFailure({@required this.error});
+  const SelfReportListFailure({@required this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

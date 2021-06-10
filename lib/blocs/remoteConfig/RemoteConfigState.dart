@@ -2,35 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 abstract class RemoteConfigState extends Equatable {
-  const RemoteConfigState([List props = const <dynamic>[]]);
-}
-
-class InitialRemoteConfigState extends RemoteConfigState {
-  @override
-  List<Object> get props => [];
-}
-
-class RemoteConfigLoading extends RemoteConfigState {
-  @override
-  String toString() {
-    return 'State RemoteConfigLoading';
-  }
+  const RemoteConfigState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
+
+class InitialRemoteConfigState extends RemoteConfigState {}
+
+class RemoteConfigLoading extends RemoteConfigState {}
 
 class RemoteConfigLoaded extends RemoteConfigState {
   final RemoteConfig remoteConfig;
 
-  RemoteConfigLoaded(this.remoteConfig) : super([remoteConfig]);
+  const RemoteConfigLoaded(this.remoteConfig);
 
   @override
-  String toString() {
-    return 'State RemoteConfigLoaded';
-  }
-
-  @override
-  List<Object> get props => [remoteConfig];
+  List<Object> get props => <Object>[remoteConfig];
 }
-

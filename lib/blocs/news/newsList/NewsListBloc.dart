@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/repositories/NewsRepository.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
@@ -10,7 +9,7 @@ import 'Bloc.dart';
 
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
   LabelNew labelNew = LabelNew();
 
   NewsListBloc() : super(InitialNewsListState());
@@ -37,7 +36,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
 
 
 
-  _loadData(collection, bool statImportantInfo, int limit) {
+  _loadData(String collection, bool statImportantInfo, int limit) {
     _subscription?.cancel();
     _subscription = collection == NewsType.articlesImportantInfo
         ? _repository

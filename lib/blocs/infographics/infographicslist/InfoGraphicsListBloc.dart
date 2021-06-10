@@ -52,7 +52,7 @@ class InfoGraphicsListBloc
     }
   }
 
-  void _loadData(infoGraphicsCollection, int limit) {
+  void _loadData(String infoGraphicsCollection, int limit) {
     _subscription?.cancel();
     _subscription = infoGraphicsCollection == kAllInfographics
         ? _repository.getAllInfographicList().listen((event) {

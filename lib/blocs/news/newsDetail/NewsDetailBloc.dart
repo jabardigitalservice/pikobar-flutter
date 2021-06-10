@@ -23,7 +23,7 @@ class NewsDetailBloc extends Bloc<NewsDetailEvent, NewsDetailState> {
             : await NewsRepository().getNewsDetail(
                 newsCollection: event.newsCollection, newsId: event.newsId);
         yield NewsDetailLoaded(record);
-      } catch (e) {
+      } on Exception catch (e) {
         yield NewsDetailFailure(
             error: CustomException.onConnectionException(e.toString()));
       }

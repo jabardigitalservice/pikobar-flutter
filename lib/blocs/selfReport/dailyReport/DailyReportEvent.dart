@@ -1,7 +1,10 @@
 part of 'DailyReportBloc.dart';
 
 abstract class DailyReportEvent extends Equatable {
-  const DailyReportEvent([List props = const <dynamic>[]]);
+  const DailyReportEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class DailyReportSave extends DailyReportEvent {
@@ -14,5 +17,5 @@ class DailyReportSave extends DailyReportEvent {
       : assert(dailyReportModel != null);
 
   @override
-  List<Object> get props => [dailyReportModel];
+  List<Object> get props => <Object>[dailyReportModel];
 }

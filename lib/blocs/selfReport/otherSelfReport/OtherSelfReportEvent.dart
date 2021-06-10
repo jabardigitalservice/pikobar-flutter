@@ -1,13 +1,13 @@
 part of 'OtherSelfReportBloc.dart';
 
 abstract class OtherSelfReportEvent extends Equatable {
-  const OtherSelfReportEvent([List props = const <dynamic>[]]);
+  const OtherSelfReportEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class OtherSelfReportLoad extends OtherSelfReportEvent {
-  @override
-  List<Object> get props => [];
-}
+class OtherSelfReportLoad extends OtherSelfReportEvent {}
 
 class OtherSelfReportUpdated extends OtherSelfReportEvent {
   final QuerySnapshot selfReportList;
@@ -15,7 +15,7 @@ class OtherSelfReportUpdated extends OtherSelfReportEvent {
   const OtherSelfReportUpdated(this.selfReportList);
 
   @override
-  List<Object> get props => [selfReportList];
+  List<Object> get props => <Object>[selfReportList];
 }
 
 

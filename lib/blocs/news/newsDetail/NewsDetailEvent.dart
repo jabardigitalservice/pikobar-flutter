@@ -2,7 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 abstract class NewsDetailEvent extends Equatable {
-  const NewsDetailEvent([List props = const <dynamic>[]]);
+  const NewsDetailEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class NewsDetailLoad extends NewsDetailEvent {
@@ -13,7 +16,6 @@ class NewsDetailLoad extends NewsDetailEvent {
   NewsDetailLoad({@required this.newsCollection, @required this.newsId});
 
   @override
-  // TODO: implement props
-  List<Object> get props => [newsCollection, newsId];
+  List<Object> get props => <Object>[newsCollection, newsId];
 
 }

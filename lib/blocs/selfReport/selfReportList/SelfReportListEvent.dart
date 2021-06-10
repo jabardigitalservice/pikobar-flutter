@@ -1,14 +1,16 @@
 part of 'SelfReportListBloc.dart';
 
 abstract class SelfReportListEvent extends Equatable {
-  const SelfReportListEvent([List props = const <dynamic>[]]);
+  const SelfReportListEvent();
 }
 
 class SelfReportListLoad extends SelfReportListEvent {
   final String otherUID, recurrenceReport;
-  SelfReportListLoad({this.otherUID, this.recurrenceReport});
+
+  const SelfReportListLoad({this.otherUID, this.recurrenceReport});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[otherUID, recurrenceReport];
 }
 
 class SelfReportListUpdated extends SelfReportListEvent {
@@ -17,5 +19,5 @@ class SelfReportListUpdated extends SelfReportListEvent {
   const SelfReportListUpdated(this.selfReportList);
 
   @override
-  List<Object> get props => [selfReportList];
+  List<Object> get props => <Object>[selfReportList];
 }

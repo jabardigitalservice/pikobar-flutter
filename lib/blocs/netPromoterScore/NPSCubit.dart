@@ -13,7 +13,7 @@ class NPSCubit extends Cubit<NPSState> {
     try {
       await NPSRepository.saveNPS(npsData: npsData);
       emit(NPSSaved());
-    } catch (e) {
+    } on Exception catch (e) {
       emit(NPSFailed(e.toString()));
     }
   }

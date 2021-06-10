@@ -5,11 +5,11 @@ import 'package:pikobar_flutter/repositories/ImportantInfoRepository.dart';
 import './Bloc.dart';
 
 class ImportantInfoDetailBloc
-    extends Bloc<ImportantInfoDetailEvent, importantInfoDetailState> {
+    extends Bloc<ImportantInfoDetailEvent, ImportantInfoDetailState> {
   ImportantInfoDetailBloc() : super(InitialImportantInfoDetailState());
 
   @override
-  Stream<importantInfoDetailState> mapEventToState(
+  Stream<ImportantInfoDetailState> mapEventToState(
     ImportantInfoDetailEvent event,
   ) async* {
     if (event is ImportantInfoDetailLoad) {

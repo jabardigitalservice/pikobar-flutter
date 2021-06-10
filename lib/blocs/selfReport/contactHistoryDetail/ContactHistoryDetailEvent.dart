@@ -1,14 +1,17 @@
 part of 'ContactHistoryDetailBloc.dart';
 
 abstract class ContactHistoryDetailEvent extends Equatable {
-  const ContactHistoryDetailEvent([List props = const <dynamic>[]]);
+  const ContactHistoryDetailEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class ContactHistoryDetailLoad extends ContactHistoryDetailEvent {
   final String contactHistoryId;
 
-  ContactHistoryDetailLoad({@required this.contactHistoryId});
+  const ContactHistoryDetailLoad({@required this.contactHistoryId});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [contactHistoryId];
 }

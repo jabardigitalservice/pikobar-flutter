@@ -1,13 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 abstract class RapidTestEvent extends Equatable {
-  RapidTestEvent([List props = const <dynamic>[]]);
-}
-
-class RapidTestLoad extends RapidTestEvent {
-  @override
-  String toString() => 'RapidTestLoad';
+  const RapidTestEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
+
+class RapidTestLoad extends RapidTestEvent {}

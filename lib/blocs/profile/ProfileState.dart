@@ -5,105 +5,61 @@ import 'package:pikobar_flutter/models/CityModel.dart';
 
 @immutable
 abstract class ProfileState extends Equatable {
-  ProfileState([List props = const <dynamic>[]]);
+  const ProfileState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class ProfileUninitialized extends ProfileState {
-  @override
-  String toString() => 'ProfileUninitialized';
+class ProfileUninitialized extends ProfileState {}
 
-  @override
-  List<Object> get props => [];
-}
+class ProfileSaved extends ProfileState {}
 
-class ProfileSaved extends ProfileState {
-  @override
-  String toString() => 'ProfileSaved';
+class ProfileVerified extends ProfileState {}
 
-  @override
-  List<Object> get props => [];
-}
-
-class ProfileVerified extends ProfileState {
-  @override
-  String toString() => 'ProfileVerified';
-
-  @override
-  List<Object> get props => [];
-}
-
-class ProfileWaiting extends ProfileState {
-  @override
-  String toString() => 'ProfileWaiting';
-
-  @override
-  List<Object> get props => [];
-}
+class ProfileWaiting extends ProfileState {}
 
 class ProfileOTPSent extends ProfileState {
   final String verificationID;
-  ProfileOTPSent({this.verificationID});
-  @override
-  String toString() => 'ProfileOTPSent';
+
+  const ProfileOTPSent({this.verificationID});
 
   @override
-  List<Object> get props => [verificationID];
+  List<Object> get props => <Object>[verificationID];
 }
 
-class ProfileVerifiedFailed extends ProfileState {
-  @override
-  String toString() => 'ProfileVerifiedFailed';
-
-  @override
-  List<Object> get props => [];
-}
+class ProfileVerifiedFailed extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
   final DocumentSnapshot profile;
-  ProfileLoaded({this.profile});
-  @override
-  String toString() => 'ProfileLoaded';
+
+  const ProfileLoaded({this.profile});
 
   @override
-  List<Object> get props => [profile];
+  List<Object> get props => <Object>[profile];
 }
 
-class ProfileLoading extends ProfileState {
-  @override
-  String toString() => 'ProfileLoading';
-
-  @override
-  List<Object> get props => [];
-}
+class ProfileLoading extends ProfileState {}
 
 class ProfileFailure extends ProfileState {
   final String error;
 
-  ProfileFailure({@required this.error}) : super([error]);
+  const ProfileFailure({@required this.error});
 
   @override
   String toString() => 'Profile { error: $error }';
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }
 
-class CityLoading extends ProfileState {
-  @override
-  String toString() => 'CityLoading';
-
-  @override
-  List<Object> get props => [];
-}
+class CityLoading extends ProfileState {}
 
 class CityLoaded extends ProfileState {
   final CityModel record;
 
-  CityLoaded({@required this.record});
+  const CityLoaded({@required this.record});
 
   @override
-  List<Object> get props => [record];
-
-  @override
-  String toString() => 'CityLoaded { record: $record }';
+  List<Object> get props => <Object>[record];
 }

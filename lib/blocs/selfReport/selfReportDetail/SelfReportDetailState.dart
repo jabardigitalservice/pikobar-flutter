@@ -1,33 +1,30 @@
 part of 'SelfReportDetailBloc.dart';
 
 abstract class SelfReportDetailState extends Equatable {
-  const SelfReportDetailState([List props = const <dynamic>[]]);
+  const SelfReportDetailState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class SelfReportDetailInitial extends SelfReportDetailState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportDetailInitial extends SelfReportDetailState {}
 
-class SelfReportDetailLoading extends SelfReportDetailState {
-  @override
-  List<Object> get props => [];
-}
+class SelfReportDetailLoading extends SelfReportDetailState {}
 
 class SelfReportDetailLoaded extends SelfReportDetailState {
   final DocumentSnapshot documentSnapshot;
 
-  SelfReportDetailLoaded({@required this.documentSnapshot});
+  const SelfReportDetailLoaded({@required this.documentSnapshot});
 
   @override
-  List<Object> get props => [documentSnapshot];
+  List<Object> get props => <Object>[documentSnapshot];
 }
 
 class SelfReportDetailFailure extends SelfReportDetailState {
   final String error;
 
-  SelfReportDetailFailure({@required this.error});
+  const SelfReportDetailFailure({@required this.error});
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

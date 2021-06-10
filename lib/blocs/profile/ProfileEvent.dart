@@ -6,14 +6,18 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class ProfileEvent extends Equatable {
-  ProfileEvent([List props = const <dynamic>[]]);
+  const ProfileEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class Save extends ProfileEvent {
   final String id, phoneNumber, gender, address, cityId, provinceId, name, nik;
   final DateTime birthdate;
   final LatLng latLng;
-  Save(
+
+  const Save(
       {this.id,
       this.phoneNumber,
       this.gender,
@@ -24,11 +28,9 @@ class Save extends ProfileEvent {
       this.nik,
       this.birthdate,
       this.latLng});
-  @override
-  String toString() => 'Save';
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
         id,
         phoneNumber,
         gender,
@@ -48,18 +50,21 @@ class Verify extends ProfileEvent {
   final PhoneVerificationFailed verificationFailed;
   final PhoneCodeSent codeSent;
 
-  Verify(
+  const Verify(
       {this.id,
       this.phoneNumber,
       this.verificationCompleted,
       this.verificationFailed,
       this.codeSent});
-  @override
-  String toString() => 'Verify';
 
   @override
-  List<Object> get props =>
-      [id, phoneNumber, verificationCompleted, verificationFailed, codeSent];
+  List<Object> get props => <Object>[
+        id,
+        phoneNumber,
+        verificationCompleted,
+        verificationFailed,
+        codeSent
+      ];
 }
 
 class ConfirmOTP extends ProfileEvent {
@@ -75,7 +80,8 @@ class ConfirmOTP extends ProfileEvent {
       nik;
   final DateTime birthdate;
   final LatLng latLng;
-  ConfirmOTP(
+
+  const ConfirmOTP(
       {this.smsCode,
       this.verificationID,
       this.id,
@@ -88,11 +94,9 @@ class ConfirmOTP extends ProfileEvent {
       this.nik,
       this.birthdate,
       this.latLng});
-  @override
-  String toString() => 'ConfirmOTP';
 
   @override
-  List<Object> get props => [
+  List<Object> get props => <Object>[
         smsCode,
         verificationID,
         id,
@@ -108,55 +112,35 @@ class ConfirmOTP extends ProfileEvent {
       ];
 }
 
-class VerifyConfirm extends ProfileEvent {
-  @override
-  String toString() => 'VerifyConfirm';
+class VerifyConfirm extends ProfileEvent {}
 
-  @override
-  List<Object> get props => [];
-}
-
-class VerifyFailed extends ProfileEvent {
-  @override
-  String toString() => 'VerifyFailed';
-
-  @override
-  List<Object> get props => [];
-}
+class VerifyFailed extends ProfileEvent {}
 
 class CodeSend extends ProfileEvent {
   final String verificationID;
-  CodeSend({this.verificationID});
-  @override
-  String toString() => 'CodeSend';
+
+  const CodeSend({this.verificationID});
 
   @override
-  List<Object> get props => [verificationID];
+  List<Object> get props => <Object>[verificationID];
 }
 
-class CityLoad extends ProfileEvent {
-  @override
-  String toString() => 'CityLoad';
-
-  @override
-  List<Object> get props => [];
-}
+class CityLoad extends ProfileEvent {}
 
 class ProfileLoad extends ProfileEvent {
   final String uid;
-  ProfileLoad({@required this.uid});
-  @override
-  String toString() => 'ProfileLoad';
+
+  const ProfileLoad({@required this.uid});
 
   @override
-  List<Object> get props => [uid];
+  List<Object> get props => <Object>[uid];
 }
 
 class ProfileUpdated extends ProfileEvent {
   final DocumentSnapshot profile;
 
-   ProfileUpdated(this.profile);
+  const ProfileUpdated(this.profile);
 
   @override
-  List<Object> get props => [profile];
+  List<Object> get props => <Object>[profile];
 }
