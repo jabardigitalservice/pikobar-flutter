@@ -11,6 +11,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
+import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
@@ -18,7 +19,10 @@ import 'package:recase/recase.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DailyChart extends StatefulWidget {
+  final DailyChartBloc dailyChartBloc;
+
   DailyChart({
+    this.dailyChartBloc,
     Key key,
   }) : super(key: key);
 
@@ -45,7 +49,8 @@ class _DailyChartState extends State<DailyChart> {
               ? _buildDailyChartBloc(
                   context,
                 )
-              : _buildIntroContent()
+              : _buildIntroContent(Dictionary.introChartTitle,
+                  Dictionary.shareChartInfo, Dictionary.shareLocation)
           : Container();
     });
   }
@@ -98,11 +103,16 @@ class _DailyChartState extends State<DailyChart> {
           ? _buildLoading()
           : state is DailyChartLoaded
               ? buildChart(state.record)
-              : Container();
+              : state is DailyChartFailure
+                  ? _buildIntroContent(
+                      Dictionary.errorLoadChart,
+                      Dictionary.errorLoadChartDesc,
+                      Dictionary.errorLoadChartButton)
+                  : Container();
     });
   }
 
-  Widget _buildIntroContent() {
+  Widget _buildIntroContent(String title, description, titleButton) {
     final Size size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.all(Dimens.contentPadding),
@@ -158,7 +168,7 @@ class _DailyChartState extends State<DailyChart> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(Dictionary.introChartTitle,
+                          Text(title,
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: FontsFamily.roboto,
@@ -167,7 +177,7 @@ class _DailyChartState extends State<DailyChart> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(Dictionary.shareChartInfo,
+                          Text(description,
                               style: TextStyle(
                                   fontSize: 12,
                                   fontFamily: FontsFamily.roboto,
@@ -180,7 +190,7 @@ class _DailyChartState extends State<DailyChart> {
                     ],
                   ),
                   RoundedButton(
-                      title: Dictionary.shareLocation,
+                      title: titleButton,
                       textStyle: TextStyle(
                           fontFamily: FontsFamily.lato,
                           fontSize: 12,
@@ -189,10 +199,14 @@ class _DailyChartState extends State<DailyChart> {
                       color: ColorBase.green,
                       elevation: 0,
                       onPressed: () async {
-                        AnalyticsHelper.setLogEvent(
-                            Analytics.tappedShareLocation);
-                        await LocationService.initializeBackgroundLocation(
-                            context);
+                        if (titleButton == Dictionary.shareLocation) {
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedShareLocation);
+                          await LocationService.initializeBackgroundLocation(
+                              context);
+                        } else {
+                          widget.dailyChartBloc.add(LoadDailyChart());
+                        }
                       })
                 ],
               ),

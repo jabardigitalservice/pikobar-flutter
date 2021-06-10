@@ -470,6 +470,10 @@ class Dictionary {
   static const String confirmedData = 'Data Terkonfirmasi ';
   static const String last7DaysConfirmedData =
       'Data Terkonfirmasi 7 Hari Terakhir';
+  static const String errorLoadChart = 'Gagal Menampilkan Chart Harian';
+  static const String errorLoadChartDesc =
+      'Muat ulang dengan klik di bawah ini';
+  static const String errorLoadChartButton = 'Muat Ulang';
 
   ///bansos
   static const String bansosWelcomeText =
