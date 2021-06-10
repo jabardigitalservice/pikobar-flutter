@@ -53,6 +53,7 @@ class HomeScreenState extends State<HomeScreen>
   RapidTestAntigenBloc _rapidTestAntigenBloc;
   PcrTestBloc _pcrTestBloc;
   PcrTestIndividuBloc _pcrTestIndividuBloc;
+  DailyChartBloc _dailyChartBloc;
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
   List<String> listItemTitleTab = [
@@ -158,24 +159,20 @@ class HomeScreenState extends State<HomeScreen>
         BlocProvider<PcrTestIndividuBloc>(
             create: (context) => _pcrTestIndividuBloc = PcrTestIndividuBloc()
               ..add(PcrTestIndividuLoad())),
-        BlocProvider<NewsListBloc>(
-            create: (context) => NewsListBloc()),
+        BlocProvider<NewsListBloc>(create: (context) => NewsListBloc()),
         BlocProvider<ImportantInfoListBloc>(
-            create: (context) =>
-                ImportantInfoListBloc()),
-        BlocProvider<VideoListBloc>(
-            create: (context) => VideoListBloc()),
+            create: (context) => ImportantInfoListBloc()),
+        BlocProvider<VideoListBloc>(create: (context) => VideoListBloc()),
         BlocProvider<InfoGraphicsListBloc>(
             create: (context) => InfoGraphicsListBloc()),
-        BlocProvider<DocumentsBloc>(
-            create: (context) => DocumentsBloc()),
+        BlocProvider<DocumentsBloc>(create: (context) => DocumentsBloc()),
         BlocProvider<CheckDistributionBloc>(
             create: (context) => CheckDistributionBloc(
                 checkDistributionRepository: CheckDistributionRepository())),
         BlocProvider<CityListBloc>(
             create: (context) => CityListBloc()..add(CityListLoad())),
         BlocProvider<DailyChartBloc>(
-            create: (context) =>
+            create: (context) => _dailyChartBloc =
                 DailyChartBloc(dailyChartRepository: DailyChartRepository())
                   ..add(LoadDailyChart())),
       ],
@@ -245,7 +242,7 @@ class HomeScreenState extends State<HomeScreen>
                 listItemTitleTab[index]);
           },
           tabBarView: <Widget>[
-            JabarTodayScreen(),
+            JabarTodayScreen(dailyChartBloc: _dailyChartBloc),
             CovidInformationScreen(
               homeScreenState: this,
             ),
@@ -262,6 +259,7 @@ class HomeScreenState extends State<HomeScreen>
     tabController.dispose();
     _remoteConfigBloc.close();
     _bannersBloc.close();
+    _dailyChartBloc.close();
     if (_statisticsBloc != null) {
       _statisticsBloc.close();
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pikobar_flutter/blocs/dailyChart/DailyChartBloc.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
 import 'package:pikobar_flutter/screens/home/components/AnnouncementScreen.dart';
@@ -10,7 +11,8 @@ import 'package:pikobar_flutter/screens/home/components/Zonation.dart';
 import 'package:pikobar_flutter/screens/home/components/statistics/Statistics.dart';
 
 class JabarTodayScreen extends StatefulWidget {
-  JabarTodayScreen({Key key}) : super(key: key);
+  final DailyChartBloc dailyChartBloc;
+  JabarTodayScreen({this.dailyChartBloc, key}) : super(key: key);
 
   @override
   _JabarTodayScreenState createState() => _JabarTodayScreenState();
@@ -64,7 +66,7 @@ class _JabarTodayScreenState extends State<JabarTodayScreen> {
                   width: MediaQuery.of(context).size.width,
                   height: 10,
                 ),
-                DailyChart(),
+                DailyChart(dailyChartBloc: widget.dailyChartBloc),
               ],
             ),
           ),
