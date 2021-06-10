@@ -215,17 +215,17 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           AnalyticsHelper.setLogEvent(analyticsData[index]);
         },
         tabBarView: <Widget>[
-          _buildNews(Dictionary.allNews),
-          if (statImportantInfo) _buildNews(Dictionary.importantInfo),
-          _buildNews(Dictionary.latestNews),
-          _buildNews(Dictionary.nationalNews),
-          _buildNews(Dictionary.worldNews),
+          _buildNewsAll(Dictionary.allNews),
+          if (statImportantInfo) _buildNewsImportant(Dictionary.importantInfo),
+          _buildNewsJabar(Dictionary.latestNews),
+          _buildNewsNational(Dictionary.nationalNews),
+          _buildNewsWorld(Dictionary.worldNews),
         ],
       ),
     );
   }
 
-  _buildNews(news) {
+  _buildNewsAll(news) {
     return BlocListener<NewsListBloc, NewsListState>(
       listener: (context, state) {
         if (state is! InitialNewsListState && state is! NewsListLoading) {
@@ -244,8 +244,131 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
-                  child: state is! InitialNewsListState &&
-                          state is! NewsListLoading
+                  child: state is NewsListLoaded
+                      ? _buildContent(list: _limitedDocs, news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildNewsImportant(news) {
+    return BlocListener<NewsListBloc, NewsListState>(
+      listener: (context, state) {
+        if (state is! InitialNewsListState && state is! NewsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<NewsListBloc, NewsListState>(
+        builder: (context, state) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListImportantLoaded
+                      ? _buildContent(list: _limitedDocs, news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildNewsJabar(news) {
+    return BlocListener<NewsListBloc, NewsListState>(
+      listener: (context, state) {
+        if (state is! InitialNewsListState && state is! NewsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<NewsListBloc, NewsListState>(
+        builder: (context, state) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListJabarLoaded
+                      ? _buildContent(list: _limitedDocs, news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildNewsNational(news) {
+    return BlocListener<NewsListBloc, NewsListState>(
+      listener: (context, state) {
+        if (state is! InitialNewsListState && state is! NewsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<NewsListBloc, NewsListState>(
+        builder: (context, state) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListNationalLoaded
+                      ? _buildContent(list: _limitedDocs, news: news)
+                      : _buildLoading(),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildNewsWorld(news) {
+    return BlocListener<NewsListBloc, NewsListState>(
+      listener: (context, state) {
+        if (state is! InitialNewsListState && state is! NewsListLoading) {
+          _listenInnerScroll(context);
+        }
+      },
+      child: BlocBuilder<NewsListBloc, NewsListState>(
+        builder: (context, state) {
+          return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverOverlapInjector(
+                  handle:
+                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                ),
+                SliverToBoxAdapter(
+                  child: state is NewsListWorldLoaded
                       ? _buildContent(list: _limitedDocs, news: news)
                       : _buildLoading(),
                 )
