@@ -244,7 +244,7 @@ class Dictionary {
   static String surveyInfo =
       'Dengan mengisi Survei ini, Anda telah membantu Jawa Barat menjadi lebih baik lagi. Yuk, segera isi Survei yang telah kami sediakan di bawah ini.';
   static String checkAroundYou = 'Cek Sekitar Anda';
-  static String youAreIn = 'Anda berada di Zona';
+  static String youAreIn = 'Anda berada di ';
   static String referralHospitalModel = 'ReferralHospitalModel';
   static String isolationCenterModel = 'IsolationCenterModel';
   static String callCenterModel = 'CallCenterModel';
@@ -413,7 +413,7 @@ class Dictionary {
   static String searchInformation = 'Cari Informasi di sini';
 
   // Zonation
-  static const String zonation = 'Zonasi';
+  static const String zonation = 'Zona';
   static const String zonationSource = 'Sumber Zonasi';
   static const String zoneHighRisk = 'RISIKO TINGGI';
   static const String zoneMediumRisk = 'RISIKO SEDANG';

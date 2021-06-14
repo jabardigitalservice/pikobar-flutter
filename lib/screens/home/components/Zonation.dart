@@ -247,7 +247,9 @@ class _ZonationState extends State<Zonation> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Wrap(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Icon(
                     Icons.circle,
@@ -257,34 +259,31 @@ class _ZonationState extends State<Zonation> {
                   const SizedBox(
                     width: 12,
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        '${Dictionary.youAreIn} $zone',
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: FontsFamily.roboto,
-                            fontWeight: FontWeight.w700),
+                  Expanded(
+                    child: Text(
+                      '${Dictionary.youAreIn}${StringUtils.capitalizeWord(data.currentLocation.namaKab)}, ${Dictionary.zonation} $zone',
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: FontsFamily.roboto,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Icon(
+                        Icons.help_outline_outlined,
+                        size: 16,
+                        color: ColorBase.netralGrey,
                       ),
-                      GestureDetector(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: Icon(
-                            Icons.help_outline_outlined,
-                            size: 16,
-                            color: ColorBase.netralGrey,
-                          ),
-                        ),
-                        onTap: () {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.zonationSource,
-                              message: Dictionary.sourceZonationInfo);
-                        },
-                      ),
-                    ],
+                    ),
+                    onTap: () {
+                      showTextBottomSheet(
+                          context: context,
+                          title: Dictionary.zonationSource,
+                          message: Dictionary.sourceZonationInfo);
+                    },
                   )
                 ],
               ),
