@@ -59,7 +59,11 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
 
                 if (limit != null) {
-                  dataListAllNews = dataListAllNews.getRange(0, limit).toList();
+                  int maxLimit = limit <= dataListAllNews.length
+                      ? limit
+                      : dataListAllNews.length;
+
+                  dataListAllNews = dataListAllNews.getRange(0, maxLimit).toList();
                 }
 
                 add(NewsListUpdate(dataListAllNews));
