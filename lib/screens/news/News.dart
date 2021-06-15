@@ -272,7 +272,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListImportantLoaded
@@ -303,7 +303,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListJabarLoaded
@@ -334,7 +334,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListNationalLoaded
@@ -365,7 +365,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
               slivers: [
                 SliverOverlapInjector(
                   handle:
-                  NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 ),
                 SliverToBoxAdapter(
                   child: state is NewsListWorldLoaded
@@ -394,7 +394,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   _buildContent({List<NewsModel> list, news}) {
     if (searchQuery != null) {
-      list = list
+      list = _allDocs
           .where((test) =>
               test.title.toLowerCase().contains(searchQuery.toLowerCase()))
           .take(_limitPerSearch)
@@ -597,9 +597,17 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   }
 
   _handleTabSelection() {
+
+    int _allDataLimit = _limitMax * (listCollectionData.length - 1);
+
     if (tabController.indexIsChanging) {
+      int _limit =
+          listCollectionData[tabController.index] == NewsType.allArticles
+              ? _allDataLimit
+              : _limitMax;
+
       _newsListBloc.add(NewsListLoad(listCollectionData[tabController.index],
-          statImportantInfo: statImportantInfo, limit: _limitMax));
+          statImportantInfo: statImportantInfo, limit: _limit));
     }
   }
 

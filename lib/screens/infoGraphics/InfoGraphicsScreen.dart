@@ -97,7 +97,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
     return BlocProvider<InfoGraphicsListBloc>(
       create: (context) => _infoGraphicsListBloc
         ..add(InfoGraphicsListLoad(
-            infoGraphicsCollection: kAllInfographics, limit: _limitMax)),
+            infoGraphicsCollection: kAllInfographics, limit: (_limitMax * (_listCollectionData.length - 1)))),
       child: BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
         listener: (context, state) {
           if (state is InfoGraphicsListLoaded) {
@@ -169,7 +169,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           default:
             _infoGraphicsListBloc.add(InfoGraphicsListLoad(
                 infoGraphicsCollection: _listCollectionData[index],
-                limit: _limitMax));
+                limit: (_limitMax * (_listCollectionData.length - 1))));
             AnalyticsHelper.setLogEvent(_analyticsData[index]);
         }
       },
@@ -305,7 +305,7 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   Widget _buildContent(List<DocumentSnapshot> listData) {
 
     if (_searchQuery != null) {
-      listData = listData
+      listData = _allDocs
           .where((test) =>
               test['title'].toLowerCase().contains(_searchQuery.toLowerCase()))
           .take(_limitPerSearch)
