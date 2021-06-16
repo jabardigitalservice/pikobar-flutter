@@ -2,13 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
 import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
-import 'package:pikobar_flutter/repositories/RemoteConfigRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
 
 part 'DailyChartEvent.dart';
@@ -33,15 +30,8 @@ class DailyChartBloc extends Bloc<DailyChartEvent, DailyChartState> {
       try {
         Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
-        List<Map<String, dynamic>> listCity =
-            await _dailyChartRepository.getCityList();
-        String cityId =
-            await _dailyChartRepository.getCityId(position, listCity);
-        RemoteConfig remoteConfig =
-            await RemoteConfigRepository().setupRemoteConfig();
-        DailyChartModel record = await _dailyChartRepository.fetchRecord(
-            cityId.replaceAll('.', ''),
-            remoteConfig.getString(FirebaseConfig.dashboardPikobarApiKey));
+        DailyChartModel record =
+            await _dailyChartRepository.fetchRecord(position);
         yield DailyChartLoaded(record: record);
       } on Exception catch (e) {
         yield DailyChartFailure(
