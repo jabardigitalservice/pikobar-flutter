@@ -4,6 +4,14 @@ import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 
 class RemoteConfigRepository {
+  static final RemoteConfigRepository _instance = RemoteConfigRepository._app();
+
+  RemoteConfigRepository._app();
+
+  factory RemoteConfigRepository() {
+    return _instance;
+  }
+
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults(<String, dynamic>{

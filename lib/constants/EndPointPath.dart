@@ -11,4 +11,5 @@ class EndPointPath {
   static String getCityList = Environment.baseUrl + '/wilayah';
   static String rapidTest = Environment.baseUrl + '/rekapitulasi/jabar';
   static String dailyChart = Environment.dahsboardPikobarUrl + '/kasus/harian';
+  static String getCity = Environment.dahsboardPikobarUrl + '/get_location';
 }
