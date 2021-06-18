@@ -213,6 +213,7 @@ class _CheckDistributionOtherScrennState
                     cityKeyword = newQuery;
                     cityId = null;
                     showSubCityList = false;
+                    _subCityIdController.text = '';
                   });
                 },
                 onFieldSubmitted: (String value) {
