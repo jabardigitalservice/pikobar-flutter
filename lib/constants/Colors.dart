@@ -21,6 +21,7 @@ class ColorBase {
   static final dodgerBlue = Color(0xff1E88E5);
   static final primaryLightGreen = Color(0xffE6F6EC);
   static final primaryGreen = Color(0xff16A75C);
+  static final primaryGreen400 = Color(0xff4DC27E);
   static final lightRed = Color(0xffFFEBEE);
 
   static final gradientGreen = [Color(0xFF0ad178), Color(0xFF009D57)];
