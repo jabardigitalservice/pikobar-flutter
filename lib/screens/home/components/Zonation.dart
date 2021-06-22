@@ -51,9 +51,7 @@ class _ZonationState extends State<Zonation> {
         create: (_) => _zonationCubit = ZonationCubit(),
         child: BlocListener<ZonationCubit, ZonationState>(
           listener: (_, state) async {
-            if (state is ZonationLoading) {
-              _flushbar = FlushHelper.loading()..show(context);
-            } else if (state is ZonationFailure) {
+            if (state is ZonationFailure) {
               await _flushbar.dismiss();
 
               await showDialog(
@@ -137,6 +135,7 @@ class _ZonationState extends State<Zonation> {
               ],
             ),
             RoundedButton(
+                isLoading: state is ZonationLoading ? true : false,
                 title: state is ZonationLoading
                     ? Dictionary.loading
                     : Dictionary.checkZone,
