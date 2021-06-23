@@ -32,7 +32,8 @@ class Zonation extends StatefulWidget {
   _ZonationState createState() => _ZonationState();
 }
 
-class _ZonationState extends State<Zonation> {
+class _ZonationState extends State<Zonation>
+    with AutomaticKeepAliveClientMixin<Zonation> {
   String _address = '-';
 
   CheckDistributionBloc _checkDistributionBloc;
@@ -47,37 +48,43 @@ class _ZonationState extends State<Zonation> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocProvider<ZonationCubit>(
-        create: (_) => _zonationCubit = ZonationCubit(),
-        child: BlocListener<ZonationCubit, ZonationState>(
-          listener: (_, state) async {
-            if (state is ZonationFailure) {
-              await _flushbar.dismiss();
+  bool get wantKeepAlive => true;
 
-              await showDialog(
-                  context: context,
-                  builder: (context) => DialogTextOnly(
-                        description: state.error.toString(),
-                        buttonText: Dictionary.ok.toUpperCase(),
-                        onOkPressed: () {
-                          Navigator.of(context).pop(); // To close the dialog
-                        },
-                      ));
-            } else if (state is ZonationLoaded) {
-              await _getAddress(state.position);
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return BlocProvider<ZonationCubit>(
+      create: (_) => _zonationCubit = ZonationCubit(),
+      child: BlocListener<ZonationCubit, ZonationState>(
+        listener: (_, state) async {
+          if (state is ZonationFailure) {
+            await _flushbar.dismiss();
 
-              await _flushbar.dismiss();
-            } else {
-              await _flushbar.dismiss();
-            }
-          },
-          child: BlocBuilder<ZonationCubit, ZonationState>(
-              builder: (BuildContext context, ZonationState state) =>
-                  state is ZonationLoaded
-                      ? _buildContent(state)
-                      : _buildIntroContent(state)),
-        ),
-      );
+            await showDialog(
+                context: context,
+                builder: (context) => DialogTextOnly(
+                      description: state.error.toString(),
+                      buttonText: Dictionary.ok.toUpperCase(),
+                      onOkPressed: () {
+                        Navigator.of(context).pop(); // To close the dialog
+                      },
+                    ));
+          } else if (state is ZonationLoaded) {
+            await _getAddress(state.position);
+
+            await _flushbar.dismiss();
+          } else {
+            await _flushbar.dismiss();
+          }
+        },
+        child: BlocBuilder<ZonationCubit, ZonationState>(
+            builder: (BuildContext context, ZonationState state) =>
+                state is ZonationLoaded
+                    ? _buildContent(state)
+                    : _buildIntroContent(state)),
+      ),
+    );
+  }
 
   Widget _buildIntroContent(ZonationState state) {
     final Size size = MediaQuery.of(context).size;
