@@ -26,7 +26,7 @@ class DailyChartRepository {
 
     final dynamic response = await http.get(
         '${EndPointPath.dailyChart}?wilayah=kota&kode_kab=$kodeKab',
-        headers: {'api-key': apiKey}).timeout(const Duration(seconds: 10));
+        headers: {'api-key': apiKey}).timeout(const Duration(seconds: 30));
     if (response.statusCode == 200) {
       final dynamic data = jsonDecode(response.body);
 
@@ -50,7 +50,7 @@ class DailyChartRepository {
 
     final http.Response response = await http.get(
         '$endPoint?lat=${position.latitude}&long=${position.longitude}',
-        headers: {'api-key': apiKey}).timeout(const Duration(seconds: 10));
+        headers: {'api-key': apiKey}).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final dynamic data = jsonDecode(response.body);
