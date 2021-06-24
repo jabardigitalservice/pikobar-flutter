@@ -41,11 +41,11 @@ class RoundedButton extends StatelessWidget {
                 ? borderRadius
                 : BorderRadius.circular(5.0),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              isLoading
-                  ? Container(
+          child: isLoading
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
                       height: 15.0,
                       width: 15.0,
                       margin: EdgeInsets.only(
@@ -55,11 +55,11 @@ class RoundedButton extends StatelessWidget {
                         valueColor: AlwaysStoppedAnimation<Color>(
                             ColorBase.primaryGreen400),
                       ),
-                    )
-                  : Container(),
-              Text(title, style: textStyle),
-            ],
-          ),
+                    ),
+                    Text(title, style: textStyle),
+                  ],
+                )
+              : Text(title, style: textStyle),
           onPressed: onPressed),
     );
   }
