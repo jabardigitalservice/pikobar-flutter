@@ -449,7 +449,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             /// Filtering data by search
             final List<IsolationCenterModel> tempList = state
                 .isolationCenterModel
-                .where((test) => test.name
+                .where((test) => test.city
                     .toLowerCase()
                     .contains(widget.searchQuery.toLowerCase()))
                 .toList();
