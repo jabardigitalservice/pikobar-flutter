@@ -113,8 +113,11 @@ class _FaqScreenState extends State<FaqScreen> {
                   indicatorColor: ColorBase.green,
                   labelColor: Colors.white,
                   showTitle: _showTitle,
-                  searchBar: CustomAppBar.buildSearchField(context, _searchController,
-                      Dictionary.searchInformation, updateSearchQuery,
+                  searchBar: CustomAppBar.buildSearchField(
+                      context,
+                      _searchController,
+                      Dictionary.searchInformation,
+                      updateSearchQuery,
                       margin: const EdgeInsets.only(
                           left: Dimens.contentPadding,
                           right: 16.0,
@@ -173,6 +176,11 @@ class _FaqScreenState extends State<FaqScreen> {
           )
         : ListView(
             children: [
+              widget.isNewPage
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                    )
+                  : Container(),
               EmptyData(
                 message: Dictionary.emptyData,
                 desc: Dictionary.descEmptyData,
