@@ -233,7 +233,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             /// Filtering data by search
             final List<ReferralHospitalModel> tempList = state
                 .referralHospitalList
-                .where((test) => test.name
+                .where((test) => test.city
                     .toLowerCase()
                     .contains(widget.searchQuery.toLowerCase()))
                 .toList();
