@@ -308,12 +308,12 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                                 firebaseConfig: FirebaseConfig.nikMessage,
                                 defaultValue:
                                     FirebaseConfig.nikMessageDefaultValue);
-                        final Map<String, dynamic> getUrl =
+                        final List<dynamic> getListData =
                             RemoteConfigHelper.decode(
                                 remoteConfig: remoteState.remoteConfig,
-                                firebaseConfig: FirebaseConfig.selfIsolationUrl,
-                                defaultValue: FirebaseConfig
-                                    .selfIsolationUrlDefaultValue);
+                                firebaseConfig: FirebaseConfig.selfIsolation,
+                                defaultValue:
+                                    FirebaseConfig.selfIsolationDefaultValue);
                         return Column(
                           children: [
                             Row(
@@ -398,36 +398,31 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                _buildContainer(
-                                    imageEnable:
-                                        '${Environment.iconAssets}telekonsultasi.png',
-                                    title: Dictionary.doctorConsultation,
-                                    length: 2,
-                                    //for give condition onPressed in widget _buildContainer
-                                    onPressedEnable: () async {
-                                      await launchExternal(
-                                          getUrl['doctor_consultation_url']);
-                                      await AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedDoctorConsultation);
-                                    },
-                                    isShowMenu: true),
-                                _buildContainer(
-                                    imageEnable:
-                                        '${Environment.iconAssets}handle_with_care.png',
-                                    title: Dictionary.vitaminApplication,
-                                    length: 2,
-                                    onPressedEnable: () async {
-                                      await launchExternal(
-                                          getUrl['vitamin_application_url']);
-                                      await AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedVitaminApplication);
-                                    },
-                                    isShowMenu: true),
-                              ],
-                            ),
+                            GridView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                        childAspectRatio: 1.4,
+                                        maxCrossAxisExtent: 200,
+                                        crossAxisSpacing: 5,
+                                        mainAxisSpacing: 5),
+                                itemCount: getListData.length,
+                                itemBuilder: (BuildContext context, int i) {
+                                  return _buildContainer(
+                                      isDynamic: true,
+                                      imageEnable: getListData[i]['icon'],
+                                      title: getListData[i]['title'],
+                                      length: 2,
+                                      //for give condition onPressed in widget _buildContainer
+                                      onPressedEnable: () async {
+                                        await launchExternal(
+                                            getListData[i]['url']);
+                                        await AnalyticsHelper.setLogEvent(
+                                            getListData[i]['analytics']);
+                                      },
+                                      isShowMenu: true);
+                                })
                           ],
                         );
                       } else {
@@ -596,7 +591,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       int length,
       GestureTapCallback onPressedEnable,
       GestureTapCallback onPressedDisable,
-      bool isShowMenu}) {
+      bool isShowMenu,
+      bool isDynamic = false}) {
     return Expanded(
         child: Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -617,7 +613,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
             children: <Widget>[
               Container(
                   height: 30,
-                  child: Image.asset(isShowMenu ? imageEnable : imageDisable)),
+                  child: isDynamic
+                      ? Image.network(imageEnable)
+                      : Image.asset(isShowMenu ? imageEnable : imageDisable)),
               Container(
                 margin: const EdgeInsets.only(top: 15, right: 10.0),
                 child: Text(title,
