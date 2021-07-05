@@ -54,6 +54,7 @@ class FirebaseConfig {
   static String successMessageSelfReport = 'succes_message_self_report';
   static String nikMessage = 'nik_message';
   static String dashboardPikobarApiKey = 'dashboard_pikobar_api_key';
+  static String selfIsolationUrl = 'self_isolation_url';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -291,5 +292,10 @@ class FirebaseConfig {
   static String nikMessageDefaultValue = '{'
       '"title": "NIK Tidak Terdaftar",'
       ' "description": "<p>Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini</p><p>Apabila Anda memiliki pertanyaan atau saran mengenai Kebijakan Privasi kami, jangan ragu untuk hubungi kami melalui email</p>"'
+      '}';
+
+  static String selfIsolationUrlDefaultValue = '{'
+      '"doctor_consultation_url": "https://wa.me/6285697391854?text=Halo%20Admin!%20Saya%20ingin%20tanya%20seputar%20Isolasi%20Mandiri",'
+      '"vitamin_application_url": "https://bit.ly/pcbr-isomanvit"'
       '}';
 }
