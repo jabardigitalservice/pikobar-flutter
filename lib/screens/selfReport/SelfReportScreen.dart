@@ -398,31 +398,17 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                                 ),
                               ],
                             ),
-                            GridView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    SliverGridDelegateWithMaxCrossAxisExtent(
-                                        childAspectRatio: 1.4,
-                                        maxCrossAxisExtent: 200,
-                                        crossAxisSpacing: 5,
-                                        mainAxisSpacing: 5),
-                                itemCount: getListData.length,
-                                itemBuilder: (BuildContext context, int i) {
-                                  return _buildContainer(
-                                      isDynamic: true,
-                                      imageEnable: getListData[i]['icon'],
-                                      title: getListData[i]['title'],
-                                      length: 2,
-                                      //for give condition onPressed in widget _buildContainer
-                                      onPressedEnable: () async {
-                                        await launchExternal(
-                                            getListData[i]['url']);
-                                        await AnalyticsHelper.setLogEvent(
-                                            getListData[i]['analytics']);
-                                      },
-                                      isShowMenu: true);
-                                })
+                            GridView(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                      childAspectRatio: 1.4,
+                                      maxCrossAxisExtent: 200,
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 5),
+                              children: getGridMenu(getListData),
+                            )
                           ],
                         );
                       } else {
@@ -673,6 +659,32 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                 },
               ));
     }
+  }
+
+  // Function to build list of group menu
+  List<Widget> getGridMenu(List<dynamic> getListData) {
+    final List<Widget> list = List();
+
+    for (int i = 0; i < getListData.length; i++) {
+      final Column column = Column(
+        children: <Widget>[
+          _buildContainer(
+              isDynamic: true,
+              imageEnable: getListData[i]['icon'],
+              title: getListData[i]['title'],
+              length: 2,
+              //for give condition onPressed in widget _buildContainer
+              onPressedEnable: () async {
+                await launchExternal(getListData[i]['url']);
+                await AnalyticsHelper.setLogEvent(getListData[i]['analytics']);
+              },
+              isShowMenu: true)
+        ],
+      );
+
+      list.add(column);
+    }
+    return list;
   }
 
   /// Function to get lat long user and auto complete address field
