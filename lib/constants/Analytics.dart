@@ -174,6 +174,9 @@ class Analytics {
   static String resetOtherReport = "tapped_menu_reset_orang_lain";
   static String submitResetDailyReport = "submitted_reset_diri_sendiri";
   static String submitResetOtherReport = "submitted_reset_orang_lain";
+  static String tappedDoctorConsultation =
+      "tapped_mobile_telekonsultasi_dokter";
+  static String tappedVitaminApplication = "tapped_mobile_permohonan_isoman";
 
   static String crowdReport = "tapped_lapor_kerumunan";
 

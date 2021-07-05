@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pikobar_flutter/blocs/educations/educationList/Bloc.dart';
+import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -104,8 +105,17 @@ class _EducationListScreenState extends State<EducationListScreen> {
 
   /// Widget for show loading when request data from server
   Widget _buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Skeleton(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 300,
+          decoration: BoxDecoration(
+              color: ColorBase.greyContainer,
+              borderRadius: BorderRadius.circular(Dimens.borderRadius)),
+        ),
+      ),
     );
   }
 

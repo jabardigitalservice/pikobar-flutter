@@ -54,6 +54,7 @@ class FirebaseConfig {
   static String successMessageSelfReport = 'succes_message_self_report';
   static String nikMessage = 'nik_message';
   static String dashboardPikobarApiKey = 'dashboard_pikobar_api_key';
+  static String selfIsolation = 'self_isolation';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -292,4 +293,19 @@ class FirebaseConfig {
       '"title": "NIK Tidak Terdaftar",'
       ' "description": "<p>Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini</p><p>Apabila Anda memiliki pertanyaan atau saran mengenai Kebijakan Privasi kami, jangan ragu untuk hubungi kami melalui email</p>"'
       '}';
+
+  static String selfIsolationDefaultValue = '['
+      '{'
+      '"title": "Telekonsultasi \nDokter",'
+      '"icon":"https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Ftelekonsultasi.png?alt=media&token=473d3122-ae38-4bca-9781-ea8015a23df5",'
+      '"analytics": "tapped_mobile_telekonsultasi_dokter",'
+      '"url":          "https://wa.me/6285697391854?text=Halo%20Admin!%20Saya%20ingin%20tanya%20seputar%20Isolasi%20Mandiri"'
+      '},'
+      ' {'
+      ' "title": "Permohonan Vitamin/Obat",'
+      ' "icon":          "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fhandle_with_care.png?alt=media&token=5ec08bc2-9687-4d19-9b76-a356be9b30b8",'
+      ' "analytics": "tapped_mobile_permohonan_isoman",'
+      ' "url": "https://bit.ly/pcbr-isomanvit"'
+      ' }'
+      ']';
 }

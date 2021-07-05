@@ -315,10 +315,10 @@ class Dictionary {
   // Self Report
   static String selfReportDetail = 'Detail Kesehatan Harian';
   static String monitoringDays = 'Pemantauan Hari ke-';
-  static String titleSelfReport = 'Lapor Mandiri';
+  static String titleSelfReport = 'Isolasi Mandiri';
   static String historyContact = 'Riwayat \nKontak';
   static String historyTravel = 'Lapor Aktivitas \nBepergian';
-  static String educationContent = 'Konten Edukasi';
+  static String educationContent = 'Panduan Isolasi Mandiri';
   static String profileNotComplete = 'Profil Anda Belum Lengkap';
   static String descProfile1 =
       'Lengkapi data diri anda untuk mengisi Laporan Kesehatan Harian. ';
@@ -408,6 +408,8 @@ class Dictionary {
       'Untuk melanjutkan laporan mandiri, silakan \nlakukan reset melalui tombol titik tiga di \npojok kanan atas';
   static String moreThan14DaysDesc =
       'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas';
+  static String doctorConsultation = 'Telekonsultasi \nDokter';
+  static String vitaminApplication = 'Permohonan Vitamin/Obat';
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';
