@@ -35,6 +35,7 @@ import 'package:pikobar_flutter/screens/selfReport/ContactHistoryScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationListScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/CustomSliverGridDelegate.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
@@ -402,9 +403,11 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                      childAspectRatio: 5.6 / 4,
-                                      maxCrossAxisExtent: 200,
+                                  SliverGridDelegateWithFixedCrossAxisAndHeight(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.16,
+                                      crossAxisCount: 2,
                                       crossAxisSpacing: 5,
                                       mainAxisSpacing: 5),
                               children: getGridMenu(getListData),
