@@ -403,7 +403,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               physics: NeverScrollableScrollPhysics(),
                               gridDelegate:
                                   SliverGridDelegateWithMaxCrossAxisExtent(
-                                      childAspectRatio: 1.4,
+                                      childAspectRatio: 5.6 / 4,
                                       maxCrossAxisExtent: 200,
                                       crossAxisSpacing: 5,
                                       mainAxisSpacing: 5),
