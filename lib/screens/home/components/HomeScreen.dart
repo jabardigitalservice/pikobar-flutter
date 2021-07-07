@@ -257,8 +257,9 @@ class HomeScreenState extends State<HomeScreen>
   void dispose() {
     tabController.dispose();
     _remoteConfigBloc.close();
-    _bannersBloc.close();
-    _dailyChartBloc.close();
+    if (_bannersBloc != null) {
+      _bannersBloc.close();
+    }
     if (_statisticsBloc != null) {
       _statisticsBloc.close();
     }
@@ -274,6 +275,10 @@ class HomeScreenState extends State<HomeScreen>
     if (_pcrTestIndividuBloc != null) {
       _pcrTestIndividuBloc.close();
     }
+    if (_dailyChartBloc != null) {
+      _dailyChartBloc.close();
+    }
+
     super.dispose();
   }
 }
