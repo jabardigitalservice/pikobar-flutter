@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -38,6 +37,7 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+import 'package:pikobar_flutter/utilities/SliverGrideDelegate.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class SelfReportScreen extends StatefulWidget {
@@ -402,9 +402,9 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               gridDelegate:
-                                  SliverGridDelegateWithMaxCrossAxisExtent(
-                                      childAspectRatio: 1.4,
-                                      maxCrossAxisExtent: 200,
+                                  SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
+                                      height: 135,
+                                      crossAxisCount: 2,
                                       crossAxisSpacing: 5,
                                       mainAxisSpacing: 5),
                               children: getGridMenu(getListData),
