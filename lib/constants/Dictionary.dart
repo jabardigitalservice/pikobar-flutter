@@ -12,6 +12,7 @@ class Dictionary {
   static String statistics = 'Data Kasus Jabar';
   static String dailyChart = 'Chart Harian';
   static String menus = 'Pusat Layanan & Informasi';
+  static String menu = 'Menu';
   static String help = 'FAQ';
   static String saberHoax = 'Saber Hoax';
   static String survey = 'Survei Pikobar';

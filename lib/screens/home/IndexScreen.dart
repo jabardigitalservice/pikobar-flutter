@@ -184,13 +184,17 @@ class IndexScreenState extends State<IndexScreen> {
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
-              Text(Dictionary.home),
+              Text(Dictionary.home,
+                  style: TextStyle(fontWeight: FontWeight.w600)),
             ],
           )),
       BottomNavigationBarItem(
         icon: Icon(EvaIcons.messageCircleOutline, size: 24),
         // ignore: deprecated_member_use
-        title: Text(Dictionary.message),
+        title: Text(
+          Dictionary.message,
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
       ),
       BottomNavigationBarItem(
           icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
@@ -198,7 +202,8 @@ class IndexScreenState extends State<IndexScreen> {
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
-              Text('Menu'),
+              Text(Dictionary.menu,
+                  style: TextStyle(fontWeight: FontWeight.w600)),
             ],
           )),
       BottomNavigationBarItem(
@@ -207,7 +212,8 @@ class IndexScreenState extends State<IndexScreen> {
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
-              Text(Dictionary.help),
+              Text(Dictionary.help,
+                  style: TextStyle(fontWeight: FontWeight.w600)),
             ],
           )),
       BottomNavigationBarItem(
@@ -216,7 +222,8 @@ class IndexScreenState extends State<IndexScreen> {
           title: Column(
             children: <Widget>[
               SizedBox(height: 4),
-              Text(Dictionary.profile),
+              Text(Dictionary.profile,
+                  style: TextStyle(fontWeight: FontWeight.w600)),
             ],
           )),
     ];
@@ -286,8 +293,10 @@ class IndexScreenState extends State<IndexScreen> {
             builder: (context) => Messages(indexScreenState: this)));
       }
     } else if (data['target'] == 'self_reports') {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => SelfReportScreen(toNextScreen: true,)));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SelfReportScreen(
+                toNextScreen: true,
+              )));
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
@@ -398,6 +407,8 @@ class IndexScreenState extends State<IndexScreen> {
               highlightColor: Colors.transparent,
             ),
             child: BottomNavigationBar(
+                selectedFontSize: 12,
+                unselectedFontSize: 12,
                 onTap: onTabTapped,
                 currentIndex: _currentIndex,
                 type: BottomNavigationBarType.fixed,
