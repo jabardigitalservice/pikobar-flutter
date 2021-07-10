@@ -34,11 +34,11 @@ Pikobar menggunakan [Firebase](https://firebase.google.com/) sebagai _backend_.
 
 #### Cloud Firestore Setup
 
-1. Di firebase console, pada _sidebar_, lihat grup `Develop`. Pilih `Database`.
+1. Di firebase console, pada _sidebar_, lihat grup `Develop`. Pilih `Firestore Database`.
 2. Klik `Create database`.
 3. Pilih `Start in production mode`,
 4. lalu pilih _location_ yang diinginkan untuk Cloud Firestore.
-![Create Database](https://user-images.githubusercontent.com/4391973/77878823-69d3ec80-7283-11ea-8a83-62857b58f229.png)
+![Create Database](https://user-images.githubusercontent.com/26060382/125148273-4290ee00-e15b-11eb-8e5b-0b2654bff56e.png)
 
   
 #### Firebase Service Account
