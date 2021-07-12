@@ -28,7 +28,7 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
     yield EducationLisLoading();
     _subscription?.cancel();
     _subscription = _repository
-        .getEducationList(educationCollection: collection)
+        .getEducationList(educationCollection: collection, limit: limit)
         .listen((List<EducationModel> education) =>
             add(EducationListUpdate(education)));
   }
