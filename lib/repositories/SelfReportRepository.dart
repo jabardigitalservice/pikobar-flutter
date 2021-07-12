@@ -170,8 +170,8 @@ class SelfReportRepository {
   }
 
   Stream<DocumentSnapshot> getIsReminder({@required String userId}) async* {
-
-    final DocumentReference selfReport = _firestore.collection(kSelfReports).doc(userId);
+    final DocumentReference selfReport =
+        _firestore.collection(kSelfReports).doc(userId);
     await selfReport.get().then((snapshot) async {
       if (!snapshot.exists) {
         await selfReport.set({'remind_me': false, 'user_id': userId});
@@ -244,13 +244,16 @@ class SelfReportRepository {
 
   Future<bool> checkNIK({@required String nik}) async {
     bool result = false;
-    await _firestore
-        .collection(kUsersQuarantined)
-        .doc(nik)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      result = documentSnapshot.exists;
-    });
+
+    try {
+      DocumentSnapshot doc = await _firestore
+          .collection(kUsersQuarantined)
+          .doc(nik)
+          .get();
+      result = doc.exists;
+    } on FirebaseException catch (e) {
+      print(e);
+    }
 
     return result;
   }
