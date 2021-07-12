@@ -35,6 +35,8 @@ class _DailyChartState extends State<DailyChart> {
   List<dynamic> filterData;
   String cityId;
   RemoteConfigLoaded remoteConfigLoaded;
+  DateTime firsDate = DateTime(2020);
+  DateTime lastDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +223,7 @@ class _DailyChartState extends State<DailyChart> {
     /// Filtering data by last 7 days
     filterData = dailyChartModel.data[0].series
         .where((element) => DateTime.parse(element.tanggal)
-            .isAfter(DateTime.now().add(Duration(days: -7))))
+            .isAfter(lastDate.add(Duration(days: -7))))
         .toList();
     final String firstDay =
         stringDateFormat(filterData.first.tanggal, 'dd MMM yyyy');
@@ -231,6 +233,20 @@ class _DailyChartState extends State<DailyChart> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        RaisedButton(
+          onPressed: () async {
+            DateTimeRange dateRange = await showDateRangePicker(
+                context: context,
+                firstDate: firsDate,
+                currentDate: DateTime.now(),
+                lastDate: DateTime.now());
+            setState(() {
+              lastDate = dateRange.end;
+            });
+            print(dateRange);
+          },
+          child: Text('data'),
+        ),
         Container(
           margin: EdgeInsets.all(Dimens.contentPadding),
           child: Column(
