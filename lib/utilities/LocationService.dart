@@ -171,9 +171,11 @@ class LocationService {
           .then((bg.State state) async {
         print("[ready] ${state.toMap()}");
 
-        bg.BackgroundGeolocation.start();
+        bg.State bgState = await bg.BackgroundGeolocation.start();
 
-        bg.BackgroundGeolocation.changePace(true);
+        if (bgState.enabled) {
+          await bg.BackgroundGeolocation.changePace(true);
+        }
       }).catchError((error) {
         print('[ready] ERROR: $error');
       });
