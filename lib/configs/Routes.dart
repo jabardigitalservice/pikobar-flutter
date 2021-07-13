@@ -3,6 +3,7 @@ import 'package:pikobar_flutter/components/BrowserScreen.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionScreen.dart';
+import 'package:pikobar_flutter/screens/covidData/covidData.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/document/DocumentListScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/ComplaintsMenuScreen.dart';
@@ -79,12 +80,17 @@ Route generateRoutes(RouteSettings settings) {
     case NavigationConstrants.Faq:
       return buildRoute(settings, FaqScreen());
 
+// screen Pikobar Complaint
     case NavigationConstrants.PikobarComplaints:
       return buildRoute(
           settings,
           ComplaintsMenuScreen(
             complaintsUrl: args,
           ));
+
+// screen Data Covid
+    case NavigationConstrants.covidData:
+      return buildRoute(settings, CovidDataScreen());
 
     default:
       return null;

@@ -7,6 +7,7 @@ class FirebaseConfig {
   static String jshUrl = 'jabarsaberhoax_url';
   static String announcement = 'announcement';
   static String jshCaption = 'jabarsaberhoax_caption';
+  static String covidDataCaption = 'data_covid_caption';
   static String pikobarCaption = 'pikobar_caption';
   static String pikobarUrl = 'pikobar_url';
   static String worldInfoCaption = 'world_info_caption';
@@ -61,6 +62,7 @@ class FirebaseConfig {
   static String loginRequired = 'login_required';
   static String emergencyNumberMenu = 'emergency_number_menu';
   static String pikobarInfoMenu = 'pikobar_info_menu';
+  static String covidDataMenu = 'data_covid_menu';
   static String nationalInfoMenu = 'national_info_menu';
   static String worldInfoMenu = 'world_info_menu';
   static String donationMenu = 'donasi_menu';
