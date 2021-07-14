@@ -54,15 +54,15 @@ class _MenuListState extends State<MenuList> {
         remoteMenuLoginKey: FirebaseConfig.covidDataMenu,
       ),
 
-      // Aduan Bansos (Added automatically)
+      // Aduan Pikobar
       BuildButtonMenu(
         remoteConfig: remoteConfig,
         iconPath: '${Environment.iconAssets}menu_aduan_bansos.png',
         defaultLabel: Dictionary.pikobarComplaints,
-        route: NavigationConstrants.PikobarComplaints,
-        defaultArguments: kUrlCaseReport,
-        firebaseConfigArguments: FirebaseConfig.reportUrl,
-        remoteMenuLoginKey: FirebaseConfig.reportMenu,
+        route: NavigationConstrants.Browser,
+        defaultArguments: kUrlPikobarHotline,
+        firebaseConfigArguments: FirebaseConfig.reportHotlineUrl,
+        remoteMenuLoginKey: FirebaseConfig.reportHotlineEnabled,
       ),
 
       // Nomor Darurat
@@ -78,7 +78,7 @@ class _MenuListState extends State<MenuList> {
         iconPath: '${Environment.iconAssets}menu_bantuan_sosial.png',
         defaultLabel: Dictionary.bansos,
         firebaseConfigLabel: FirebaseConfig.bansosCaption,
-        route: NavigationConstrants.Browser,
+        route: NavigationConstrants.PikobarComplaints,
         defaultArguments: kUrlBansos,
         firebaseConfigArguments: FirebaseConfig.bansosUrl,
         remoteMenuLoginKey: FirebaseConfig.bansosMenu,

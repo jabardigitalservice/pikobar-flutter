@@ -24,6 +24,7 @@ class FirebaseConfig {
   static String reportCaption = 'lapor_caption';
   static String reportHotlineEnabled = 'lapor_hotline_enabled';
   static String reportHotlineCaption = 'lapor_hotline_caption';
+  static String reportHotlineUrl = 'lapor_hotline_url';
   static String reportUrl = 'lapor_url';
   static String qnaEnabled = 'tanyajawab_enabled';
   static String qnaCaption = 'tanyajawab_caption';

@@ -24,7 +24,7 @@ class Dictionary {
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Donasi Covid-19';
   static String bansos = 'Bantuan Sosial';
-  static String pikobarComplaints = 'Aduan Pikobar';
+  static String pikobarComplaints = 'Hotline Pikobar';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String massiveTestRegistration = 'Daftar Test Masif';
