@@ -191,9 +191,14 @@ class IndexScreenState extends State<IndexScreen> {
       BottomNavigationBarItem(
         icon: Icon(EvaIcons.messageCircleOutline, size: 24),
         // ignore: deprecated_member_use
-        title: Text(
-          Dictionary.message,
-          style: TextStyle(fontWeight: FontWeight.w600),
+        title: Column(
+          children: [
+            SizedBox(height: 4),
+            Text(
+              Dictionary.message,
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ],
         ),
       ),
       BottomNavigationBarItem(
