@@ -208,7 +208,7 @@ class _MenuListState extends State<MenuList> {
 
     if (remoteConfig.getBool(FirebaseConfig.volunteerEnabled)) {
       otherMenus.insert(
-          2,
+          6,
           BuildButtonMenu(
             remoteConfig: remoteConfig,
             iconPath: '${Environment.iconAssets}menu_relawan.png',
@@ -223,7 +223,7 @@ class _MenuListState extends State<MenuList> {
 
     if (remoteConfig.getBool(FirebaseConfig.qnaEnabled)) {
       otherMenus.insert(
-          6,
+          2,
           BuildButtonMenu(
             remoteConfig: remoteConfig,
             iconPath: '${Environment.iconAssets}menu_qna.png',
