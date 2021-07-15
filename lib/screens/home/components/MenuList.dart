@@ -43,51 +43,26 @@ class _MenuListState extends State<MenuList> {
 
   _buildContent(RemoteConfig remoteConfig) {
     List<Widget> menus = <Widget>[
-      // Data Jabar
+      // Data Covid
       BuildButtonMenu(
         remoteConfig: remoteConfig,
-        iconPath: '${Environment.iconAssets}menu_data_jabar.png',
-        defaultLabel: Dictionary.pikobar,
-        firebaseConfigLabel: FirebaseConfig.pikobarCaption,
-        route: NavigationConstrants.Browser,
-        defaultArguments: kUrlCoronaInfo,
+        iconPath: '${Environment.iconAssets}data_covid.png',
+        defaultLabel: Dictionary.covidData,
+        firebaseConfigLabel: FirebaseConfig.covidDataCaption,
+        route: NavigationConstrants.covidData,
         firebaseConfigArguments: FirebaseConfig.pikobarUrl,
-        remoteMenuLoginKey: FirebaseConfig.pikobarInfoMenu,
+        remoteMenuLoginKey: FirebaseConfig.covidDataMenu,
       ),
 
-      // Data Nasional
-      BuildButtonMenu(
-        remoteConfig: remoteConfig,
-        iconPath: '${Environment.iconAssets}menu_data_nasional.png',
-        defaultLabel: Dictionary.nationalInfo,
-        firebaseConfigLabel: FirebaseConfig.nationalInfoCaption,
-        route: NavigationConstrants.Browser,
-        defaultArguments: kUrlCoronaEscort,
-        firebaseConfigArguments: FirebaseConfig.nationalInfoUrl,
-        remoteMenuLoginKey: FirebaseConfig.nationalInfoMenu,
-      ),
-
-      // Data Dunia
-      BuildButtonMenu(
-        remoteConfig: remoteConfig,
-        iconPath: '${Environment.iconAssets}menu_data_dunia.png',
-        defaultLabel: Dictionary.worldInfo,
-        firebaseConfigLabel: FirebaseConfig.worldInfoCaption,
-        route: NavigationConstrants.Browser,
-        defaultArguments: kUrlWorldCoronaInfo,
-        firebaseConfigArguments: FirebaseConfig.worldInfoUrl,
-        remoteMenuLoginKey: FirebaseConfig.worldInfoMenu,
-      ),
-
-      // Aduan Bansos (Added automatically)
+      // Aduan Pikobar
       BuildButtonMenu(
         remoteConfig: remoteConfig,
         iconPath: '${Environment.iconAssets}menu_aduan_bansos.png',
         defaultLabel: Dictionary.pikobarComplaints,
-        route: NavigationConstrants.PikobarComplaints,
-        defaultArguments: kUrlCaseReport,
-        firebaseConfigArguments: FirebaseConfig.reportUrl,
-        remoteMenuLoginKey: FirebaseConfig.reportMenu,
+        route: NavigationConstrants.Browser,
+        defaultArguments: kUrlPikobarHotline,
+        firebaseConfigArguments: FirebaseConfig.reportHotlineUrl,
+        remoteMenuLoginKey: FirebaseConfig.reportHotlineEnabled,
       ),
 
       // Nomor Darurat
@@ -103,7 +78,7 @@ class _MenuListState extends State<MenuList> {
         iconPath: '${Environment.iconAssets}menu_bantuan_sosial.png',
         defaultLabel: Dictionary.bansos,
         firebaseConfigLabel: FirebaseConfig.bansosCaption,
-        route: NavigationConstrants.Browser,
+        route: NavigationConstrants.PikobarComplaints,
         defaultArguments: kUrlBansos,
         firebaseConfigArguments: FirebaseConfig.bansosUrl,
         remoteMenuLoginKey: FirebaseConfig.bansosMenu,
@@ -227,15 +202,28 @@ class _MenuListState extends State<MenuList> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${Dictionary.menus} (${menus.length})',
-          style: TextStyle(
-              fontFamily: FontsFamily.lato,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0),
+        Row(
+          children: [
+            Text(
+              '${Dictionary.menus}',
+              style: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
+                  fontSize: 16),
+            ),
+            Text(
+              ' (${menus.length})',
+              style: TextStyle(
+                  fontFamily: FontsFamily.lato,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                  fontSize: 16),
+            ),
+          ],
         ),
         SizedBox(
-          height: 24.0,
+          height: 24,
         ),
         GridView.builder(
           itemCount: menus.length,
@@ -245,7 +233,7 @@ class _MenuListState extends State<MenuList> {
             crossAxisCount: 4,
             crossAxisSpacing: Dimens.padding,
             mainAxisSpacing: Dimens.padding,
-            height: 120.0,
+            height: 120,
           ),
           itemBuilder: (context, index) {
             return menus[index];
@@ -261,12 +249,25 @@ class _MenuListState extends State<MenuList> {
               }
             },
             tilePadding: EdgeInsets.zero,
-            title: Text(
-              '${Dictionary.otherMenus} (${otherMenus.length})',
-              style: TextStyle(
-                  fontFamily: FontsFamily.lato,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
+            title: Row(
+              children: [
+                Text(
+                  '${Dictionary.otherMenus}',
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                      fontSize: 16),
+                ),
+                Text(
+                  ' (${otherMenus.length})',
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      fontSize: 16),
+                ),
+              ],
             ),
             children: <Widget>[
               GridView.builder(
@@ -278,7 +279,7 @@ class _MenuListState extends State<MenuList> {
                   crossAxisCount: 4,
                   crossAxisSpacing: Dimens.padding,
                   mainAxisSpacing: Dimens.padding,
-                  height: 120.0,
+                  height: 120,
                 ),
                 itemBuilder: (context, index) {
                   return otherMenus[index];
@@ -348,7 +349,7 @@ class BuildButtonMenu extends StatelessWidget {
             child: Text(
               label.replaceFirst(' ', '\n'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: FontsFamily.roboto, fontSize: 12.0),
+              style: TextStyle(fontFamily: FontsFamily.roboto, fontSize: 12),
             ),
           )
         ],

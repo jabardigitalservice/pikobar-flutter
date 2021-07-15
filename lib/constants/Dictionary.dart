@@ -8,6 +8,7 @@ class Dictionary {
   static String home = 'Beranda';
   static String message = 'Pesan';
   static String pikobar = 'Data Jabar';
+  static String covidData = 'Data COVID-19';
   static String phoneBookEmergency = 'Nomor Darurat';
   static String statistics = 'Data Kasus Jabar';
   static String dailyChart = 'Chart Harian';
@@ -23,7 +24,7 @@ class Dictionary {
   static String volunteer = 'Daftar Relawan';
   static String donation = 'Donasi Covid-19';
   static String bansos = 'Bantuan Sosial';
-  static String pikobarComplaints = 'Aduan Pikobar';
+  static String pikobarComplaints = 'Hotline Pikobar';
   static String qna = 'Tanya Jawab';
   static String selfDiagnose = 'Periksa Mandiri';
   static String massiveTestRegistration = 'Daftar Test Masif';
@@ -489,4 +490,8 @@ class Dictionary {
       'Kini, cari data penerima bantuan Kemensos bisa lebih cepat dan praktis! Cek di sini';
   static const String checkBansosData =
       'Informasi detail seputar Data Penerima Bansos Kementerian Sosial RI dapat hubungi di sini';
+
+  //data covid
+  static String covidDataDesc =
+      'Ketahui data lengkap terkait COVID-19 dengan memilih menu di bawah ini';
 }
