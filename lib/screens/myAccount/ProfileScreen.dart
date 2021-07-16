@@ -482,6 +482,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           termsAndPrivacyConfig: termsConditions,
                         )),
               );
+              AnalyticsHelper.setLogEvent(Analytics.tappedTermsAndConditions);
             } else {
               Navigator.push(
                 context,
@@ -491,6 +492,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           termsAndPrivacyConfig: dataPrivacy,
                         )),
               );
+              AnalyticsHelper.setLogEvent(Analytics.tappedDataPrivacy);
             }
           });
     } else {

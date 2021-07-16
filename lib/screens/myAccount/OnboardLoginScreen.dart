@@ -12,12 +12,14 @@ import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 import 'TermsConditions.dart';
 
@@ -245,6 +247,8 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                                     termsAndPrivacyConfig: termsConditions,
                                   )),
                         );
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedTermsAndConditions);
                       } else {
                         Navigator.push(
                           context,
@@ -254,6 +258,8 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                                     termsAndPrivacyConfig: dataPrivacy,
                                   )),
                         );
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedDataPrivacy);
                       }
                     })),
           ],
