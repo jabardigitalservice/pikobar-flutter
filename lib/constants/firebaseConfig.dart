@@ -98,6 +98,7 @@ class FirebaseConfig {
   static String healthStatusVisible = 'health_status_visible';
   static String otpEnabled = 'otp_enabled';
   static String termsConditions = 'terms_conditions';
+  static String dataPrivacy = 'data_privacy';
 
   /// Remote config parameter key
   /// Contact History
