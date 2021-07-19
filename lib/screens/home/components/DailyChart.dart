@@ -11,7 +11,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
-import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
+import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
@@ -37,6 +37,25 @@ class _DailyChartState extends State<DailyChart> {
   RemoteConfigLoaded remoteConfigLoaded;
   DateTime firsDate = DateTime(2020);
   DateTime lastDate = DateTime.now();
+  final _dateFilterController = TextEditingController();
+  List<dynamic> items = [
+    {
+      "name": "7 Hari Terakhir",
+      "value": 7,
+    },
+    {
+      "name": "14 Hari Terakhir",
+      "value": 14,
+    },
+    {
+      "name": "30 Hari Terakhir",
+      "value": 30,
+    },
+    {
+      "name": "Atur Tanggal",
+      "value": "Custom",
+    }
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -222,8 +241,11 @@ class _DailyChartState extends State<DailyChart> {
   Widget buildChart(DailyChartModel dailyChartModel) {
     /// Filtering data by last 7 days
     filterData = dailyChartModel.data[0].series
-        .where((element) => DateTime.parse(element.tanggal)
-            .isAfter(lastDate.add(Duration(days: -7))))
+        .where((element) => DateTime.parse(element.tanggal).isAfter(
+            lastDate.add(Duration(
+                days: -(int.parse(_dateFilterController.text == ''
+                    ? '7'
+                    : _dateFilterController.text))))))
         .toList();
     final String firstDay =
         stringDateFormat(filterData.first.tanggal, 'dd MMM yyyy');
@@ -296,6 +318,72 @@ class _DailyChartState extends State<DailyChart> {
                     fontSize: 14),
               ),
               SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: 40,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: ColorBase.greyContainer,
+                    borderRadius: BorderRadius.circular(8),
+                    border:
+                        Border.all(color: ColorBase.greyBorder, width: 1.5)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: custom.DropdownButton<dynamic>(
+                    style: TextStyle(
+                        color: ColorBase.netralGrey,
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 14),
+                    underline: SizedBox(),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: ColorBase.netralGrey,
+                      size: 30,
+                    ),
+                    isExpanded: true,
+                    hint: Text(
+                      items[0]['name'],
+                      style: TextStyle(
+                          color: ColorBase.netralGrey,
+                          fontFamily: FontsFamily.roboto,
+                          fontSize: 14),
+                    ),
+                    items: items.map((item) {
+                      return custom.DropdownMenuItem(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Colors.grey[200], width: 1))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              item['name'],
+                              style: TextStyle(
+                                  fontFamily: FontsFamily.roboto,
+                                  fontSize: 14,
+                                  color: Colors.grey[800]),
+                            ),
+                          ),
+                        ),
+                        value: item['value'].toString(),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      setState(() {
+                        _dateFilterController.text = value;
+                      });
+                    },
+                    value: _dateFilterController.text == ''
+                        ? null
+                        : _dateFilterController.text,
+                  ),
+                ),
+              ),
+              SizedBox(
                 height: 10,
               ),
             ],
@@ -333,7 +421,11 @@ class _DailyChartState extends State<DailyChart> {
                           fontFamily: FontsFamily.roboto,
                           fontWeight: FontWeight.bold,
                           fontSize: 10),
-                      isVisible: true,
+                      isVisible: _dateFilterController.text == ''
+                          ? true
+                          : int.parse(_dateFilterController.text) > 7
+                              ? false
+                              : true,
                       labelAlignment: ChartDataLabelAlignment.middle),
                   color: ColorBase.primaryGreen,
                   borderRadius: BorderRadius.only(
