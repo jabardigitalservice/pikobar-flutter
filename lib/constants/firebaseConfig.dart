@@ -57,6 +57,13 @@ class FirebaseConfig {
   static String nikMessage = 'nik_message';
   static String dashboardPikobarApiKey = 'dashboard_pikobar_api_key';
   static String selfIsolation = 'self_isolation';
+  static String vaccinationInformationCaption =
+      'vaccination_information_caption';
+  static String vaccinationInformationUrl = 'vaccination_information_url';
+  static String hospitalBedOccupancyCaption = 'hospital_bed_occupancy_caption';
+  static String hospitalBedOccupancyUrl = 'hospital_bed_occupancy_url';
+  static String oxygenTherapyCaption = 'oxygen_therapy_caption';
+  static String oxygenTherapyUrl = 'oxygen_therapy_url';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -75,6 +82,9 @@ class FirebaseConfig {
   static String volunteerMenu = 'volunteer_menu';
   static String reportMenu = 'lapor_menu';
   static String qnaMenu = 'tanyajawab_menu';
+  static String vaccinInformationMenu = 'informasi_vaksinasi_menu';
+  static String hospitalBedOccipancyMenu = 'keterisian_bed_rs_menu';
+  static String oxygenTherapyMenu = 'terapi_oksigen_menu';
   static String spreadCheckMenu = 'spread_check';
   static String bansosMenu = 'bansos';
   static String loginRequiredDefaultVal = '{"$emergencyNumberMenu":false,'

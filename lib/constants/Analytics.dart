@@ -47,6 +47,9 @@ class Analytics {
   static String tappedImportantInfoMore = 'tapped_info_penting_selengkapnya';
   static String tappedJabarToday = 'tapped_tab_jabar_hari_ini';
   static String tappedCovidInformation = 'tapped_tab_informasi_covid_19';
+  static String tappedVaccinInformation = 'tapped_menu_vaksinasi';
+  static String tappedHospitalBedOccupancy = 'tapped_menu_keterisian_bed';
+  static String tappedOxygenTherapy = 'tapped_menu_oksigen';
 
   // event news
   static String tappedNewsDetail = 'tapped_berita_detail';

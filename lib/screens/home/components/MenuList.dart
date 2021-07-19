@@ -54,6 +54,30 @@ class _MenuListState extends State<MenuList> {
         remoteMenuLoginKey: FirebaseConfig.covidDataMenu,
       ),
 
+      // Informasi Vaksinasi
+      BuildButtonMenu(
+        remoteConfig: remoteConfig,
+        iconPath: '${Environment.iconAssets}menu_informasi_vaksin.png',
+        defaultLabel: Dictionary.vaccinInformation,
+        firebaseConfigLabel: FirebaseConfig.vaccinationInformationCaption,
+        route: NavigationConstrants.Browser,
+        defaultArguments: kUrlVaccinInformation,
+        firebaseConfigArguments: FirebaseConfig.vaccinationInformationUrl,
+        remoteMenuLoginKey: FirebaseConfig.vaccinInformationMenu,
+      ),
+
+      // Keterisian Bed RS
+      BuildButtonMenu(
+        remoteConfig: remoteConfig,
+        iconPath: '${Environment.iconAssets}menu_keterisian_bed_rs.png',
+        defaultLabel: Dictionary.hospitalBedOccupancy,
+        firebaseConfigLabel: FirebaseConfig.hospitalBedOccupancyCaption,
+        route: NavigationConstrants.Browser,
+        defaultArguments: kUrlHospitalBedOccupancy,
+        firebaseConfigArguments: FirebaseConfig.hospitalBedOccupancyUrl,
+        remoteMenuLoginKey: FirebaseConfig.hospitalBedOccipancyMenu,
+      ),
+
       // Aduan Pikobar
       BuildButtonMenu(
         remoteConfig: remoteConfig,
@@ -91,7 +115,17 @@ class _MenuListState extends State<MenuList> {
           defaultLabel: Dictionary.titleSelfReport,
           route: NavigationConstrants.SelfReports),
 
-      // Periksa Mandiri (Added automatically)
+      // Keterisian Bed RS
+      BuildButtonMenu(
+        remoteConfig: remoteConfig,
+        iconPath: '${Environment.iconAssets}menu_terapi_oksigen.png',
+        defaultLabel: Dictionary.oxygenTherapy,
+        firebaseConfigLabel: FirebaseConfig.oxygenTherapyCaption,
+        route: NavigationConstrants.Browser,
+        defaultArguments: kUrlOxygenTherapy,
+        firebaseConfigArguments: FirebaseConfig.oxygenTherapyUrl,
+        remoteMenuLoginKey: FirebaseConfig.oxygenTherapyMenu,
+      ),
     ];
 
     List<Widget> otherMenus = <Widget>[
@@ -107,7 +141,7 @@ class _MenuListState extends State<MenuList> {
         remoteMenuLoginKey: FirebaseConfig.massiveTestMenu,
       ),
 
-      // Daftar Relawan (Added automatically)
+      // Periksa Mandiri (Added automatically)
 
       // Tanya Jawab (Added automatically)
 
@@ -153,24 +187,28 @@ class _MenuListState extends State<MenuList> {
         firebaseConfigArguments: FirebaseConfig.jshUrl,
         remoteMenuLoginKey: FirebaseConfig.jshMenu,
       ),
+
+      // Daftar Relawan (Added automatically)
     ];
 
     if (remoteConfig.getBool(FirebaseConfig.selfDiagnoseEnabled)) {
-      menus.add(BuildButtonMenu(
-        remoteConfig: remoteConfig,
-        iconPath: '${Environment.iconAssets}menu_periksa_mandiri.png',
-        defaultLabel: Dictionary.selfDiagnose,
-        firebaseConfigLabel: FirebaseConfig.selfDiagnoseCaption,
-        route: NavigationConstrants.Browser,
-        defaultArguments: kUrlSelfDiagnose,
-        firebaseConfigArguments: FirebaseConfig.selfDiagnoseUrl,
-        remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu,
-      ));
+      otherMenus.insert(
+          1,
+          BuildButtonMenu(
+            remoteConfig: remoteConfig,
+            iconPath: '${Environment.iconAssets}menu_periksa_mandiri.png',
+            defaultLabel: Dictionary.selfDiagnose,
+            firebaseConfigLabel: FirebaseConfig.selfDiagnoseCaption,
+            route: NavigationConstrants.Browser,
+            defaultArguments: kUrlSelfDiagnose,
+            firebaseConfigArguments: FirebaseConfig.selfDiagnoseUrl,
+            remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu,
+          ));
     }
 
     if (remoteConfig.getBool(FirebaseConfig.volunteerEnabled)) {
       otherMenus.insert(
-          1,
+          6,
           BuildButtonMenu(
             remoteConfig: remoteConfig,
             iconPath: '${Environment.iconAssets}menu_relawan.png',
@@ -461,6 +499,15 @@ class BuildButtonMenu extends StatelessWidget {
             AnalyticsHelper.setLogEvent(Analytics.tappedBansos);
           } else if (defaultLabel == Dictionary.massiveTestRegistration) {
             AnalyticsHelper.setLogEvent(Analytics.tappedMassiveTest);
+          } else if (iconPath ==
+              '${Environment.iconAssets}menu_informasi_vaksin.png') {
+            AnalyticsHelper.setLogEvent(Analytics.tappedVaccinInformation);
+          } else if (iconPath ==
+              '${Environment.iconAssets}menu_keterisian_bed_rs.png') {
+            AnalyticsHelper.setLogEvent(Analytics.tappedHospitalBedOccupancy);
+          } else if (iconPath ==
+              '${Environment.iconAssets}menu_terapi_oksigen.png') {
+            AnalyticsHelper.setLogEvent(Analytics.tappedOxygenTherapy);
           }
         }
       },

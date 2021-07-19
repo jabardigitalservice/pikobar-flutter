@@ -97,6 +97,9 @@ class Dictionary {
   static String isolationCenter = 'Pusat Isolasi';
   static String city = 'Kota/Kabupaten';
   static String portalBansos = 'Portal Bansos Kemensos';
+  static String vaccinInformation = 'Informasi Vaksinasi';
+  static String hospitalBedOccupancy = 'Keterisian Bed RS';
+  static String oxygenTherapy = 'Terapi Oksigen';
 
   // Button Text
   static String cancel = 'Batal';
