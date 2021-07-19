@@ -24,8 +24,8 @@ class _CheckDistributionOtherScrennState
   ScrollController _scrollController;
   final _cityIdController = TextEditingController();
   final _subCityIdController = TextEditingController();
-  List<dynamic> cityList, subCityList;
-  List<dynamic> cityListFiltered, subCityListFiltered;
+  List<dynamic> cityList, subCityList = [];
+  List<dynamic> cityListFiltered, subCityListFiltered = [];
   String cityKeyword, subCityKeyword, cityId, subCityId;
   bool showCityList = false;
   bool showSubCityList = false;
@@ -344,7 +344,7 @@ class _CheckDistributionOtherScrennState
 
   Widget _buildSubCityList(SubCityListState subCityState) {
     if (subCityState is SubCityListLoaded) {
-      subCityList = subCityState.subcityList;
+      subCityList = subCityState.subcityList ?? [];
       if (cityId != null || cityId != '') {
         subCityListFiltered = subCityList
             .where((test) =>
