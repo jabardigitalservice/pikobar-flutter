@@ -4,18 +4,19 @@ import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
 import 'package:pikobar_flutter/repositories/ImportantInfoRepository.dart';
 import './Bloc.dart';
 
-class ImportantInfoDetailBloc extends Bloc<ImportantInfoDetailEvent, importantInfoDetailState> {
-
+class ImportantInfoDetailBloc
+    extends Bloc<ImportantInfoDetailEvent, ImportantInfoDetailState> {
   ImportantInfoDetailBloc() : super(InitialImportantInfoDetailState());
 
   @override
-  Stream<importantInfoDetailState> mapEventToState(
+  Stream<ImportantInfoDetailState> mapEventToState(
     ImportantInfoDetailEvent event,
   ) async* {
     if (event is ImportantInfoDetailLoad) {
       yield ImportantInfoDetailLoading();
 
-      ImportantInfoModel record = await ImportantInfoRepository().getImportantInfoDetail(importantInfoid: event.importantInfoId);
+      ImportantInfoModel record = await ImportantInfoRepository()
+          .getImportantInfoDetail(importantInfoid: event.importantInfoId);
       yield ImportantInfoDetailLoaded(record);
     }
   }

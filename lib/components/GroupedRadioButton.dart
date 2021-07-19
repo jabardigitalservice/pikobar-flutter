@@ -157,12 +157,14 @@ class GroupedRadioButton extends StatefulWidget {
       this.wrapDirection = Axis.horizontal,
       this.wrapAlignment = WrapAlignment.start,
       this.wrapSpacing = 0.0,
-      this.wrapRunSpacing = 0.0})
+      this.wrapRunSpacing = 0.0,
+      Key key})
       : assert(
             defaultSelectedIndex != null
                 ? defaultSelectedIndex < itemLabelList.length
                 : true,
-            "The defaultSelected index value must be less than the number of items. (< ${itemLabelList.length})");
+            "The defaultSelected index value must be less than the number of items. (< ${itemLabelList.length})"),
+        super(key: key);
 
   @override
   _GroupedRadioButtonState createState() => _GroupedRadioButtonState();
@@ -210,7 +212,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
               decoration: validatorValue != null
                   ? BoxDecoration(
                       border: Border.all(color: Colors.red),
-                      borderRadius: BorderRadius.circular(8.0))
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius))
                   : null,
               padding: validatorValue != null ? EdgeInsets.all(10.0) : null,
               child: SingleChildScrollView(
@@ -221,7 +223,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
           validatorValue != null
               ? Padding(
                   padding: EdgeInsets.only(
-                      left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
+                      left: Dimens.cardContentMargin, top: Dimens.sizedBoxHeight),
                   child: Text(
                     validatorValue,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -243,7 +245,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             decoration: validatorValue != null
                 ? BoxDecoration(
                     border: Border.all(color: Colors.red),
-                    borderRadius: BorderRadius.circular(8.0))
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius))
                 : null,
             padding: validatorValue != null ? EdgeInsets.all(10.0) : null,
             child: SingleChildScrollView(
@@ -253,7 +255,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
           validatorValue != null
               ? Padding(
                   padding: EdgeInsets.only(
-                      left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
+                      left: Dimens.cardContentMargin, top: Dimens.sizedBoxHeight),
                   child: Text(
                     validatorValue,
                     style: TextStyle(color: Colors.red, fontSize: 12),
@@ -273,7 +275,7 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
               decoration: validatorValue != null
                   ? BoxDecoration(
                       border: Border.all(color: Colors.red),
-                      borderRadius: BorderRadius.circular(8.0))
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius))
                   : null,
               padding: validatorValue != null ? EdgeInsets.all(10.0) : null,
               child: Wrap(
@@ -287,7 +289,8 @@ class _GroupedRadioButtonState extends State<GroupedRadioButton> {
             validatorValue != null
                 ? Padding(
                     padding: EdgeInsets.only(
-                        left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
+                        left: Dimens.cardContentMargin,
+                        top: Dimens.sizedBoxHeight),
                     child: Text(
                       validatorValue,
                       style: TextStyle(color: Colors.red, fontSize: 12),

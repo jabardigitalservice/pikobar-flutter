@@ -3,19 +3,21 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
+import 'package:pikobar_flutter/models/IsolationCenterModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 import 'package:pikobar_flutter/repositories/EmergencyNumberRepository.dart';
 import 'Bloc.dart';
 
 class EmergencyNumberBloc
     extends Bloc<EmergencyNumberEvent, EmergencyNumberState> {
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
   final EmergencyNumberRepository emergencyNumberRepository;
 
   EmergencyNumberBloc({
     @required this.emergencyNumberRepository,
-  }) : assert(emergencyNumberRepository != null), super(InitialEmergencyNumberState());
-
+  })  : assert(emergencyNumberRepository != null,
+            'emergencyNumberRepository must not be null'),
+        super(InitialEmergencyNumberState());
 
   @override
   Stream<EmergencyNumberState> mapEventToState(
@@ -38,15 +40,21 @@ class EmergencyNumberBloc
     } else if (event is GugusTugasWebUpdated) {
       yield* _mapGugusTugasWebToState(event);
     }
+
+    if (event is IsolationCenterLoad) {
+      yield* _mapLoadIsolationCenterToState();
+    } else if (event is IsolationCenterUpdated) {
+      yield* _mapIsolationCenterToState(event);
+    }
   }
 
   Stream<EmergencyNumberState> _mapLoadreferralHospitalToState() async* {
     yield EmergencyNumberLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = emergencyNumberRepository
         .getReferralHospitalModelList()
-        .listen((referralHospital) {
-      List<ReferralHospitalModel> list = [];
+        .listen((List<ReferralHospitalModel> referralHospital) {
+      List<ReferralHospitalModel> list = <ReferralHospitalModel>[];
       for (int i = 0; i < referralHospital.length; i++) {
         list.add(referralHospital[i]);
       }
@@ -61,10 +69,11 @@ class EmergencyNumberBloc
 
   Stream<EmergencyNumberState> _mapLoadCallCenterToState() async* {
     yield EmergencyNumberLoading();
-    _subscription?.cancel();
-    _subscription =
-        emergencyNumberRepository.getCallCenterModelList().listen((callCenter) {
-      List<CallCenterModel> list = [];
+    await _subscription?.cancel();
+    _subscription = emergencyNumberRepository
+        .getCallCenterModelList()
+        .listen((List<CallCenterModel> callCenter) {
+      List<CallCenterModel> list = <CallCenterModel>[];
       for (int i = 0; i < callCenter.length; i++) {
         list.add(callCenter[i]);
       }
@@ -79,10 +88,11 @@ class EmergencyNumberBloc
 
   Stream<EmergencyNumberState> _mapLoadGugusTugasWebToState() async* {
     yield EmergencyNumberLoading();
-    _subscription?.cancel();
-    _subscription =
-        emergencyNumberRepository.getGugusTugasWebList().listen((callCenter) {
-      List<GugusTugasWebModel> list = [];
+    await _subscription?.cancel();
+    _subscription = emergencyNumberRepository
+        .getGugusTugasWebList()
+        .listen((List<GugusTugasWebModel> callCenter) {
+      List<GugusTugasWebModel> list = <GugusTugasWebModel>[];
       for (int i = 0; i < callCenter.length; i++) {
         list.add(callCenter[i]);
       }
@@ -93,6 +103,25 @@ class EmergencyNumberBloc
   Stream<EmergencyNumberState> _mapGugusTugasWebToState(
       GugusTugasWebUpdated event) async* {
     yield GugusTugasWebLoaded(event.gugusTugasWebModel);
+  }
+
+  Stream<EmergencyNumberState> _mapLoadIsolationCenterToState() async* {
+    yield EmergencyNumberLoading();
+    await _subscription?.cancel();
+    _subscription = emergencyNumberRepository
+        .getIsolationCenterModelList()
+        .listen((List<IsolationCenterModel> referralHospital) {
+      List<IsolationCenterModel> list = <IsolationCenterModel>[];
+      for (int i = 0; i < referralHospital.length; i++) {
+        list.add(referralHospital[i]);
+      }
+      add(IsolationCenterUpdated(list));
+    });
+  }
+
+  Stream<EmergencyNumberState> _mapIsolationCenterToState(
+      IsolationCenterUpdated event) async* {
+    yield IsolationCenterLoaded(event.isolationCenterModel);
   }
 
   @override

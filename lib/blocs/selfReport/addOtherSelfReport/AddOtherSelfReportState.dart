@@ -1,29 +1,23 @@
 part of 'AddOtherSelfReportBloc.dart';
 
 abstract class AddOtherSelfReportState extends Equatable {
-  const AddOtherSelfReportState([List props = const <dynamic>[]]);
+  const AddOtherSelfReportState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class AddOtherSelfReportInitial extends AddOtherSelfReportState {
-  @override
-  List<Object> get props => [];
-}
+class AddOtherSelfReportInitial extends AddOtherSelfReportState {}
 
-class AddOtherSelfReportLoading extends AddOtherSelfReportState {
-  @override
-  List<Object> get props => [];
-}
+class AddOtherSelfReportLoading extends AddOtherSelfReportState {}
 
-class AddOtherSelfReportSaved extends AddOtherSelfReportState {
-  @override
-  List<Object> get props => [];
-}
+class AddOtherSelfReportSaved extends AddOtherSelfReportState {}
 
 class AddOtherSelfReportFailed extends AddOtherSelfReportState {
   final String error;
 
-  AddOtherSelfReportFailed({@required this.error}):assert(error != null);
+  const AddOtherSelfReportFailed({@required this.error});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[error];
 }

@@ -2,20 +2,15 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 
 abstract class NewsDetailState extends Equatable {
-  const NewsDetailState([List props = const <dynamic>[]]);
-}
+  const NewsDetailState();
 
-class InitialNewsDetailState extends NewsDetailState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
-class NewsDetailLoading extends NewsDetailState {
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
+class InitialNewsDetailState extends NewsDetailState {}
 
-}
+class NewsDetailLoading extends NewsDetailState {}
 
 class NewsDetailLoaded extends NewsDetailState {
   final NewsModel record;
@@ -23,22 +18,17 @@ class NewsDetailLoaded extends NewsDetailState {
   const NewsDetailLoaded(this.record);
 
   @override
-  List<Object> get props => [record];
-
-  @override
-  String toString() => 'NewsDetailLoaded { record: $record }';
+  List<Object> get props => <Object>[record];
 }
 
 class NewsDetailFailure extends NewsDetailState {
   final String error;
 
-  NewsDetailFailure({this.error});
+  const NewsDetailFailure({this.error});
 
   @override
-  String toString() {
-    return 'State NewsDetailFailure{error: $error}';
-  }
+  String toString() => 'State NewsDetailFailure{error: $error}';
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

@@ -4,7 +4,7 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 class ErrorContent extends StatefulWidget {
   final String error;
 
-  ErrorContent({this.error});
+  ErrorContent({Key key, this.error}) : super(key: key);
 
   @override
   _ErrorContentState createState() => _ErrorContentState();

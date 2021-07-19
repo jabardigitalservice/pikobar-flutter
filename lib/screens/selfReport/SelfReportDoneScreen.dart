@@ -15,13 +15,22 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 import 'package:pikobar_flutter/screens/selfReport/EducationDetailScreen.dart';
+import 'package:pikobar_flutter/utilities/ReplaceText.dart';
 
 class SelfReportDoneScreen extends StatefulWidget {
   final LatLng location;
   final String otherUID;
   final String analytics;
+  final String recurrenceReport;
 
-  SelfReportDoneScreen(this.location, this.otherUID, this.analytics);
+  SelfReportDoneScreen(
+      {Key key,
+      this.location,
+      this.otherUID,
+      this.analytics,
+      this.recurrenceReport})
+      : super(key: key);
+
   @override
   _SelfReportDoneScreenState createState() => _SelfReportDoneScreenState();
 }
@@ -99,7 +108,9 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
       ),
       body: BlocProvider<SelfReportListBloc>(
         create: (BuildContext context) => SelfReportListBloc()
-          ..add(SelfReportListLoad(otherUID: widget.otherUID)),
+          ..add(SelfReportListLoad(
+              otherUID: widget.otherUID,
+              recurrenceReport: widget.recurrenceReport)),
         child: BlocBuilder<SelfReportListBloc, SelfReportListState>(
             builder: (context, state) {
           if (state is SelfReportListLoaded) {
@@ -209,7 +220,11 @@ class _SelfReportDoneScreenState extends State<SelfReportDoneScreen> {
           title: Dictionary.info,
           content: isHealthy
               ? Dictionary.announcementDescHealthy
-              : Dictionary.announcementDescIndication,
+              : autoReplaceForDailyReport(
+                  otherUID: widget.otherUID,
+                  text: Dictionary.announcementDescIndication,
+                  replaceTo: ['pasien', 'pasien'],
+                  replaceFrom: ['Anda', 'anda']),
           margin: EdgeInsets.zero,
           htmlStyle: Style(
               margin: EdgeInsets.zero,

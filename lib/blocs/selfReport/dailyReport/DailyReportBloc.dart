@@ -32,8 +32,8 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
           await SelfReportRepository()
               .updateToCollection(userId: userId, isReminder: false);
         }
-        yield DailyReportSaved();
-      } catch (e) {
+        yield DailyReportSaved(event.successMessage);
+      } on Exception catch (e) {
         yield DailyReportFailed(
             error: CustomException.onConnectionException(e.toString()));
       }

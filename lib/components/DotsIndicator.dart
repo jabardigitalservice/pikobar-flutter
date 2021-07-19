@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 /// An indicator showing the currently selected page of a PageController
 class DotsIndicator extends AnimatedWidget {
   DotsIndicator({
+    Key key,
     this.controller,
     this.itemCount,
     this.onPageSelected,
     this.color: Colors.white,
-  }) : super(listenable: controller);
+  }) : super(listenable: controller, key: key);
 
   /// The PageController that this DotsIndicator is representing.
   final PageController controller;
@@ -50,10 +51,7 @@ class DotsIndicator extends AnimatedWidget {
           child: Material(
             color: color,
             type: MaterialType.circle,
-            child: Container(
-              width: _kDotSize * zoom,
-              height: _kDotSize * zoom
-            ),
+            child: Container(width: _kDotSize * zoom, height: _kDotSize * zoom),
           ),
         ),
       ),

@@ -10,6 +10,9 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
+import 'package:pikobar_flutter/components/InWebView.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
@@ -17,9 +20,12 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
+import 'package:pikobar_flutter/screens/document/DocumentViewScreen.dart';
 import 'package:pikobar_flutter/screens/faq/FaqScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/BottomSheetMenu.dart';
 import 'package:pikobar_flutter/screens/home/components/HomeScreen.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/DetailInfoGraphicScreen.dart';
+import 'package:pikobar_flutter/screens/infoGraphics/InfoGraphicsScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messages.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/ProfileScreen.dart';
@@ -34,8 +40,11 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/NPSService.dart';
 import 'package:pikobar_flutter/utilities/NotificationHelper.dart';
+import 'package:pedantic/pedantic.dart';
 
 class IndexScreen extends StatefulWidget {
+  IndexScreen({Key key}) : super(key: key);
+
   @override
   IndexScreenState createState() => IndexScreenState();
 }
@@ -253,6 +262,20 @@ class IndexScreenState extends State<IndexScreen> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => NewsListScreen(news: newsType)));
       }
+    } else if (data['target'] == 'infographics') {
+      if (data['id'] != null &&
+          data['id'] != 'null' &&
+          data['type'] != null &&
+          data['type'] != 'null') {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => DetailInfoGraphicScreen(
+                  id: data['id'].toString().trim(),
+                  infographicType: data['type'],
+                )));
+      } else {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => InfoGraphicsScreen()));
+      }
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
@@ -262,6 +285,9 @@ class IndexScreenState extends State<IndexScreen> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this)));
       }
+    } else if (data['target'] == 'self_reports') {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SelfReportScreen(toNextScreen: true,)));
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
         Navigator.of(context).push(MaterialPageRoute(
@@ -289,6 +315,12 @@ class IndexScreenState extends State<IndexScreen> {
       if (data['url'] != null && data['url'] != 'null') {
         await launchUrl(context: context, url: data['url']);
       }
+    } else if (data['target'] == 'documents') {
+      if (data['url'] != null && data['url'] != 'null') {
+        Platform.isAndroid
+            ? _downloadAttachment(data['title'], data['url'])
+            : _viewPdf(data['title'], data['url']);
+      }
     }
   }
 
@@ -297,6 +329,57 @@ class IndexScreenState extends State<IndexScreen> {
       setState(() {
         _currentIndex = index;
       });
+    }
+  }
+
+  void _viewPdf(String title, String url) async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title)));
+
+    await AnalyticsHelper.setLogEvent(Analytics.openDocument, <String, dynamic>{
+      'name_document': title.length < 100 ? title : title.substring(0, 100),
+    });
+  }
+
+  void _downloadAttachment(String name, String url) async {
+    if (!await Permission.storage.status.isGranted) {
+      unawaited(showDialog(
+          context: context,
+          builder: (BuildContext context) => DialogRequestPermission(
+                image: Image.asset(
+                  'assets/icons/folder.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionDownloadAttachment,
+                onOkPressed: () {
+                  Navigator.of(context).pop();
+                  Permission.storage.request().then((val) {
+                    _onStatusRequested(val, name, url);
+                  });
+                },
+              )));
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DocumentViewScreen(
+            url: url,
+            nameFile: name,
+          ),
+        ),
+      );
+
+      await AnalyticsHelper.setLogEvent(
+          Analytics.tappedDownloadDocuments, <String, dynamic>{
+        'name_document': name.length < 100 ? name : name.substring(0, 100),
+      });
+    }
+  }
+
+  void _onStatusRequested(PermissionStatus statuses, String name, String url) {
+    if (statuses.isGranted) {
+      _downloadAttachment(name, url);
     }
   }
 

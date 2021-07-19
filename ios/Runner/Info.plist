@@ -62,7 +62,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>Pikobar memerlukan izin mendeteksi gerakan untuk mengaktifkan akses lokasi</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Pikobar memerlukan izin untuk menyimpan gambar ke gallery</string>
+    <string>Pikobar memerlukan izin untuk menyimpan gambar ke gallery</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

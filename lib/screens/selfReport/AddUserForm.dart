@@ -17,6 +17,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 
 class AddUserFormScreen extends StatefulWidget {
+  AddUserFormScreen({Key key}) : super(key: key);
+
   @override
   _AddUserFormScreenState createState() => _AddUserFormScreenState();
 }
@@ -60,109 +62,118 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
         title: Dictionary.addUserForm,
       ),
       backgroundColor: Colors.white,
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            controller: _scrollController,
-            children: <Widget>[
-              AnimatedOpacity(
-                opacity: _showTitle ? 0.0 : 1.0,
-                duration: Duration(milliseconds: 250),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    Dictionary.addUserForm,
-                    style: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold),
+      body: Listener(
+        onPointerDown: (_) {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            currentFocus.focusedChild.unfocus();
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              controller: _scrollController,
+              children: <Widget>[
+                AnimatedOpacity(
+                  opacity: _showTitle ? 0.0 : 1.0,
+                  duration: Duration(milliseconds: 250),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      Dictionary.addUserForm,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.lato,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: Dimens.padding),
-              buildAnnouncement(),
-              SizedBox(height: Dimens.padding),
-              buildTextField(
-                  controller: _nikController,
-                  hintText: Dictionary.placeholderYourNIK,
-                  isRequired: false,
-                  isEdit: true,
-                  title: Dictionary.nik,
-                  textInputType: TextInputType.number),
-              SizedBox(height: Dimens.padding),
-              buildTextField(
-                  controller: _nameController,
-                  hintText: Dictionary.placeholderYourName,
-                  isEdit: true,
-                  title: Dictionary.name,
-                  validation: Validations.nameValidation,
-                  textInputType: TextInputType.text),
-              SizedBox(height: Dimens.padding),
-              buildLabel(text: Dictionary.birthday, required: true),
-              SizedBox(height: Dimens.padding),
-              buildDateField(
-                  title: Dictionary.birthday,
-                  placeholder: _dateController.text == ''
-                      ? Dictionary.birthdayPlaceholder
-                      : DateFormat.yMMMMd('id')
-                          .format(DateTime.parse(_dateController.text)),
-                  isEmpty: isBirthdayEmpty),
-              SizedBox(height: Dimens.padding),
-              buildLabel(text: Dictionary.gender),
-              _buildRadioButton(
-                  title: Dictionary.gender,
-                  itemList: <String>[
-                    "Laki - Laki",
-                    "Perempuan",
-                  ],
-                  onChanged: (label, index) {
-                    setState(() {
-                      _genderController.text = index == 0 ? 'M' : 'F';
-                      isGenderEmpty = _genderController.text.isEmpty;
-                    });
-                  },
-                  validator: (value) {
-                    return isGenderEmpty
-                        ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
-                        : null;
-                  }),
-              buildLabel(text: Dictionary.relation),
-              _buildRadioButton(
-                  title: Dictionary.relationOtherSelfReport,
-                  itemList: <String>[
-                    "Orangtua",
-                    "Suami/Istri",
-                    "Anak",
-                    "Kerabat Lainnya",
-                  ],
-                  onChanged: (label, index) {
-                    setState(() {
-                      _relationController.text = label;
-                      isRelationEmpty = _relationController.text.isEmpty;
-                    });
-                  },
-                  validator: (value) {
-                    return isRelationEmpty
-                        ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
-                        : null;
-                  }),
-              SizedBox(height: 32.0),
-              RoundedButton(
-                  title: Dictionary.nextStep,
-                  elevation: 0.0,
-                  color: ColorBase.green,
-                  textStyle: TextStyle(
-                      fontFamily: FontsFamily.roboto,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white),
-                  onPressed: () {
-                    _saveSelfReport();
-                  }),
-              SizedBox(height: Dimens.padding),
-            ],
+                const SizedBox(height: Dimens.padding),
+                buildAnnouncement(),
+                const SizedBox(height: Dimens.padding),
+                buildTextField(
+                    controller: _nikController,
+                    hintText: Dictionary.placeholderNIK,
+                    validation: Validations.nikValidation,
+                    isEdit: true,
+                    title: Dictionary.nik,
+                    textInputType: TextInputType.number),
+                const SizedBox(height: Dimens.padding),
+                buildTextField(
+                    controller: _nameController,
+                    hintText: Dictionary.placeholderName,
+                    isEdit: true,
+                    title: Dictionary.name,
+                    validation: Validations.nameValidation,
+                    textInputType: TextInputType.text),
+                const SizedBox(height: Dimens.padding),
+                buildLabel(text: Dictionary.birthday, required: true),
+                const SizedBox(height: Dimens.padding),
+                buildDateField(
+                    title: Dictionary.birthday,
+                    placeholder: _dateController.text == ''
+                        ? Dictionary.birthdayPlaceholder
+                        : DateFormat.yMMMMd('id')
+                            .format(DateTime.parse(_dateController.text)),
+                    isEmpty: isBirthdayEmpty),
+                const SizedBox(height: Dimens.padding),
+                buildLabel(text: Dictionary.gender),
+                _buildRadioButton(
+                    title: Dictionary.gender,
+                    itemList: <String>[
+                      "Laki - Laki",
+                      "Perempuan",
+                    ],
+                    onChanged: (label, index) {
+                      setState(() {
+                        _genderController.text = index == 0 ? 'M' : 'F';
+                        isGenderEmpty = _genderController.text.isEmpty;
+                      });
+                    },
+                    validator: (value) {
+                      return isGenderEmpty
+                          ? '${Dictionary.gender + Dictionary.pleaseCompleteAllField}'
+                          : null;
+                    }),
+                buildLabel(text: Dictionary.relation),
+                _buildRadioButton(
+                    title: Dictionary.relationOtherSelfReport,
+                    itemList: <String>[
+                      "Orangtua",
+                      "Suami/Istri",
+                      "Anak",
+                      "Kerabat Lainnya",
+                    ],
+                    onChanged: (label, index) {
+                      setState(() {
+                        _relationController.text = label;
+                        isRelationEmpty = _relationController.text.isEmpty;
+                      });
+                    },
+                    validator: (value) {
+                      return isRelationEmpty
+                          ? '${Dictionary.relation + Dictionary.pleaseCompleteAllField}'
+                          : null;
+                    }),
+                const SizedBox(height: 32.0),
+                RoundedButton(
+                    title: Dictionary.nextStep,
+                    elevation: 0.0,
+                    color: ColorBase.green,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
+                    onPressed: () {
+                      _saveSelfReport();
+                    }),
+                const SizedBox(height: Dimens.padding),
+              ],
+            ),
           ),
         ),
       ),
@@ -204,7 +215,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextFormField(
@@ -284,6 +295,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       children: <Widget>[
         InkWell(
           onTap: () {
+            FocusScope.of(context).unfocus();
             _showDatePicker();
           },
           child: Container(
@@ -299,7 +311,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     placeholder,
                     style: TextStyle(
@@ -311,7 +323,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
                       height: 15,
                       child:
@@ -322,13 +334,13 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
           ),
         ),
         isEmpty
-            ? SizedBox(
+            ? const SizedBox(
                 height: 10,
               )
             : Container(),
         isEmpty
             ? Padding(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),
@@ -364,67 +376,6 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
     );
   }
 
-  // Bottom sheet message form
-  void _showBottomSheetForm(String image, String titleDialog, String descDialog,
-      GestureTapCallback onPressed) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(8.0),
-          ),
-        ),
-        isDismissible: false,
-        builder: (context) {
-          return Container(
-            margin: EdgeInsets.all(Dimens.padding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 44.0),
-                  child: Image.asset(
-                    image,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                SizedBox(height: 24.0),
-                Text(
-                  titleDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  descDialog,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: FontsFamily.lato,
-                      fontSize: 12.0,
-                      color: Colors.grey[600]),
-                ),
-                SizedBox(height: 24.0),
-                RoundedButton(
-                    title: Dictionary.ok.toUpperCase(),
-                    textStyle: TextStyle(
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    color: ColorBase.green,
-                    elevation: 0.0,
-                    onPressed: onPressed)
-              ],
-            ),
-          );
-        });
-  }
-
   // Build each radio button on the form
   _buildRadioButton(
       {@required title,
@@ -432,12 +383,12 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
       @required void Function(String label, int index) onChanged,
       FormFieldValidator<String> validator}) {
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
           top: Dimens.fieldMarginTop, bottom: Dimens.fieldMarginBottom),
       child: GroupedRadioButton(
         itemWidth: MediaQuery.of(context).size.width / 2 - 21,
         itemHeight: 40.0,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(Dimens.borderRadius),
         color: ColorBase.menuBorderColor,
         activeColor: ColorBase.green,
         itemLabelList: itemList,
@@ -463,7 +414,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   /// Set up for show announcement widget
   Widget buildAnnouncement() {
     return Announcement(
-      margin: EdgeInsets.all(0),
+      margin: const EdgeInsets.all(0),
       title: Dictionary.titleInfoTextAnnouncement,
       content: Dictionary.otherReportAnnouncement,
       context: context,
@@ -473,13 +424,12 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
 
   // Validate and Record data to firestore
   void _saveSelfReport() async {
-    print(isBirthdayEmpty);
     isBirthdayEmpty = _dateController.text.isEmpty;
     isRelationEmpty = _relationController.text.isEmpty;
     isGenderEmpty = _genderController.text.isEmpty;
     setState(() {
+      FocusScope.of(context).unfocus();
       if (_formKey.currentState.validate()) {
-        FocusScope.of(context).unfocus();
         if (!isBirthdayEmpty && !isRelationEmpty && !isGenderEmpty) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => ConfirmUserForm(

@@ -16,11 +16,10 @@ import 'package:pikobar_flutter/screens/home/components/VideoList.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
-// ignore: must_be_immutable
 class CovidInformationScreen extends StatefulWidget {
-  HomeScreenState homeScreenState;
+  final HomeScreenState homeScreenState;
 
-  CovidInformationScreen({Key key, this.homeScreenState}) : super(key: key);
+  const CovidInformationScreen({Key key, this.homeScreenState}) : super(key: key);
 
   @override
   CovidInformationScreenState createState() => CovidInformationScreenState();
@@ -62,7 +61,8 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        CustomAppBar.buildSearchField(
+        SizedBox(height: Dimens.sizedBoxHeight),
+        CustomAppBar.buildSearchField(context,
             _searchController, Dictionary.searchInformation, updateSearchQuery,
             margin: EdgeInsets.symmetric(horizontal: Dimens.padding)),
         SizedBox(height: Dimens.verticalPadding * 1.5),
@@ -100,25 +100,27 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
   }
 
   void _onSearchChanged() {
+    if (getIsEmptyData()) {
+      resetEmptyData();
+    }
+
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         setState(() {
           searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSearchCovidInformation);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchCovidInformation);
   }
 
   void _clearSearchQuery() {
     setState(() {
-      isEmptyDataInfoGraphic = false;
-      isEmptyDataNews = false;
-      isEmptyDataVideoList = false;
-      isEmptyDataDocument = false;
+      resetEmptyData();
       _searchController.clear();
       updateSearchQuery(null);
     });
@@ -129,6 +131,14 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
       searchQuery = newQuery;
     });
   }
+
+  void resetEmptyData() {
+    isEmptyDataInfoGraphic = false;
+    isEmptyDataNews = false;
+    isEmptyDataVideoList = false;
+    isEmptyDataDocument = false;
+  }
+
 
   @override
   void dispose() {

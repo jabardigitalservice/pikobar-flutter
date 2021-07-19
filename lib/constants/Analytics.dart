@@ -60,11 +60,14 @@ class Analytics {
 
   //event tab jabar today
   static String tappedDailyUpdate = 'tapped_update_harian';
-  static String tappedTotalInspectionCovid = 'tapped_total_pemeriksaan_covid_19';
-  static String tappedMoreCaseDataJabar = 'tapped_selengkapnya_data_kasus_jabar';
+  static String tappedTotalInspectionCovid =
+      'tapped_total_pemeriksaan_covid_19';
+  static String tappedMoreCaseDataJabar =
+      'tapped_selengkapnya_data_kasus_jabar';
 
   //event tab informasi covid-19
-  static String tappedSearchCovidInformation = 'tapped_cari_tab_informasi_covid_19';
+  static String tappedSearchCovidInformation =
+      'tapped_cari_tab_informasi_covid_19';
 
   // event phoneBook Emergency
   static String tappedphoneBookEmergencyDetail = 'tapped_nomor_darurat_detail';
@@ -77,6 +80,7 @@ class Analytics {
   static String tappedRefferalHospitalTab = 'tapped_rs_rujukan_tab';
   static String tappedCallCenterTab = 'tapped_call_center_tab';
   static String tappedGugusTugasWebTab = 'tapped_gugus_tugas_web_tab';
+  static String tappedIsolationCenterTab = 'tapped_pusat_Isolasi_tab';
 
   // event infographic
   static String tappedInfographicall = 'tapped_semua_info_praktikal';
@@ -141,7 +145,9 @@ class Analytics {
 
   //event test
   static String tappedRDT = 'tapped_rapid_test';
+  static String tappedRDTAntigen = 'tapped_rapid_test_antigen';
   static String tappedPCR = 'tapped_pcr';
+  static String tappedPCRNewCase = 'tapped_pcr_orang_kasus_baru';
   static String tappedRappidTestUrl = 'tapped_url_rapid_test_info';
 
   //event education
@@ -164,17 +170,25 @@ class Analytics {
   static String tappedContactHistoryForm = "tapped_riwayat_kontak_form";
   static String contactHistorySaved = "riwayat_kontak_baru_tersimpan";
   static String contactHistoryFailed = "riwayat_kontak_baru_gagal";
+  static String resetDailyReport = "tapped_menu_reset_diri_sendiri";
+  static String resetOtherReport = "tapped_menu_reset_orang_lain";
+  static String submitResetDailyReport = "submitted_reset_diri_sendiri";
+  static String submitResetOtherReport = "submitted_reset_orang_lain";
+  static String tappedDoctorConsultation =
+      "tapped_mobile_telekonsultasi_dokter";
+  static String tappedVitaminApplication = "tapped_mobile_permohonan_isoman";
 
   static String crowdReport = "tapped_lapor_kerumunan";
-  
+
   //event profile
   static String tappedEditProfile = "tapped_edit_akun";
   static String tappedVerificationNumber = "tapped_verifikasi_nomor";
-  static String tappedSendAgainVerificationNumber = "tapped_kirim_ulang_verifikasi_nomor";
+  static String tappedSendAgainVerificationNumber =
+      "tapped_kirim_ulang_verifikasi_nomor";
   static String tappedTermsAndConditions = "tapped_terms_and_conditions";
 
   //event zonation
-  static String tappedShareLocation = "tapped_bagikan_lokasi";
+  static String tappedCheckZone = "tapped_cek_zonasi";
   static String tappedArroundYouLocation = "tapped_lokasi_sekitar_anda";
-
+  static String tappedShareLocation = "tapped_bagikan_lokasi";
 }

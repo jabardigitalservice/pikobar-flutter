@@ -1,24 +1,33 @@
 part of 'SelfReportReminderBloc.dart';
 
 abstract class SelfReportReminderEvent extends Equatable {
-  const SelfReportReminderEvent([List props = const <dynamic>[]]);
-}
+  const SelfReportReminderEvent();
 
-
-
-class SelfReportReminderListLoad extends SelfReportReminderEvent {
   @override
-  List<Object> get props => [];
+  // TODO: implement props
+  List<Object> get props => <Object>[];
 }
 
+class SelfReportReminderListLoad extends SelfReportReminderEvent {}
+
+@immutable
 class SelfReportListUpdateReminder extends SelfReportReminderEvent {
   final bool isReminder;
-  SelfReportListUpdateReminder(this.isReminder);
+
+  const SelfReportListUpdateReminder(this.isReminder);
+
   @override
-  List<Object> get props => [isReminder];
+  List<Object> get props => <Object>[isReminder];
 }
 
+class SelfReportUpdateRecurrenceReport extends SelfReportReminderEvent {
+  final String recurrenceReport, otherUID;
 
+  const SelfReportUpdateRecurrenceReport(this.recurrenceReport, this.otherUID);
+
+  @override
+  List<Object> get props => <Object>[recurrenceReport, otherUID];
+}
 
 class SelfReportReminderUpdated extends SelfReportReminderEvent {
   final DocumentSnapshot selfReportReminderList;
@@ -26,6 +35,5 @@ class SelfReportReminderUpdated extends SelfReportReminderEvent {
   const SelfReportReminderUpdated(this.selfReportReminderList);
 
   @override
-  List<Object> get props => [selfReportReminderList];
+  List<Object> get props => <Object> [selfReportReminderList];
 }
-

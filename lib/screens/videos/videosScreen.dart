@@ -24,51 +24,308 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 import 'package:pikobar_flutter/utilities/youtubeThumnail.dart';
 
-// ignore: must_be_immutable
 class VideosScreen extends StatelessWidget {
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
+  final String title;
 
-  VideosScreen({Key key, this.covidInformationScreenState}) : super(key: key);
+  const VideosScreen({Key key, this.covidInformationScreenState, this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VideoListBloc>(
-      create: (context) => VideoListBloc()..add(LoadVideos()),
-      child:
-          VideosList(covidInformationScreenState: covidInformationScreenState),
+      create: (context) => VideoListBloc(),
+      child: VideosList(
+        covidInformationScreenState: covidInformationScreenState,
+        title: title,
+      ),
     );
   }
 }
 
-// ignore: must_be_immutable
 class VideosList extends StatefulWidget {
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
+  final String title;
 
-  VideosList({Key key, this.covidInformationScreenState}) : super(key: key);
+  const VideosList({Key key, this.covidInformationScreenState, this.title})
+      : super(key: key);
 
   @override
   _VideosListState createState() => _VideosListState();
 }
 
 class _VideosListState extends State<VideosList> {
-  // ignore: close_sinks
-  ScrollController _scrollController;
-  TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+
+  final int _limitMax = 500;
+  final int _limitPerPage = 10;
+  final int _limitPerSearch = 25;
+
+  List<LabelNewModel> _dataLabel = [];
+  List<VideoModel> _allVideos;
+  List<VideoModel> _limitedVideos = [];
+
+  bool _isGetDataLabel = true;
+  LabelNew _labelNew = LabelNew();
+  VideoListBloc _videoListBloc;
   Timer _debounce;
-  List<VideoModel> listVideos;
-  String searchQuery;
-  List<LabelNewModel> dataLabel = [];
-  bool isGetDataLabel = true;
-  LabelNew labelNew = LabelNew();
+  String _searchQuery;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.video);
+
+    _videoListBloc = BlocProvider.of<VideoListBloc>(context);
+    _videoListBloc.add(LoadVideos(limit: _limitMax));
+
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        await _getMoreData();
+      }
+
+      setState(() {});
+    });
+
     _searchController.addListener((() {
       _onSearchChanged();
     }));
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        body: WillPopScope(
+          child: CollapsingAppbar(
+            searchBar: CustomAppBar.buildSearchField(context, _searchController,
+                Dictionary.searchInformation, _updateSearchQuery),
+            showTitle: _showTitle,
+            titleAppbar: widget.title,
+            scrollController: _scrollController,
+            body: BlocListener<VideoListBloc, VideoListState>(
+              listener: (_, state) {
+                if (state is VideosLoaded) {
+                  _allVideos = state.videos;
+
+                  int limit = _allVideos.length > _limitPerPage
+                      ? _limitPerPage
+                      : _allVideos.length;
+
+                  _limitedVideos.addAll(_allVideos.getRange(0, limit).toList());
+                }
+                _getDataLabel();
+              },
+              child: BlocBuilder<VideoListBloc, VideoListState>(
+                builder: (context, state) {
+                  return state is VideosLoading
+                      ? _buildLoading()
+                      : state is VideosLoaded
+                          ? _buildContent(_limitedVideos)
+                          : Container();
+                },
+              ),
+            ),
+          ),
+          onWillPop: _onWillPop,
+        ));
+  }
+
+  _buildLoading() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(bottom: 10.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: 6,
+        padding: const EdgeInsets.all(10.0),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
+            height: 300.0,
+            child: Row(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  child:
+                      Skeleton(width: MediaQuery.of(context).size.width - 40),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildContent(List<VideoModel> listVideos) {
+    if (_searchQuery != null) {
+      listVideos = _allVideos
+          .where((test) =>
+              test.title.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .take(_limitPerSearch)
+          .toList();
+    }
+
+    int itemCount =
+        _searchQuery == null && listVideos.length != _allVideos.length
+            ? listVideos.length + 1
+            : listVideos.length;
+
+    return listVideos.isNotEmpty
+        ? ListView.builder(
+            itemCount: itemCount,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              if (index == listVideos.length) {
+                return CupertinoActivityIndicator();
+              }
+
+              return GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: Dimens.contentPadding,
+                      right: Dimens.contentPadding,
+                      bottom: Dimens.padding),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
+                          child: CachedNetworkImage(
+                            imageUrl: getYtThumbnail(
+                                youtubeUrl: listVideos[index].url,
+                                error: false),
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Center(
+                              heightFactor: 4.2,
+                              child: CupertinoActivityIndicator(),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Container(height: 200, color: Colors.grey[200]),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.8),
+                            ],
+                            stops: [0.0, 1.0],
+                          ),
+                        ),
+                      ),
+                      Image.asset(
+                        '${Environment.iconAssets}play_button_black.png',
+                        scale: 3,
+                      ),
+                      Positioned(
+                        left: 10,
+                        right: 10,
+                        bottom: 0,
+                        top: 215,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                _labelNew.isLabelNew(
+                                        listVideos[index].id.toString(),
+                                        _dataLabel)
+                                    ? LabelNewScreen()
+                                    : Container(),
+                                Expanded(
+                                  child: Text(
+                                    unixTimeStampToDateTime(
+                                        listVideos[index].publishedAt),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        color: Colors.white,
+                                        fontFamily: FontsFamily.roboto),
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 3,
+                            ),
+                            Text(
+                              listVideos[index].title,
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                  fontFamily: FontsFamily.roboto),
+                              textAlign: TextAlign.left,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    _labelNew.readNewInfo(
+                        listVideos[index].id,
+                        listVideos[index].publishedAt.toString(),
+                        _dataLabel,
+                        Dictionary.labelVideos);
+                    if (widget.covidInformationScreenState != null) {
+                      widget.covidInformationScreenState.widget.homeScreenState
+                          .getAllUnreadData();
+                    }
+                  });
+                  launchExternal(listVideos[index].url);
+
+                  AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
+                      <String, dynamic>{'title': listVideos[index].title});
+                },
+              );
+            })
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: Dictionary.descEmptyData,
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
+          );
+  }
+
+  Future<bool> _onWillPop() {
+    Navigator.pop(context, true);
+    return Future.value();
+  }
+
+  Future<void> _getMoreData() async {
+    if (_searchQuery == null) {
+      final nextPage = _limitedVideos.length + _limitPerPage;
+      final limit =
+          _allVideos.length > nextPage ? nextPage : _limitedVideos.length;
+
+      _limitedVideos
+          .addAll(_allVideos.getRange(_limitedVideos.length, limit).toList());
+      await Future.delayed(Duration(milliseconds: 500));
+    }
   }
 
   bool get _showTitle {
@@ -77,15 +334,15 @@ class _VideosListState extends State<VideosList> {
             0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
-  getDataLabel() {
-    if (isGetDataLabel) {
-      labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
+  void _getDataLabel() {
+    if (_isGetDataLabel) {
+      _labelNew.getDataLabel(Dictionary.labelVideos).then((value) {
         if (!mounted) return;
         setState(() {
-          dataLabel = value;
+          _dataLabel = value;
         });
       });
-      isGetDataLabel = false;
+      _isGetDataLabel = false;
     }
   }
 
@@ -94,235 +351,29 @@ class _VideosListState extends State<VideosList> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         setState(() {
-          searchQuery = _searchController.text;
+          _searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSearchVideo);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSearchVideo);
   }
 
-  void updateSearchQuery(String newQuery) {
+  void _updateSearchQuery(String newQuery) {
     setState(() {
-      searchQuery = newQuery;
+      _searchQuery = newQuery;
     });
   }
 
   void _clearSearchQuery() {
     setState(() {
       _searchController.clear();
-      updateSearchQuery(null);
+      _updateSearchQuery(null);
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: WillPopScope(
-      child: CollapsingAppbar(
-        searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
-        showTitle: _showTitle,
-        titleAppbar: Dictionary.videoUpToDate,
-        scrollController: _scrollController,
-        body: BlocBuilder<VideoListBloc, VideoListState>(
-          builder: (context, state) {
-            return state is VideosLoading
-                ? _buildLoading()
-                : state is VideosLoaded
-                    ? _buildContent(state)
-                    : Container();
-          },
-        ),
-      ),
-      onWillPop: _onWillPop,
-    ));
-  }
-
-  _buildLoading() {
-    return SingleChildScrollView(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: 6,
-            padding: const EdgeInsets.all(10.0),
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                height: 300.0,
-                child: Row(
-                  children: <Widget>[
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Skeleton(
-                          width: MediaQuery.of(context).size.width - 40),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<bool> _onWillPop() {
-    Navigator.pop(context, true);
-    return Future.value();
-  }
-
-  _buildContent(VideosLoaded state) {
-    if (searchQuery != null) {
-      listVideos = state.videos
-          .where((test) =>
-              test.title.toLowerCase().contains(searchQuery.toLowerCase()))
-          .toList();
-    } else {
-      listVideos = state.videos;
-    }
-
-    getDataLabel();
-
-    return Container(
-        child: listVideos.isNotEmpty
-            ? ListView.builder(
-                itemCount: listVideos.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      GestureDetector(
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              left: Dimens.padding,
-                              right: Dimens.padding,
-                              bottom: Dimens.padding),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl: getYtThumbnail(
-                                        youtubeUrl: listVideos[index].url,
-                                        error: false),
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(
-                                      heightFactor: 4.2,
-                                      child: CupertinoActivityIndicator(),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                            height: 200,
-                                            color: Colors.grey[200]),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 300,
-                                decoration: BoxDecoration(
-                                  color: Colors.black12.withOpacity(0.2),
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(
-                                      Dimens.dialogRadius),
-                                ),
-                              ),
-                              Image.asset(
-                                '${Environment.iconAssets}play_button_black.png',
-                                scale: 3,
-                              ),
-                              Positioned(
-                                left: 10,
-                                right: 10,
-                                bottom: 0,
-                                top: 215,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        labelNew.isLabelNew(
-                                                listVideos[index].id.toString(),
-                                                dataLabel)
-                                            ? LabelNewScreen()
-                                            : Container(),
-                                        Expanded(
-                                          child: Text(
-                                            unixTimeStampToDateTime(
-                                                listVideos[index].publishedAt),
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
-                                                fontFamily: FontsFamily.roboto),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Text(
-                                      listVideos[index].title,
-                                      style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                          fontFamily: FontsFamily.roboto),
-                                      textAlign: TextAlign.left,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            labelNew.readNewInfo(
-                                listVideos[index].id,
-                                listVideos[index].publishedAt.toString(),
-                                dataLabel,
-                                Dictionary.labelVideos);
-                            if (widget.covidInformationScreenState != null) {
-                              widget.covidInformationScreenState.widget
-                                  .homeScreenState
-                                  .getAllUnreadData();
-                            }
-                          });
-                          launchExternal(listVideos[index].url);
-
-                          AnalyticsHelper.setLogEvent(
-                              Analytics.tappedVideo, <String, dynamic>{
-                            'title': listVideos[index].title
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                })
-            : ListView(
-                children: [
-                  EmptyData(
-                    message: Dictionary.emptyData,
-                    desc: Dictionary.descEmptyData,
-                    isFlare: false,
-                    image: "${Environment.imageAssets}not_found.png",
-                  ),
-                ],
-              ));
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -11,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
@@ -18,8 +20,10 @@ import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/Navigation.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
@@ -33,8 +37,13 @@ import 'package:pikobar_flutter/screens/selfReport/SelfReportOption.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/HealthCheck.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class SelfReportScreen extends StatefulWidget {
+  final bool toNextScreen;
+  SelfReportScreen({Key key, this.toNextScreen = false}) : super(key: key);
+
   @override
   _SelfReportScreenState createState() => _SelfReportScreenState();
 }
@@ -44,7 +53,6 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationAuthenticated profileLoaded;
 
-  // ignore: close_sinks
   AuthenticationBloc _authenticationBloc;
   LatLng latLng;
   String addressMyLocation;
@@ -73,15 +81,18 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     return MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(
-              create: (BuildContext context) => _authenticationBloc =
+              create: (context) => _authenticationBloc =
                   AuthenticationBloc(authRepository: _authRepository)
                     ..add(AppStarted())),
           BlocProvider<ProfileBloc>(
-              create: (BuildContext context) => _profileBloc =
+              create: (context) => _profileBloc =
                   ProfileBloc(profileRepository: _profileRepository)),
+          BlocProvider<RemoteConfigBloc>(
+              create: (BuildContext context) =>
+                  RemoteConfigBloc()..add(RemoteConfigLoad())),
         ],
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
+          listener: (BuildContext context, AuthenticationState state) {
             if (state is AuthenticationFailure) {
               // Show an error message dialog when login,
               // except for errors caused by users who were canceled to login.
@@ -89,7 +100,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   !state.error.contains('NoSuchMethodError')) {
                 showDialog(
                     context: context,
-                    builder: (BuildContext context) => DialogTextOnly(
+                    builder: (context) => DialogTextOnly(
                           description: state.error.toString(),
                           buttonText: "OK",
                           onOkPressed: () {
@@ -111,7 +122,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                     children: <Widget>[
                       CircularProgressIndicator(),
                       Container(
-                        margin: EdgeInsets.only(left: 15.0),
+                        margin: const EdgeInsets.only(left: 15.0),
                         child: Text(Dictionary.loading),
                       )
                     ],
@@ -217,7 +228,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function for build widget content
   Widget _buildContent(DocumentSnapshot state) {
     return Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
         child: ListView(
           controller: _scrollController,
           children: <Widget>[
@@ -225,7 +236,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               opacity: _showTitle ? 0.0 : 1.0,
               duration: Duration(milliseconds: 250),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
                   Dictionary.titleSelfReport,
                   style: TextStyle(
@@ -236,148 +247,181 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               ),
             ),
             hasLogin
-                ? !HealthCheck()
-                            .isUserHealty(getField(state, 'health_status')) &&
-                        _isProfileUserNotComplete(state)
-                    ? SizedBox(
+                ? _isProfileUserNotComplete(state)
+                    ? const SizedBox(
                         height: 20,
                       )
                     : Container()
                 : Container(),
             hasLogin
-                ? !HealthCheck()
-                            .isUserHealty(getField(state, 'health_status')) &&
-                        _isProfileUserNotComplete(state)
+                ? _isProfileUserNotComplete(state)
                     ? _buildAnnounceProfileNotComplete(state)
                     : Container()
                 : Container(),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             _buildLocation(state),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FutureBuilder<bool>(
               future:
                   SelfReportRepository().checkNIK(nik: getField(state, 'nik')),
               builder: (context, snapshot) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    _buildContainer(
-                      imageDisable:
-                          '${Environment.iconAssets}daily_self_report_disable.png',
-                      imageEnable:
-                          '${Environment.iconAssets}daily_self_report_enable.png',
-                      title: Dictionary.dailyMonitoring,
-                      length: 2,
-                      //for give condition onPressed in widget _buildContainer
-                      onPressedEnable: () {
-                        if (latLng == null ||
-                            addressMyLocation == '-' ||
-                            addressMyLocation.isEmpty ||
-                            addressMyLocation == null) {
-                          Fluttertoast.showToast(
-                              backgroundColor: ColorBase.grey500,
-                              msg: Dictionary.alertLocationSelfReport,
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              fontSize: 16.0);
-                        } else {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SelfReportOption(latLng)));
-                        }
-                      },
-                      onPressedDisable: () {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            !_isProfileUserNotComplete(state) &&
-                            !snapshot.data) {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.nikNotRegistered,
-                              message: Dictionary.nikNotRegisteredDesc);
-                        } else {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.profileNotComplete,
-                              message: Dictionary.descProfile1);
-                        }
-                      },
-                      // condition for check if user login and user complete fill that profile
-                      // and health status is not healthy user can access for press the button in _buildContainer
-                      isShowMenu: hasLogin &&
-                          !_isProfileUserNotComplete(state) &&
-                          (snapshot.connectionState == ConnectionState.done &&
-                                  snapshot.hasData
-                              ? (snapshot.data ||
-                                  !HealthCheck().isUserHealty(
-                                    getField(state, 'health_status'),
-                                  ))
-                              : !HealthCheck().isUserHealty(
-                                  getField(state, 'health_status'),
-                                )),
-                    ),
-                    _buildContainer(
-                      imageDisable:
-                          '${Environment.iconAssets}history_contact_disable.png',
-                      imageEnable:
-                          '${Environment.iconAssets}history_contact_enable.png',
-                      title: Dictionary.historyContact,
-                      length: 2,
-                      onPressedEnable: () {
-                        if (latLng == null ||
-                            addressMyLocation == '-' ||
-                            addressMyLocation.isEmpty ||
-                            addressMyLocation == null) {
-                          Fluttertoast.showToast(
-                              backgroundColor: ColorBase.grey500,
-                              msg: Dictionary.alertLocationSelfReport,
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              fontSize: 16.0);
-                        } else {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ContactHistoryScreen()));
-                        }
-                      },
-                      onPressedDisable: () {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            !_isProfileUserNotComplete(state) &&
-                            !snapshot.data) {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.nikNotRegistered,
-                              message: Dictionary.nikNotRegisteredDesc);
-                        } else {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.profileNotComplete,
-                              message: Dictionary.descProfile1);
-                        }
-                      },
-                      isShowMenu: hasLogin &&
-                          !_isProfileUserNotComplete(state) &&
-                          (snapshot.connectionState == ConnectionState.done &&
-                                  snapshot.hasData
-                              ? (snapshot.data ||
-                                  !HealthCheck().isUserHealty(
-                                    getField(state, 'health_status'),
-                                  ))
-                              : !HealthCheck().isUserHealty(
-                                  getField(state, 'health_status'),
-                                )),
-                    ),
-                  ],
+                final bool checkHasData =
+                    snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData;
+                final bool isQuarantined = (checkHasData && snapshot.data) ||
+                    !HealthCheck()
+                        .isUserHealty(getField(state, 'health_status'));
+
+                return BlocListener<RemoteConfigBloc, RemoteConfigState>(
+                  listener: (_, remoteState) {
+                    if (widget.toNextScreen &&
+                        remoteState is RemoteConfigLoaded) {
+                      final Map<String, dynamic> getLabel =
+                          RemoteConfigHelper.decode(
+                              remoteConfig: remoteState.remoteConfig,
+                              firebaseConfig: FirebaseConfig.nikMessage,
+                              defaultValue:
+                                  FirebaseConfig.nikMessageDefaultValue);
+
+                      if (hasLogin && !_isProfileUserNotComplete(state)) {
+                        _openSelfReportOption(state, isQuarantined, getLabel);
+                      } else {
+                        _checkUserProfile(
+                            checkHasData &&
+                                !_isProfileUserNotComplete(state) &&
+                                !snapshot.data,
+                            getLabel);
+                      }
+                    }
+                  },
+                  child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                    builder: (context, remoteState) {
+                      if (remoteState is RemoteConfigLoaded) {
+                        final Map<String, dynamic> getLabel =
+                            RemoteConfigHelper.decode(
+                                remoteConfig: remoteState.remoteConfig,
+                                firebaseConfig: FirebaseConfig.nikMessage,
+                                defaultValue:
+                                    FirebaseConfig.nikMessageDefaultValue);
+                        final List<dynamic> getListData =
+                            RemoteConfigHelper.decode(
+                                remoteConfig: remoteState.remoteConfig,
+                                firebaseConfig: FirebaseConfig.selfIsolation,
+                                defaultValue:
+                                    FirebaseConfig.selfIsolationDefaultValue);
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                _buildContainer(
+                                  imageDisable:
+                                      '${Environment.iconAssets}daily_self_report_disable.png',
+                                  imageEnable:
+                                      '${Environment.iconAssets}daily_self_report_enable.png',
+                                  title: Dictionary.dailyMonitoring,
+                                  length: 2,
+                                  //for give condition onPressed in widget _buildContainer
+                                  onPressedEnable: () {
+                                    _openSelfReportOption(
+                                        state, isQuarantined, getLabel);
+                                  },
+                                  onPressedDisable: () {
+                                    _checkUserProfile(
+                                        checkHasData &&
+                                            !_isProfileUserNotComplete(state) &&
+                                            !snapshot.data,
+                                        getLabel);
+                                  },
+                                  // condition for check if user login and user complete fill that profile
+                                  // and health status is not healthy user can access for press the button in _buildContainer
+                                  isShowMenu: hasLogin &&
+                                      !_isProfileUserNotComplete(state),
+                                ),
+                                _buildContainer(
+                                  imageDisable:
+                                      '${Environment.iconAssets}history_contact_disable.png',
+                                  imageEnable:
+                                      '${Environment.iconAssets}history_contact_enable.png',
+                                  title: Dictionary.historyContact,
+                                  length: 2,
+                                  onPressedEnable: () {
+                                    if (latLng == null ||
+                                        addressMyLocation == '-' ||
+                                        addressMyLocation.isEmpty ||
+                                        addressMyLocation == null) {
+                                      Fluttertoast.showToast(
+                                          backgroundColor: ColorBase.grey500,
+                                          msg: Dictionary
+                                              .alertLocationSelfReport,
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          fontSize: 16.0);
+                                    } else {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ContactHistoryScreen()));
+                                    }
+                                  },
+                                  onPressedDisable: () {
+                                    if (checkHasData &&
+                                        !_isProfileUserNotComplete(state) &&
+                                        !snapshot.data) {
+                                      showTextBottomSheet(
+                                          context: context,
+                                          title: getLabel['title'],
+                                          message: getLabel['description']);
+                                    } else {
+                                      showTextBottomSheet(
+                                          context: context,
+                                          title: Dictionary.profileNotComplete,
+                                          message: Dictionary.descProfile1);
+                                    }
+                                  },
+                                  isShowMenu: hasLogin &&
+                                      !_isProfileUserNotComplete(state) &&
+                                      (checkHasData
+                                          ? (snapshot.data ||
+                                              !HealthCheck().isUserHealty(
+                                                getField(
+                                                    state, 'health_status'),
+                                              ))
+                                          : !HealthCheck().isUserHealty(
+                                              getField(state, 'health_status'),
+                                            )),
+                                ),
+                              ],
+                            ),
+                            GridView(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithMaxCrossAxisExtent(
+                                      childAspectRatio: 1.4,
+                                      maxCrossAxisExtent: 200,
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 5),
+                              children: getGridMenu(getListData),
+                            )
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            EducationListScreen()
+            EducationListScreen(scrollController: _scrollController)
           ],
         ));
   }
@@ -386,14 +430,15 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   Widget _buildAnnounceProfileNotComplete(DocumentSnapshot state) {
     return Container(
       width: (MediaQuery.of(context).size.width),
-      margin: EdgeInsets.only(left: 5, right: 5),
+      margin: const EdgeInsets.only(left: 5, right: 5),
       decoration: BoxDecoration(
-          color: ColorBase.lightRed, borderRadius: BorderRadius.circular(8.0)),
+          color: ColorBase.lightRed,
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: <Widget>[
           Image.asset('${Environment.imageAssets}red_intersect.png', width: 73),
           Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -409,7 +454,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Container(
                       child: RichText(
                     text: TextSpan(children: [
@@ -472,7 +517,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 7),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 7),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -486,7 +531,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                   height: 1.2,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -531,29 +576,33 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       int length,
       GestureTapCallback onPressedEnable,
       GestureTapCallback onPressedDisable,
-      bool isShowMenu}) {
+      bool isShowMenu,
+      bool isDynamic = false}) {
     return Expanded(
         child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: RaisedButton(
         elevation: 0,
         padding: EdgeInsets.all(0.0),
         color: ColorBase.greyContainer,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius),
         ),
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
-          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 8),
+          padding:
+              const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
                   height: 30,
-                  child: Image.asset(isShowMenu ? imageEnable : imageDisable)),
+                  child: isDynamic
+                      ? Image.network(imageEnable)
+                      : Image.asset(isShowMenu ? imageEnable : imageDisable)),
               Container(
-                margin: EdgeInsets.only(top: 15, right: 10.0),
+                margin: const EdgeInsets.only(top: 15, right: 10.0),
                 child: Text(title,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -574,7 +623,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
   /// Function to get location user
   Future<void> _handleLocation() async {
     //Checking permission status
-    var permissionService =
+    final PermissionWithService permissionService =
         Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
 
     if (await permissionService.status.isGranted) {
@@ -585,7 +634,7 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       // Show dialog to ask permission
       showDialog(
           context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
+          builder: (context) => DialogRequestPermission(
                 image: Image.asset(
                   '${Environment.iconAssets}map_pin.png',
                   fit: BoxFit.contain,
@@ -611,6 +660,32 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
     }
   }
 
+  // Function to build list of group menu
+  List<Widget> getGridMenu(List<dynamic> getListData) {
+    final List<Widget> list = List();
+
+    for (int i = 0; i < getListData.length; i++) {
+      final Column column = Column(
+        children: <Widget>[
+          _buildContainer(
+              isDynamic: true,
+              imageEnable: getListData[i]['icon'],
+              title: getListData[i]['title'],
+              length: 2,
+              //for give condition onPressed in widget _buildContainer
+              onPressedEnable: () async {
+                await launchExternal(getListData[i]['url']);
+                await AnalyticsHelper.setLogEvent(getListData[i]['analytics']);
+              },
+              isShowMenu: true)
+        ],
+      );
+
+      list.add(column);
+    }
+    return list;
+  }
+
   /// Function to get lat long user and auto complete address field
   Future<void> _openLocationPicker() async {
     latLng = await Navigator.push(
@@ -632,6 +707,54 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
       AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
       AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+    }
+  }
+
+  void _openSelfReportOption(DocumentSnapshot state, bool isQuarantined,
+      Map<String, dynamic> getLabel) {
+    if (latLng == null ||
+        addressMyLocation == '-' ||
+        addressMyLocation.isEmpty ||
+        addressMyLocation == null) {
+      Fluttertoast.showToast(
+          backgroundColor: ColorBase.grey500,
+          msg: Dictionary.alertLocationSelfReport,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          fontSize: 16.0);
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SelfReportOption(
+                location: latLng,
+                cityId: getField(state, 'city_id'),
+                isHealthStatusChanged:
+                    getField(state, 'health_status_changed') ?? false,
+                isQuarantined: isQuarantined,
+                nikMessage: getLabel,
+              )));
+    }
+  }
+
+  void _checkUserProfile(
+      bool isProfileComplete, Map<String, dynamic> getLabel) {
+    if (isProfileComplete) {
+      showTextBottomSheet(
+          context: context,
+          title: getLabel['title'],
+          message: getLabel['description']);
+    } else {
+      showTextBottomSheet(
+          context: context,
+          title: Dictionary.profileNotComplete,
+          message: Dictionary.descProfile1);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_authenticationBloc != null) {
+      _authenticationBloc.close();
     }
   }
 }

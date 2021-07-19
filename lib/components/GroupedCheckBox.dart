@@ -156,8 +156,10 @@ class GroupedCheckBox extends StatefulWidget {
       this.wrapAlignment = WrapAlignment.start,
       this.wrapSpacing = 0.0,
       this.wrapRunSpacing = 0.0,
-      this.indexAllDisabled})
-      : assert(itemLabelList.length == itemValueList.length);
+      this.indexAllDisabled,
+      Key key})
+      : assert(itemLabelList.length == itemValueList.length),
+        super(key: key);
 
   @override
   _GroupedCheckBoxState createState() => _GroupedCheckBoxState();
@@ -272,23 +274,21 @@ class _GroupedCheckBoxState extends State<GroupedCheckBox> {
                   borderRadius: BorderRadius.all(Radius.circular(4.0)),
                   border: Border.all(
                       width: 2,
-                      color:
-                          selectedItems.contains(widget.itemValueList[index])
-                              ? widget.activeColor
-                              : widget.color)),
+                      color: selectedItems.contains(widget.itemValueList[index])
+                          ? widget.activeColor
+                          : widget.color)),
               child: selectedItems.contains(widget.itemValueList[index])
                   ? Icon(FontAwesomeIcons.check,
                       size: 13,
-                      color:
-                          selectedItems.contains(widget.itemValueList[index])
-                              ? Colors.white
-                              : widget.color)
+                      color: selectedItems.contains(widget.itemValueList[index])
+                          ? Colors.white
+                          : widget.color)
                   : null,
             ),
             Expanded(
               child: Text(widget.itemLabelList[index],
-                  style: !selectedItems.contains(widget
-                              .itemValueList[widget.indexAllDisabled]) &&
+                  style: !selectedItems.contains(
+                              widget.itemValueList[widget.indexAllDisabled]) &&
                           selectedItems.isNotEmpty
                       ? index == widget.indexAllDisabled
                           ? TextStyle(

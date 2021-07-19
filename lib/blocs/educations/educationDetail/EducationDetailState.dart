@@ -2,20 +2,15 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 
 abstract class EducationDetailState extends Equatable {
-  const EducationDetailState([List props = const <dynamic>[]]);
-}
+  const EducationDetailState();
 
-class InitialEducationDetailState extends EducationDetailState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
-class EducationDetailLoading extends EducationDetailState {
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
+class InitialEducationDetailState extends EducationDetailState {}
 
-}
+class EducationDetailLoading extends EducationDetailState {}
 
 class EducationDetailLoaded extends EducationDetailState {
   final EducationModel record;
@@ -23,22 +18,17 @@ class EducationDetailLoaded extends EducationDetailState {
   const EducationDetailLoaded(this.record);
 
   @override
-  List<Object> get props => [record];
-
-  @override
-  String toString() => 'EducationDetailLoaded { record: $record }';
+  List<Object> get props => <Object>[record];
 }
 
 class EducationDetailFailure extends EducationDetailState {
   final String error;
 
-  EducationDetailFailure({this.error});
+  const EducationDetailFailure({this.error});
 
   @override
-  String toString() {
-    return 'State EducationDetailFailure{error: $error}';
-  }
+  String toString() => 'State EducationDetailFailure{error: $error}';
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

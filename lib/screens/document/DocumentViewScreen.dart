@@ -13,7 +13,7 @@ class DocumentViewScreen extends StatefulWidget {
   final String url;
   final String nameFile;
 
-  DocumentViewScreen({this.url, this.nameFile});
+  DocumentViewScreen({Key key, this.url, this.nameFile}) : super(key: key);
 
   @override
   _DocumentViewScreenState createState() => _DocumentViewScreenState();
@@ -30,7 +30,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
   @override
   void initState() {
     if (widget.nameFile.length > 253) {
-      var maxlength = widget.nameFile.length - 253;
+      final int maxlength = widget.nameFile.length - 253;
       nameFile =
           widget.nameFile.substring(0, widget.nameFile.length - maxlength);
     } else {

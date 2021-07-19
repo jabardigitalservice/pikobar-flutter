@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 
 class CustomAppBar {
@@ -57,17 +58,17 @@ class CustomAppBar {
     );
   }
 
-  static AppBar bottomSearchAppBar(
+  static AppBar bottomSearchAppBar(BuildContext context,
       {@required TextEditingController searchController,
       @required String title,
       @required String hintText,
-        double elevation,
+      double elevation,
       ValueChanged<String> onChanged}) {
     return AppBar(
         backgroundColor: Colors.white,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
-          child: buildSearchField(searchController, hintText, onChanged),
+          child: buildSearchField(context, searchController, hintText, onChanged),
         ),
         elevation: elevation ?? 0.0,
         title: CustomAppBar.setTitleAppBar(title));
@@ -83,8 +84,9 @@ class CustomAppBar {
         overflow: TextOverflow.ellipsis);
   }
 
-  static Widget buildSearchField(TextEditingController searchController,
-      String hintText, ValueChanged<String> onChanged, {EdgeInsetsGeometry margin}) {
+  static Widget buildSearchField(BuildContext context, TextEditingController searchController,
+      String hintText, ValueChanged<String> onChanged,
+      {EdgeInsetsGeometry margin}) {
     return Container(
       margin: margin ?? EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       height: 40.0,
@@ -92,7 +94,7 @@ class CustomAppBar {
           color: ColorBase.greyContainer,
           shape: BoxShape.rectangle,
           border: Border.all(color: ColorBase.greyBorder),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: TextField(
         controller: searchController,
         autofocus: false,
@@ -107,6 +109,7 @@ class CustomAppBar {
                     color: ColorBase.darkGrey,
                     onPressed: () {
                       searchController.text = '';
+                      FocusScope.of(context).unfocus();
                     },
                   )
                 : null,
@@ -133,7 +136,7 @@ class CustomAppBar {
     return AppBar(
       title: AnimatedOpacity(
         opacity: showTitle ? 1.0 : 0.0,
-        duration: Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 250),
         child: Text(
           showTitle ? title : '',
           style: TextStyle(

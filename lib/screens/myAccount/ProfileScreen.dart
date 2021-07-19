@@ -31,7 +31,10 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 import 'TermsConditions.dart';
 
+@immutable
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key key}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -42,6 +45,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _versionText = Dictionary.version;
   RemoteConfigBloc _remoteConfigBloc;
   final ProfileRepository _profileRepository = ProfileRepository();
+
+  // ignore: unused_field, close_sinks
   ProfileBloc _profileBloc;
 
   @override
@@ -97,14 +102,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundColor: Theme.of(context).primaryColor,
                   content: Row(
                     children: <Widget>[
-                      CircularProgressIndicator(),
+                      const CircularProgressIndicator(),
                       Container(
-                        margin: EdgeInsets.only(left: 15.0),
+                        margin: const EdgeInsets.only(left: 15.0),
                         child: Text(Dictionary.loading),
                       )
                     ],
                   ),
-                  duration: Duration(seconds: 15),
+                  duration: const Duration(seconds: 15),
                 ),
               );
             } else {
@@ -114,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Scaffold(
               backgroundColor: Colors.white,
               appBar: CustomAppBar.animatedAppBar(
-                  showTitle: true, title: Dictionary.profile),
+                  showTitle: true, title: Dictionary.profile, fontSize: 20),
               body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (
                   BuildContext context,
@@ -130,27 +135,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   } else if (state is AuthenticationAuthenticated ||
                       state is AuthenticationLoading) {
                     // When user already login get data user from firestore
-                    AuthenticationAuthenticated _profileLoaded =
+                    final AuthenticationAuthenticated _profileLoaded =
                         state as AuthenticationAuthenticated;
                     HealthCheck().isUserHealty(_profileLoaded.record.uid);
-                    return BlocBuilder<ProfileBloc, ProfileState>(builder: (
-                      BuildContext context,
-                      ProfileState state,
-                    ) {
-                      if (state is ProfileLoading) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (state is ProfileLoaded) {
-                        return _buildContent(state.profile, _profileLoaded);
-                      } else {
-                        _profileBloc
-                            .add(ProfileLoad(uid: _profileLoaded.record.uid));
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    });
+                    return BlocProvider<ProfileBloc>(
+                        create: (context) => ProfileBloc(
+                            profileRepository: ProfileRepository())
+                          ..add(ProfileLoad(uid: _profileLoaded.record.uid)),
+                        child: BlocBuilder<ProfileBloc, ProfileState>(builder: (
+                          BuildContext context,
+                          ProfileState state,
+                        ) {
+                          if (state is ProfileLoading) {
+                            return const Center(
+                              child: const CircularProgressIndicator(),
+                            );
+                          } else if (state is ProfileLoaded) {
+                            return _buildContent(state.profile, _profileLoaded);
+                          } else {
+                            return const Center(
+                              child: const CircularProgressIndicator(),
+                            );
+                          }
+                        }));
                   } else if (state is AuthenticationFailure ||
                       state is AuthenticationLoading) {
                     return OnBoardingLoginScreen(
@@ -170,11 +177,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       DocumentSnapshot state, AuthenticationAuthenticated _profileLoaded) {
     return ListView(
       children: <Widget>[
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -190,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : ExactAssetImage('${Environment.imageAssets}user.png'),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Container(
@@ -202,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: 30.0,
                       child: Text(
-                        state['name'],
+                        _profileLoaded.record.name,
                         style: TextStyle(
                             color: ColorBase.grey800,
                             fontSize: 16,
@@ -235,7 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
 
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 40),
+          padding: const EdgeInsets.only(left: 20, top: 40),
           child: Text(Dictionary.qrCode,
               style: TextStyle(
                   color: ColorBase.grey800,
@@ -248,10 +255,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             showModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    topRight: Radius.circular(8.0),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: const Radius.circular(8.0),
+                    topRight: const Radius.circular(8.0),
                   ),
                 ),
                 builder: (context) {
@@ -259,9 +266,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 });
           },
           child: Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: ColorBase.menuBorderColor)),
@@ -276,7 +283,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 20,
                               child: Image.asset(
                                   '${Environment.iconAssets}qr-code.png')),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Text(
@@ -291,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                 ],
@@ -301,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
 
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 20),
+          padding: const EdgeInsets.only(left: 20, top: 20),
           child: Text(Dictionary.accountManage,
               style: TextStyle(
                   color: ColorBase.grey800,
@@ -313,7 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Column(
               children: <Widget>[
                 _buildGroupMenu(state),
@@ -331,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 20,
                               child: Image.asset(
                                   '${Environment.iconAssets}editProfile.png')),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Text(
@@ -352,14 +359,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Divider(
                   color: ColorBase.menuBorderColor,
                   thickness: 1,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Row(
@@ -371,7 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 20,
                             child: Image.asset(
                                 '${Environment.iconAssets}versionLogo.png')),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         Text(
@@ -394,7 +401,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         // Get terms and condition string from remote config
@@ -402,17 +409,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context, state) {
             return state is RemoteConfigLoaded
                 ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: _buildTermsConditions(state.remoteConfig),
                   )
                 : Container();
           },
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: OutlineButton(
             borderSide: BorderSide(color: ColorBase.softRed),
             shape:
@@ -422,7 +429,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _authenticationBloc.add(LoggedOut());
             },
             child: Padding(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Center(
@@ -453,7 +460,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Container(
         child: RichText(
           text: TextSpan(
-              text: termsConditions['agreement']+' ',
+              text: termsConditions['agreement'] + ' ',
               style: TextStyle(
                   fontFamily: FontsFamily.roboto,
                   fontWeight: FontWeight.bold,
@@ -463,7 +470,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <TextSpan>[
                 TextSpan(
                     text: Dictionary.termsConditions,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
                         fontWeight: FontWeight.bold),
@@ -473,7 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => TermsConditionsPage(
-                                    termsConditions,
+                                    termsConfig: termsConditions,
                                   )),
                         );
                       })
@@ -491,7 +498,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Color textColor = Colors.white;
     String uriImage = '${Environment.iconAssets}user_health.png';
     // Get data health status visible or not
-    bool visible = remoteConfig != null &&
+    final bool visible = remoteConfig != null &&
             remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
         ? remoteConfig.getBool(FirebaseConfig.healthStatusVisible)
         : false;
@@ -499,7 +506,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (remoteConfig != null &&
         remoteConfig.getString(FirebaseConfig.healthStatusColors) != null &&
         data['health_status'] != null) {
-      Map<String, dynamic> healthStatusColor = json
+      final Map<String, dynamic> healthStatusColor = json
           .decode(remoteConfig.getString(FirebaseConfig.healthStatusColors));
 
       switch (data['health_status']) {
@@ -547,7 +554,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: BoxDecoration(
                 color: cardColor, borderRadius: BorderRadius.circular(18)),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Text(
                 data['health_status_text'],
                 style: TextStyle(
@@ -604,16 +611,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Function to build list of group menu
   List<Widget> getGroupMenu(List<dynamic> groupMenu) {
-    List<Widget> list = List();
+    final List<Widget> list = List();
 
     for (int i = 0; i < groupMenu.length; i++) {
-      Column column = Column(
+      final Column column = Column(
         children: <Widget>[
           Column(
             children: <Widget>[
               InkWell(
                 onTap: () async {
-                  var url = await userDataUrlAppend(groupMenu[i]['url']);
+                  final String url =
+                      await userDataUrlAppend(groupMenu[i]['url']);
                   openChromeSafariBrowser(url: url);
                 },
                 child: Row(
@@ -624,7 +632,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Container(
                             height: 20,
                             child: Image.network(groupMenu[i]['icon'])),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         Text(
@@ -647,14 +655,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Column(
                 children: <Widget>[
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Divider(
                     color: ColorBase.menuBorderColor,
                     thickness: 1,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                 ],

@@ -50,6 +50,11 @@ class FirebaseConfig {
   static String statisticsSwitch = 'statistics_switch';
   static String bottomSheetContent = 'bottom_sheet_content';
   static String geolocationEnabled = 'geolocation_enabled';
+  static String emergencyNumberTab = 'emergency_number_tab';
+  static String successMessageSelfReport = 'succes_message_self_report';
+  static String nikMessage = 'nik_message';
+  static String dashboardPikobarApiKey = 'dashboard_pikobar_api_key';
+  static String selfIsolation = 'self_isolation';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -210,4 +215,97 @@ class FirebaseConfig {
       '}'
       '}'
       '}';
+
+  static String emergencyCallDefaultValue = '['
+      '{'
+      '"title": "119 Call Center",'
+      '"image": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fphone.png?alt=media&token=fba990d3-3ca1-4078-a8cb-2eb7432fdf05",'
+      '"phone_number": "119",'
+      '"action": "call",'
+      '"message": ""'
+      ' },'
+      '{'
+      '"title": "WA Hotline Pikobar",'
+      '"image": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fwhatsapp_icon.png?alt=media&token=b0554181-390d-453e-8a58-890dd4942ab7",'
+      ' "phone_number": "+6285697391854",'
+      '"action": "whatsapp",'
+      ' "message": "Halo Admin! Saya ingin tanya seputar PIKOBAR"'
+      '}'
+      ']';
+
+  static String emergencyNumberTabDefaultValue = '['
+      '{'
+      '"name": "No Darurat",'
+      '"analytics": "tapped_nomor_darurat_tab"'
+      '},'
+      '{'
+      '"name": "RS Rujukan COVID-19",'
+      '"analytics": "tapped_rs_rujukan_tab"'
+      '},'
+      '{'
+      '"name": "Call Center Kota/Kab",'
+      '"analytics": "tapped_call_center_tab"'
+      '},'
+      '{'
+      '"name": "Website Gugus Tugas Kota/Kabupaten Jawa Barat",'
+      ' "analytics": "tapped_gugus_tugas_web_tab"'
+      '},'
+      ' {'
+      '"name": "Pusat Isolasi",'
+      '"analytics": "tapped_pusat_Isolasi_tab"'
+      '}'
+      ']';
+
+  static String successMessageSelfReportDefaultValue = '{'
+      '"saved_message": ['
+      '{'
+      '"icon": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fdaily_success.png?alt=media&token=5a08e00b-b47b-4d5a-9230-3e50d0fe2fe5",'
+      ' "title": "Berhasil Disimpan",'
+      '"description": "Terima kasih, laporan Anda membantu kami dalam melakukan penanganan kasus secara tepat.",'
+      '"city_id": ['
+      '"default"'
+      ' ]'
+      '}'
+      '],'
+      '"indications_message": ['
+      ' {'
+      '"icon": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Findications_info.png?alt=media&token=cb1dc19a-30d6-4e3a-88aa-55f69ff9cc3a",'
+      '"title": "Anda terdeteksi bergejala",'
+      ' "description": "Jika Anda merasakan gejala selama isolasi mandiri, segera lapor ke Puskesmas terdekat untuk mendapatkan arahan lebih lanjut.",'
+      ' "city_id": ['
+      '"default"'
+      ']'
+      '}'
+      '],'
+      '"temperature_message": ['
+      '{'
+      '"icon": "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Ftemperature_info.png?alt=media&token=6b4103a5-87e4-4da9-a53c-76de3cd65105",'
+      '"title": "Informasi Tambahan",'
+      ' "description": "Agar dapat memantau suhu tubuh secara akurat, penting bagi Anda untuk memiliki thermometer selama isolasi mandiri.",'
+      ' "city_id": ['
+      ' "default"'
+      ']'
+      ' }'
+      ']'
+      '}';
+
+  static String nikMessageDefaultValue = '{'
+      '"title": "NIK Tidak Terdaftar",'
+      ' "description": "<p>Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini</p><p>Apabila Anda memiliki pertanyaan atau saran mengenai Kebijakan Privasi kami, jangan ragu untuk hubungi kami melalui email</p>"'
+      '}';
+
+  static String selfIsolationDefaultValue = '['
+      '{'
+      '"title": "Telekonsultasi \nDokter",'
+      '"icon":"https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Ftelekonsultasi.png?alt=media&token=473d3122-ae38-4bca-9781-ea8015a23df5",'
+      '"analytics": "tapped_mobile_telekonsultasi_dokter",'
+      '"url":          "https://wa.me/6285697391854?text=Halo%20Admin!%20Saya%20ingin%20tanya%20seputar%20Isolasi%20Mandiri"'
+      '},'
+      ' {'
+      ' "title": "Permohonan Vitamin/Obat",'
+      ' "icon":          "https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fhandle_with_care.png?alt=media&token=5ec08bc2-9687-4d19-9b76-a356be9b30b8",'
+      ' "analytics": "tapped_mobile_permohonan_isoman",'
+      ' "url": "https://bit.ly/pcbr-isomanvit"'
+      ' }'
+      ']';
 }

@@ -4,17 +4,21 @@ import 'dart:io';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+enum Auth { login, logout }
 
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -31,7 +35,8 @@ class AuthRepository {
       idToken: googleSignInAuthentication.idToken,
     );
 
-    final UserCredential authResult = await _auth.signInWithCredential(credential);
+    final UserCredential authResult =
+        await _auth.signInWithCredential(credential);
     final User user = authResult.user;
     assert(!user.isAnonymous);
     assert(await user.getIdToken() != null);
@@ -193,8 +198,9 @@ class AuthRepository {
 
         await persistUserInfo(authUserInfo);
         await registerFCMToken();
-        //await LocationService.actionSendLocation();
-        await LocationService.configureBackgroundLocation(userInfo: authUserInfo);
+        await cloudFunctionOnAuth(authType: Auth.login);
+        await LocationService.configureBackgroundLocation(
+            userInfo: authUserInfo);
       } else {
         authUserInfo = await readLocalUserInfo();
       }
@@ -246,13 +252,11 @@ class AuthRepository {
           FirebaseFirestore.instance.collection(kUsers).doc(_user.uid);
 
       _firebaseMessaging.getToken().then((token) {
-        final tokensDocument =
-            userDocument.collection(kUserTokens).doc(token);
+        final tokensDocument = userDocument.collection(kUserTokens).doc(token);
 
         tokensDocument.get().then((snapshot) {
           if (!snapshot.exists) {
-            tokensDocument
-                .set({'token': token, 'created_at': DateTime.now()});
+            tokensDocument.set({'token': token, 'created_at': DateTime.now()});
           }
         });
       });
@@ -268,10 +272,45 @@ class AuthRepository {
     }
   }
 
+  /// Send information to the cloud function
+  /// when the user login or logout
+  ///
+  /// The data passed into the trigger [call] can be any of the following types:
+  ///
+  /// `null`
+  /// `String`
+  /// `num`
+  /// [List], where the contained objects are also one of these types.
+  /// [Map], where the values are also one of these types.
+  ///
+  /// The request to the Cloud Functions backend made by this method
+  /// automatically includes a Firebase Instance ID token to identify the app
+  /// instance. If a user is logged in with Firebase Auth, an auth ID token for
+  /// the user is also automatically included.
+  Future<void> cloudFunctionOnAuth({@required Auth authType}) async {
+    final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
+        'userOnAuth',
+        options: HttpsCallableOptions(timeout: const Duration(seconds: 5)));
+
+    try {
+      await callable.call(
+        <String, dynamic>{
+          'auth_type': authType.toString().split('.').last,
+          'fcm_token': await _firebaseMessaging.getToken()
+        },
+      );
+    } catch (e) {
+      print('Exception: $e');
+    }
+  }
+
   Future<void> removeFCMToken() async {
     UserModel authUserInfo = await getUserInfo();
 
+    await _firebaseMessaging.unsubscribeFromTopic('self_reports');
+
     await _firebaseMessaging.getToken().then((token) async {
+
       final tokensDocument = FirebaseFirestore.instance
           .collection(kUsers)
           .doc(authUserInfo.uid)

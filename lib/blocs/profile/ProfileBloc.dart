@@ -10,11 +10,11 @@ import './Bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   ProfileBloc({
     @required this.profileRepository,
-  })  : assert(profileRepository != null),
+  })  : assert(profileRepository != null, 'profileRepository must not be null'),
         super(ProfileUninitialized());
 
   @override
@@ -26,7 +26,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try {
         CityModel record = await profileRepository.getCityList();
         yield CityLoaded(record: record);
-      } catch (e) {
+      } on Exception catch (e) {
         yield ProfileFailure(
             error: CustomException.onConnectionException(e.toString()));
       }
@@ -46,7 +46,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.birthdate,
             event.latLng);
         yield ProfileSaved();
-      } catch (e) {
+      } on Exception catch (e) {
         yield ProfileFailure(error: e.toString());
       }
     }
@@ -62,7 +62,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.codeSent);
 
         yield ProfileWaiting();
-      } catch (e) {
+      } on Exception catch (e) {
         yield ProfileFailure(error: e.toString());
       }
     }
@@ -84,7 +84,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.birthdate,
             event.latLng);
         yield ProfileVerified();
-      } catch (e) {
+      } on Exception catch (e) {
         yield ProfileFailure(error: e.toString());
       }
     }
@@ -110,7 +110,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _loadSelfReportListToState(String otherUID) async* {
     yield ProfileLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
 
     _subscription = profileRepository.getProfile(otherUID).listen((event) {
       add(ProfileUpdated(event));
@@ -118,6 +118,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> _selfReportListToState(ProfileUpdated event) async* {
-    yield ProfileLoaded(event.profile);
+    yield ProfileLoaded(profile: event.profile);
   }
 }

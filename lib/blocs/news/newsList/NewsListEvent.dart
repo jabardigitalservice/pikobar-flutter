@@ -2,32 +2,64 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 
 abstract class NewsListEvent extends Equatable {
-  const NewsListEvent([List props = const <dynamic>[]]);
+  const NewsListEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class NewsListLoad extends NewsListEvent {
   final String newsCollection;
   final bool statImportantInfo;
+  final int limit;
 
-  NewsListLoad(this.newsCollection, {this.statImportantInfo});
-
-  @override
-  String toString() {
-    return 'Event NewsListLoad $newsCollection';
-  }
+  const NewsListLoad(this.newsCollection, {this.statImportantInfo, this.limit});
 
   @override
-  List<Object> get props => [newsCollection];
+  List<Object> get props => <Object>[newsCollection, limit];
 }
 
 class NewsListUpdate extends NewsListEvent {
   final List<NewsModel> newsList;
 
-  NewsListUpdate(this.newsList);
+  const NewsListUpdate(this.newsList);
 
   @override
-  String toString() => 'Event NewsListUpdate';
+  List<Object> get props => <Object>[newsList];
+}
+
+class NewsListImportantUpdate extends NewsListEvent {
+  final List<NewsModel> newsList;
+
+  const NewsListImportantUpdate(this.newsList);
 
   @override
-  List<Object> get props => [newsList];
+  List<Object> get props => <Object>[newsList];
+}
+
+class NewsListJabarUpdate extends NewsListEvent {
+  final List<NewsModel> newsList;
+
+  const NewsListJabarUpdate(this.newsList);
+
+  @override
+  List<Object> get props => <Object>[newsList];
+}
+
+class NewsListNationalUpdate extends NewsListEvent {
+  final List<NewsModel> newsList;
+
+  const NewsListNationalUpdate(this.newsList);
+
+  @override
+  List<Object> get props => <Object>[newsList];
+}
+
+class NewsListWorldUpdate extends NewsListEvent {
+  final List<NewsModel> newsList;
+
+  const NewsListWorldUpdate(this.newsList);
+
+  @override
+  List<Object> get props => <Object>[newsList];
 }

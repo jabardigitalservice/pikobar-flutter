@@ -31,7 +31,7 @@ class AddOtherSelfReportBloc
         );
 
         yield AddOtherSelfReportSaved();
-      } catch (e) {
+      } on Exception catch (e) {
         yield AddOtherSelfReportFailed(
             error: CustomException.onConnectionException(e.toString()));
       }

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/infographics/infographicslist/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
@@ -24,12 +24,12 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
-// ignore: must_be_immutable
 class InfoGraphics extends StatefulWidget {
   final String searchQuery;
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  InfoGraphics({Key key, this.searchQuery, this.covidInformationScreenState})
+  const InfoGraphics(
+      {Key key, this.searchQuery, this.covidInformationScreenState})
       : super(key: key);
 
   @override
@@ -41,24 +41,6 @@ class _InfoGraphicsState extends State<InfoGraphics> {
   bool isGetDataLabel = true;
   LabelNew labelNew;
   List<LabelNewModel> dataLabel = [];
-
-  List<String> listItemTitleTab = [
-    Dictionary.titleLatestNews,
-    Dictionary.center,
-    Dictionary.who,
-  ];
-
-  List<String> listCollectionData = [
-    kInfographics,
-    kInfographicsCenter,
-    kInfographicsWho,
-  ];
-
-  List<String> analyticsData = [
-    Analytics.tappedInfographicJabar,
-    Analytics.tappedInfographicCenter,
-    Analytics.tappedInfographicWho,
-  ];
 
   @override
   void initState() {
@@ -92,63 +74,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             defaultValue: FirebaseConfig.labelsDefaultValue);
         return _buildInfographic(getLabel);
       } else {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    Dictionary.infoGraphics,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 16.0),
-                  ),
-                  InkWell(
-                    child: Text(
-                      Dictionary.more,
-                      style: TextStyle(
-                          color: ColorBase.green,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.roboto,
-                          fontSize: Dimens.textSubtitleSize),
-                    ),
-                    onTap: () async {
-                      final result = await Navigator.pushNamed(
-                              context, NavigationConstrants.InfoGraphics,
-                              arguments: widget.covidInformationScreenState)
-                          as bool;
-                      if (result) {
-                        isGetDataLabel = result;
-                        getDataLabel();
-                      }
-
-                      AnalyticsHelper.setLogEvent(
-                          Analytics.tappedInfoGraphicsMore);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: Text(
-                Dictionary.descInfoGraphic,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: FontsFamily.roboto,
-                    fontSize: 12.0),
-                textAlign: TextAlign.left,
-              ),
-            ),
-          ],
-        );
+        return Container();
       }
     });
   }
@@ -191,7 +117,8 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                       height: 140,
                       width: 150,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                         child: Skeleton(
                           width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
@@ -240,9 +167,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
-      if (listData.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataInfoGraphic = true;
-      }
+
+      widget.covidInformationScreenState.isEmptyDataInfoGraphic =
+          listData.isEmpty;
     }
     return listData.isNotEmpty
         ? Column(
@@ -304,18 +231,20 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                             : 5,
                     itemBuilder: (context, index) {
                       final DocumentSnapshot document = listData[index];
-                      return Container(
-                        padding: EdgeInsets.only(left: Dimens.padding),
-                        width: 150.0,
-                        height: 150.0,
-                        child: Column(
-                          children: <Widget>[
-                            InkWell(
-                              child: Container(
+                      return GestureDetector(
+                        onTap: () => _tapAction(document),
+                        child: Container(
+                          padding: EdgeInsets.only(left: Dimens.padding),
+                          width: 150.0,
+                          height: 150.0,
+                          child: Column(
+                            children: <Widget>[
+                              Container(
                                 height: 140,
                                 width: 150,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(
+                                      Dimens.borderRadius),
                                   child: CachedNetworkImage(
                                     imageUrl: document['images'][0] ?? '',
                                     alignment: Alignment.topCenter,
@@ -336,61 +265,9 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                   ),
                                 ),
                               ),
-                              onTap: () async {
-                                setState(() {
-                                  labelNew.readNewInfo(
-                                      document.id,
-                                      document['published_date']
-                                          .seconds
-                                          .toString(),
-                                      dataLabel,
-                                      Dictionary.labelInfoGraphic);
-                                  widget.covidInformationScreenState.widget
-                                      .homeScreenState
-                                      .getAllUnreadData();
-                                });
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        DetailInfoGraphicScreen(
-                                            dataInfoGraphic: document)));
-
-                                AnalyticsHelper.setLogEvent(
-                                    Analytics.tappedInfoGraphicsDetail,
-                                    <String, dynamic>{
-                                      'title': document['title']
-                                    });
-                              },
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () async {
-                                      setState(() {
-                                        labelNew.readNewInfo(
-                                            document.id,
-                                            document['published_date']
-                                                .seconds
-                                                .toString(),
-                                            dataLabel,
-                                            Dictionary.labelInfoGraphic);
-                                        widget.covidInformationScreenState
-                                            .widget.homeScreenState
-                                            .getAllUnreadData();
-                                      });
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DetailInfoGraphicScreen(
-                                                      dataInfoGraphic:
-                                                          document)));
-
-                                      AnalyticsHelper.setLogEvent(
-                                          Analytics.tappedInfoGraphicsDetail,
-                                          <String, dynamic>{
-                                            'title': document['title']
-                                          });
-                                    },
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
                                     child: Container(
                                       padding: EdgeInsets.only(top: 10),
                                       child: Column(
@@ -445,11 +322,11 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20)
-                          ],
+                                ],
+                              ),
+                              SizedBox(height: 20)
+                            ],
+                          ),
                         ),
                       );
                     }),
@@ -457,5 +334,23 @@ class _InfoGraphicsState extends State<InfoGraphics> {
             ],
           )
         : Container();
+  }
+
+  void _tapAction(DocumentSnapshot document) async {
+    setState(() {
+      labelNew.readNewInfo(
+          document.id,
+          document['published_date'].seconds.toString(),
+          dataLabel,
+          Dictionary.labelInfoGraphic);
+      widget.covidInformationScreenState.widget.homeScreenState
+          .getAllUnreadData();
+    });
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            DetailInfoGraphicScreen(dataInfoGraphic: document)));
+
+    AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
+        <String, dynamic>{'title': document['title']});
   }
 }

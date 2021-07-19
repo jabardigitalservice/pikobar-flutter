@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
+import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
+import 'package:pikobar_flutter/models/IsolationCenterModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class PhoneBookDetail extends StatefulWidget {
   List<ReferralHospitalModel> documentReferralHospital;
+  List<IsolationCenterModel> isolationCenterModel;
   CallCenterModel documentCallCenterModel;
   GugusTugasWebModel documentGugusTugasWebModel;
   String nameModel, nameCity;
@@ -20,6 +23,7 @@ class PhoneBookDetail extends StatefulWidget {
   PhoneBookDetail(
       {Key key,
       this.documentReferralHospital,
+      this.isolationCenterModel,
       this.documentCallCenterModel,
       this.documentGugusTugasWebModel,
       @required this.nameModel,
@@ -62,7 +66,7 @@ class _PhoneBookDetailState extends State<PhoneBookDetail> {
                 opacity: _showTitle ? 0.0 : 1.0,
                 duration: Duration(milliseconds: 250),
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(20.0),
                   child: Text(
                     appBarTitle,
                     style: TextStyle(
@@ -72,25 +76,35 @@ class _PhoneBookDetailState extends State<PhoneBookDetail> {
                   ),
                 ),
               ),
-              widget.nameModel == 'ReferralHospitalModel'
+              widget.nameModel == Dictionary.referralHospitalModel ||
+                      widget.nameModel == Dictionary.isolationCenterModel
                   ? Column(
-                      children: buildListContentRefferalHospital(
-                          widget.documentReferralHospital),
+                      children: buildListContent(
+                          referralHospitalModel:
+                              widget.documentReferralHospital,
+                          isolationCenterModel: widget.isolationCenterModel),
                     )
-                  : widget.nameModel == 'CallCenterModel'
+                  : widget.nameModel == Dictionary.callCenterModel
                       ? buildCallCenter(widget.documentCallCenterModel)
                       : buildWebGugusTugas(widget.documentGugusTugasWebModel)
             ]));
   }
 }
 
-List<Widget> buildListContentRefferalHospital(
-    List<ReferralHospitalModel> document) {
+List<Widget> buildListContent(
+    {List<ReferralHospitalModel> referralHospitalModel,
+    List<IsolationCenterModel> isolationCenterModel}) {
   List<Widget> list = List();
+  dynamic document;
+  if (referralHospitalModel != null) {
+    document = referralHospitalModel;
+  } else {
+    document = isolationCenterModel;
+  }
   for (var i = 0; i < document.length; i++) {
     Column column = Column(children: <Widget>[
       Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -100,12 +114,12 @@ List<Widget> buildListContentRefferalHospital(
                       color: ColorBase.greyBorder,
                       thickness: 1,
                     ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               document[i].name != null
                   ? Padding(
-                      padding: EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: 8),
                       child: Text(document[i].name,
                           style: TextStyle(
                               fontFamily: FontsFamily.roboto,
@@ -115,7 +129,7 @@ List<Widget> buildListContentRefferalHospital(
                   : Container(),
               document[i].address != null
                   ? Padding(
-                      padding: EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: 8),
                       child: Text(document[i].address,
                           style: TextStyle(
                               color: ColorBase.netralGrey,
@@ -132,7 +146,7 @@ List<Widget> buildListContentRefferalHospital(
                   : Container(),
               document[i].web != null && document[i].web.isNotEmpty
                   ? Padding(
-                      padding: EdgeInsets.only(top: 20.0),
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: InkWell(
                         onTap: () {
                           _launchURL(document[i].web, 'web');
@@ -151,7 +165,7 @@ List<Widget> buildListContentRefferalHospital(
                                 height: 15,
                                 child: Image.asset(
                                     '${Environment.iconAssets}web_underline.png')),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Expanded(
@@ -181,7 +195,7 @@ List<Widget> buildListContentRefferalHospital(
 
 Widget buildCallCenter(CallCenterModel document) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -203,13 +217,13 @@ Widget buildCallCenter(CallCenterModel document) {
 
 Widget buildWebGugusTugas(GugusTugasWebModel document) {
   return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         document.website != null && document.website.isNotEmpty
             ? Padding(
-                padding: EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.only(top: 20.0),
                 child: InkWell(
                   onTap: () {
                     _launchURL(document.website, 'web');
@@ -227,7 +241,7 @@ Widget buildWebGugusTugas(GugusTugasWebModel document) {
                           height: 15,
                           child: Image.asset(
                               '${Environment.iconAssets}web_underline.png')),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       Text(
@@ -258,7 +272,7 @@ List<Widget> _buildListDetailPhone(List<dynamic> document, String name,
     Column column = Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(top: 20.0),
           child: InkWell(
             onTap: () {
               _launchURL(document[i], 'number');
@@ -272,7 +286,7 @@ List<Widget> _buildListDetailPhone(List<dynamic> document, String name,
                 Container(
                     height: 15,
                     child: Image.asset('${Environment.iconAssets}phone.png')),
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Text(

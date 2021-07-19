@@ -12,6 +12,7 @@ const String kInfographicsWho = 'infographics_who';
 const String kAllInfographics = 'all_infographics';
 const String kDocuments = 'documents';
 const String kAreas = 'areas';
+const String kSubAreas = 'sub_areas';
 const String kUsers = 'users';
 const String kUsersQuarantined = 'users_quarantined';
 const String kUserTokens = 'tokens';
@@ -28,4 +29,4 @@ const String kDailyReport = 'daily_report';
 const String kEducationContent = 'education_content';
 const String kContactHistory = 'contact_history';
 const String kScores = 'scores';
-
+const String kIsolationCenter = 'isolation_center';

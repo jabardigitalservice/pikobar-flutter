@@ -18,7 +18,7 @@ class CheckDistributionBanner extends StatelessWidget {
       child: Card(
         color: Color(0xFFF2C94C),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

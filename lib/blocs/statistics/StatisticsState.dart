@@ -2,34 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class StatisticsState extends Equatable {
-  const StatisticsState([List props = const <dynamic>[]]);
-}
-
-class InitialStatisticsState extends StatisticsState {
-  @override
-  List<Object> get props => [];
-}
-
-class StatisticsLoading extends StatisticsState {
-  @override
-  String toString() {
-    return 'State StatisticsLoading';
-  }
+  const StatisticsState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
+
+class InitialStatisticsState extends StatisticsState {}
+
+class StatisticsLoading extends StatisticsState {}
 
 class StatisticsLoaded extends StatisticsState {
   final DocumentSnapshot snapshot;
 
-  StatisticsLoaded({this.snapshot}) : super([snapshot]);
+  const StatisticsLoaded({this.snapshot});
 
   @override
-  String toString() {
-    return 'State StatisticsLoaded';
-  }
-
-  @override
-  List<Object> get props => [snapshot];
+  List<Object> get props => <Object>[snapshot];
 }

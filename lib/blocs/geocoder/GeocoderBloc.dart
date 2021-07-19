@@ -9,7 +9,9 @@ class GeocoderBloc extends Bloc<GeocoderEvent, GeocoderState> {
   final GeocoderRepository geocoderRepository;
 
   GeocoderBloc({@required this.geocoderRepository})
-      : assert(geocoderRepository != null), super(GeocoderStateInitial());
+      : assert(
+            geocoderRepository != null, 'geocoderRepository must not be null'),
+        super(GeocoderStateInitial());
 
   @override
   Stream<GeocoderState> mapEventToState(
@@ -22,7 +24,7 @@ class GeocoderBloc extends Bloc<GeocoderEvent, GeocoderState> {
         String address = await geocoderRepository.getAddress(event.coordinate);
 
         yield GeocoderLoaded(address: address);
-      } catch (e) {
+      } on Exception catch (e) {
         yield GeocoderFailure(
             error: CustomException.onConnectionException(e.toString()));
       }

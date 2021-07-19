@@ -5,8 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
@@ -18,7 +20,6 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
@@ -28,11 +29,10 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 
 import 'DocumentViewScreen.dart';
 
-// ignore: must_be_immutable
 class DocumentListScreen extends StatefulWidget {
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  DocumentListScreen({Key key, this.covidInformationScreenState})
+  const DocumentListScreen({Key key, this.covidInformationScreenState})
       : super(key: key);
 
   @override
@@ -40,13 +40,21 @@ class DocumentListScreen extends StatefulWidget {
 }
 
 class _DocumentListScreenState extends State<DocumentListScreen> {
-  ScrollController _scrollController;
-  TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+
+  final int _limitMax = 500;
+  final int _limitPerPage = 10;
+  final int _limitPerSearch = 25;
+
+  List<LabelNewModel> _dataLabel = [];
+  List<DocumentSnapshot> _allDocs = [];
+  List<DocumentSnapshot> _limitedDocs = [];
+
+  LabelNew _labelNew = LabelNew();
   Timer _debounce;
-  String searchQuery;
-  List<LabelNewModel> dataLabel = [];
-  bool isGetDataLabel = true;
-  LabelNew labelNew = LabelNew();
+  String _searchQuery;
+  bool _isGetDataLabel = true;
 
   @override
   void initState() {
@@ -54,7 +62,15 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     _searchController.addListener((() {
       _onSearchChanged();
     }));
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        await _getMoreData();
+      }
+
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -66,48 +82,46 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: WillPopScope(
-      child: CollapsingAppbar(
-        searchBar: CustomAppBar.buildSearchField(
-            _searchController, Dictionary.searchInformation, updateSearchQuery),
-        showTitle: _showTitle,
-        titleAppbar: Dictionary.document,
-        scrollController: _scrollController,
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection(kDocuments)
-              .orderBy('published_at', descending: true)
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              List<DocumentSnapshot> data = [];
+    return BlocProvider<DocumentsBloc>(
+      create: (context) => DocumentsBloc()..add(DocumentsLoad(limit: _limitMax)),
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          body: WillPopScope(
+            child: CollapsingAppbar(
+              searchBar: CustomAppBar.buildSearchField(
+                  context,
+                  _searchController,
+                  Dictionary.searchInformation,
+                  _updateSearchQuery),
+              showTitle: _showTitle,
+              titleAppbar: Dictionary.document,
+              scrollController: _scrollController,
+              body: BlocListener<DocumentsBloc, DocumentsState>(
+                listener: (_, state) {
+                  if (state is DocumentsLoaded) {
+                    _allDocs = state.documents;
 
-              snapshot.data.docs.forEach((record) {
-                if (record['published']) {
-                  data.add(record);
-                }
-              });
+                    int limit = _allDocs.length > _limitPerPage
+                        ? _limitPerPage
+                        : _allDocs.length;
 
-              if (data.isNotEmpty) {
-                return _buildContent(data);
-              } else {
-                return EmptyData(
-                  message: Dictionary.emptyData,
-                  desc: '',
-                  isFlare: false,
-                  image: "${Environment.imageAssets}not_found.png",
-                );
-              }
-            } else {
-              return _buildLoading();
-            }
-          },
-        ),
-      ),
-      onWillPop: _onWillPop,
-    ));
+                    _limitedDocs = _allDocs.getRange(0, limit).toList();
+
+                    _getDataLabel();
+                  }
+                },
+                child: BlocBuilder<DocumentsBloc, DocumentsState>(
+                  builder: (context, state) {
+                    return state is DocumentsLoaded
+                        ? _buildContent(_limitedDocs)
+                        : _buildLoading();
+                  },
+                ),
+              ),
+            ),
+            onWillPop: _onWillPop,
+          )),
+    );
     //   body:
   }
 
@@ -117,30 +131,41 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   }
 
   Widget _buildContent(List<DocumentSnapshot> dataDocuments) {
-    if (searchQuery != null && searchQuery.isNotEmpty) {
-      dataDocuments = dataDocuments
+
+    if (_searchQuery != null && _searchQuery.isNotEmpty) {
+      dataDocuments = _allDocs
           .where((test) =>
-              test['title'].toLowerCase().contains(searchQuery.toLowerCase()))
+              test['title'].toLowerCase().contains(_searchQuery.toLowerCase()))
+          .take(_limitPerSearch)
           .toList();
     }
 
-    getDataLabel();
+    int itemCount =
+    _searchQuery == null && dataDocuments.length != _allDocs.length
+        ? dataDocuments.length + 1
+        : dataDocuments.length;
 
-    return dataDocuments.length > 0
+    return dataDocuments.isNotEmpty
         ? ListView.builder(
             padding: const EdgeInsets.only(bottom: 16.0, top: 10.0),
             shrinkWrap: true,
-            itemCount: dataDocuments.length,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: itemCount,
             itemBuilder: (context, index) {
-              final DocumentSnapshot document = dataDocuments[index];
+              if (index == dataDocuments.length) {
+                return CupertinoActivityIndicator();
+              }
+
+              DocumentSnapshot document = dataDocuments[index];
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   GestureDetector(
                     child: Container(
-                      padding: EdgeInsets.only(
-                          left: Dimens.padding,
-                          right: Dimens.padding,
+                      padding: const EdgeInsets.only(
+                          left: Dimens.contentPadding,
+                          right: Dimens.contentPadding,
                           bottom: Dimens.padding),
                       child: Stack(
                         alignment: Alignment.center,
@@ -149,7 +174,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             width: MediaQuery.of(context).size.width,
                             height: 300,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.borderRadius),
                               child: CachedNetworkImage(
                                 imageUrl: document['images'],
                                 fit: BoxFit.cover,
@@ -171,15 +197,22 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                             ),
                           ),
                           Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 300,
-                            decoration: BoxDecoration(
-                              color: Colors.black12.withOpacity(0.2),
-                              shape: BoxShape.rectangle,
-                              borderRadius:
-                                  BorderRadius.circular(Dimens.dialogRadius),
-                            ),
-                          ),
+                              width: MediaQuery.of(context).size.width,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.borderRadius),
+                                color: Colors.white,
+                                gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.8),
+                                  ],
+                                  stops: [0.0, 1.0],
+                                ),
+                              )),
                           Image.asset(
                             '${Environment.iconAssets}pdf_icon.png',
                             height: 80,
@@ -197,8 +230,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    labelNew.isLabelNew(
-                                            document.id.toString(), dataLabel)
+                                    _labelNew.isLabelNew(
+                                            document.id.toString(), _dataLabel)
                                         ? LabelNewScreen()
                                         : Container(),
                                     Expanded(
@@ -213,7 +246,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 3,
                                 ),
                                 Text(
@@ -235,10 +268,10 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                     ),
                     onTap: () {
                       setState(() {
-                        labelNew.readNewInfo(
+                        _labelNew.readNewInfo(
                             document.id,
                             document['published_at'].seconds.toString(),
-                            dataLabel,
+                            _dataLabel,
                             Dictionary.labelDocuments);
                         if (widget.covidInformationScreenState != null) {
                           widget.covidInformationScreenState.widget
@@ -256,15 +289,11 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 ],
               );
             })
-        : ListView(
-            children: [
-              EmptyData(
-                message: Dictionary.emptyData,
-                desc: Dictionary.descEmptyData,
-                isFlare: false,
-                image: "${Environment.imageAssets}not_found.png",
-              ),
-            ],
+        : EmptyData(
+            message: Dictionary.emptyData,
+            desc: Dictionary.descEmptyData,
+            isFlare: false,
+            image: "${Environment.imageAssets}not_found.png",
           );
   }
 
@@ -273,7 +302,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0),
           child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -281,12 +310,12 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             padding: const EdgeInsets.all(10.0),
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+                padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
                 height: 300.0,
                 child: Row(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
                       child: Skeleton(
                           width: MediaQuery.of(context).size.width - 40),
                     ),
@@ -300,7 +329,19 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     );
   }
 
-  void _viewPdf(String title, String url) async {
+  Future<void> _getMoreData() async {
+    if (_searchQuery == null) {
+      final nextPage = _limitedDocs.length + _limitPerPage;
+      final limit =
+      _allDocs.length > nextPage ? nextPage : _limitedDocs.length;
+
+      _limitedDocs
+          .addAll(_allDocs.getRange(_limitedDocs.length, limit).toList());
+      await Future.delayed(Duration(milliseconds: 500));
+    }
+  }
+
+  Future<void> _viewPdf(String title, String url) async {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => InWebView(url: url, title: title)));
 
@@ -309,7 +350,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     });
   }
 
-  void _downloadAttachment(String name, String url) async {
+  Future<void> _downloadAttachment(String name, String url) async {
     if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
@@ -350,25 +391,28 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         setState(() {
-          searchQuery = _searchController.text;
+          _searchQuery = _searchController.text;
         });
-        AnalyticsHelper.setLogEvent(Analytics.tappedSerachDocument);
       } else {
         _clearSearchQuery();
       }
     });
+
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSerachDocument);
   }
 
-  void updateSearchQuery(String newQuery) {
+  void _updateSearchQuery(String newQuery) {
     setState(() {
-      searchQuery = newQuery;
+      _searchQuery = newQuery;
     });
   }
 
   void _clearSearchQuery() {
     setState(() {
       _searchController.clear();
-      updateSearchQuery(null);
+      _updateSearchQuery(null);
     });
   }
 
@@ -378,21 +422,22 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     }
   }
 
-  getDataLabel() {
-    if (isGetDataLabel) {
-      labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
+  void _getDataLabel() {
+    if (_isGetDataLabel) {
+      _labelNew.getDataLabel(Dictionary.labelDocuments).then((value) {
         if (!mounted) return;
         setState(() {
-          dataLabel = value;
+          _dataLabel = value;
         });
       });
-      isGetDataLabel = false;
+      _isGetDataLabel = false;
     }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }

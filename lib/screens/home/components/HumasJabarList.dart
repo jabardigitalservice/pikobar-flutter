@@ -135,7 +135,7 @@
 //                           imageUrl: humasJabar.thumbnail,
 //                           imageBuilder: (context, imageProvider) => Container(
 //                             decoration: BoxDecoration(
-//                               borderRadius: BorderRadius.circular(8.0),
+//                               borderRadius: BorderRadius.circular(Dimens.borderRadius),
 //                               image: DecorationImage(
 //                                 image: imageProvider,
 //                                 fit: BoxFit.fill,

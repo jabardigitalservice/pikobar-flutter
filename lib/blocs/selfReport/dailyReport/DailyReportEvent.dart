@@ -1,16 +1,21 @@
 part of 'DailyReportBloc.dart';
 
 abstract class DailyReportEvent extends Equatable {
-  const DailyReportEvent([List props = const <dynamic>[]]);
+  const DailyReportEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
 class DailyReportSave extends DailyReportEvent {
-
   final DailyReportModel dailyReportModel;
   final String otherUID;
+  final dynamic successMessage;
 
-  DailyReportSave(this.dailyReportModel,{this.otherUID}):assert(dailyReportModel != null);
+  const DailyReportSave(this.dailyReportModel,
+      {this.otherUID, this.successMessage})
+      : assert(dailyReportModel != null);
 
   @override
-  List<Object> get props => [dailyReportModel];
+  List<Object> get props => <Object>[dailyReportModel];
 }

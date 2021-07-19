@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcrIndividu/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdtAntigen/Bloc.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -23,6 +25,8 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class Statistics extends StatefulWidget {
+  Statistics({Key key}) : super(key: key);
+
   @override
   _StatisticsState createState() => _StatisticsState();
 }
@@ -32,24 +36,26 @@ class _StatisticsState extends State<Statistics> {
   String urlStatistic = "";
   RemoteConfigLoaded remoteConfigLoaded;
   RapidTestLoaded rapidTestLoaded;
+  RapidTestAntigenLoaded rapidTestAntigenLoaded;
   PcrTestLoaded pcrTestLoaded;
+  PcrTestIndividuLoaded pcrTestIndividuLoaded;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       color: Colors.white,
       child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
           builder: (context, remoteState) {
         return remoteState is RemoteConfigLoaded
-            ? BlocBuilder<StatisticsBloc, StatisticsState>(
-                builder: (context, statisticState) {
+            ? BlocBuilder<StatisticsBloc, StatisticsState>(builder:
+                (BuildContext context, StatisticsState statisticState) {
                 return statisticState is StatisticsLoaded
                     ? Column(
                         children: <Widget>[
                           _buildContent(statisticState.snapshot, remoteState,
                               statisticState),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           _buildRapidTest(remoteState),
@@ -65,7 +71,7 @@ class _StatisticsState extends State<Statistics> {
   _buildMore(StatisticsLoaded statisticState) {
     return InkWell(
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -84,10 +90,13 @@ class _StatisticsState extends State<Statistics> {
         AnalyticsHelper.setLogEvent(Analytics.tappedMoreCaseDataJabar);
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => StatisticsDetailScreen(
-                remoteConfigLoaded: remoteConfigLoaded,
-                statisticsLoaded: statisticState,
-                rapidTestLoaded: rapidTestLoaded,
-                pcrTestLoaded: pcrTestLoaded)));
+                  remoteConfigLoaded: remoteConfigLoaded,
+                  statisticsLoaded: statisticState,
+                  rapidTestLoaded: rapidTestLoaded,
+                  pcrTestLoaded: pcrTestLoaded,
+                  pcrTestIndividuLoaded: pcrTestIndividuLoaded,
+                  rapidTestAntigenLoaded: rapidTestAntigenLoaded,
+                )));
       },
     );
   }
@@ -97,40 +106,95 @@ class _StatisticsState extends State<Statistics> {
         ? MultiBlocListener(
             listeners: [
               BlocListener<RapidTestBloc, RapidTestState>(
-                  listener: (context, rapidState) {
+                  listener: (BuildContext context, RapidTestState rapidState) {
                 if (rapidState is RapidTestLoaded) {
                   setState(() {
                     this.rapidTestLoaded = rapidState;
                   });
                 }
               }),
+              BlocListener<RapidTestAntigenBloc, RapidTestAntigenState>(
+                  listener: (BuildContext context,
+                      RapidTestAntigenState rapidAntigenState) {
+                if (rapidAntigenState is RapidTestAntigenLoaded) {
+                  setState(() {
+                    this.rapidTestAntigenLoaded = rapidAntigenState;
+                  });
+                }
+              }),
               BlocListener<PcrTestBloc, PcrTestState>(
-                  listener: (context, pcrState) {
+                  listener: (BuildContext context, PcrTestState pcrState) {
                 if (pcrState is PcrTestLoaded) {
                   setState(() {
                     this.pcrTestLoaded = pcrState;
                   });
                 }
+              }),
+              BlocListener<PcrTestIndividuBloc, PcrTestIndividuState>(listener:
+                  (BuildContext context,
+                      PcrTestIndividuState pcrIndividuState) {
+                if (pcrIndividuState is PcrTestIndividuLoaded) {
+                  setState(() {
+                    this.pcrTestIndividuLoaded = pcrIndividuState;
+                  });
+                }
               })
             ],
             child: BlocBuilder<RapidTestBloc, RapidTestState>(
-              builder: (context, rapidState) {
+              builder: (BuildContext context, RapidTestState rapidState) {
                 urlStatistic = remoteState.remoteConfig
                     .getString(FirebaseConfig.pikobarUrl);
                 return rapidState is RapidTestLoaded
-                    ? BlocBuilder<PcrTestBloc, PcrTestState>(
-                        builder: (context, pcrState) {
-                          return pcrState is PcrTestLoaded
-                              ? buildContentRapidTest(remoteState.remoteConfig,
-                                  rapidState.snapshot, pcrState)
-                              : buildLoadingRapidTest();
-                        },
-                      )
+                    ? _buildPcrTestBloc(remoteState, rapidState)
                     : buildLoadingRapidTest();
               },
             ),
           )
         : Container();
+  }
+
+  _buildPcrTestBloc(RemoteConfigLoaded remoteState, RapidTestState rapidState) {
+    return BlocBuilder<PcrTestBloc, PcrTestState>(
+      builder: (BuildContext context, PcrTestState pcrState) {
+        this.rapidTestLoaded = rapidState;
+        return pcrState is PcrTestLoaded
+            ? _buildRapidTestAntigenBloc(remoteState, rapidState, pcrState)
+            : buildLoadingRapidTest();
+      },
+    );
+  }
+
+  _buildRapidTestAntigenBloc(RemoteConfigLoaded remoteState,
+      RapidTestState rapidState, PcrTestState pcrState) {
+    return BlocBuilder<RapidTestAntigenBloc, RapidTestAntigenState>(
+      builder: (BuildContext context, RapidTestAntigenState rapidAntigenState) {
+        if (rapidAntigenState is RapidTestAntigenLoaded) {
+          this.rapidTestAntigenLoaded = rapidAntigenState;
+          return _buildPcrTestIndividuBloc(
+              remoteState, rapidState, pcrState, rapidAntigenState);
+        } else {
+          return buildLoadingRapidTest();
+        }
+      },
+    );
+  }
+
+  _buildPcrTestIndividuBloc(
+      RemoteConfigLoaded remoteState,
+      RapidTestState rapidState,
+      PcrTestState pcrState,
+      RapidTestAntigenState rapidAntigenState) {
+    return BlocBuilder<PcrTestIndividuBloc, PcrTestIndividuState>(
+      builder: (BuildContext context, PcrTestIndividuState pcrIndividuState) {
+        if (pcrIndividuState is PcrTestIndividuLoaded) {
+          this.pcrTestIndividuLoaded = pcrIndividuState;
+          return buildContentRapidTest(remoteState.remoteConfig, rapidState,
+              pcrState, rapidAntigenState, pcrIndividuState);
+        } else {
+          return buildLoadingRapidTest();
+        }
+      },
+    );
   }
 
   _buildLoading() {
@@ -148,8 +212,8 @@ class _StatisticsState extends State<Statistics> {
                   fontFamily: FontsFamily.lato,
                   fontSize: Dimens.textTitleSize),
             ),
-            SizedBox(height: Dimens.padding),
-            SizedBox(height: 15),
+            const SizedBox(height: Dimens.padding),
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -163,7 +227,7 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 _buildContainer(
                     '',
                     Dictionary.positif,
@@ -174,12 +238,12 @@ class _StatisticsState extends State<Statistics> {
                     Colors.grey[600],
                     Colors.grey[600],
                     ''),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 _buildContainer('', Dictionary.die, Dictionary.die, '-', 4,
                     Dictionary.people, Colors.grey[600], Colors.grey[600], ''),
               ],
             ),
-            SizedBox(height: Dimens.padding),
+            const SizedBox(height: Dimens.padding),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -214,7 +278,7 @@ class _StatisticsState extends State<Statistics> {
   Container _buildContent(DocumentSnapshot data,
       RemoteConfigLoaded remoteConfigLoaded, StatisticsLoaded statisticState) {
     this.remoteConfigLoaded = remoteConfigLoaded;
-    RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
+    final RemoteConfig remoteConfig = remoteConfigLoaded.remoteConfig;
     if (!data.exists)
       return Container(
         child: Center(
@@ -246,19 +310,20 @@ class _StatisticsState extends State<Statistics> {
               _buildMore(statisticState)
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
-            unixTimeStampToCustomDateFormat(data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
+            unixTimeStampToCustomDateFormat(
+                data['updated_at'].seconds, 'dd MMM yyyy HH:mm'),
             style: TextStyle(
                 color: Color(0xff333333),
                 fontFamily: FontsFamily.roboto,
                 fontSize: Dimens.textSubtitleSize),
           ),
-          SizedBox(height: Dimens.padding),
+          const SizedBox(height: Dimens.padding),
           _buildConfirmedBox(
               label: labelUpdateTerkini['statistics']['confirmed'],
               caseTotal: '${data['aktif']['jabar']}'),
-          SizedBox(height: Dimens.padding),
+          const SizedBox(height: Dimens.padding),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -270,15 +335,15 @@ class _StatisticsState extends State<Statistics> {
                       data['sembuh']['jabar'], data['meninggal']['jabar']),
                   4,
                   Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff333333),
+                  const Color(0xff333333),
+                  const Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'],
                       int.parse(getDataActivePositive(
                           data['aktif']['jabar'],
                           data['sembuh']['jabar'],
                           data['meninggal']['jabar'])))),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               _buildContainer(
                   '${Environment.iconAssets}circle_check_green.png',
                   labelUpdateTerkini['statistics']['recovered'],
@@ -286,11 +351,11 @@ class _StatisticsState extends State<Statistics> {
                   '${data['sembuh']['jabar']}',
                   4,
                   Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff333333),
+                  const Color(0xff333333),
+                  const Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['sembuh']['jabar'])),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               _buildContainer(
                   '${Environment.iconAssets}circle_cross_red.png',
                   labelUpdateTerkini['statistics']['deaths'],
@@ -298,8 +363,8 @@ class _StatisticsState extends State<Statistics> {
                   '${data['meninggal']['jabar']}',
                   4,
                   Dictionary.people,
-                  Color(0xff333333),
-                  Color(0xff333333),
+                  const Color(0xff333333),
+                  const Color(0xff333333),
                   getDataProcessPercent(
                       data['aktif']['jabar'], data['meninggal']['jabar'])),
             ],
@@ -312,10 +377,10 @@ class _StatisticsState extends State<Statistics> {
   Widget buildLoadingRapidTest() {
     return Card(
       elevation: 0,
-      color: Color(0xffFAFAFA),
+      color: const Color(0xffFAFAFA),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -325,23 +390,23 @@ class _StatisticsState extends State<Statistics> {
               children: <Widget>[
                 Skeleton(
                   child: Container(
-                    margin: EdgeInsets.only(left: 5.0),
+                    margin: const EdgeInsets.only(left: 5),
                     child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 12.0,
-                            color: Color(0xff828282),
+                            fontSize: 12,
+                            color: const Color(0xff828282),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   ),
                 ),
                 Skeleton(
                   child: Container(
-                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5),
                     child: Text('0',
                         style: TextStyle(
-                            fontSize: 22.0,
-                            color: Color(0xff828282),
+                            fontSize: 22,
+                            color: const Color(0xff828282),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   ),
@@ -361,12 +426,26 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  Widget buildContentRapidTest(RemoteConfig remoteConfig,
-      DocumentSnapshot document, PcrTestLoaded pcrTestLoaded) {
-    DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+  Widget buildContentRapidTest(
+      RemoteConfig remoteConfig,
+      RapidTestLoaded rapidTestLoaded,
+      PcrTestLoaded pcrTestLoaded,
+      RapidTestAntigenLoaded rapidTestAntigenLoaded,
+      PcrTestIndividuLoaded pcrTestIndividuLoaded) {
+    final DocumentSnapshot documentRapidTest = rapidTestLoaded.snapshot;
+    final DocumentSnapshot documentPCR = pcrTestLoaded.snapshot;
+    final DocumentSnapshot documentPCRIndividu = pcrTestIndividuLoaded.snapshot;
+    final DocumentSnapshot documentRDTAntigen = rapidTestAntigenLoaded.snapshot;
 
-    String count = formatter
-        .format(document.get('total') + documentPCR.get('total'))
+    this.pcrTestLoaded = pcrTestLoaded;
+    this.rapidTestAntigenLoaded = rapidTestAntigenLoaded;
+    this.pcrTestIndividuLoaded = pcrTestIndividuLoaded;
+
+    final String count = formatter
+        .format(documentRapidTest.get('total') +
+            documentPCR.get('total') +
+            documentPCRIndividu.get('total') +
+            documentRDTAntigen.get('total'))
         .replaceAll(',', '.');
 
     return InkWell(
@@ -374,17 +453,23 @@ class _StatisticsState extends State<Statistics> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  RapidTestDetail(remoteConfig, document, documentPCR)),
+              builder: (context) => RapidTestDetail(
+                    remoteConfig: remoteConfig,
+                    document: documentRapidTest,
+                    documentPCR: documentPCR,
+                    documentPCRIndividu: documentPCRIndividu,
+                    documentRdtAntigen: documentRDTAntigen,
+                  )),
         );
       },
       child: Card(
-        margin: EdgeInsets.all(0),
+        margin: const EdgeInsets.all(0),
         elevation: 0,
-        color: Color(0xffFAFAFA),
+        color: const Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.only(left: 5.0, right: 20.0, top: 15, bottom: 15),
+          padding:
+              const EdgeInsets.only(left: 5, right: 20, top: 15, bottom: 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -393,20 +478,20 @@ class _StatisticsState extends State<Statistics> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(left: 5.0),
+                    margin: const EdgeInsets.only(left: 5),
                     child: Text(Dictionary.testSummaryTitle,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                            fontSize: 12.0,
-                            color: Color(0xff333333),
+                            fontSize: 12,
+                            color: const Color(0xff333333),
                             fontFamily: FontsFamily.roboto)),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: Dimens.padding, left: 5.0),
+                    margin: const EdgeInsets.only(top: Dimens.padding, left: 5),
                     child: Text(count,
                         style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color(0xff333333),
+                            fontSize: 16,
+                            color: const Color(0xff333333),
                             fontWeight: FontWeight.bold,
                             fontFamily: FontsFamily.roboto)),
                   )
@@ -440,35 +525,36 @@ class _StatisticsState extends State<Statistics> {
       child: InkWell(
         child: Container(
           width: (MediaQuery.of(context).size.width / length),
-          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          padding:
+              const EdgeInsets.only(left: 5, right: 5, top: 15, bottom: 15),
           decoration: BoxDecoration(
-              color: Color(0xffFAFAFA),
-              borderRadius: BorderRadius.circular(8.0)),
+              color: const Color(0xffFAFAFA),
+              borderRadius: BorderRadius.circular(Dimens.borderRadius)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  margin: EdgeInsets.only(left: 5.0),
+                  margin: const EdgeInsets.only(left: 5),
                   child: image != ''
                       ? Image.asset(
                           image,
-                          height: 15.0,
+                          height: 15,
                         )
                       : null),
               Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
+                margin: const EdgeInsets.only(top: 10, left: 5),
                 child: Text(title,
                     style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 12,
                         color: colorTextTitle,
                         fontFamily: FontsFamily.roboto)),
               ),
               Container(
-                margin: EdgeInsets.only(top: 10, left: 5.0),
+                margin: const EdgeInsets.only(top: 10, left: 5),
                 child: Text(count,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: 15.0,
+                        fontSize: 15,
                         color: colorNumber,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
@@ -486,21 +572,21 @@ class _StatisticsState extends State<Statistics> {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: [
           Positioned(
-              width: 60.0,
-              height: 60.0,
-              right: 0.0,
-              top: 0.0,
+              width: 60,
+              height: 60,
+              right: 0,
+              top: 0,
               child: Image.asset(
                 '${Environment.iconAssets}virus_purple.png',
-                width: 60.0,
-                height: 60.0,
+                width: 60,
+                height: 60,
               )),
           Container(
-            margin: EdgeInsets.all(Dimens.padding),
+            margin: const EdgeInsets.all(Dimens.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -508,17 +594,17 @@ class _StatisticsState extends State<Statistics> {
                   label,
                   style: TextStyle(
                       fontFamily: FontsFamily.roboto,
-                      fontSize: 12.0,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
                         fontFamily: FontsFamily.roboto,
-                        fontSize: 20.0,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
@@ -542,17 +628,17 @@ class _StatisticsState extends State<Statistics> {
 }
 
 String getDataProcess(int totalData, int dataDone) {
-  int processData = totalData - dataDone;
+  final int processData = totalData - dataDone;
   return processData.toString();
 }
 
 String getDataActivePositive(int totalData, int dataDone, int dataRecover) {
-  int dataActivePositive = totalData - dataDone - dataRecover;
+  final int dataActivePositive = totalData - dataDone - dataRecover;
   return dataActivePositive.toString();
 }
 
 String getDataProcessPercent(int totalData, int dataDone) {
-  double processData =
+  final double processData =
       num.parse(((dataDone / totalData) * 100).toStringAsFixed(2));
 
   return processData.toString() + '%';

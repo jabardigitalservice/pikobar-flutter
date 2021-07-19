@@ -43,10 +43,18 @@ class Documents extends StatefulWidget {
 }
 
 class _DocumentsState extends State<Documents> {
+  DocumentsBloc _documentsBloc;
   List<DocumentSnapshot> dataDocuments = [];
   List<LabelNewModel> dataLabel = [];
   bool isGetDataLabel = true;
   LabelNew labelNew = LabelNew();
+
+  @override
+  void initState() {
+    _documentsBloc = BlocProvider.of<DocumentsBloc>(context);
+    _documentsBloc.add(DocumentsLoad(limit: 5));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +180,7 @@ class _DocumentsState extends State<Documents> {
                       height: 140,
                       width: 150,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
                         child: Skeleton(
                           width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
@@ -228,9 +236,8 @@ class _DocumentsState extends State<Documents> {
               .toLowerCase()
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
-      if (dataDocuments.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataDocument = true;
-      }
+
+        widget.covidInformationScreenState.isEmptyDataDocument = dataDocuments.isEmpty;
     }
 
     getDataLabel();
@@ -241,7 +248,7 @@ class _DocumentsState extends State<Documents> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 16.0, right: 16.0, bottom: 16.0),
+                    left: 16.0, right: 16.0, bottom: 16.0,top:16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -308,7 +315,7 @@ class _DocumentsState extends State<Documents> {
                                     height: 140,
                                     width: 150,
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
                                       child: CachedNetworkImage(
                                         imageUrl: document['images'] ?? '',
                                         alignment: Alignment.topCenter,

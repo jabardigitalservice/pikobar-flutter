@@ -25,6 +25,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
 
 class ContactHistoryFormScreen extends StatefulWidget {
+  ContactHistoryFormScreen({Key key}) : super(key: key);
+
   @override
   _ContactHistoryFormScreenState createState() =>
       _ContactHistoryFormScreenState();
@@ -126,7 +128,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           ),
           backgroundColor: Colors.white,
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding: EdgeInsets.symmetric(horizontal:Dimens.contentPadding),
             child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
                 builder: (context, state) {
               if (state is RemoteConfigLoaded) {
@@ -166,7 +168,6 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
             ),
           ),
           SizedBox(height: Dimens.padding),
-
           _buildLabel(text: Dictionary.contactName),
           _buildTextField(
               title: Dictionary.contactName,
@@ -326,7 +327,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         error != null
             ? Padding(
                 padding: EdgeInsets.only(
-                    left: Dimens.contentPadding,
+                    left: Dimens.cardContentMargin,
                     bottom: Dimens.fieldMarginBottom),
                 child: Text(
                   error,
@@ -350,7 +351,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
       child: GroupedRadioButton(
         itemWidth: MediaQuery.of(context).size.width / 2 - 21,
         itemHeight: 40.0,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(Dimens.borderRadius),
         color: ColorBase.menuBorderColor,
         activeColor: ColorBase.green,
         itemLabelList: itemList,
@@ -411,7 +412,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
         isEmpty
             ? Padding(
                 padding: EdgeInsets.only(
-                    left: Dimens.contentPadding, top: Dimens.sizedBoxHeight),
+                    left: Dimens.cardContentMargin, top: Dimens.sizedBoxHeight),
                 child: Text(
                   title + Dictionary.pleaseCompleteAllField,
                   style: TextStyle(color: Colors.red, fontSize: 12),

@@ -13,7 +13,7 @@ class RapidTestReposity {
     final response = await http
         .get('${EndPointPath.rapidTest}',
             headers: await HttpHeaders.headers())
-        .timeout(const Duration(seconds: 10));
+        .timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

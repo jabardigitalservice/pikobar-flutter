@@ -15,6 +15,8 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class DailyUpdateScreen extends StatefulWidget {
+  DailyUpdateScreen({Key key}) : super(key: key);
+
   @override
   _DailyUpdateScreenState createState() => _DailyUpdateScreenState();
 }
@@ -33,8 +35,8 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
       builder: (context, state) {
-        return state is ImpoftantInfoListLoaded
-            ? _buildContent(state.imporntantinfoList)
+        return state is ImportantInfoListLoaded
+            ? _buildContent(state.importantInfoList)
             : Container();
       },
     );
@@ -58,10 +60,13 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
       },
       child: Container(
         width: (MediaQuery.of(context).size.width),
-        margin: EdgeInsets.only(left: Dimens.padding, right: Dimens.padding, top: Dimens.homeCardMargin),
+        margin: EdgeInsets.only(
+            left: Dimens.padding,
+            right: Dimens.padding,
+            top: Dimens.homeCardMargin),
         decoration: BoxDecoration(
             color: ColorBase.greyContainer,
-            borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Padding(
           padding: EdgeInsets.all(Dimens.homeCardMargin),
           child: Row(
@@ -70,11 +75,12 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
                 Row(
                   children: [
                     Container(
-                        height: 13,
+                        width: 16,
+                        height: 16,
                         child: Image.asset(
                             '${Environment.iconAssets}email_icon.png')),
                     SizedBox(
-                      width: 20,
+                      width: Dimens.padding,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,9 +93,7 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        Text(
-                            unixTimeStampToDateWithoutDay(
-                                list[0].publishedAt),
+                        Text(unixTimeStampToDateWithoutDay(list[0].publishedAt),
                             style: TextStyle(
                                 fontSize: 12.0,
                                 fontFamily: FontsFamily.roboto,

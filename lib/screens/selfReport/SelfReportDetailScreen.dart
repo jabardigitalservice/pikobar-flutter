@@ -17,9 +17,24 @@ import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
 class SelfReportDetailScreen extends StatefulWidget {
-  final String reportId, otherUID, analytics;
+  final String reportId,
+      otherUID,
+      analytics,
+      cityId,
+      recurrenceReport,
+      countDay;
+  final int firstData, lastData;
 
-  SelfReportDetailScreen(this.reportId, this.otherUID, this.analytics);
+  SelfReportDetailScreen({Key key,
+    this.reportId,
+    this.otherUID,
+    this.analytics,
+    this.cityId,
+    this.recurrenceReport,
+    this.countDay,
+    @required this.firstData,
+    @required this.lastData})
+      : super(key: key);
 
   @override
   _SelfReportDetailScreenState createState() => _SelfReportDetailScreenState();
@@ -35,19 +50,25 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
     super.initState();
     AnalyticsHelper.setCurrentScreen(Analytics.selfReports);
     AnalyticsHelper.setLogEvent(Analytics.tappedDailyReportDetail);
-  
-    _scrollController = ScrollController()..addListener(() => setState(() {}));
+
+    _scrollController = ScrollController()
+      ..addListener(() => setState(() {}));
   }
 
   bool get _showTitle {
     return _scrollController.hasClients &&
         _scrollController.offset >
-            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.5);
+            0.16 * MediaQuery
+                .of(context)
+                .size
+                .height - (kToolbarHeight * 1.5);
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SelfReportDetailBloc>(
-      create: (context) => _selfReportDetailBloc
+      create: (context) =>
+      _selfReportDetailBloc
         ..add(SelfReportDetailLoad(
             selfReportId: widget.reportId, otherUid: widget.otherUID)),
       child: Scaffold(
@@ -63,105 +84,123 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           children: [
             BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
                 builder: (context, state) {
-              return state is SelfReportDetailLoaded
-                  ?
+                  return state is SelfReportDetailLoaded
+                      ?
 
                   /// Edit button section
                   isSameDate(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              state.documentSnapshot['created_at'].seconds *
-                                  1000),
-                          currentDay)
+                      DateTime.fromMillisecondsSinceEpoch(
+                          state.documentSnapshot['created_at'].seconds *
+                              1000),
+                      currentDay)
                       ? Container(
-                          height: 38.0,
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.only(
-                              left: Dimens.padding, right: Dimens.padding),
-                          child: RaisedButton(
-                              splashColor: Colors.lightGreenAccent,
-                              color: ColorBase.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Text(
-                                Dictionary.editDailyMonitoring,
-                                style: TextStyle(
-                                    fontFamily: FontsFamily.lato,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12.0,
-                                    color: Colors.white),
-                              ),
-                              onPressed: () async {
-                                /// Add data to DailyReportModel that will be used for edit data
-                                LatLng latLng = LatLng(
-                                    state.documentSnapshot['location'].latitude,
-                                    state.documentSnapshot['location']
-                                        .longitude);
+                    height: 38.0,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    margin: const EdgeInsets.only(
+                        left: Dimens.padding, right: Dimens.padding),
+                    child: RaisedButton(
+                        splashColor: Colors.lightGreenAccent,
+                        color: ColorBase.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(Dimens.borderRadius),
+                        ),
+                        child: Text(
+                          Dictionary.editDailyMonitoring,
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.0,
+                              color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          /// Add data to DailyReportModel that will be used for edit data
+                          final LatLng latLng = LatLng(
+                              state.documentSnapshot['location'].latitude,
+                              state.documentSnapshot['location']
+                                  .longitude);
 
-                                var dailyReportModel = DailyReportModel(
-                                    id: state.documentSnapshot['id'],
-                                    quarantineDate:
-                                        state.documentSnapshot['quarantine_date'] !=
-                                                null
-                                            ? DateTime.fromMillisecondsSinceEpoch(
-                                                state.documentSnapshot['quarantine_date'].seconds *
-                                                    1000)
-                                            : null,
-                                    createdAt:
-                                        DateTime.fromMillisecondsSinceEpoch(state
-                                                .documentSnapshot['created_at']
-                                                .seconds *
-                                            1000),
-                                    contactDate: state.documentSnapshot['contact_date'] !=
-                                            null
-                                        ? DateTime.fromMillisecondsSinceEpoch(
-                                            state.documentSnapshot['contact_date'].seconds * 1000)
-                                        : null,
-                                    indications: state.documentSnapshot['indications'],
-                                    bodyTemperature: state.documentSnapshot['body_temperature'],
-                                    location: latLng);
+                          final DailyReportModel dailyReportModel = DailyReportModel(
+                              id: state.documentSnapshot['id'],
+                              quarantineDate:
+                              state.documentSnapshot['quarantine_date'] != null
+                                  ? DateTime.fromMillisecondsSinceEpoch(
+                                  state.documentSnapshot['quarantine_date']
+                                      .seconds *
+                                      1000)
+                                  : null,
+                              createdAt:
+                              DateTime.fromMillisecondsSinceEpoch(state
+                                  .documentSnapshot['created_at']
+                                  .seconds *
+                                  1000),
+                              contactDate: state
+                                  .documentSnapshot['contact_date'] !=
+                                  null
+                                  ? DateTime.fromMillisecondsSinceEpoch(
+                                  state.documentSnapshot['contact_date']
+                                      .seconds * 1000)
+                                  : null,
+                              indications: state
+                                  .documentSnapshot['indications'],
+                              bodyTemperature: state
+                                  .documentSnapshot['body_temperature'],
+                              location: latLng);
 
-                                /// Move to form screen
-                                bool isUpdateForm = await Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            SelfReportFormScreen(
-                                              dailyId:
-                                                  state.documentSnapshot['id'],
-                                              otherUID: widget.otherUID,
-                                              location: latLng,
-                                              analytics: widget.analytics,
-                                              dailyReportModel:
-                                                  dailyReportModel,
-                                            )));
+                          /// Move to form screen
+                          final bool isUpdateForm =
+                          await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SelfReportFormScreen(
+                                        isEdit: true,
+                                        cityId: widget.cityId,
+                                        recurrenceReport:
+                                        widget.recurrenceReport,
+                                        dailyId: state
+                                            .documentSnapshot['id'],
+                                        otherUID: widget.otherUID,
+                                        location: latLng,
+                                        analytics: widget.analytics,
+                                        dailyReportModel:
+                                        dailyReportModel,
+                                        firstData: widget.firstData,
+                                        lastData: widget.lastData,
+                                      )));
 
-                                /// If data form updates, will get the newest data detail
-                                if (isUpdateForm != null && isUpdateForm) {
-                                  _selfReportDetailBloc
-                                    ..add(SelfReportDetailLoad(
-                                        selfReportId: widget.reportId,
-                                        otherUid: widget.otherUID));
-                                }
-                              }),
-                        )
+                          /// If data form updates, will get the newest data detail
+                          if (isUpdateForm != null && isUpdateForm) {
+                            _selfReportDetailBloc
+                              ..add(SelfReportDetailLoad(
+                                  selfReportId: widget.reportId,
+                                  otherUid: widget.otherUID));
+                          }
+                        }),
+                  )
                       : Container()
-                  : state is SelfReportDetailFailure
+                      : state is SelfReportDetailFailure
                       ? Container()
                       : Center(
-                          child: CircularProgressIndicator(),
-                        );
-            }),
+                    child: CircularProgressIndicator(),
+                  );
+                }),
 
             /// Back button section
             Container(
               height: 38.0,
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.all(Dimens.padding),
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+              margin: const EdgeInsets.all(Dimens.padding),
               child: RaisedButton(
                   splashColor: Colors.lightGreenAccent,
                   color: ColorBase.green,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius),
                   ),
                   child: Text(
                     Dictionary.back,
@@ -178,50 +217,51 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
           ],
         ),
         body: BlocBuilder<SelfReportDetailBloc, SelfReportDetailState>(
-            builder: (context, state) {
-          return state is SelfReportDetailLoaded
-              ? _buildContent(state)
-              : state is SelfReportDetailFailure
+            builder: (BuildContext context, SelfReportDetailState state) {
+              return state is SelfReportDetailLoaded
+                  ? _buildContent(state)
+                  : state is SelfReportDetailFailure
                   ? ErrorContent(error: state.error)
                   : Center(child: CircularProgressIndicator());
-        }),
+            }),
       ),
     );
   }
 
   Widget _buildContent(SelfReportDetailLoaded state) {
-    return ListView(controller: _scrollController,
+    return ListView(
+      controller: _scrollController,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-               AnimatedOpacity(
-                    opacity: _showTitle ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 250),
-                    child: Text(
-                      Dictionary.selfReportDetail,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-              SizedBox(height: 30.0),
+              AnimatedOpacity(
+                opacity: _showTitle ? 0.0 : 1.0,
+                duration: Duration(milliseconds: 250),
+                child: Text(
+                  Dictionary.selfReportDetail,
+                  style: TextStyle(
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 30.0),
 
               Container(
                 child: Row(
                   children: <Widget>[
                     Image.asset('${Environment.iconAssets}calendar_1.png',
                         width: 39, height: 39),
-                    SizedBox(width: 16.0),
+                    const SizedBox(width: 16.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          '${Dictionary.monitoringDays}${state.documentSnapshot['id']}',
+                          '${Dictionary.monitoringDays}${widget.countDay}',
                           style: TextStyle(
                               fontFamily: FontsFamily.roboto,
                               fontWeight: FontWeight.bold,
@@ -229,7 +269,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                               fontSize: 14.0,
                               height: 1.214),
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         _buildText(
                             text: Dictionary.monitoringCompleted,
                             color: ColorBase.netralGrey,
@@ -240,7 +280,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 32.0,
               ),
 
@@ -251,7 +291,7 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     _buildText(text: Dictionary.inputDate, isLabel: true),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     _buildText(
@@ -265,96 +305,102 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
         ),
 
         state.documentSnapshot['contact_date'] != null &&
-                state.documentSnapshot['contact_date'].toString().isNotEmpty
+            state.documentSnapshot['contact_date']
+                .toString()
+                .isNotEmpty
             ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  /// Divider
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
-                    height: 1.0,
-                    color: ColorBase.greyBorder,
-                  ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
 
-                  /// Contact date section
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Dimens.padding,
-                        vertical: Dimens.verticalPadding),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        _buildText(
-                            text: Dictionary.contactDateCovid, isLabel: true),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        _buildText(
-                            text: unixTimeStampToDateWithoutDay(
-                                state.documentSnapshot['contact_date'].seconds))
-                      ],
-                    ),
+            /// Divider
+            Container(
+              margin:
+              const EdgeInsets.symmetric(horizontal:Dimens.contentPadding),
+              height: 1.0,
+              color: ColorBase.greyBorder,
+            ),
+
+            /// Contact date section
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.contentPadding,
+                  vertical: Dimens.verticalPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  _buildText(
+                      text: Dictionary.contactDateCovid, isLabel: true),
+                  const SizedBox(
+                    height: 10.0,
                   ),
+                  _buildText(
+                      text: unixTimeStampToDateWithoutDay(
+                          state.documentSnapshot['contact_date'].seconds))
                 ],
-              )
+              ),
+            ),
+          ],
+        )
             : Container(),
 
         getField(state.documentSnapshot, 'quarantine_date') != null &&
-                getField(state.documentSnapshot, 'quarantine_date')
-                    .toString()
-                    .isNotEmpty
+            getField(state.documentSnapshot, 'quarantine_date')
+                .toString()
+                .isNotEmpty
             ? Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+
+            /// Divider
+            Container(
+              margin:
+              const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+              height: 1.0,
+              color: ColorBase.greyBorder,
+            ),
+
+            /// Quarantine date section
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.contentPadding,
+                  vertical: Dimens.verticalPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  /// Divider
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
-                    height: 1.0,
-                    color: ColorBase.greyBorder,
+                  _buildText(
+                      text: Dictionary.quarantineDate, isLabel: true),
+                  const SizedBox(
+                    height: 10.0,
                   ),
-
-                  /// Quarantine date section
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Dimens.padding,
-                        vertical: Dimens.verticalPadding),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        _buildText(
-                            text: Dictionary.quarantineDate, isLabel: true),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        _buildText(
-                            text: unixTimeStampToDateWithoutDay(state
-                                .documentSnapshot['quarantine_date'].seconds))
-                      ],
-                    ),
-                  ),
+                  _buildText(
+                      text: unixTimeStampToDateWithoutDay(state
+                          .documentSnapshot['quarantine_date'].seconds))
                 ],
-              )
+              ),
+            ),
+          ],
+        )
             : Container(),
 
         /// Divider
         Container(
-          margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           height: 1.0,
           color: ColorBase.greyBorder,
         ),
 
         /// Temperature section
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _buildText(text: Dictionary.bodyTemperature, isLabel: true),
-              SizedBox(
+              const SizedBox(
                 height: 10.0,
               ),
               _buildText(
@@ -365,33 +411,44 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
 
         /// Divider
         Container(
-          margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           height: 1.0,
           color: ColorBase.greyBorder,
         ),
 
         /// The symptoms section
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+          padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width / 2,
                   child:
-                      _buildText(text: Dictionary.indications, isLabel: true)),
-              SizedBox(
+                  _buildText(text: Dictionary.indications, isLabel: true)),
+              const SizedBox(
                 height: 10.0,
               ),
               _buildText(
-                  text: state.documentSnapshot['indications'].replaceAll('[', '').replaceAll(']', ''),
+                  text: state.documentSnapshot['indications']
+                      .replaceAll('[', '')
+                      .replaceAll(']', '')
+                      .replaceAll('Gejala Lainnya, ', ''),
                   textAlign: TextAlign.start)
             ],
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height*0.2,)
+        SizedBox(
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.2,
+        )
       ],
     );
   }
@@ -407,11 +464,10 @@ class _SelfReportDetailScreenState extends State<SelfReportDetailScreen> {
   ///
   /// If the [isLabel] parameter is true, it will make the text bold.
   /// The [text] parameter must not be null.
-  Text _buildText(
-      {@required String text,
-      bool isLabel = false,
-      TextAlign textAlign,
-      Color color}) {
+  Text _buildText({@required String text,
+    bool isLabel = false,
+    TextAlign textAlign,
+    Color color}) {
     return Text(
       text,
       style: TextStyle(

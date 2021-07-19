@@ -13,7 +13,7 @@ part 'ContactHistoryListState.dart';
 
 class ContactHistoryListBloc
     extends Bloc<ContactHistoryListEvent, ContactHistoryListState> {
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   ContactHistoryListBloc() : super(ContactHistoryListInitial());
 

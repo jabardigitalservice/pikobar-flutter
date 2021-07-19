@@ -27,8 +27,10 @@ class Verification extends StatefulWidget {
       nik;
   final DateTime birthdate;
   final LatLng latLng;
+
   Verification(
-      {this.phoneNumber,
+      {Key key,
+      this.phoneNumber,
       this.uid,
       this.verificationID,
       this.gender,
@@ -38,7 +40,9 @@ class Verification extends StatefulWidget {
       this.name,
       this.nik,
       this.birthdate,
-      this.latLng});
+      this.latLng})
+      : super(key: key);
+
   @override
   _VerificationState createState() => _VerificationState();
 }

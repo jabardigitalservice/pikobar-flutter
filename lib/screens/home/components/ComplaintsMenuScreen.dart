@@ -4,11 +4,13 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/RemoteConfigRepository.dart';
+import 'package:pikobar_flutter/screens/home/components/bansos/Bansos.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
@@ -38,7 +40,8 @@ class ComplaintsMenuScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: Dimens.contentPadding),
                   child: Text(
                     Dictionary.pikobarComplaints,
                     style: TextStyle(
@@ -82,8 +85,11 @@ class ComplaintsMenuScreen extends StatelessWidget {
                                     .getBool(FirebaseConfig.reportEnabled)
                             ? null
                             : () async {
-                                await openChromeSafariBrowser(
-                                    url: complaintsUrl);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Bansos()),
+                                );
                                 await AnalyticsHelper.setLogEvent(
                                     Analytics.tappedCaseReport);
                               })
@@ -100,24 +106,26 @@ class ComplaintsMenuScreen extends StatelessWidget {
       GestureTapCallback onPressed) {
     return Expanded(
         child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      padding: const EdgeInsets.symmetric(
+          vertical: 10, horizontal: Dimens.contentPadding),
       child: RaisedButton(
         elevation: 0,
-        padding: EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(0.0),
         color: ColorBase.greyContainer,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius),
         ),
         child: Container(
           width: (MediaQuery.of(context).size.width / 2),
-          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-          margin: EdgeInsets.symmetric(horizontal: 8),
+          padding:
+              const EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(height: 30, child: Image.asset(image)),
               Container(
-                margin: EdgeInsets.only(top: 15, left: 5.0, right: 10.0),
+                margin: const EdgeInsets.only(top: 15, left: 5.0, right: 10.0),
                 child: Text(title,
                     textAlign: TextAlign.left,
                     style: TextStyle(

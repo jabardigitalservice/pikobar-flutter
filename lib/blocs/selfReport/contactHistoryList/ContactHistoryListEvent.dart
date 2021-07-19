@@ -1,13 +1,13 @@
 part of 'ContactHistoryListBloc.dart';
 
 abstract class ContactHistoryListEvent extends Equatable {
-  const ContactHistoryListEvent([List props = const <dynamic>[]]);
+  const ContactHistoryListEvent();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class ContactHistoryListLoad extends ContactHistoryListEvent {
-  @override
-  List<Object> get props => [];
-}
+class ContactHistoryListLoad extends ContactHistoryListEvent {}
 
 class ContactHistoryListUpdated extends ContactHistoryListEvent {
   final QuerySnapshot contactHistoryList;
@@ -15,7 +15,7 @@ class ContactHistoryListUpdated extends ContactHistoryListEvent {
   const ContactHistoryListUpdated(this.contactHistoryList);
 
   @override
-  List<Object> get props => [contactHistoryList];
+  List<Object> get props => <Object>[contactHistoryList];
 }
 
 

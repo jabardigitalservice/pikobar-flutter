@@ -16,6 +16,8 @@ import 'package:pikobar_flutter/screens/selfReport/ContactHistoryDetailScreen.da
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class ContactHistoryScreen extends StatefulWidget {
+  ContactHistoryScreen({Key key}) : super(key: key);
+
   @override
   _ContactHistoryScreenState createState() => _ContactHistoryScreenState();
 }
@@ -90,7 +92,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
           right: 0.0,
           top: 0.0,
           child: Padding(
-            padding: EdgeInsets.all(Dimens.contentPadding),
+            padding: EdgeInsets.all(Dimens.cardContentMargin),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -144,7 +146,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
           right: 0.0,
           bottom: 0.0,
           child: Padding(
-              padding: EdgeInsets.all(Dimens.contentPadding),
+              padding: EdgeInsets.all(Dimens.cardContentMargin),
               child: buildCreateButton()),
         ),
       ],
@@ -214,11 +216,11 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     ContactHistoryDetailScreen(
-                                        documents[i].id)),
+                                        contactHistoryId: documents[i].id)),
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.symmetric(vertical:10.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[

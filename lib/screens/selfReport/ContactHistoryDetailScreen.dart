@@ -15,7 +15,8 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 class ContactHistoryDetailScreen extends StatefulWidget {
   final String contactHistoryId;
 
-  ContactHistoryDetailScreen(this.contactHistoryId);
+  ContactHistoryDetailScreen({Key key, this.contactHistoryId})
+      : super(key: key);
 
   @override
   _ContactHistoryDetailScreenState createState() =>
@@ -60,7 +61,7 @@ class _ContactHistoryDetailScreenState
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -145,7 +146,7 @@ class _ContactHistoryDetailScreenState
         /// Gender section
         Container(
           padding: EdgeInsets.symmetric(
-              horizontal: Dimens.padding, vertical: Dimens.verticalPadding),
+              horizontal: Dimens.contentPadding, vertical: Dimens.verticalPadding),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,7 +172,7 @@ class _ContactHistoryDetailScreenState
                     /// Last contact date
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: Dimens.padding,
+                          horizontal: Dimens.contentPadding,
                           vertical: Dimens.verticalPadding),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -192,12 +193,12 @@ class _ContactHistoryDetailScreenState
         /// Back button section
         Container(
           height: 38.0,
-          margin: EdgeInsets.all(Dimens.padding),
+          margin: EdgeInsets.all(Dimens.contentPadding),
           child: RaisedButton(
               splashColor: Colors.lightGreenAccent,
               color: ColorBase.green,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(Dimens.borderRadius),
               ),
               child: Text(
                 Dictionary.back,

@@ -18,12 +18,16 @@ import 'package:uuid/uuid.dart';
 
 class ConfirmUserForm extends StatefulWidget {
   final String nik, name, birthday, gender, relation;
+
   ConfirmUserForm(
-      {@required this.nik,
+      {Key key,
+      @required this.nik,
       @required this.name,
       @required this.birthday,
       @required this.gender,
-      @required this.relation});
+      @required this.relation})
+      : super(key: key);
+
   @override
   _ConfirmUserFormState createState() => _ConfirmUserFormState();
 }
@@ -54,7 +58,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
       backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
@@ -72,7 +76,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                 onPressed: () {
                   _saveSelfReport();
                 }),
-            SizedBox(height: Dimens.padding),
+            const SizedBox(height: Dimens.padding),
             OutlineButton(
               borderSide: BorderSide(color: Colors.grey[400]),
               shape: RoundedRectangleBorder(
@@ -82,7 +86,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                 Navigator.of(context).pop();
               },
               child: Padding(
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: Container(
                     width: MediaQuery.of(context).size.width,
                     child: Center(
@@ -99,11 +103,10 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
         ),
       ),
       body: BlocProvider<AddOtherSelfReportBloc>(
-        create: (BuildContext context) =>
-            _addOtherSelfReportBloc = AddOtherSelfReportBloc(),
+        create: (context) => _addOtherSelfReportBloc = AddOtherSelfReportBloc(),
         child: BlocListener(
           cubit: _addOtherSelfReportBloc,
-          listener: (context, state) {
+          listener: (BuildContext context, dynamic state) {
             if (state is AddOtherSelfReportSaved) {
               AnalyticsHelper.setLogEvent(Analytics.addOtherUserSaved);
               Navigator.of(context).pop();
@@ -121,7 +124,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
               Navigator.of(context).pop();
               showDialog(
                   context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
+                  builder: (context) => DialogTextOnly(
                         description: state.error.toString(),
                         buttonText: Dictionary.ok,
                         onOkPressed: () {
@@ -133,7 +136,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
             }
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: ListView(
               controller: _scrollController,
               children: <Widget>[
@@ -141,7 +144,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                   opacity: _showTitle ? 0.0 : 1.0,
                   duration: Duration(milliseconds: 250),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
                       Dictionary.previewData,
                       style: TextStyle(
@@ -151,21 +154,21 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                     ),
                   ),
                 ),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 widget.nik.isEmpty
                     ? Container()
                     : buildPreviewText(Dictionary.nik, widget.nik),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 buildPreviewText(Dictionary.name, widget.name),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 buildPreviewText(
                     Dictionary.birthday,
                     DateFormat.yMMMMd('id')
                         .format(DateTime.parse(widget.birthday))),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 buildPreviewText(Dictionary.gender,
                     widget.gender == 'M' ? 'Laki-laki' : 'Perempuan'),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 buildPreviewText(Dictionary.relation, widget.relation,
                     withDivider: false),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.3),
@@ -192,7 +195,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
         isDismissible: false,
         builder: (context) {
           return Container(
-            margin: EdgeInsets.all(Dimens.padding),
+            margin: const EdgeInsets.all(Dimens.padding),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -203,7 +206,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                     fit: BoxFit.fitWidth,
                   ),
                 ),
-                SizedBox(height: 24.0),
+                const SizedBox(height: 24.0),
                 Text(
                   titleDialog,
                   textAlign: TextAlign.center,
@@ -212,7 +215,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(
                   descDialog,
                   textAlign: TextAlign.center,
@@ -221,7 +224,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                       fontSize: 12.0,
                       color: Colors.grey[600]),
                 ),
-                SizedBox(height: 24.0),
+                const SizedBox(height: 24.0),
                 RoundedButton(
                     title: Dictionary.ok.toUpperCase(),
                     textStyle: TextStyle(
@@ -249,7 +252,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                 fontWeight: FontWeight.bold,
                 height: 18.0 / 12.0,
                 color: ColorBase.grey800)),
-        SizedBox(
+        const SizedBox(
           height: 10.0,
         ),
         Text(value,
@@ -259,7 +262,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
                 fontSize: 14.0,
                 height: 18.0 / 12.0,
                 color: ColorBase.grey800)),
-        SizedBox(
+        const SizedBox(
           height: Dimens.padding,
         ),
 
@@ -277,7 +280,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
   // Validate and Record data to firestore
   void _saveSelfReport() async {
     String otherUID = Uuid().v4();
-    final data = AddOtherSelfReportModel(
+    final AddOtherSelfReportModel data = AddOtherSelfReportModel(
         userId: otherUID,
         createdAt: DateTime.now(),
         birthday:

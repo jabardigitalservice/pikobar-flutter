@@ -1,73 +1,56 @@
 import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/CallCenterModel.dart';
 import 'package:pikobar_flutter/models/GugusTugasWebModel.dart';
+import 'package:pikobar_flutter/models/IsolationCenterModel.dart';
 import 'package:pikobar_flutter/models/ReferralHospitalModel.dart';
 
 abstract class EmergencyNumberEvent extends Equatable {
-  const EmergencyNumberEvent([List props = const <dynamic>[]]);
-}
-
-class ReferralHospitalLoad extends EmergencyNumberEvent {
-
+  const EmergencyNumberEvent();
 
   @override
-  String toString() {
-    return 'Event ReferralHospitalLoad';
-  }
-
-  @override
-  List<Object> get props => ["ReferralHospitalLoad"];
+  List<Object> get props => <Object>[];
 }
 
+class ReferralHospitalLoad extends EmergencyNumberEvent {}
 
-class  ReferralHospitalUpdated extends EmergencyNumberEvent {
+class ReferralHospitalUpdated extends EmergencyNumberEvent {
   final List<ReferralHospitalModel> referralModel;
 
-  const  ReferralHospitalUpdated(this.referralModel);
+  const ReferralHospitalUpdated(this.referralModel);
 
   @override
-  List<Object> get props => [referralModel];
+  List<Object> get props => <Object>[referralModel];
 }
 
-class CallCenterLoad extends EmergencyNumberEvent {
+class CallCenterLoad extends EmergencyNumberEvent {}
 
-
-  @override
-  String toString() {
-    return 'Event CallCenterLoad';
-  }
-
-  @override
-  List<Object> get props => ["CallCenterLoad"];
-}
-
-class  CallCenterUpdated extends EmergencyNumberEvent {
+class CallCenterUpdated extends EmergencyNumberEvent {
   final List<CallCenterModel> callCenterModel;
 
-  const  CallCenterUpdated(this.callCenterModel);
+  const CallCenterUpdated(this.callCenterModel);
 
   @override
-  List<Object> get props => [callCenterModel];
+  List<Object> get props => <Object>[callCenterModel];
 }
 
-class GugusTugasWebLoad extends EmergencyNumberEvent {
-
-
-  @override
-  String toString() {
-    return 'Event GugusTugasWebLoad';
-  }
-
-  @override
-  List<Object> get props => ["GugusTugasWebLoad"];
-}
+class GugusTugasWebLoad extends EmergencyNumberEvent {}
 
 class GugusTugasWebUpdated extends EmergencyNumberEvent {
   final List<GugusTugasWebModel> gugusTugasWebModel;
 
-  const  GugusTugasWebUpdated(this.gugusTugasWebModel);
+  const GugusTugasWebUpdated(this.gugusTugasWebModel);
 
   @override
-  List<Object> get props => [gugusTugasWebModel];
+  List<Object> get props => <Object>[gugusTugasWebModel];
 }
 
+class IsolationCenterLoad extends EmergencyNumberEvent {}
+
+class IsolationCenterUpdated extends EmergencyNumberEvent {
+  final List<IsolationCenterModel> isolationCenterModel;
+
+  const IsolationCenterUpdated(this.isolationCenterModel);
+
+  @override
+  List<Object> get props => <Object>[isolationCenterModel];
+}

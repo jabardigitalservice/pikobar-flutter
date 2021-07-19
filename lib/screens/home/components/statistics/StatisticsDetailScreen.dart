@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcrIndividu/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdtAntigen/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
@@ -27,16 +29,24 @@ class StatisticsDetailScreen extends StatefulWidget {
   final StatisticsLoaded statisticsLoaded;
   final RapidTestLoaded rapidTestLoaded;
   final PcrTestLoaded pcrTestLoaded;
+  final RapidTestAntigenLoaded rapidTestAntigenLoaded;
+  final PcrTestIndividuLoaded pcrTestIndividuLoaded;
 
   StatisticsDetailScreen(
-      {@required this.remoteConfigLoaded,
+      {Key key,
+      @required this.remoteConfigLoaded,
       @required this.statisticsLoaded,
       @required this.rapidTestLoaded,
-      @required this.pcrTestLoaded})
+      @required this.pcrTestLoaded,
+      @required this.rapidTestAntigenLoaded,
+      @required this.pcrTestIndividuLoaded})
       : assert(remoteConfigLoaded != null),
         assert(statisticsLoaded != null),
         assert(rapidTestLoaded != null),
-        assert(pcrTestLoaded != null);
+        assert(pcrTestLoaded != null),
+        assert(rapidTestAntigenLoaded != null),
+        assert(pcrTestIndividuLoaded != null),
+        super(key: key);
 
   @override
   _StatisticsDetailScreenState createState() => _StatisticsDetailScreenState();
@@ -52,6 +62,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
   DocumentSnapshot get rapidDoc => widget.rapidTestLoaded.snapshot;
 
   DocumentSnapshot get pcrDoc => widget.pcrTestLoaded.snapshot;
+
+  DocumentSnapshot get rapidAntigenDoc =>
+      widget.rapidTestAntigenLoaded.snapshot;
+
+  DocumentSnapshot get pcrIndividuDoc => widget.pcrTestIndividuLoaded.snapshot;
 
   @override
   void initState() {
@@ -98,20 +113,21 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             FirebaseConfig.bottomSheetDefaultValue)['statistics_bottom_sheet'];
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: Dimens.padding),
+      padding: const EdgeInsets.symmetric(vertical: Dimens.padding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: AnimatedOpacity(
-              opacity: _showTitle ? 0.0 : 1.0,
+              opacity: _showTitle ? 0 : 1,
               duration: Duration(milliseconds: 250),
               child: Text(
                 Dictionary.statistics,
                 style: TextStyle(
                     fontFamily: FontsFamily.lato,
-                    fontSize: 20.0,
+                    fontSize: 20,
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ),
@@ -119,20 +135,21 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8),
                 Text(
                   unixTimeStampToDateTimeWithoutDay(
                       statisticsDoc['updated_at'].seconds),
                   style: TextStyle(
                       color: ColorBase.veryDarkGrey,
                       fontFamily: FontsFamily.roboto,
-                      fontSize: 10.0),
+                      fontSize: 10),
                 ),
-                SizedBox(height: Dimens.padding),
+                const SizedBox(height: Dimens.padding),
                 _buildConfirmedBox(
                     label: labels['statistics']['confirmed'],
                     caseTotal: '${statisticsDoc['aktif']['jabar']}'),
@@ -140,9 +157,9 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                left: 8.0,
-                right: 8.0,
+            padding: const EdgeInsets.only(
+                left: 12,
+                right: 12,
                 top: Dimens.padding,
                 bottom: Dimens.padding),
             child: Row(
@@ -275,21 +292,21 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: ColorBase.gradientBlueStatistics),
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Stack(
         children: [
           Positioned(
-              width: 60.0,
-              height: 60.0,
-              right: 0.0,
-              top: 0.0,
+              width: 60,
+              height: 60,
+              right: 0,
+              top: 0,
               child: Image.asset(
                 '${Environment.iconAssets}virus_purple.png',
-                width: 60.0,
-                height: 60.0,
+                width: 60,
+                height: 60,
               )),
           Container(
-            margin: EdgeInsets.all(Dimens.padding),
+            margin: const EdgeInsets.all(Dimens.padding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -297,17 +314,17 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   label,
                   style: TextStyle(
                       fontFamily: FontsFamily.roboto,
-                      fontSize: 12.0,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     formattedStringNumber(caseTotal),
                     style: TextStyle(
                         fontFamily: FontsFamily.roboto,
-                        fontSize: 20.0,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
@@ -327,35 +344,36 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     return Expanded(
       child: Container(
         width: (MediaQuery.of(context).size.width / 3),
-        padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 15, bottom: 15),
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.only(left: 5, right: 5, top: 15, bottom: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-            color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(8.0)),
+            color: Color(0xFFFAFAFA),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-                margin: EdgeInsets.only(left: 5.0),
+                margin: const EdgeInsets.only(left: 5),
                 child: image != ''
                     ? Image.asset(
                         image,
-                        height: 15.0,
+                        height: 15,
                       )
                     : null),
             Container(
-              margin: EdgeInsets.only(top: 10, left: 5.0),
+              margin: const EdgeInsets.only(top: 10, left: 5),
               child: Text(title,
                   style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 12,
                       color: ColorBase.veryDarkGrey,
                       fontFamily: FontsFamily.roboto)),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, left: 5.0),
+              margin: const EdgeInsets.only(top: 10, left: 5),
               child: Text(count,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 16.0,
+                      fontSize: 16,
                       color: ColorBase.veryDarkGrey,
                       fontWeight: FontWeight.bold,
                       fontFamily: FontsFamily.roboto)),
@@ -387,11 +405,14 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
     fourthCount = formattedStringNumber(fourthCount);
 
     return Container(
-      padding: EdgeInsets.all(Dimens.padding),
-      margin: EdgeInsets.only(
-          left: Dimens.padding, right: Dimens.padding, bottom: Dimens.padding),
+      padding: const EdgeInsets.all(Dimens.padding),
+      margin: const EdgeInsets.only(
+          left: Dimens.contentPadding,
+          right: Dimens.contentPadding,
+          bottom: Dimens.padding),
       decoration: BoxDecoration(
-          color: Color(0xFFFAFAFA), borderRadius: BorderRadius.circular(8.0)),
+          color: Color(0xFFFAFAFA),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -399,7 +420,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
             children: [
               Text(mainTitle,
                   style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 12,
                       color: ColorBase.veryDarkGrey,
                       fontFamily: FontsFamily.roboto)),
               GestureDetector(
@@ -407,25 +428,25 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                 child: SizedBox(
                   width: 20,
                   child: Icon(Icons.help_outline,
-                      size: 13.0, color: ColorBase.darkGrey),
+                      size: 13, color: ColorBase.darkGrey),
                 ),
               )
             ],
           ),
           Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10),
             child: Text(mainCount,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 16,
                     color: ColorBase.veryDarkGrey,
                     fontWeight: FontWeight.bold,
                     fontFamily: FontsFamily.roboto)),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: Dimens.padding),
+            margin: const EdgeInsets.symmetric(vertical: Dimens.padding),
             width: MediaQuery.of(context).size.width,
-            height: 1.0,
+            height: 1,
             color: ColorBase.menuBorderColor,
           ),
           Row(
@@ -436,15 +457,15 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   children: [
                     Text(secondTitle,
                         style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: ColorBase.darkGrey,
                             fontFamily: FontsFamily.roboto)),
                     Container(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Text(secondCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 16,
                               color: ColorBase.darkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),
@@ -460,7 +481,7 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                       children: [
                         Text(thirdTitle,
                             style: TextStyle(
-                                fontSize: 12.0,
+                                fontSize: 12,
                                 color: ColorBase.darkGrey,
                                 fontFamily: FontsFamily.roboto)),
                         thirdTitleHelpOnTap != null
@@ -469,18 +490,18 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                                 child: SizedBox(
                                   width: 20,
                                   child: Icon(Icons.help_outline,
-                                      size: 13.0, color: ColorBase.darkGrey),
+                                      size: 13, color: ColorBase.darkGrey),
                                 ),
                               )
                             : Container()
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Text(thirdCount,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 16,
                               color: ColorBase.darkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),
@@ -497,17 +518,17 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             children: [
                               Text(fourthTitle ?? '',
                                   style: TextStyle(
-                                      fontSize: 12.0,
+                                      fontSize: 12,
                                       color: ColorBase.darkGrey,
                                       fontFamily: FontsFamily.roboto)),
-                              SizedBox(width: 5.0),
+                              const SizedBox(width: 5),
                               fourthTitleHelpOnTap != null
                                   ? GestureDetector(
                                       onTap: fourthTitleHelpOnTap,
                                       child: SizedBox(
                                         width: 20,
                                         child: Icon(Icons.help_outline,
-                                            size: 13.0,
+                                            size: 13,
                                             color: ColorBase.darkGrey),
                                       ),
                                     )
@@ -515,11 +536,11 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 10),
+                            margin: const EdgeInsets.only(top: 10),
                             child: Text(fourthCount ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 16.0,
+                                    fontSize: 16,
                                     color: ColorBase.darkGrey,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: FontsFamily.roboto)),
@@ -536,8 +557,8 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
   }
 
   _buildContentRapidTest() {
-    String count =
-        formattedStringNumber('${rapidDoc['total'] + pcrDoc['total']}');
+    final String count = formattedStringNumber(
+        '${rapidDoc['total'] + pcrDoc['total'] + rapidAntigenDoc['total'] + pcrIndividuDoc['total']}');
 
     return InkWell(
       onTap: () {
@@ -545,17 +566,22 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  RapidTestDetail(remoteConfig, rapidDoc, pcrDoc)),
+              builder: (context) => RapidTestDetail(
+                    remoteConfig: remoteConfig,
+                    document: rapidDoc,
+                    documentPCR: pcrDoc,
+                    documentPCRIndividu: pcrIndividuDoc,
+                    documentRdtAntigen: rapidAntigenDoc,
+                  )),
         );
       },
       child: Card(
         elevation: 0,
         color: Color(0xffFAFAFA),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        margin: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
         child: Padding(
-          padding: EdgeInsets.all(Dimens.padding),
+          padding: const EdgeInsets.all(Dimens.padding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -566,14 +592,14 @@ class _StatisticsDetailScreenState extends State<StatisticsDetailScreen> {
                   children: <Widget>[
                     Text(Dictionary.testSummaryTitle,
                         style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: ColorBase.veryDarkGrey,
                             fontFamily: FontsFamily.roboto)),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 8),
                       child: Text(count,
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 16,
                               color: ColorBase.veryDarkGrey,
                               fontWeight: FontWeight.bold,
                               fontFamily: FontsFamily.roboto)),

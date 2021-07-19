@@ -2,31 +2,24 @@ import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
 
 abstract class EducationListEvent extends Equatable {
-  const EducationListEvent([List props = const <dynamic>[]]);
+  const EducationListEvent();
 }
 
 class EducationListLoad extends EducationListEvent {
   final String educationCollection;
+  final int limit;
 
-  EducationListLoad(this.educationCollection);
-
-  @override
-  String toString() {
-    return 'Event EducationListLoad $educationCollection';
-  }
+  const EducationListLoad(this.educationCollection, {this.limit});
 
   @override
-  List<Object> get props => [educationCollection];
+  List<Object> get props => <Object>[educationCollection];
 }
 
 class EducationListUpdate extends EducationListEvent {
   final List<EducationModel> educationList;
 
-  EducationListUpdate(this.educationList);
+  const EducationListUpdate(this.educationList);
 
   @override
-  String toString() => 'Event EducationListUpdate';
-
-  @override
-  List<Object> get props => [educationList];
+  List<Object> get props => <Object>[educationList];
 }

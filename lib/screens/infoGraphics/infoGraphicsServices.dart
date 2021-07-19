@@ -11,7 +11,7 @@ import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 class InfoGraphicsServices {
   Future<void> shareInfoGraphics(title, images) async {
     try {
-      var files = Map<String, Uint8List>();
+      final Map<String, Uint8List> files = Map<String, Uint8List>();
       var index = 0;
       for (String image in images) {
         var request = await HttpClient().getUrl(Uri.parse(image));

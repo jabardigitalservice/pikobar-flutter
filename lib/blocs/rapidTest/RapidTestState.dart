@@ -7,13 +7,10 @@ abstract class RapidTestState extends Equatable {
   const RapidTestState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
-class RapidTestInitial extends RapidTestState {
-  @override
-  List<Object> get props => [];
-}
+class RapidTestInitial extends RapidTestState {}
 
 class RapidTestLoading extends RapidTestState {}
 
@@ -23,16 +20,13 @@ class RapidTestLoaded extends RapidTestState {
   const RapidTestLoaded({@required this.record});
 
   @override
-  List<Object> get props => [record];
-
-  @override
-  String toString() => 'RapidTestLoaded { record: $record }';
+  List<Object> get props => <Object>[record];
 }
 
 class RapidTestFailure extends RapidTestState {
   final String error;
 
-  RapidTestFailure({this.error});
+  const RapidTestFailure({this.error});
 
   @override
   String toString() {
@@ -40,5 +34,5 @@ class RapidTestFailure extends RapidTestState {
   }
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => <Object>[error];
 }

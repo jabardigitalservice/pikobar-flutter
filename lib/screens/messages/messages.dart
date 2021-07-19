@@ -20,7 +20,7 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 class Messages extends StatefulWidget {
   final IndexScreenState indexScreenState;
 
-  Messages({this.indexScreenState});
+  Messages({Key key, this.indexScreenState}) : super(key: key);
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -177,10 +177,12 @@ class _MessagesState extends State<Messages> {
               );
             },
             itemBuilder: (context, index) {
-              bool hasRead = listMessage[index].readAt == null ||
-                      listMessage[index].readAt == 0
-                  ? false
-                  : true;
+              bool hasRead = listMessage[index].readAt != null &&
+                      listMessage[index].readAt != 0;
+
+              if (MessageRepository.hasNullField(listMessage[index])) {
+                return Container();
+              }
 
               return GestureDetector(
                 child: Container(

@@ -15,7 +15,7 @@ class AuthenticationBloc
 
   AuthenticationBloc({
     @required this.authRepository,
-  })  : assert(authRepository != null),
+  })  : assert(authRepository != null, 'authRepositori must not be null'),
         super(AuthenticationUninitialized());
 
   @override
@@ -25,7 +25,7 @@ class AuthenticationBloc
     UserModel record;
 
     if (event is AppStarted) {
-      final bool hasToken = await authRepository.hasToken();
+      bool hasToken = await authRepository.hasToken();
       if (hasToken) {
         yield AuthenticationLoading();
         record = await authRepository.getUserInfo();
@@ -47,7 +47,7 @@ class AuthenticationBloc
         );
         await ProfileUidSharedPreference.setProfileUid(record.uid);
         yield AuthenticationAuthenticated(record: record);
-      } catch (e) {
+      } on Exception catch (e) {
         yield AuthenticationFailure(
             error: CustomException.onConnectionException(e.toString()));
       }

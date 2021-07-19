@@ -1,30 +1,24 @@
 import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/ImportantinfoModel.dart';
 
-// ignore: camel_case_types
-abstract class importantInfoDetailState extends Equatable {
-  const importantInfoDetailState([List props = const <dynamic>[]]);
-}
+abstract class ImportantInfoDetailState extends Equatable {
+  const ImportantInfoDetailState();
 
-class InitialImportantInfoDetailState extends importantInfoDetailState {
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
-class ImportantInfoDetailLoading extends importantInfoDetailState {
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
+class InitialImportantInfoDetailState extends ImportantInfoDetailState {}
 
-}
+class ImportantInfoDetailLoading extends ImportantInfoDetailState {}
 
-class ImportantInfoDetailLoaded extends importantInfoDetailState {
+class ImportantInfoDetailLoaded extends ImportantInfoDetailState {
   final ImportantInfoModel record;
 
   const ImportantInfoDetailLoaded(this.record);
 
   @override
-  List<Object> get props => [record];
+  List<Object> get props => <Object>[record];
 
   @override
   String toString() => 'ImportantInfoDetailLoaded { record: $record }';

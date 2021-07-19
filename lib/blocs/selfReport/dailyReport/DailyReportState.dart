@@ -1,29 +1,30 @@
 part of 'DailyReportBloc.dart';
 
 abstract class DailyReportState extends Equatable {
-  const DailyReportState([List props = const <dynamic>[]]);
+  const DailyReportState();
+
+  @override
+  List<Object> get props => <Object>[];
 }
 
-class DailyReportInitial extends DailyReportState {
-  @override
-  List<Object> get props => [];
-}
+class DailyReportInitial extends DailyReportState {}
 
-class DailyReportLoading extends DailyReportState {
-  @override
-  List<Object> get props => [];
-}
+class DailyReportLoading extends DailyReportState {}
 
 class DailyReportSaved extends DailyReportState {
+  final dynamic successMessage;
+
+  const DailyReportSaved(this.successMessage);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[successMessage];
 }
 
 class DailyReportFailed extends DailyReportState {
   final String error;
 
-  DailyReportFailed({@required this.error}):assert(error != null);
+  const DailyReportFailed({@required this.error});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[error];
 }

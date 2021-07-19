@@ -13,7 +13,7 @@ part 'SelfReportReminderState.dart';
 
 class SelfReportReminderBloc
     extends Bloc<SelfReportReminderEvent, SelfReportReminderState> {
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
 
   SelfReportReminderBloc() : super(SelfReportReminderInitial());
 
@@ -21,46 +21,62 @@ class SelfReportReminderBloc
   Stream<SelfReportReminderState> mapEventToState(
     SelfReportReminderEvent event,
   ) async* {
-   
-
     if (event is SelfReportReminderListLoad) {
       yield* _loadSelfReportReminderToState();
     } else if (event is SelfReportReminderUpdated) {
       yield* _selfReportReminderToState(event);
     }
 
-  
     if (event is SelfReportListUpdateReminder) {
       yield SelfReportReminderLoading();
       try {
         String userId = await AuthRepository().getToken();
-        await SelfReportRepository().updateToCollection(userId: userId, isReminder: event.isReminder);
+        await SelfReportRepository()
+            .updateToCollection(userId: userId, isReminder: event.isReminder);
         yield SelfReportIsreminderSaved();
-      } catch (e) {
+      } on Exception catch (e) {
+        yield SelfReportReminderFailure(error: e.toString());
+      }
+    }
+
+    if (event is SelfReportUpdateRecurrenceReport) {
+      yield SelfReportReminderLoading();
+      try {
+        String userId = await AuthRepository().getToken();
+        if (event.otherUID == null) {
+          await SelfReportRepository().updateRecurrenceReport(
+              userId: userId, recurrenceReport: event.recurrenceReport);
+          await SelfReportRepository().updateHealthStatus(userId: userId);
+        } else {
+          await SelfReportRepository().updateRecurrenceReport(
+              userId: userId,
+              recurrenceReport: event.recurrenceReport,
+              otherUID: event.otherUID);
+          await SelfReportRepository()
+              .updateHealthStatus(userId: userId, otherUID: event.otherUID);
+        }
+
+        yield SelfReportRecurrenceReportSaved();
+      } on Exception catch (e) {
         yield SelfReportReminderFailure(error: e.toString());
       }
     }
   }
 
-
-
   Stream<SelfReportReminderState> _loadSelfReportReminderToState() async* {
     yield SelfReportReminderLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     String userId = await AuthRepository().getToken();
 
-    _subscription = SelfReportRepository()
-        .getIsReminder(userId: userId)
-        .listen((event) {
+    _subscription =
+        SelfReportRepository().getIsReminder(userId: userId).listen((event) {
       add(SelfReportReminderUpdated(event));
     });
   }
 
-
   Stream<SelfReportReminderState> _selfReportReminderToState(
       SelfReportReminderUpdated event) async* {
-      yield SelfReportIsReminderLoaded(
-          querySnapshot: event.selfReportReminderList);
-    
+    yield SelfReportIsReminderLoaded(
+        querySnapshot: event.selfReportReminderList);
   }
 }

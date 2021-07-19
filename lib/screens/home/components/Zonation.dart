@@ -4,13 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
-import 'package:pikobar_flutter/blocs/locationPermission/location_permission_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/RoundedButton.dart';
-import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -19,6 +18,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
 import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
+import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionOtherScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
@@ -26,137 +26,160 @@ import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:pikobar_flutter/utilities/flushbar_helper.dart';
 
 class Zonation extends StatefulWidget {
-  Zonation({Key key}) : super(key: key);
+  const Zonation({Key key}) : super(key: key);
 
   @override
   _ZonationState createState() => _ZonationState();
 }
 
-class _ZonationState extends State<Zonation> {
+class _ZonationState extends State<Zonation>
+    with AutomaticKeepAliveClientMixin<Zonation> {
   String _address = '-';
 
   CheckDistributionBloc _checkDistributionBloc;
-  Flushbar _flushbar = Flushbar();
+  ZonationCubit _zonationCubit;
+  Flushbar _flushbar;
 
   @override
   void initState() {
     super.initState();
+    _flushbar = Flushbar();
     _checkDistributionBloc = BlocProvider.of<CheckDistributionBloc>(context);
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LocationPermissionBloc, LocationPermissionState>(
-        builder: (context, state) {
-      return state is LocationPermissionLoaded
-          ? state.isGranted
-              ? _buildZonationBloc(context)
-              : _buildDeniedContent()
-          : Container();
-    });
+    super.build(context);
+    return BlocProvider<ZonationCubit>(
+      create: (_) => _zonationCubit = ZonationCubit(),
+      child: BlocListener<ZonationCubit, ZonationState>(
+        listener: (_, state) async {
+          if (state is ZonationFailure) {
+            await _flushbar.dismiss();
+
+            await showDialog(
+                context: context,
+                builder: (context) => DialogTextOnly(
+                      description: state.error.toString(),
+                      buttonText: Dictionary.ok.toUpperCase(),
+                      onOkPressed: () {
+                        Navigator.of(context).pop(); // To close the dialog
+                      },
+                    ));
+          } else if (state is ZonationLoaded) {
+            await _getAddress(state.position);
+
+            await _flushbar.dismiss();
+          } else {
+            await _flushbar.dismiss();
+          }
+        },
+        child: BlocBuilder<ZonationCubit, ZonationState>(
+            builder: (BuildContext context, ZonationState state) =>
+                state is ZonationLoaded
+                    ? _buildContent(state)
+                    : _buildIntroContent(state)),
+      ),
+    );
   }
 
-  _buildDeniedContent() {
-    Size size = MediaQuery.of(context).size;
+  Widget _buildIntroContent(ZonationState state) {
+    final Size size = MediaQuery.of(context).size;
 
     return Container(
       width: size.width,
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
           left: Dimens.padding,
           right: Dimens.padding,
           top: Dimens.homeCardMargin),
       decoration: BoxDecoration(
           color: ColorBase.greyContainer,
-          borderRadius: BorderRadius.circular(8.0)),
+          borderRadius: BorderRadius.circular(Dimens.borderRadius)),
       child: Padding(
-        padding: EdgeInsets.all(Dimens.homeCardMargin),
+        padding: const EdgeInsets.all(Dimens.homeCardMargin),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Dictionary.zonation,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: FontsFamily.roboto,
-                  fontWeight: FontWeight.w700),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimens.padding),
-              child: Text(
-                Dictionary.shareZonationInfo,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: FontsFamily.roboto,
-                    color: ColorBase.netralGrey),
-              ),
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    width: 16,
+                    height: 16,
+                    margin: const EdgeInsets.only(top: 6),
+                    child: Icon(
+                      Icons.location_on,
+                      color: ColorBase.netralGrey,
+                    )),
+                const SizedBox(
+                  width: Dimens.padding,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(Dictionary.introZoneTitle,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: FontsFamily.roboto,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(Dictionary.shareZonationInfo,
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: FontsFamily.roboto,
+                            color: ColorBase.netralGrey)),
+                    const SizedBox(
+                      height: Dimens.padding,
+                    ),
+                  ],
+                ),
+              ],
             ),
             RoundedButton(
-                title: Dictionary.shareLocation,
+                isLoading: state is ZonationLoading ? true : false,
+                title: state is ZonationLoading
+                    ? Dictionary.loading
+                    : Dictionary.checkZone,
                 textStyle: TextStyle(
                     fontFamily: FontsFamily.lato,
-                    fontSize: 12.0,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
                 color: ColorBase.green,
-                elevation: 0.0,
-                onPressed: () async {
-                  AnalyticsHelper.setLogEvent(Analytics.tappedShareLocation);
-                  await LocationService.initializeBackgroundLocation(context);
-                })
+                elevation: 0,
+                onPressed: state is ZonationLoading
+                    ? null
+                    : () async {
+                        bool isGranted = await Permission
+                                .locationAlways.status.isGranted ||
+                            await Permission.locationWhenInUse.status.isGranted;
+
+                        await AnalyticsHelper.setLogEvent(
+                            Analytics.tappedCheckZone);
+
+                        if (isGranted) {
+                          _zonationCubit.loadZonation();
+                        } else {
+                          await LocationService.initializeBackgroundLocation(
+                              context);
+                        }
+                      })
           ],
         ),
       ),
     );
   }
 
-  _buildZonationBloc(BuildContext context) {
-    return FutureBuilder<Position>(
-      future:
-          Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          _getAddress(snapshot.data);
-
-          return BlocProvider<ZonationCubit>(
-            create: (_) => ZonationCubit()..loadZonation(snapshot.data),
-            child: BlocBuilder<ZonationCubit, ZonationState>(
-                builder: (context, state) {
-              return state is ZonationLoading
-                  ? _buildLoading()
-                  : state is ZonationLoaded
-                      ? _buildContent(state, snapshot.data)
-                      : Container();
-            }),
-          );
-        } else {
-          return Container();
-        }
-      },
-    );
-  }
-
-  _buildLoading() {
-    Size size = MediaQuery.of(context).size;
-    return Skeleton(
-      child: Container(
-        width: size.width,
-        height: 150.0,
-        margin: EdgeInsets.only(
-            left: Dimens.padding,
-            right: Dimens.padding,
-            top: Dimens.homeCardMargin),
-        decoration: BoxDecoration(
-            color: ColorBase.greyContainer,
-            borderRadius: BorderRadius.circular(8.0)),
-      ),
-    );
-  }
-
-  _buildContent(ZonationLoaded state, Position position) {
-    Size size = MediaQuery.of(context).size;
-    CheckDistributionModel data = state.record;
+  Widget _buildContent(ZonationLoaded state) {
+    final Size size = MediaQuery.of(context).size;
+    final CheckDistributionModel data = state.record;
+    final Position position = state.position;
     Color dotColor = Colors.transparent;
     String zone = '';
     String description;
@@ -184,17 +207,18 @@ class _ZonationState extends State<Zonation> {
         break;
     }
 
-    return BlocListener<CheckDistributionBloc, CheckdistributionState>(
-      listener: (context, state) async {
+    return BlocListener<CheckDistributionBloc, CheckDistributionState>(
+      listener: (BuildContext context, CheckDistributionState state) async {
         if (state is CheckDistributionLoading ||
             state is CheckDistributionLoadingIsOther) {
-          _flushbar = FlushHelper.loading()..show(context);
+          _flushbar = FlushHelper.loading();
+          await _flushbar.show(context);
         } else if (state is CheckDistributionFailure) {
           await _flushbar.dismiss();
 
-          showDialog(
+          await showDialog(
               context: context,
-              builder: (BuildContext context) => DialogTextOnly(
+              builder: (context) => DialogTextOnly(
                     description: state.error.toString(),
                     buttonText: Dictionary.ok.toUpperCase(),
                     onOkPressed: () {
@@ -204,10 +228,11 @@ class _ZonationState extends State<Zonation> {
         } else if (state is CheckDistributionLoaded) {
           await _flushbar.dismiss();
 
-          Navigator.push(
+          await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => CheckDistributionDetail(state, _address)),
+                builder: (context) =>
+                    CheckDistributionDetail(state: state, address: _address)),
           );
         } else {
           await _flushbar.dismiss();
@@ -215,62 +240,61 @@ class _ZonationState extends State<Zonation> {
       },
       child: Container(
         width: size.width,
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
             left: Dimens.padding,
             right: Dimens.padding,
             top: Dimens.homeCardMargin),
         decoration: BoxDecoration(
             color: ColorBase.greyContainer,
-            borderRadius: BorderRadius.circular(8.0)),
+            borderRadius: BorderRadius.circular(Dimens.borderRadius)),
         child: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                children: [
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
                   Icon(
                     Icons.circle,
                     size: 16,
                     color: dotColor,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${Dictionary.youAreIn} $zone',
-                        overflow: TextOverflow.clip,
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontFamily: FontsFamily.roboto,
-                            fontWeight: FontWeight.w700),
+                  Expanded(
+                    child: Text(
+                      '${Dictionary.youAreIn}${StringUtils.capitalizeWord(data.currentLocation.namaKab)}, ${Dictionary.zonation} $zone',
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: FontsFamily.roboto,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Icon(
+                        Icons.help_outline_outlined,
+                        size: 16,
+                        color: ColorBase.netralGrey,
                       ),
-                      GestureDetector(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: Icon(
-                            Icons.help_outline_outlined,
-                            size: 16,
-                            color: ColorBase.netralGrey,
-                          ),
-                        ),
-                        onTap: () {
-                          showTextBottomSheet(
-                              context: context,
-                              title: Dictionary.zonationSource,
-                              message: Dictionary.sourceZonationInfo);
-                        },
-                      ),
-                    ],
+                    ),
+                    onTap: () {
+                      showTextBottomSheet(
+                          context: context,
+                          title: Dictionary.zonationSource,
+                          message: Dictionary.sourceZonationInfo);
+                    },
                   )
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: Dimens.padding),
+                margin: const EdgeInsets.symmetric(vertical: Dimens.padding),
                 child: RichText(
                   text: TextSpan(
                     text: description,
@@ -278,7 +302,7 @@ class _ZonationState extends State<Zonation> {
                         fontSize: 12,
                         fontFamily: FontsFamily.roboto,
                         color: ColorBase.netralGrey),
-                    children: [
+                    children: <TextSpan>[
                       TextSpan(
                         text: Dictionary.zoneOther,
                         style: TextStyle(
@@ -291,10 +315,11 @@ class _ZonationState extends State<Zonation> {
                   ),
                 ),
               ),
-              BlocBuilder<CheckDistributionBloc, CheckdistributionState>(
-                  builder: (context, state) {
+              BlocBuilder<CheckDistributionBloc, CheckDistributionState>(
+                  builder:
+                      (BuildContext context, CheckDistributionState state) {
                 return Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: RoundedButton(
                         title: state is CheckDistributionLoading
@@ -302,15 +327,15 @@ class _ZonationState extends State<Zonation> {
                             : Dictionary.checkAroundYou,
                         textStyle: TextStyle(
                             fontFamily: FontsFamily.lato,
-                            fontSize: 12.0,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                         color: ColorBase.green,
-                        elevation: 0.0,
+                        elevation: 0,
                         onPressed: state is CheckDistributionLoading
                             ? null
                             : () async {
-                                AnalyticsHelper.setLogEvent(
+                                await AnalyticsHelper.setLogEvent(
                                     Analytics.tappedArroundYouLocation);
                                 _checkDistributionBloc.add(
                                     LoadCheckDistribution(
@@ -320,7 +345,7 @@ class _ZonationState extends State<Zonation> {
                               },
                       ),
                     ),
-                    SizedBox(width: Dimens.padding),
+                    const SizedBox(width: Dimens.padding),
                     Expanded(
                       child: RoundedButton(
                           title: state is CheckDistributionLoadingIsOther
@@ -328,15 +353,22 @@ class _ZonationState extends State<Zonation> {
                               : Dictionary.checkOtherLocation,
                           textStyle: TextStyle(
                               fontFamily: FontsFamily.lato,
-                              fontSize: 12.0,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: ColorBase.netralGrey),
                           color: Colors.white,
                           borderSide: BorderSide(color: ColorBase.disableText),
-                          elevation: 0.0,
+                          elevation: 0,
                           onPressed: state is CheckDistributionLoadingIsOther
                               ? null
-                              : _otherLocation),
+                              : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CheckDistributionOtherScrenn()),
+                                  );
+                                }),
                     ),
                   ],
                 );
@@ -348,28 +380,23 @@ class _ZonationState extends State<Zonation> {
     );
   }
 
-  _getAddress(Position position) async {
-    List<Placemark> placemarks =
+  Future<void> _getAddress(Position position) async {
+    final List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
 
     if (placemarks != null && placemarks.isNotEmpty) {
-      final Placemark pos = placemarks[0];
-      final stringAddress = pos.thoroughfare +
-          ', ' +
-          pos.locality +
-          ', ' +
-          pos.subAdministrativeArea;
-
-      _address = stringAddress;
+      Placemark pos = placemarks[0];
+      _address =
+          '${pos.thoroughfare}, ${pos.locality}, ${pos.subAdministrativeArea}';
     }
   }
 
-  _otherLocation() async {
-    LatLng result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LocationPicker()));
+  Future<void> _otherLocation() async {
+    final LatLng result = await Navigator.push(context,
+        MaterialPageRoute(builder: (BuildContext context) => LocationPicker()));
 
     /// set gecoder to show in location information
-    final String address = await GeocoderRepository().getAddress(result);
+    String address = await GeocoderRepository().getAddress(result);
 
     if (address != null) {
       _address = address;
@@ -381,7 +408,7 @@ class _ZonationState extends State<Zonation> {
           lat: result.latitude, long: result.longitude, isOther: true));
 
       // analytics
-      AnalyticsHelper.setLogEvent(
+      await AnalyticsHelper.setLogEvent(
           Analytics.tappedFindByLocation, <String, dynamic>{
         'latlong': '${result.latitude}, ${result.longitude}'
       });

@@ -13,7 +13,6 @@ part 'SelfReportDetailState.dart';
 
 class SelfReportDetailBloc
     extends Bloc<SelfReportDetailEvent, SelfReportDetailState> {
-
   SelfReportDetailBloc() : super(SelfReportDetailInitial());
 
   @override
@@ -26,9 +25,11 @@ class SelfReportDetailBloc
       try {
         String userId = await AuthRepository().getToken();
         DocumentSnapshot doc = await SelfReportRepository().getSelfReportDetail(
-            userId: userId, dailyReportId: event.selfReportId,otherUID: event.otherUid);
+            userId: userId,
+            dailyReportId: event.selfReportId,
+            otherUID: event.otherUid);
         yield SelfReportDetailLoaded(documentSnapshot: doc);
-      } catch (error) {
+      } on Exception catch (error) {
         yield SelfReportDetailFailure(error: error.toString());
       }
     }

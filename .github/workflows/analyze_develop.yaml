@@ -11,7 +11,7 @@ on:
 
 # We can now build our job
 jobs:
-  build:
+  Analize:
 
     runs-on: ubuntu-latest
 
@@ -33,7 +33,7 @@ jobs:
 
       # Install Flutter
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh stable # or: beta
+        run: ./.github/workflows/scripts/install-flutter.sh 1.22.6 # or: beta
 
       # Install Tools
       - name: "Install Tools"

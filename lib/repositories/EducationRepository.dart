@@ -6,9 +6,10 @@ class EducationRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<List<EducationModel>> getEducationList(
-      {@required String educationCollection}) {
+      {@required String educationCollection, int limit}) {
     return firestore
         .collection(educationCollection)
+        .limit(limit)
         .orderBy('published_at', descending: true)
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.docs

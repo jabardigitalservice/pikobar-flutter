@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
+import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/EducationModel.dart';
@@ -67,12 +68,12 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
             educationId: widget.id)),
       child: BlocListener<EducationDetailBloc, EducationDetailState>(
           listener: (context, state) {
-            if (state is EducationDetailLoaded) {
-              setState(() {
-                dataEducation = state.record;
-              });
-            }
-          }, child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
+        if (state is EducationDetailLoaded) {
+          setState(() {
+            dataEducation = state.record;
+          });
+        }
+      }, child: BlocBuilder<EducationDetailBloc, EducationDetailState>(
         builder: (context, state) {
           return _buildScaffold(context, state);
         },
@@ -101,8 +102,20 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                         height: MediaQuery.of(context).size.height,
                       ),
                       Container(
-                        color: Colors.black12.withOpacity(0.2),
-                      )
+                        height: 360,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.6),
+                              Colors.transparent,
+                            ],
+                            stops: [0.0, 1.0],
+                          ),
+                        ),
+                      ),
                     ],
                   )),
               onTap: () {
@@ -111,27 +124,27 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (_) => HeroImagePreview(
-                            Dictionary.heroImageTag,
-                            imageUrl: dataEducation.image,
-                          )));
+                                Dictionary.heroImageTag,
+                                imageUrl: dataEducation.image,
+                              )));
                 }
               },
             ),
             body: state is EducationDetailLoading
                 ? _buildLoading(context)
                 : state is EducationDetailLoaded
-                ? _buildContent(context, state.record)
-                : state is EducationDetailFailure
-                ? dataEducation != null
-                ? _buildContent(context, dataEducation)
-                : EmptyData(
-              message: Dictionary.emptyData,
-              desc: '',
-              isFlare: false,
-              image:
-              "${Environment.imageAssets}not_found.png",
-            )
-                : Container()));
+                    ? _buildContent(context, state.record)
+                    : state is EducationDetailFailure
+                        ? dataEducation != null
+                            ? _buildContent(context, dataEducation)
+                            : EmptyData(
+                                message: Dictionary.emptyData,
+                                desc: '',
+                                isFlare: false,
+                                image:
+                                    "${Environment.imageAssets}not_found.png",
+                              )
+                        : Container()));
   }
 
   /// Widget for show loading when request data from server
@@ -237,7 +250,7 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(
-                        left: 30.0, top: 15.0, right: 15.0, bottom: 10.0),
+                        left: Dimens.contentPadding, top: 15.0, right: Dimens.contentPadding, bottom: 10.0),
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -268,13 +281,12 @@ class _EducationDetailScreenState extends State<EducationDetailScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 15.0, right: 15.0, bottom: 15.0),
+                        left: Dimens.contentPadding, right: Dimens.contentPadding, bottom: 15.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
+                          padding: const EdgeInsets.only( top: 15.0,  bottom: 15.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[

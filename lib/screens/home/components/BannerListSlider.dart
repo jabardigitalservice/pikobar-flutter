@@ -22,6 +22,8 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BannerListSlider extends StatefulWidget {
+  BannerListSlider({Key key}) : super(key: key);
+
   @override
   BannerListSliderState createState() => BannerListSliderState();
 }
@@ -55,7 +57,7 @@ class BannerListSliderState extends State<BannerListSlider> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 decoration: BoxDecoration(shape: BoxShape.circle),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
                   child: Skeleton(
                     width: MediaQuery.of(context).size.width,
                   ),
@@ -73,8 +75,9 @@ class BannerListSliderState extends State<BannerListSlider> {
                 options: CarouselOptions(
                   initialPage: 0,
                   enableInfiniteScroll: state.records.length > 1 ? true : false,
-                  aspectRatio: 21 / 10,
+                  aspectRatio: 1.9,
                   viewportFraction: 0.95,
+                  enlargeCenterPage: false,
                   autoPlay: state.records.length > 1 ? true : false,
                   autoPlayInterval: Duration(seconds: 5),
                   onPageChanged: (index, reason) {
@@ -87,18 +90,15 @@ class BannerListSliderState extends State<BannerListSlider> {
                   return Builder(builder: (BuildContext context) {
                     return GestureDetector(
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 4.0),
                         decoration: BoxDecoration(shape: BoxShape.circle),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                               imageUrl: data.url ?? '',
                               imageBuilder: (context, imageProvider) =>
-                                  Container(
+                                  Container(margin: EdgeInsets.symmetric(horizontal: 5),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(5.0),
-                                          topRight: Radius.circular(5.0)),
+                                      borderRadius: BorderRadius.all(Radius.circular(5)),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.fill,

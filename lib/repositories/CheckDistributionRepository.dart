@@ -9,12 +9,18 @@ import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
 
 class CheckDistributionRepository {
-  Future<CheckDistributionModel> fetchRecord(lat, long) async {
-
+  Future<CheckDistributionModel> fetchRecord(
+      {lat, long, cityId, subCityId, isOther = false}) async {
+    String param;
+    if (isOther) {
+      param = '?bps_kecamatan=$subCityId&bps_kabupaten=$cityId';
+    } else {
+      param = '?lat=$lat&long=$long';
+    }
     final response = await http
-        .get('${EndPointPath.checkDistribution}?long=$long&lat=$lat',
+        .get('${EndPointPath.checkDistribution}$param',
             headers: await HttpHeaders.headers())
-        .timeout(const Duration(seconds: 10));
+        .timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

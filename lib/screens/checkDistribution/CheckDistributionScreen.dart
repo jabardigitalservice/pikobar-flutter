@@ -8,7 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/DialogRequestPermission.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
@@ -28,6 +28,8 @@ import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 class CheckDistributionScreen extends StatelessWidget {
+  CheckDistributionScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CheckDistributionBloc>(
@@ -39,6 +41,8 @@ class CheckDistributionScreen extends StatelessWidget {
 }
 
 class CheckDistribution extends StatefulWidget {
+  CheckDistribution({Key key}) : super(key: key);
+
   @override
   _CheckDistributionState createState() => _CheckDistributionState();
 }
@@ -67,14 +71,14 @@ class _CheckDistributionState extends State<CheckDistribution> {
     return Scaffold(
         appBar: CustomAppBar.defaultAppBar(title: Dictionary.checkDistribution),
         backgroundColor: Colors.white,
-        body: BlocListener<CheckDistributionBloc, CheckdistributionState>(
-          listener: (context, state) {
+        body: BlocListener<CheckDistributionBloc, CheckDistributionState>(
+          listener: (BuildContext context, CheckDistributionState state) {
             // Show dialog error message
             // When check distribution failed to load
             if (state is CheckDistributionFailure) {
               showDialog(
                   context: context,
-                  builder: (BuildContext context) => DialogTextOnly(
+                  builder: (context) => DialogTextOnly(
                         description: state.error.toString(),
                         buttonText: "OK",
                         onOkPressed: () {
@@ -88,8 +92,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        CheckDistributionDetail(state, _address)),
+                    builder: (context) => CheckDistributionDetail(
+                        state: state, address: _address)),
               );
             } else {
               Scaffold.of(context).hideCurrentSnackBar();
@@ -98,11 +102,11 @@ class _CheckDistributionState extends State<CheckDistribution> {
           child: Stack(
             children: <Widget>[
               Positioned(
-                left: 0.0,
-                right: 0.0,
-                top: 0.0,
+                left: 0,
+                right: 0,
+                top: 0,
                 child: Container(
-                  padding: EdgeInsets.all(Dimens.padding),
+                  padding: const EdgeInsets.all(Dimens.padding),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
@@ -117,32 +121,32 @@ class _CheckDistributionState extends State<CheckDistribution> {
                       ),
                       // Title Section
                       Container(
-                        margin: EdgeInsets.fromLTRB(
-                            Dimens.padding, 0.0, Dimens.padding, 0.0),
+                        margin: const EdgeInsets.fromLTRB(
+                            Dimens.padding, 0, Dimens.padding, 0),
                         child: Text(
                           Dictionary.checkLocationSpread,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontFamily: FontsFamily.lato,
                               fontWeight: FontWeight.bold,
-                              fontSize: 14.0),
+                              fontSize: 14),
                         ),
                       ),
                       // Description Section
                       Container(
-                        margin: EdgeInsets.fromLTRB(
-                            Dimens.padding, 10.0, Dimens.padding, 0.0),
+                        margin: const EdgeInsets.fromLTRB(
+                            Dimens.padding, 10, Dimens.padding, 0),
                         child: Text(
                           Dictionary.checkLocationSpreadDesc,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontFamily: FontsFamily.lato,
                               fontWeight: FontWeight.normal,
-                              fontSize: 12.0),
+                              fontSize: 12),
                         ),
                       ),
 
-                      // SizedBox(height: 25),
+                      // const SizedBox(height: 25),
                     ],
                   ),
                 ),
@@ -150,9 +154,9 @@ class _CheckDistributionState extends State<CheckDistribution> {
 
               // Box
               Positioned(
-                left: 0.0,
-                right: 0.0,
-                bottom: 0.0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 child: Container(
                   padding: const EdgeInsets.all(Dimens.padding),
                   child: Align(
@@ -167,11 +171,11 @@ class _CheckDistributionState extends State<CheckDistribution> {
                               Container(
                                 padding: const EdgeInsets.fromLTRB(
                                     Dimens.padding,
-                                    8.0,
+                                    8,
                                     Dimens.padding,
                                     Dimens.padding),
                                 child: BlocBuilder<CheckDistributionBloc,
-                                    CheckdistributionState>(
+                                    CheckDistributionState>(
                                   builder: (context, state) {
                                     return Column(
                                       children: <Widget>[
@@ -187,7 +191,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide.none,
                                                 borderRadius:
-                                                    BorderRadius.circular(8.0),
+                                                    BorderRadius.circular(
+                                                        Dimens.borderRadius),
                                               ),
                                               child: Row(
                                                 mainAxisAlignment:
@@ -211,7 +216,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                         )
                                                       : Container(),
                                                   state is CheckDistributionLoading
-                                                      ? SizedBox(
+                                                      ? const SizedBox(
                                                           width: 10,
                                                         )
                                                       : Container(),
@@ -266,7 +271,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                 }
                                               }),
                                         ),
-                                        SizedBox(height: 10),
+                                        const SizedBox(height: 10),
                                         OutlineButton(
                                             borderSide: BorderSide(
                                                 color: Color(0xff27AE60)),
@@ -279,7 +284,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                               _handleLocation(isOther: true);
                                             },
                                             child: Padding(
-                                              padding: EdgeInsets.all(15),
+                                              padding: const EdgeInsets.all(15),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -302,7 +307,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                         )
                                                       : Container(),
                                                   state is CheckDistributionLoadingIsOther
-                                                      ? SizedBox(
+                                                      ? const SizedBox(
                                                           width: 10,
                                                         )
                                                       : Container(),
@@ -343,7 +348,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                   style: TextStyle(
                                     fontFamily: FontsFamily.lato,
                                     color: Colors.grey[600],
-                                    fontSize: 12.0,
+                                    fontSize: 12,
                                     height: 1.3,
                                   ),
                                 ),
@@ -352,7 +357,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                     style: TextStyle(
                                       fontFamily: FontsFamily.lato,
                                       color: Colors.blue,
-                                      fontSize: 12.0,
+                                      fontSize: 12,
                                       height: 1.3,
                                       decoration: TextDecoration.underline,
                                     ),
@@ -365,7 +370,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 22),
+                        const SizedBox(height: 22),
                       ],
                     ),
                   ),
@@ -383,11 +388,11 @@ class _CheckDistributionState extends State<CheckDistribution> {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(.2),
-            blurRadius: 20.0, // soften the shadow
-            spreadRadius: 10.0, //extend the shadow
+            blurRadius: 20, // soften the shadow
+            spreadRadius: 10, //extend the shadow
             offset: Offset(
-              1.0, // Move to right 1  horizontally
-              1.0, // Move to bottom 1 Vertically
+              1, // Move to right 1  horizontally
+              1, // Move to bottom 1 Vertically
             ),
           )
         ],
@@ -408,7 +413,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
       // Show permission dialog
       showDialog(
           context: context,
-          builder: (BuildContext context) => DialogRequestPermission(
+          builder: (context) => DialogRequestPermission(
                 image: Image.asset(
                   '${Environment.iconAssets}map_pin.png',
                   fit: BoxFit.contain,
@@ -473,7 +478,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
       // Pick location by current location
       Position position = await Geolocator.getLastKnownPosition();
       if (position != null && position.latitude != null) {
-        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];
@@ -492,7 +498,8 @@ class _CheckDistributionState extends State<CheckDistribution> {
               id: id);
         }
       } else {
-        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
 
         if (placemarks != null && placemarks.isNotEmpty) {
           final Placemark pos = placemarks[0];

@@ -1,16 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pikobar_flutter/blocs/area/cityListBloc/Bloc.dart';
 import 'package:pikobar_flutter/blocs/banners/Bloc.dart';
-import 'package:pikobar_flutter/blocs/checkDIstribution/CheckdistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
+import 'package:pikobar_flutter/blocs/dailyChart/DailyChartBloc.dart';
 import 'package:pikobar_flutter/blocs/documents/Bloc.dart';
 import 'package:pikobar_flutter/blocs/importantinfo/importantInfoList/Bloc.dart';
-import 'package:pikobar_flutter/blocs/infographics/Bloc.dart';
+import 'package:pikobar_flutter/blocs/infographics/infographicslist/Bloc.dart';
 import 'package:pikobar_flutter/blocs/news/newsList/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/pcr/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/pcrIndividu/Bloc.dart';
 import 'package:pikobar_flutter/blocs/statistics/rdt/Bloc.dart';
+import 'package:pikobar_flutter/blocs/statistics/rdtAntigen/Bloc.dart';
 import 'package:pikobar_flutter/blocs/video/videoList/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/configs/SharedPreferences/HistoryTabHome.dart';
@@ -18,9 +22,9 @@ import 'package:pikobar_flutter/configs/SharedPreferences/ProfileUid.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/NewsType.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
+import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/home/components/AlertUpdate.dart';
@@ -33,7 +37,7 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 class HomeScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
 
-  HomeScreen({this.indexScreenState});
+  HomeScreen({Key key, this.indexScreenState}) : super(key: key);
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -45,12 +49,10 @@ class HomeScreenState extends State<HomeScreen>
   BannersBloc _bannersBloc;
   StatisticsBloc _statisticsBloc;
   RapidTestBloc _rapidTestBloc;
+  RapidTestAntigenBloc _rapidTestAntigenBloc;
   PcrTestBloc _pcrTestBloc;
-  NewsListBloc _newsListBloc = NewsListBloc();
-  ImportantInfoListBloc _importantInfoListBloc;
-  VideoListBloc _videoListBloc = VideoListBloc();
-  InfoGraphicsListBloc _infoGraphicsListBloc = InfoGraphicsListBloc();
-  DocumentsBloc _documentsBloc = DocumentsBloc();
+  PcrTestIndividuBloc _pcrTestIndividuBloc;
+  DailyChartBloc _dailyChartBloc;
   bool isLoading = true;
   String typeNews = Dictionary.importantInfo;
   List<String> listItemTitleTab = [
@@ -76,6 +78,7 @@ class HomeScreenState extends State<HomeScreen>
   getAllUnreadData() {
     Future.delayed(Duration(milliseconds: 0), () async {
       var data = await LabelNew().getAllUnreadDataLabel();
+      if (!mounted) return;
       setState(() {
         totalUnreadInfo = data;
       });
@@ -149,59 +152,60 @@ class HomeScreenState extends State<HomeScreen>
         BlocProvider<PcrTestBloc>(
             create: (context) =>
                 _pcrTestBloc = PcrTestBloc()..add(PcrTestLoad())),
-        BlocProvider<NewsListBloc>(
-            create: (context) => _newsListBloc = NewsListBloc()
-              ..add(
-                  NewsListLoad(NewsType.allArticles, statImportantInfo: true))),
+        BlocProvider<RapidTestAntigenBloc>(
+            create: (context) => _rapidTestAntigenBloc = RapidTestAntigenBloc()
+              ..add(RapidTestAntigenLoad())),
+        BlocProvider<PcrTestIndividuBloc>(
+            create: (context) => _pcrTestIndividuBloc = PcrTestIndividuBloc()
+              ..add(PcrTestIndividuLoad())),
+        BlocProvider<NewsListBloc>(create: (context) => NewsListBloc()),
         BlocProvider<ImportantInfoListBloc>(
-            create: (context) =>
-                _importantInfoListBloc = ImportantInfoListBloc()
-                  ..add(ImportantInfoListLoad(kImportantInfor))),
-        BlocProvider<VideoListBloc>(
-            create: (context) =>
-                _videoListBloc = VideoListBloc()..add(LoadVideos(limit: 5))),
+            create: (context) => ImportantInfoListBloc()),
+        BlocProvider<VideoListBloc>(create: (context) => VideoListBloc()),
         BlocProvider<InfoGraphicsListBloc>(
-            create: (context) => _infoGraphicsListBloc = InfoGraphicsListBloc()
-              ..add(InfoGraphicsListLoad(
-                  infoGraphicsCollection: kInfographics, limit: 3))),
-        BlocProvider<DocumentsBloc>(
-            create: (context) =>
-                _documentsBloc = DocumentsBloc()..add(DocumentsLoad())),
+            create: (context) => InfoGraphicsListBloc()),
+        BlocProvider<DocumentsBloc>(create: (context) => DocumentsBloc()),
         BlocProvider<CheckDistributionBloc>(
             create: (context) => CheckDistributionBloc(
-                checkDistributionRepository: CheckDistributionRepository()))
+                checkDistributionRepository: CheckDistributionRepository())),
+        BlocProvider<CityListBloc>(
+            create: (context) => CityListBloc()..add(CityListLoad())),
+        BlocProvider<DailyChartBloc>(
+            create: (context) => _dailyChartBloc =
+                DailyChartBloc(dailyChartRepository: DailyChartRepository())
+                  ..add(LoadDailyChart())),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(20.0),
+          preferredSize: Size.fromHeight(20),
           child: AppBar(
-            elevation: 0.0,
+            elevation: 0,
             backgroundColor: Colors.white,
           ),
         ),
         body: MultiBlocListener(
           listeners: [
             BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
-                listener: (context, state) {
+                listener: (BuildContext context, InfoGraphicsListState state) {
               if (state is InfoGraphicsListLoaded) {
                 getAllUnreadData();
               }
             }),
             BlocListener<NewsListBloc, NewsListState>(
-                listener: (context, state) {
+                listener: (BuildContext context, NewsListState state) {
               if (state is NewsListLoaded) {
                 getAllUnreadData();
               }
             }),
             BlocListener<VideoListBloc, VideoListState>(
-                listener: (context, state) {
+                listener: (BuildContext context, VideoListState state) {
               if (state is VideosLoaded) {
                 getAllUnreadData();
               }
             }),
             BlocListener<DocumentsBloc, DocumentsState>(
-                listener: (context, state) {
+                listener: (BuildContext context, DocumentsState state) {
               if (state is DocumentsLoaded) {
                 getAllUnreadData();
               }
@@ -230,7 +234,6 @@ class HomeScreenState extends State<HomeScreen>
           paddingBubbleTab: 10,
           titleNameLabelNew: listItemTitleTab[1],
           totalInfoUnread: totalUnreadInfo,
-          sizeLabel: 13.0,
           onTap: (index) async {
             getAllUnreadData();
             AnalyticsHelper.setLogEvent(analyticsData[index]);
@@ -238,7 +241,7 @@ class HomeScreenState extends State<HomeScreen>
                 listItemTitleTab[index]);
           },
           tabBarView: <Widget>[
-            JabarTodayScreen(),
+            JabarTodayScreen(dailyChartBloc: _dailyChartBloc),
             CovidInformationScreen(
               homeScreenState: this,
             ),
@@ -255,29 +258,21 @@ class HomeScreenState extends State<HomeScreen>
     tabController.dispose();
     _remoteConfigBloc.close();
     _bannersBloc.close();
+    _dailyChartBloc.close();
     if (_statisticsBloc != null) {
       _statisticsBloc.close();
     }
     if (_rapidTestBloc != null) {
       _rapidTestBloc.close();
     }
+    if (_rapidTestAntigenBloc != null) {
+      _rapidTestAntigenBloc.close();
+    }
     if (_pcrTestBloc != null) {
       _pcrTestBloc.close();
     }
-    if (_newsListBloc != null) {
-      _newsListBloc.close();
-    }
-    if (_importantInfoListBloc != null) {
-      _importantInfoListBloc.close();
-    }
-    if (_videoListBloc != null) {
-      _videoListBloc.close();
-    }
-    if (_infoGraphicsListBloc != null) {
-      _infoGraphicsListBloc.close();
-    }
-    if (_documentsBloc != null) {
-      _documentsBloc.close();
+    if (_pcrTestIndividuBloc != null) {
+      _pcrTestIndividuBloc.close();
     }
     super.dispose();
   }

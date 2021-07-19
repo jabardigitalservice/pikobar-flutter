@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/NewsType.dart';
-import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/NewsModel.dart';
 import 'package:pikobar_flutter/repositories/NewsRepository.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
@@ -10,7 +9,7 @@ import 'Bloc.dart';
 
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
-  StreamSubscription _subscription;
+  StreamSubscription<Object> _subscription;
   LabelNew labelNew = LabelNew();
 
   NewsListBloc() : super(InitialNewsListState());
@@ -20,23 +19,32 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     NewsListEvent event,
   ) async* {
     if (event is NewsListLoad) {
-      yield* _mapLoadVideosToState(event.newsCollection,
-          statImportantInfo: event.statImportantInfo);
+      yield* _mapLoadNewsToState(event.newsCollection,
+          statImportantInfo: event.statImportantInfo, limit: event.limit);
     } else if (event is NewsListUpdate) {
-      yield* _mapVideosUpdateToState(event);
+      yield* _mapNewsUpdateToState(event);
+    } else if (event is NewsListImportantUpdate) {
+      yield* _mapNewsUpdateImportantToState(event);
+    } else if (event is NewsListJabarUpdate) {
+      yield* _mapNewsUpdateJabarToState(event);
+    } else if (event is NewsListNationalUpdate) {
+      yield* _mapNewsUpdateNationalToState(event);
+    } else if (event is NewsListWorldUpdate) {
+      yield* _mapNewsUpdateWorldToState(event);
     }
   }
 
-  Stream<NewsListState> _mapLoadVideosToState(String collection,
-      {bool statImportantInfo = true}) async* {
-    yield NewsListLoading();
+
+
+  _loadData(String collection, bool statImportantInfo, int limit) {
     _subscription?.cancel();
-    _subscription = collection == kImportantInfor
+    _subscription = collection == NewsType.articlesImportantInfo
         ? _repository
-            .getInfoImportantList(improtantInfoCollection: collection)
+            .getInfoImportantList(
+                improtantInfoCollection: collection, limit: limit)
             .listen(
             (news) {
-              add(NewsListUpdate(news));
+              add(NewsListImportantUpdate(news));
             },
           )
         : collection == NewsType.allArticles
@@ -47,18 +55,69 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                 });
                 dataListAllNews
                     .sort((b, a) => a.publishedAt.compareTo(b.publishedAt));
+
                 labelNew.insertDataLabel(dataListAllNews, Dictionary.labelNews);
+
+                if (limit != null) {
+                  int maxLimit = limit <= dataListAllNews.length
+                      ? limit
+                      : dataListAllNews.length;
+
+                  dataListAllNews = dataListAllNews.getRange(0, maxLimit).toList();
+                }
+
                 add(NewsListUpdate(dataListAllNews));
               })
             : _repository
-                .getNewsList(newsCollection: collection)
+                .getNewsList(newsCollection: collection, limit: limit)
                 .listen((news) {
-                add(NewsListUpdate(news));
+                switch (collection) {
+                  case NewsType.articlesImportantInfo:
+                    add(NewsListImportantUpdate(news));
+                    break;
+                  case NewsType.articles:
+                    add(NewsListJabarUpdate(news));
+                    break;
+                  case NewsType.articlesNational:
+                    add(NewsListNationalUpdate(news));
+                    break;
+                  case NewsType.articlesWorld:
+                    add(NewsListWorldUpdate(news));
+                    break;
+                  default:
+                    add(NewsListUpdate(news));
+                }
               });
   }
 
-  Stream<NewsListState> _mapVideosUpdateToState(NewsListUpdate event) async* {
+  Stream<NewsListState> _mapLoadNewsToState(String collection,
+      {bool statImportantInfo = true, int limit}) async* {
+    yield NewsListLoading();
+    _loadData(collection, statImportantInfo, limit);
+  }
+
+  Stream<NewsListState> _mapNewsUpdateToState(NewsListUpdate event) async* {
     yield NewsListLoaded(event.newsList);
+  }
+
+  Stream<NewsListState> _mapNewsUpdateImportantToState(
+      NewsListImportantUpdate event) async* {
+    yield NewsListImportantLoaded(event.newsList);
+  }
+
+  Stream<NewsListState> _mapNewsUpdateJabarToState(
+      NewsListJabarUpdate event) async* {
+    yield NewsListJabarLoaded(event.newsList);
+  }
+
+  Stream<NewsListState> _mapNewsUpdateNationalToState(
+      NewsListNationalUpdate event) async* {
+    yield NewsListNationalLoaded(event.newsList);
+  }
+
+  Stream<NewsListState> _mapNewsUpdateWorldToState(
+      NewsListWorldUpdate event) async* {
+    yield NewsListWorldLoaded(event.newsList);
   }
 
   @override

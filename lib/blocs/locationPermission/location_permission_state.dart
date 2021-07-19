@@ -4,7 +4,7 @@ abstract class LocationPermissionState extends Equatable {
   const LocationPermissionState();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 class LocationPermissionInitial extends LocationPermissionState {

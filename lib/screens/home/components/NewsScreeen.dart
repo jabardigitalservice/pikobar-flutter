@@ -26,14 +26,13 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
-// ignore: must_be_immutable
 class NewsScreen extends StatefulWidget {
   final String news;
   final int maxLength;
   final String searchQuery;
-  CovidInformationScreenState covidInformationScreenState;
+  final CovidInformationScreenState covidInformationScreenState;
 
-  NewsScreen(
+  const NewsScreen(
       {Key key,
       @required this.news,
       this.maxLength,
@@ -57,7 +56,7 @@ class _NewsScreenState extends State<NewsScreen> {
     if (widget.maxLength != null) {
       newsListBloc = BlocProvider.of<NewsListBloc>(context);
       newsListBloc
-          .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true));
+          .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true, limit: 10));
     }
     super.initState();
   }
@@ -75,7 +74,6 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   @override
-  // ignore: must_call_super
   Widget build(BuildContext context) {
     return BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
       builder: (context, remoteState) {
@@ -119,16 +117,14 @@ class _NewsScreenState extends State<NewsScreen> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-      if (list.isEmpty) {
-        widget.covidInformationScreenState.isEmptyDataNews = true;
-      }
+      widget.covidInformationScreenState.isEmptyDataNews = list.isEmpty;
     }
     return list.isNotEmpty
         ? Container(
             child: Column(
               children: [
                 Container(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: Dimens.padding,
                         right: Dimens.padding,
                         bottom: Dimens.padding),
@@ -154,10 +150,11 @@ class _NewsScreenState extends State<NewsScreen> {
                                 fontSize: Dimens.textSubtitleSize),
                           ),
                           onTap: () async {
-                            final result = await Navigator.push(
+                            final bool result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NewsListScreen(
+                                    title: getLabel['news']['title'],
                                     news: Dictionary.allNews,
                                     covidInformationScreenState:
                                         widget.covidInformationScreenState),
@@ -188,7 +185,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       itemBuilder: (context, index) {
                         NewsModel newsmodel = list[index];
                         return Container(
-                          padding: EdgeInsets.only(left: Dimens.padding),
+                          padding: const EdgeInsets.only(left: Dimens.padding),
                           width: 150.0,
                           height: 150.0,
                           child: Column(
@@ -198,7 +195,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                   height: 140,
                                   width: 150,
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderRadius: BorderRadius.circular(
+                                        Dimens.borderRadius),
                                     child: CachedNetworkImage(
                                       imageUrl: newsmodel.image ?? '',
                                       alignment: Alignment.topCenter,
@@ -286,7 +284,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                             });
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.only(top: 10),
+                                        padding: const EdgeInsets.only(top: 10),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -303,7 +301,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 5,
                                             ),
                                             Row(
@@ -343,7 +341,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20)
+                              const SizedBox(height: 20)
                             ],
                           ),
                         );
@@ -383,7 +381,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 <String, dynamic>{'title': data.title});
           },
           child: Container(
-            padding: EdgeInsets.only(top: 5, bottom: 5),
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,11 +390,12 @@ class _NewsScreenState extends State<NewsScreen> {
                     ? Stack(
                         children: <Widget>[
                           Container(
-                            margin: EdgeInsets.only(left: 6),
+                            margin: const EdgeInsets.only(left: 6),
                             width: 70,
                             height: 70,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.borderRadius),
                               child: CachedNetworkImage(
                                 imageUrl: data.image,
                                 fit: BoxFit.cover,
@@ -414,7 +413,7 @@ class _NewsScreenState extends State<NewsScreen> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 5),
+                            margin: const EdgeInsets.only(top: 5),
                             child: Image.asset(
                                 '${Environment.imageAssets}label.png',
                                 fit: BoxFit.fill,
@@ -422,7 +421,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                 height: 32.0),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 9, left: 5),
+                            margin: const EdgeInsets.only(top: 9, left: 5),
                             child: Text(
                               Dictionary.labelImportantInfo,
                               style: TextStyle(
@@ -440,7 +439,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: 70,
                         height: 70,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                             imageUrl: data.image,
                             fit: BoxFit.cover,
@@ -473,7 +473,7 @@ class _NewsScreenState extends State<NewsScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Container(
-                          padding: EdgeInsets.only(top: 5.0),
+                          padding: const EdgeInsets.only(top: 5.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -488,7 +488,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                               height: 25.0,
                                             )
                                           : Container(),
-                                      SizedBox(width: 3.0),
+                                      const SizedBox(width: 3.0),
                                       Expanded(
                                         child: Text(
                                           data.newsChannel,
@@ -534,7 +534,7 @@ class _NewsScreenState extends State<NewsScreen> {
             elevation: 0,
             color: Colors.white,
             child: Container(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -545,7 +545,8 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                             imageUrl: data.image,
                             fit: BoxFit.cover,
@@ -566,10 +567,18 @@ class _NewsScreenState extends State<NewsScreen> {
                         width: MediaQuery.of(context).size.width - 35,
                         height: 300,
                         decoration: BoxDecoration(
-                          color: Colors.black12.withOpacity(0.2),
-                          shape: BoxShape.rectangle,
                           borderRadius:
-                              BorderRadius.circular(Dimens.dialogRadius),
+                              BorderRadius.circular(Dimens.borderRadius),
+                          color: Colors.white,
+                          gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.8),
+                            ],
+                            stops: [0.0, 1.0],
+                          ),
                         ),
                       ),
                       Positioned(
@@ -595,7 +604,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 3,
                             ),
                             Text(
@@ -677,7 +686,7 @@ class _NewsScreenState extends State<NewsScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Container(
-          margin: EdgeInsets.only(bottom: 10.0),
+          margin: const EdgeInsets.only(bottom: 10.0),
           child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -693,7 +702,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 child: Row(
                   children: <Widget>[
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
                       child: Skeleton(
                           width: MediaQuery.of(context).size.width - 40),
                     ),
@@ -720,21 +729,22 @@ class _NewsScreenState extends State<NewsScreen> {
           itemBuilder: (context, index) {
             return Container(
                 width: 150,
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
                 child: Column(
                   children: <Widget>[
                     Container(
                       height: 140,
                       width: 150,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                         child: Skeleton(
                           width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -750,7 +760,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                       MediaQuery.of(context).size.width / 1.8,
                                   padding: 10.0,
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Skeleton(
                                   height: 20.0,
                                   width: MediaQuery.of(context).size.width / 2,

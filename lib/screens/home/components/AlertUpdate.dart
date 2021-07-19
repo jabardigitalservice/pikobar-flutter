@@ -10,6 +10,8 @@ import 'package:pikobar_flutter/utilities/checkVersion.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 class AlertUpdate extends StatefulWidget {
+  AlertUpdate({Key key}) : super(key: key);
+
   @override
   _AlertUpdateState createState() => _AlertUpdateState();
 }
@@ -34,7 +36,6 @@ class _AlertUpdateState extends State<AlertUpdate> {
   }
 
   _buildContent(RemoteConfig remoteConfig) {
-
     return FutureBuilder<bool>(
       future: checkVersion(remoteConfig),
       builder: (context, status) {
@@ -44,8 +45,7 @@ class _AlertUpdateState extends State<AlertUpdate> {
             right: 0.0,
             bottom: 0.0,
             child: Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: 10.0, horizontal: 20.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                     colors: [Colors.green[700], ColorBase.green],
@@ -66,27 +66,30 @@ class _AlertUpdateState extends State<AlertUpdate> {
                 children: <Widget>[
                   Expanded(
                     child: Text(Dictionary.updateAppAvailable,
-                        style: TextStyle(color: Colors.white,
-                          fontFamily: FontsFamily.sourceSansPro,)),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: FontsFamily.sourceSansPro,
+                        )),
                   ),
-
                   GestureDetector(
                     child: Container(
                       padding: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 6.0),
                       decoration: BoxDecoration(
                         color: ColorBase.yellow,
-                        border: Border.all(
-                            color: Colors.grey[300], width: 1.0),
+                        border: Border.all(color: Colors.grey[300], width: 1.0),
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       ),
-                      child: Text(Dictionary.update, style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: FontsFamily.sourceSansPro,
-                          fontWeight: FontWeight.bold),),
+                      child: Text(
+                        Dictionary.update,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: FontsFamily.sourceSansPro,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     onTap: () {
-                      launchExternal(remoteConfig.getString(
-                          FirebaseConfig.storeUrl));
+                      launchExternal(
+                          remoteConfig.getString(FirebaseConfig.storeUrl));
                     },
                   )
                 ],

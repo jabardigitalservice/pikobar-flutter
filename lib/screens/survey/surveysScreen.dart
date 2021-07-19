@@ -24,6 +24,8 @@ import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SurveysScreen extends StatefulWidget {
+  SurveysScreen({Key key}) : super(key: key);
+
   @override
   _SurveysScreenState createState() => _SurveysScreenState();
 }
@@ -32,15 +34,24 @@ class _SurveysScreenState extends State<SurveysScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthRepository _authRepository = AuthRepository();
   AuthenticationBloc _authenticationBloc;
+  bool isConnected = false;
+  ScrollController _scrollController;
 
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.survey);
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
   }
 
-  Future<bool> checkConnection() async {
-    return await Connection().checkConnection(kUrlGoogle);
+  checkConnection() async {
+    isConnected = await Connection().checkConnection(kUrlGoogle);
+  }
+
+  bool get _showTitle {
+    return _scrollController.hasClients &&
+        _scrollController.offset >
+            0.16 * MediaQuery.of(context).size.height - (kToolbarHeight * 1.8);
   }
 
   @override
@@ -73,7 +84,7 @@ class _SurveysScreenState extends State<SurveysScreen> {
                     children: <Widget>[
                       CircularProgressIndicator(),
                       Container(
-                        margin: EdgeInsets.only(left: 15.0),
+                        margin: const EdgeInsets.only(left: 15.0),
                         child: Text(Dictionary.loading),
                       )
                     ],
@@ -87,7 +98,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
           },
           child: Scaffold(
             key: _scaffoldKey,
-            appBar: CustomAppBar.defaultAppBar(
+            backgroundColor: Colors.white,
+            appBar: CustomAppBar.animatedAppBar(
+              showTitle: _showTitle,
               title: Dictionary.survey,
             ),
             body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -104,26 +117,25 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 } else if (state is AuthenticationAuthenticated ||
                     state is AuthenticationLoading) {
                   AuthenticationAuthenticated _profileLoaded =
-                  state as AuthenticationAuthenticated;
+                      state as AuthenticationAuthenticated;
                   // ignore: unnecessary_statements
                   _profileLoaded.record.uid;
                   return StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection(kSurveys).snapshots(),
+                    stream: FirebaseFirestore.instance
+                        .collection(kSurveys)
+                        .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data.docs.isNotEmpty) {
                           return _buildContent(snapshot);
                         } else {
-                          return FutureBuilder<bool>(
-                            future: checkConnection(),
-                              builder: (_, connection) {
-                                if (connection.hasData && connection.data) {
-                                  return EmptyData(message: Dictionary.surveyEmpty);
-                                } else {
-                                  return EmptyData(message: Dictionary.errorConnection);
-                                }
-                              });
+                          if (isConnected) {
+                            return EmptyData(message: Dictionary.surveyEmpty);
+                          } else {
+                            return EmptyData(
+                                message: Dictionary.errorConnection);
+                          }
                         }
                       } else {
                         return _buildLoading();
@@ -193,12 +205,32 @@ class _SurveysScreenState extends State<SurveysScreen> {
   _buildContent(AsyncSnapshot<QuerySnapshot> snapshot) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          AnimatedOpacity(
+            opacity: _showTitle ? 0.0 : 1.0,
+            duration: Duration(milliseconds: 250),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10.0, horizontal: Dimens.contentPadding),
+              child: Text(
+                Dictionary.survey,
+                style: TextStyle(
+                    fontFamily: FontsFamily.lato,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            margin: const EdgeInsets.symmetric(
+              vertical: 10,
+            ),
 
             /// Set up for show announcement widget
             child: Announcement(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
               content: Dictionary.surveyInfo,
               htmlStyle: Style(
                   margin: EdgeInsets.zero,
@@ -213,21 +245,22 @@ class _SurveysScreenState extends State<SurveysScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final DocumentSnapshot document =
-                      snapshot.data.docs[index];
+                  final DocumentSnapshot document = snapshot.data.docs[index];
 
                   return Column(
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          margin: EdgeInsets.all(Dimens.padding),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: Dimens.contentPadding,
+                              vertical: Dimens.padding),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Expanded(
                                 child: Container(
-                                  margin: EdgeInsets.only(right: 25.0),
+                                  margin: const EdgeInsets.only(right: 25.0),
                                   child: Text(document['title'],
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
