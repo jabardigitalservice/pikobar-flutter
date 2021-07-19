@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/components/CollapsingAppbar.dart';
-import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
-import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
-import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 
 class TermsConditionsPage extends StatefulWidget {
-  final Map<String, dynamic> termsConfig;
+  final Map<String, dynamic> termsAndPrivacyConfig;
+  final String title;
 
-  TermsConditionsPage({Key key, this.termsConfig}) : super(key: key);
+  TermsConditionsPage({Key key, this.termsAndPrivacyConfig, this.title})
+      : super(key: key);
 
   @override
   _TermsConditionsPageState createState() => _TermsConditionsPageState();
@@ -28,7 +27,6 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
 
   @override
   void initState() {
-    AnalyticsHelper.setLogEvent(Analytics.tappedTermsAndConditions);
     _scrollController = ScrollController()..addListener(() => setState(() {}));
     super.initState();
   }
@@ -45,12 +43,12 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
         body: CollapsingAppbar(
       scrollController: _scrollController,
       showTitle: _showTitle,
-      titleAppbar: Dictionary.termsConditions,
+      titleAppbar: widget.title,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Container(
           color: Colors.white,
-          margin: const EdgeInsets.only(bottom: 20.0),
+          margin: const EdgeInsets.only(bottom: 20),
           child: Column(
             children: <Widget>[
               Padding(
@@ -59,9 +57,9 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Image.asset('${Environment.logoAssets}logo.png',
-                        width: 50.0, height: 50.0),
+                        width: 50, height: 50),
                     Container(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(10),
                         child: Text(
                           Dictionary.appName,
                           style: TextStyle(
@@ -75,10 +73,10 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                 ),
               ),
               Text(
-                widget.termsConfig['title'],
+                widget.termsAndPrivacyConfig['title'],
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 16.0,
+                    fontSize: 16,
                     fontFamily: FontsFamily.roboto,
                     fontWeight: FontWeight.bold),
               ),
@@ -86,23 +84,23 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                 height: 10,
               ),
               Text(
-                widget.termsConfig['date'],
+                widget.termsAndPrivacyConfig['date'] ?? '',
                 style: TextStyle(
                   fontFamily: FontsFamily.roboto,
                   color: ColorBase.darkGrey,
-                  fontSize: 14.0,
+                  fontSize: 14,
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 20),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 child: Html(
-                    data: widget.termsConfig['description'],
+                    data: widget.termsAndPrivacyConfig['description'],
                     style: {
                       'body': Style(
                           color: Colors.black,
-                          fontSize: FontSize(14.0),
+                          fontSize: FontSize(14),
                           fontFamily: FontsFamily.lato,
                           textAlign: TextAlign.justify),
                     },

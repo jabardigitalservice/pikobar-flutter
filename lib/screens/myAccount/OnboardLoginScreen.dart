@@ -6,16 +6,20 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 
 import 'TermsConditions.dart';
 
@@ -63,24 +67,24 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
         children: <Widget>[
           widget.showTitle
               ? Positioned(
-                  left: 0.0,
-                  right: 0.0,
-                  top: 0.0,
+                  left: 0,
+                  right: 0,
+                  top: 0,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       Dictionary.profile,
                       style: TextStyle(
                           fontFamily: FontsFamily.lato,
-                          fontSize: 20.0,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 )
               : Container(),
           Positioned(
-            left: 0.0,
-            right: 0.0,
+            left: 0,
+            right: 0,
             top: size.height * (size.height < 600 ? 0 : 0.15),
             child: Column(
               children: <Widget>[
@@ -93,13 +97,13 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                     children: <Widget>[
                       Image.asset(
                           '${Environment.logoAssets}pikobar_logo_flat.png',
-                          width: 80.0,
-                          height: 80.0),
+                          width: 80,
+                          height: 80),
                       SizedBox(
                         height: 10,
                       ),
                       Container(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10),
                           child: Text(
                             Dictionary.appName,
                             style: TextStyle(
@@ -114,7 +118,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, 20.0, Dimens.padding, 0.0),
+                      Dimens.padding, 20, Dimens.padding, 0),
                   child: Text(
                     Dictionary.titleOnBoardingLogin,
                     textAlign: TextAlign.center,
@@ -122,16 +126,16 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                         color: ColorBase.netralGrey,
                         fontFamily: FontsFamily.roboto,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14.0),
+                        fontSize: 14),
                   ),
                 )
               ],
             ),
           ),
           Positioned(
-            left: 0.0,
-            right: 0.0,
-            bottom: widget.positionBottom ?? 0.0,
+            left: 0,
+            right: 0,
+            bottom: widget.positionBottom ?? 0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -144,22 +148,23 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 ),
                 Container(
                   width: size.width,
-                  height: 40.0,
+                  height: 40,
                   margin: EdgeInsets.fromLTRB(Dimens.padding, Dimens.padding,
                       Dimens.padding, Dimens.padding),
                   child: RaisedButton(
                       splashColor: Colors.lightGreenAccent,
-                      padding: EdgeInsets.all(0.0),
+                      padding: EdgeInsets.all(0),
                       color: isAgree ? ColorBase.green : Colors.grey,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                       ),
                       child: Text(
                         Dictionary.acceptLogin,
                         style: TextStyle(
                             fontFamily: FontsFamily.roboto,
                             fontWeight: FontWeight.bold,
-                            fontSize: 12.0,
+                            fontSize: 12,
                             color: Colors.white),
                       ),
                       onPressed: () {
@@ -180,14 +185,14 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, 0.0, Dimens.padding, 50.0),
+                      Dimens.padding, 0, Dimens.padding, 50),
                   child: Text(
                     '${Dictionary.versionText} ' + _versionText,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: ColorBase.darkGrey,
                         fontFamily: FontsFamily.lato,
-                        fontSize: 12.0),
+                        fontSize: 12),
                   ),
                 ),
               ],
@@ -199,12 +204,16 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
   }
 
   _buildTermsConditions(RemoteConfig remoteConfig) {
-    var termsConditions;
-    if (remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
+    dynamic termsConditions;
+    dynamic dataPrivacy;
+    if (remoteConfig.getString(FirebaseConfig.dataPrivacy).isNotEmpty ||
+        remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
       termsConditions =
           json.decode(remoteConfig.getString(FirebaseConfig.termsConditions));
+      dataPrivacy =
+          json.decode(remoteConfig.getString(FirebaseConfig.dataPrivacy));
       return Container(
-        margin: EdgeInsets.fromLTRB(Dimens.padding, 0.0, Dimens.padding, 0.0),
+        margin: EdgeInsets.fromLTRB(10, 0, Dimens.padding, 10),
         child: Row(
           children: <Widget>[
             Checkbox(
@@ -218,34 +227,41 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
               },
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: RichText(
-                text: TextSpan(
-                    text: termsConditions['agreement']+' ',
-                    style: TextStyle(
-                        fontFamily: FontsFamily.roboto,
-                        height: 1.6,
-                        color: ColorBase.darkGrey,
-                        fontSize: 10.0),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: Dictionary.termsConditions,
-                          style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.bold),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        TermsConditionsPage(termsConfig: termsConditions,)),
-                              );
-                            })
-                    ]),
-              ),
-            ),
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: Html(
+                    data: dataPrivacy['agreement'],
+                    style: {
+                      'p': Style(
+                          color: ColorBase.netralGrey,
+                          fontSize: FontSize(11),
+                          lineHeight: 1.7,
+                          fontFamily: FontsFamily.roboto),
+                    },
+                    onLinkTap: (url) {
+                      if (url == 'termsAndCondition') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TermsConditionsPage(
+                                    title: Dictionary.termsConditions,
+                                    termsAndPrivacyConfig: termsConditions,
+                                  )),
+                        );
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedTermsAndConditions);
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TermsConditionsPage(
+                                    title: Dictionary.dataPrivacy,
+                                    termsAndPrivacyConfig: dataPrivacy,
+                                  )),
+                        );
+                        AnalyticsHelper.setLogEvent(
+                            Analytics.tappedDataPrivacy);
+                      }
+                    })),
           ],
         ),
       );
@@ -263,41 +279,41 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
           ),
         ),
-        elevation: 60.0,
+        elevation: 60,
         builder: (BuildContext context) {
           return Container(
-            margin: EdgeInsets.only(bottom: 20.0),
+            margin: EdgeInsets.only(bottom: 20),
             child: Wrap(
               alignment: WrapAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 14.0),
+                  margin: EdgeInsets.only(top: 14),
                   color: Colors.black,
                   height: 1.5,
-                  width: 40.0,
+                  width: 40,
                 ),
                 Container(
                   alignment: Alignment.topCenter,
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.05),
-                      offset: Offset(0.0, 0.05),
+                      color: Colors.white.withOpacity(05),
+                      offset: Offset(0, 05),
                     ),
                   ]),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 5.0),
+                      SizedBox(height: 5),
                       isAvailable
                           ? Column(children: <Widget>[
                               _signInButton(isApple: true),
                               SizedBox(
-                                height: 16.0,
+                                height: 16,
                               )
                             ])
                           : Container(),
@@ -322,7 +338,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
       icon: Image(
           image: AssetImage(
               '${Environment.iconAssets}${isApple ? 'apple_white.png' : 'google.png'}'),
-          height: 24.0),
+          height: 24),
       label: Text(
         isApple ? Dictionary.signInWithApple : Dictionary.signInWithGoogle,
         style: TextStyle(

@@ -5,6 +5,8 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/profile/Bloc.dart';
@@ -104,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: <Widget>[
                       const CircularProgressIndicator(),
                       Container(
-                        margin: const EdgeInsets.only(left: 15.0),
+                        margin: const EdgeInsets.only(left: 15),
                         child: Text(Dictionary.loading),
                       )
                     ],
@@ -207,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      height: 30.0,
+                      height: 30,
                       child: Text(
                         _profileLoaded.record.name,
                         style: TextStyle(
@@ -218,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Container(
-                      height: 30.0,
+                      height: 30,
                       child: Text(_profileLoaded.record.email,
                           style: TextStyle(
                               color: ColorBase.grey800,
@@ -257,8 +259,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 backgroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(
                   borderRadius: const BorderRadius.only(
-                    topLeft: const Radius.circular(8.0),
-                    topRight: const Radius.circular(8.0),
+                    topLeft: const Radius.circular(8),
+                    topRight: const Radius.circular(8),
                   ),
                 ),
                 builder: (context) {
@@ -266,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 });
           },
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
@@ -320,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: <Widget>[
                 _buildGroupMenu(state),
@@ -409,7 +411,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context, state) {
             return state is RemoteConfigLoaded
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: _buildTermsConditions(state.remoteConfig),
                   )
                 : Container();
@@ -451,42 +453,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Function to build text terms and conditions
+  // Function to build text terms and conditions and data privacy
   _buildTermsConditions(RemoteConfig remoteConfig) {
-    var termsConditions;
-    if (remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
+    dynamic termsConditions;
+    dynamic dataPrivacy;
+    if (remoteConfig.getString(FirebaseConfig.dataPrivacy).isNotEmpty ||
+        remoteConfig.getString(FirebaseConfig.termsConditions).isNotEmpty) {
       termsConditions =
           json.decode(remoteConfig.getString(FirebaseConfig.termsConditions));
-      return Container(
-        child: RichText(
-          text: TextSpan(
-              text: termsConditions['agreement'] + ' ',
-              style: TextStyle(
-                  fontFamily: FontsFamily.roboto,
-                  fontWeight: FontWeight.bold,
-                  color: ColorBase.netralGrey,
-                  height: 1.7,
-                  fontSize: 11.0),
-              children: <TextSpan>[
-                TextSpan(
-                    text: Dictionary.termsConditions,
-                    style: const TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TermsConditionsPage(
-                                    termsConfig: termsConditions,
-                                  )),
-                        );
-                      })
-              ]),
-        ),
-      );
+      dataPrivacy =
+          json.decode(remoteConfig.getString(FirebaseConfig.dataPrivacy));
+      return Html(
+          data: dataPrivacy['agreement'],
+          style: {
+            'p': Style(
+                color: ColorBase.netralGrey,
+                fontSize: FontSize(11),
+                lineHeight: 1.7,
+                fontFamily: FontsFamily.roboto),
+          },
+          onLinkTap: (url) {
+            if (url == 'termsAndCondition') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TermsConditionsPage(
+                          title: Dictionary.termsConditions,
+                          termsAndPrivacyConfig: termsConditions,
+                        )),
+              );
+              AnalyticsHelper.setLogEvent(Analytics.tappedTermsAndConditions);
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TermsConditionsPage(
+                          title: Dictionary.dataPrivacy,
+                          termsAndPrivacyConfig: dataPrivacy,
+                        )),
+              );
+              AnalyticsHelper.setLogEvent(Analytics.tappedDataPrivacy);
+            }
+          });
     } else {
       return Container();
     }

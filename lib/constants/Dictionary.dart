@@ -113,6 +113,7 @@ class Dictionary {
   static String acceptLogin = 'Ya, Saya Bersedia Login';
   static String setLocation = 'Pilih Lokasi';
   static String termsConditions = 'Terms & Conditions';
+  static String dataPrivacy = 'Data Privacy';
   static String agree = 'Setuju';
   static String back = 'Kembali';
   static String change = 'Ubah';

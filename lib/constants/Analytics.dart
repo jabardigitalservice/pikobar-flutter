@@ -189,6 +189,7 @@ class Analytics {
   static String tappedSendAgainVerificationNumber =
       "tapped_kirim_ulang_verifikasi_nomor";
   static String tappedTermsAndConditions = "tapped_terms_and_conditions";
+  static String tappedDataPrivacy = "tapped_data_privacy";
 
   //event zonation
   static String tappedCheckZone = "tapped_cek_zonasi";
