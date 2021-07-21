@@ -106,6 +106,7 @@ dependencies:
   sentry_flutter: ^4.0.6
   syncfusion_flutter_charts: ^18.4.44
   recase: ^3.0.1
+  syncfusion_flutter_datepicker: ^18.4.44
 
 dev_dependencies:
   flutter_test:

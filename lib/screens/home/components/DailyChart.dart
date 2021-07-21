@@ -17,6 +17,7 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:recase/recase.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DailyChart extends StatefulWidget {
   final DailyChartBloc dailyChartBloc;
@@ -239,36 +240,44 @@ class _DailyChartState extends State<DailyChart> {
   }
 
   Widget buildChart(DailyChartModel dailyChartModel) {
-    /// Filtering data by last 7 days
-    filterData = dailyChartModel.data[0].series
-        .where((element) => DateTime.parse(element.tanggal).isAfter(
-            lastDate.add(Duration(
-                days: -(int.parse(_dateFilterController.text == ''
-                    ? '7'
-                    : _dateFilterController.text))))))
-        .toList();
-    final String firstDay =
-        stringDateFormat(filterData.first.tanggal, 'dd MMM yyyy');
-    final String lastDay =
-        stringDateFormat(filterData.last.tanggal, 'dd MMM yyyy');
+    int date = 7;
+    DateTime rangeStartDate, rangeEndDate;
+    String firstDay, lastDay;
+    switch (_dateFilterController.text) {
+      case '7':
+        date = 7;
+        break;
+      case '14':
+        date = 14;
+        break;
+      case '30':
+        date = 30;
+        break;
+      case 'Custom':
+        filterData = dailyChartModel.data[0].series
+            .where((element) =>
+                DateTime.parse(element.tanggal).isAfter(rangeStartDate) &&
+                DateTime.parse(element.tanggal).isBefore(rangeEndDate))
+            .toList();
+        firstDay = stringDateFormat(rangeStartDate.toString(), 'dd MMM yyyy');
+        lastDay = stringDateFormat(rangeEndDate.toString(), 'dd MMM yyyy');
+        break;
+      default:
+        date = 7;
+    }
+    if (_dateFilterController.text != 'Custom') {
+      /// Filtering data by last selected days
+      filterData = dailyChartModel.data[0].series
+          .where((element) => DateTime.parse(element.tanggal)
+              .isAfter(lastDate.add(Duration(days: -date))))
+          .toList();
+      firstDay = stringDateFormat(filterData.first.tanggal, 'dd MMM yyyy');
+      lastDay = stringDateFormat(filterData.last.tanggal, 'dd MMM yyyy');
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RaisedButton(
-          onPressed: () async {
-            DateTimeRange dateRange = await showDateRangePicker(
-                context: context,
-                firstDate: firsDate,
-                currentDate: DateTime.now(),
-                lastDate: DateTime.now());
-            setState(() {
-              lastDate = dateRange.end;
-            });
-            print(dateRange);
-          },
-          child: Text('data'),
-        ),
         Container(
           margin: EdgeInsets.all(Dimens.contentPadding),
           child: Column(
@@ -373,6 +382,99 @@ class _DailyChartState extends State<DailyChart> {
                     }).toList(),
                     onChanged: (value) {
                       FocusScope.of(context).requestFocus(FocusNode());
+                      if (value == 'Custom') {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: const Radius.circular(8.0),
+                                topRight: const Radius.circular(8.0),
+                              ),
+                            ),
+                            isDismissible: false,
+                            builder: (context) {
+                              return Container(
+                                margin: EdgeInsets.all(Dimens.padding),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    /// Divider section
+                                    Center(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            bottom: Dimens.padding),
+                                        height: 6,
+                                        width: 60.0,
+                                        decoration: BoxDecoration(
+                                            color: ColorBase.menuBorderColor,
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text('Atur Tanggal',
+                                          style: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontSize: 16,
+                                            fontFamily: FontsFamily.roboto,
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SfDateRangePicker(
+                                        view: DateRangePickerView.month,
+                                        selectionMode:
+                                            DateRangePickerSelectionMode.range,
+                                        minDate: DateTime(2020, 3, 20),
+                                        maxDate: DateTime.now(),
+                                        selectionRadius: 13,
+                                        headerHeight: 60,
+                                        headerStyle: DateRangePickerHeaderStyle(
+                                            textStyle: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              fontFamily: FontsFamily.roboto,
+                                            ),
+                                            textAlign: TextAlign.center),
+                                        enablePastDates: true,
+                                        selectionTextStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          fontFamily: FontsFamily.roboto,
+                                        ),
+                                        selectionColor: ColorBase.primaryGreen,
+                                        startRangeSelectionColor:
+                                            ColorBase.primaryGreen,
+                                        endRangeSelectionColor:
+                                            ColorBase.primaryGreen,
+                                        rangeSelectionColor: Colors.green[50],
+                                        rangeTextStyle: TextStyle(
+                                          color: Colors.grey[800],
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          fontFamily: FontsFamily.roboto,
+                                        ),
+                                        onSelectionChanged:
+                                            (DateRangePickerSelectionChangedArgs
+                                                datePicker) {
+                                          rangeStartDate =
+                                              datePicker.value.startDate;
+                                          rangeEndDate =
+                                              datePicker.value.endDate;
+                                        })
+                                  ],
+                                ),
+                              );
+                            });
+                      }
                       setState(() {
                         _dateFilterController.text = value;
                       });
@@ -421,9 +523,9 @@ class _DailyChartState extends State<DailyChart> {
                           fontFamily: FontsFamily.roboto,
                           fontWeight: FontWeight.bold,
                           fontSize: 10),
-                      isVisible: _dateFilterController.text == ''
+                      isVisible: date == null
                           ? true
-                          : int.parse(_dateFilterController.text) > 7
+                          : date > 7
                               ? false
                               : true,
                       labelAlignment: ChartDataLabelAlignment.middle),
