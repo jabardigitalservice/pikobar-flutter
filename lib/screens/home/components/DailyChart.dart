@@ -376,21 +376,12 @@ class _DailyChartState extends State<DailyChart> {
           ),
           items: items.map((item) {
             return custom.DropdownMenuItem(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.grey[200], width: 1))),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    item['name'],
-                    style: TextStyle(
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 14,
-                        color: Colors.grey[800]),
-                  ),
-                ),
+              child: Text(
+                item['name'],
+                style: TextStyle(
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14,
+                    color: Colors.grey[800]),
               ),
               value: item['value'].toString(),
             );
@@ -470,8 +461,8 @@ class _DailyChartState extends State<DailyChart> {
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(8.0),
-            topRight: const Radius.circular(8.0),
+            topLeft: const Radius.circular(8),
+            topRight: const Radius.circular(8),
           ),
         ),
         isDismissible: false,
@@ -487,10 +478,10 @@ class _DailyChartState extends State<DailyChart> {
                   child: Container(
                     margin: const EdgeInsets.only(bottom: Dimens.padding),
                     height: 6,
-                    width: 60.0,
+                    width: 60,
                     decoration: BoxDecoration(
                         color: ColorBase.menuBorderColor,
-                        borderRadius: BorderRadius.circular(30.0)),
+                        borderRadius: BorderRadius.circular(30)),
                   ),
                 ),
                 Padding(
