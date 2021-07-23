@@ -482,6 +482,7 @@ class Dictionary {
   static const String errorLoadChartDesc =
       'Muat ulang dengan klik di bawah ini';
   static const String errorLoadChartButton = 'Muat Ulang';
+  static const String setDate = 'Atur Tanggal';
 
   ///bansos
   static const String bansosWelcomeText =

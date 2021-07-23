@@ -11,12 +11,13 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/DailyChartModel.dart';
-import 'package:pikobar_flutter/repositories/DailyChartRepository.dart';
+import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
 import 'package:recase/recase.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DailyChart extends StatefulWidget {
   final DailyChartBloc dailyChartBloc;
@@ -35,6 +36,30 @@ class _DailyChartState extends State<DailyChart> {
   List<dynamic> filterData;
   String cityId;
   RemoteConfigLoaded remoteConfigLoaded;
+  DateTime firsDate = DateTime(2020);
+  DateTime lastDate = DateTime.now();
+  final _dateFilterController = TextEditingController();
+  int date = 7;
+  DateTime rangeStartDate, rangeEndDate;
+  String firstDay, lastDay;
+  List<dynamic> items = [
+    {
+      "name": "7 Hari Terakhir",
+      "value": 7,
+    },
+    {
+      "name": "14 Hari Terakhir",
+      "value": 14,
+    },
+    {
+      "name": "30 Hari Terakhir",
+      "value": 30,
+    },
+    {
+      "name": "Atur Tanggal",
+      "value": "Custom",
+    }
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +127,7 @@ class _DailyChartState extends State<DailyChart> {
       return state is DailyChartLoading
           ? _buildLoading()
           : state is DailyChartLoaded
-              ? buildChart(state.record)
+              ? buildHeader(state.record)
               : state is DailyChartFailure
                   ? _buildIntroContent(
                       Dictionary.errorLoadChart,
@@ -217,17 +242,43 @@ class _DailyChartState extends State<DailyChart> {
     );
   }
 
-  Widget buildChart(DailyChartModel dailyChartModel) {
-    /// Filtering data by last 7 days
-    filterData = dailyChartModel.data[0].series
-        .where((element) => DateTime.parse(element.tanggal)
-            .isAfter(DateTime.now().add(Duration(days: -7))))
-        .toList();
-    final String firstDay =
-        stringDateFormat(filterData.first.tanggal, 'dd MMM yyyy');
-    final String lastDay =
-        stringDateFormat(filterData.last.tanggal, 'dd MMM yyyy');
+  filteringData(DailyChartModel dailyChartModel) {
+    switch (_dateFilterController.text) {
+      case '7':
+        date = 7;
+        break;
+      case '14':
+        date = 14;
+        break;
+      case '30':
+        date = 30;
+        break;
+      default:
+        date = 7;
+    }
+    if (rangeEndDate == null) {
+      /// Filtering data by last selected days
+      filterData = dailyChartModel.data[0].series
+          .where((element) => DateTime.parse(element.tanggal)
+              .isAfter(lastDate.add(Duration(days: -date))))
+          .toList();
+      firstDay = stringDateFormat(filterData.first.tanggal, 'dd MMM yyyy');
+      lastDay = stringDateFormat(filterData.last.tanggal, 'dd MMM yyyy');
+    } else {
+      filterData = dailyChartModel.data[0].series
+          .where((element) =>
+              DateTime.parse(element.tanggal)
+                  .isAfter(rangeStartDate.add(Duration(days: -1))) &&
+              DateTime.parse(element.tanggal)
+                  .isBefore(rangeEndDate.add(Duration(days: 1))))
+          .toList();
+      firstDay = stringDateFormat(rangeStartDate.toString(), 'dd MMM yyyy');
+      lastDay = stringDateFormat(rangeEndDate.toString(), 'dd MMM yyyy');
+    }
+  }
 
+  Widget buildHeader(DailyChartModel dailyChartModel) {
+    filteringData(dailyChartModel);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -280,60 +331,230 @@ class _DailyChartState extends State<DailyChart> {
                     fontSize: 14),
               ),
               SizedBox(
+                height: 20,
+              ),
+              buildDropdown(),
+              SizedBox(
                 height: 10,
               ),
             ],
           ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.38,
-          child: SfCartesianChart(
-            // Custom chart display
-            plotAreaBorderWidth: 0,
-            primaryXAxis: CategoryAxis(
-                labelStyle: TextStyle(
-                    fontSize: 10,
-                    fontFamily: FontsFamily.roboto,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[600]),
-                majorGridLines: MajorGridLines(width: 0),
-                axisLine: AxisLine(width: 0.2),
-                majorTickLines: MajorTickLines(size: 0)),
-            primaryYAxis: NumericAxis(
-                labelStyle: TextStyle(
-                    fontSize: 10,
-                    fontFamily: FontsFamily.roboto,
-                    color: Colors.grey[600]),
-                axisLine: AxisLine(width: 0),
-                majorGridLines: MajorGridLines(width: 1, dashArray: [7, 7]),
-                majorTickLines: MajorTickLines(size: 0)),
-            series: <ChartSeries>[
-              // Renders column chart
-              ColumnSeries<dynamic, String>(
-                  dataLabelSettings: DataLabelSettings(
-                      textStyle: TextStyle(
-                          color: Colors.white,
-                          fontFamily: FontsFamily.roboto,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10),
-                      isVisible: true,
-                      labelAlignment: ChartDataLabelAlignment.middle),
-                  color: ColorBase.primaryGreen,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(4),
-                      topLeft: Radius.circular(4)),
-                  width: 0.6,
-                  dataSource: filterData,
-                  xValueMapper: (dynamic, int index) =>
-                      stringDateFormat(filterData[index].tanggal, 'dd MMM'),
-                  yValueMapper: (dynamic, int index) => double.parse(
-                      filterData[index].harian.confirmationTotal.toString()))
-            ],
-            margin: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
-          ),
-        ),
+        buildChart()
       ],
     );
+  }
+
+  Widget buildDropdown() {
+    return Container(
+      height: 40,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+          color: ColorBase.greyContainer,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: ColorBase.greyBorder, width: 1.5)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: custom.DropdownButton<dynamic>(
+          style: TextStyle(
+              color: ColorBase.netralGrey,
+              fontFamily: FontsFamily.roboto,
+              fontSize: 14),
+          underline: SizedBox(),
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: ColorBase.netralGrey,
+            size: 30,
+          ),
+          isExpanded: true,
+          hint: Text(
+            items[0]['name'],
+            style: TextStyle(
+                color: ColorBase.netralGrey,
+                fontFamily: FontsFamily.roboto,
+                fontSize: 14),
+          ),
+          items: items.map((item) {
+            return custom.DropdownMenuItem(
+              child: Text(
+                item['name'],
+                style: TextStyle(
+                    fontFamily: FontsFamily.roboto,
+                    fontSize: 14,
+                    color: Colors.grey[800]),
+              ),
+              value: item['value'].toString(),
+            );
+          }).toList(),
+          onChanged: (value) {
+            FocusScope.of(context).requestFocus(FocusNode());
+            if (value == 'Custom') {
+              showBottomSheetCalendar();
+            }
+            setState(() {
+              rangeEndDate = null;
+              _dateFilterController.text = value;
+            });
+          },
+          value: _dateFilterController.text == ''
+              ? null
+              : _dateFilterController.text,
+        ),
+      ),
+    );
+  }
+
+  Widget buildChart() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.38,
+      child: SfCartesianChart(
+        // Custom chart display
+        plotAreaBorderWidth: 0,
+        primaryXAxis: CategoryAxis(
+            labelStyle: TextStyle(
+                fontSize: 10,
+                fontFamily: FontsFamily.roboto,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600]),
+            majorGridLines: MajorGridLines(width: 0),
+            axisLine: AxisLine(width: 0.2),
+            majorTickLines: MajorTickLines(size: 0)),
+        primaryYAxis: NumericAxis(
+            labelStyle: TextStyle(
+                fontSize: 10,
+                fontFamily: FontsFamily.roboto,
+                color: Colors.grey[600]),
+            axisLine: AxisLine(width: 0),
+            majorGridLines: MajorGridLines(width: 1, dashArray: [7, 7]),
+            majorTickLines: MajorTickLines(size: 0)),
+        series: <ChartSeries>[
+          // Renders column chart
+          ColumnSeries<dynamic, String>(
+              dataLabelSettings: DataLabelSettings(
+                  textStyle: TextStyle(
+                      color: Colors.white,
+                      fontFamily: FontsFamily.roboto,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10),
+                  isVisible: filterData.length < 10 ? true : false,
+                  labelAlignment: ChartDataLabelAlignment.middle),
+              color: ColorBase.primaryGreen,
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4), topLeft: Radius.circular(4)),
+              width: 0.6,
+              dataSource: filterData,
+              xValueMapper: (dynamic, int index) =>
+                  stringDateFormat(filterData[index].tanggal, 'dd MMM'),
+              yValueMapper: (dynamic, int index) => double.parse(
+                  filterData[index].harian.confirmationTotal.toString()))
+        ],
+        margin: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+      ),
+    );
+  }
+
+  showBottomSheetCalendar() {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(8),
+            topRight: const Radius.circular(8),
+          ),
+        ),
+        isDismissible: false,
+        builder: (context) {
+          return Container(
+            margin: EdgeInsets.all(Dimens.padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                /// Divider section
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: Dimens.padding),
+                    height: 6,
+                    width: 60,
+                    decoration: BoxDecoration(
+                        color: ColorBase.menuBorderColor,
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(Dictionary.setDate,
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 16,
+                        fontFamily: FontsFamily.roboto,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SfDateRangePicker(
+                    view: DateRangePickerView.month,
+                    selectionMode: DateRangePickerSelectionMode.range,
+                    minDate: DateTime(2020, 3, 20),
+                    maxDate: DateTime.now(),
+                    selectionRadius: 13,
+                    headerHeight: 60,
+                    headerStyle: DateRangePickerHeaderStyle(
+                        textStyle: TextStyle(
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          fontFamily: FontsFamily.roboto,
+                        ),
+                        textAlign: TextAlign.center),
+                    enablePastDates: true,
+                    selectionTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontFamily: FontsFamily.roboto,
+                    ),
+                    selectionColor: ColorBase.primaryGreen,
+                    startRangeSelectionColor: ColorBase.primaryGreen,
+                    endRangeSelectionColor: ColorBase.primaryGreen,
+                    rangeSelectionColor: Colors.green[50],
+                    rangeTextStyle: TextStyle(
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontFamily: FontsFamily.roboto,
+                    ),
+                    onSelectionChanged:
+                        (DateRangePickerSelectionChangedArgs datePicker) {
+                      setState(() {
+                        rangeStartDate = datePicker.value.startDate;
+                        rangeEndDate = datePicker.value.endDate;
+                      });
+                    }),
+                SizedBox(
+                  height: 10,
+                ),
+                RoundedButton(
+                    title: Dictionary.ok,
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 0,
+                    color: ColorBase.green,
+                    textStyle: TextStyle(
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+              ],
+            ),
+          );
+        });
   }
 }
