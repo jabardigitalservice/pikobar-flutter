@@ -495,7 +495,10 @@ class IndexScreenState extends State<IndexScreen> {
               title: Column(
                 children: <Widget>[
                   SizedBox(height: 4),
-                  Text(Dictionary.message),
+                  Text(
+                    Dictionary.message,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ],
               ));
         } else {
