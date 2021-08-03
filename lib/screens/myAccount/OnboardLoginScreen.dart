@@ -63,141 +63,120 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
     return BlocProvider<RemoteConfigBloc>(
       create: (BuildContext context) =>
           _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
-      child: Stack(
+      child: Column(
         children: <Widget>[
           widget.showTitle
-              ? Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      Dictionary.profile,
-                      style: TextStyle(
-                          fontFamily: FontsFamily.lato,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    Dictionary.profile,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.lato,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
                   ),
                 )
               : Container(),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: size.height * (size.height < 600 ? 0 : 0.15),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 20,
+          Expanded(
+              child: ListView(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset('${Environment.logoAssets}pikobar_logo_flat.png',
+                      width: 80, height: 80),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                          '${Environment.logoAssets}pikobar_logo_flat.png',
-                          width: 80,
-                          height: 80),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            Dictionary.appName,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: FontsFamily.intro,
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, 20, Dimens.padding, 0),
-                  child: Text(
-                    Dictionary.titleOnBoardingLogin,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: ColorBase.netralGrey,
-                        fontFamily: FontsFamily.roboto,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: widget.positionBottom ?? 0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-                  builder: (context, state) {
-                    return state is RemoteConfigLoaded
-                        ? _buildTermsConditions(state.remoteConfig)
-                        : Container();
-                  },
-                ),
-                Container(
-                  width: size.width,
-                  height: 40,
-                  margin: EdgeInsets.fromLTRB(Dimens.padding, Dimens.padding,
-                      Dimens.padding, Dimens.padding),
-                  child: RaisedButton(
-                      splashColor: Colors.lightGreenAccent,
-                      padding: EdgeInsets.all(0),
-                      color: isAgree ? ColorBase.green : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(Dimens.borderRadius),
-                      ),
+                  Container(
+                      padding: const EdgeInsets.all(10),
                       child: Text(
-                        Dictionary.acceptLogin,
+                        Dictionary.appName,
                         style: TextStyle(
-                            fontFamily: FontsFamily.roboto,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: Colors.white),
-                      ),
-                      onPressed: () {
-                        if (isAgree) {
-                          Platform.isAndroid
-                              ? widget.authenticationBloc.add(LoggedIn())
-                              : _loginBottomSheet(context);
-                        } else {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              content: Text(Dictionary.aggrementIsFalse),
-                              duration: Duration(seconds: 5),
-                            ),
-                          );
-                        }
-                      }),
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: FontsFamily.intro,
+                        ),
+                      ))
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(
+                    Dimens.padding, 20, Dimens.padding, 0),
+                child: Text(
+                  Dictionary.titleOnBoardingLogin,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: ColorBase.netralGrey,
+                      fontFamily: FontsFamily.roboto,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14),
                 ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(
-                      Dimens.padding, 0, Dimens.padding, 50),
-                  child: Text(
-                    '${Dictionary.versionText} ' + _versionText,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: ColorBase.darkGrey,
-                        fontFamily: FontsFamily.lato,
-                        fontSize: 12),
-                  ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.10,
+              ),
+              BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                builder: (context, state) {
+                  return state is RemoteConfigLoaded
+                      ? _buildTermsConditions(state.remoteConfig)
+                      : Container();
+                },
+              ),
+              Container(
+                width: size.width,
+                height: 40,
+                margin: const EdgeInsets.fromLTRB(Dimens.padding,
+                    Dimens.padding, Dimens.padding, Dimens.padding),
+                child: RaisedButton(
+                    splashColor: Colors.lightGreenAccent,
+                    padding: const EdgeInsets.all(0),
+                    color: isAgree ? ColorBase.green : Colors.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                    ),
+                    child: Text(
+                      Dictionary.acceptLogin,
+                      style: TextStyle(
+                          fontFamily: FontsFamily.roboto,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.white),
+                    ),
+                    onPressed: () {
+                      if (isAgree) {
+                        Platform.isAndroid
+                            ? widget.authenticationBloc.add(LoggedIn())
+                            : _loginBottomSheet(context);
+                      } else {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            content: Text(Dictionary.aggrementIsFalse),
+                            duration: Duration(seconds: 5),
+                          ),
+                        );
+                      }
+                    }),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(
+                    Dimens.padding, 0, Dimens.padding, 50),
+                child: Text(
+                  '${Dictionary.versionText} ' + _versionText,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: ColorBase.darkGrey,
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 12),
                 ),
-              ],
-            ),
-          ),
+              ),
+            ],
+          ))
         ],
       ),
     );
@@ -213,7 +192,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
       dataPrivacy =
           json.decode(remoteConfig.getString(FirebaseConfig.dataPrivacy));
       return Container(
-        margin: EdgeInsets.fromLTRB(10, 0, Dimens.padding, 10),
+        margin: const EdgeInsets.fromLTRB(10, 0, Dimens.padding, 10),
         child: Row(
           children: <Widget>[
             Checkbox(
@@ -227,7 +206,7 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
               },
             ),
             Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+                width: MediaQuery.of(context).size.width * 0.81,
                 child: Html(
                     data: dataPrivacy['agreement'],
                     style: {
@@ -286,19 +265,19 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
         elevation: 60,
         builder: (BuildContext context) {
           return Container(
-            margin: EdgeInsets.only(bottom: 20),
+            margin: const EdgeInsets.only(bottom: 20),
             child: Wrap(
               alignment: WrapAlignment.center,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 14),
+                  margin: const EdgeInsets.only(top: 14),
                   color: Colors.black,
                   height: 1.5,
                   width: 40,
                 ),
                 Container(
                   alignment: Alignment.topCenter,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(boxShadow: [
                     BoxShadow(
                       color: Colors.white.withOpacity(05),
@@ -308,11 +287,11 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       isAvailable
                           ? Column(children: <Widget>[
                               _signInButton(isApple: true),
-                              SizedBox(
+                              const SizedBox(
                                 height: 16,
                               )
                             ])
