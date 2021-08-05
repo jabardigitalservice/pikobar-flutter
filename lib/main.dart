@@ -104,11 +104,32 @@ void main() async {
 
   Bloc.observer = SimpleBlocObserver();
 
+  /// Wait for Sentry to initialize
+  await SentryFlutter.init(
+        (options) {
+
+      /// If these values are not provided,
+      /// the SDK will try to read them from the environment variable.
+      /// (SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_RELEASE)
+
+      /*
+      options.dsn = 'https://example@sentry.io/add-your-dsn-here';
+      options.release = 'my-project-name@2.3.12';
+      options.environment = 'staging';
+      */
+    },
+  );
+
+
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) async {
     print('runZonedGuarded: Caught error in my root zone.');
-    await Sentry.captureException(error, stackTrace: stackTrace);
+    if (kReleaseMode){
+      await Sentry.captureException(error, stackTrace: stackTrace);
+    } else {
+      print(error);
+    }
   });
 
   /// Register BackgroundGeolocation headless-task.
@@ -131,23 +152,6 @@ class _AppState extends State<App> {
   Future<void> _initializeFlutterFire() async {
     /// Wait for Firebase to initialize
     await Firebase.initializeApp();
-
-    /// Wait for Sentry to initialize
-    await SentryFlutter.init(
-      (options) {
-
-        /// If these values are not provided,
-        /// the SDK will try to read them from the environment variable.
-        /// (SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_RELEASE)
-
-        /*
-        options.dsn = 'https://example@sentry.io/add-your-dsn-here';
-        options.release = 'my-project-name@2.3.12';
-        options.environment = 'staging';
-        */
-      },
-    );
-
     await Future.delayed(Duration(seconds: 1));
   }
 

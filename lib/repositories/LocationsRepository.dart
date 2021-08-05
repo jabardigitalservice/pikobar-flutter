@@ -14,7 +14,7 @@ class LocationsRepository {
 
     if (_user != null) {
       List<Placemark> placemarks =
-      await placemarkFromCoordinates(data.latitude, data.longitude);
+          await placemarkFromCoordinates(data.latitude, data.longitude);
 
       if (placemarks != null && placemarks.isNotEmpty) {
         final Placemark pos = placemarks[0];
@@ -45,9 +45,9 @@ class LocationsRepository {
 
         final response = await http
             .patch('$kUrlTracking/user/location',
-            headers: await HttpHeaders.headers(token: null),
-            body: requestBody)
-            .timeout(Duration(seconds: 10));
+                headers: await HttpHeaders.headers(token: null),
+                body: requestBody)
+            .timeout(Duration(seconds: 31));
 
         print('[sendToGeocreate] status? ${response.statusCode}');
       }

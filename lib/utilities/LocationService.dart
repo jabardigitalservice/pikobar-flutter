@@ -136,7 +136,12 @@ class LocationService {
       // 2.  Get the user token
       String userId = await AuthRepository().getToken();
 
-      // 3.  Configure the plugin
+      // 3.  Check user token is null
+      if (userId == null && userInfo == null) {
+        return;
+      }
+
+      // 4.  Configure the plugin
       await bg.BackgroundGeolocation.ready(bg.Config(
               url: kUrlFirebaseTracking,
               headers: {"content-type": "application/json"},
@@ -166,9 +171,11 @@ class LocationService {
           .then((bg.State state) async {
         print("[ready] ${state.toMap()}");
 
-        bg.BackgroundGeolocation.start();
+        bg.State bgState = await bg.BackgroundGeolocation.start();
 
-        bg.BackgroundGeolocation.changePace(true);
+        if (bgState.enabled) {
+          await bg.BackgroundGeolocation.changePace(true);
+        }
       }).catchError((error) {
         print('[ready] ERROR: $error');
       });
