@@ -20,6 +20,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 
 import 'TermsConditions.dart';
 
@@ -153,13 +154,16 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                             ? widget.authenticationBloc.add(LoggedIn())
                             : _loginBottomSheet(context);
                       } else {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            content: Text(Dictionary.aggrementIsFalse),
-                            duration: Duration(seconds: 5),
-                          ),
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (context) => DialogTextOnly(
+                                  description: Dictionary.aggrementIsFalse,
+                                  buttonText: Dictionary.ok.toUpperCase(),
+                                  onOkPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // To close the dialog
+                                  },
+                                ));
                       }
                     }),
               ),
