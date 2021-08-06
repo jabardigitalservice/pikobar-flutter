@@ -167,7 +167,7 @@ class Dictionary {
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
   static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
   static String aggrementIsFalse =
-      'Silahkan setujui Terms & Conditions untuk login';
+      'Silakan setujui Terms & Conditions untuk login';
   static String errorEmptyOTP = 'OTP harus diisi';
   static String errorEmptyNPS = 'Tanggapan harus diisi';
   static String errorMinimumEmptyNPS =
