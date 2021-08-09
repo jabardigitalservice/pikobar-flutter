@@ -202,7 +202,10 @@ class IndexScreenState extends State<IndexScreen> {
         ),
       ),
       BottomNavigationBarItem(
-          icon: Icon(EvaIcons.questionMarkCircleOutline, size: 24),
+          icon: SizedBox(
+            width: 24,
+            height: 24,
+          ),
           // ignore: deprecated_member_use
           title: Column(
             children: <Widget>[
@@ -427,7 +430,7 @@ class IndexScreenState extends State<IndexScreen> {
               child: Container(
                 width: 60,
                 height: 60,
-                margin: EdgeInsets.only(bottom: 22.0),
+                margin: EdgeInsets.only(bottom: 20.0),
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
