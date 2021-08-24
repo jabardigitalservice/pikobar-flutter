@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -85,7 +84,7 @@ class LocationService {
 
       if (oldTime == null) {
         oldTime =
-            DateTime.now().add(Duration(minutes: -6)).millisecondsSinceEpoch;
+            DateTime.now().add(Duration(minutes: -16)).millisecondsSinceEpoch;
         await LocationSharedPreference.setLastLocationRecordingTime(oldTime);
       }
 
@@ -96,7 +95,7 @@ class LocationService {
           desiredAccuracy: LocationAccuracy.high);
 
       if (position != null && position.latitude != null) {
-        if (minutes >= 5) {
+        if (minutes >= 15) {
           int currentMillis = DateTime.now().millisecondsSinceEpoch;
 
           LocationModel data = LocationModel(
