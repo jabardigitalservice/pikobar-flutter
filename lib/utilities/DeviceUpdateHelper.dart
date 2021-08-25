@@ -81,18 +81,17 @@ Future<void> _sendDataToFirestore(
     final userDocument =
         FirebaseFirestore.instance.collection(kUsers).doc(user.uid);
 
-    final devicesDocument =
-        userDocument.collection(kUserDevices).doc(deviceId);
+    final devicesDocument = userDocument.collection(kUserDevices).doc(deviceId);
 
-    devicesDocument.get().then((snapshot) {
+    await devicesDocument.get().then((snapshot) async {
       if (!snapshot.exists) {
-        devicesDocument.set(data);
+        await devicesDocument.set(data);
       }
     });
 
-    userDocument.get().then((snapshot) {
+    await userDocument.get().then((snapshot) async {
       if (snapshot.exists) {
-        userDocument
+        await userDocument
             .update({'last_open_at': DateTime.now()}).catchError((onError) {
           print("Update last_open failed : ${onError.toString()}");
         });
