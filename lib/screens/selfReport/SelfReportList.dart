@@ -101,14 +101,16 @@ class _SelfReportListState extends State<SelfReportList> {
             BlocListener<SelfReportListBloc, SelfReportListState>(
                 listener: (BuildContext context, SelfReportListState state) {
               if (state is SelfReportListLoaded) {
-                isMoreThan14days = DateTime.now()
-                        .difference(DateTime.fromMillisecondsSinceEpoch(state
-                                .querySnapshot.docs.last
-                                .get('created_at')
-                                .seconds *
-                            1000))
-                        .inDays >=
-                    14;
+                isMoreThan14days = state.querySnapshot.docs.isNotEmpty
+                    ? DateTime.now()
+                            .difference(DateTime.fromMillisecondsSinceEpoch(
+                                state.querySnapshot.docs.last
+                                        .get('created_at')
+                                        .seconds *
+                                    1000))
+                            .inDays >=
+                        14
+                    : false;
                 if (widget.isHealthStatusChanged) {
                   setState(() {
                     isTouchDisable = true;
@@ -346,8 +348,8 @@ class _SelfReportListState extends State<SelfReportList> {
                         _showTitle
                             ? Container()
                             : Container(
-                                margin:
-                                    const EdgeInsets.all(Dimens.cardContentMargin),
+                                margin: const EdgeInsets.all(
+                                    Dimens.cardContentMargin),
                                 decoration: BoxDecoration(
                                     color: ColorBase.grey,
                                     borderRadius: BorderRadius.circular(8)),
