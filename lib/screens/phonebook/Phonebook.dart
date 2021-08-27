@@ -79,8 +79,8 @@ class _PhonebookState extends State<Phonebook> {
                 fontWeight: FontWeight.w900),
           ),
         ),
-        CustomAppBar.buildSearchField(context,
-            _searchController, Dictionary.findEmergencyPhone, updateSearchQuery)
+        CustomAppBar.buildSearchField(context, _searchController,
+            Dictionary.findEmergencyPhone, updateSearchQuery)
       ],
     );
   }
@@ -101,11 +101,14 @@ class _PhonebookState extends State<Phonebook> {
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
-        setState(() {
-          searchQuery = _searchController.text;
-        });
+        if (mounted) {
+          setState(() {
+            searchQuery = _searchController.text;
+          });
+        }
       } else {
         _clearSearchQuery();
       }

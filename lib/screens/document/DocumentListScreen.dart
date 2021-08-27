@@ -83,7 +83,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<DocumentsBloc>(
-      create: (context) => DocumentsBloc()..add(DocumentsLoad(limit: _limitMax)),
+      create: (context) =>
+          DocumentsBloc()..add(DocumentsLoad(limit: _limitMax)),
       child: Scaffold(
           backgroundColor: Colors.white,
           body: WillPopScope(
@@ -131,7 +132,6 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   }
 
   Widget _buildContent(List<DocumentSnapshot> dataDocuments) {
-
     if (_searchQuery != null && _searchQuery.isNotEmpty) {
       dataDocuments = _allDocs
           .where((test) =>
@@ -141,9 +141,9 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     }
 
     int itemCount =
-    _searchQuery == null && dataDocuments.length != _allDocs.length
-        ? dataDocuments.length + 1
-        : dataDocuments.length;
+        _searchQuery == null && dataDocuments.length != _allDocs.length
+            ? dataDocuments.length + 1
+            : dataDocuments.length;
 
     return dataDocuments.isNotEmpty
         ? ListView.builder(
@@ -332,8 +332,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   Future<void> _getMoreData() async {
     if (_searchQuery == null) {
       final nextPage = _limitedDocs.length + _limitPerPage;
-      final limit =
-      _allDocs.length > nextPage ? nextPage : _limitedDocs.length;
+      final limit = _allDocs.length > nextPage ? nextPage : _limitedDocs.length;
 
       _limitedDocs
           .addAll(_allDocs.getRange(_limitedDocs.length, limit).toList());
@@ -388,11 +387,14 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
-        setState(() {
-          _searchQuery = _searchController.text;
-        });
+        if (mounted) {
+          setState(() {
+            _searchQuery = _searchController.text;
+          });
+        }
       } else {
         _clearSearchQuery();
       }
