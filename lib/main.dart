@@ -15,6 +15,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import 'package:background_fetch/background_fetch.dart';
+import 'package:pikobar_flutter/utilities/SentryHandler.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'configs/Routes.dart';
@@ -106,8 +107,7 @@ void main() async {
 
   /// Wait for Sentry to initialize
   await SentryFlutter.init(
-        (options) {
-
+    (options) {
       /// If these values are not provided,
       /// the SDK will try to read them from the environment variable.
       /// (SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_RELEASE)
@@ -120,16 +120,11 @@ void main() async {
     },
   );
 
-
   runZonedGuarded(() {
     runApp(App());
   }, (error, stackTrace) async {
     print('runZonedGuarded: Caught error in my root zone.');
-    if (kReleaseMode){
-      await Sentry.captureException(error, stackTrace: stackTrace);
-    } else {
-      print(error);
-    }
+    await SentryHandler.reportError(error, stackTrace: stackTrace);
   });
 
   /// Register BackgroundGeolocation headless-task.

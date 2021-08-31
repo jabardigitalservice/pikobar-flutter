@@ -18,7 +18,6 @@ class DailyChartRepository {
   final RemoteConfigRepository _remoteConfig = RemoteConfigRepository();
 
   Future<DailyChartModel> fetchRecord(Position position) async {
-
     final apiKey = await _remoteConfig.setupRemoteConfig().then(
         (value) => value.getString(FirebaseConfig.dashboardPikobarApiKey));
 
@@ -46,7 +45,7 @@ class DailyChartRepository {
     final String endPoint = EndPointPath.getCity.replaceAll("/v2", "");
 
     final apiKey = await _remoteConfig.setupRemoteConfig().then(
-            (value) => value.getString(FirebaseConfig.dashboardPikobarApiKey));
+        (value) => value.getString(FirebaseConfig.dashboardPikobarApiKey));
 
     final http.Response response = await http.get(
         '$endPoint?lat=${position.latitude}&long=${position.longitude}',
