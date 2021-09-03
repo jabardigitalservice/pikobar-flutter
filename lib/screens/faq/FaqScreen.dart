@@ -209,15 +209,18 @@ class _FaqScreenState extends State<FaqScreen> {
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         _faqListBloc.add(FaqListLoad(
             faqCollection: kFaq,
             category:
                 listDataRemoteConfigTab[indexTab]['category'].toString()));
-        setState(() {
-          searchQuery = _searchController.text;
-        });
+        if (mounted) {
+          setState(() {
+            searchQuery = _searchController.text;
+          });
+        }
       } else if (_searchController.text.isEmpty) {
         _clearSearchQuery();
       }

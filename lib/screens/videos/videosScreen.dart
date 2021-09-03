@@ -348,11 +348,14 @@ class _VideosListState extends State<VideosList> {
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
-        setState(() {
-          _searchQuery = _searchController.text;
-        });
+        if (mounted) {
+          setState(() {
+            _searchQuery = _searchController.text;
+          });
+        }
       } else {
         _clearSearchQuery();
       }

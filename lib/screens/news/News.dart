@@ -569,11 +569,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce.cancel();
+
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
-        setState(() {
-          searchQuery = _searchController.text;
-        });
+        if (mounted) {
+          setState(() {
+            searchQuery = _searchController.text;
+          });
+        }
       } else {
         _clearSearchQuery();
       }
@@ -597,7 +600,6 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   }
 
   _handleTabSelection() {
-
     int _allDataLimit = _limitMax * (listCollectionData.length - 1);
 
     if (tabController.indexIsChanging) {
