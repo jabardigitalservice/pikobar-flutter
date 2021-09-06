@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pikobar_flutter/blocs/checkDistribution/CheckDistributionBloc.dart';
 import 'package:pikobar_flutter/blocs/zonation/zonation_cubit.dart';
@@ -16,10 +15,8 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/models/CheckDistribution.dart';
-import 'package:pikobar_flutter/repositories/GeocoderRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionOtherScreen.dart';
-import 'package:pikobar_flutter/screens/checkDistribution/components/LocationPicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/LocationService.dart';
@@ -388,30 +385,6 @@ class _ZonationState extends State<Zonation>
       Placemark pos = placemarks[0];
       _address =
           '${pos.thoroughfare}, ${pos.locality}, ${pos.subAdministrativeArea}';
-    }
-  }
-
-  Future<void> _otherLocation() async {
-    final LatLng result = await Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => LocationPicker()));
-
-    /// set gecoder to show in location information
-    String address = await GeocoderRepository().getAddress(result);
-
-    if (address != null) {
-      _address = address;
-    }
-
-    /// find location
-    if (result != null) {
-      _checkDistributionBloc.add(LoadCheckDistribution(
-          lat: result.latitude, long: result.longitude, isOther: true));
-
-      // analytics
-      await AnalyticsHelper.setLogEvent(
-          Analytics.tappedFindByLocation, <String, dynamic>{
-        'latlong': '${result.latitude}, ${result.longitude}'
-      });
     }
   }
 }

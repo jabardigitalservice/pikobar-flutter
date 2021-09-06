@@ -1,22 +1,16 @@
-
-
 import 'package:equatable/equatable.dart';
 import 'package:pikobar_flutter/models/VideoModel.dart';
 
 abstract class VideoListState extends Equatable {
-  const VideoListState([List props = const <dynamic>[]]);
-}
+  const VideoListState();
 
-class VideoListInitial extends VideoListState {
   @override
   List<Object> get props => [];
 }
 
-class VideosLoading extends VideoListState {
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
-}
+class VideoListInitial extends VideoListState {}
+
+class VideosLoading extends VideoListState {}
 
 class VideosLoaded extends VideoListState {
   final List<VideoModel> videos;

@@ -172,7 +172,8 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                         duration: Duration(milliseconds: 250),
                         child: Padding(
                           padding: const EdgeInsets.only(
-                              bottom: 15.0,),
+                            bottom: 15.0,
+                          ),
                           child: Text(
                             Dictionary.reportForOther,
                             style: TextStyle(
@@ -199,7 +200,7 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
                             )));
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical:10.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -279,7 +280,6 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
   _buildHealthStatus(RemoteConfig remoteConfig, DocumentSnapshot data) {
     Color cardColor = ColorBase.grey;
     Color textColor = Colors.white;
-    String uriImage = '${Environment.iconAssets}user_health.png';
     // Get data health status visible or not
     bool visible = remoteConfig != null &&
             remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
@@ -304,7 +304,6 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
               ? healthStatusColor['odp']
               : Colors.yellow);
           textColor = Colors.black;
-          uriImage = '${Environment.iconAssets}user_health_black.png';
           break;
 
         case "PDP":
@@ -312,7 +311,6 @@ class _SelfReportOtherScreenState extends State<SelfReportOtherScreen> {
               ? healthStatusColor['pdp']
               : Colors.orange);
           textColor = Colors.black;
-          uriImage = '${Environment.iconAssets}user_health_black.png';
           break;
 
         case "CONFIRMED":

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -504,7 +503,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _buildHealthStatus(RemoteConfig remoteConfig, DocumentSnapshot data) {
     Color cardColor = ColorBase.grey;
     Color textColor = Colors.white;
-    String uriImage = '${Environment.iconAssets}user_health.png';
     // Get data health status visible or not
     final bool visible = remoteConfig != null &&
             remoteConfig.getBool(FirebaseConfig.healthStatusVisible) != null
@@ -529,7 +527,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ? healthStatusColor['odp']
               : Colors.yellow);
           textColor = Colors.black;
-          uriImage = '${Environment.iconAssets}user_health_black.png';
           break;
 
         case "PDP":
@@ -537,7 +534,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ? healthStatusColor['pdp']
               : Colors.orange);
           textColor = Colors.black;
-          uriImage = '${Environment.iconAssets}user_health_black.png';
           break;
 
         case "CONFIRMED":
