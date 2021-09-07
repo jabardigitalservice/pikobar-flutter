@@ -412,7 +412,10 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
                           ],
                         );
                       } else {
-                        return Container();
+                        return Container(
+                          height: 50,
+                          child: CupertinoActivityIndicator(),
+                        );
                       }
                     },
                   ),
