@@ -284,8 +284,8 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(05),
-                      offset: Offset(0, 05),
+                      color: Colors.white.withOpacity(0.5),
+                      offset: Offset(0, 0.5),
                     ),
                   ]),
                   child: Column(

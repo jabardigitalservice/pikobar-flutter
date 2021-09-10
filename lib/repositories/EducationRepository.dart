@@ -9,7 +9,7 @@ class EducationRepository {
       {@required String educationCollection, int limit = 100}) {
     return firestore
         .collection(educationCollection)
-        .limit(null)
+        .limit(limit)
         .orderBy('published_at', descending: true)
         .snapshots()
         .map((QuerySnapshot snapshot) => snapshot.docs
@@ -20,10 +20,8 @@ class EducationRepository {
   Future<EducationModel> getEducationDetail(
       {@required String educationCollection,
       @required String educationId}) async {
-    DocumentSnapshot doc = await firestore
-        .collection(educationCollection)
-        .doc(educationId)
-        .get();
+    DocumentSnapshot doc =
+        await firestore.collection(educationCollection).doc(educationId).get();
     return EducationModel.fromFirestore(doc);
   }
 }
