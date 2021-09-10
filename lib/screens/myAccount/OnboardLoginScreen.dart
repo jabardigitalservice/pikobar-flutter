@@ -209,42 +209,44 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
                 });
               },
             ),
-            Container(
-                width: MediaQuery.of(context).size.width * 0.81,
-                child: Html(
-                    data: dataPrivacy['agreement'],
-                    style: {
-                      'p': Style(
-                          color: ColorBase.netralGrey,
-                          fontSize: FontSize(11),
-                          lineHeight: 1.7,
-                          fontFamily: FontsFamily.roboto),
-                    },
-                    onLinkTap: (url) {
-                      if (url == 'termsAndCondition') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TermsConditionsPage(
-                                    title: Dictionary.termsConditions,
-                                    termsAndPrivacyConfig: termsConditions,
-                                  )),
-                        );
-                        AnalyticsHelper.setLogEvent(
-                            Analytics.tappedTermsAndConditions);
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TermsConditionsPage(
-                                    title: Dictionary.dataPrivacy,
-                                    termsAndPrivacyConfig: dataPrivacy,
-                                  )),
-                        );
-                        AnalyticsHelper.setLogEvent(
-                            Analytics.tappedDataPrivacy);
-                      }
-                    })),
+            Expanded(
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 0.81,
+                  child: Html(
+                      data: dataPrivacy['agreement'],
+                      style: {
+                        'p': Style(
+                            color: ColorBase.netralGrey,
+                            fontSize: FontSize(11),
+                            lineHeight: 1.7,
+                            fontFamily: FontsFamily.roboto),
+                      },
+                      onLinkTap: (url) {
+                        if (url == 'termsAndCondition') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TermsConditionsPage(
+                                      title: Dictionary.termsConditions,
+                                      termsAndPrivacyConfig: termsConditions,
+                                    )),
+                          );
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedTermsAndConditions);
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TermsConditionsPage(
+                                      title: Dictionary.dataPrivacy,
+                                      termsAndPrivacyConfig: dataPrivacy,
+                                    )),
+                          );
+                          AnalyticsHelper.setLogEvent(
+                              Analytics.tappedDataPrivacy);
+                        }
+                      })),
+            ),
           ],
         ),
       );
