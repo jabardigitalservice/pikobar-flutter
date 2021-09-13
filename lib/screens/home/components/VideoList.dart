@@ -324,12 +324,14 @@ class _VideoListState extends State<VideoList> {
                                       margin: EdgeInsets.only(right: 5.0),
                                       child: Text(
                                         data[index].title,
+                                        style: TextStyle(
+                                            fontSize: Dimens.textSubtitleSize,
+                                            fontFamily: FontsFamily.roboto,
+                                            height: Dimens.lineHeight,
+                                            fontWeight: FontWeight.w600),
+                                        textAlign: TextAlign.left,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontFamily: FontsFamily.roboto,
-                                            fontWeight: FontWeight.w600),
                                       ),
                                     ),
                                   ),

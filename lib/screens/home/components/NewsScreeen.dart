@@ -55,8 +55,8 @@ class _NewsScreenState extends State<NewsScreen> {
     labelNew = LabelNew();
     if (widget.maxLength != null) {
       newsListBloc = BlocProvider.of<NewsListBloc>(context);
-      newsListBloc
-          .add(NewsListLoad(NewsType.allArticles, statImportantInfo: true, limit: 10));
+      newsListBloc.add(NewsListLoad(NewsType.allArticles,
+          statImportantInfo: true, limit: 10));
     }
     super.initState();
   }
@@ -296,6 +296,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                                       Dimens.textSubtitleSize,
                                                   fontFamily:
                                                       FontsFamily.roboto,
+                                                  height: Dimens.lineHeight,
                                                   fontWeight: FontWeight.w600),
                                               textAlign: TextAlign.left,
                                               maxLines: 2,

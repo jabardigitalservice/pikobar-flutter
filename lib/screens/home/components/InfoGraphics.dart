@@ -280,6 +280,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                                                 fontSize:
                                                     Dimens.textSubtitleSize,
                                                 fontFamily: FontsFamily.roboto,
+                                                height: Dimens.lineHeight,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
