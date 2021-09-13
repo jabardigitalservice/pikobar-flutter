@@ -145,77 +145,77 @@ class _EducationListScreenState extends State<EducationListScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: InkWell(
-        child: Stack(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 300,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                child: CachedNetworkImage(
-                  imageUrl: educationModel.image,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Center(
-                      heightFactor: 4.2, child: CupertinoActivityIndicator()),
-                  errorWidget: (context, url, error) => Container(
-                      height: MediaQuery.of(context).size.height / 3.3,
-                      color: Colors.grey[200],
-                      child: Image.asset('${Environment.iconAssets}pikobar.png',
-                          fit: BoxFit.fitWidth)),
+        child: AspectRatio(
+          aspectRatio: 1 / 1,
+          child: Stack(
+            children: [
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  child: CachedNetworkImage(
+                    imageUrl: educationModel.image,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Center(
+                        heightFactor: 4.2, child: CupertinoActivityIndicator()),
+                    errorWidget: (context, url, error) => Container(
+                        height: MediaQuery.of(context).size.height / 3.3,
+                        color: Colors.grey[200],
+                        child: Image.asset(
+                            '${Environment.iconAssets}pikobar.png',
+                            fit: BoxFit.fitWidth)),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                color: Colors.white,
-                gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.8),
-                  ],
-                  stops: [0.0, 1.0],
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  color: Colors.white,
+                  gradient: LinearGradient(
+                    begin: FractionalOffset.topCenter,
+                    end: FractionalOffset.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.8),
+                    ],
+                    stops: [0.0, 1.0],
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 10,
-              right: 10,
-              bottom: 20,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    unixTimeStampToDateTime(educationModel.publishedAt),
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.white,
-                        fontFamily: FontsFamily.roboto),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    child: Text(
-                      educationModel.title,
+              Positioned(
+                left: 10,
+                right: 10,
+                bottom: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      unixTimeStampToDateTime(educationModel.publishedAt),
                       style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: FontsFamily.roboto,
-                          color: Colors.white),
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                          fontSize: 12.0,
+                          color: Colors.white,
+                          fontFamily: FontsFamily.roboto),
                     ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      child: Text(
+                        educationModel.title,
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: FontsFamily.roboto,
+                            color: Colors.white),
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
