@@ -75,7 +75,6 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   Timer _debounce;
   String _searchQuery;
 
-
   @override
   void dispose() {
     _infoGraphicsListBloc.close();
@@ -97,7 +96,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
     return BlocProvider<InfoGraphicsListBloc>(
       create: (context) => _infoGraphicsListBloc
         ..add(InfoGraphicsListLoad(
-            infoGraphicsCollection: kAllInfographics, limit: (_limitMax * (_listCollectionData.length - 1)))),
+            infoGraphicsCollection: kAllInfographics,
+            limit: (_limitMax * (_listCollectionData.length - 1)))),
       child: BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
         listener: (context, state) {
           if (state is InfoGraphicsListLoaded) {
@@ -110,8 +110,11 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
             _allDocs = state.infoGraphicsListWHO;
           }
 
-          if (state is! InitialInfoGraphicsListState && state is! InfoGraphicsListLoading) {
-            int limit = _allDocs.length > _limitPerPage ? _limitPerPage : _allDocs.length;
+          if (state is! InitialInfoGraphicsListState &&
+              state is! InfoGraphicsListLoading) {
+            int limit = _allDocs.length > _limitPerPage
+                ? _limitPerPage
+                : _allDocs.length;
             _limitedDocs = _allDocs.getRange(0, limit).toList();
             _getDataLabel();
           }
@@ -222,23 +225,23 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       },
       child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
           builder: (context, state) {
-            return SafeArea(
-                top: false,
-                bottom: false,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverOverlapInjector(
-                      handle:
+        return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverOverlapInjector(
+                  handle:
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                    ),
-                    SliverToBoxAdapter(
-                      child: state is InfoGraphicsListJabarLoaded
-                          ? _buildContent(_limitedDocs)
-                          : _buildLoading(),
-                    )
-                  ],
-                ));
-          }),
+                ),
+                SliverToBoxAdapter(
+                  child: state is InfoGraphicsListJabarLoaded
+                      ? _buildContent(_limitedDocs)
+                      : _buildLoading(),
+                )
+              ],
+            ));
+      }),
     );
   }
 
@@ -252,23 +255,23 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       },
       child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
           builder: (context, state) {
-            return SafeArea(
-                top: false,
-                bottom: false,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverOverlapInjector(
-                      handle:
+        return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverOverlapInjector(
+                  handle:
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                    ),
-                    SliverToBoxAdapter(
-                      child: state is InfoGraphicsListPusatLoaded
-                          ? _buildContent(_limitedDocs)
-                          : _buildLoading(),
-                    )
-                  ],
-                ));
-          }),
+                ),
+                SliverToBoxAdapter(
+                  child: state is InfoGraphicsListPusatLoaded
+                      ? _buildContent(_limitedDocs)
+                      : _buildLoading(),
+                )
+              ],
+            ));
+      }),
     );
   }
 
@@ -282,28 +285,27 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       },
       child: BlocBuilder<InfoGraphicsListBloc, InfoGraphicsListState>(
           builder: (context, state) {
-            return SafeArea(
-                top: false,
-                bottom: false,
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverOverlapInjector(
-                      handle:
+        return SafeArea(
+            top: false,
+            bottom: false,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverOverlapInjector(
+                  handle:
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                    ),
-                    SliverToBoxAdapter(
-                      child: state is InfoGraphicsListWHOLoaded
-                          ? _buildContent(_limitedDocs)
-                          : _buildLoading(),
-                    )
-                  ],
-                ));
-          }),
+                ),
+                SliverToBoxAdapter(
+                  child: state is InfoGraphicsListWHOLoaded
+                      ? _buildContent(_limitedDocs)
+                      : _buildLoading(),
+                )
+              ],
+            ));
+      }),
     );
   }
 
   Widget _buildContent(List<DocumentSnapshot> listData) {
-
     if (_searchQuery != null) {
       listData = _allDocs
           .where((test) =>
@@ -312,7 +314,9 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
           .toList();
     }
 
-    int itemCount = _searchQuery == null && listData.length != _allDocs.length ? listData.length + 1 : listData.length;
+    int itemCount = _searchQuery == null && listData.length != _allDocs.length
+        ? listData.length + 1
+        : listData.length;
 
     return listData.isNotEmpty
         ? ListView.builder(
@@ -350,7 +354,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
         padding: const EdgeInsets.all(10),
         itemBuilder: (BuildContext context, int index) {
           return Container(
-            padding: const EdgeInsets.only(bottom: Dimens.contentPadding, left: 10, right: 10),
+            padding: const EdgeInsets.only(
+                bottom: Dimens.contentPadding, left: 10, right: 10),
             height: 300,
             child: Row(
               children: <Widget>[
@@ -369,120 +374,119 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
 
   Widget _cardContent(DocumentSnapshot data, int indexListData) {
     return InkWell(
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-            vertical: 10, horizontal: Dimens.contentPadding),
-        child: Stack(
-          children: [
-            Container(
-                width: MediaQuery.of(context).size.width - 35,
-                height: 300,
-                child: CachedNetworkImage(
-                    imageUrl: data['images'][0].toString() ?? '',
-                    imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(Dimens.borderRadius),
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
+      child: AspectRatio(
+        aspectRatio: 1 / 1,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+              vertical: 10, horizontal: Dimens.contentPadding),
+          child: Stack(
+            children: [
+              Container(
+                  child: CachedNetworkImage(
+                      imageUrl: data['images'][0].toString() ?? '',
+                      imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.borderRadius),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                    placeholder: (context, url) => Center(
-                        heightFactor: 10.2,
-                        child: const CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(5),
-                              topRight: Radius.circular(5)),
-                        ),
-                        child: PikobarPlaceholder()))),
-            Container(
-              width: MediaQuery.of(context).size.width - 35,
-              height: 300,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                color: Colors.white,
-                gradient: LinearGradient(
-                  begin: FractionalOffset.topCenter,
-                  end: FractionalOffset.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withOpacity(0.8),
-                  ],
-                  stops: [0.0, 1.0],
+                      placeholder: (context, url) => Center(
+                          heightFactor: 10.2,
+                          child: const CupertinoActivityIndicator()),
+                      errorWidget: (context, url, error) => Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                topRight: Radius.circular(5)),
+                          ),
+                          child: PikobarPlaceholder()))),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  color: Colors.white,
+                  gradient: LinearGradient(
+                    begin: FractionalOffset.topCenter,
+                    end: FractionalOffset.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.8),
+                    ],
+                    stops: [0.0, 1.0],
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              left: 10,
-              right: 10,
-              bottom: 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      _labelNew.isLabelNew(data.id.toString(), _dataLabel)
-                          ? LabelNewScreen()
-                          : Container(),
-                      Expanded(
-                        child: Text(
-                          unixTimeStampToDateTime(
-                              data['published_date'].seconds),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontFamily: FontsFamily.roboto),
-                        ),
-                      )
-                    ],
+              Positioned(
+                left: 10,
+                right: 10,
+                bottom: 0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      children: [
+                        _labelNew.isLabelNew(data.id.toString(), _dataLabel)
+                            ? LabelNewScreen()
+                            : Container(),
+                        Expanded(
+                          child: Text(
+                            unixTimeStampToDateTime(
+                                data['published_date'].seconds),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontFamily: FontsFamily.roboto),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      data['title'],
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontFamily: FontsFamily.roboto),
+                      textAlign: TextAlign.left,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      height: Dimens.sizedBoxHeight,
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black12.withOpacity(0.5),
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(Dimens.dialogRadius),
                   ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                  Text(
-                    data['title'],
+                  child: Text(
+                    '1/${data['images'].length}',
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
                         color: Colors.white,
                         fontFamily: FontsFamily.roboto),
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(
-                    height: Dimens.sizedBoxHeight,
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.black12.withOpacity(0.5),
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(Dimens.dialogRadius),
-                ),
-                child: Text(
-                  '1/${data['images'].length}',
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontFamily: FontsFamily.roboto),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       onTap: () {
@@ -575,9 +579,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
       final nextPage = _limitedDocs.length + _limitPerPage;
       final limit = _allDocs.length > nextPage ? nextPage : _limitedDocs.length;
 
-      _limitedDocs.addAll(_allDocs
-          .getRange(_limitedDocs.length, limit)
-          .toList());
+      _limitedDocs
+          .addAll(_allDocs.getRange(_limitedDocs.length, limit).toList());
       await Future.delayed(Duration(milliseconds: 500));
       setState(() {});
     }
