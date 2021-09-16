@@ -180,7 +180,8 @@ class _DocumentsState extends State<Documents> {
                       height: 140,
                       width: 150,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                         child: Skeleton(
                           width: MediaQuery.of(context).size.width / 1.4,
                           padding: 10.0,
@@ -237,7 +238,8 @@ class _DocumentsState extends State<Documents> {
               .contains(widget.searchQuery.toLowerCase()))
           .toList();
 
-        widget.covidInformationScreenState.isEmptyDataDocument = dataDocuments.isEmpty;
+      widget.covidInformationScreenState.isEmptyDataDocument =
+          dataDocuments.isEmpty;
     }
 
     getDataLabel();
@@ -248,7 +250,7 @@ class _DocumentsState extends State<Documents> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 16.0, right: 16.0, bottom: 16.0,top:16),
+                    left: 16.0, right: 16.0, bottom: 16.0, top: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -315,7 +317,8 @@ class _DocumentsState extends State<Documents> {
                                     height: 140,
                                     width: 150,
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                                      borderRadius: BorderRadius.circular(
+                                          Dimens.borderRadius),
                                       child: CachedNetworkImage(
                                         imageUrl: document['images'] ?? '',
                                         alignment: Alignment.topCenter,
@@ -406,6 +409,7 @@ class _DocumentsState extends State<Documents> {
                                                 fontSize:
                                                     Dimens.textSubtitleSize,
                                                 fontFamily: FontsFamily.roboto,
+                                                height: Dimens.lineHeight,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,

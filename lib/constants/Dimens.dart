@@ -10,6 +10,7 @@ class Dimens {
 
   static const double textTitleSize = 16.0;
   static const double textSubtitleSize = 12.0;
+  static const double lineHeight = 1.3;
 
   static const double fieldSize = 40.0;
   static const double fieldMarginTop = 12.0;
