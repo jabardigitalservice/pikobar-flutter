@@ -117,7 +117,7 @@ class _VideoListState extends State<VideoList> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -133,7 +133,7 @@ class _VideoListState extends State<VideoList> {
                                       MediaQuery.of(context).size.width / 1.8,
                                   padding: 10.0,
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Skeleton(
                                   height: 20.0,
                                   width: MediaQuery.of(context).size.width / 2,
@@ -315,13 +315,13 @@ class _VideoListState extends State<VideoList> {
                             ),
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.only(top: 10),
+                              margin: const EdgeInsets.only(top: 10),
                               child: Row(
                                 children: <Widget>[
                                   Expanded(
                                     child: Container(
                                       height: 40.0,
-                                      margin: EdgeInsets.only(right: 5.0),
+                                      margin: const EdgeInsets.only(right: 5.0),
                                       child: Text(
                                         data[index].title,
                                         style: TextStyle(
@@ -358,7 +358,7 @@ class _VideoListState extends State<VideoList> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20)
+                            const SizedBox(height: 20)
                           ],
                         ),
                       );
