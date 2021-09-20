@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +10,7 @@ import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/components/ThumbnailCard.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
@@ -431,90 +431,14 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   }
 
   Widget _cardContent(NewsModel data, String news) {
-    return InkWell(
-      child: AspectRatio(
-        aspectRatio: 1 / 1,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-              vertical: 10, horizontal: Dimens.contentPadding),
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                  child: CachedNetworkImage(
-                    imageUrl: data.image,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Center(
-                        heightFactor: 4.2, child: CupertinoActivityIndicator()),
-                    errorWidget: (context, url, error) => Container(
-                        height: MediaQuery.of(context).size.height / 3.3,
-                        color: Colors.grey[200],
-                        child: Image.asset(
-                            '${Environment.iconAssets}pikobar.png',
-                            fit: BoxFit.fitWidth)),
-                  ),
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                  color: Colors.white,
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.8),
-                    ],
-                    stops: [0.0, 1.0],
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 10,
-                right: 10,
-                bottom: 10,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        labelNew.isLabelNew(data.id.toString(), dataLabel)
-                            ? LabelNewScreen()
-                            : Container(),
-                        Expanded(
-                          child: Text(
-                            unixTimeStampToDateTime(data.publishedAt),
-                            style:
-                                TextStyle(fontSize: 16.0, color: Colors.white),
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      data.title,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-      onTap: () async {
+    return ThumbnailCard(
+      imageUrl: data.image,
+      title: data.title,
+      date: unixTimeStampToDateTime(data.publishedAt),
+      label: labelNew.isLabelNew(data.id.toString(), dataLabel)
+          ? LabelNewScreen()
+          : Container(),
+      onTap: () {
         setState(() {
           labelNew.readNewInfo(data.id, data.publishedAt.toString(), dataLabel,
               Dictionary.labelNews);

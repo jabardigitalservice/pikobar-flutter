@@ -9,11 +9,12 @@ import 'PikobarPlaceholder.dart';
 class ThumbnailCard extends StatelessWidget {
   const ThumbnailCard({
     Key key,
-    this.imageUrl = '',
+    @required this.imageUrl,
     this.imageLength,
-    this.title,
-    this.date,
+    @required this.title,
+    @required this.date,
     this.label,
+    this.centerIcon,
     this.onTap,
   }) : super(key: key);
 
@@ -27,6 +28,8 @@ class ThumbnailCard extends StatelessWidget {
 
   final Widget label;
 
+  final Widget centerIcon;
+
   final GestureTapCallback onTap;
 
   @override
@@ -38,10 +41,11 @@ class ThumbnailCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(
               vertical: 10, horizontal: Dimens.contentPadding),
           child: Stack(
+            alignment: Alignment.center,
             children: [
               Container(
                   child: CachedNetworkImage(
-                      imageUrl: imageUrl,
+                      imageUrl: imageUrl ?? '',
                       imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               borderRadius:
@@ -78,6 +82,7 @@ class ThumbnailCard extends StatelessWidget {
                   ),
                 ),
               ),
+              centerIcon ?? Container(),
               Positioned(
                 left: 10,
                 right: 10,
@@ -120,7 +125,7 @@ class ThumbnailCard extends StatelessWidget {
                   ],
                 ),
               ),
-              imageLength > 1
+              imageLength != null
                   ? Positioned(
                       top: 10,
                       right: 10,

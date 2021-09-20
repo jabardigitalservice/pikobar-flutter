@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/LabelNewScreen.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/components/ThumbnailCard.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -187,122 +188,7 @@ class _VideosListState extends State<VideosList> {
                 return CupertinoActivityIndicator();
               }
 
-              return GestureDetector(
-                child: AspectRatio(
-                  aspectRatio: 1 / 1,
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: Dimens.contentPadding,
-                        right: Dimens.contentPadding,
-                        bottom: Dimens.padding),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(Dimens.borderRadius),
-                            child: CachedNetworkImage(
-                              imageUrl: getYtThumbnail(
-                                  youtubeUrl: listVideos[index].url,
-                                  error: false),
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
-                                heightFactor: 4.2,
-                                child: CupertinoActivityIndicator(),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                  height: 200, color: Colors.grey[200]),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(Dimens.borderRadius),
-                            color: Colors.white,
-                            gradient: LinearGradient(
-                              begin: FractionalOffset.topCenter,
-                              end: FractionalOffset.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.8),
-                              ],
-                              stops: [0.0, 1.0],
-                            ),
-                          ),
-                        ),
-                        Image.asset(
-                          '${Environment.iconAssets}play_button_black.png',
-                          scale: 3,
-                        ),
-                        Positioned(
-                          left: 10,
-                          right: 10,
-                          bottom: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  _labelNew.isLabelNew(
-                                          listVideos[index].id.toString(),
-                                          _dataLabel)
-                                      ? LabelNewScreen()
-                                      : Container(),
-                                  Expanded(
-                                    child: Text(
-                                      unixTimeStampToDateTime(
-                                          listVideos[index].publishedAt),
-                                      style: TextStyle(
-                                          fontSize: 16.0,
-                                          color: Colors.white,
-                                          fontFamily: FontsFamily.roboto),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Text(
-                                listVideos[index].title,
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                    fontFamily: FontsFamily.roboto),
-                                textAlign: TextAlign.left,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  setState(() {
-                    _labelNew.readNewInfo(
-                        listVideos[index].id,
-                        listVideos[index].publishedAt.toString(),
-                        _dataLabel,
-                        Dictionary.labelVideos);
-                    if (widget.covidInformationScreenState != null) {
-                      widget.covidInformationScreenState.widget.homeScreenState
-                          .getAllUnreadData();
-                    }
-                  });
-                  launchExternal(listVideos[index].url);
-
-                  AnalyticsHelper.setLogEvent(Analytics.tappedVideo,
-                      <String, dynamic>{'title': listVideos[index].title});
-                },
-              );
+              return _cardContent(listVideos[index]);
             })
         : EmptyData(
             message: Dictionary.emptyData,
@@ -310,6 +196,31 @@ class _VideosListState extends State<VideosList> {
             isFlare: false,
             image: "${Environment.imageAssets}not_found.png",
           );
+  }
+
+  Widget _cardContent(VideoModel data) {
+    return ThumbnailCard(
+      imageUrl: getYtThumbnail(youtubeUrl: data.url, error: false),
+      title: data.title,
+      date: unixTimeStampToDateTime(data.publishedAt),
+      label: _labelNew.isLabelNew(data.id.toString(), _dataLabel)
+          ? LabelNewScreen()
+          : Container(),
+      onTap: () {
+        setState(() {
+          _labelNew.readNewInfo(data.id, data.publishedAt.toString(),
+              _dataLabel, Dictionary.labelVideos);
+          if (widget.covidInformationScreenState != null) {
+            widget.covidInformationScreenState.widget.homeScreenState
+                .getAllUnreadData();
+          }
+        });
+        launchExternal(data.url);
+
+        AnalyticsHelper.setLogEvent(
+            Analytics.tappedVideo, <String, dynamic>{'title': data.title});
+      },
+    );
   }
 
   Future<bool> _onWillPop() {
