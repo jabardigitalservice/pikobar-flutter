@@ -162,108 +162,110 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   GestureDetector(
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                          left: Dimens.contentPadding,
-                          right: Dimens.contentPadding,
-                          bottom: Dimens.padding),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 300,
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(Dimens.borderRadius),
-                              child: CachedNetworkImage(
-                                imageUrl: document['images'],
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Center(
-                                  heightFactor: 4.2,
-                                  child: CupertinoActivityIndicator(),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 3.3,
-                                  color: Colors.grey[200],
-                                  child: Image.asset(
-                                    '${Environment.iconAssets}pikobar.png',
-                                    height: 40,
-                                    width: 40,
+                    child: AspectRatio(
+                      aspectRatio: 1 / 1,
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                            left: Dimens.contentPadding,
+                            right: Dimens.contentPadding,
+                            bottom: Dimens.padding),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.borderRadius),
+                                child: CachedNetworkImage(
+                                  imageUrl: document['images'],
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Center(
+                                    heightFactor: 4.2,
+                                    child: CupertinoActivityIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    height: MediaQuery.of(context).size.height /
+                                        3.3,
+                                    color: Colors.grey[200],
+                                    child: Image.asset(
+                                      '${Environment.iconAssets}pikobar.png',
+                                      height: 40,
+                                      width: 40,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 300,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(Dimens.borderRadius),
-                                color: Colors.white,
-                                gradient: LinearGradient(
-                                  begin: FractionalOffset.topCenter,
-                                  end: FractionalOffset.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withOpacity(0.8),
-                                  ],
-                                  stops: [0.0, 1.0],
-                                ),
-                              )),
-                          Image.asset(
-                            '${Environment.iconAssets}pdf_icon.png',
-                            height: 80,
-                            width: 80,
-                          ),
-                          Positioned(
-                            left: 10,
-                            right: 10,
-                            bottom: 0,
-                            top: 215,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _labelNew.isLabelNew(
-                                            document.id.toString(), _dataLabel)
-                                        ? LabelNewScreen()
-                                        : Container(),
-                                    Expanded(
-                                      child: Text(
-                                        unixTimeStampToDateTime(
-                                            document['published_at'].seconds),
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.white,
-                                            fontFamily: FontsFamily.roboto),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  document['title'],
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      fontFamily: FontsFamily.roboto),
-                                  textAlign: TextAlign.left,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                            Container(
+                                decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(Dimens.borderRadius),
+                              color: Colors.white,
+                              gradient: LinearGradient(
+                                begin: FractionalOffset.topCenter,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.8),
+                                ],
+                                stops: [0.0, 1.0],
+                              ),
+                            )),
+                            Image.asset(
+                              '${Environment.iconAssets}pdf_icon.png',
+                              height: 80,
+                              width: 80,
                             ),
-                          )
-                        ],
+                            Positioned(
+                              left: 10,
+                              right: 10,
+                              bottom: 10,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _labelNew.isLabelNew(
+                                              document.id.toString(),
+                                              _dataLabel)
+                                          ? LabelNewScreen()
+                                          : Container(),
+                                      Expanded(
+                                        child: Text(
+                                          unixTimeStampToDateTime(
+                                              document['published_at'].seconds),
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.white,
+                                              fontFamily: FontsFamily.roboto),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(
+                                    document['title'],
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontFamily: FontsFamily.roboto),
+                                    textAlign: TextAlign.left,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     onTap: () {
