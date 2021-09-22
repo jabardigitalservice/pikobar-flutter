@@ -3,6 +3,7 @@ class Environment {
   static String logoAssets = 'assets/logo/';
   static String iconAssets = 'assets/icons/';
   static String flareAssets = 'assets/flares/';
+  static String lottieAssets = 'assets/lotties/';
 
   static Map<String, String> headerPost = {};
 

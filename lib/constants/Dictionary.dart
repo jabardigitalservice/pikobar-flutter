@@ -383,6 +383,11 @@ class Dictionary {
       'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
   static String selfReportActivationAgreement =
       'Dengan ini saya menyetujui bahwa data yang saya isikan adalah benar.';
+  static String selfReportActivationSuccess = 'Berhasil Mendapatkan Akses';
+  static String selfReportActivationSuccessMessage =
+      'Silahkan tap tombol di bawah untuk memulai mengisi form Lapor Kesehatan Harian.';
+  static String selfReportActivationLoading =
+      'Mohon tunggu sebentar untuk\nmendapatkan akses Lapor Mandiri';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
