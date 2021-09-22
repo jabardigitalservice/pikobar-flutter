@@ -6,9 +6,20 @@ part 'SelfReportActivationState.dart';
 
 class SelfReportActivationBloc
     extends Bloc<SelfReportActivationEvent, SelfReportActivationState> {
-  SelfReportActivationBloc() : super(SelfreportactivationblocInitial());
+  SelfReportActivationBloc() : super(SelfReportActivationInitial());
 
   @override
   Stream<SelfReportActivationState> mapEventToState(
-      SelfReportActivationEvent event) {}
+      SelfReportActivationEvent event) async* {
+    if (event is SelfReportActivate) {
+      yield SelfReportActivationLoading();
+      final time = DateTime.now().difference(event.date).inDays;
+      if (event.type == SelfReportActivateType.PCR && time <= 10) {
+        yield SelfReportActivationSuccess();
+      } else if (event.type == SelfReportActivateType.ANTIGEN && time <= 3) {
+        yield SelfReportActivationSuccess();
+      } else
+        yield SelfReportActivationFail();
+    }
+  }
 }

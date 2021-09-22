@@ -7,4 +7,10 @@ abstract class SelfReportActivationState extends Equatable {
   List<Object> get props => [];
 }
 
-class SelfreportactivationblocInitial extends SelfReportActivationState {}
+class SelfReportActivationInitial extends SelfReportActivationState {}
+
+class SelfReportActivationLoading extends SelfReportActivationState {}
+
+class SelfReportActivationSuccess extends SelfReportActivationState {}
+
+class SelfReportActivationFail extends SelfReportActivationState {}

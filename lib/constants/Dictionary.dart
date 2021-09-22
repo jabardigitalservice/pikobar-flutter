@@ -100,6 +100,8 @@ class Dictionary {
   static String vaccinInformation = 'Informasi Vaksinasi';
   static String hospitalBedOccupancy = 'Keterisian Bed RS';
   static String oxygenTherapy = 'Terapi Oksigen';
+  static String confirmationDate = 'Tanggal Konfirmasi';
+  static String testType = 'Jenis Tes';
 
   // Button Text
   static String cancel = 'Batal';
@@ -207,7 +209,7 @@ class Dictionary {
   static String findFaq = 'Cari Pertanyaan';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
-  static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String chooseDatePlaceholder = 'Pilih Tanggal';
   static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
   static String quarantineDatePlaceholder = 'Pilih Tanggal Awal Karantina';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';
@@ -361,6 +363,7 @@ class Dictionary {
   static String dailyMonitoringFilled = 'Proses pelaporan sudah terisi';
   static String dailyMonitoringUnfilled = 'Proses pelaporan belum terisi';
   static String dailySelfReport = 'Lapor Kesehatan Harian';
+  static String dailySelfReportActivation = 'Form Akses Lapor Kesehatan Harian';
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String errorMessageDailyMonitoringOrder =
@@ -378,6 +381,8 @@ class Dictionary {
   static String nikNotRegistered = 'NIK Tidak Terdaftar';
   static String nikNotRegisteredDesc =
       'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
+  static String selfReportActivationAgreement =
+      'Dengan ini saya menyetujui bahwa data yang saya isikan adalah benar.';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';
