@@ -10,6 +10,8 @@ class RadioFormField extends StatefulWidget {
     this.title,
     this.controller,
     this.items,
+    this.errorText,
+    this.showError = false,
   }) : super(key: key);
 
   final String title;
@@ -18,11 +20,24 @@ class RadioFormField extends StatefulWidget {
 
   final List<String> items;
 
+  final String errorText;
+
+  final bool showError;
+
   @override
   _RadioFormFieldState createState() => _RadioFormFieldState();
 }
 
 class _RadioFormFieldState extends State<RadioFormField> {
+  String _errorText;
+
+  @override
+  void initState() {
+    _errorText =
+        widget.errorText ?? widget.title + Dictionary.pleaseCompleteAllField;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,11 +84,11 @@ class _RadioFormFieldState extends State<RadioFormField> {
             );
           },
         ),
-        widget.controller.text.isEmpty
+        widget.showError
             ? Padding(
                 padding: const EdgeInsets.only(left: 15, top: 10),
                 child: Text(
-                  widget.title + Dictionary.pleaseCompleteAllField,
+                  _errorText,
                   style: TextStyle(color: Colors.red, fontSize: 12),
                 ),
               )
