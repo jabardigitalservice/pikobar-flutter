@@ -71,7 +71,8 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
           }
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+          padding:
+              const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
           child: Form(
             key: _formKey,
             child: ListView(
@@ -115,7 +116,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                 buildDateField(
                     title: Dictionary.birthday,
                     placeholder: _dateController.text == ''
-                        ? Dictionary.birthdayPlaceholder
+                        ? Dictionary.chooseDatePlaceholder
                         : DateFormat.yMMMMd('id')
                             .format(DateTime.parse(_dateController.text)),
                     isEmpty: isBirthdayEmpty),
@@ -317,7 +318,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
                     style: TextStyle(
                         fontSize: 14,
                         fontFamily: FontsFamily.roboto,
-                        color: placeholder == Dictionary.birthdayPlaceholder
+                        color: placeholder == Dictionary.chooseDatePlaceholder
                             ? ColorBase.netralGrey
                             : Colors.black),
                   ),

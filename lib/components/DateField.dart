@@ -67,7 +67,7 @@ class _DateFieldState extends State<DateField> {
                 '${Environment.iconAssets}calendar.png',
                 scale: 1.5,
               ),
-              hintText: 'Pilih Tanggal',
+              hintText: Dictionary.chooseDatePlaceholder,
             ),
             readOnly: true,
             validator: widget.validator,

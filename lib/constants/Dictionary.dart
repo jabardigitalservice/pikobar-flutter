@@ -207,7 +207,7 @@ class Dictionary {
   static String findFaq = 'Cari Pertanyaan';
   static String findEmergencyPhone = 'Cari Nomor Darurat';
   static String phoneNumberPlaceholder = 'Masukan no. hp anda disini';
-  static String birthdayPlaceholder = 'Pilih Tanggal';
+  static String chooseDatePlaceholder = 'Pilih Tanggal';
   static String contactDatePlaceholder = 'Pilih Tanggal Terakhir Kontak';
   static String quarantineDatePlaceholder = 'Pilih Tanggal Awal Karantina';
   static String addressPlaceholder = 'Masukan Alamat Domisili Anda';

@@ -333,7 +333,7 @@ class _EditState extends State<Edit> {
                               buildDateField(
                                   title: Dictionary.birthday,
                                   placeholder: _birthDayController.text == ''
-                                      ? Dictionary.birthdayPlaceholder
+                                      ? Dictionary.chooseDatePlaceholder
                                       : DateFormat.yMMMMd('id').format(
                                           DateTime.parse(_birthDayController
                                               .text
@@ -782,7 +782,7 @@ class _EditState extends State<Edit> {
                       style: TextStyle(
                           fontSize: 14,
                           fontFamily: FontsFamily.roboto,
-                          color: placeholder == Dictionary.birthdayPlaceholder
+                          color: placeholder == Dictionary.chooseDatePlaceholder
                               ? ColorBase.netralGrey
                               : Colors.black),
                     ),
