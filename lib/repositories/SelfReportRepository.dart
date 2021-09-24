@@ -246,15 +246,22 @@ class SelfReportRepository {
     bool result = false;
 
     try {
-      DocumentSnapshot doc = await _firestore
-          .collection(kUsersQuarantined)
-          .doc(nik)
-          .get();
+      DocumentSnapshot doc =
+          await _firestore.collection(kUsersQuarantined).doc(nik).get();
       result = doc.exists;
     } on FirebaseException catch (e) {
       print(e);
     }
 
     return result;
+  }
+
+  Future<void> activateSelfReport(
+      {@required String userId, DateTime date}) async {
+    await _firestore.collection(kUsers).doc(userId).update({
+      'health_status': 'CONFIRMED',
+      'health_status_text': 'Terkonfirmasi',
+      'health_status_check': date
+    });
   }
 }

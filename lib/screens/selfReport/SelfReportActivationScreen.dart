@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/blocs/selfReport/selfReportActivation/SelfReportActivationBloc.dart';
 import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/components/DateField.dart';
 import 'package:pikobar_flutter/components/RadioFormField.dart';
+import 'package:pikobar_flutter/components/RoundedButton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
+import 'package:pikobar_flutter/utilities/BasicUtils.dart';
+import 'package:pikobar_flutter/utilities/NavigatorHelper.dart';
+import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+
+import 'SelfReportList.dart';
 
 class SelfReportActivationScreen extends StatelessWidget {
-  const SelfReportActivationScreen();
+  const SelfReportActivationScreen({this.location, this.cityId});
+
+  final LatLng location;
+  final String cityId;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SelfReportActivationBloc>(
-      create: (context) => SelfReportActivationBloc(),
-      child: SelfReportActivationForm(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<SelfReportActivationBloc>(
+          create: (context) => SelfReportActivationBloc(),
+        ),
+        BlocProvider<RemoteConfigBloc>(
+          create: (context) => RemoteConfigBloc(),
+        ),
+      ],
+      child: SelfReportActivationForm(
+        location: location,
+        cityId: cityId,
+      ),
     );
   }
 }
 
 class SelfReportActivationForm extends StatefulWidget {
-  SelfReportActivationForm({Key key}) : super(key: key);
+  SelfReportActivationForm({Key key, this.location, this.cityId})
+      : super(key: key);
+  final LatLng location;
+  final String cityId;
 
   @override
   _SelfReportActivationFormState createState() =>
@@ -40,13 +67,16 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
     'PCR',
   ];
 
-  SelfReportActivationBloc _bloc;
+  SelfReportActivationBloc _activationBloc;
+  RemoteConfigBloc _remoteConfigBloc;
   bool isAgree = false;
   bool isEmptyType = false;
 
   @override
   void initState() {
-    _bloc = BlocProvider.of<SelfReportActivationBloc>(context);
+    _activationBloc = BlocProvider.of<SelfReportActivationBloc>(context);
+    _remoteConfigBloc = BlocProvider.of<RemoteConfigBloc>(context);
+    _remoteConfigBloc.add(RemoteConfigLoad());
     super.initState();
   }
 
@@ -63,6 +93,9 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
             BlocListener<SelfReportActivationBloc, SelfReportActivationState>(
           listener: (context, state) {
             if (state is SelfReportActivationSuccess) {
+              AnalyticsHelper.setLogEvent(
+                  Analytics.selfReportActivationSuccess);
+
               // Bottom sheet success message
               showSuccessBottomSheet(
                   context: context,
@@ -73,8 +106,111 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                   title: Dictionary.selfReportActivationSuccess,
                   message: Dictionary.selfReportActivationSuccessMessage,
                   onPressed: () async {
-                    Navigator.of(context).pop(true);
+                    popUntil(context, multiplication: 2);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelfReportList(
+                                location: widget.location,
+                                cityId: widget.cityId,
+                                analytics: Analytics.tappedDailyReport,
+                                isHealthStatusChanged: true,
+                              )),
+                    );
                   });
+            }
+
+            if (state is SelfReportActivationFail) {
+              AnalyticsHelper.setLogEvent(Analytics.selfReportActivationFail);
+
+              // Bottom sheet fail message
+              showWidgetBottomSheet(
+                  context: context,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 44.0, vertical: Dimens.verticalPadding),
+                        child: Image.asset(
+                          '${Environment.imageAssets}fail.png',
+                          width: 200,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 8.0),
+                        child: Text(
+                          Dictionary.selfReportActivationFail,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
+                        cubit: _remoteConfigBloc,
+                        builder: (context, state) {
+                          if (state is RemoteConfigLoaded) {
+                            final remoteValue = RemoteConfigHelper.decode(
+                                remoteConfig: state.remoteConfig,
+                                firebaseConfig:
+                                    FirebaseConfig.selfReportActivation,
+                                defaultValue: FirebaseConfig
+                                    .selfReportActivationDefaultValue);
+
+                            final url = remoteValue['activation_request_url'];
+                            final failMessage = remoteValue['fail_message'];
+
+                            return Column(
+                              children: [
+                                Text(
+                                  failMessage,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: FontsFamily.lato,
+                                      fontSize: 12.0,
+                                      color: Colors.grey[600]),
+                                ),
+                                SizedBox(height: 24.0),
+                                RoundedButton(
+                                    title: Dictionary.requestActivation,
+                                    textStyle: TextStyle(
+                                        fontFamily: FontsFamily.lato,
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                    color: ColorBase.green,
+                                    elevation: 0.0,
+                                    onPressed: () async {
+                                      AnalyticsHelper.setLogEvent(Analytics
+                                          .selfReportActivationRequerst);
+                                      popUntil(context, multiplication: 3);
+                                      await launchUrl(
+                                          context: context, url: url);
+                                    }),
+                                SizedBox(height: 16.0),
+                              ],
+                            );
+                          } else {
+                            return Container();
+                          }
+                        },
+                      ),
+                      RoundedButton(
+                          title: Dictionary.back,
+                          textStyle: TextStyle(
+                              fontFamily: FontsFamily.lato,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                          color: Colors.white,
+                          borderSide: BorderSide(color: ColorBase.disableText),
+                          elevation: 0.0,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          })
+                    ],
+                  ));
             }
           },
           child:
@@ -201,11 +337,13 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
 
     if (_formKey.currentState.validate() &&
         _testTypeController.text.isNotEmpty) {
+      AnalyticsHelper.setLogEvent(Analytics.submitSelfReportActivation);
+
       final date = DateTime.parse(_dateController.text);
       final type = _testTypeController.text == _testTypeValue[1]
           ? SelfReportActivateType.PCR
           : SelfReportActivateType.ANTIGEN;
-      _bloc.add(SelfReportActivate(date: date, type: type));
+      _activationBloc.add(SelfReportActivate(date: date, type: type));
     }
   }
 }

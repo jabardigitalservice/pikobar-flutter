@@ -129,6 +129,7 @@ class Dictionary {
   static String resetReport = 'Reset Laporan';
   static String reset = 'Reset';
   static String checkZone = 'Cek Zona Risiko';
+  static String requestActivation = 'Ajukan Permohonan';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -388,6 +389,7 @@ class Dictionary {
       'Silahkan tap tombol di bawah untuk memulai mengisi form Lapor Kesehatan Harian.';
   static String selfReportActivationLoading =
       'Mohon tunggu sebentar untuk\nmendapatkan akses Lapor Mandiri';
+  static String selfReportActivationFail = 'Gagal Mendapatkan Akses';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';

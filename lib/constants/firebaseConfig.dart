@@ -64,6 +64,7 @@ class FirebaseConfig {
   static String hospitalBedOccupancyUrl = 'hospital_bed_occupancy_url';
   static String oxygenTherapyCaption = 'oxygen_therapy_caption';
   static String oxygenTherapyUrl = 'oxygen_therapy_url';
+  static String selfReportActivation = 'self_report_activation';
 
   /// Remote config parameter key
   /// Access requires a login
@@ -322,4 +323,9 @@ class FirebaseConfig {
       ' "url": "https://bit.ly/pcbr-isomanvit"'
       ' }'
       ']';
+
+  static String selfReportActivationDefaultValue = '{'
+      '"activation_request_url": "https://www.google.com/?client=safari"'
+      '"fail_message": "Periksa kembali data Anda. Jika belum berhasil, silahkan ajukan permohonan akses melalui google form."'
+      ' }';
 }
