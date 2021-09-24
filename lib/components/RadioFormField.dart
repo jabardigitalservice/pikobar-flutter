@@ -67,14 +67,14 @@ class _RadioFormFieldState extends State<RadioFormField> {
           height: 5,
         ),
         RadioButtonGroup(
+          labels: widget.items,
+          picked: widget.controller.text,
           activeColor: ColorBase.limeGreen,
           labelStyle: TextStyle(fontSize: 14, fontFamily: FontsFamily.roboto),
           orientation: GroupedButtonsOrientation.VERTICAL,
           onSelected: (String selected) => setState(() {
             widget.controller.text = selected;
           }),
-          labels: widget.items,
-          picked: widget.controller.text,
           itemBuilder: (Radio rb, Text txt, int i) {
             return Row(
               children: <Widget>[
