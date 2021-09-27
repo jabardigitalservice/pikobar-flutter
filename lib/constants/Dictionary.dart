@@ -100,6 +100,8 @@ class Dictionary {
   static String vaccinInformation = 'Informasi Vaksinasi';
   static String hospitalBedOccupancy = 'Keterisian Bed RS';
   static String oxygenTherapy = 'Terapi Oksigen';
+  static String confirmationDate = 'Tanggal Konfirmasi';
+  static String testType = 'Jenis Tes';
 
   // Button Text
   static String cancel = 'Batal';
@@ -127,6 +129,7 @@ class Dictionary {
   static String resetReport = 'Reset Laporan';
   static String reset = 'Reset';
   static String checkZone = 'Cek Zona Risiko';
+  static String requestActivation = 'Ajukan Permohonan';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
@@ -361,6 +364,7 @@ class Dictionary {
   static String dailyMonitoringFilled = 'Proses pelaporan sudah terisi';
   static String dailyMonitoringUnfilled = 'Proses pelaporan belum terisi';
   static String dailySelfReport = 'Lapor Kesehatan Harian';
+  static String dailySelfReportActivation = 'Form Akses Lapor Kesehatan Harian';
   static String errorMessageDailyMonitoring =
       'Mohon maaf anda belum bisa mengisi untuk hari ke -';
   static String errorMessageDailyMonitoringOrder =
@@ -378,6 +382,14 @@ class Dictionary {
   static String nikNotRegistered = 'NIK Tidak Terdaftar';
   static String nikNotRegisteredDesc =
       'Hanya NIK yang terdaftar untuk melakukan karantina mandiri yang dapat mengakses menu ini';
+  static String selfReportActivationAgreement =
+      'Dengan ini saya menyetujui bahwa data yang saya isikan adalah benar.';
+  static String selfReportActivationSuccess = 'Berhasil Mendapatkan Akses';
+  static String selfReportActivationSuccessMessage =
+      'Silahkan tap tombol di bawah untuk memulai mengisi form Lapor Kesehatan Harian.';
+  static String selfReportActivationLoading =
+      'Mohon tunggu sebentar untuk\nmendapatkan akses Lapor Mandiri';
+  static String selfReportActivationFail = 'Gagal Mendapatkan Akses';
 
   static String contactHistoryForm = 'Form Riwayat Kontak';
   static String contactName = 'Nama Kontak';

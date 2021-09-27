@@ -31,6 +31,15 @@ class _DateFieldState extends State<DateField> {
   TextEditingController _controller = TextEditingController();
 
   @override
+  void initState() {
+    if (widget.controller.text.isNotEmpty) {
+      final date = DateTime.parse(widget.controller.text);
+      _controller.text = DateFormat.yMMMMd('id').format(date);
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(

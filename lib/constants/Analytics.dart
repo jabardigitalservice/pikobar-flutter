@@ -183,6 +183,12 @@ class Analytics {
 
   static String crowdReport = "tapped_lapor_kerumunan";
 
+  static String submitSelfReportActivation = 'submit_aktivasi_lapor_madiri';
+  static String selfReportActivationSuccess = 'aktivasi_lapor_madiri_sukses';
+  static String selfReportActivationFail = 'aktivasi_lapor_madiri_gagal';
+  static String selfReportActivationRequerst =
+      'request_aktivasi_lapor_madiri_manual';
+
   //event profile
   static String tappedEditProfile = "tapped_edit_akun";
   static String tappedVerificationNumber = "tapped_verifikasi_nomor";

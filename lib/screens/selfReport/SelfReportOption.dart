@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
-import 'package:pikobar_flutter/components/CustomBottomSheet.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/selfReport/SelfReportActivationScreen.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportList.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportOtherScreen.dart';
 
@@ -59,10 +59,9 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                 _buildContainer(
                     imageEnable:
                         '${Environment.iconAssets}self_report_icon.png',
-                    imageDisable:
-                        '${Environment.iconAssets}self_report_icon_disable.png',
                     title: Dictionary.reportForMySelf,
                     length: 2,
+                    disabledTextColor: ColorBase.grey800,
                     onPressedEnable: () {
                       // move to self report list screen
                       Navigator.of(context).push(MaterialPageRoute(
@@ -75,10 +74,12 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                               )));
                     },
                     onPressedDisable: () {
-                      showTextBottomSheet(
-                          context: context,
-                          title: widget.nikMessage['title'],
-                          message: widget.nikMessage['description']);
+                      // move to self report activation screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SelfReportActivationScreen(
+                                location: widget.location,
+                                cityId: widget.cityId,
+                              )));
                     },
                     isEnabledMenu: widget.isQuarantined),
                 _buildContainer(
@@ -109,7 +110,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
       @required int length,
       @required GestureTapCallback onPressedEnable,
       GestureTapCallback onPressedDisable,
-      @required bool isEnabledMenu}) {
+      @required bool isEnabledMenu,
+      Color disabledTextColor}) {
     return Expanded(
         child: Container(
       padding: const EdgeInsets.symmetric(
@@ -142,7 +144,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                         fontSize: 14.0,
                         color: isEnabledMenu
                             ? ColorBase.grey800
-                            : ColorBase.grey500,
+                            : disabledTextColor ?? ColorBase.grey500,
                         fontWeight: FontWeight.bold,
                         fontFamily: FontsFamily.roboto)),
               )
