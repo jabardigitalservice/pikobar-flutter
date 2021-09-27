@@ -114,7 +114,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                                 location: widget.location,
                                 cityId: widget.cityId,
                                 analytics: Analytics.tappedDailyReport,
-                                isHealthStatusChanged: true,
+                                isHealthStatusChanged: false,
                               )),
                     );
                   });
