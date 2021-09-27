@@ -137,7 +137,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 8.0),
+                        padding: const EdgeInsets.only(bottom: 8.0),
                         child: Text(
                           Dictionary.selfReportActivationFail,
                           textAlign: TextAlign.center,
@@ -171,7 +171,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                                       fontSize: 12.0,
                                       color: Colors.grey[600]),
                                 ),
-                                SizedBox(height: 24.0),
+                                const SizedBox(height: 24.0),
                                 RoundedButton(
                                     title: Dictionary.requestActivation,
                                     textStyle: TextStyle(
@@ -188,7 +188,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                                       await launchUrl(
                                           context: context, url: url);
                                     }),
-                                SizedBox(height: 16.0),
+                                const SizedBox(height: 16.0),
                               ],
                             );
                           } else {
@@ -250,7 +250,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
     return Form(
       key: _formKey,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -270,7 +270,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
               items: _testTypeValue,
               showError: isEmptyType,
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             DateField(
