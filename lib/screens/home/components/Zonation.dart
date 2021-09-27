@@ -193,7 +193,7 @@ class _ZonationState extends State<Zonation>
         description = Dictionary.zoneOrangeDescription;
         break;
       case Dictionary.zoneLowRisk:
-        dotColor = Colors.yellow;
+        dotColor = ColorBase.yellow;
         zone = StringUtils.capitalizeWord(Dictionary.zoneLowRisk);
         description = Dictionary.zoneYellowDescription;
         break;
