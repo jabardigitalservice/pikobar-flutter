@@ -193,7 +193,7 @@ class _ZonationState extends State<Zonation>
         description = Dictionary.zoneOrangeDescription;
         break;
       case Dictionary.zoneLowRisk:
-        dotColor = Colors.yellow;
+        dotColor = ColorBase.yellow;
         zone = StringUtils.capitalizeWord(Dictionary.zoneLowRisk);
         description = Dictionary.zoneYellowDescription;
         break;
@@ -269,7 +269,8 @@ class _ZonationState extends State<Zonation>
                       style: TextStyle(
                           fontSize: 14,
                           fontFamily: FontsFamily.roboto,
-                          fontWeight: FontWeight.w700),
+                          fontWeight: FontWeight.w700,
+                          height: 1.3),
                     ),
                   ),
                   GestureDetector(
@@ -298,15 +299,16 @@ class _ZonationState extends State<Zonation>
                     style: TextStyle(
                         fontSize: 12,
                         fontFamily: FontsFamily.roboto,
-                        color: ColorBase.netralGrey),
+                        color: ColorBase.netralGrey,
+                        height: 1.3),
                     children: <TextSpan>[
                       TextSpan(
                         text: Dictionary.zoneOther,
                         style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: FontsFamily.roboto,
-                          fontWeight: FontWeight.w700,
-                        ),
+                            fontSize: 12,
+                            fontFamily: FontsFamily.roboto,
+                            fontWeight: FontWeight.w700,
+                            height: 1.3),
                       )
                     ],
                   ),

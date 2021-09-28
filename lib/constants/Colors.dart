@@ -27,7 +27,7 @@ class ColorBase {
   static final gradientGreen = [Color(0xFF0ad178), Color(0xFF009D57)];
   static final gradientBlueStatistics = [Color(0xFF2C347C), Color(0xFF4E59C0)];
 
-  static final yellow = Color(0xfffdcc3b);
+  static final yellow = Color(0xFFFFD026);
 
   static final healthStatusColors =
       '{"healthy": "009d57","odp": "fff45a","pdp": "ffc831","confirmed": "ff0000"}';

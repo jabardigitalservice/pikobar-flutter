@@ -44,8 +44,8 @@ class _SelfReportOptionState extends State<SelfReportOption> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              padding: const EdgeInsets.fromLTRB(
+                  Dimens.padding, 10, Dimens.padding, 20),
               child: Text(
                 Dictionary.dailySelfReport,
                 style: TextStyle(
@@ -54,49 +54,52 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Row(
-              children: [
-                _buildContainer(
-                    imageEnable:
-                        '${Environment.iconAssets}self_report_icon.png',
-                    title: Dictionary.reportForMySelf,
-                    length: 2,
-                    disabledTextColor: ColorBase.grey800,
-                    onPressedEnable: () {
-                      // move to self report list screen
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SelfReportList(
-                                location: widget.location,
-                                cityId: widget.cityId,
-                                analytics: Analytics.tappedDailyReport,
-                                isHealthStatusChanged:
-                                    widget.isHealthStatusChanged,
-                              )));
-                    },
-                    onPressedDisable: () {
-                      // move to self report activation screen
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SelfReportActivationScreen(
-                                location: widget.location,
-                                cityId: widget.cityId,
-                              )));
-                    },
-                    isEnabledMenu: widget.isQuarantined),
-                _buildContainer(
-                    imageEnable:
-                        '${Environment.iconAssets}self_report_other_icon.png',
-                    title: Dictionary.reportForOther,
-                    length: 2,
-                    onPressedEnable: () {
-                      // move to self report other screen
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SelfReportOtherScreen(
-                                cityId: widget.cityId,
-                                location: widget.location,
-                              )));
-                    },
-                    isEnabledMenu: true)
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Row(
+                children: [
+                  _buildContainer(
+                      imageEnable:
+                          '${Environment.iconAssets}self_report_icon.png',
+                      title: Dictionary.reportForMySelf,
+                      length: 2,
+                      disabledTextColor: ColorBase.grey800,
+                      onPressedEnable: () {
+                        // move to self report list screen
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportList(
+                                  location: widget.location,
+                                  cityId: widget.cityId,
+                                  analytics: Analytics.tappedDailyReport,
+                                  isHealthStatusChanged:
+                                      widget.isHealthStatusChanged,
+                                )));
+                      },
+                      onPressedDisable: () {
+                        // move to self report activation screen
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportActivationScreen(
+                                  location: widget.location,
+                                  cityId: widget.cityId,
+                                )));
+                      },
+                      isEnabledMenu: widget.isQuarantined),
+                  _buildContainer(
+                      imageEnable:
+                          '${Environment.iconAssets}self_report_other_icon.png',
+                      title: Dictionary.reportForOther,
+                      length: 2,
+                      onPressedEnable: () {
+                        // move to self report other screen
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => SelfReportOtherScreen(
+                                  cityId: widget.cityId,
+                                  location: widget.location,
+                                )));
+                      },
+                      isEnabledMenu: true)
+                ],
+              ),
             )
           ],
         ));
@@ -114,8 +117,7 @@ class _SelfReportOptionState extends State<SelfReportOption> {
       Color disabledTextColor}) {
     return Expanded(
         child: Container(
-      padding: const EdgeInsets.symmetric(
-          vertical: 10, horizontal: Dimens.contentPadding),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: RaisedButton(
         elevation: 0,
         padding: EdgeInsets.all(0.0),
@@ -138,15 +140,18 @@ class _SelfReportOptionState extends State<SelfReportOption> {
                       : imageDisable ?? imageEnable)),
               Container(
                 margin: const EdgeInsets.only(top: 15, right: 10.0),
-                child: Text(title,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        color: isEnabledMenu
-                            ? ColorBase.grey800
-                            : disabledTextColor ?? ColorBase.grey500,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.roboto)),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      color: isEnabledMenu
+                          ? ColorBase.grey800
+                          : disabledTextColor ?? ColorBase.grey500,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.roboto,
+                      height: 1.3),
+                ),
               )
             ],
           ),

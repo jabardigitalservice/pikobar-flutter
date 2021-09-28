@@ -177,13 +177,6 @@ class HomeScreenState extends State<HomeScreen>
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(20),
-          child: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-          ),
-        ),
         body: MultiBlocListener(
           listeners: [
             BlocListener<InfoGraphicsListBloc, InfoGraphicsListState>(
