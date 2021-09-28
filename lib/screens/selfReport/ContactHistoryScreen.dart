@@ -92,7 +92,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
           right: 0.0,
           top: 0.0,
           child: Padding(
-            padding: EdgeInsets.all(Dimens.cardContentMargin),
+            padding: const EdgeInsets.all(Dimens.cardContentMargin),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -103,9 +103,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.3,
@@ -114,9 +112,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                     fit: BoxFit.fitWidth,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Center(
                   child: Text(
                     Dictionary.emptyContactTitle,
@@ -126,9 +122,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                         fontSize: 14),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 Center(
                   child: Text(
                     Dictionary.emptyContactDesc,
@@ -146,7 +140,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
           right: 0.0,
           bottom: 0.0,
           child: Padding(
-              padding: EdgeInsets.all(Dimens.cardContentMargin),
+              padding: const EdgeInsets.all(Dimens.cardContentMargin),
               child: buildCreateButton()),
         ),
       ],
@@ -156,7 +150,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
   /// Function to build contact history list screen
   Widget buildContactHistoryList(List<DocumentSnapshot> documents) {
     return Padding(
-      padding: EdgeInsets.all(Dimens.contentPadding),
+      padding: const EdgeInsets.all(Dimens.contentPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -167,16 +161,14 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: ColorBase.grey,
             ),
             child: Padding(
-              padding: EdgeInsets.all(Dimens.cardContentMargin),
+              padding: const EdgeInsets.all(Dimens.cardContentMargin),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -199,12 +191,16 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
               ),
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
                 itemCount: documents.length,
+                separatorBuilder: (context, i) {
+                  return Divider(
+                    color: ColorBase.grey,
+                    thickness: 1,
+                  );
+                },
                 itemBuilder: (context, i) {
                   return Column(
                     children: <Widget>[
@@ -220,7 +216,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical:10.0),
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -247,9 +243,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                       )
                                     ],
                                   ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
+                                  const SizedBox(width: 20),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -261,9 +255,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                                             fontSize: 12,
                                             fontFamily: FontsFamily.lato),
                                       ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
+                                      const SizedBox(height: 10),
                                       Text(
                                         documents[i].get('relation'),
                                         style: TextStyle(
@@ -282,15 +274,7 @@ class _ContactHistoryScreenState extends State<ContactHistoryScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      i == documents.length - 1
-                          ? Container()
-                          : Divider(
-                              color: ColorBase.grey,
-                              thickness: 10,
-                            ),
+                      const SizedBox(height: 5),
                     ],
                   );
                 }),
