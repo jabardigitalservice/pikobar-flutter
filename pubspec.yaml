@@ -71,6 +71,7 @@ dependencies:
   geocoding: ^1.0.5
   geolocator: ^6.1.4+1
   google_maps_flutter: ^1.0.2
+  google_ml_vision: ^0.0.2+1
   google_sign_in: ^4.5.4
   grouped_buttons: ^1.0.4
   http: ^0.12.2
