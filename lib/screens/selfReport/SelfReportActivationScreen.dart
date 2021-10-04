@@ -305,7 +305,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
             Container(
               width: double.infinity,
               height: 50,
-              margin: const EdgeInsets.only(top: 32),
+              margin: const EdgeInsets.only(top: 32, bottom: 20),
               child: RaisedButton(
                 splashColor: Colors.lightGreenAccent,
                 padding: const EdgeInsets.all(0),
@@ -314,7 +314,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                   borderRadius: BorderRadius.circular(Dimens.borderRadius),
                 ),
                 child: Text(
-                  Dictionary.acceptLogin,
+                  Dictionary.checkTestResult,
                   style: TextStyle(
                       fontFamily: FontsFamily.roboto,
                       fontWeight: FontWeight.bold,

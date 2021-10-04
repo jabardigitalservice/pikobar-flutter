@@ -130,6 +130,7 @@ class Dictionary {
   static String reset = 'Reset';
   static String checkZone = 'Cek Zona Risiko';
   static String requestActivation = 'Ajukan Permohonan';
+  static String checkTestResult = 'Cek Hasil Tes';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
