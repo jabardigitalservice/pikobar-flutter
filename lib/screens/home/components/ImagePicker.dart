@@ -79,14 +79,14 @@ class _ImagePickerState extends State<ImagePicker> {
           },
           child: DottedBorder(
             borderType: BorderType.RRect,
-            radius: Radius.circular(8),
+            radius: const Radius.circular(8),
             dashPattern: const <double>[5, 3],
             padding: EdgeInsets.zero,
             color: ColorBase.netralGrey,
             child: AspectRatio(
               aspectRatio: 21 / 9,
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Container(
                   color: ColorBase.grey,
                   child: _image == null
@@ -98,7 +98,7 @@ class _ImagePickerState extends State<ImagePicker> {
                               Icons.image_outlined,
                               color: ColorBase.netralGrey,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             Text(Dictionary.uploadPhoto),
@@ -156,14 +156,14 @@ class _ImagePickerState extends State<ImagePicker> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: Dimens.padding),
+            const SizedBox(height: Dimens.padding),
             Text(
               Dictionary.btsImgPickerDescription,
               style: TextStyle(
                 fontFamily: FontsFamily.roboto,
               ),
             ),
-            SizedBox(height: 24.0),
+            const SizedBox(height: 24.0),
             RoundedButton(
               title: Dictionary.pickFromGallery,
               textStyle: TextStyle(
@@ -179,7 +179,7 @@ class _ImagePickerState extends State<ImagePicker> {
                 Navigator.pop(context);
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               children: <Widget>[
                 Expanded(child: Divider()),
@@ -191,7 +191,7 @@ class _ImagePickerState extends State<ImagePicker> {
                 Expanded(child: Divider()),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             RoundedButton(
               title: Dictionary.pickFromCamera,
               textStyle: TextStyle(
