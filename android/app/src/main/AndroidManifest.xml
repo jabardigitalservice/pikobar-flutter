@@ -44,6 +44,12 @@
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
 
+        <!-- For API's using unbundled models, configure your application to download the model 
+        to your device automatically from play store -->
+        <meta-data
+           android:name="com.google.mlkit.vision.DEPENDENCIES"
+           android:value="ocr" />
+
         <!-- flutter_background_geolocation licence -->
         <provider
             android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
