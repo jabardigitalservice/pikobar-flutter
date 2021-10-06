@@ -83,4 +83,16 @@ class Validations {
 
     return null;
   }
+
+  static bool checkSwabDocument(String val) {
+    if (val == null) {
+      return null;
+    }
+    final regex = RegExp(
+        r'^((?=.*\brs\b)|(?=.*\bklinik\b)|(?=.*\blab\b)|(?=.*\blaboratorium\b))((?=.*\bpcr\b)|(?=.*\bswab\b)|(?=.*\bantigen\b))((?=.*\bcov\b)|(?=.*\bcovid\b)|(?=.*\bsars\b)).*$',
+        multiLine: true,
+        caseSensitive: false);
+    final text = val.replaceAll(RegExp(r'\r?\n|\r'), ' ');
+    return regex.hasMatch(text);
+  }
 }
