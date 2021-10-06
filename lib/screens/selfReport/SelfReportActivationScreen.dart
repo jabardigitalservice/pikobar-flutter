@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,6 +16,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/ImagePicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/NavigatorHelper.dart';
@@ -279,9 +281,20 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
               placeholder: Dictionary.chooseDatePlaceholder,
               validator: (value) {
                 if (value.isEmpty) {
-                  return 'Harus diisi';
+                  return Dictionary.confirmationDate +
+                      Dictionary.pleaseCompleteAllField;
                 }
                 return null;
+              },
+            ),
+            const SizedBox(
+              height: Dimens.verticalPadding,
+            ),
+            ImagePicker(
+              title: Dictionary.uploadTestProof,
+              isRequired: true,
+              imgToTextValue: (value) {
+                print(value.text);
               },
             ),
             Spacer(),
