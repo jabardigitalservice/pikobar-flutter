@@ -13,9 +13,14 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/utilities/OCRHelper.dart';
 
 class ImagePicker extends StatefulWidget {
-  ImagePicker(
-      {Key key, this.title, this.isRequired, this.imgToTextValue, this.image})
-      : super(key: key);
+  ImagePicker({
+    Key key,
+    this.title,
+    this.isRequired,
+    this.imgToTextValue,
+    this.image,
+    this.validator,
+  }) : super(key: key);
 
   final String title;
 
@@ -25,6 +30,8 @@ class ImagePicker extends StatefulWidget {
 
   final void Function(File) image;
 
+  final String Function(Extracted) validator;
+
   @override
   _ImagePickerState createState() => _ImagePickerState();
 }
@@ -32,6 +39,9 @@ class ImagePicker extends StatefulWidget {
 class _ImagePickerState extends State<ImagePicker> {
   final img.ImagePicker _imagePicker = img.ImagePicker();
   File _image;
+  Extracted _extracted;
+
+  bool get _isValid => widget.validator.call(_extracted) == null;
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +81,8 @@ class _ImagePickerState extends State<ImagePicker> {
                 widget.image(_image);
               }
               if (widget.imgToTextValue != null) {
-                final extracted = await OCRHelper(image: _image).extract;
-                widget.imgToTextValue(extracted);
+                _extracted = await OCRHelper(image: _image).extract;
+                widget.imgToTextValue(_extracted);
               }
               setState(() {});
             }
@@ -82,7 +92,7 @@ class _ImagePickerState extends State<ImagePicker> {
             radius: const Radius.circular(8),
             dashPattern: const <double>[5, 3],
             padding: EdgeInsets.zero,
-            color: ColorBase.netralGrey,
+            color: _isValid ? ColorBase.netralGrey : Colors.red,
             child: AspectRatio(
               aspectRatio: 21 / 9,
               child: ClipRRect(
@@ -121,6 +131,8 @@ class _ImagePickerState extends State<ImagePicker> {
                                 onTap: () {
                                   setState(() {
                                     _image = null;
+                                    _extracted = null;
+                                    widget.imgToTextValue?.call(_extracted);
                                   });
                                 },
                                 child: Icon(
@@ -135,7 +147,19 @@ class _ImagePickerState extends State<ImagePicker> {
               ),
             ),
           ),
-        )
+        ),
+        _isValid
+            ? Container()
+            : Container(
+                margin: const EdgeInsets.only(top: 10, left: 16),
+                child: Text(
+                  widget.validator(_extracted),
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
       ],
     );
   }
