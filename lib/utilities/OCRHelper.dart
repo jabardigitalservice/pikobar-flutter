@@ -22,17 +22,6 @@ class OCRHelper {
       throw Exception(e);
     }
   }
-
-  Future<bool> get documentCheck async {
-    final regex = RegExp(
-        r'^((?=.*\brs\b)|(?=.*\bklinik\b)|(?=.*\blab\b)|(?=.*\blaboratorium\b))((?=.*\bpcr\b)|(?=.*\bswab\b)|(?=.*\bantigen\b))((?=.*\bcov\b)|(?=.*\bcovid\b)|(?=.*\bsars\b)).*$',
-        multiLine: true,
-        caseSensitive: false);
-    final extracted = await extract;
-    final text = extracted.text.replaceAll(RegExp(r'\r?\n|\r'), ' ');
-    print(text);
-    return regex.hasMatch(text);
-  }
 }
 
 class Extracted {
