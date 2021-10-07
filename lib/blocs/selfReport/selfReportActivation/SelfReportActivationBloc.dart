@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/SelfReportRepository.dart';
 
@@ -18,8 +19,9 @@ class SelfReportActivationBloc
       await Future.delayed(Duration(seconds: 2));
       String userId = await AuthRepository().getToken();
       final time = DateTime.now().difference(event.date).inDays;
-      if ((event.type == SelfReportActivateType.PCR && time <= 10) ||
-          (event.type == SelfReportActivateType.ANTIGEN && time <= 3)) {
+      if (((event.type == SelfReportActivateType.PCR && time <= 10) ||
+              (event.type == SelfReportActivateType.ANTIGEN && time <= 3)) &&
+          event.isSwabDoc) {
         await SelfReportRepository().activateSelfReport(
           userId: userId,
           date: event.date,

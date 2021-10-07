@@ -12,9 +12,11 @@ abstract class SelfReportActivationEvent extends Equatable {
 class SelfReportActivate extends SelfReportActivationEvent {
   final DateTime date;
   final SelfReportActivateType type;
+  final bool isSwabDoc;
 
-  const SelfReportActivate({this.date, this.type});
+  const SelfReportActivate(
+      {@required this.date, @required this.type, @required this.isSwabDoc});
 
   @override
-  List<Object> get props => [date, type];
+  List<Object> get props => [date, type, isSwabDoc];
 }
