@@ -134,6 +134,7 @@ class Dictionary {
   static String pickFromGallery = 'Ambil dari Galeri';
   static String pickFromCamera = 'Ambil dari Kamera';
   static String or = 'Atau';
+  static String checkTestResult = 'Cek Hasil Tes';
 
   // Error messages
   static String errorConnection = 'Periksa kembali koneksi Internet';
