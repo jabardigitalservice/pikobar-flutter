@@ -178,7 +178,7 @@ class _MessagesState extends State<Messages> {
             },
             itemBuilder: (context, index) {
               bool hasRead = listMessage[index].readAt != null &&
-                      listMessage[index].readAt != 0;
+                  listMessage[index].readAt != 0;
 
               if (MessageRepository.hasNullField(listMessage[index])) {
                 return Container();
@@ -227,11 +227,12 @@ class _MessagesState extends State<Messages> {
                               listMessage[index].title,
                               style: TextStyle(
                                   fontFamily: FontsFamily.roboto,
-                                  fontSize: 12.0,
+                                  fontSize: 14.0,
+                                  height: Dimens.lineHeight,
                                   color: ColorBase.grey800,
                                   fontWeight: hasRead
                                       ? FontWeight.w400
-                                      : FontWeight.w900),
+                                      : FontWeight.w700),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 8.0, bottom: 13.0),
@@ -239,7 +240,7 @@ class _MessagesState extends State<Messages> {
                                 unixTimeStampToDateTime(
                                     listMessage[index].publishedAt),
                                 style: TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 12.0,
                                   color: ColorBase.netralGrey,
                                   fontFamily: FontsFamily.roboto,
                                 ),
@@ -251,7 +252,8 @@ class _MessagesState extends State<Messages> {
                               overflow: TextOverflow.clip,
                               style: TextStyle(
                                   fontFamily: FontsFamily.roboto,
-                                  fontSize: 10.0,
+                                  fontSize: 12.0,
+                                  height: Dimens.lineHeight,
                                   color: hasRead
                                       ? ColorBase.netralGrey
                                       : ColorBase.grey800),

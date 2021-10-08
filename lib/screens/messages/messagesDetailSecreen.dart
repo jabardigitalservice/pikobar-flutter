@@ -189,7 +189,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               ),
             ),
             SizedBox(
-              height: Dimens.sizedBoxHeight,
+              height: Dimens.verticalPadding,
             ),
           ],
         ),
