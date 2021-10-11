@@ -33,6 +33,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   device_info: ^0.4.2+9
   device_preview: ^0.4.8
+  dotted_border: ^1.0.7
   equatable: ^1.2.5
   esys_flutter_share: ^1.0.2
   eva_icons_flutter: ^2.0.1
@@ -71,9 +72,11 @@ dependencies:
   geocoding: ^1.0.5
   geolocator: ^6.1.4+1
   google_maps_flutter: ^1.0.2
+  google_ml_vision: ^0.0.2+1
   google_sign_in: ^4.5.4
   grouped_buttons: ^1.0.4
   http: ^0.12.2
+  image_picker: ^0.6.7+22
   intl: ^0.16.1
   lottie: ^0.7.0+1
   meta: ^1.2.3

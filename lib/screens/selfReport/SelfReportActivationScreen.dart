@@ -15,10 +15,12 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/screens/home/components/ImagePicker.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/NavigatorHelper.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+import 'package:pikobar_flutter/utilities/Validations.dart';
 
 import 'SelfReportList.dart';
 
@@ -69,8 +71,10 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
 
   SelfReportActivationBloc _activationBloc;
   RemoteConfigBloc _remoteConfigBloc;
-  bool isAgree = false;
-  bool isEmptyType = false;
+  bool _isAgree = false;
+  bool _isEmptyType = false;
+  bool _isSwabDoc;
+  String _imageValidator;
 
   @override
   void initState() {
@@ -268,7 +272,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
               controller: _testTypeController,
               title: Dictionary.testType,
               items: _testTypeValue,
-              showError: isEmptyType,
+              showError: _isEmptyType,
             ),
             const SizedBox(
               height: 15,
@@ -279,21 +283,35 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
               placeholder: Dictionary.chooseDatePlaceholder,
               validator: (value) {
                 if (value.isEmpty) {
-                  return 'Harus diisi';
+                  return Dictionary.confirmationDate +
+                      Dictionary.pleaseCompleteAllField;
                 }
                 return null;
+              },
+            ),
+            const SizedBox(
+              height: Dimens.verticalPadding,
+            ),
+            ImagePicker(
+              title: Dictionary.uploadTestProof,
+              isRequired: true,
+              imgToTextValue: (value) {
+                _isSwabDoc = Validations.checkSwabDocument(value?.text);
+              },
+              validator: (value) {
+                return _imageValidator;
               },
             ),
             Spacer(),
             Row(
               children: [
                 Checkbox(
-                  value: isAgree,
+                  value: _isAgree,
                   activeColor: ColorBase.lightLimeGreen,
                   checkColor: ColorBase.limeGreen,
                   onChanged: (bool value) {
                     setState(() {
-                      isAgree = value;
+                      _isAgree = value;
                     });
                   },
                 ),
@@ -321,7 +339,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                       fontSize: 12,
                       color: Colors.white),
                 ),
-                onPressed: isAgree ? _process : null,
+                onPressed: _isAgree ? _process : null,
               ),
             )
           ],
@@ -332,18 +350,24 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
 
   void _process() {
     setState(() {
-      isEmptyType = _testTypeController.text.isEmpty;
+      _isEmptyType = _testTypeController.text.isEmpty;
+      _imageValidator = _isSwabDoc != null
+          ? null
+          : Dictionary.uploadTestProof.replaceAll('Unggah', '') +
+              Dictionary.pleaseCompleteAllField;
     });
 
     if (_formKey.currentState.validate() &&
-        _testTypeController.text.isNotEmpty) {
+        _testTypeController.text.isNotEmpty &&
+        _isSwabDoc != null) {
       AnalyticsHelper.setLogEvent(Analytics.submitSelfReportActivation);
 
       final date = DateTime.parse(_dateController.text);
       final type = _testTypeController.text == _testTypeValue[1]
           ? SelfReportActivateType.PCR
           : SelfReportActivateType.ANTIGEN;
-      _activationBloc.add(SelfReportActivate(date: date, type: type));
+      _activationBloc.add(
+          SelfReportActivate(date: date, type: type, isSwabDoc: _isSwabDoc));
     }
   }
 }

@@ -130,6 +130,10 @@ class Dictionary {
   static String reset = 'Reset';
   static String checkZone = 'Cek Zona Risiko';
   static String requestActivation = 'Ajukan Permohonan';
+  static String uploadPhoto = 'Unggah Foto';
+  static String pickFromGallery = 'Ambil dari Galeri';
+  static String pickFromCamera = 'Ambil dari Kamera';
+  static String or = 'Atau';
   static String checkTestResult = 'Cek Hasil Tes';
 
   // Error messages
@@ -260,6 +264,8 @@ class Dictionary {
   static String callCenterModel = 'CallCenterModel';
   static String gugusTugasWebModel = 'GugusTugasWebModel';
   static String chooseLocationEditProfile = 'Pilih Lokasi pada Edit Profil';
+  static String btsImgPickerDescription =
+      'Pastikan Anda melampirkan bukti foto berupa surat keterangan hasil tes yang memuat nama pemeriksa, hasil tes, dll.';
 
   // OnBoarding Login
   static String titleOnBoardingLogin =
@@ -429,6 +435,7 @@ class Dictionary {
       'Untuk melakukan laporan mandiri lagi, \nsilakan lakukan reset melalui tombol titik tiga \ndi pojok kanan atas';
   static String doctorConsultation = 'Telekonsultasi \nDokter';
   static String vitaminApplication = 'Permohonan Vitamin/Obat';
+  static String uploadTestProof = 'Unggah Bukti Hasil Tes';
 
   //Covid information
   static String searchInformation = 'Cari Informasi di sini';
