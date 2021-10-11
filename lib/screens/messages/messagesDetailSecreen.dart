@@ -198,8 +198,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             right: 0.0,
             bottom: 0.0,
             child: data.actionTitle != null && data.actionUrl != null
-                ? Padding(
+                ? Container(
                     padding: EdgeInsets.all(20.0),
+                    color: Colors.white,
                     child: RoundedButton(
                         title: data.actionTitle,
                         color: ColorBase.green,
