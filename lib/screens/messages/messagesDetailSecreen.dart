@@ -96,20 +96,20 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               color: Colors.grey,
             ),
             Container(
-              margin: EdgeInsets.only(top: 5.0),
+              margin: const EdgeInsets.only(top: 5.0),
               width: MediaQuery.of(context).size.width / 3,
               height: 10.0,
               color: Colors.grey,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 200.0,
               color: Colors.grey,
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             _loadingText(),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             _loadingText(),
           ],
         ),
@@ -122,7 +122,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
     for (int i = 0; i < 4; i++) {
       widgets.add(Container(
-        margin: EdgeInsets.only(bottom: 5.0),
+        margin: const EdgeInsets.only(bottom: 5.0),
         width: MediaQuery.of(context).size.width,
         height: 18.0,
         color: Colors.grey,
@@ -130,7 +130,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     }
 
     widgets.add(Container(
-      margin: EdgeInsets.only(bottom: 5.0),
+      margin: const EdgeInsets.only(bottom: 5.0),
       width: MediaQuery.of(context).size.width / 2,
       height: 18.0,
       color: Colors.grey,
@@ -145,7 +145,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       children: [
         ListView(
           controller: _scrollController,
-          padding: EdgeInsets.all(Dimens.padding),
+          padding: const EdgeInsets.all(Dimens.padding),
           children: <Widget>[
             AnimatedOpacity(
               opacity: _showTitle ? 0.0 : 1.0,
@@ -173,7 +173,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 context),
             Container(
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 6, bottom: Dimens.padding),
+              margin: const EdgeInsets.only(top: 6, bottom: Dimens.padding),
               child: Html(
                 data: data.content,
                 style: {
@@ -188,7 +188,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 },
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: Dimens.verticalPadding,
             ),
           ],
@@ -199,7 +199,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             bottom: 0.0,
             child: data.actionTitle != null && data.actionUrl != null
                 ? Container(
-                    padding: EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(20.0),
                     color: Colors.white,
                     child: RoundedButton(
                         title: data.actionTitle,
@@ -218,7 +218,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   _buildText(Text text, context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(bottom: 10.0),
+      margin: const EdgeInsets.only(bottom: 10.0),
       child: text,
     );
   }
