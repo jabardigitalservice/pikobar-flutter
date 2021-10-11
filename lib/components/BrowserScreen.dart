@@ -19,9 +19,11 @@ class BrowserScreen extends StatefulWidget {
 class _BrowserScreenState extends State<BrowserScreen> {
   double progress = 0.0;
   InAppWebViewController webView;
+  String url;
 
   @override
   void initState() {
+    url = widget.url;
     super.initState();
   }
 
@@ -50,14 +52,16 @@ class _BrowserScreenState extends State<BrowserScreen> {
             Expanded(
               child: Container(
                 child: InAppWebView(
-                  initialUrl: widget.url,
+                  initialUrl: url,
                   initialHeaders: {},
                   initialOptions: InAppWebViewGroupOptions(
                       crossPlatform: InAppWebViewOptions(
+                          debuggingEnabled: true,
+                          applicationNameForUserAgent: 'PIKOBAR',
                           useShouldOverrideUrlLoading: true,
                           mediaPlaybackRequiresUserGesture: false,
                           javaScriptEnabled: true,
-                          applicationNameForUserAgent: 'PIKOBAR',
+                          javaScriptCanOpenWindowsAutomatically: true,
                           userAgent:
                               "Mozilla/5.0 (Linux; Android 9; LG-H870 Build/PKQ1.190522.001) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36"),
                       android: AndroidInAppWebViewOptions(
@@ -70,6 +74,13 @@ class _BrowserScreenState extends State<BrowserScreen> {
                       )),
                   onWebViewCreated: (InAppWebViewController controller) {
                     webView = controller;
+                  },
+                  onCreateWindow: (controller, createWindowRequest) async {
+                    setState(() {
+                      url = createWindowRequest.url;
+                      webView.loadUrl(url: url);
+                    });
+                    return false;
                   },
                   onProgressChanged:
                       (InAppWebViewController controller, int progress) {
