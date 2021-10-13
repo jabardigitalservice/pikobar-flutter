@@ -78,6 +78,9 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
 
   @override
   void initState() {
+    AnalyticsHelper.setCurrentScreen(Analytics.selfReportsActivation);
+    AnalyticsHelper.setLogEvent(Analytics.tappedSelfReportActivation);
+
     _activationBloc = BlocProvider.of<SelfReportActivationBloc>(context);
     _remoteConfigBloc = BlocProvider.of<RemoteConfigBloc>(context);
     _remoteConfigBloc.add(RemoteConfigLoad());
@@ -297,6 +300,9 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
               isRequired: true,
               imgToTextValue: (value) {
                 _isSwabDoc = Validations.checkSwabDocument(value?.text);
+                AnalyticsHelper.setLogEvent(_isSwabDoc
+                    ? Analytics.validSwabDoc
+                    : Analytics.invalidSwabDoc);
               },
               validator: (value) {
                 return _imageValidator;

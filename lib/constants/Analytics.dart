@@ -12,6 +12,7 @@ class Analytics {
   static String checkDistribution = 'Cek Sebaran';
   static String document = 'Dokumen';
   static String selfReports = 'Lapor Mandiri';
+  static String selfReportsActivation = 'Aktivasi Lapor Mandiri';
   static String education = 'Konten Edukasi';
   static String announcement = 'tapped_pengumuman_selengkapnya';
   static String profile = 'Akun';
@@ -183,11 +184,14 @@ class Analytics {
 
   static String crowdReport = "tapped_lapor_kerumunan";
 
+  static String tappedSelfReportActivation = "tapped_aktivasi_lapor_mandiri";
   static String submitSelfReportActivation = 'submit_aktivasi_lapor_madiri';
   static String selfReportActivationSuccess = 'aktivasi_lapor_madiri_sukses';
   static String selfReportActivationFail = 'aktivasi_lapor_madiri_gagal';
   static String selfReportActivationRequerst =
       'request_aktivasi_lapor_madiri_manual';
+  static String validSwabDoc = 'valid_swab_document';
+  static String invalidSwabDoc = 'invalid_swab_document';
 
   //event profile
   static String tappedEditProfile = "tapped_edit_akun";
