@@ -416,12 +416,8 @@ class BuildButtonMenu extends StatelessWidget {
                           firebaseConfig: firebaseConfigArguments,
                           defaultValue: defaultArguments));
 
-                  if (route == NavigationConstrants.Browser) {
-                    openChromeSafariBrowser(url: combinedArguments);
-                  } else {
-                    Navigator.pushNamed(context, route,
-                        arguments: combinedArguments);
-                  }
+                  Navigator.pushNamed(context, route,
+                      arguments: combinedArguments);
                 }
               } else {
                 combinedArguments = await userDataUrlAppend(
@@ -430,12 +426,8 @@ class BuildButtonMenu extends StatelessWidget {
                         firebaseConfig: firebaseConfigArguments,
                         defaultValue: defaultArguments));
 
-                if (route == NavigationConstrants.Browser) {
-                  openChromeSafariBrowser(url: combinedArguments);
-                } else {
-                  Navigator.pushNamed(context, route,
-                      arguments: combinedArguments);
-                }
+                Navigator.pushNamed(context, route,
+                    arguments: combinedArguments);
               }
             } else {
               combinedArguments = await userDataUrlAppend(
@@ -444,12 +436,7 @@ class BuildButtonMenu extends StatelessWidget {
                       firebaseConfig: firebaseConfigArguments,
                       defaultValue: defaultArguments));
 
-              if (route == NavigationConstrants.Browser) {
-                openChromeSafariBrowser(url: combinedArguments);
-              } else {
-                Navigator.pushNamed(context, route,
-                    arguments: combinedArguments);
-              }
+              Navigator.pushNamed(context, route, arguments: combinedArguments);
             }
           } else {
             combinedArguments = await userDataUrlAppend(
@@ -458,11 +445,7 @@ class BuildButtonMenu extends StatelessWidget {
                     firebaseConfig: firebaseConfigArguments,
                     defaultValue: defaultArguments));
 
-            if (route == NavigationConstrants.Browser) {
-              openChromeSafariBrowser(url: combinedArguments);
-            } else {
-              Navigator.pushNamed(context, route, arguments: combinedArguments);
-            }
+            Navigator.pushNamed(context, route, arguments: combinedArguments);
           }
 
           // record event to analytics
