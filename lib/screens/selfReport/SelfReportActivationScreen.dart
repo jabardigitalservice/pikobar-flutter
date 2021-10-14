@@ -309,7 +309,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                   return _imageValidator;
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 35,
               ),
               Row(
