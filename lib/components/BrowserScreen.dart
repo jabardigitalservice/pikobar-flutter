@@ -76,10 +76,12 @@ class _BrowserScreenState extends State<BrowserScreen> {
                     webView = controller;
                   },
                   onCreateWindow: (controller, createWindowRequest) async {
-                    setState(() {
-                      url = createWindowRequest.url;
-                      webView.loadUrl(url: url);
-                    });
+                    if (createWindowRequest.url != null) {
+                      setState(() {
+                        url = createWindowRequest.url;
+                        webView.loadUrl(url: url);
+                      });
+                    }
                     return false;
                   },
                   onProgressChanged:
