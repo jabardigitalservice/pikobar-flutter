@@ -91,7 +91,7 @@ class _ImagePickerState extends State<ImagePicker> {
             borderType: BorderType.RRect,
             radius: const Radius.circular(8),
             dashPattern: const <double>[5, 3],
-            padding: EdgeInsets.zero,
+            padding: EdgeInsets.all(1),
             color: _isValid ? ColorBase.netralGrey : Colors.red,
             child: AspectRatio(
               aspectRatio: 21 / 9,
@@ -228,6 +228,7 @@ class _ImagePickerState extends State<ImagePicker> {
               onPressed: () async {
                 pickedFile =
                     await _imagePicker.getImage(source: ImageSource.camera);
+                Navigator.pop(context);
               },
             ),
           ],

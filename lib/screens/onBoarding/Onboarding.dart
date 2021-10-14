@@ -35,7 +35,7 @@ class PermissionScreen extends StatelessWidget {
                           '${Environment.imageAssets}share_location.png'),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 15,
                     ),
                     Text(
                       Dictionary.permissionLocationTitleIOS,
@@ -47,7 +47,7 @@ class PermissionScreen extends StatelessWidget {
                           height: 1.5),
                     ),
                     const SizedBox(
-                      height: 45,
+                      height: 30,
                     ),
                     _buildListTile(
                         icon: '${Environment.iconAssets}maps_search.png',
@@ -87,6 +87,9 @@ class PermissionScreen extends StatelessWidget {
                           onPressed: () async {
                             await _requestPermissions(context);
                           }),
+                      const SizedBox(
+                        height: Dimens.padding,
+                      ),
                     ],
                   ),
                 )
@@ -100,7 +103,7 @@ class PermissionScreen extends StatelessWidget {
 
   Widget _buildListTile({@required String icon, @required String title}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

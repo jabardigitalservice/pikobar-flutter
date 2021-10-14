@@ -258,97 +258,101 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
       key: _formKey,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 32),
-              child: Text(
-                Dictionary.dailySelfReport,
-                style: TextStyle(
-                    fontFamily: FontsFamily.lato,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            RadioFormField(
-              controller: _testTypeController,
-              title: Dictionary.testType,
-              items: _testTypeValue,
-              showError: _isEmptyType,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            DateField(
-              controller: _dateController,
-              title: Dictionary.confirmationDate,
-              placeholder: Dictionary.chooseDatePlaceholder,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return Dictionary.confirmationDate +
-                      Dictionary.pleaseCompleteAllField;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: Dimens.verticalPadding,
-            ),
-            ImagePicker(
-              title: Dictionary.uploadTestProof,
-              isRequired: true,
-              imgToTextValue: (value) {
-                _isSwabDoc = Validations.checkSwabDocument(value?.text);
-                AnalyticsHelper.setLogEvent(_isSwabDoc
-                    ? Analytics.validSwabDoc
-                    : Analytics.invalidSwabDoc);
-              },
-              validator: (value) {
-                return _imageValidator;
-              },
-            ),
-            Spacer(),
-            Row(
-              children: [
-                Checkbox(
-                  value: _isAgree,
-                  activeColor: ColorBase.lightLimeGreen,
-                  checkColor: ColorBase.limeGreen,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _isAgree = value;
-                    });
-                  },
-                ),
-                Expanded(
-                  child: Text(Dictionary.selfReportActivationAgreement),
-                ),
-              ],
-            ),
-            Container(
-              width: double.infinity,
-              height: 50,
-              margin: const EdgeInsets.only(top: 32, bottom: 20),
-              child: RaisedButton(
-                splashColor: Colors.lightGreenAccent,
-                padding: const EdgeInsets.all(0),
-                color: ColorBase.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Dimens.borderRadius),
-                ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 32),
                 child: Text(
-                  Dictionary.checkTestResult,
+                  Dictionary.dailySelfReport,
                   style: TextStyle(
-                      fontFamily: FontsFamily.roboto,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.white),
+                      fontFamily: FontsFamily.lato,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
                 ),
-                onPressed: _isAgree ? _process : null,
               ),
-            )
-          ],
+              RadioFormField(
+                controller: _testTypeController,
+                title: Dictionary.testType,
+                items: _testTypeValue,
+                showError: _isEmptyType,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              DateField(
+                controller: _dateController,
+                title: Dictionary.confirmationDate,
+                placeholder: Dictionary.chooseDatePlaceholder,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return Dictionary.confirmationDate +
+                        Dictionary.pleaseCompleteAllField;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: Dimens.verticalPadding,
+              ),
+              ImagePicker(
+                title: Dictionary.uploadTestProof,
+                isRequired: true,
+                imgToTextValue: (value) {
+                  _isSwabDoc = Validations.checkSwabDocument(value?.text);
+                  AnalyticsHelper.setLogEvent(_isSwabDoc
+                      ? Analytics.validSwabDoc
+                      : Analytics.invalidSwabDoc);
+                },
+                validator: (value) {
+                  return _imageValidator;
+                },
+              ),
+              const SizedBox(
+                height: 35,
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: _isAgree,
+                    activeColor: ColorBase.lightLimeGreen,
+                    checkColor: ColorBase.limeGreen,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isAgree = value;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: Text(Dictionary.selfReportActivationAgreement),
+                  ),
+                ],
+              ),
+              Container(
+                width: double.infinity,
+                height: 50,
+                margin: const EdgeInsets.only(top: 32, bottom: 20),
+                child: RaisedButton(
+                  splashColor: Colors.lightGreenAccent,
+                  padding: const EdgeInsets.all(0),
+                  color: ColorBase.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                  ),
+                  child: Text(
+                    Dictionary.checkTestResult,
+                    style: TextStyle(
+                        fontFamily: FontsFamily.roboto,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Colors.white),
+                  ),
+                  onPressed: _isAgree ? _process : null,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
