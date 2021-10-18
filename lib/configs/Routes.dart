@@ -16,6 +16,7 @@ import 'package:pikobar_flutter/screens/phonebook/Phonebook.dart';
 import 'package:pikobar_flutter/screens/selfReport/SelfReportScreen.dart';
 import 'package:pikobar_flutter/screens/survey/surveysScreen.dart';
 import 'package:pikobar_flutter/screens/videos/videosScreen.dart';
+import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 Route generateRoutes(RouteSettings settings) {
   // getting arguments passed
@@ -85,8 +86,12 @@ Route generateRoutes(RouteSettings settings) {
       return buildRoute(settings, Bansos());
 
 // screen Data Covid
-    case NavigationConstrants.covidData:
+    case NavigationConstrants.CovidData:
       return buildRoute(settings, CovidDataScreen());
+
+    case NavigationConstrants.LaunchUrl:
+      launchExternal(args);
+      return null;
 
     default:
       return null;
