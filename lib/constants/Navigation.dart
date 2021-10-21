@@ -18,5 +18,6 @@ class NavigationConstrants {
   static const String Faq = "/faq";
   static const String SelfReports = "/self-reports";
   static const String PikobarComplaints = "/pikobar-complaints";
-  static const String covidData = "/data-covid";
+  static const String CovidData = "/data-covid";
+  static const String LaunchUrl = "/launch-url";
 }
