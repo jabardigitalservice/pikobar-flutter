@@ -10,7 +10,9 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
-class PermissionScreen extends StatelessWidget {
+class OnBoardingScreen extends StatelessWidget {
+  const OnBoardingScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
