@@ -25,7 +25,11 @@ import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'SelfReportList.dart';
 
 class SelfReportActivationScreen extends StatelessWidget {
-  const SelfReportActivationScreen({this.location, this.cityId});
+  const SelfReportActivationScreen({
+    Key key,
+    this.location,
+    this.cityId,
+  }) : super(key: key);
 
   final LatLng location;
   final String cityId;

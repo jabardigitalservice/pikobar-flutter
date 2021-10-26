@@ -19,7 +19,7 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/LocationsRepository.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
-import 'package:pikobar_flutter/screens/onBoarding/Onboarding.dart';
+import 'package:pikobar_flutter/screens/onBoarding/OnboardingScreen.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 
 import 'AnalyticsHelper.dart';
@@ -54,7 +54,7 @@ class LocationService {
     bool isGranted;
 
     final result = await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PermissionScreen()))
+            MaterialPageRoute(builder: (context) => OnBoardingScreen()))
         as Map<Permission, PermissionStatus>;
 
     if (result != null) {

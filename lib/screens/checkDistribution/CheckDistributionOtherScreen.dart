@@ -14,6 +14,8 @@ import 'package:pikobar_flutter/repositories/CheckDistributionRepository.dart';
 import 'package:pikobar_flutter/screens/checkDistribution/CheckDistributionDetailScreen.dart';
 
 class CheckDistributionOtherScrenn extends StatefulWidget {
+  const CheckDistributionOtherScrenn({Key key}) : super(key: key);
+
   @override
   _CheckDistributionOtherScrennState createState() =>
       _CheckDistributionOtherScrennState();
