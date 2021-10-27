@@ -238,6 +238,7 @@ class _ImagePickerState extends State<ImagePicker> {
       return File(pickedFile.path);
     } else {
       print('No image selected.');
+      if (_image != null) return _image;
       return null;
     }
   }

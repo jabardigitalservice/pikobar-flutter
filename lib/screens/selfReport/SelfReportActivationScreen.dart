@@ -219,6 +219,9 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                           elevation: 0.0,
                           onPressed: () {
                             Navigator.pop(context);
+                            _isSwabDoc = null;
+                            _isAgree = false;
+                            setState(() {});
                           })
                     ],
                   ));
@@ -305,9 +308,11 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                 isRequired: true,
                 imgToTextValue: (value) {
                   _isSwabDoc = Validations.checkSwabDocument(value?.text);
-                  AnalyticsHelper.setLogEvent(_isSwabDoc
-                      ? Analytics.validSwabDoc
-                      : Analytics.invalidSwabDoc);
+                  if (_isSwabDoc != null) {
+                    AnalyticsHelper.setLogEvent(_isSwabDoc
+                        ? Analytics.validSwabDoc
+                        : Analytics.invalidSwabDoc);
+                  }
                 },
                 validator: (value) {
                   return _imageValidator;
@@ -352,7 +357,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                         fontSize: 12,
                         color: Colors.white),
                   ),
-                  onPressed: _isAgree ? _process : null,
+                  onPressed: _isFulfilled ? _process : null,
                 ),
               )
             ],
@@ -360,6 +365,13 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
         ),
       ),
     );
+  }
+
+  bool get _isFulfilled {
+    return _isAgree &&
+        _testTypeController.text.isNotEmpty &&
+        _dateController.text.isNotEmpty &&
+        _isSwabDoc != null;
   }
 
   void _process() {
@@ -372,7 +384,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
     });
 
     if (_formKey.currentState.validate() &&
-        _testTypeController.text.isNotEmpty &&
+        !_isEmptyType &&
         _isSwabDoc != null) {
       AnalyticsHelper.setLogEvent(Analytics.submitSelfReportActivation);
 
