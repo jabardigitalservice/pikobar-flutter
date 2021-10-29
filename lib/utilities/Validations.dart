@@ -26,11 +26,16 @@ class Validations {
   }
 
   static String nikValidation(String val) {
+    RegExp formatValidation = RegExp(
+        r"^(1[1-9]|21|[37][1-6]|5[1-3]|6[1-5]|[89][12])\d{2}\d{2}([04][1-9]|[1256][0-9]|[37][01])(0[1-9]|1[0-2])\d{2}(?!0000)\d{4}$");
+
+    if (val.isEmpty) return Dictionary.errorEmptyNIK;
+
     if (val.length > 16) return Dictionary.errorMaximumNIK;
 
     if (val.length < 16) return Dictionary.errorMinimumNIK;
 
-    if (val.isEmpty) return Dictionary.errorEmptyNIK;
+    if (!formatValidation.hasMatch(val)) return Dictionary.errorNotValidNIK;
 
     return null;
   }

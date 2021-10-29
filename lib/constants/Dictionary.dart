@@ -174,6 +174,7 @@ class Dictionary {
   static String errorEmptyNIK = 'NIK harus diisi';
   static String errorMinimumNIK = 'NIK harus terdiri dari 16 karakter';
   static String errorMaximumNIK = 'NIK harus terdiri dari 16 karakter';
+  static String errorNotValidNIK = 'Format NIK tidak sesuai';
   static String aggrementIsFalse =
       'Silakan setujui Terms & Conditions untuk login';
   static String errorEmptyOTP = 'OTP harus diisi';
