@@ -49,6 +49,8 @@
 	<true/>
 	<key>NSAllowsArbitraryLoads</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Pikobar memerlukan izin untuk mengakses kamera untuk memindai dokumen swab</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -60,9 +62,9 @@
 	<key>NSMotionUsageDescription</key>
 	<string>Pikobar memerlukan izin mendeteksi gerakan untuk mengaktifkan akses lokasi</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Pikobar memerlukan izin untuk menyimpan gambar ke gallery</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Pikobar memerlukan izin untuk mengakses kamera</string>
+	<string>Pikobar memerlukan izin untuk mengakses gambar dari gallery untuk memindai dokumen swab</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pikobar memerlukan izin untuk mengakses gambar dari gallery untuk memindai dokumen swab</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

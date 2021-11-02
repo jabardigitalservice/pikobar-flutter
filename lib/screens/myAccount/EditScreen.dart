@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -74,6 +75,7 @@ class _EditState extends State<Edit> {
   LatLng latLng;
   List<dynamic> listCity;
   ScrollController _scrollController;
+  Timer _debounce;
 
   @override
   void initState() {
@@ -92,6 +94,7 @@ class _EditState extends State<Edit> {
     _genderController.text = getField(widget.state, 'gender');
     _cityController.text = getField(widget.state, 'city_id');
     _nikController.text = getField(widget.state, 'nik');
+    _nikController.addListener(_onNIKChanged);
     latLng = getField(widget.state, 'location') == null
         ? null
         : new LatLng(widget.state['location'].latitude,
@@ -1075,6 +1078,42 @@ class _EditState extends State<Edit> {
         ],
       ),
     );
+  }
+
+  void _onNIKChanged() {
+    if (_debounce?.isActive ?? false) _debounce.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_nikController.text.trim().isNotEmpty &&
+          _nikController.text.length == 16) {
+        int day = int.parse(_nikController.text.substring(6, 8));
+        int month = int.parse(_nikController.text.substring(8, 10));
+        int year = int.parse(_nikController.text.substring(10, 12));
+        setState(() {
+          if (day > 40) {
+            _genderController.text = 'F';
+            day -= 40;
+          } else {
+            _genderController.text = 'M';
+          }
+
+          try {
+            String formatedYear = DateFormat('yy').format(DateTime.now());
+            int currentYear = int.parse(formatedYear);
+            if (year > currentYear) {
+              year += 1900;
+            } else {
+              year += 2000;
+            }
+            String date =
+                DateFormat('dd/MM/yyyy').parse('$day/$month/$year').toString();
+            _birthDayController.text = date;
+          } catch (e) {
+            print(e);
+          }
+        });
+      }
+    });
   }
 
   // Function to call remote config
