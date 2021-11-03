@@ -88,6 +88,19 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
     _activationBloc = BlocProvider.of<SelfReportActivationBloc>(context);
     _remoteConfigBloc = BlocProvider.of<RemoteConfigBloc>(context);
     _remoteConfigBloc.add(RemoteConfigLoad());
+
+    _testTypeController.addListener(() {
+      setState(() {
+        _isFulfilled;
+      });
+    });
+
+    _dateController.addListener(() {
+      setState(() {
+        _isFulfilled;
+      });
+    });
+
     super.initState();
   }
 
@@ -313,6 +326,9 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                         ? Analytics.validSwabDoc
                         : Analytics.invalidSwabDoc);
                   }
+                  setState(() {
+                    _isFulfilled;
+                  });
                 },
                 validator: (value) {
                   return _imageValidator;
@@ -395,5 +411,14 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
       _activationBloc.add(
           SelfReportActivate(date: date, type: type, isSwabDoc: _isSwabDoc));
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _testTypeController.dispose();
+    _dateController.dispose();
+    _activationBloc.close();
+    _remoteConfigBloc.close();
   }
 }
