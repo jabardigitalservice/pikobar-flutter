@@ -55,8 +55,13 @@ class _EditState extends State<Edit> {
   final _birthDayController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
+  final _nikController = MaskedTextController(mask: '0000000000000000');
 
-  var _nikController = new MaskedTextController(mask: '0000000000000000');
+  final _nikFocusNode = FocusNode();
+  final _nameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _phoneNumberFocusNode = FocusNode();
+  final _addressFocusNode = FocusNode();
 
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
@@ -292,7 +297,8 @@ class _EditState extends State<Edit> {
                                   title: Dictionary.name,
                                   hintText: Dictionary.placeholderYourName,
                                   controller: _nameController,
-                                  validation: Validations.nameValidation,
+                                  focusNode: _nameFocusNode,
+                                  validator: Validations.nameValidation,
                                   isEdit: true),
                               const SizedBox(
                                 height: 20,
@@ -300,6 +306,7 @@ class _EditState extends State<Edit> {
                               buildTextField(
                                   title: Dictionary.email,
                                   controller: _emailController,
+                                  focusNode: _emailFocusNode,
                                   isEdit: false),
                               const SizedBox(
                                 height: 20,
@@ -307,9 +314,10 @@ class _EditState extends State<Edit> {
                               buildTextField(
                                   title: Dictionary.nik,
                                   controller: _nikController,
+                                  focusNode: _nikFocusNode,
                                   textInputType: TextInputType.number,
                                   hintText: Dictionary.placeholderYourNIK,
-                                  validation: Validations.nikValidation,
+                                  validator: Validations.nikValidation,
                                   isEdit: true),
                               const SizedBox(
                                 height: 20,
@@ -317,6 +325,7 @@ class _EditState extends State<Edit> {
                               buildPhoneField(
                                   title: Dictionary.telephoneNumber,
                                   controller: _phoneNumberController,
+                                  focusNode: _phoneNumberFocusNode,
                                   validation: Validations.telephoneValidation,
                                   isEdit: true,
                                   hintText: Dictionary.phoneNumberPlaceholder),
@@ -409,9 +418,10 @@ class _EditState extends State<Edit> {
                               buildTextField(
                                   title: Dictionary.addressDomicile,
                                   controller: _addressController,
+                                  focusNode: _addressFocusNode,
                                   maxLines: 2,
                                   hintText: Dictionary.addressPlaceholder,
-                                  validation: Validations.addressValidation,
+                                  validator: Validations.addressValidation,
                                   isEdit: true),
                               const SizedBox(
                                 height: 20,
@@ -824,8 +834,9 @@ class _EditState extends State<Edit> {
   Widget buildTextField(
       {String title,
       TextEditingController controller,
+      FocusNode focusNode,
       String hintText,
-      validation,
+      FormFieldValidator<String> validator,
       TextInputType textInputType,
       TextStyle textStyle,
       bool isEdit,
@@ -869,7 +880,16 @@ class _EditState extends State<Edit> {
                     fontFamily: FontsFamily.roboto,
                     fontSize: 14),
             enabled: isEdit,
-            validator: validation,
+            validator: (value) {
+              if (validator != null) {
+                String validate = validator(value);
+                if (validate != null && focusNode != null) {
+                  focusNode.requestFocus();
+                }
+                return validate;
+              }
+            },
+            focusNode: focusNode,
             textCapitalization: TextCapitalization.words,
             controller: controller,
             decoration: InputDecoration(
@@ -1005,6 +1025,7 @@ class _EditState extends State<Edit> {
   Widget buildPhoneField(
       {String title,
       TextEditingController controller,
+      FocusNode focusNode,
       String hintText,
       validation,
       TextInputType textInputType,
@@ -1050,6 +1071,7 @@ class _EditState extends State<Edit> {
             enabled: isEdit,
             validator: validation,
             controller: controller,
+            focusNode: focusNode,
             decoration: InputDecoration(
                 hintText: hintText,
                 filled: true,
