@@ -25,7 +25,7 @@ class ImportantInfoListBloc
   Stream<ImportantInfoListState> _mapLoadVideosToState(
       String collection) async* {
     yield ImportantInfoListLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = _repository
         .getInfoImportantList(improtantInfoCollection: collection)
         .listen((importantInfo) {
@@ -45,8 +45,8 @@ class ImportantInfoListBloc
   }
 
   @override
-  Future<void> close() {
-    _subscription?.cancel();
+  Future<void> close() async {
+    await _subscription?.cancel();
     return super.close();
   }
 }

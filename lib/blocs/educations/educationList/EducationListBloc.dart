@@ -26,7 +26,7 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   Stream<EducationListState> _mapLoadEducationsToState(
       String collection, int limit) async* {
     yield EducationLisLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = _repository
         .getEducationList(educationCollection: collection, limit: limit)
         .listen((List<EducationModel> education) =>
@@ -39,8 +39,8 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   }
 
   @override
-  Future<void> close() {
-    _subscription?.cancel();
+  Future<void> close() async {
+    await _subscription?.cancel();
     return super.close();
   }
 }
