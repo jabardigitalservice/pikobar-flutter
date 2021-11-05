@@ -22,7 +22,7 @@ class CityListBloc extends Bloc<CityListEvent, CityListState> {
 
   Stream<CityListState> _mapLoadCitysToState() async* {
     yield CityListLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = _repository
         .getCityList()
         .listen((cityList) => add(CityListUpdate(cityList)));
@@ -33,8 +33,8 @@ class CityListBloc extends Bloc<CityListEvent, CityListState> {
   }
 
   @override
-  Future<void> close() {
-    _subscription?.cancel();
+  Future<void> close() async {
+    await _subscription?.cancel();
     return super.close();
   }
 }
