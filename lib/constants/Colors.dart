@@ -29,6 +29,6 @@ class ColorBase {
 
   static final yellow = Color(0xFFFFD026);
 
-  static final healthStatusColors =
+  static const healthStatusColors =
       '{"healthy": "009d57","odp": "fff45a","pdp": "ffc831","confirmed": "ff0000"}';
 }

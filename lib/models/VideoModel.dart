@@ -21,8 +21,7 @@ class VideoModel extends Equatable {
       id: doc.id,
       title: data['title'] ?? '',
       url: data['url'] ?? '',
-      publishedAt:
-          data["published_at"] != null ? data["published_at"].seconds : null,
+      publishedAt: data["published_at"]?.seconds,
     );
   }
 

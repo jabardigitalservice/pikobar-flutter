@@ -53,7 +53,7 @@ class _InWebViewState extends State<InWebView> {
 
   Future<bool> _exitWebView(BuildContext context) async {
     if (await controllerGlobal.canGoBack()) {
-      controllerGlobal.goBack();
+      await controllerGlobal.goBack();
       return Future.value(false);
     } else {
       return Future.value(true);

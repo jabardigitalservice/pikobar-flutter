@@ -38,7 +38,7 @@ class CheckDistributionRepository {
   }
 
   Future<void> saveToCollection(String id, lat, long) async {
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection(kUsers)
         .doc(id)
         .update({'location': GeoPoint(lat, long)});

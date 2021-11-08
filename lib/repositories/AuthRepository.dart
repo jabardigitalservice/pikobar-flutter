@@ -251,7 +251,7 @@ class AuthRepository {
       final userDocument =
           FirebaseFirestore.instance.collection(kUsers).doc(_user.uid);
 
-      _firebaseMessaging.getToken().then((token) {
+      await _firebaseMessaging.getToken().then((token) {
         final tokensDocument = userDocument.collection(kUserTokens).doc(token);
 
         tokensDocument.get().then((snapshot) {
@@ -261,9 +261,9 @@ class AuthRepository {
         });
       });
 
-      FirebaseAnalytics().setUserId(_user.uid);
+      await FirebaseAnalytics().setUserId(_user.uid);
 
-      userDocument.get().then((snapshot) {
+      await userDocument.get().then((snapshot) {
         if (snapshot.exists && getField(snapshot, 'city_id') != null) {
           FirebaseAnalytics().setUserProperty(
               name: 'city_id', value: getField(snapshot, 'city_id'));
@@ -310,7 +310,6 @@ class AuthRepository {
     await _firebaseMessaging.unsubscribeFromTopic('self_reports');
 
     await _firebaseMessaging.getToken().then((token) async {
-
       final tokensDocument = FirebaseFirestore.instance
           .collection(kUsers)
           .doc(authUserInfo.uid)

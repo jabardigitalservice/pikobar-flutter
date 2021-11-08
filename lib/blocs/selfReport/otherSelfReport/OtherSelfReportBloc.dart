@@ -26,14 +26,11 @@ class OtherSelfReportBloc
     } else if (event is OtherSelfReportUpdated) {
       yield* _selfReportListToState(event);
     }
-
   }
-
- 
 
   Stream<OtherSelfReportState> _loadOtherSelfReportToState() async* {
     yield OtherSelfReportLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     String userId = await AuthRepository().getToken();
 
     _subscription = SelfReportRepository()
@@ -43,14 +40,8 @@ class OtherSelfReportBloc
     });
   }
 
-
-
   Stream<OtherSelfReportState> _selfReportListToState(
       OtherSelfReportUpdated event) async* {
-      yield OtherSelfReportLoaded(
-          querySnapshot: event.selfReportList);
-    
+    yield OtherSelfReportLoaded(querySnapshot: event.selfReportList);
   }
-
- 
 }

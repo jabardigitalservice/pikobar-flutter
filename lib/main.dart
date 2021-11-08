@@ -21,7 +21,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'configs/Routes.dart';
 
 /// Receive events from BackgroundGeolocation in Headless state.
-void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) async {
+void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) {
   print('📬 --> $headlessEvent');
 
   switch (headlessEvent.name) {
@@ -81,7 +81,7 @@ void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) async {
 }
 
 /// This "Headless Task" is run when app is terminated.
-void backgroundFetchHeadlessTask(String taskId) async {
+void backgroundFetchHeadlessTask(String taskId) {
   print('[BackgroundFetch] Headless event received.');
   BackgroundFetch.finish(taskId);
 }
@@ -100,7 +100,7 @@ class SimpleBlocObserver extends BlocObserver {
   }
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Bloc.observer = SimpleBlocObserver();
@@ -128,12 +128,12 @@ void main() async {
   });
 
   /// Register BackgroundGeolocation headless-task.
-  bg.BackgroundGeolocation.registerHeadlessTask(
+  await bg.BackgroundGeolocation.registerHeadlessTask(
       backgroundGeolocationHeadlessTask);
 
   /// Register to receive BackgroundFetch events after app is terminated.
   /// Requires {stopOnTerminate: false, enableHeadless: true}
-  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class App extends StatefulWidget {

@@ -6,7 +6,12 @@ class InfographicModel {
   String title;
   // List<dynamic> images;
 
-  InfographicModel({this.id, this.title, this.publishedDate, /*this.images*/});
+  InfographicModel({
+    this.id,
+    this.title,
+    this.publishedDate,
+    /*this.images*/
+  });
 
   factory InfographicModel.fromFirestore(DocumentSnapshot document) {
     Map<String, dynamic> json = document.data();
@@ -14,9 +19,7 @@ class InfographicModel {
     return InfographicModel(
       id: document.id,
       title: json["title"] ?? '',
-      publishedDate: json["published_date"] != null
-          ? json["published_date"].seconds
-          : null,
+      publishedDate: json["published_date"]?.seconds,
       // images: json["images"],
     );
   }
