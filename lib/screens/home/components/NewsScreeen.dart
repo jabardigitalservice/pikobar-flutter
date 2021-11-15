@@ -25,6 +25,7 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+import 'package:pedantic/pedantic.dart';
 
 class NewsScreen extends StatefulWidget {
   final String news;
@@ -166,7 +167,8 @@ class _NewsScreenState extends State<NewsScreen> {
                               getDataLabel();
                             }
 
-                            AnalyticsHelper.setLogEvent(Analytics.tappedMore);
+                            await AnalyticsHelper.setLogEvent(
+                                Analytics.tappedMore);
                           },
                         ),
                       ],
@@ -231,7 +233,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                           .getAllUnreadData();
                                     }
                                   });
-                                  Navigator.push(
+                                  unawaited(Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => NewsDetailScreen(
@@ -239,8 +241,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                           news: widget.news,
                                           model: list[index]),
                                     ),
-                                  );
-                                  AnalyticsHelper.setLogEvent(
+                                  ));
+                                  await AnalyticsHelper.setLogEvent(
                                       Analytics.tappedNewsDetail,
                                       <String, dynamic>{
                                         'title': newsmodel.title
@@ -267,7 +269,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                           }
                                         });
 
-                                        Navigator.push(
+                                        unawaited(Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
@@ -276,8 +278,8 @@ class _NewsScreenState extends State<NewsScreen> {
                                                     news: widget.news,
                                                     model: list[index]),
                                           ),
-                                        );
-                                        AnalyticsHelper.setLogEvent(
+                                        ));
+                                        await AnalyticsHelper.setLogEvent(
                                             Analytics.tappedNewsDetail,
                                             <String, dynamic>{
                                               'title': newsmodel.title
@@ -370,15 +372,15 @@ class _NewsScreenState extends State<NewsScreen> {
               }
             });
 
-            Navigator.push(
+            unawaited(Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => NewsDetailScreen(
                     id: data.id, news: widget.news, model: data),
               ),
-            );
+            ));
 
-            AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+            await AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
                 <String, dynamic>{'title': data.title});
           },
           child: Container(
@@ -636,14 +638,14 @@ class _NewsScreenState extends State<NewsScreen> {
                 }
               });
 
-              Navigator.push(
+              unawaited(Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => NewsDetailScreen(
                       id: data.id, news: widget.news, model: data),
                 ),
-              );
-              AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
+              ));
+              await AnalyticsHelper.setLogEvent(Analytics.tappedNewsDetail,
                   <String, dynamic>{'title': data.title});
             },
           ),

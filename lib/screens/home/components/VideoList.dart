@@ -12,7 +12,6 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
@@ -213,7 +212,8 @@ class _VideoListState extends State<VideoList> {
                           getDataLabel();
                         }
 
-                        AnalyticsHelper.setLogEvent(Analytics.tappedVideoMore);
+                        await AnalyticsHelper.setLogEvent(
+                            Analytics.tappedVideoMore);
                       },
                     ),
                   ],

@@ -161,7 +161,7 @@ class _ZonationState extends State<Zonation>
                             Analytics.tappedCheckZone);
 
                         if (isGranted) {
-                          _zonationCubit.loadZonation();
+                          await _zonationCubit.loadZonation();
                         } else {
                           await LocationService.initializeBackgroundLocation(
                               context);

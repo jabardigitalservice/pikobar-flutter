@@ -12,7 +12,6 @@ import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/repositories/RemoteConfigRepository.dart';
 import 'package:pikobar_flutter/screens/home/components/bansos/Bansos.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
@@ -85,7 +84,7 @@ class ComplaintsMenuScreen extends StatelessWidget {
                                     .getBool(FirebaseConfig.reportEnabled)
                             ? null
                             : () async {
-                                Navigator.push(
+                                await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Bansos()),

@@ -225,7 +225,7 @@ class _DailyChartState extends State<DailyChart> {
                       elevation: 0,
                       onPressed: () async {
                         if (titleButton == Dictionary.shareLocation) {
-                          AnalyticsHelper.setLogEvent(
+                          await AnalyticsHelper.setLogEvent(
                               Analytics.tappedShareLocation);
                           await LocationService.initializeBackgroundLocation(
                               context);

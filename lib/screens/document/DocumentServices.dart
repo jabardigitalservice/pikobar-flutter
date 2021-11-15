@@ -17,7 +17,7 @@ class DocumentServices {
           title.replaceAll(RegExp(r"\|.*"), '').replaceAll('/', '').trim();
       await Share.file(Dictionary.appName, '$namefile.pdf', bytes, 'text/pdf',
           text: '${Dictionary.sharedFrom}');
-      AnalyticsHelper.setLogEvent(
+      await AnalyticsHelper.setLogEvent(
           Analytics.tappedShareDocuments, <String, dynamic>{
         'title': title.length < 100 ? title : title.substring(0, 100)
       });

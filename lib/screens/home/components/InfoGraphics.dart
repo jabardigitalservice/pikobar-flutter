@@ -23,6 +23,7 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
+import 'package:pedantic/pedantic.dart';
 
 class InfoGraphics extends StatefulWidget {
   final String searchQuery;
@@ -209,7 +210,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
                           getDataLabel();
                         }
 
-                        AnalyticsHelper.setLogEvent(
+                        await AnalyticsHelper.setLogEvent(
                             Analytics.tappedInfoGraphicsMore);
                       },
                     ),
@@ -337,7 +338,7 @@ class _InfoGraphicsState extends State<InfoGraphics> {
         : Container();
   }
 
-  void _tapAction(DocumentSnapshot document) async {
+  Future<void> _tapAction(DocumentSnapshot document) async {
     setState(() {
       labelNew.readNewInfo(
           document.id,
@@ -347,11 +348,11 @@ class _InfoGraphicsState extends State<InfoGraphics> {
       widget.covidInformationScreenState.widget.homeScreenState
           .getAllUnreadData();
     });
-    Navigator.of(context).push(MaterialPageRoute(
+    unawaited(Navigator.of(context).push(MaterialPageRoute(
         builder: (context) =>
-            DetailInfoGraphicScreen(dataInfoGraphic: document)));
+            DetailInfoGraphicScreen(dataInfoGraphic: document))));
 
-    AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
+    await AnalyticsHelper.setLogEvent(Analytics.tappedInfoGraphicsDetail,
         <String, dynamic>{'title': document['title']});
   }
 }

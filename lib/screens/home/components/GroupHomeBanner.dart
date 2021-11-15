@@ -69,7 +69,8 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                       padding: EdgeInsets.all(0.0),
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                        borderRadius:
+                            BorderRadius.circular(Dimens.borderRadius),
                       ),
                       child: Row(
                         children: <Widget>[
@@ -122,14 +123,14 @@ class _GroupHomeBannerState extends State<GroupHomeBanner> {
                           if (isLoggedIn != null && isLoggedIn) {
                             var url =
                                 await userDataUrlAppend(groupBanner[i]['url']);
-                            AnalyticsHelper.setLogEvent(
+                            await AnalyticsHelper.setLogEvent(
                                 groupBanner[i]['analyticName']);
                             openChromeSafariBrowser(url: url);
                           }
                         } else {
                           var url =
                               await userDataUrlAppend(groupBanner[i]['url']);
-                          AnalyticsHelper.setLogEvent(
+                          await AnalyticsHelper.setLogEvent(
                               groupBanner[i]['analyticName']);
                           openChromeSafariBrowser(url: url);
                         }

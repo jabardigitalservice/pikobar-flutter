@@ -99,8 +99,8 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       onTap: (index) {
         if (index == 0) {
           setState(() {
-            lastUpdate = unixTimeStampToDate(
-                widget.document.get('last_update').seconds);
+            lastUpdate =
+                unixTimeStampToDate(widget.document.get('last_update').seconds);
           });
           AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
         } else if (index == 1) {
@@ -167,43 +167,39 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
     return SafeArea(
       top: false,
       bottom: false,
-      child: Builder(
-          builder: (BuildContext context) {
-          return CustomScrollView(
-            slivers: <Widget>[
-              SliverOverlapInjector(
-                handle:
-                NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+      child: Builder(builder: (BuildContext context) {
+        return CustomScrollView(
+          slivers: <Widget>[
+            SliverOverlapInjector(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            ),
+            SliverToBoxAdapter(
+              child: ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  // Announcement section
+                  widget.remoteConfig != null &&
+                          dataAnnouncement[announcementArray]['enabled'] == true
+                      ? buildAnnouncement(announcementArray)
+                      : Container(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  buildHeader(titleHeader, total, Color(0xffFAFAFA)),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  detailContent,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
-
-              SliverToBoxAdapter(
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: <Widget>[
-                    // Announcement section
-                    widget.remoteConfig != null &&
-                            dataAnnouncement[announcementArray]['enabled'] == true
-                        ? buildAnnouncement(announcementArray)
-                        : Container(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildHeader(titleHeader, total, Color(0xffFAFAFA)),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    detailContent,
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        }
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
@@ -580,16 +576,16 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
 
         if (isLoggedIn != null && isLoggedIn) {
           url = await userDataUrlAppend(url);
-          AnalyticsHelper.setLogEvent(analyticsUrl);
+          await AnalyticsHelper.setLogEvent(analyticsUrl);
           openChromeSafariBrowser(url: url);
         }
       } else {
         url = await userDataUrlAppend(url);
-        AnalyticsHelper.setLogEvent(analyticsUrl);
+        await AnalyticsHelper.setLogEvent(analyticsUrl);
         openChromeSafariBrowser(url: url);
       }
     } else {
-      AnalyticsHelper.setLogEvent(analyticsUrl);
+      await AnalyticsHelper.setLogEvent(analyticsUrl);
       openChromeSafariBrowser(url: url);
     }
   }

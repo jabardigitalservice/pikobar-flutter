@@ -14,9 +14,9 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/SliverGrideDelegate.dart';
+import 'package:pedantic/pedantic.dart';
 
 class MenuList extends StatefulWidget {
   MenuList({Key key}) : super(key: key);
@@ -416,8 +416,8 @@ class BuildButtonMenu extends StatelessWidget {
                           firebaseConfig: firebaseConfigArguments,
                           defaultValue: defaultArguments));
 
-                  Navigator.pushNamed(context, route,
-                      arguments: combinedArguments);
+                  unawaited(Navigator.pushNamed(context, route,
+                      arguments: combinedArguments));
                 }
               } else {
                 combinedArguments = await userDataUrlAppend(
@@ -426,8 +426,8 @@ class BuildButtonMenu extends StatelessWidget {
                         firebaseConfig: firebaseConfigArguments,
                         defaultValue: defaultArguments));
 
-                Navigator.pushNamed(context, route,
-                    arguments: combinedArguments);
+                unawaited(Navigator.pushNamed(context, route,
+                    arguments: combinedArguments));
               }
             } else {
               combinedArguments = await userDataUrlAppend(
@@ -436,7 +436,8 @@ class BuildButtonMenu extends StatelessWidget {
                       firebaseConfig: firebaseConfigArguments,
                       defaultValue: defaultArguments));
 
-              Navigator.pushNamed(context, route, arguments: combinedArguments);
+              unawaited(Navigator.pushNamed(context, route,
+                  arguments: combinedArguments));
             }
           } else {
             combinedArguments = await userDataUrlAppend(
@@ -445,52 +446,56 @@ class BuildButtonMenu extends StatelessWidget {
                     firebaseConfig: firebaseConfigArguments,
                     defaultValue: defaultArguments));
 
-            Navigator.pushNamed(context, route, arguments: combinedArguments);
+            unawaited(Navigator.pushNamed(context, route,
+                arguments: combinedArguments));
           }
 
           // record event to analytics
           if (defaultLabel == Dictionary.phoneBookEmergency) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedphoneBookEmergency);
+            await AnalyticsHelper.setLogEvent(
+                Analytics.tappedphoneBookEmergency);
           } else if (defaultLabel == Dictionary.saberHoax) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedJabarSaberHoax);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedJabarSaberHoax);
           } else if (defaultLabel == Dictionary.titleSelfReport) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedSelfReports);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedSelfReports);
           } else if (iconPath == '${Environment.iconAssets}pikobar.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedInfoCorona);
           } else if (iconPath == '${Environment.iconAssets}indo_flag.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedKawalCovid19);
           } else if (iconPath == '${Environment.iconAssets}world.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedWorldInfo);
           } else if (defaultLabel == Dictionary.survey) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedSurvey);
           } else if (iconPath == '${Environment.iconAssets}self_diagnose.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedSelfDiagnose);
           } else if (iconPath == '${Environment.iconAssets}logistics.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedLogistic);
           } else if (iconPath ==
               '${Environment.iconAssets}relawan_active.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedVolunteer);
           } else if (iconPath ==
               '${Environment.iconAssets}report_case_active.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedCaseReport);
           } else if (iconPath == '${Environment.iconAssets}help.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedDonasi);
           } else if (iconPath ==
               '${Environment.iconAssets}conversation_active.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedQna);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedQna);
           } else if (defaultLabel == Dictionary.bansos) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedBansos);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedBansos);
           } else if (defaultLabel == Dictionary.massiveTestRegistration) {
-            AnalyticsHelper.setLogEvent(Analytics.tappedMassiveTest);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedMassiveTest);
           } else if (iconPath ==
               '${Environment.iconAssets}menu_informasi_vaksin.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedVaccinInformation);
+            await AnalyticsHelper.setLogEvent(
+                Analytics.tappedVaccinInformation);
           } else if (iconPath ==
               '${Environment.iconAssets}menu_keterisian_bed_rs.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedHospitalBedOccupancy);
+            await AnalyticsHelper.setLogEvent(
+                Analytics.tappedHospitalBedOccupancy);
           } else if (iconPath ==
               '${Environment.iconAssets}menu_terapi_oksigen.png') {
-            AnalyticsHelper.setLogEvent(Analytics.tappedOxygenTherapy);
+            await AnalyticsHelper.setLogEvent(Analytics.tappedOxygenTherapy);
           }
         }
       },

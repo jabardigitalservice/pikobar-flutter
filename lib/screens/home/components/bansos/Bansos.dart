@@ -174,7 +174,7 @@ class _BansosState extends State<Bansos> {
     );
   }
 
-  void _launchEmail() async {
+  Future<void> _launchEmail() async {
     dynamic params;
     if (Platform.isAndroid) {
       params = Uri(
@@ -182,8 +182,8 @@ class _BansosState extends State<Bansos> {
         path: 'dtks@kemsos.go.id',
       );
     } else if (Platform.isIOS) {
-      final String subject = "Subject:";
-      final String stringText = "Message:";
+      const String subject = "Subject:";
+      const String stringText = "Message:";
       params =
           'mailto:dtks@kemsos.go.id?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(stringText)}';
     }

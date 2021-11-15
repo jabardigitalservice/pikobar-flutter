@@ -19,14 +19,15 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 class CovidInformationScreen extends StatefulWidget {
   final HomeScreenState homeScreenState;
 
-  const CovidInformationScreen({Key key, this.homeScreenState}) : super(key: key);
+  const CovidInformationScreen({Key key, this.homeScreenState})
+      : super(key: key);
 
   @override
   CovidInformationScreenState createState() => CovidInformationScreenState();
 }
 
 class CovidInformationScreenState extends State<CovidInformationScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
   bool isEmptyDataInfoGraphic = false;
@@ -62,8 +63,8 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
     return ListView(
       children: [
         SizedBox(height: Dimens.sizedBoxHeight),
-        CustomAppBar.buildSearchField(context,
-            _searchController, Dictionary.searchInformation, updateSearchQuery,
+        CustomAppBar.buildSearchField(context, _searchController,
+            Dictionary.searchInformation, updateSearchQuery,
             margin: EdgeInsets.symmetric(horizontal: Dimens.padding)),
         SizedBox(height: Dimens.verticalPadding * 1.5),
         !getIsEmptyData()
@@ -115,7 +116,9 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
       }
     });
 
-    AnalyticsHelper.analyticSearch(searchController: _searchController, event: Analytics.tappedSearchCovidInformation);
+    AnalyticsHelper.analyticSearch(
+        searchController: _searchController,
+        event: Analytics.tappedSearchCovidInformation);
   }
 
   void _clearSearchQuery() {
@@ -138,7 +141,6 @@ class CovidInformationScreenState extends State<CovidInformationScreen> {
     isEmptyDataVideoList = false;
     isEmptyDataDocument = false;
   }
-
 
   @override
   void dispose() {
