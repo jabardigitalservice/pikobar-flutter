@@ -8,9 +8,9 @@ import 'package:sqflite/sqflite.dart';
 class DBProvider {
   DBProvider._();
 
-  static final _dbName = Environment.databaseNameProd;
+  static const _dbVersion = 3;
 
-  static final _dbVersion = 3;
+  static final _dbName = Environment.databaseNameProd;
 
   static final DBProvider db = DBProvider._();
 
@@ -26,16 +26,17 @@ class DBProvider {
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, _dbName);
-    return await openDatabase(path, version: _dbVersion,
-        onCreate: _onCreate, onUpgrade: _onUpgrade);
+    return await openDatabase(path,
+        version: _dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
-  static final String _createTablePopupInformation = "CREATE TABLE PopupInformation ("
+  static const String _createTablePopupInformation =
+      "CREATE TABLE PopupInformation ("
       "id INTEGER PRIMARY KEY,"
       "last_shown TEXT"
       ")";
 
-  static final String _createTableMessages = "CREATE TABLE Messages ("
+  static const String _createTableMessages = "CREATE TABLE Messages ("
       "id TEXT PRIMARY KEY,"
       "backlink TEXT,"
       "content TEXT,"
@@ -45,7 +46,6 @@ class DBProvider {
       "read_at INTEGER,"
       "published_at INTEGER"
       ")";
-
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(_createTablePopupInformation);
@@ -57,7 +57,7 @@ class DBProvider {
       try {
         await db.execute("DROP TABLE IF EXISTS Messages");
         await db.execute(_createTableMessages);
-      } catch (e){
+      } catch (e) {
         print("Update v3 error : ${e.toString()}");
       }
     }

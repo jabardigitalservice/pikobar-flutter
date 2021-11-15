@@ -25,8 +25,7 @@ class EducationModel {
       image: json["image"] ?? '',
       sourceChannel: json["source_channel"] ?? '',
       title: json["title"] ?? '',
-      publishedAt:
-          json["published_at"] != null ? json["published_at"].seconds : null,
+      publishedAt: json["published_at"]?.seconds,
     );
   }
 }

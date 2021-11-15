@@ -38,8 +38,7 @@ class ImportantInfoModel {
       attachmentUrl: json["attachment_url"] ?? '',
       attachmentName: json["attachment_name"] ?? '',
       published: json["published"] ?? false,
-      publishedAt:
-          json["published_at"] != null ? json["published_at"].seconds : null,
+      publishedAt: json["published_at"]?.seconds,
     );
   }
 }

@@ -26,14 +26,11 @@ class ContactHistoryListBloc
     } else if (event is ContactHistoryListUpdated) {
       yield* _contactHistoryListToState(event);
     }
-
   }
-
- 
 
   Stream<ContactHistoryListState> _loadContactHistoryListToState() async* {
     yield ContactHistoryListLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     String userId = await AuthRepository().getToken();
 
     _subscription = SelfReportRepository()
@@ -43,14 +40,8 @@ class ContactHistoryListBloc
     });
   }
 
-
-
   Stream<ContactHistoryListState> _contactHistoryListToState(
       ContactHistoryListUpdated event) async* {
-      yield ContactHistoryListLoaded(
-          querySnapshot: event.contactHistoryList);
-    
+    yield ContactHistoryListLoaded(querySnapshot: event.contactHistoryList);
   }
-
- 
 }

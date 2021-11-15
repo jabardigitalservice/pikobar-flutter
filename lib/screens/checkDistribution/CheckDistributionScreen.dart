@@ -257,7 +257,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                     String id =
                                                         await AuthRepository()
                                                             .getToken();
-                                                    _handleLocation(
+                                                    await _handleLocation(
                                                         isOther: false, id: id);
                                                   }
                                                 } else {
@@ -266,7 +266,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                                                           .getToken();
 
                                                   /// Get user location
-                                                  _handleLocation(
+                                                  await _handleLocation(
                                                       isOther: false, id: id);
                                                 }
                                               }),
@@ -411,7 +411,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
       await _actionFindLocation(isOther, id);
     } else {
       // Show permission dialog
-      showDialog(
+      await showDialog(
           context: context,
           builder: (context) => DialogRequestPermission(
                 image: Image.asset(
@@ -427,7 +427,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
                         ? await AppSettings.openAppSettings()
                         : await AppSettings.openLocationSettings();
                   } else {
-                    permissionService.request().then((status) {
+                    await permissionService.request().then((status) {
                       _onStatusRequested(context, status,
                           isOther: isOther, id: id);
                     });
@@ -469,7 +469,7 @@ class _CheckDistributionState extends State<CheckDistribution> {
         _checkDistribution(result.latitude, result.longitude, isOther);
 
         // analytics
-        AnalyticsHelper.setLogEvent(
+        await AnalyticsHelper.setLogEvent(
             Analytics.tappedFindByLocation, <String, dynamic>{
           'latlong': '${result.latitude}, ${result.longitude}'
         });
@@ -518,24 +518,25 @@ class _CheckDistributionState extends State<CheckDistribution> {
               id: id);
 
           // analytics
-          AnalyticsHelper.setLogEvent(
+          await AnalyticsHelper.setLogEvent(
               Analytics.tappedFindByLocation, <String, dynamic>{
             'latlong': '${position.latitude}, ${position.longitude}'
           });
         }
       }
       // analytics
-      AnalyticsHelper.setLogEvent(Analytics.tappedCheckCurrentLocation);
+      await AnalyticsHelper.setLogEvent(Analytics.tappedCheckCurrentLocation);
     }
   }
 
-  void _onStatusRequested(BuildContext context, PermissionStatus statuses,
+  Future<void> _onStatusRequested(
+      BuildContext context, PermissionStatus statuses,
       {bool isOther, String id}) async {
     if (statuses.isGranted) {
       _actionFindLocation(isOther, id);
-      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+      await AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
-      AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+      await AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }
   }
 

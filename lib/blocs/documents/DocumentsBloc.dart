@@ -7,7 +7,7 @@ import 'package:pikobar_flutter/utilities/LabelNew.dart';
 import './Bloc.dart';
 
 class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
-  DocumentsRepository _repository = DocumentsRepository();
+  final DocumentsRepository _repository = DocumentsRepository();
   StreamSubscription<Object> _subscription;
   LabelNew labelNew = LabelNew();
 
@@ -26,7 +26,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
 
   Stream<DocumentsState> _mapLoadDocumentsToState({int limit}) async* {
     yield DocumentsLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = _repository.getDocuments(limit: limit).listen(
       (List<DocumentSnapshot> data) {
         labelNew.insertDataLabel(data, Dictionary.labelDocuments);
@@ -41,8 +41,8 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
   }
 
   @override
-  Future<void> close() {
-    _subscription?.cancel();
+  Future<void> close() async {
+    await _subscription?.cancel();
     return super.close();
   }
 }

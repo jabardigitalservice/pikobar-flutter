@@ -61,7 +61,7 @@ class InfoGraphicsListBloc
             List<DocumentSnapshot> dataListAllinfographics =
                 <DocumentSnapshot>[];
 
-            for (var iterable in event) {
+            for (final iterable in event) {
               dataListAllinfographics.addAll(iterable.toList());
             }
 

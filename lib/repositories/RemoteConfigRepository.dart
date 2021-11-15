@@ -14,7 +14,7 @@ class RemoteConfigRepository {
 
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
+    await remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.jshCaption: Dictionary.saberHoax,
       FirebaseConfig.jshUrl: kUrlIGSaberHoax,
       FirebaseConfig.pikobarCaption: Dictionary.pikobar,

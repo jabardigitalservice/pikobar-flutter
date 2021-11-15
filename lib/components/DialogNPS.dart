@@ -41,11 +41,12 @@ class _DialogNPSState extends State<DialogNPS> {
       child: BlocConsumer<NPSCubit, NPSState>(
         listener: (BuildContext context, NPSState state) async {
           if (state is NPSLoading) {
-            _flushbar = FlushHelper.loading()..show(context);
+            _flushbar = FlushHelper.loading();
+            await _flushbar.show(context);
           } else if (state is NPSFailed) {
             await _flushbar.dismiss();
 
-            showDialog(
+            await showDialog(
                 context: context,
                 builder: (context) => DialogTextOnly(
                       description: Dictionary.errorExternal,
@@ -218,7 +219,8 @@ class _DialogNPSState extends State<DialogNPS> {
                   ? () async {
                       if (_formKey.currentState.validate()) {
                         FocusScope.of(context).unfocus();
-                        AnalyticsHelper.setLogEvent(Analytics.tappedSendNPS);
+                        await AnalyticsHelper.setLogEvent(
+                            Analytics.tappedSendNPS);
                         final NPSModel npsData = NPSModel(
                             score: _currentSliderValue.round().toString(),
                             feedback: _feedbackFieldController.text.trim());
@@ -238,7 +240,7 @@ class _DialogNPSState extends State<DialogNPS> {
               borderSide: BorderSide(color: ColorBase.disableText),
               elevation: 0.0,
               onPressed: () async {
-                AnalyticsHelper.setLogEvent(Analytics.tappedSkipNPS);
+                await AnalyticsHelper.setLogEvent(Analytics.tappedSkipNPS);
                 await NPSRepository.setNPSTimeLater(
                     DateTime.now().millisecondsSinceEpoch);
 

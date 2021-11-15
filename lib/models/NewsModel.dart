@@ -42,8 +42,7 @@ class NewsModel {
       backlink: json["backlink"] ?? '',
       newsChannel: json["news_channel"] ?? '',
       newsChannelIcon: json["news_channel_icon"] ?? '',
-      publishedAt:
-          json["published_at"] != null ? json["published_at"].seconds : null,
+      publishedAt: json["published_at"]?.seconds,
       actionUrl: json["action_url"] ?? null,
       actionTitle: json["action_title"] ?? null,
       attachmentUrl: json["attachment_url"] ?? '',

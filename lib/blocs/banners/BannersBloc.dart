@@ -22,10 +22,10 @@ class BannersBloc extends Bloc<BannersEvent, BannersState> {
 
   Stream<BannersState> _mapBannersLoadToState() async* {
     yield BannersLoading();
-    _subscription?.cancel();
+    await _subscription?.cancel();
     _subscription = _repository.getBanners().listen(
           (banners) => add(BannersUpdate(banners)),
-    );
+        );
   }
 
   Stream<BannersState> _mapBannersUpdateToState(BannersUpdate event) async* {
@@ -33,8 +33,8 @@ class BannersBloc extends Bloc<BannersEvent, BannersState> {
   }
 
   @override
-  Future<void> close() {
-    _subscription?.cancel();
+  Future<void> close() async {
+    await _subscription?.cancel();
     return super.close();
   }
 }
