@@ -89,18 +89,6 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
     _remoteConfigBloc = BlocProvider.of<RemoteConfigBloc>(context);
     _remoteConfigBloc.add(RemoteConfigLoad());
 
-    _testTypeController.addListener(() {
-      setState(() {
-        _isFulfilled;
-      });
-    });
-
-    _dateController.addListener(() {
-      setState(() {
-        _isFulfilled;
-      });
-    });
-
     super.initState();
   }
 
@@ -326,9 +314,6 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                         ? Analytics.validSwabDoc
                         : Analytics.invalidSwabDoc);
                   }
-                  setState(() {
-                    _isFulfilled;
-                  });
                 },
                 validator: (value) {
                   return _imageValidator;
@@ -373,7 +358,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                         fontSize: 12,
                         color: Colors.white),
                   ),
-                  onPressed: _isFulfilled ? _process : null,
+                  onPressed: _isAgree ? _process : null,
                 ),
               )
             ],
@@ -381,13 +366,6 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
         ),
       ),
     );
-  }
-
-  bool get _isFulfilled {
-    return _isAgree &&
-        _testTypeController.text.isNotEmpty &&
-        _dateController.text.isNotEmpty &&
-        _isSwabDoc != null;
   }
 
   void _process() {
