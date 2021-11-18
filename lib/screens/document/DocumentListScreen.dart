@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,6 @@ import 'package:pikobar_flutter/components/ThumbnailCard.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
-import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/LabelNewModel.dart';
 import 'package:pikobar_flutter/screens/home/components/CovidInformationScreen.dart';
@@ -52,7 +50,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   List<DocumentSnapshot> _allDocs = [];
   List<DocumentSnapshot> _limitedDocs = [];
 
-  LabelNew _labelNew = LabelNew();
+  final LabelNew _labelNew = LabelNew();
   Timer _debounce;
   String _searchQuery;
   bool _isGetDataLabel = true;
@@ -115,7 +113,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 child: BlocBuilder<DocumentsBloc, DocumentsState>(
                   builder: (context, state) {
                     return state is DocumentsLoaded
-                        ? _buildContent(_limitedDocs)
+                        ? _buildContent(dataDocuments: _limitedDocs)
                         : _buildLoading();
                   },
                 ),
@@ -132,7 +130,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
     return Future.value();
   }
 
-  Widget _buildContent(List<DocumentSnapshot> dataDocuments) {
+  Widget _buildContent({List<DocumentSnapshot> dataDocuments}) {
     if (_searchQuery != null && _searchQuery.isNotEmpty) {
       dataDocuments = _allDocs
           .where((test) =>
@@ -242,8 +240,8 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
   }
 
   Future<void> _viewPdf(String title, String url) async {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => InWebView(url: url, title: title)));
+    unawaited(Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title))));
 
     await AnalyticsHelper.setLogEvent(Analytics.openDocument, <String, dynamic>{
       'name_document': title.length < 100 ? title : title.substring(0, 100),
@@ -269,7 +267,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
                 },
               )));
     } else {
-      Navigator.push(
+      unawaited(Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DocumentViewScreen(
@@ -277,7 +275,7 @@ class _DocumentListScreenState extends State<DocumentListScreen> {
             nameFile: name,
           ),
         ),
-      );
+      ));
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{

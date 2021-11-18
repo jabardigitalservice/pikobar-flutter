@@ -22,7 +22,7 @@ class LocationPicker extends StatefulWidget {
 }
 
 class _LocationPickerState extends State<LocationPicker> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   GeocoderBloc _geocoderBloc;
 
   Map<String, Marker> markers = <String, Marker>{};
@@ -42,7 +42,7 @@ class _LocationPickerState extends State<LocationPicker> {
     super.initState();
   }
 
-  void _onMapCreated(GoogleMapController controller) async {
+  Future<void> _onMapCreated(GoogleMapController controller) async {
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(target: _currentPosition, zoom: 15.5),
@@ -174,7 +174,7 @@ class _LocationPickerState extends State<LocationPicker> {
     _geocoderBloc.add(GeocoderGetLocation(coordinate: _currentPosition));
   }
 
-  void _initializeLocation() async {
+  Future<void> _initializeLocation() async {
     final GoogleMapController controller = await _controller.future;
     Position position = await Geolocator.getCurrentPosition();
 

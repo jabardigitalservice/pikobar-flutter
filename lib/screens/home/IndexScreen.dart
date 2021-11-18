@@ -50,7 +50,7 @@ class IndexScreen extends StatefulWidget {
 }
 
 class IndexScreenState extends State<IndexScreen> {
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   static FirebaseInAppMessaging firebaseInAppMsg = FirebaseInAppMessaging();
 
   int _currentIndex = 0;
@@ -128,10 +128,10 @@ class IndexScreenState extends State<IndexScreen> {
       bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
       bool hasExistedSavedDir = await savedDir.exists();
       if (!hasExistedPublicDownloadDir) {
-        publicDownloadDir.create();
+        await publicDownloadDir.create();
       }
       if (!hasExistedSavedDir) {
-        savedDir.create();
+        await savedDir.create();
       }
     } else if (Platform.isIOS) {
       await FlutterDownloader.initialize();
@@ -141,13 +141,13 @@ class IndexScreenState extends State<IndexScreen> {
       bool hasExistedPublicDownloadDir = await publicDownloadDir.exists();
 
       if (!hasExistedPublicDownloadDir) {
-        publicDownloadDir.create();
+        await publicDownloadDir.create();
       }
 
       final savedDir = Directory(_localPath);
       bool hasExisted = await savedDir.exists();
       if (!hasExisted) {
-        savedDir.create();
+        await savedDir.create();
       }
     }
   }
@@ -268,65 +268,65 @@ class IndexScreenState extends State<IndexScreen> {
       }
 
       if (data['id'] != null && data['id'] != 'null') {
-        Navigator.of(context).push(MaterialPageRoute(
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => NewsDetailScreen(
                   id: data['id'].toString().trim(),
                   news: newsType,
-                )));
+                ))));
       } else {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => NewsListScreen(news: newsType)));
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => NewsListScreen(news: newsType))));
       }
     } else if (data['target'] == 'infographics') {
       if (data['id'] != null &&
           data['id'] != 'null' &&
           data['type'] != null &&
           data['type'] != 'null') {
-        Navigator.of(context).push(MaterialPageRoute(
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => DetailInfoGraphicScreen(
                   id: data['id'].toString().trim(),
                   infographicType: data['type'],
-                )));
+                ))));
       } else {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => InfoGraphicsScreen()));
+        unawaited(Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => InfoGraphicsScreen())));
       }
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
-        Navigator.of(context).push(MaterialPageRoute(
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                MessageDetailScreen(id: data['id'].toString().trim())));
+                MessageDetailScreen(id: data['id'].toString().trim()))));
       } else {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Messages(indexScreenState: this)));
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => Messages(indexScreenState: this))));
       }
     } else if (data['target'] == 'self_reports') {
-      Navigator.of(context).push(MaterialPageRoute(
+      unawaited(Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => SelfReportScreen(
                 toNextScreen: true,
-              )));
+              ))));
     } else if (data['target'] == 'important_info') {
       if (data['id'] != null && data['id'] != 'null') {
-        Navigator.of(context).push(MaterialPageRoute(
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => NewsDetailScreen(
                   id: data['id'].toString().trim(),
                   news: Dictionary.importantInfo,
-                )));
+                ))));
       } else {
-        Navigator.of(context).push(MaterialPageRoute(
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                NewsListScreen(news: Dictionary.importantInfo)));
+                NewsListScreen(news: Dictionary.importantInfo))));
       }
     } else if (data['target'] == 'content_education') {
       if (data['id'] != null && data['id'] != 'null') {
-        Navigator.of(context).push(MaterialPageRoute(
+        unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => EducationDetailScreen(
                   id: data['id'].toString().trim(),
                   educationCollection: kEducationContent,
-                )));
+                ))));
       } else {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SelfReportScreen()));
+        unawaited(Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => SelfReportScreen())));
       }
     } else if (data['target'] == 'url') {
       if (data['url'] != null && data['url'] != 'null') {
@@ -335,8 +335,8 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'documents') {
       if (data['url'] != null && data['url'] != 'null') {
         Platform.isAndroid
-            ? _downloadAttachment(data['title'], data['url'])
-            : _viewPdf(data['title'], data['url']);
+            ? await _downloadAttachment(data['title'], data['url'])
+            : await _viewPdf(data['title'], data['url']);
       }
     }
   }
@@ -349,16 +349,16 @@ class IndexScreenState extends State<IndexScreen> {
     }
   }
 
-  void _viewPdf(String title, String url) async {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => InWebView(url: url, title: title)));
+  Future<void> _viewPdf(String title, String url) async {
+    unawaited(Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title))));
 
     await AnalyticsHelper.setLogEvent(Analytics.openDocument, <String, dynamic>{
       'name_document': title.length < 100 ? title : title.substring(0, 100),
     });
   }
 
-  void _downloadAttachment(String name, String url) async {
+  Future<void> _downloadAttachment(String name, String url) async {
     if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
@@ -377,7 +377,7 @@ class IndexScreenState extends State<IndexScreen> {
                 },
               )));
     } else {
-      Navigator.push(
+      unawaited(Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DocumentViewScreen(
@@ -385,7 +385,7 @@ class IndexScreenState extends State<IndexScreen> {
             nameFile: name,
           ),
         ),
-      );
+      ));
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{

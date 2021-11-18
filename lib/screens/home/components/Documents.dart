@@ -136,7 +136,8 @@ class _DocumentsState extends State<Documents> {
                     getDataLabel();
                   }
 
-                  AnalyticsHelper.setLogEvent(Analytics.tappedDocumentsMore);
+                  await AnalyticsHelper.setLogEvent(
+                      Analytics.tappedDocumentsMore);
                 },
               ),
             ],
@@ -283,7 +284,7 @@ class _DocumentsState extends State<Documents> {
                           getDataLabel();
                         }
 
-                        AnalyticsHelper.setLogEvent(
+                        await AnalyticsHelper.setLogEvent(
                             Analytics.tappedDocumentsMore);
                       },
                     ),
@@ -466,16 +467,16 @@ class _DocumentsState extends State<Documents> {
         : Container();
   }
 
-  void _viewPdf(String title, String url) async {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => InWebView(url: url, title: title)));
+  Future<void> _viewPdf(String title, String url) async {
+    unawaited(Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title))));
 
     await AnalyticsHelper.setLogEvent(Analytics.openDocument, <String, dynamic>{
       'name_document': title.length < 100 ? title : title.substring(0, 100),
     });
   }
 
-  void _downloadAttachment(String name, String url) async {
+  Future<void> _downloadAttachment(String name, String url) async {
     if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
@@ -494,7 +495,7 @@ class _DocumentsState extends State<Documents> {
                 },
               )));
     } else {
-      Navigator.push(
+      unawaited(Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DocumentViewScreen(
@@ -502,7 +503,7 @@ class _DocumentsState extends State<Documents> {
             nameFile: name,
           ),
         ),
-      );
+      ));
 
       await AnalyticsHelper.setLogEvent(
           Analytics.tappedDownloadDocuments, <String, dynamic>{

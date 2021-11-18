@@ -68,8 +68,8 @@ class _InfoGraphicsScreenState extends State<InfoGraphicsScreen> {
   List<DocumentSnapshot> _limitedDocs = [];
   List<LabelNewModel> _dataLabel = [];
 
+  final LabelNew _labelNew = LabelNew();
   bool _isGetDataLabel = true;
-  LabelNew _labelNew = LabelNew();
   Timer _debounce;
   String _searchQuery;
 

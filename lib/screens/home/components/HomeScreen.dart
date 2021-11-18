@@ -121,7 +121,7 @@ class HomeScreenState extends State<HomeScreen>
   Future<void> getDataProfileFromServer() async {
     String uid = await ProfileUidSharedPreference.getProfileUid();
     if (uid != null) {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection(kUsers)
           .where('id', isEqualTo: uid)
           .get()
@@ -229,7 +229,7 @@ class HomeScreenState extends State<HomeScreen>
           totalInfoUnread: totalUnreadInfo,
           onTap: (index) async {
             getAllUnreadData();
-            AnalyticsHelper.setLogEvent(analyticsData[index]);
+            await AnalyticsHelper.setLogEvent(analyticsData[index]);
             await HistoryTabHomeSharedPreference.setHistoryTabHome(
                 listItemTitleTab[index]);
           },

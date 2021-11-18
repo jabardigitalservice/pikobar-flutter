@@ -176,7 +176,7 @@ class CovidDataScreen extends StatelessWidget {
                           firebaseConfig: firebaseConfigArguments,
                           defaultValue: defaultArguments));
                   openChromeSafariBrowser(url: combinedArguments);
-                  AnalyticsHelper.setLogEvent(analytics);
+                  await AnalyticsHelper.setLogEvent(analytics);
                 })));
   }
 }

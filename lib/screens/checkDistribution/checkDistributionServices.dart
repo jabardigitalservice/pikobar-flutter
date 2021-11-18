@@ -9,19 +9,24 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 
 class CheckDistributions {
-    Future<void> handleLocation(BuildContext context) async {
-      var permissionService = Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
+  Future<void> handleLocation(BuildContext context) async {
+    var permissionService =
+        Platform.isIOS ? Permission.locationWhenInUse : Permission.location;
     if (await permissionService.status.isGranted) {
-
       Position position = await Geolocator.getLastKnownPosition();
       if (position != null && position.latitude != null) {
-        List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
         // print(position.toString());
-      if (placemarks != null && placemarks.isNotEmpty) {
-      final Placemark pos = placemarks[0];
-      final stringAddress = pos.thoroughfare + ', ' + pos.locality +', ' + pos.subAdministrativeArea;
-      print(stringAddress);
-    }
+        if (placemarks != null && placemarks.isNotEmpty) {
+          final Placemark pos = placemarks[0];
+          final stringAddress = pos.thoroughfare +
+              ', ' +
+              pos.locality +
+              ', ' +
+              pos.subAdministrativeArea;
+          print(stringAddress);
+        }
         // Navigator.of(context).pushNamed(NavigationConstrants.Browser, arguments: '$url?lat=${position.latitude}&long=${position.longitude}');
 
       } else {
@@ -32,33 +37,33 @@ class CheckDistributions {
       // AnalyticsHelper.setLogEvent(Analytics.tappedSpreadCheck);
 
     } else {
-      showDialog(
+      await showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
-            image: Image.asset(
-              '${Environment.iconAssets}map_pin.png',
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            description: Dictionary.permissionLocationSpread,
-            onOkPressed: () {
-              Navigator.of(context).pop();
-              permissionService.request().then((status) {
+                image: Image.asset(
+                  '${Environment.iconAssets}map_pin.png',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ),
+                description: Dictionary.permissionLocationSpread,
+                onOkPressed: () {
+                  Navigator.of(context).pop();
+                  permissionService.request().then((status) {
                     _onStatusRequested(context, status);
-              });
-            },
-            onCancelPressed: () {
-              // AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
-              Navigator.of(context).pop();
-            },
-          ));
+                  });
+                },
+                onCancelPressed: () {
+                  // AnalyticsHelper.setLogEvent(Analytics.permissionDismissLocation);
+                  Navigator.of(context).pop();
+                },
+              ));
     }
   }
 
-  void _onStatusRequested(BuildContext context,
-      PermissionStatus statuses) async {
+  Future<void> _onStatusRequested(
+      BuildContext context, PermissionStatus statuses) async {
     if (statuses.isGranted) {
-      handleLocation(context);
+      await handleLocation(context);
       // AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
       // AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);

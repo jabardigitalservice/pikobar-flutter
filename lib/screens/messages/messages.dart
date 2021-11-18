@@ -64,7 +64,7 @@ class _MessagesState extends State<Messages> {
                         borderRadius: BorderRadius.circular(20),
                         side: BorderSide(color: ColorBase.primaryGreen)),
                     onPressed: () async {
-                      AnalyticsHelper.setLogEvent(
+                      await AnalyticsHelper.setLogEvent(
                           Analytics.tappedReadAllMessage);
                       await MessageRepository().updateAllReadData();
                       widget.indexScreenState.getCountMessage();

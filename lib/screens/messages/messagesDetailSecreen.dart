@@ -234,17 +234,17 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 '${data.backLink != null ? 'Baca pesan lengkapnya:\n' + data.backLink.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
                 '${Dictionary.sharedFrom}');
       } catch (e) {
-        Share.share('${data.title}\n\n'
+        await Share.share('${data.title}\n\n'
             '${data.backLink != null ? 'Baca pesan lengkapnya:\n' + data.backLink.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
             '${Dictionary.sharedFrom}');
       }
     } else {
-      Share.share('${data.title}\n\n'
+      await Share.share('${data.title}\n\n'
           '${data.backLink != null ? 'Baca pesan lengkapnya:\n' + data.backLink.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
           '${Dictionary.sharedFrom}');
     }
 
-    AnalyticsHelper.setLogEvent(Analytics.tappedShareNewsFromMessage,
+    await AnalyticsHelper.setLogEvent(Analytics.tappedShareNewsFromMessage,
         <String, dynamic>{'title': data.title});
   }
 
