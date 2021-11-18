@@ -2,6 +2,7 @@
 const String kBanners = 'banners';
 const String kSurveys = 'surveys';
 const String kFaq = 'faqs';
+const String kFaqCategories = 'faq_categories';
 const String kEmergencyNumbers = 'emergency_numbers';
 const String kCallCenters = 'call_centers';
 const String kTaskForces = 'task_forces';

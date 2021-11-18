@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/faq/Bloc.dart';
+import 'package:pikobar_flutter/blocs/faq/faqCatagories/bloc/faqcatagories_bloc.dart';
 import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
@@ -37,8 +38,7 @@ class FaqScreen extends StatefulWidget {
 
 class _FaqScreenState extends State<FaqScreen> {
   final FaqListBloc _faqListBloc = FaqListBloc();
-  // ignore: unused_field, close_sinks
-  RemoteConfigBloc _remoteConfigBloc;
+  FaqCatagoriesBloc _faqCatagoriesBloc;
   final TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController;
   String searchQuery = '';
@@ -48,7 +48,7 @@ class _FaqScreenState extends State<FaqScreen> {
   int indexTab = 0;
 
   List<Widget> listWidgetTab = [];
-  List<dynamic> listDataRemoteConfigTab = [];
+  List<String> listDataRemoteConfigTab = [];
   List<String> listItemTitleTab = [];
   List<DocumentSnapshot> listDataFaq;
 
@@ -75,73 +75,70 @@ class _FaqScreenState extends State<FaqScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: BlocProvider<RemoteConfigBloc>(
-          create: (BuildContext context) =>
-              _remoteConfigBloc = RemoteConfigBloc()..add(RemoteConfigLoad()),
-          child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
-              builder: (context, remoteState) {
-            if (remoteState is RemoteConfigLoaded) {
-              final Map<String, dynamic> getLabel = RemoteConfigHelper.decode(
-                  remoteConfig: remoteState.remoteConfig,
-                  firebaseConfig: FirebaseConfig.labels,
-                  defaultValue: FirebaseConfig.labelsDefaultValue);
+    return BlocProvider<FaqCatagoriesBloc>(
+      create: (BuildContext context) =>
+          _faqCatagoriesBloc = FaqCatagoriesBloc()..add(FaqCategoriesLoad()),
+      child: BlocListener<FaqCatagoriesBloc, FaqCatagoriesState>(
+        listener: (context, categoriesState) {
+          if (categoriesState is FaqCatagoriesLoaded) {
+            listWidgetTab.clear();
+            listDataRemoteConfigTab.clear();
+            listItemTitleTab.clear();
+            listDataRemoteConfigTab = categoriesState.categories;
 
-              listWidgetTab.clear();
-              listDataRemoteConfigTab.clear();
-              listItemTitleTab.clear();
-              listDataRemoteConfigTab = getLabel['faq'] as List;
-
-              listDataRemoteConfigTab.forEach((element) {
-                if (element['published']) {
-                  listWidgetTab.add(_buildFaq());
-                  listItemTitleTab.add(element['title']);
-                }
-              });
-
-              return BlocProvider<FaqListBloc>(
-                create: (context) => _faqListBloc
-                  ..add(FaqListLoad(
-                      faqCollection: kFaq,
-                      category:
-                          listDataRemoteConfigTab[0]['category'].toString())),
-                child: CustomBubbleTab(
-                  isStickyHeader: widget.isNewPage,
-                  titleHeader: Dictionary.faq,
-                  listItemTitleTab: listItemTitleTab,
-                  indicatorColor: ColorBase.green,
-                  labelColor: Colors.white,
-                  showTitle: _showTitle,
-                  searchBar: CustomAppBar.buildSearchField(
-                      context,
-                      _searchController,
-                      Dictionary.searchInformation,
-                      updateSearchQuery,
-                      margin: const EdgeInsets.only(
-                          left: Dimens.contentPadding,
-                          right: 16.0,
-                          bottom: Dimens.contentPadding)),
-                  unselectedLabelColor: Colors.grey,
-                  scrollController: _scrollController,
-                  onTap: (index) {
-                    setState(() {});
-                    indexTab = index;
-                    _faqListBloc.add(FaqListLoad(
+            listDataRemoteConfigTab.forEach((category) {
+              listWidgetTab.add(_buildFaq());
+              listItemTitleTab.add(category);
+            });
+          }
+        },
+        child: Scaffold(
+            backgroundColor: Colors.white,
+            body: BlocBuilder<FaqCatagoriesBloc, FaqCatagoriesState>(
+                builder: (context, categoriesState) {
+              if (categoriesState is FaqCatagoriesLoaded) {
+                return BlocProvider<FaqListBloc>(
+                  create: (context) => _faqListBloc
+                    ..add(FaqListLoad(
                         faqCollection: kFaq,
-                        category: listDataRemoteConfigTab[index]['category']
-                            .toString()));
-                    AnalyticsHelper.setLogEvent(
-                        listDataRemoteConfigTab[index]['analytic'].toString());
-                  },
-                  tabBarView: listWidgetTab,
-                  isExpand: true,
-                ),
-              );
-            } else {
-              return _buildLoading();
-            }
-          })),
+                        category: listDataRemoteConfigTab[0])),
+                  child: CustomBubbleTab(
+                    isStickyHeader: widget.isNewPage,
+                    titleHeader: Dictionary.faq,
+                    listItemTitleTab: listItemTitleTab,
+                    indicatorColor: ColorBase.green,
+                    labelColor: Colors.white,
+                    showTitle: _showTitle,
+                    searchBar: CustomAppBar.buildSearchField(
+                        context,
+                        _searchController,
+                        Dictionary.searchInformation,
+                        updateSearchQuery,
+                        margin: const EdgeInsets.only(
+                            left: Dimens.contentPadding,
+                            right: 16.0,
+                            bottom: Dimens.contentPadding)),
+                    unselectedLabelColor: Colors.grey,
+                    scrollController: _scrollController,
+                    onTap: (index) {
+                      setState(() {});
+                      indexTab = index;
+                      _faqListBloc.add(FaqListLoad(
+                          faqCollection: kFaq,
+                          category: listDataRemoteConfigTab[index]));
+                      // AnalyticsHelper.setLogEvent(
+                      //     listDataRemoteConfigTab[index]['analytic'].toString());
+                    },
+                    tabBarView: listWidgetTab,
+                    isExpand: true,
+                  ),
+                );
+              } else {
+                print('Loading');
+                return _buildLoading();
+              }
+            })),
+      ),
     );
   }
 
@@ -203,8 +200,7 @@ class _FaqScreenState extends State<FaqScreen> {
       updateSearchQuery(null);
     });
     _faqListBloc.add(FaqListLoad(
-        faqCollection: kFaq,
-        category: listDataRemoteConfigTab[indexTab]['category'].toString()));
+        faqCollection: kFaq, category: listDataRemoteConfigTab[indexTab]));
   }
 
   void _onSearchChanged() {
@@ -213,9 +209,7 @@ class _FaqScreenState extends State<FaqScreen> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         _faqListBloc.add(FaqListLoad(
-            faqCollection: kFaq,
-            category:
-                listDataRemoteConfigTab[indexTab]['category'].toString()));
+            faqCollection: kFaq, category: listDataRemoteConfigTab[indexTab]));
         if (mounted) {
           setState(() {
             searchQuery = _searchController.text;
