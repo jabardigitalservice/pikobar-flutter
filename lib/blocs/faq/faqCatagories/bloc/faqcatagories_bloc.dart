@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:pikobar_flutter/models/FaqCategoriesModel.dart';
 import 'package:pikobar_flutter/repositories/FaqRepository.dart';
 
 part 'faqcatagories_event.dart';

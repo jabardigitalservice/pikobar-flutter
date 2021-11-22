@@ -7,7 +7,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:pikobar_flutter/blocs/faq/Bloc.dart';
 import 'package:pikobar_flutter/blocs/faq/faqCatagories/bloc/faqcatagories_bloc.dart';
-import 'package:pikobar_flutter/blocs/remoteConfig/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
@@ -19,11 +18,10 @@ import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
-import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
+import 'package:pikobar_flutter/models/FaqCategoriesModel.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
-import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/launchExternal.dart';
 
 @immutable
@@ -48,7 +46,7 @@ class _FaqScreenState extends State<FaqScreen> {
   int indexTab = 0;
 
   List<Widget> listWidgetTab = [];
-  List<String> listDataRemoteConfigTab = [];
+  List<FaqCategoriesModel> listDataRemoteConfigTab = [];
   List<String> listItemTitleTab = [];
   List<DocumentSnapshot> listDataFaq;
 
@@ -88,7 +86,7 @@ class _FaqScreenState extends State<FaqScreen> {
 
             listDataRemoteConfigTab.forEach((category) {
               listWidgetTab.add(_buildFaq());
-              listItemTitleTab.add(category);
+              listItemTitleTab.add(category.title);
             });
           }
         },
@@ -101,7 +99,7 @@ class _FaqScreenState extends State<FaqScreen> {
                   create: (context) => _faqListBloc
                     ..add(FaqListLoad(
                         faqCollection: kFaq,
-                        category: listDataRemoteConfigTab[0])),
+                        category: listDataRemoteConfigTab[0].id)),
                   child: CustomBubbleTab(
                     isStickyHeader: widget.isNewPage,
                     titleHeader: Dictionary.faq,
@@ -125,9 +123,9 @@ class _FaqScreenState extends State<FaqScreen> {
                       indexTab = index;
                       _faqListBloc.add(FaqListLoad(
                           faqCollection: kFaq,
-                          category: listDataRemoteConfigTab[index]));
-                      // AnalyticsHelper.setLogEvent(
-                      //     listDataRemoteConfigTab[index]['analytic'].toString());
+                          category: listDataRemoteConfigTab[index].id));
+                      AnalyticsHelper.setLogEvent(
+                          listDataRemoteConfigTab[index].analytics);
                     },
                     tabBarView: listWidgetTab,
                     isExpand: true,
@@ -200,7 +198,7 @@ class _FaqScreenState extends State<FaqScreen> {
       updateSearchQuery(null);
     });
     _faqListBloc.add(FaqListLoad(
-        faqCollection: kFaq, category: listDataRemoteConfigTab[indexTab]));
+        faqCollection: kFaq, category: listDataRemoteConfigTab[indexTab].id));
   }
 
   void _onSearchChanged() {
@@ -209,7 +207,8 @@ class _FaqScreenState extends State<FaqScreen> {
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.trim().isNotEmpty) {
         _faqListBloc.add(FaqListLoad(
-            faqCollection: kFaq, category: listDataRemoteConfigTab[indexTab]));
+            faqCollection: kFaq,
+            category: listDataRemoteConfigTab[indexTab].id));
         if (mounted) {
           setState(() {
             searchQuery = _searchController.text;

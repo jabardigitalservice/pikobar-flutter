@@ -12,7 +12,7 @@ class FaqCatagoriesInitial extends FaqCatagoriesState {}
 class FaqCatagoriesLoading extends FaqCatagoriesState {}
 
 class FaqCatagoriesLoaded extends FaqCatagoriesState {
-  final List<String> categories;
+  final List<FaqCategoriesModel> categories;
 
   const FaqCatagoriesLoaded({@required this.categories});
 
