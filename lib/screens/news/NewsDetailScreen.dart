@@ -429,7 +429,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     }
   }
 
-  void _downloadAttachment(String name, String url) async {
+  Future<void> _downloadAttachment(String name, String url) async {
     if (!await Permission.storage.status.isGranted) {
       unawaited(showDialog(
           context: context,
@@ -448,11 +448,11 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 },
               )));
     } else {
-      Fluttertoast.showToast(
+      unawaited(Fluttertoast.showToast(
           msg: Dictionary.downloadingFile,
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          fontSize: 16.0);
+          fontSize: 16.0));
 
       name = name.replaceAll(RegExp(r"\|.*"), '').trim() + '.pdf';
 
@@ -486,9 +486,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     }
   }
 
-  void _viewPdf(String title, String url) async {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => InWebView(url: url, title: title)));
+  Future<void> _viewPdf(String title, String url) async {
+    unawaited(Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => InWebView(url: url, title: title))));
 
     await AnalyticsHelper.setLogEvent(
         Analytics.openFileImportantInfo, <String, dynamic>{
@@ -496,15 +496,17 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     });
   }
 
-  void _shareMessage(NewsModel data) async {
+  Future<void> _shareMessage(NewsModel data) async {
     String content = await stringFromHtmlString(data.content);
     if (data.image != null) {
       try {
-        blockCircleLoading(context: context, dismissible: true);
+        unawaited(blockCircleLoading(context: context, dismissible: true));
 
-        final HttpClientRequest request = await HttpClient().getUrl(Uri.parse(data.image));
+        final HttpClientRequest request =
+            await HttpClient().getUrl(Uri.parse(data.image));
         final HttpClientResponse response = await request.close();
-        final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+        final Uint8List bytes =
+            await consolidateHttpClientResponseBytes(response);
 
         Navigator.of(context).pop();
 
@@ -515,19 +517,19 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 '${data.actionUrl != null ? data.actionTitle + ':\n' + data.actionUrl.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
                 '${Dictionary.sharedFrom}');
       } catch (e) {
-        Share.share('${data.title}\n\n'
+        await Share.share('${data.title}\n\n'
             '$content\n\n'
             '${data.actionUrl != null ? data.actionTitle + ':\n' + data.actionUrl.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
             '${Dictionary.sharedFrom}');
       }
     } else {
-      Share.share('${data.title}\n\n'
+      await Share.share('${data.title}\n\n'
           '$content\n\n'
           '${data.actionUrl != null ? data.actionTitle + ':\n' + data.actionUrl.replaceAll(new RegExp(r"\s+\b|\b\s"), "") : ''}\n\n'
           '${Dictionary.sharedFrom}');
     }
 
-    AnalyticsHelper.setLogEvent(
+    await AnalyticsHelper.setLogEvent(
         Analytics.tappedImportantInfoDetailShare, <String, dynamic>{
       'title':
           data.title.length < 100 ? data.title : data.title.substring(0, 100)

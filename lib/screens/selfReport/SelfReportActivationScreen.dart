@@ -21,6 +21,7 @@ import 'package:pikobar_flutter/utilities/BasicUtils.dart';
 import 'package:pikobar_flutter/utilities/NavigatorHelper.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 import 'package:pikobar_flutter/utilities/Validations.dart';
+import 'package:pedantic/pedantic.dart';
 
 import 'SelfReportList.dart';
 
@@ -119,7 +120,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                   message: Dictionary.selfReportActivationSuccessMessage,
                   onPressed: () async {
                     popUntil(context, multiplication: 2);
-                    Navigator.pushReplacement(
+                    unawaited(Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => SelfReportList(
@@ -128,7 +129,7 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                                 analytics: Analytics.tappedDailyReport,
                                 isHealthStatusChanged: false,
                               )),
-                    );
+                    ));
                   });
             }
 
@@ -194,8 +195,9 @@ class _SelfReportActivationFormState extends State<SelfReportActivationForm> {
                                     color: ColorBase.green,
                                     elevation: 0.0,
                                     onPressed: () async {
-                                      AnalyticsHelper.setLogEvent(Analytics
-                                          .selfReportActivationRequerst);
+                                      await AnalyticsHelper.setLogEvent(
+                                          Analytics
+                                              .selfReportActivationRequerst);
                                       popUntil(context, multiplication: 3);
                                       await launchUrl(
                                           context: context, url: url);

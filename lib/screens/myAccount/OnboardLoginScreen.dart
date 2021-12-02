@@ -255,11 +255,11 @@ class _OnBoardingLoginScreenState extends State<OnBoardingLoginScreen> {
     }
   }
 
-  void _loginBottomSheet(context) async {
+  Future<void> _loginBottomSheet(context) async {
     /// Determine if Sign In with Apple is supported on the current device
     bool isAvailable = await AppleSignIn.isAvailable();
 
-    showModalBottomSheet(
+    await showModalBottomSheet(
         context: context,
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(

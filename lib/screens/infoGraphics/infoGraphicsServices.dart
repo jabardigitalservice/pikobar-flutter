@@ -13,7 +13,7 @@ class InfoGraphicsServices {
     try {
       final Map<String, Uint8List> files = Map<String, Uint8List>();
       var index = 0;
-      for (String image in images) {
+      for (final image in images) {
         var request = await HttpClient().getUrl(Uri.parse(image));
         var response = await request.close();
         Uint8List bytes = await consolidateHttpClientResponseBytes(response);

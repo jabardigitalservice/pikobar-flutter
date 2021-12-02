@@ -36,7 +36,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   bool isRelationEmpty = false;
   ScrollController _scrollController;
 
-  String _format = 'dd-MMMM-yyyy';
+  final String _format = 'dd-MMMM-yyyy';
   String minDate = '1900-01-01';
 
   @override
@@ -424,7 +424,7 @@ class _AddUserFormScreenState extends State<AddUserFormScreen> {
   }
 
   // Validate and Record data to firestore
-  void _saveSelfReport() async {
+  Future<void> _saveSelfReport() async {
     isBirthdayEmpty = _dateController.text.isEmpty;
     isRelationEmpty = _relationController.text.isEmpty;
     isGenderEmpty = _genderController.text.isEmpty;

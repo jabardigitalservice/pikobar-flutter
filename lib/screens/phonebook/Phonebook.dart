@@ -17,7 +17,7 @@ class Phonebook extends StatefulWidget {
 
 class _PhonebookState extends State<Phonebook> {
   var containerWidth = 40.0;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   Timer _debounce;
   String searchQuery;
 

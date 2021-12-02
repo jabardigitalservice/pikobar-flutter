@@ -136,7 +136,8 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
             }
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: ListView(
               controller: _scrollController,
               children: <Widget>[
@@ -278,7 +279,7 @@ class _ConfirmUserFormState extends State<ConfirmUserForm> {
   }
 
   // Validate and Record data to firestore
-  void _saveSelfReport() async {
+  Future<void> _saveSelfReport() async {
     String otherUID = Uuid().v4();
     final AddOtherSelfReportModel data = AddOtherSelfReportModel(
         userId: otherUID,
