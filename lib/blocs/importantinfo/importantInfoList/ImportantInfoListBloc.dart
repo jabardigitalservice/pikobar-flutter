@@ -7,7 +7,7 @@ import 'Bloc.dart';
 class ImportantInfoListBloc
     extends Bloc<ImportantInfoListEvent, ImportantInfoListState> {
   final ImportantInfoRepository _repository = ImportantInfoRepository();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
 
   ImportantInfoListBloc() : super(InitialImportantInfoListState());
 
@@ -25,7 +25,7 @@ class ImportantInfoListBloc
   Stream<ImportantInfoListState> _mapLoadVideosToState(
       String collection) async* {
     yield ImportantInfoListLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = _repository
         .getInfoImportantList(improtantInfoCollection: collection)
         .listen((importantInfo) {
@@ -46,7 +46,7 @@ class ImportantInfoListBloc
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    await _subscription.cancel();
     return super.close();
   }
 }

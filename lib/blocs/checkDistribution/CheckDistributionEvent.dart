@@ -16,12 +16,13 @@ class LoadCheckDistribution extends CheckDistributionEvent {
       {this.lat,
       this.long,
       this.id,
-      this.isOther,
-      this.cityId,
-      this.subCityId});
+      required this.isOther,
+      required this.cityId,
+      required this.subCityId});
 
   @override
-  List<Object> get props => <Object>[lat, long, id, isOther, cityId, subCityId];
+  List<dynamic> get props =>
+      <dynamic>[lat, long, id, isOther, cityId, subCityId];
 }
 
 class CheckDistributionLoad extends CheckDistributionEvent {

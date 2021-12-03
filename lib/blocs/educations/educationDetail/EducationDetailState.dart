@@ -24,7 +24,7 @@ class EducationDetailLoaded extends EducationDetailState {
 class EducationDetailFailure extends EducationDetailState {
   final String error;
 
-  const EducationDetailFailure({this.error});
+  const EducationDetailFailure({required this.error});
 
   @override
   String toString() => 'State EducationDetailFailure{error: $error}';

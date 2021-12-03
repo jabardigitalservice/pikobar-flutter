@@ -10,11 +10,11 @@ import 'Bloc.dart';
 
 class EmergencyNumberBloc
     extends Bloc<EmergencyNumberEvent, EmergencyNumberState> {
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
   final EmergencyNumberRepository emergencyNumberRepository;
 
   EmergencyNumberBloc({
-    @required this.emergencyNumberRepository,
+    required this.emergencyNumberRepository,
   })  : assert(emergencyNumberRepository != null,
             'emergencyNumberRepository must not be null'),
         super(InitialEmergencyNumberState());
@@ -50,7 +50,7 @@ class EmergencyNumberBloc
 
   Stream<EmergencyNumberState> _mapLoadreferralHospitalToState() async* {
     yield EmergencyNumberLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = emergencyNumberRepository
         .getReferralHospitalModelList()
         .listen((List<ReferralHospitalModel> referralHospital) {
@@ -69,7 +69,7 @@ class EmergencyNumberBloc
 
   Stream<EmergencyNumberState> _mapLoadCallCenterToState() async* {
     yield EmergencyNumberLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = emergencyNumberRepository
         .getCallCenterModelList()
         .listen((List<CallCenterModel> callCenter) {
@@ -88,7 +88,7 @@ class EmergencyNumberBloc
 
   Stream<EmergencyNumberState> _mapLoadGugusTugasWebToState() async* {
     yield EmergencyNumberLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = emergencyNumberRepository
         .getGugusTugasWebList()
         .listen((List<GugusTugasWebModel> callCenter) {
@@ -107,7 +107,7 @@ class EmergencyNumberBloc
 
   Stream<EmergencyNumberState> _mapLoadIsolationCenterToState() async* {
     yield EmergencyNumberLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = emergencyNumberRepository
         .getIsolationCenterModelList()
         .listen((List<IsolationCenterModel> referralHospital) {
@@ -126,7 +126,7 @@ class EmergencyNumberBloc
 
   @override
   Future<void> close() {
-    _subscription?.cancel();
+    _subscription.cancel();
     return super.close();
   }
 }

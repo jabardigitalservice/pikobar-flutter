@@ -8,7 +8,7 @@ import 'Bloc.dart';
 class FaqListBloc extends Bloc<FaqListEvent, FaqListState> {
   final FaqRepository _repository = FaqRepository();
   LabelNew labelNew = LabelNew();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
 
   FaqListBloc() : super(InitialFaqListState());
 
@@ -25,9 +25,9 @@ class FaqListBloc extends Bloc<FaqListEvent, FaqListState> {
   }
 
   Stream<FaqListState> _mapLoadFaqListToState(
-      {String faqCollection, String category}) async* {
+      {required String faqCollection, required String category}) async* {
     yield FaqListLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = _repository
         .getFaq(faqCollection: faqCollection, category: category)
         .listen(
@@ -43,7 +43,7 @@ class FaqListBloc extends Bloc<FaqListEvent, FaqListState> {
 
   @override
   Future<void> close() {
-    _subscription?.cancel();
+    _subscription.cancel();
     return super.close();
   }
 }

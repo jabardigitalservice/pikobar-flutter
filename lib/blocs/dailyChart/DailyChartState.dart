@@ -16,11 +16,11 @@ class DailyChartLoadingIsOther extends DailyChartState {}
 class DailyChartLoaded extends DailyChartState {
   final DailyChartModel record;
 
-  const DailyChartLoaded({@required this.record});
+  const DailyChartLoaded({required this.record});
 
-   @override
+  @override
   String toString() => 'DailyChartLoaded { record: $record }';
-  
+
   @override
   List<Object> get props => <Object>[record];
 }
@@ -28,7 +28,7 @@ class DailyChartLoaded extends DailyChartState {
 class DailyChartFailure extends DailyChartState {
   final String error;
 
-  const DailyChartFailure({this.error});
+  const DailyChartFailure({required this.error});
 
   @override
   String toString() => 'State DailyChartFailure{error: $error}';

@@ -7,7 +7,7 @@ class InfoGraphicsRepository {
   final firestore = FirebaseFirestore.instance;
 
   Stream<List<DocumentSnapshot>> getInfoGraphics(
-      {@required String infoGraphicsCollection, int limit}) {
+      {required String infoGraphicsCollection, int? limit}) {
     Query infoGraphicsQuery = firestore
         .collection(infoGraphicsCollection)
         .orderBy('published_date', descending: true);
@@ -21,8 +21,8 @@ class InfoGraphicsRepository {
   }
 
   Future<DocumentSnapshot> getInfoGraphicDetail(
-      {@required String infoGraphicCollection,
-      @required String infoGraphicId}) async {
+      {required String infoGraphicCollection,
+      required String infoGraphicId}) async {
     final DocumentSnapshot doc = await firestore
         .collection(infoGraphicCollection)
         .doc(infoGraphicId)

@@ -6,12 +6,10 @@ abstract class ImportantInfoDetailEvent extends Equatable {
 }
 
 class ImportantInfoDetailLoad extends ImportantInfoDetailEvent {
-
   final String importantInfoId;
 
-  const ImportantInfoDetailLoad({ @required this.importantInfoId});
+  const ImportantInfoDetailLoad({required this.importantInfoId});
 
   @override
-  List<Object> get props => <Object>[ importantInfoId];
-
+  List<Object> get props => <Object>[importantInfoId];
 }

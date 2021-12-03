@@ -10,7 +10,7 @@ abstract class GeocoderEvent extends Equatable {
 class GeocoderGetLocation extends GeocoderEvent {
   final LatLng coordinate;
 
-  const GeocoderGetLocation({@required this.coordinate})
+  const GeocoderGetLocation({required this.coordinate})
       : assert(coordinate != null, 'coordinate must not be null');
 
   @override

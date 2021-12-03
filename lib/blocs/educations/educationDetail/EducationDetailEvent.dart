@@ -10,7 +10,7 @@ class EducationDetailLoad extends EducationDetailEvent {
   final String educationId;
 
   const EducationDetailLoad(
-      {@required this.educationCollection, @required this.educationId});
+      {required this.educationCollection, required this.educationId});
 
   @override
   List<Object> get props => <Object>[educationCollection, educationId];

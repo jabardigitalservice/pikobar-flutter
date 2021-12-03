@@ -16,10 +16,8 @@ part 'DailyChartState.dart';
 class DailyChartBloc extends Bloc<DailyChartEvent, DailyChartState> {
   final DailyChartRepository _dailyChartRepository;
 
-  DailyChartBloc({@required DailyChartRepository dailyChartRepository})
-      : assert(DailyChartRepository != null,
-            'DailyChartRepository must not be null'),
-        _dailyChartRepository = dailyChartRepository,
+  DailyChartBloc({required DailyChartRepository dailyChartRepository})
+      : _dailyChartRepository = dailyChartRepository,
         super(DailyChartInitial());
 
   @override

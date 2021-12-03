@@ -5,7 +5,7 @@ import 'Bloc.dart';
 
 class BannersBloc extends Bloc<BannersEvent, BannersState> {
   final BannersRepository _repository = BannersRepository();
-  StreamSubscription _subscription;
+  late StreamSubscription _subscription;
 
   BannersBloc() : super(InitialBannersState());
 
@@ -22,7 +22,7 @@ class BannersBloc extends Bloc<BannersEvent, BannersState> {
 
   Stream<BannersState> _mapBannersLoadToState() async* {
     yield BannersLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = _repository.getBanners().listen(
           (banners) => add(BannersUpdate(banners)),
         );
@@ -34,7 +34,7 @@ class BannersBloc extends Bloc<BannersEvent, BannersState> {
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    await _subscription.cancel();
     return super.close();
   }
 }

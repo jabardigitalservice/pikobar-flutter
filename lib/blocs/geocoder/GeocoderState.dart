@@ -16,7 +16,7 @@ class GeocoderLoading extends GeocoderState {}
 class GeocoderLoaded extends GeocoderState {
   final String address;
 
-  const GeocoderLoaded({this.address});
+  const GeocoderLoaded({required this.address});
 
   @override
   List<Object> get props => <Object>[address];
@@ -25,7 +25,7 @@ class GeocoderLoaded extends GeocoderState {
 class GeocoderFailure extends GeocoderState {
   final String error;
 
-  const GeocoderFailure({@required this.error});
+  const GeocoderFailure({required this.error});
 
   @override
   String toString() => 'State GeocoderFailure{error: $error}';

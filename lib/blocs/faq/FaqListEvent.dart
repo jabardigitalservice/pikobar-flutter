@@ -11,7 +11,7 @@ class FaqListLoad extends FaqListEvent {
   final String faqCollection;
   final String category;
 
-  FaqListLoad({this.faqCollection, this.category});
+  FaqListLoad({required this.faqCollection, required this.category});
 
   @override
   List<Object> get props => <Object>[faqCollection, category];

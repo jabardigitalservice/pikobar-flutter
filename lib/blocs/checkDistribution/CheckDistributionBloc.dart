@@ -16,10 +16,8 @@ class CheckDistributionBloc
   final CheckDistributionRepository _checkDistributionRepository;
 
   CheckDistributionBloc(
-      {@required CheckDistributionRepository checkDistributionRepository})
-      : assert(checkDistributionRepository != null,
-            'checkDistributionRepository must not be null'),
-        _checkDistributionRepository = checkDistributionRepository,
+      {required CheckDistributionRepository checkDistributionRepository})
+      : _checkDistributionRepository = checkDistributionRepository,
         super(CheckDistributionInitial());
 
   @override

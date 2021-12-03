@@ -8,7 +8,7 @@ import 'Bloc.dart';
 
 class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   final EducationRepository _repository = EducationRepository();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
 
   EducationListBloc() : super(InitialEducationListState());
 
@@ -26,7 +26,7 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
   Stream<EducationListState> _mapLoadEducationsToState(
       String collection, int limit) async* {
     yield EducationLisLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = _repository
         .getEducationList(educationCollection: collection, limit: limit)
         .listen((List<EducationModel> education) =>
@@ -40,7 +40,7 @@ class EducationListBloc extends Bloc<EducationListEvent, EducationListState> {
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    await _subscription.cancel();
     return super.close();
   }
 }

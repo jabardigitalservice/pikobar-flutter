@@ -15,7 +15,7 @@ class AuthenticationUninitialized extends AuthenticationState {}
 class AuthenticationAuthenticated extends AuthenticationState {
   final UserModel record;
 
-  const AuthenticationAuthenticated({this.record});
+  const AuthenticationAuthenticated({required this.record});
 
   @override
   List<Object> get props => <Object>[record];
@@ -28,7 +28,7 @@ class AuthenticationLoading extends AuthenticationState {}
 class AuthenticationFailure extends AuthenticationState {
   final String error;
 
-  const AuthenticationFailure({@required this.error});
+  const AuthenticationFailure({required this.error});
 
   @override
   String toString() => 'Authentication { error: $error }';

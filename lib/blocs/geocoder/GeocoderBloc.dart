@@ -8,7 +8,7 @@ import './Bloc.dart';
 class GeocoderBloc extends Bloc<GeocoderEvent, GeocoderState> {
   final GeocoderRepository geocoderRepository;
 
-  GeocoderBloc({@required this.geocoderRepository})
+  GeocoderBloc({required this.geocoderRepository})
       : assert(
             geocoderRepository != null, 'geocoderRepository must not be null'),
         super(GeocoderStateInitial());

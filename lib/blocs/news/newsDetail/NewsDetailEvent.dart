@@ -9,13 +9,11 @@ abstract class NewsDetailEvent extends Equatable {
 }
 
 class NewsDetailLoad extends NewsDetailEvent {
-
   final String newsCollection;
   final String newsId;
 
-  NewsDetailLoad({@required this.newsCollection, @required this.newsId});
+  NewsDetailLoad({required this.newsCollection, required this.newsId});
 
   @override
   List<Object> get props => <Object>[newsCollection, newsId];
-
 }

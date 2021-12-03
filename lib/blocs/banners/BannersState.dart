@@ -13,10 +13,9 @@ class InitialBannersState extends BannersState {}
 class BannersLoading extends BannersState {}
 
 class BannersLoaded extends BannersState {
-
   final List<BannerModel> records;
 
-  const BannersLoaded({this.records});
+  const BannersLoaded({required this.records});
 
   @override
   List<Object> get props => <Object>[records];

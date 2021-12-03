@@ -7,44 +7,39 @@ import 'package:async/async.dart';
 class NewsRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Stream<List<NewsModel>> getNewsList({@required String newsCollection, int limit}) {
+  Stream<List<NewsModel>> getNewsList(
+      {required String newsCollection, required int limit}) {
     return firestore
         .collection(newsCollection)
         .limit(limit)
         .orderBy('published_at', descending: true)
         .snapshots()
         .map((QuerySnapshot snapshot) =>
-        snapshot.docs
-            .map((doc) => NewsModel.fromFirestore(doc))
-            .toList());
+            snapshot.docs.map((doc) => NewsModel.fromFirestore(doc)).toList());
   }
 
   Future<NewsModel> getNewsDetail(
-      {@required String newsCollection, @required String newsId}) async {
+      {required String newsCollection, required String newsId}) async {
     DocumentSnapshot doc =
-    await firestore.collection(newsCollection).doc(newsId).get();
+        await firestore.collection(newsCollection).doc(newsId).get();
     return NewsModel.fromFirestore(doc);
   }
 
   Stream<List<NewsModel>> getInfoImportantList(
-      {@required String improtantInfoCollection, int limit}) {
+      {required String improtantInfoCollection, required int limit}) {
     return firestore
         .collection(improtantInfoCollection)
         .limit(limit)
         .orderBy('published_at', descending: true)
         .snapshots()
         .map((QuerySnapshot snapshot) =>
-        snapshot.docs
-            .map((doc) => NewsModel.fromFirestore(doc))
-            .toList());
+            snapshot.docs.map((doc) => NewsModel.fromFirestore(doc)).toList());
   }
 
   Future<NewsModel> getImportantInfoDetail(
-      {@required String importantInfoid}) async {
-    DocumentSnapshot doc = await firestore
-        .collection(kImportantInfor)
-        .doc(importantInfoid)
-        .get();
+      {required String importantInfoid}) async {
+    DocumentSnapshot doc =
+        await firestore.collection(kImportantInfor).doc(importantInfoid).get();
     return NewsModel.fromFirestore(doc);
   }
 

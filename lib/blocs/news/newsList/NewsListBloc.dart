@@ -9,7 +9,7 @@ import 'Bloc.dart';
 
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   final NewsRepository _repository = NewsRepository();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
   LabelNew labelNew = LabelNew();
 
   NewsListBloc() : super(InitialNewsListState());
@@ -34,10 +34,8 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     }
   }
 
-
-
   _loadData(String collection, bool statImportantInfo, int limit) {
-    _subscription?.cancel();
+    _subscription.cancel();
     _subscription = collection == NewsType.articlesImportantInfo
         ? _repository
             .getInfoImportantList(
@@ -63,7 +61,8 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
                       ? limit
                       : dataListAllNews.length;
 
-                  dataListAllNews = dataListAllNews.getRange(0, maxLimit).toList();
+                  dataListAllNews =
+                      dataListAllNews.getRange(0, maxLimit).toList();
                 }
 
                 add(NewsListUpdate(dataListAllNews));
@@ -91,7 +90,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
   }
 
   Stream<NewsListState> _mapLoadNewsToState(String collection,
-      {bool statImportantInfo = true, int limit}) async* {
+      {bool statImportantInfo = true, required int limit}) async* {
     yield NewsListLoading();
     _loadData(collection, statImportantInfo, limit);
   }
@@ -122,7 +121,7 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
 
   @override
   Future<void> close() {
-    _subscription?.cancel();
+    _subscription.cancel();
     return super.close();
   }
 }

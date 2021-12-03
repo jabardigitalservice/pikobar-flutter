@@ -4,7 +4,7 @@ import 'package:pikobar_flutter/constants/collections.dart';
 class DocumentsRepository {
   final documentsCollection = FirebaseFirestore.instance.collection(kDocuments);
 
-  Stream<List<DocumentSnapshot>> getDocuments({int limit}) {
+  Stream<List<DocumentSnapshot>> getDocuments({int? limit}) {
     Query documentsQuery =
         documentsCollection.orderBy('published_at', descending: true);
 
@@ -12,7 +12,7 @@ class DocumentsRepository {
       documentsQuery = documentsQuery.limit(limit);
     }
 
-    return documentsQuery.snapshots().map((QuerySnapshot snapshot) =>
-        snapshot.docs.map((doc) => doc).toList());
+    return documentsQuery.snapshots().map(
+        (QuerySnapshot snapshot) => snapshot.docs.map((doc) => doc).toList());
   }
 }

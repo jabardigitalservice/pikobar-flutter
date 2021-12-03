@@ -14,9 +14,8 @@ class AuthenticationBloc
   final AuthRepository authRepository;
 
   AuthenticationBloc({
-    @required this.authRepository,
-  })  : assert(authRepository != null, 'authRepositori must not be null'),
-        super(AuthenticationUninitialized());
+    required this.authRepository,
+  }) : super(AuthenticationUninitialized());
 
   @override
   Stream<AuthenticationState> mapEventToState(

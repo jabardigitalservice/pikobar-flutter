@@ -10,7 +10,7 @@ class InfoGraphicDetailLoad extends InfoGraphicDetailEvent {
   final String infographicId;
 
   const InfoGraphicDetailLoad(
-      {@required this.infographicCollection, @required this.infographicId});
+      {required this.infographicCollection, required this.infographicId});
 
   @override
   List<Object> get props => <Object>[infographicCollection, infographicId];

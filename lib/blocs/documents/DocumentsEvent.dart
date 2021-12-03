@@ -8,7 +8,7 @@ abstract class DocumentsEvent extends Equatable {
 class DocumentsLoad extends DocumentsEvent {
   final int limit;
 
-  const DocumentsLoad({this.limit});
+  const DocumentsLoad({required this.limit});
 
   @override
   List<Object> get props => <Object>[limit];

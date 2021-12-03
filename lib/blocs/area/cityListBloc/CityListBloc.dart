@@ -5,7 +5,7 @@ import 'Bloc.dart';
 
 class CityListBloc extends Bloc<CityListEvent, CityListState> {
   final AreaRepository _repository = AreaRepository();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
 
   CityListBloc() : super(InitialCityListState());
 
@@ -22,7 +22,7 @@ class CityListBloc extends Bloc<CityListEvent, CityListState> {
 
   Stream<CityListState> _mapLoadCitysToState() async* {
     yield CityListLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = _repository
         .getCityList()
         .listen((cityList) => add(CityListUpdate(cityList)));
@@ -34,7 +34,7 @@ class CityListBloc extends Bloc<CityListEvent, CityListState> {
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    await _subscription.cancel();
     return super.close();
   }
 }

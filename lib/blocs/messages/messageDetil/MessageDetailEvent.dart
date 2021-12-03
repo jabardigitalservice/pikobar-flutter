@@ -11,7 +11,7 @@ abstract class MessageDetailEvent extends Equatable {
 class MessageDetailLoad extends MessageDetailEvent {
   final String messageId;
 
-  const MessageDetailLoad({@required this.messageId});
+  const MessageDetailLoad({required this.messageId});
 
   @override
   List<Object> get props => <Object>[messageId];

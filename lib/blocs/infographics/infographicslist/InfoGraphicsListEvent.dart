@@ -9,7 +9,8 @@ class InfoGraphicsListLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  const InfoGraphicsListLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListLoad(
+      {required this.limit, required this.infoGraphicsCollection});
 
   @override
   List<Object> get props => <Object>[limit, infoGraphicsCollection];
@@ -28,7 +29,8 @@ class InfoGraphicsListJabarLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  const InfoGraphicsListJabarLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListJabarLoad(
+      {required this.limit, required this.infoGraphicsCollection});
 
   @override
   List<Object> get props => <Object>[limit];
@@ -47,7 +49,8 @@ class InfoGraphicsListPusatLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  const InfoGraphicsListPusatLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListPusatLoad(
+      {required this.limit, required this.infoGraphicsCollection});
 
   @override
   List<Object> get props => <Object>[limit];
@@ -66,7 +69,8 @@ class InfoGraphicsListWHOLoad extends InfoGraphicsListEvent {
   final int limit;
   final String infoGraphicsCollection;
 
-  const InfoGraphicsListWHOLoad({this.limit, this.infoGraphicsCollection});
+  const InfoGraphicsListWHOLoad(
+      {required this.limit, required this.infoGraphicsCollection});
 
   @override
   List<Object> get props => <Object>[limit];

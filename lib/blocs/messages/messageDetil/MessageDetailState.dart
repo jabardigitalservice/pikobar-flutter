@@ -15,7 +15,7 @@ class MessageDetailLoading extends MessageDetailState {}
 class MessageDetailLoaded extends MessageDetailState {
   final MessageModel data;
 
-  const MessageDetailLoaded({this.data});
+  const MessageDetailLoaded({required this.data});
 
   @override
   List<Object> get props => <Object>[data];

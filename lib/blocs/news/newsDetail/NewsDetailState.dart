@@ -24,7 +24,7 @@ class NewsDetailLoaded extends NewsDetailState {
 class NewsDetailFailure extends NewsDetailState {
   final String error;
 
-  const NewsDetailFailure({this.error});
+  const NewsDetailFailure({required this.error});
 
   @override
   String toString() => 'State NewsDetailFailure{error: $error}';

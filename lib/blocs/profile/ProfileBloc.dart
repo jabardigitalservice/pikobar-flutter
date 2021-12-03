@@ -10,10 +10,10 @@ import './Bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
 
   ProfileBloc({
-    @required this.profileRepository,
+    required this.profileRepository,
   })  : assert(profileRepository != null, 'profileRepository must not be null'),
         super(ProfileUninitialized());
 
@@ -110,7 +110,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Stream<ProfileState> _loadSelfReportListToState(String otherUID) async* {
     yield ProfileLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
 
     _subscription = profileRepository.getProfile(otherUID).listen((event) {
       add(ProfileUpdated(event));

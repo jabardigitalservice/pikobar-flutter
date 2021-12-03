@@ -8,7 +8,7 @@ import './Bloc.dart';
 
 class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
   final DocumentsRepository _repository = DocumentsRepository();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
   LabelNew labelNew = LabelNew();
 
   DocumentsBloc() : super(InitialDocumentsState());
@@ -24,9 +24,9 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
     }
   }
 
-  Stream<DocumentsState> _mapLoadDocumentsToState({int limit}) async* {
+  Stream<DocumentsState> _mapLoadDocumentsToState({int? limit}) async* {
     yield DocumentsLoading();
-    await _subscription?.cancel();
+    await _subscription.cancel();
     _subscription = _repository.getDocuments(limit: limit).listen(
       (List<DocumentSnapshot> data) {
         labelNew.insertDataLabel(data, Dictionary.labelDocuments);
@@ -42,7 +42,7 @@ class DocumentsBloc extends Bloc<DocumentsEvent, DocumentsState> {
 
   @override
   Future<void> close() async {
-    await _subscription?.cancel();
+    await _subscription.cancel();
     return super.close();
   }
 }

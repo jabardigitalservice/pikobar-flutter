@@ -24,7 +24,7 @@ class InfoGraphicDetailLoaded extends InfoGraphicDetailState {
 class InfoGraphicDetailFailure extends InfoGraphicDetailState {
   final String error;
 
-  const InfoGraphicDetailFailure({this.error});
+  const InfoGraphicDetailFailure({required this.error});
 
   @override
   String toString() => 'State InfoGraphicDetailFailure{error: $error}';

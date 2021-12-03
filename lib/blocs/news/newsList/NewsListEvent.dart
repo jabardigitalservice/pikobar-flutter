@@ -13,7 +13,8 @@ class NewsListLoad extends NewsListEvent {
   final bool statImportantInfo;
   final int limit;
 
-  const NewsListLoad(this.newsCollection, {this.statImportantInfo, this.limit});
+  const NewsListLoad(this.newsCollection,
+      {required this.statImportantInfo, required this.limit});
 
   @override
   List<Object> get props => <Object>[newsCollection, limit];

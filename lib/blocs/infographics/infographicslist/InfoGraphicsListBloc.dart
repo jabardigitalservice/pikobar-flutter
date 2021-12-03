@@ -13,7 +13,7 @@ class InfoGraphicsListBloc
     extends Bloc<InfoGraphicsListEvent, InfoGraphicsListState> {
   final InfoGraphicsRepository _repository = InfoGraphicsRepository();
   LabelNew labelNew = LabelNew();
-  StreamSubscription<Object> _subscription;
+  late StreamSubscription<Object> _subscription;
 
   InfoGraphicsListBloc() : super(InitialInfoGraphicsListState());
 
@@ -54,8 +54,8 @@ class InfoGraphicsListBloc
     }
   }
 
-  void _loadData(String infoGraphicsCollection, int limit) {
-    _subscription?.cancel();
+  void _loadData(String infoGraphicsCollection, int? limit) {
+    _subscription.cancel();
     _subscription = infoGraphicsCollection == kAllInfographics
         ? _repository.getAllInfographicList().listen((event) {
             List<DocumentSnapshot> dataListAllinfographics =
@@ -108,7 +108,7 @@ class InfoGraphicsListBloc
   }
 
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListToState(
-      {int limit, String infoGraphicsCollection}) async* {
+      {int? limit, required String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
     _loadData(infoGraphicsCollection, limit);
   }
@@ -119,7 +119,7 @@ class InfoGraphicsListBloc
   }
 
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListJabarToState(
-      {int limit, String infoGraphicsCollection}) async* {
+      {int? limit, required String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
     _loadData(infoGraphicsCollection, limit);
   }
@@ -130,7 +130,7 @@ class InfoGraphicsListBloc
   }
 
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListPusatToState(
-      {int limit, String infoGraphicsCollection}) async* {
+      {int? limit, required String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
     _loadData(infoGraphicsCollection, limit);
   }
@@ -141,7 +141,7 @@ class InfoGraphicsListBloc
   }
 
   Stream<InfoGraphicsListState> _mapLoadInfoGraphicsListWHOToState(
-      {int limit, String infoGraphicsCollection}) async* {
+      {int? limit, required String infoGraphicsCollection}) async* {
     yield InfoGraphicsListLoading();
     _loadData(infoGraphicsCollection, limit);
   }
@@ -153,7 +153,7 @@ class InfoGraphicsListBloc
 
   @override
   Future<void> close() {
-    _subscription?.cancel();
+    _subscription.cancel();
     return super.close();
   }
 }
