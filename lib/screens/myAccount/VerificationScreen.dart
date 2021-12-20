@@ -48,7 +48,7 @@ class Verification extends StatefulWidget {
 }
 
 class _VerificationState extends State<Verification> {
-  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
   final ProfileRepository _profileRepository = ProfileRepository();
   ProfileBloc _profileBloc;

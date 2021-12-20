@@ -36,6 +36,7 @@ import 'package:pikobar_flutter/utilities/Validations.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:pikobar_flutter/components/custom_dropdown.dart' as custom;
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:pedantic/pedantic.dart';
 
 class Edit extends StatefulWidget {
   final DocumentSnapshot state;
@@ -63,16 +64,16 @@ class _EditState extends State<Edit> {
   final _phoneNumberFocusNode = FocusNode();
   final _addressFocusNode = FocusNode();
 
-  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   String verificationID, smsCode;
   final ProfileRepository _profileRepository = ProfileRepository();
   ProfileBloc _profileBloc;
   PhoneVerificationCompleted verificationCompleted;
   PhoneVerificationFailed verificationFailed;
   PhoneCodeSent codeSent;
-  String _format = 'dd-MMMM-yyyy';
+  final String _format = 'dd-MMMM-yyyy';
   String minDate = '1900-01-01';
-  DateTimePickerLocale _locale = DateTimePickerLocale.id;
+  final DateTimePickerLocale _locale = DateTimePickerLocale.id;
   bool otpEnabled;
   bool isCityFieldEmpty = false;
   bool isBirthdayEmpty = false;
@@ -1141,7 +1142,7 @@ class _EditState extends State<Edit> {
   // Function to call remote config
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
+    await remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.otpEnabled: false,
     });
 
@@ -1165,7 +1166,7 @@ class _EditState extends State<Edit> {
     } else {
       // Permission disallowed
       // Show dialog to ask permission
-      showDialog(
+      await showDialog(
           context: context,
           builder: (BuildContext context) => DialogRequestPermission(
                 image: Image.asset(
@@ -1181,7 +1182,7 @@ class _EditState extends State<Edit> {
                         ? await AppSettings.openAppSettings()
                         : await AppSettings.openLocationSettings();
                   } else {
-                    permissionService.request().then((status) {
+                    await permissionService.request().then((status) {
                       _onStatusRequested(context, status);
                     });
                   }
@@ -1245,13 +1246,13 @@ class _EditState extends State<Edit> {
   }
 
   // Function to get status for access location
-  void _onStatusRequested(
+  Future<void> _onStatusRequested(
       BuildContext context, PermissionStatus statuses) async {
     if (statuses.isGranted) {
-      _openLocationPicker();
-      AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
+      unawaited(_openLocationPicker());
+      await AnalyticsHelper.setLogEvent(Analytics.permissionGrantedLocation);
     } else {
-      AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
+      await AnalyticsHelper.setLogEvent(Analytics.permissionDeniedLocation);
     }
   }
 

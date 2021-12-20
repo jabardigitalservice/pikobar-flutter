@@ -657,11 +657,11 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
               fontFamily: FontsFamily.roboto,
               fontSize: 14),
         ),
-        onTap: () {
+        onTap: () async {
           if (document.action == 'call') {
             _launchURL(document.phoneNumber, 'number');
 
-            AnalyticsHelper.setLogEvent(
+            await AnalyticsHelper.setLogEvent(
                 Analytics.tappedphoneBookEmergencyTelp, <String, dynamic>{
               'title': document.title,
               'telp': document.phoneNumber
@@ -670,7 +670,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
             _launchURL(document.phoneNumber, 'whatsapp',
                 message: document.message);
 
-            AnalyticsHelper.setLogEvent(
+            await AnalyticsHelper.setLogEvent(
                 Analytics.tappedphoneBookEmergencyWa, <String, dynamic>{
               'title': document.title,
               'wa': document.phoneNumber
@@ -760,7 +760,7 @@ class _ListViewPhoneBooksState extends State<ListViewPhoneBooks> {
 
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig
+    await remoteConfig
         .setDefaults(<String, dynamic>{FirebaseConfig.emergencyCall: []});
 
     try {

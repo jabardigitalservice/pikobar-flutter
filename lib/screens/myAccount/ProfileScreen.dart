@@ -681,7 +681,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Function to call remote config
   Future<RemoteConfig> setupRemoteConfig() async {
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults(<String, dynamic>{
+    await remoteConfig.setDefaults(<String, dynamic>{
       FirebaseConfig.healthStatusVisible: false,
       FirebaseConfig.healthStatusColors: ColorBase.healthStatusColors,
       FirebaseConfig.groupMenuProfile: false,

@@ -44,8 +44,8 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
   RemoteConfigBloc _remoteConfigBloc;
   ContactHistorySaveBloc _contactHistorySaveBloc;
 
-  String _format = 'dd-MMMM-yyyy';
-  String _minDate = '2019-01-01';
+  final String _format = 'dd-MMMM-yyyy';
+  final String _minDate = '2019-01-01';
   String _gender = '';
   String _relation = '';
   String _errorName;
@@ -128,7 +128,7 @@ class _ContactHistoryFormScreenState extends State<ContactHistoryFormScreen> {
           ),
           backgroundColor: Colors.white,
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal:Dimens.contentPadding),
+            padding: EdgeInsets.symmetric(horizontal: Dimens.contentPadding),
             child: BlocBuilder<RemoteConfigBloc, RemoteConfigState>(
                 builder: (context, state) {
               if (state is RemoteConfigLoaded) {
