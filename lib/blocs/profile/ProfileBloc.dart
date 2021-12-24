@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/models/CityModel.dart';
 import 'package:pikobar_flutter/repositories/ProfileRepository.dart';
 import 'package:pikobar_flutter/utilities/exceptions/CustomException.dart';
@@ -14,28 +13,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   ProfileBloc({
     required this.profileRepository,
-  })  : assert(profileRepository != null, 'profileRepository must not be null'),
-        super(ProfileUninitialized());
-
-  @override
-  Stream<ProfileState> mapEventToState(
-    ProfileEvent event,
-  ) async* {
-    if (event is CityLoad) {
-      yield CityLoading();
+  }) : super(ProfileUninitialized()) {
+    on<CityLoad>((event, emit) async {
+      emit(CityLoading());
       try {
         CityModel record = await profileRepository.getCityList();
-        yield CityLoaded(record: record);
+        emit(CityLoaded(record: record));
       } on Exception catch (e) {
-        yield ProfileFailure(
-            error: CustomException.onConnectionException(e.toString()));
+        emit(ProfileFailure(
+            error: CustomException.onConnectionException(e.toString())));
       }
-    }
-    if (event is Save) {
-      yield ProfileLoading();
+    });
+
+    on<Save>((event, emit) async {
+      emit(ProfileLoading());
       try {
         await profileRepository.saveToCollection(
-            event.id,
+            event.id!,
             event.phoneNumber,
             event.gender,
             event.address,
@@ -45,33 +39,32 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.nik,
             event.birthdate,
             event.latLng);
-        yield ProfileSaved();
+        emit(ProfileSaved());
       } on Exception catch (e) {
-        yield ProfileFailure(error: e.toString());
+        emit(ProfileFailure(error: e.toString()));
       }
-    }
+    });
 
-    if (event is Verify) {
-      yield ProfileLoading();
+    on<Verify>((event, emit) async {
+      emit(ProfileLoading());
       try {
         await profileRepository.sendCodeToPhoneNumber(
-            event.id,
+            event.id!,
             event.phoneNumber,
-            event.verificationCompleted,
-            event.verificationFailed,
-            event.codeSent);
-
-        yield ProfileWaiting();
+            event.verificationCompleted!,
+            event.verificationFailed!,
+            event.codeSent!);
+        emit(ProfileWaiting());
       } on Exception catch (e) {
-        yield ProfileFailure(error: e.toString());
+        emit(ProfileFailure(error: e.toString()));
       }
-    }
+    });
 
-    if (event is ConfirmOTP) {
-      yield ProfileLoading();
+    on<ConfirmOTP>((event, emit) async {
+      emit(ProfileLoading());
       try {
         await profileRepository.signInWithPhoneNumber(
-            event.smsCode,
+            event.smsCode!,
             event.verificationID,
             event.id,
             event.phoneNumber,
@@ -83,29 +76,31 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             event.nik,
             event.birthdate,
             event.latLng);
-        yield ProfileVerified();
+        emit(ProfileVerified());
       } on Exception catch (e) {
-        yield ProfileFailure(error: e.toString());
+        emit(ProfileFailure(error: e.toString()));
       }
-    }
+    });
 
-    if (event is VerifyConfirm) {
-      yield ProfileVerified();
-    }
+    on<VerifyConfirm>((event, emit) async {
+      emit(ProfileVerified());
+    });
 
-    if (event is VerifyFailed) {
-      yield ProfileVerifiedFailed();
-    }
+    on<VerifyFailed>((event, emit) async {
+      emit(ProfileVerifiedFailed());
+    });
 
-    if (event is CodeSend) {
-      yield ProfileOTPSent(verificationID: event.verificationID);
-    }
+    on<CodeSend>((event, emit) async {
+      emit(ProfileOTPSent(verificationID: event.verificationID!));
+    });
 
-    if (event is ProfileLoad) {
-      yield* _loadSelfReportListToState(event.uid);
-    } else if (event is ProfileUpdated) {
+    on<ProfileLoad>((event, emit) async* {
+      yield* _loadSelfReportListToState(event.uid!);
+    });
+
+    on<ProfileUpdated>((event, emit) async* {
       yield* _selfReportListToState(event);
-    }
+    });
   }
 
   Stream<ProfileState> _loadSelfReportListToState(String otherUID) async* {

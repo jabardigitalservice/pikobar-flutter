@@ -13,9 +13,9 @@ abstract class ProfileEvent extends Equatable {
 }
 
 class Save extends ProfileEvent {
-  final String id, phoneNumber, gender, address, cityId, provinceId, name, nik;
-  final DateTime birthdate;
-  final LatLng latLng;
+  final String? id, phoneNumber, gender, address, cityId, provinceId, name, nik;
+  final DateTime? birthdate;
+  final LatLng? latLng;
 
   const Save(
       {this.id,
@@ -31,44 +31,45 @@ class Save extends ProfileEvent {
 
   @override
   List<Object> get props => <Object>[
-        id,
-        phoneNumber,
-        gender,
-        address,
-        cityId,
-        provinceId,
-        name,
-        nik,
-        birthdate,
-        latLng
+        id!,
+        phoneNumber!,
+        gender!,
+        address!,
+        cityId!,
+        provinceId!,
+        name!,
+        nik!,
+        birthdate!,
+        latLng!,
       ];
 }
 
 class Verify extends ProfileEvent {
-  final String id, phoneNumber;
-  final PhoneVerificationCompleted verificationCompleted;
-  final PhoneVerificationFailed verificationFailed;
-  final PhoneCodeSent codeSent;
+  final String? id, phoneNumber;
+  final PhoneVerificationCompleted? verificationCompleted;
+  final PhoneVerificationFailed? verificationFailed;
+  final PhoneCodeSent? codeSent;
 
-  const Verify(
-      {this.id,
-      this.phoneNumber,
-      this.verificationCompleted,
-      this.verificationFailed,
-      this.codeSent});
+  const Verify({
+    this.id,
+    this.phoneNumber,
+    this.verificationCompleted,
+    this.verificationFailed,
+    this.codeSent,
+  });
 
   @override
   List<Object> get props => <Object>[
-        id,
-        phoneNumber,
-        verificationCompleted,
-        verificationFailed,
-        codeSent
+        id!,
+        phoneNumber!,
+        verificationCompleted!,
+        verificationFailed!,
+        codeSent!,
       ];
 }
 
 class ConfirmOTP extends ProfileEvent {
-  final String smsCode,
+  final String? smsCode,
       verificationID,
       id,
       phoneNumber,
@@ -78,8 +79,8 @@ class ConfirmOTP extends ProfileEvent {
       provinceId,
       name,
       nik;
-  final DateTime birthdate;
-  final LatLng latLng;
+  final DateTime? birthdate;
+  final LatLng? latLng;
 
   const ConfirmOTP(
       {this.smsCode,
@@ -97,18 +98,18 @@ class ConfirmOTP extends ProfileEvent {
 
   @override
   List<Object> get props => <Object>[
-        smsCode,
-        verificationID,
-        id,
-        phoneNumber,
-        gender,
-        address,
-        cityId,
-        provinceId,
-        name,
-        nik,
-        birthdate,
-        latLng
+        smsCode!,
+        verificationID!,
+        id!,
+        phoneNumber!,
+        gender!,
+        address!,
+        cityId!,
+        provinceId!,
+        name!,
+        nik!,
+        birthdate!,
+        latLng!,
       ];
 }
 
@@ -117,23 +118,23 @@ class VerifyConfirm extends ProfileEvent {}
 class VerifyFailed extends ProfileEvent {}
 
 class CodeSend extends ProfileEvent {
-  final String verificationID;
+  final String? verificationID;
 
   const CodeSend({this.verificationID});
 
   @override
-  List<Object> get props => <Object>[verificationID];
+  List<Object> get props => <Object>[verificationID!];
 }
 
 class CityLoad extends ProfileEvent {}
 
 class ProfileLoad extends ProfileEvent {
-  final String uid;
+  final String? uid;
 
   const ProfileLoad({@required this.uid});
 
   @override
-  List<Object> get props => <Object>[uid];
+  List<Object> get props => <Object>[uid!];
 }
 
 class ProfileUpdated extends ProfileEvent {

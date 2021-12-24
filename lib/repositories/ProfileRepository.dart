@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:pikobar_flutter/models/CityModel.dart';
 
 class ProfileRepository {
-  String status, verificationid;
+  late String status, verificationid;
 
   Future<void> sendCodeToPhoneNumber(
       String id,
@@ -40,10 +40,10 @@ class ProfileRepository {
       provinceId,
       name,
       nik,
-      DateTime birthdate,
+      DateTime? birthdate,
       AuthCredential credential,
-      LatLng latLng) async {
-    final User user = FirebaseAuth.instance.currentUser;
+      LatLng? latLng) async {
+    final User user = FirebaseAuth.instance.currentUser!;
     List<UserInfo> providerList = user.providerData;
     if (providerList.length > 2) {
       await user.unlink(credential.providerId);
@@ -54,7 +54,7 @@ class ProfileRepository {
   }
 
   Future<void> saveToCollection(String id, phoneNumber, gender, address, cityId,
-      provinceId, name, nik, DateTime birthdate, LatLng latLng) async {
+      provinceId, name, nik, DateTime? birthdate, LatLng? latLng) async {
     await FirebaseFirestore.instance.collection(kUsers).doc(id).update({
       'phone_number': Dictionary.inaCode + phoneNumber,
       'gender': gender,
@@ -80,8 +80,8 @@ class ProfileRepository {
       provinceId,
       name,
       nik,
-      DateTime birthdate,
-      LatLng latLng) async {
+      DateTime? birthdate,
+      LatLng? latLng) async {
     final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationID,
       smsCode: smsCode,
@@ -94,7 +94,7 @@ class ProfileRepository {
     await Future.delayed(Duration(seconds: 1));
 
     final response = await http
-        .get('${EndPointPath.getCityList}/jabar?level=kabupaten',
+        .get(Uri.parse('${EndPointPath.getCityList}/jabar?level=kabupaten'),
             headers: await HttpHeaders.headers())
         .timeout(const Duration(seconds: 30));
 

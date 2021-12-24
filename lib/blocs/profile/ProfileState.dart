@@ -20,29 +20,29 @@ class ProfileVerified extends ProfileState {}
 class ProfileWaiting extends ProfileState {}
 
 class ProfileOTPSent extends ProfileState {
-  final String verificationID;
+  final String? verificationID;
 
   const ProfileOTPSent({this.verificationID});
 
   @override
-  List<Object> get props => <Object>[verificationID];
+  List<Object> get props => <Object>[verificationID!];
 }
 
 class ProfileVerifiedFailed extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final DocumentSnapshot profile;
+  final DocumentSnapshot? profile;
 
   const ProfileLoaded({this.profile});
 
   @override
-  List<Object> get props => <Object>[profile];
+  List<Object> get props => <Object>[profile!];
 }
 
 class ProfileLoading extends ProfileState {}
 
 class ProfileFailure extends ProfileState {
-  final String error;
+  final String? error;
 
   const ProfileFailure({@required this.error});
 
@@ -50,16 +50,16 @@ class ProfileFailure extends ProfileState {
   String toString() => 'Profile { error: $error }';
 
   @override
-  List<Object> get props => <Object>[error];
+  List<Object> get props => <Object>[error!];
 }
 
 class CityLoading extends ProfileState {}
 
 class CityLoaded extends ProfileState {
-  final CityModel record;
+  final CityModel? record;
 
   const CityLoaded({@required this.record});
 
   @override
-  List<Object> get props => <Object>[record];
+  List<Object> get props => <Object>[record!];
 }
