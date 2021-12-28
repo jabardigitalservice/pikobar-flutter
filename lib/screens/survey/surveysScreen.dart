@@ -14,6 +14,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/constants/UrlThirdParty.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
@@ -22,6 +23,7 @@ import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:pedantic/pedantic.dart';
 
 class SurveysScreen extends StatefulWidget {
   SurveysScreen({Key key}) : super(key: key);
@@ -277,7 +279,9 @@ class _SurveysScreenState extends State<SurveysScreen> {
                           ),
                         ),
                         onTap: () {
-                          openChromeSafariBrowser(url: document['url']);
+                          unawaited(Navigator.pushNamed(
+                              context, NavigationConstrants.Browser,
+                              arguments: document['url']));
                         },
                       ),
                       Container(

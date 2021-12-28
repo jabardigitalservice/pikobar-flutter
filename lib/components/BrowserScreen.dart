@@ -53,13 +53,10 @@ class _BrowserScreenState extends State<BrowserScreen> {
               child: Container(
                 child: InAppWebView(
                   initialUrl: url,
-                  initialHeaders: {},
                   initialOptions: InAppWebViewGroupOptions(
                       crossPlatform: InAppWebViewOptions(
                           debuggingEnabled: true,
                           applicationNameForUserAgent: 'PIKOBAR',
-                          useShouldOverrideUrlLoading: true,
-                          mediaPlaybackRequiresUserGesture: false,
                           javaScriptEnabled: true,
                           javaScriptCanOpenWindowsAutomatically: true,
                           userAgent:
