@@ -191,24 +191,24 @@ class _MenuListState extends State<MenuList> {
       // Daftar Relawan (Added automatically)
     ];
 
-    if (remoteConfig.getBool(FirebaseConfig.selfDiagnoseEnabled)) {
-      otherMenus.insert(
-          1,
-          BuildButtonMenu(
-            remoteConfig: remoteConfig,
-            iconPath: '${Environment.iconAssets}menu_periksa_mandiri.png',
-            defaultLabel: Dictionary.selfDiagnose,
-            firebaseConfigLabel: FirebaseConfig.selfDiagnoseCaption,
-            route: NavigationConstrants.Browser,
-            defaultArguments: kUrlSelfDiagnose,
-            firebaseConfigArguments: FirebaseConfig.selfDiagnoseUrl,
-            remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu,
-          ));
-    }
+    // if (remoteConfig.getBool(FirebaseConfig.selfDiagnoseEnabled)) {
+    //   otherMenus.insert(
+    //       1,
+    //       BuildButtonMenu(
+    //         remoteConfig: remoteConfig,
+    //         iconPath: '${Environment.iconAssets}menu_periksa_mandiri.png',
+    //         defaultLabel: Dictionary.selfDiagnose,
+    //         firebaseConfigLabel: FirebaseConfig.selfDiagnoseCaption,
+    //         route: NavigationConstrants.Browser,
+    //         defaultArguments: kUrlSelfDiagnose,
+    //         firebaseConfigArguments: FirebaseConfig.selfDiagnoseUrl,
+    //         remoteMenuLoginKey: FirebaseConfig.selfDiagnoseMenu,
+    //       ));
+    // }
 
     if (remoteConfig.getBool(FirebaseConfig.volunteerEnabled)) {
       otherMenus.insert(
-          6,
+          5,
           BuildButtonMenu(
             remoteConfig: remoteConfig,
             iconPath: '${Environment.iconAssets}menu_relawan.png',
@@ -223,7 +223,7 @@ class _MenuListState extends State<MenuList> {
 
     if (remoteConfig.getBool(FirebaseConfig.qnaEnabled)) {
       otherMenus.insert(
-          2,
+          1,
           BuildButtonMenu(
             remoteConfig: remoteConfig,
             iconPath: '${Environment.iconAssets}menu_qna.png',

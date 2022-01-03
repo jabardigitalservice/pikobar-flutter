@@ -103,11 +103,13 @@ class _BrowserScreenState extends State<BrowserScreen> {
   }
 
   Future<bool> _exitWebView() async {
-    if (await webView.canGoBack()) {
-      unawaited(webView.goBack());
-      return Future.value(false);
-    } else {
-      return Future.value(true);
-    }
+    // if (await webView.canGoBack()) {
+    //   unawaited(webView.goBack());
+    //   return Future.value(false);
+    // } else {
+    //   return Future.value(true);
+    // }
+
+    return Future.value(true);
   }
 }
