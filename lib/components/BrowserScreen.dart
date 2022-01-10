@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
@@ -39,6 +41,14 @@ class _BrowserScreenState extends State<BrowserScreen> {
       child: Scaffold(
         appBar: CustomAppBar.defaultAppBar(
           title: Dictionary.appName,
+          leading: Platform.isAndroid
+              ? GestureDetector(
+                  child: Icon(Icons.arrow_back),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                )
+              : null,
         ),
         body: Column(
           children: <Widget>[
@@ -103,13 +113,11 @@ class _BrowserScreenState extends State<BrowserScreen> {
   }
 
   Future<bool> _exitWebView() async {
-    // if (await webView.canGoBack()) {
-    //   unawaited(webView.goBack());
-    //   return Future.value(false);
-    // } else {
-    //   return Future.value(true);
-    // }
-
-    return Future.value(true);
+    if (Platform.isAndroid && await webView.canGoBack()) {
+      await webView.goBack();
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
   }
 }

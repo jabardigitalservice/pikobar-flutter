@@ -48,9 +48,9 @@ post_install do |installer|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
 
-      if Gem::Version.new($iOSVersion) > Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'])
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = $iOSVersion
-      end
+       if Gem::Version.new($iOSVersion) > Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'])
+         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = $iOSVersion
+       end
       
       # You can remove unused permissions here
       # e.g. when you don't need camera permission, just add 'PERMISSION_CAMERA=0'
