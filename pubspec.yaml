@@ -58,7 +58,7 @@ dependencies:
   flutter_cupertino_date_picker:
     git:
       url: https://github.com/anandarh/flutter-cupertino-date-picker.git
-  flutter_downloader: ^1.5.1
+  flutter_downloader: ^1.5.2
   flutter_full_pdf_viewer: ^1.0.6
   flutter_html: ^1.0.2
   flutter_inappwebview: ^4.0.0+4
