@@ -12,6 +12,7 @@ import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/BannerModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
@@ -92,13 +93,16 @@ class BannerListSliderState extends State<BannerListSlider> {
                       child: Container(
                         decoration: BoxDecoration(shape: BoxShape.circle),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimens.borderRadius),
+                          borderRadius:
+                              BorderRadius.circular(Dimens.borderRadius),
                           child: CachedNetworkImage(
                               imageUrl: data.url ?? '',
                               imageBuilder: (context, imageProvider) =>
-                                  Container(margin: EdgeInsets.symmetric(horizontal: 5),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
                                       image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.fill,
@@ -202,7 +206,8 @@ class BannerListSliderState extends State<BannerListSlider> {
         throw 'Could not launch $url';
       }
     } else {
-      openChromeSafariBrowser(url: url);
+      Navigator.pushNamed(context, NavigationConstrants.Browser,
+          arguments: url);
     }
   }
 }
