@@ -18,6 +18,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/login/LoginScreen.dart';
@@ -279,14 +280,17 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         if (isLoggedIn != null && isLoggedIn) {
           url = await userDataUrlAppend(url);
 
-          openChromeSafariBrowser(url: url);
+          Navigator.pushNamed(context, NavigationConstrants.Browser,
+              arguments: url);
         }
       } else {
         url = await userDataUrlAppend(url);
-        openChromeSafariBrowser(url: url);
+        Navigator.pushNamed(context, NavigationConstrants.Browser,
+            arguments: url);
       }
     } else {
-      openChromeSafariBrowser(url: url);
+      Navigator.pushNamed(context, NavigationConstrants.Browser,
+          arguments: url);
     }
   }
 

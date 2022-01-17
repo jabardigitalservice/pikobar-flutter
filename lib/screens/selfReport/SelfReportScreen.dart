@@ -678,7 +678,8 @@ class _SelfReportScreenState extends State<SelfReportScreen> {
               length: 2,
               //for give condition onPressed in widget _buildContainer
               onPressedEnable: () async {
-                await launchExternal(getListData[i]['url']);
+                Navigator.pushNamed(context, NavigationConstrants.Browser,
+                    arguments: getListData[i]['url']);
                 await AnalyticsHelper.setLogEvent(getListData[i]['analytics']);
               },
               isShowMenu: true)
