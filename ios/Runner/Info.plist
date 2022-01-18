@@ -47,8 +47,13 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Pikobar memerlukan izin untuk mengakses kamera untuk memindai dokumen swab</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

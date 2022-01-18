@@ -5,6 +5,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BrowserScreen extends StatefulWidget {
   final String url;
@@ -26,6 +27,7 @@ class _BrowserScreenState extends State<BrowserScreen> {
   @override
   void initState() {
     url = widget.url;
+    print(url);
     super.initState();
   }
 
@@ -63,14 +65,42 @@ class _BrowserScreenState extends State<BrowserScreen> {
               child: Container(
                 child: InAppWebView(
                   initialUrl: url,
+                  shouldOverrideUrlLoading: (controller, request) async {
+                    var url = request.url;
+                    var uri = Uri.parse(url);
+
+                    if (![
+                      "http",
+                      "https",
+                      "file",
+                      "chrome",
+                      "data",
+                      "javascript",
+                      "about"
+                    ].contains(uri.scheme)) {
+                      if (await canLaunch(url)) {
+                        // Launch the App
+                        await launch(
+                          url,
+                        );
+                        // and cancel the request
+                        return ShouldOverrideUrlLoadingAction.CANCEL;
+                      }
+                    }
+
+                    return ShouldOverrideUrlLoadingAction.ALLOW;
+                  },
                   initialOptions: InAppWebViewGroupOptions(
                       crossPlatform: InAppWebViewOptions(
-                          debuggingEnabled: true,
-                          applicationNameForUserAgent: 'PIKOBAR',
-                          javaScriptEnabled: true,
-                          javaScriptCanOpenWindowsAutomatically: true,
-                          userAgent:
-                              "Mozilla/5.0 (Linux; Android 9; LG-H870 Build/PKQ1.190522.001) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36"),
+                        debuggingEnabled: true,
+                        applicationNameForUserAgent: 'PIKOBAR',
+                        javaScriptEnabled: true,
+                        javaScriptCanOpenWindowsAutomatically: true,
+                        useShouldOverrideUrlLoading: true,
+                        userAgent: Platform.isAndroid
+                            ? "Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.87 Mobile Safari/537.36"
+                            : "Mozilla/5.0 (iPhone; CPU iPhone OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Mobile/15E148 Safari/604.1",
+                      ),
                       android: AndroidInAppWebViewOptions(
                           allowContentAccess: true,
                           thirdPartyCookiesEnabled: true,
