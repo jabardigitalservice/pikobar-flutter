@@ -96,7 +96,7 @@ class Dictionary {
   static String travelHistoryReport = 'Lapor Aktivitas Berpegian';
   static String isolationCenter = 'Pusat Isolasi';
   static String city = 'Kota/Kabupaten';
-  static String portalBansos = 'Portal Bansos Kemensos';
+  static String portalBansos = 'Laman Bansos Kemensos';
   static String vaccinInformation = 'Informasi Vaksinasi';
   static String hospitalBedOccupancy = 'Keterisian Bed RS';
   static String oxygenTherapy = 'Terapi Oksigen';
@@ -507,15 +507,15 @@ class Dictionary {
 
   ///bansos
   static const String bansosWelcomeText =
-      'Selamat datang di Portal Informasi Data Penerima Bantuan Sosial Kemensos';
+      'Selamat datang di Laman Informasi Data Penerima Bantuan Sosial Kemensos';
   static const String bansosDescriptionText =
-      'Laman ini berguna untuk mengetahui tata cara mengakses data penerima bantuan sosial yang telah disalurkan atau masih dalam proses penyaluran melalui Website Kemensos. ';
+      'Halaman ini hanya ditujukan untuk memeriksa penyaluran bantuan sosial dari Kementerian Sosial Republik Indonesia, tidak untuk mengajukan bantuan sosial. Kunjungi FAQ atau hubungi Hotline Pikobar untuk aduan/pertanyaan lebih lanjut.';
   static const String bansosDisclaimerText =
       '*Laman ini tidak ditujukan untuk melakukan pengajuan bantuan sosial';
   static const String findBansosData =
-      'Kini, cari data penerima bantuan Kemensos bisa lebih cepat dan praktis! Cek di sini';
+      'Lebih praktis & cepat cari data penerima Bansos Kemensos, klik di sini untuk lakukan pengecekan';
   static const String checkBansosData =
-      'Informasi detail seputar Data Penerima Bansos Kementerian Sosial RI dapat hubungi di sini';
+      'Hubungi email Kementerian Sosial RI untuk informasi lebih jauh seputar Bansos Kemensos';
 
   //data covid
   static String covidDataDesc =
