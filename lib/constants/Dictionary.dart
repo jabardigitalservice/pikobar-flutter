@@ -508,6 +508,8 @@ class Dictionary {
   ///bansos
   static const String bansosWelcomeText =
       'Selamat datang di Laman Informasi Data Penerima Bantuan Sosial Kemensos';
+  static const String bansosTimeLineTitle =
+  'Bagaimana Cara Mengakses Data Penerima Bansos Kemensos?';
   static const String bansosDescriptionText =
       'Halaman ini hanya ditujukan untuk memeriksa penyaluran bantuan sosial dari Kementerian Sosial Republik Indonesia, tidak untuk mengajukan bantuan sosial. Kunjungi FAQ atau hubungi Hotline Pikobar untuk aduan/pertanyaan lebih lanjut.';
   static const String bansosDisclaimerText =

@@ -144,7 +144,7 @@ class _BansosState extends State<Bansos> {
               image,
               width: 70,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Expanded(
@@ -177,13 +177,13 @@ class _BansosState extends State<Bansos> {
     return Column(
       children: [
         Text(
-          'Bagaimana Cara Mengakses Data Penerima Bansos Kemensos?',
+          Dictionary.bansosTimeLineTitle,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w900,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         ListView.builder(
           shrinkWrap: true,
           physics: BouncingScrollPhysics(),
