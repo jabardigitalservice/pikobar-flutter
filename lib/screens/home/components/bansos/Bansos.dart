@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
-import 'package:pikobar_flutter/components/HeroImagePreviewScreen.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -10,6 +9,7 @@ import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/components/SocialMedia.dart';
 import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Bansos extends StatefulWidget {
@@ -23,6 +23,15 @@ class _BansosState extends State<Bansos> {
   ScrollController _scrollController;
   String imageBansosUrl =
       'https://firebasestorage.googleapis.com/v0/b/jabarprov-covid19.appspot.com/o/public%2Fcara%20cek%20bansos.jpeg?alt=media&token=d9d769fa-5072-46d6-98ef-bb6a5138efed';
+
+  List<String> descItem = [
+    'Kunjungi Portal Bansos Kementrian Sosial',
+    'Pilih Provinsi, Kab/Kota, Kecamatan, Desa/Kelurahan Tempat Tinggalmu',
+    'Masukkan Nama Sesuai Dengan KTP',
+    'Masukkan  4 Kode Yang Tertera Dalam Kotak',
+    'Jika Tidak Terlihat Jelas, Klik Kotak Kode Untuk Mendapatkan Kode Baru',
+    'Klik Tombol Cari Dan Telurusi Data Penerima Bantuan Sosial',
+  ];
 
   @override
   void initState() {
@@ -96,37 +105,23 @@ class _BansosState extends State<Bansos> {
                 height: 1.5,
                 fontSize: 12),
           ),
+          const SizedBox(height: 35),
+          _buildTimelines(),
           const SizedBox(height: 20),
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => HeroImagePreview(
-                        Dictionary.heroImageTag,
-                        imageUrl: imageBansosUrl,
-                      ),
-                    ));
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    imageBansosUrl,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-              )),
+          _buildContainer(
+            Dictionary.findBansosData,
+            'find_bansos.png',
+            () async {
+              await openChromeSafariBrowser(
+                  url: 'https://cekbansos.kemensos.go.id/');
+            },
+          ),
           const SizedBox(height: 20),
-          _buildContainer(Dictionary.findBansosData,
-              '${Environment.imageAssets}find_bansos.png', () async {
-            await openChromeSafariBrowser(
-                url: 'https://cekbansos.kemensos.go.id/');
-          }),
-          const SizedBox(height: 20),
-          _buildContainer(Dictionary.checkBansosData,
-              '${Environment.imageAssets}ministry_of_social.png', _launchEmail),
+          _buildContainer(
+            Dictionary.checkBansosData,
+            'ministry_of_social.png',
+            _launchEmail,
+          ),
           const SizedBox(height: 40),
           SocialMedia()
         ],
@@ -146,10 +141,10 @@ class _BansosState extends State<Bansos> {
         child: Row(
           children: [
             Image.asset(
-              image,
+              Environment.imageAssets + image,
               width: 70,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Expanded(
@@ -171,6 +166,70 @@ class _BansosState extends State<Bansos> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTimelines() {
+    LineStyle _lineStyle = LineStyle(
+      color: ColorBase.menuBorderColor,
+      thickness: 4,
+    );
+    return Column(
+      children: [
+        Text(
+          Dictionary.bansosTimeLineTitle,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 10),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: BouncingScrollPhysics(),
+          itemCount: descItem.length,
+          itemBuilder: (context, index) => TimelineTile(
+            isFirst: index == 0,
+            isLast: index == (descItem.length - 1),
+            beforeLineStyle: _lineStyle,
+            afterLineStyle: _lineStyle,
+            endChild: Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 10),
+              constraints: const BoxConstraints(
+                minHeight: 80,
+              ),
+              child: Text(
+                descItem[index],
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            indicatorStyle: IndicatorStyle(
+              width: 30,
+              height: 30,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+              ),
+              drawGap: true,
+              indicator: Container(
+                decoration: BoxDecoration(
+                  color: ColorBase.primaryGreen,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '${index + 1}',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -14,7 +14,7 @@ publish_to: none
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # GDrive version 3.0.0+19
 # PlayStore version 2.4.2+30
-version: 2.4.4+33 # Staging Version
+version: 2.4.6+35 # Staging Version
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -98,6 +98,7 @@ dependencies:
   syncfusion_flutter_charts: ^18.4.44
   syncfusion_flutter_datepicker: ^18.4.44
   timeago: ^2.0.27
+  timeline_tile: ^1.0.0
   url_launcher: ^5.7.2
   uuid: ^2.2.2
 
