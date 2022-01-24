@@ -110,7 +110,7 @@ class _BansosState extends State<Bansos> {
           const SizedBox(height: 20),
           _buildContainer(
             Dictionary.findBansosData,
-            '${Environment.imageAssets}find_bansos.png',
+            'find_bansos.png',
             () async {
               await openChromeSafariBrowser(
                   url: 'https://cekbansos.kemensos.go.id/');
@@ -119,7 +119,7 @@ class _BansosState extends State<Bansos> {
           const SizedBox(height: 20),
           _buildContainer(
             Dictionary.checkBansosData,
-            '${Environment.imageAssets}ministry_of_social.png',
+            'ministry_of_social.png',
             _launchEmail,
           ),
           const SizedBox(height: 40),
@@ -141,7 +141,7 @@ class _BansosState extends State<Bansos> {
         child: Row(
           children: [
             Image.asset(
-              image,
+              Environment.imageAssets + image,
               width: 70,
             ),
             const SizedBox(
