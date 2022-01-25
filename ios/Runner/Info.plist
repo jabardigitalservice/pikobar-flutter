@@ -64,8 +64,6 @@
 	<string>Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Pikobar memerlukan izin akses lokasi untuk memberi informasi sebaran kasus Covid-19, melakukan check-in, serta memungkinkan Anda untuk dapat mengubah profile lokasi tempat tinggal.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Pikobar memerlukan izin mendeteksi gerakan untuk mengaktifkan akses lokasi</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Pikobar memerlukan izin untuk mengakses gambar dari gallery untuk memindai dokumen swab</string>
 	<key>NSPhotoLibraryUsageDescription</key>

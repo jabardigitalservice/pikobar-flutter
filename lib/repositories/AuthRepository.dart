@@ -14,7 +14,6 @@ import 'package:meta/meta.dart';
 import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/UserModel.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
-import 'package:pikobar_flutter/utilities/LocationService.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,7 +61,6 @@ class AuthRepository {
     });
     await deleteToken();
     await deleteLocalUserInfo();
-    await LocationService.stopBackgroundLocation();
   }
 
   /// Sign In with Apple
@@ -199,8 +197,6 @@ class AuthRepository {
         await persistUserInfo(authUserInfo);
         await registerFCMToken();
         await cloudFunctionOnAuth(authType: Auth.login);
-        await LocationService.configureBackgroundLocation(
-            userInfo: authUserInfo);
       } else {
         authUserInfo = await readLocalUserInfo();
       }

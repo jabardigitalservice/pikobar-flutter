@@ -53,7 +53,6 @@ dependencies:
   flushbar: ^1.10.4
   flutter:
     sdk: flutter
-  flutter_background_geolocation: ^1.11.0
   flutter_bloc: ^6.0.6
   flutter_cupertino_date_picker:
     git:

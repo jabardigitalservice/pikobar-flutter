@@ -30,9 +30,6 @@
                 android:name="io.flutter.embedding.android.SplashScreenDrawable"
                 android:resource="@drawable/launch_background" />
         </activity>
-        <meta-data
-            android:name="com.transistorsoft.locationmanager.license"
-            android:value="%GEOLOCATION_KEY%" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
