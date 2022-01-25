@@ -12,79 +12,10 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
-    as bg;
-import 'package:background_fetch/background_fetch.dart';
 import 'package:pikobar_flutter/utilities/SentryHandler.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'configs/Routes.dart';
-
-/// Receive events from BackgroundGeolocation in Headless state.
-void backgroundGeolocationHeadlessTask(bg.HeadlessEvent headlessEvent) {
-  print('📬 --> $headlessEvent');
-
-  switch (headlessEvent.name) {
-    case bg.Event.TERMINATE:
-      try {
-        //bg.Location location = await bg.BackgroundGeolocation.getCurrentPosition(samples: 1);
-        print('[getCurrentPosition] Headless: $headlessEvent');
-      } catch (error) {
-        print('[getCurrentPosition] Headless ERROR: $error');
-      }
-      break;
-    case bg.Event.LOCATION:
-      bg.Location location = headlessEvent.event;
-      print(location);
-      break;
-    case bg.Event.MOTIONCHANGE:
-      bg.Location location = headlessEvent.event;
-      print(location);
-      break;
-    case bg.Event.GEOFENCE:
-      bg.GeofenceEvent geofenceEvent = headlessEvent.event;
-      print(geofenceEvent);
-      break;
-    case bg.Event.GEOFENCESCHANGE:
-      bg.GeofencesChangeEvent event = headlessEvent.event;
-      print(event);
-      break;
-    case bg.Event.SCHEDULE:
-      bg.State state = headlessEvent.event;
-      print(state);
-      break;
-    case bg.Event.ACTIVITYCHANGE:
-      bg.ActivityChangeEvent event = headlessEvent.event;
-      print(event);
-      break;
-    case bg.Event.HTTP:
-      bg.HttpEvent response = headlessEvent.event;
-      print(response);
-      break;
-    case bg.Event.POWERSAVECHANGE:
-      bool enabled = headlessEvent.event;
-      print(enabled);
-      break;
-    case bg.Event.CONNECTIVITYCHANGE:
-      bg.ConnectivityChangeEvent event = headlessEvent.event;
-      print(event);
-      break;
-    case bg.Event.ENABLEDCHANGE:
-      bool enabled = headlessEvent.event;
-      print(enabled);
-      break;
-    case bg.Event.AUTHORIZATION:
-      bg.AuthorizationEvent event = headlessEvent.event;
-      print(event);
-      break;
-  }
-}
-
-/// This "Headless Task" is run when app is terminated.
-void backgroundFetchHeadlessTask(String taskId) {
-  print('[BackgroundFetch] Headless event received.');
-  BackgroundFetch.finish(taskId);
-}
 
 class SimpleBlocObserver extends BlocObserver {
   @override
@@ -126,14 +57,6 @@ Future<void> main() async {
     print('runZonedGuarded: Caught error in my root zone.');
     await SentryHandler.reportError(error, stackTrace: stackTrace);
   });
-
-  /// Register BackgroundGeolocation headless-task.
-  await bg.BackgroundGeolocation.registerHeadlessTask(
-      backgroundGeolocationHeadlessTask);
-
-  /// Register to receive BackgroundFetch events after app is terminated.
-  /// Requires {stopOnTerminate: false, enableHeadless: true}
-  await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class App extends StatefulWidget {
