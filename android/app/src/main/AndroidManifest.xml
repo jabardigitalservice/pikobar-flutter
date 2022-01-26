@@ -47,7 +47,6 @@
            android:name="com.google.mlkit.vision.DEPENDENCIES"
            android:value="ocr" />
 
-        <!-- flutter_background_geolocation licence -->
         <provider
             android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
             android:authorities="${applicationId}.flutter_downloader.provider"
@@ -58,13 +57,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <!-- google API -->
-        <service
-            android:name="com.transistorsoft.locationmanager.service.LocationRequestService"
-            android:foregroundServiceType="location" />
-        <service
-            android:name="com.transistorsoft.locationmanager.service.TrackingService"
-            android:foregroundServiceType="location" />
+        
     </application>
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />

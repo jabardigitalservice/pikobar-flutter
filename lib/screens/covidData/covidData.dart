@@ -14,7 +14,6 @@ import 'package:pikobar_flutter/constants/firebaseConfig.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/BasicUtils.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:pikobar_flutter/utilities/RemoteConfigHelper.dart';
 
 class CovidDataScreen extends StatelessWidget {

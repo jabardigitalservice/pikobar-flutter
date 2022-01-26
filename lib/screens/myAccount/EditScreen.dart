@@ -888,6 +888,8 @@ class _EditState extends State<Edit> {
                   focusNode.requestFocus();
                 }
                 return validate;
+              } else {
+                return null;
               }
             },
             focusNode: focusNode,

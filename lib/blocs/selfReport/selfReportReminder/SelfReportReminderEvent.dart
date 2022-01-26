@@ -4,7 +4,6 @@ abstract class SelfReportReminderEvent extends Equatable {
   const SelfReportReminderEvent();
 
   @override
-  // TODO: implement props
   List<Object> get props => <Object>[];
 }
 
@@ -35,5 +34,5 @@ class SelfReportReminderUpdated extends SelfReportReminderEvent {
   const SelfReportReminderUpdated(this.selfReportReminderList);
 
   @override
-  List<Object> get props => <Object> [selfReportReminderList];
+  List<Object> get props => <Object>[selfReportReminderList];
 }

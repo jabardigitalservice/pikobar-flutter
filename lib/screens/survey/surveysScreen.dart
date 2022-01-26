@@ -21,7 +21,6 @@ import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/Connection.dart';
-import 'package:pikobar_flutter/utilities/OpenChromeSapariBrowser.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:pedantic/pedantic.dart';
 

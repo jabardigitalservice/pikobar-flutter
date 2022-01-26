@@ -36,7 +36,6 @@ class FaqScreen extends StatefulWidget {
 
 class _FaqScreenState extends State<FaqScreen> {
   final FaqListBloc _faqListBloc = FaqListBloc();
-  FaqCatagoriesBloc _faqCatagoriesBloc;
   final TextEditingController _searchController = TextEditingController();
   ScrollController _scrollController;
   String searchQuery = '';
@@ -75,7 +74,7 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<FaqCatagoriesBloc>(
       create: (BuildContext context) =>
-          _faqCatagoriesBloc = FaqCatagoriesBloc()..add(FaqCategoriesLoad()),
+          FaqCatagoriesBloc()..add(FaqCategoriesLoad()),
       child: BlocListener<FaqCatagoriesBloc, FaqCatagoriesState>(
         listener: (context, categoriesState) {
           if (categoriesState is FaqCatagoriesLoaded) {
