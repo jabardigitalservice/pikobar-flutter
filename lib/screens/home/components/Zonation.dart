@@ -67,9 +67,22 @@ class _ZonationState extends State<Zonation>
                       },
                     ));
           } else if (state is ZonationLoaded) {
-            await _getAddress(state.position);
+            if (state.record.zonaResiko == null) {
+              _flushbar = Flushbar(
+                icon: Icon(
+                  Icons.error_outline,
+                  color: Colors.redAccent,
+                ),
+                title: Dictionary.oops,
+                message: Dictionary.zonationError,
+                duration: Duration(seconds: 3),
+              );
+              await _flushbar.show(context);
+            } else {
+              await _getAddress(state.position);
 
-            await _flushbar.dismiss();
+              await _flushbar.dismiss();
+            }
           } else {
             await _flushbar.dismiss();
           }
@@ -77,7 +90,9 @@ class _ZonationState extends State<Zonation>
         child: BlocBuilder<ZonationCubit, ZonationState>(
             builder: (BuildContext context, ZonationState state) =>
                 state is ZonationLoaded
-                    ? _buildContent(state)
+                    ? state.record.zonaResiko != null
+                        ? _buildContent(state)
+                        : _buildIntroContent(state)
                     : _buildIntroContent(state)),
       ),
     );

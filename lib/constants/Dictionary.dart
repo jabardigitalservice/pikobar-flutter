@@ -247,6 +247,7 @@ class Dictionary {
 
   // text
   static String loading = 'Tunggu Sebentar...';
+  static String oops = 'Upss!!';
   static String textLogoutButton = 'Logout';
   static String people = 'Orang';
   static String emptyData = 'Informasi Tidak Ditemukan';
@@ -462,6 +463,8 @@ class Dictionary {
   static const String sourceZonationInfo =
       'Warna Zonasi Risiko ini dihitung berdasarkan indikator - indikator kesehatan masyarakat dengan menggunakan skoring dan pembobotan. Sumber: </br><a href="https://covid19.go.id/peta-risiko">https://covid19.go.id/peta-risiko</a>';
   static const String zonationCheck = 'Cek Zona Risiko';
+  static const String zonationError =
+      'Terjdi kesalahan saat melakukan cek zona, silakan coba beberapa saat lagi.';
 
   // Net Promote Score
   static const String npsTitle =
@@ -509,7 +512,7 @@ class Dictionary {
   static const String bansosWelcomeText =
       'Selamat datang di Laman Informasi Data Penerima Bantuan Sosial Kemensos';
   static const String bansosTimeLineTitle =
-  'Bagaimana Cara Mengakses Data Penerima Bansos Kemensos?';
+      'Bagaimana Cara Mengakses Data Penerima Bansos Kemensos?';
   static const String bansosDescriptionText =
       'Halaman ini hanya ditujukan untuk memeriksa penyaluran bantuan sosial dari Kementerian Sosial Republik Indonesia, tidak untuk mengajukan bantuan sosial. Kunjungi FAQ atau hubungi Hotline Pikobar untuk aduan/pertanyaan lebih lanjut.';
   static const String bansosDisclaimerText =
