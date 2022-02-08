@@ -3,19 +3,21 @@ class CheckDistributionModel {
   Detected detected;
   String zonaResiko;
 
-  CheckDistributionModel({this.currentLocation, this.detected, this.zonaResiko});
+  CheckDistributionModel(
+      {this.currentLocation, this.detected, this.zonaResiko});
 
-  factory CheckDistributionModel.fromJson(Map<String, dynamic> json) => CheckDistributionModel(
-    currentLocation: CurrentLocation.fromJson(json["current_location"]),
-    detected: Detected.fromJson(json["detected"]),
-    zonaResiko: json["zona_resiko"],
-  );
+  factory CheckDistributionModel.fromJson(Map<String, dynamic> json) =>
+      CheckDistributionModel(
+        currentLocation: CurrentLocation.fromJson(json["current_location"]),
+        detected: Detected.fromJson(json["detected"]),
+        zonaResiko: json["zona_resiko"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "current_location": currentLocation.toJson(),
-    "detected": detected.toJson(),
-    "zona_resiko": zonaResiko,
-  };
+        "current_location": currentLocation.toJson(),
+        "detected": detected.toJson(),
+        "zona_resiko": zonaResiko,
+      };
 }
 
 class CurrentLocation {
@@ -145,7 +147,13 @@ class Radius {
   int suspectDiisolasi;
   int probable;
 
-  Radius({this.kmRadius, this.odpProses, this.pdpProses, this.positif, this.probable,});
+  Radius({
+    this.kmRadius,
+    this.odpProses,
+    this.pdpProses,
+    this.positif,
+    this.probable,
+  });
 
   Radius.fromJson(Map<String, dynamic> json) {
     kmRadius = json['km_radius'];
@@ -185,7 +193,8 @@ class DesaLainnya {
       this.confirmation,
       this.kodeDesa,
       this.namaDesa,
-      this.suspectDiisolasi, this.probable});
+      this.suspectDiisolasi,
+      this.probable});
 
   DesaLainnya.fromJson(Map<String, dynamic> json) {
     closecontactDikarantina = json['closecontact_dikarantina'];
