@@ -95,36 +95,36 @@ class CheckDistributionCardRadius extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: Dimens.padding),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                buildCard(context,
-                    image: '',
-                    title: getLabel['check_distribution']['by_radius']
-                        ['close_contact'],
-                    total: isFromOther
-                        ? state.record.detected.kec.closecontactDikarantina
-                        : state.record.detected.desa.closecontactDikarantina,
-                    textColor: Colors.black),
-                buildCard(context,
-                    image: '',
-                    title: getLabel['check_distribution']['by_radius']
-                        ['suspect'],
-                    total: isFromOther
-                        ? state.record.detected.kec.suspectDiisolasi
-                        : state.record.detected.desa.suspectDiisolasi,
-                    textColor: Colors.black),
-                buildCard(context,
-                    image: '',
-                    title: getLabel['check_distribution']['by_radius']
-                        ['probable'],
-                    total: isFromOther
-                        ? state.record.detected.kec.probable
-                        : state.record.detected.desa.probable,
-                    textColor: Colors.black),
-              ],
-            )
+            // SizedBox(height: Dimens.padding),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: <Widget>[
+            //     buildCard(context,
+            //         image: '',
+            //         title: getLabel['check_distribution']['by_radius']
+            //             ['close_contact'],
+            //         total: isFromOther
+            //             ? state.record.detected.kec.closecontactDikarantina
+            //             : state.record.detected.desa.closecontactDikarantina,
+            //         textColor: Colors.black),
+            //     buildCard(context,
+            //         image: '',
+            //         title: getLabel['check_distribution']['by_radius']
+            //             ['suspect'],
+            //         total: isFromOther
+            //             ? state.record.detected.kec.suspectDiisolasi
+            //             : state.record.detected.desa.suspectDiisolasi,
+            //         textColor: Colors.black),
+            //     buildCard(context,
+            //         image: '',
+            //         title: getLabel['check_distribution']['by_radius']
+            //             ['probable'],
+            //         total: isFromOther
+            //             ? state.record.detected.kec.probable
+            //             : state.record.detected.desa.probable,
+            //         textColor: Colors.black),
+            //   ],
+            // )
           ],
         ),
       ),

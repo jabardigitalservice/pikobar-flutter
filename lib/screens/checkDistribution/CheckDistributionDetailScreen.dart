@@ -40,9 +40,9 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
   RemoteConfigBloc _remoteConfigBloc;
   List<String> listItemTitleTab = [
     Dictionary.confirmed,
-    Dictionary.closeContact,
-    Dictionary.suspect,
-    Dictionary.probable
+    // Dictionary.closeContact,
+    // Dictionary.suspect,
+    // Dictionary.probable
   ];
   ScrollController _scrollController;
 
@@ -234,24 +234,24 @@ class _CheckDistributionDetailState extends State<CheckDistributionDetail> {
                               statusType: listItemTitleTab[0],
                             ),
 
-                            // show kecamatan
-                            CheckDistributionCardFilter(
-                              listOtherVillage:
-                                  widget.state.record.detected.desaLainnya,
-                              statusType: listItemTitleTab[1],
-                            ),
+                            // // show kecamatan
+                            // CheckDistributionCardFilter(
+                            //   listOtherVillage:
+                            //       widget.state.record.detected.desaLainnya,
+                            //   statusType: listItemTitleTab[1],
+                            // ),
 
-                            CheckDistributionCardFilter(
-                              listOtherVillage:
-                                  widget.state.record.detected.desaLainnya,
-                              statusType: listItemTitleTab[2],
-                            ),
+                            // CheckDistributionCardFilter(
+                            //   listOtherVillage:
+                            //       widget.state.record.detected.desaLainnya,
+                            //   statusType: listItemTitleTab[2],
+                            // ),
 
-                            CheckDistributionCardFilter(
-                              listOtherVillage:
-                                  widget.state.record.detected.desaLainnya,
-                              statusType: listItemTitleTab[3],
-                            ),
+                            // CheckDistributionCardFilter(
+                            //   listOtherVillage:
+                            //       widget.state.record.detected.desaLainnya,
+                            //   statusType: listItemTitleTab[3],
+                            // ),
                           ],
                           // isExpand: true,
                           heightTabBarView: widget
