@@ -45,10 +45,10 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
   List<dynamic> dataAnnouncement;
   final formatter = new NumberFormat("#,###");
   List<String> listItemTitleTab = [
-    Dictionary.rdtAntibodi,
+    //Dictionary.rdtAntibodi,
     Dictionary.rdtAntigen,
     Dictionary.pcrSpesimen,
-    Dictionary.pcrNewCase
+    //Dictionary.pcrNewCase
   ];
   Map<String, dynamic> label;
   Map<String, dynamic> helpBottomSheet;
@@ -97,37 +97,50 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
       listItemTitleTab: listItemTitleTab,
       unselectedLabelColor: Colors.grey,
       onTap: (index) {
+        // if (index == 0) {
+        //   setState(() {
+        //     lastUpdate =
+        //         unixTimeStampToDate(widget.document.get('last_update').seconds);
+        //   });
+        //   AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
+        // } else if (index == 1) {
+        //   setState(() {
+        //     lastUpdate = unixTimeStampToDate(
+        //         widget.documentRdtAntigen.get('last_update').seconds);
+        //   });
+        //   AnalyticsHelper.setLogEvent(Analytics.tappedRDTAntigen);
+        // } else if (index == 2) {
+        //   setState(() {
+        //     lastUpdate = unixTimeStampToDate(
+        //         widget.documentPCR.get('last_update').seconds);
+        //   });
+        //   AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
+        // } else if (index == 3) {
+        //   setState(() {
+        //     lastUpdate = unixTimeStampToDate(
+        //         widget.documentPCRIndividu.get('last_update').seconds);
+        //   });
+        //   AnalyticsHelper.setLogEvent(Analytics.tappedPCRNewCase);
+        // }
         if (index == 0) {
-          setState(() {
-            lastUpdate =
-                unixTimeStampToDate(widget.document.get('last_update').seconds);
-          });
-          AnalyticsHelper.setLogEvent(Analytics.tappedRDT);
-        } else if (index == 1) {
           setState(() {
             lastUpdate = unixTimeStampToDate(
                 widget.documentRdtAntigen.get('last_update').seconds);
           });
           AnalyticsHelper.setLogEvent(Analytics.tappedRDTAntigen);
-        } else if (index == 2) {
+        } else if (index == 1) {
           setState(() {
             lastUpdate = unixTimeStampToDate(
                 widget.documentPCR.get('last_update').seconds);
           });
           AnalyticsHelper.setLogEvent(Analytics.tappedPCR);
-        } else if (index == 3) {
-          setState(() {
-            lastUpdate = unixTimeStampToDate(
-                widget.documentPCRIndividu.get('last_update').seconds);
-          });
-          AnalyticsHelper.setLogEvent(Analytics.tappedPCRNewCase);
         }
       },
       tabBarView: <Widget>[
-        _buildContent(
-            titleHeader: label['pcr_rdt']['rdt_antibodi']['sum'],
-            total: widget.document.get('total'),
-            announcementArray: 0),
+        // _buildContent(
+        //     titleHeader: label['pcr_rdt']['rdt_antibodi']['sum'],
+        //     total: widget.document.get('total'),
+        //     announcementArray: 0),
         _buildContent(
             titleHeader: label['pcr_rdt']['rdt_antigen']['sum'],
             total: widget.documentRdtAntigen.get('total'),
@@ -136,10 +149,10 @@ class _RapidTestDetailState extends State<RapidTestDetail> {
             titleHeader: label['pcr_rdt']['pcr_spesimen']['sum'],
             total: widget.documentPCR.get('total'),
             announcementArray: 2),
-        _buildContent(
-            titleHeader: label['pcr_rdt']['pcr_kasus_baru']['sum'],
-            total: widget.documentPCRIndividu.get('total'),
-            announcementArray: 3),
+        // _buildContent(
+        //     titleHeader: label['pcr_rdt']['pcr_kasus_baru']['sum'],
+        //     total: widget.documentPCRIndividu.get('total'),
+        //     announcementArray: 3),
       ],
       isExpand: true,
     );

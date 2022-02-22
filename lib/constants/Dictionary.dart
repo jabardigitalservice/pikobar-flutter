@@ -75,8 +75,8 @@ class Dictionary {
   static String otpHasBeenSent = 'OTP telah dikirimkan ke nomor';
   static String searchLocation = 'Cari Lokasi';
   static String rdtAntibodi = 'RDT Antibodi';
-  static String rdtAntigen = 'RDT Antigen';
-  static String pcrSpesimen = 'PCR Spesimen';
+  static String rdtAntigen = 'Pengujian Antigen';
+  static String pcrSpesimen = 'Pengujian PCR (Spesimen)';
   static String pcrNewCase = 'PCR Orang Kasus Baru';
   static String emergencyNumber = 'No Darurat';
   static String referralHospital = 'RS Rujukan COVID-19';

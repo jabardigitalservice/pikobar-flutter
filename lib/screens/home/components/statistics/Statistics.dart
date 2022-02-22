@@ -307,7 +307,7 @@ class _StatisticsState extends State<Statistics> {
                     fontFamily: FontsFamily.lato,
                     fontSize: Dimens.textTitleSize),
               ),
-              _buildMore(statisticState)
+              //_buildMore(statisticState)
             ],
           ),
           const SizedBox(height: 10),
