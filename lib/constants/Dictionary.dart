@@ -300,8 +300,8 @@ class Dictionary {
   static String cantFindLocation =
       'Maaf, lokasi yang Anda cari tidak ditemukan. Coba ulangi kembali';
   static String informationLocation =
-      '<p>Data yang ditampilkan adalah data 24 jam terakhir. '
-      'Jika ada perbedaan data, maka yang dipakai adalah data dari Dinas Kesehatan Provinsi Jawa Barat atau Dinas Kesehatan masing-masing Kabupaten/Kota di Jawa Barat.</p> <p>Sumber Data:<br>Terkonfirmasi: Pusdatin Kemenkes<br>Kontak Erat, Suspek dan Probable: Aplikasi Pelaporan Covid-19 Jawa Barat</p>';
+      '<p>Data yang ditampilkan adalah data 24 jam terakhir.</p>'
+      '<p>Sumber Data:<br>Laporan Harian Kemenkes</p>';
   static String disclaimer = 'Disclaimer/Penyangkalan';
   static String downloadAttachment = 'Unduh Lampiran';
   static String downloadImage = 'Unduh Gambar';

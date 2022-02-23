@@ -98,7 +98,7 @@ class _BrowserScreenState extends State<BrowserScreen> {
                         useShouldOverrideUrlLoading: true,
                         userAgent: Platform.isAndroid
                             ? "Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.87 Mobile Safari/537.36"
-                            : "Mozilla/5.0 (iPhone; CPU iPhone OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Mobile/15E148 Safari/604.1",
+                            : "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.2 Mobile/15E148 Safari/604.1",
                       ),
                       android: AndroidInAppWebViewOptions(
                           allowContentAccess: true,
