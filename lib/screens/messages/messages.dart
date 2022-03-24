@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
+import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
 import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
@@ -50,46 +51,62 @@ class _MessagesState extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FutureBuilder<int>(
-            future: MessageRepository().hasUnreadData(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data != 0) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 30),
-                  child: RaisedButton(
-                    color: ColorBase.primaryLightGreen,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: ColorBase.primaryGreen)),
-                    onPressed: () async {
-                      await AnalyticsHelper.setLogEvent(
-                          Analytics.tappedReadAllMessage);
-                      await MessageRepository().updateAllReadData();
-                      widget.indexScreenState.getCountMessage();
-                      setState(() {
-                        for (int i = 0; i < listMessage.length; i++) {
-                          listMessage[i].readAt = 1;
-                        }
-                      });
-                    },
-                    child: Text(
-                      Dictionary.markAsRead,
-                      style: TextStyle(
-                          color: ColorBase.primaryGreen,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: FontsFamily.roboto,
-                          fontSize: 11),
-                    ),
+      backgroundColor: Colors.white,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FutureBuilder<int>(
+          future: MessageRepository().hasUnreadData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data != 0) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 30),
+                child: RaisedButton(
+                  color: ColorBase.primaryLightGreen,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: ColorBase.primaryGreen)),
+                  onPressed: () async {
+                    await AnalyticsHelper.setLogEvent(
+                        Analytics.tappedReadAllMessage);
+                    await MessageRepository().updateAllReadData();
+                    widget.indexScreenState.getCountMessage();
+                    setState(() {
+                      for (int i = 0; i < listMessage.length; i++) {
+                        listMessage[i].readAt = 1;
+                      }
+                    });
+                  },
+                  child: Text(
+                    Dictionary.markAsRead,
+                    style: TextStyle(
+                        color: ColorBase.primaryGreen,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: FontsFamily.roboto,
+                        fontSize: 11),
                   ),
-                );
-              }
-              return Container();
-            }),
-        appBar: CustomAppBar.animatedAppBar(
-            title: Dictionary.message, showTitle: true, fontSize: 20),
-        body: _buildContent());
+                ),
+              );
+            }
+            return Container();
+          }),
+      appBar: CustomAppBar.animatedAppBar(
+          title: Dictionary.message, showTitle: true, fontSize: 20),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+        child: CustomBubbleTab(
+          titleHeader: Dictionary.message,
+          listItemTitleTab: ['General', 'Personal'],
+          indicatorColor: ColorBase.green,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.grey,
+          scrollController: _scrollController,
+          onTap: (index) {
+            setState(() {});
+          },
+          tabBarView: [_buildContent(), _buildContent()],
+          isExpand: true,
+        ),
+      ),
+    );
   }
 
   String _parseHtmlString(String htmlString) {
@@ -107,7 +124,7 @@ class _MessagesState extends State<Messages> {
           margin: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
           elevation: 0.2,
           child: Container(
-            margin: EdgeInsets.all(15.0),
+            margin: EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -173,7 +190,6 @@ class _MessagesState extends State<Messages> {
               return Container(
                 color: ColorBase.grey,
                 height: 1,
-                margin: EdgeInsets.symmetric(horizontal: Dimens.padding),
               );
             },
             itemBuilder: (context, index) {
@@ -187,7 +203,7 @@ class _MessagesState extends State<Messages> {
               return GestureDetector(
                 child: Container(
                   color: Colors.white,
-                  padding: EdgeInsets.all(Dimens.padding),
+                  padding: EdgeInsets.symmetric(vertical: Dimens.padding),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
