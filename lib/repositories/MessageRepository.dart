@@ -8,7 +8,8 @@ import 'package:sqflite/sqflite.dart';
 
 class MessageRepository {
   //insert data from server to database
-  Future<void> insertToDatabase(List<DocumentSnapshot> record) async {
+  Future<void> insertToDatabase(
+      List<DocumentSnapshot> record, String tableName) async {
     Database db = await DBProvider.db.database;
 
     for (int i = 0; i < record.length; i++) {
@@ -25,7 +26,7 @@ class MessageRepository {
       if (!hasNullField(messageModel)) {
         try {
           await db.insert(
-            'Messages',
+            tableName,
             messageModel.toJson(),
             conflictAlgorithm: ConflictAlgorithm.ignore,
           );

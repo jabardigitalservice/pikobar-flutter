@@ -113,7 +113,7 @@ class HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
-    await MessageRepository().insertToDatabase(snapshot.docs);
+    await MessageRepository().insertToDatabase(snapshot.docs, 'Messages');
     widget.indexScreenState.getCountMessage();
     isLoading = false;
   }
