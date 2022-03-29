@@ -8,7 +8,7 @@ import 'package:sqflite/sqflite.dart';
 class DBProvider {
   DBProvider._();
 
-  static const _dbVersion = 3;
+  static const _dbVersion = 4;
 
   static final _dbName = Environment.databaseNameProd;
 
@@ -47,9 +47,22 @@ class DBProvider {
       "published_at INTEGER"
       ")";
 
+  static const String _createTablePersonalMessages =
+      "CREATE TABLE PersonalMessages ("
+      "id TEXT PRIMARY KEY,"
+      "backlink TEXT,"
+      "content TEXT,"
+      "title TEXT,"
+      "action_title TEXT,"
+      "action_url TEXT,"
+      "read_at INTEGER,"
+      "published_at INTEGER"
+      ")";
+
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(_createTablePopupInformation);
     await db.execute(_createTableMessages);
+    await db.execute(_createTablePersonalMessages);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -57,8 +70,17 @@ class DBProvider {
       try {
         await db.execute("DROP TABLE IF EXISTS Messages");
         await db.execute(_createTableMessages);
+        await db.execute("DROP TABLE IF EXISTS PersonalMessages");
+        await db.execute(_createTablePersonalMessages);
       } catch (e) {
         print("Update v3 error : ${e.toString()}");
+      }
+    } else if (oldVersion < 4) {
+      try {
+        await db.execute("DROP TABLE IF EXISTS PersonalMessages");
+        await db.execute(_createTablePersonalMessages);
+      } catch (e) {
+        print("Update v4 error : ${e.toString()}");
       }
     }
   }

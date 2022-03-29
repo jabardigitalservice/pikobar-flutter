@@ -8,11 +8,15 @@ import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
+import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
+import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/parser.dart';
 
 class PersonalMessageScreen extends StatefulWidget {
-  PersonalMessageScreen({Key key}) : super(key: key);
+  final IndexScreenState indexScreenState;
+
+  PersonalMessageScreen({Key key, this.indexScreenState}) : super(key: key);
 
   @override
   State<PersonalMessageScreen> createState() => _PersonalMessageScreenState();
@@ -41,10 +45,10 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
 
   Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
     await MessageRepository()
-        .insertToDatabase(snapshot.docs, 'personal_messages');
-    // widget.indexScreenState.getCountMessage();
+        .insertToDatabase(snapshot.docs, 'PersonalMessages');
+    widget.indexScreenState.getCountMessage();
     listMessage.clear();
-    listMessage = await MessageRepository().getRecords();
+    listMessage = await MessageRepository().getRecords('PersonalMessages');
   }
 
   @override
@@ -154,7 +158,6 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
             },
           )
         : _buildLoading();
-    ;
   }
 
   _buildLoading() {
@@ -223,9 +226,16 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
   }
 
   _openDetail(MessageModel messageModel, int index) async {
-    // widget.indexScreenState.getCountMessage();
-    await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
-        arguments: messageModel.id);
+    widget.indexScreenState.getCountMessage();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MessageDetailScreen(
+                id: messageModel.id,
+                collection: 'personal_broadcasts',
+                tableName: 'PersonalMessages',
+              )),
+    );
     setState(() {
       listMessage[index].readAt = 1;
     });

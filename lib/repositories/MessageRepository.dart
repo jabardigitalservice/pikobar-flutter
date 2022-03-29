@@ -38,22 +38,22 @@ class MessageRepository {
   }
 
   //get detail message from firestore
-  Future<DocumentSnapshot> getDetail(String id) {
-    return FirebaseFirestore.instance.collection('broadcasts').doc(id).get();
+  Future<DocumentSnapshot> getDetail(String id, collection) {
+    return FirebaseFirestore.instance.collection(collection).doc(id).get();
   }
 
   //get data list message from local db
-  Future<List<MessageModel>> getRecords() async {
-    List<MessageModel> localRecords = await getLocalData();
+  Future<List<MessageModel>> getRecords(String tableName) async {
+    List<MessageModel> localRecords = await getLocalData(tableName);
 
     return localRecords;
   }
 
-  Future<bool> hasLocalData() async {
+  Future<bool> hasLocalData(String tableName) async {
     Database db = await DBProvider.db.database;
 
     int count = Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM Messages'));
+        await db.rawQuery('SELECT COUNT(*) FROM $tableName'));
 
     return count > 0;
   }
@@ -65,10 +65,10 @@ class MessageRepository {
         data.publishedAt == null;
   }
 
-  Future<bool> checkData(String id) async {
+  Future<bool> checkData(String id, String tableName) async {
     Database db = await DBProvider.db.database;
 
-    var res = await db.query("Messages",
+    var res = await db.query(tableName,
         columns: ["id"], where: 'id = ?', whereArgs: [id]);
 
     if (res.isNotEmpty) {
@@ -78,11 +78,11 @@ class MessageRepository {
     }
   }
 
-  Future<List<MessageModel>> getLocalData() async {
+  Future<List<MessageModel>> getLocalData(String tableName) async {
     Database db = await DBProvider.db.database;
 
-    var res =
-        await db.rawQuery('SELECT * FROM Messages ORDER BY published_at DESC');
+    var res = await db
+        .rawQuery('SELECT * FROM $tableName ORDER BY published_at DESC');
 
     List<MessageModel> list =
         res.isNotEmpty ? res.map((c) => MessageModel.fromJson(c)).toList() : [];
@@ -96,16 +96,19 @@ class MessageRepository {
     int count = Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM Messages WHERE read_at IS 0'));
 
-    return count;
+    int personalCount = Sqflite.firstIntValue(await db
+        .rawQuery('SELECT COUNT(*) FROM PersonalMessages WHERE read_at IS 0'));
+
+    return count + personalCount;
   }
 
   //Update read message
-  Future<int> updateData(MessageModel data) async {
+  Future<int> updateData(MessageModel data, String tableName) async {
     Database db = await DBProvider.db.database;
     int readAt =
         (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
     return await db.update(
-        'Messages',
+        tableName,
         {
           'backlink': data.backLink,
           'content': data.content,
@@ -120,17 +123,17 @@ class MessageRepository {
   }
 
   //Update all read message
-  Future<int> updateAllReadData() async {
+  Future<int> updateAllReadData(String tableName) async {
     Database db = await DBProvider.db.database;
     int readAt =
         (DateTime.now().toLocal().millisecondsSinceEpoch / 1000).round();
-    return await db.update('Messages', {'read_at': readAt});
+    return await db.update(tableName, {'read_at': readAt});
   }
 
   //Clear all data from db
-  Future<void> clearLocalData() async {
+  Future<void> clearLocalData(String tableName) async {
     Database db = await DBProvider.db.database;
 
-    await db.rawDelete('Delete from Messages');
+    await db.rawDelete('Delete from $tableName');
   }
 }

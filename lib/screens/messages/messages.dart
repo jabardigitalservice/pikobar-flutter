@@ -10,11 +10,12 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
-import 'package:pikobar_flutter/constants/Navigation.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
+import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
+import 'package:pikobar_flutter/screens/messages/personalMessageScreen.dart';
 import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 
@@ -67,7 +68,9 @@ class _MessagesState extends State<Messages> {
                   onPressed: () async {
                     await AnalyticsHelper.setLogEvent(
                         Analytics.tappedReadAllMessage);
-                    await MessageRepository().updateAllReadData();
+                    await MessageRepository().updateAllReadData('Messages');
+                    await MessageRepository()
+                        .updateAllReadData('PersonalMessages');
                     widget.indexScreenState.getCountMessage();
                     setState(() {
                       for (int i = 0; i < listMessage.length; i++) {
@@ -102,7 +105,12 @@ class _MessagesState extends State<Messages> {
           onTap: (index) {
             setState(() {});
           },
-          tabBarView: [_buildContent(), _buildContent()],
+          tabBarView: [
+            _buildContent(),
+            PersonalMessageScreen(
+              indexScreenState: widget.indexScreenState,
+            )
+          ],
           isExpand: true,
         ),
       ),
@@ -178,7 +186,7 @@ class _MessagesState extends State<Messages> {
     await MessageRepository().insertToDatabase(snapshot.docs, 'Messages');
     widget.indexScreenState.getCountMessage();
     listMessage.clear();
-    listMessage = await MessageRepository().getRecords();
+    listMessage = await MessageRepository().getRecords('Messages');
   }
 
   _buildContent() {
@@ -291,8 +299,16 @@ class _MessagesState extends State<Messages> {
 
   _openDetail(MessageModel messageModel, int index) async {
     widget.indexScreenState.getCountMessage();
-    await Navigator.pushNamed(context, NavigationConstrants.BroadcastDetail,
-        arguments: messageModel.id);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MessageDetailScreen(
+                id: messageModel.id,
+                collection: 'broadcasts',
+                tableName: 'Messages',
+              )),
+    );
+
     setState(() {
       listMessage[index].readAt = 1;
     });

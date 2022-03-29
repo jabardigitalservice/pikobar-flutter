@@ -21,19 +21,19 @@ class MessageDetailBloc extends Bloc<MessageDetailEvent, MessageDetailState> {
       yield MessageDetailLoading();
 
       DocumentSnapshot snapshot =
-          await messageRepository.getDetail(event.messageId);
+          await messageRepository.getDetail(event.messageId, event.collection);
 
       MessageModel data = MessageModel(
           id: snapshot.id,
-          backLink: getField(snapshot,'backlink'),
-          content: getField(snapshot,'content'),
-          title: getField(snapshot,'title'),
+          backLink: getField(snapshot, 'backlink'),
+          content: getField(snapshot, 'content'),
+          title: getField(snapshot, 'title'),
           actionTitle: getField(snapshot, 'action_title'),
           actionUrl: getField(snapshot, 'action_url'),
           publishedAt: snapshot.get('published_at').seconds,
           readAt: 100);
 
-      await MessageRepository().updateData(data);
+      await MessageRepository().updateData(data, event.tableName);
 
       yield MessageDetailLoaded(data: data);
     }
