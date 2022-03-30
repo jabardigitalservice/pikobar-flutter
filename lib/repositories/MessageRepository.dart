@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/configs/DBProvider.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
+import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -40,6 +41,21 @@ class MessageRepository {
   //get detail message from firestore
   Future<DocumentSnapshot> getDetail(String id, collection) {
     return FirebaseFirestore.instance.collection(collection).doc(id).get();
+  }
+
+  //get list message from firestore
+  Future<QuerySnapshot> getListFromCollection(String collection) {
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .orderBy('published_at', descending: true)
+        .get();
+  }
+
+  Future<List<MessageModel>> getListFromDatabase(QuerySnapshot snapshot,
+      String tableName, IndexScreenState indexScreenState) async {
+    await MessageRepository().insertToDatabase(snapshot.docs, tableName);
+    indexScreenState.getCountMessage();
+    return await MessageRepository().getRecords(tableName);
   }
 
   //get data list message from local db
