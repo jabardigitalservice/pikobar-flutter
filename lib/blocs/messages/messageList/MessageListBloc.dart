@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 
 import './Bloc.dart';
@@ -18,9 +19,10 @@ class MessageListBloc extends Bloc<MessageListEvent, MessageListState> {
   ) async* {
     if (event is MessageListLoad) {
       yield MessageListLoading();
+      String userId = await AuthRepository().getToken();
 
-      QuerySnapshot snapshot =
-          await messageRepository.getListFromCollection(event.collection);
+      QuerySnapshot snapshot = await messageRepository.getListFromCollection(
+          event.collection, userId);
 
       List<MessageModel> data = await messageRepository.getListFromDatabase(
           snapshot, event.tableName, event.indexScreenState);

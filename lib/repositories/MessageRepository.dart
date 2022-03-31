@@ -44,11 +44,30 @@ class MessageRepository {
   }
 
   //get list message from firestore
-  Future<QuerySnapshot> getListFromCollection(String collection) {
-    return FirebaseFirestore.instance
-        .collection(collection)
-        .orderBy('published_at', descending: true)
-        .get();
+  Future<QuerySnapshot> getListFromCollection(
+      String collection, String userId) {
+    if (collection == 'personal_broadcasts') {
+      final DocumentReference personalBroadcast = FirebaseFirestore.instance
+          .collection('personal_broadcasts')
+          .doc(userId);
+      personalBroadcast.get().then((snapshot) {
+        if (snapshot.exists) {
+        } else {
+          personalBroadcast.set({'user_id': userId});
+        }
+      });
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .doc(userId)
+          .collection('personal_messages')
+          .orderBy('published_at', descending: true)
+          .get();
+    } else {
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .orderBy('published_at', descending: true)
+          .get();
+    }
   }
 
   Future<List<MessageModel>> getListFromDatabase(QuerySnapshot snapshot,

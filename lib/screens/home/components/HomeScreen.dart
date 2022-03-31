@@ -95,16 +95,6 @@ class HomeScreenState extends State<HomeScreen>
     }).catchError((error) {});
   }
 
-  void getDataFromServerPersonalMessage() {
-    FirebaseFirestore.instance
-        .collection('personal_broadcasts')
-        .orderBy('published_at', descending: true)
-        .get()
-        .then((QuerySnapshot snapshot) {
-      insertIntoDatabase(snapshot, 'PersonalMessages');
-    }).catchError((error) {});
-  }
-
   setControllerTab() async {
     getAllUnreadData();
     String historyTab =
