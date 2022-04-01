@@ -39,8 +39,17 @@ class MessageRepository {
   }
 
   //get detail message from firestore
-  Future<DocumentSnapshot> getDetail(String id, collection) {
-    return FirebaseFirestore.instance.collection(collection).doc(id).get();
+  Future<DocumentSnapshot> getDetail(String id, collection, userId) {
+    if (collection == 'personal_broadcasts') {
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .doc(userId)
+          .collection('personal_messages')
+          .doc(id)
+          .get();
+    } else {
+      return FirebaseFirestore.instance.collection(collection).doc(id).get();
+    }
   }
 
   //get list message from firestore
