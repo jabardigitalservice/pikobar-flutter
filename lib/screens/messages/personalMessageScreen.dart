@@ -21,8 +21,9 @@ import 'package:html/parser.dart';
 
 class PersonalMessageScreen extends StatefulWidget {
   final IndexScreenState indexScreenState;
-
-  PersonalMessageScreen({Key key, this.indexScreenState}) : super(key: key);
+  static bool isSecondTab = false;
+  PersonalMessageScreen({Key key, this.indexScreenState, isSecondTab})
+      : super(key: key);
 
   @override
   State<PersonalMessageScreen> createState() => _PersonalMessageScreenState();
@@ -37,7 +38,9 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
   @override
   void initState() {
     // AnalyticsHelper.setCurrentScreen(Analytics.message);
-
+    setState(() {
+      PersonalMessageScreen.isSecondTab = true;
+    });
     super.initState();
   }
 

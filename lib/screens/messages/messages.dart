@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
+import 'package:pikobar_flutter/blocs/authentication/Bloc.dart';
 import 'package:pikobar_flutter/blocs/messages/messageList/Bloc.dart';
 import 'package:pikobar_flutter/components/CustomAppBar.dart';
 import 'package:pikobar_flutter/components/CustomBubbleTab.dart';
@@ -14,6 +15,7 @@ import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
+import 'package:pikobar_flutter/repositories/AuthRepository.dart';
 import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
@@ -33,6 +35,8 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   final ScrollController _scrollController = ScrollController();
   List<MessageModel> listMessage = [];
+  bool isSecondTab = false;
+  final AuthRepository _authRepository = AuthRepository();
 
   @override
   void initState() {
@@ -42,67 +46,50 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FutureBuilder<int>(
-          future: MessageRepository().hasUnreadData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data != 0) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 30),
-                child: RaisedButton(
-                  color: ColorBase.primaryLightGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: ColorBase.primaryGreen)),
-                  onPressed: () async {
-                    await AnalyticsHelper.setLogEvent(
-                        Analytics.tappedReadAllMessage);
-                    await MessageRepository().updateAllReadData('Messages');
-                    await MessageRepository()
-                        .updateAllReadData('PersonalMessages');
-                    widget.indexScreenState.getCountMessage();
-                    setState(() {
-                      for (int i = 0; i < listMessage.length; i++) {
-                        listMessage[i].readAt = 1;
-                      }
-                    });
-                  },
-                  child: Text(
-                    Dictionary.markAsRead,
-                    style: TextStyle(
-                        color: ColorBase.primaryGreen,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: FontsFamily.roboto,
-                        fontSize: 11),
-                  ),
-                ),
-              );
-            }
+    return BlocProvider<AuthenticationBloc>(
+      create: (BuildContext context) =>
+          AuthenticationBloc(authRepository: _authRepository)
+            ..add(AppStarted()),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton:
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: (
+          BuildContext context,
+          AuthenticationState state,
+        ) {
+          if (state is AuthenticationUnauthenticated) {
+            return PersonalMessageScreen.isSecondTab
+                ? Container()
+                : readAllButton();
+          } else if (state is AuthenticationAuthenticated) {
+            return readAllButton();
+          } else {
             return Container();
-          }),
-      appBar: CustomAppBar.animatedAppBar(
-          title: Dictionary.message, showTitle: true, fontSize: 20),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
-        child: CustomBubbleTab(
-          titleHeader: Dictionary.message,
-          listItemTitleTab: ['General', 'Personal'],
-          indicatorColor: ColorBase.green,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.grey,
-          scrollController: _scrollController,
-          onTap: (index) {
-            setState(() {});
-          },
-          tabBarView: [
-            _buildContent(),
-            PersonalMessageScreen(
-              indexScreenState: widget.indexScreenState,
-            )
-          ],
-          isExpand: true,
+          }
+        }),
+        appBar: CustomAppBar.animatedAppBar(
+            title: Dictionary.message, showTitle: true, fontSize: 20),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
+          child: CustomBubbleTab(
+            titleHeader: Dictionary.message,
+            listItemTitleTab: ['General', 'Personal'],
+            indicatorColor: ColorBase.green,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            scrollController: _scrollController,
+            onTap: (index) {
+              setState(() {});
+            },
+            tabBarView: [
+              _buildContent(),
+              PersonalMessageScreen(
+                indexScreenState: widget.indexScreenState,
+              )
+            ],
+            isExpand: true,
+          ),
         ),
       ),
     );
@@ -185,6 +172,7 @@ class _MessagesState extends State<Messages> {
             if (state is MessageListLoaded) {
               setState(() {
                 listMessage = state.data;
+                PersonalMessageScreen.isSecondTab = false;
               });
             }
           },
@@ -303,6 +291,46 @@ class _MessagesState extends State<Messages> {
             },
           ),
         ));
+  }
+
+  Widget readAllButton() {
+    return FutureBuilder<int>(
+        future: MessageRepository().hasUnreadData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != 0) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 30),
+              child: RaisedButton(
+                color: ColorBase.primaryLightGreen,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: ColorBase.primaryGreen)),
+                onPressed: () async {
+                  await AnalyticsHelper.setLogEvent(
+                      Analytics.tappedReadAllMessage);
+                  await MessageRepository().updateAllReadData('Messages');
+                  await MessageRepository()
+                      .updateAllReadData('PersonalMessages');
+                  widget.indexScreenState.getCountMessage();
+                  setState(() {
+                    for (int i = 0; i < listMessage.length; i++) {
+                      listMessage[i].readAt = 1;
+                    }
+                  });
+                },
+                child: Text(
+                  Dictionary.markAsRead,
+                  style: TextStyle(
+                      color: ColorBase.primaryGreen,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontsFamily.roboto,
+                      fontSize: 11),
+                ),
+              ),
+            );
+          }
+          return Container();
+        });
   }
 
   _openDetail(
