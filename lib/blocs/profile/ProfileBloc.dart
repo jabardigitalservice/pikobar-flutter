@@ -111,7 +111,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Stream<ProfileState> _loadSelfReportListToState(String otherUID) async* {
     yield ProfileLoading();
     await _subscription?.cancel();
-    await Future.delayed(Duration(seconds: 1));
     _subscription = profileRepository.getProfile(otherUID).listen((event) {
       add(ProfileUpdated(event));
     });
