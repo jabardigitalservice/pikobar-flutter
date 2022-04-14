@@ -2,6 +2,7 @@ class Analytics {
   // Screen Names
   static String home = 'Home';
   static String message = 'Pesan';
+  static String personalMessage = 'tapped_menu_pesan_personal';
   static String faq = 'FAQ';
   static String survey = 'Survei';
   static String phoneBookEmergency = 'Nomor Darurat';

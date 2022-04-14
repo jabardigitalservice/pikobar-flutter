@@ -5,6 +5,7 @@ import 'package:pikobar_flutter/blocs/messages/messageList/Bloc.dart';
 import 'package:pikobar_flutter/components/DialogTextOnly.dart';
 import 'package:pikobar_flutter/components/EmptyData.dart';
 import 'package:pikobar_flutter/components/Skeleton.dart';
+import 'package:pikobar_flutter/constants/Analytics.dart';
 import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
@@ -16,6 +17,7 @@ import 'package:pikobar_flutter/repositories/MessageRepository.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/screens/messages/messagesDetailSecreen.dart';
 import 'package:pikobar_flutter/screens/myAccount/OnboardLoginScreen.dart';
+import 'package:pikobar_flutter/utilities/AnalyticsHelper.dart';
 import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:html/parser.dart';
 
@@ -37,7 +39,7 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
 
   @override
   void initState() {
-    // AnalyticsHelper.setCurrentScreen(Analytics.message);
+    AnalyticsHelper.setCurrentScreen(Analytics.personalMessage);
     setState(() {
       PersonalMessageScreen.isSecondTab = true;
     });
