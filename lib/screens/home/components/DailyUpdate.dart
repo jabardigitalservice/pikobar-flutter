@@ -36,7 +36,9 @@ class _DailyUpdateScreenState extends State<DailyUpdateScreen> {
     return BlocBuilder<ImportantInfoListBloc, ImportantInfoListState>(
       builder: (context, state) {
         return state is ImportantInfoListLoaded
-            ? _buildContent(state.importantInfoList)
+            ? state.importantInfoList.isNotEmpty
+                ? _buildContent(state.importantInfoList)
+                : Container()
             : Container();
       },
     );
