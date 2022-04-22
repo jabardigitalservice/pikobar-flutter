@@ -74,7 +74,7 @@ class _MessagesState extends State<Messages> {
           padding: EdgeInsets.symmetric(horizontal: Dimens.padding),
           child: CustomBubbleTab(
             titleHeader: Dictionary.message,
-            listItemTitleTab: ['General', 'Personal'],
+            listItemTitleTab: [Dictionary.notification, Dictionary.myMessage],
             indicatorColor: ColorBase.green,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.grey,

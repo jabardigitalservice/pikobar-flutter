@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pikobar_flutter/configs/DBProvider.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/screens/home/IndexScreen.dart';
 import 'package:pikobar_flutter/utilities/FirestoreHelper.dart';
@@ -40,11 +41,11 @@ class MessageRepository {
 
   //get detail message from firestore
   Future<DocumentSnapshot> getDetail(String id, collection, userId) {
-    if (collection == 'personal_broadcasts') {
+    if (collection == kPersonalBroadcast) {
       return FirebaseFirestore.instance
           .collection(collection)
           .doc(userId)
-          .collection('personal_messages')
+          .collection(kPersonalMessages)
           .doc(id)
           .get();
     } else {
@@ -55,10 +56,9 @@ class MessageRepository {
   //get list message from firestore
   Future<QuerySnapshot> getListFromCollection(
       String collection, String userId) {
-    if (collection == 'personal_broadcasts') {
-      final DocumentReference personalBroadcast = FirebaseFirestore.instance
-          .collection('personal_broadcasts')
-          .doc(userId);
+    if (collection == kPersonalBroadcast) {
+      final DocumentReference personalBroadcast =
+          FirebaseFirestore.instance.collection(kPersonalBroadcast).doc(userId);
       personalBroadcast.get().then((snapshot) {
         if (snapshot.exists) {
         } else {
@@ -68,7 +68,7 @@ class MessageRepository {
       return FirebaseFirestore.instance
           .collection(collection)
           .doc(userId)
-          .collection('personal_messages')
+          .collection(kPersonalMessages)
           .orderBy('published_at', descending: true)
           .get();
     } else {

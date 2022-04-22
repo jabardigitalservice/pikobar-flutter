@@ -10,6 +10,7 @@ import 'package:pikobar_flutter/constants/Colors.dart';
 import 'package:pikobar_flutter/constants/Dictionary.dart';
 import 'package:pikobar_flutter/constants/Dimens.dart';
 import 'package:pikobar_flutter/constants/FontsFamily.dart';
+import 'package:pikobar_flutter/constants/collections.dart';
 import 'package:pikobar_flutter/environment/Environment.dart';
 import 'package:pikobar_flutter/models/MessageModel.dart';
 import 'package:pikobar_flutter/repositories/AuthRepository.dart';
@@ -39,7 +40,7 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
 
   @override
   void initState() {
-    AnalyticsHelper.setCurrentScreen(Analytics.personalMessage);
+    AnalyticsHelper.setLogEvent(Analytics.personalMessage);
     setState(() {
       PersonalMessageScreen.isSecondTab = true;
     });
@@ -112,7 +113,7 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
               return BlocProvider<MessageListBloc>(
                 create: (_) => MessageListBloc()
                   ..add(MessageListLoad(
-                      collection: 'personal_broadcasts',
+                      collection: kPersonalBroadcast,
                       indexScreenState: widget.indexScreenState,
                       tableName: 'PersonalMessages')),
                 child: BlocBuilder<MessageListBloc, MessageListState>(
@@ -121,7 +122,7 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
                         ? state.data.isEmpty
                             ? EmptyData(
                                 message: Dictionary.emptyData,
-                                desc: Dictionary.descEmptyData,
+                                desc: Dictionary.descEmptyMessage,
                                 isFlare: false,
                                 image:
                                     "${Environment.imageAssets}not_found.png",
@@ -337,7 +338,7 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
       MaterialPageRoute(
           builder: (context) => MessageDetailScreen(
                 id: messageModel.id,
-                collection: 'personal_broadcasts',
+                collection: kPersonalBroadcast,
                 tableName: 'PersonalMessages',
               )),
     );
