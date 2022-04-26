@@ -253,9 +253,11 @@ class Dictionary {
   static String textLogoutButton = 'Logout';
   static String people = 'Orang';
   static String emptyData = 'Informasi Tidak Ditemukan';
+  static String emptyMessage = 'Pesan Masih Kosong';
   static String descEmptyData =
       'Mohon maaf, sepertinya kami tidak memiliki informasi yang Anda cari';
-  static String descEmptyMessage = 'Tidak ada pesan untuk Anda saat ini';
+  static String descEmptyMessage =
+      'Anda belum memiliki pesan masuk. Tenang saja, jika terdapat informasi terbaru, Anda akan yang pertama kami beritahu.';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =

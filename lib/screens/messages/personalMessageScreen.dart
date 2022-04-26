@@ -121,11 +121,11 @@ class _PersonalMessageScreenState extends State<PersonalMessageScreen> {
                     return state is MessageListLoaded
                         ? state.data.isEmpty
                             ? EmptyData(
-                                message: Dictionary.emptyData,
+                                message: Dictionary.emptyMessage,
                                 desc: Dictionary.descEmptyMessage,
                                 isFlare: false,
                                 image:
-                                    "${Environment.imageAssets}not_found.png",
+                                    "${Environment.imageAssets}empty_message.png",
                               )
                             : ListView.separated(
                                 controller: _scrollController,

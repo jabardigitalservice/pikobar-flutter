@@ -13,8 +13,8 @@ publish_to: none
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # GDrive version 3.0.0+19
-# PlayStore version 2.4.2+30
-version: 2.4.6+35 # Staging Version
+# PlayStore version 2.4.8+37
+version: 2.4.8+37 # Staging Version
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

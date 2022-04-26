@@ -11,7 +11,6 @@ checkForceUpdate(BuildContext context, RemoteConfig remoteConfig) async {
   await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
     appVersion = packageInfo.version;
   });
-
   if (Platform.isAndroid) {
     bool forceUpdateRequired =
         remoteConfig.getString(FirebaseConfig.forceUpdateRequired) == 'false'
@@ -20,8 +19,9 @@ checkForceUpdate(BuildContext context, RemoteConfig remoteConfig) async {
     String storeUrl = remoteConfig.getString(FirebaseConfig.storeUrl);
     String currentVersion =
         remoteConfig.getString(FirebaseConfig.currentVersion);
-    
-    if (forceUpdateRequired && extractNumber(appVersion) < extractNumber(currentVersion)) {
+
+    if (forceUpdateRequired &&
+        extractNumber(appVersion) < extractNumber(currentVersion)) {
       showDialog(
           context: context,
           builder: (context) => WillPopScope(
@@ -42,12 +42,12 @@ Future<bool> checkVersion(RemoteConfig remoteConfig) async {
     appVersion = packageInfo.version;
   });
 
-  String currentVersion =
-  remoteConfig.getString(FirebaseConfig.currentVersion);
+  String currentVersion = remoteConfig.getString(FirebaseConfig.currentVersion);
 
   return (extractNumber(appVersion) < extractNumber(currentVersion));
 }
 
 int extractNumber(String version) {
-  return int.parse(version.replaceAll(RegExp("\\D+"),""));
+  print(int.tryParse(version.replaceAll(RegExp("\\D+"), "")));
+  return int.tryParse(version.replaceAll(RegExp("\\D+"), "")) ?? 0;
 }
