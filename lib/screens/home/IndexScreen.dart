@@ -294,8 +294,13 @@ class IndexScreenState extends State<IndexScreen> {
     } else if (data['target'] == 'broadcast') {
       if (data['id'] != null && data['id'] != 'null') {
         unawaited(Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                MessageDetailScreen(id: data['id'].toString().trim()))));
+            builder: (context) => MessageDetailScreen(
+                  id: data['id'].toString().trim(),
+                  collection: data['target'],
+                  tableName: data['target'] == 'broadcast'
+                      ? 'Messages'
+                      : 'PersonalMessages',
+                ))));
       } else {
         unawaited(Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => Messages(indexScreenState: this))));

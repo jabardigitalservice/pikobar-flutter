@@ -69,7 +69,7 @@ class HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     AnalyticsHelper.setCurrentScreen(Analytics.home);
-    getDataFromServer();
+    getDataFromServerBroadcast();
     setControllerTab();
     getAllUnreadData();
     super.initState();
@@ -85,13 +85,13 @@ class HomeScreenState extends State<HomeScreen>
     });
   }
 
-  void getDataFromServer() {
+  void getDataFromServerBroadcast() {
     FirebaseFirestore.instance
         .collection('broadcasts')
         .orderBy('published_at', descending: true)
         .get()
         .then((QuerySnapshot snapshot) {
-      insertIntoDatabase(snapshot);
+      insertIntoDatabase(snapshot, 'Messages');
     }).catchError((error) {});
   }
 
@@ -112,8 +112,9 @@ class HomeScreenState extends State<HomeScreen>
     }
   }
 
-  Future<void> insertIntoDatabase(QuerySnapshot snapshot) async {
-    await MessageRepository().insertToDatabase(snapshot.docs);
+  Future<void> insertIntoDatabase(
+      QuerySnapshot snapshot, String tableName) async {
+    await MessageRepository().insertToDatabase(snapshot.docs, tableName);
     widget.indexScreenState.getCountMessage();
     isLoading = false;
   }

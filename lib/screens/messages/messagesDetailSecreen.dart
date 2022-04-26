@@ -28,9 +28,10 @@ import 'package:pikobar_flutter/utilities/FormatDate.dart';
 import 'package:share/share.dart';
 
 class MessageDetailScreen extends StatefulWidget {
-  final String id;
+  final String id, collection, tableName;
 
-  MessageDetailScreen({Key key, this.id}) : super(key: key);
+  MessageDetailScreen({Key key, this.id, this.collection, this.tableName})
+      : super(key: key);
 
   @override
   _MessageDetailScreenState createState() => _MessageDetailScreenState();
@@ -57,7 +58,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<MessageDetailBloc>(
       create: (context) => _messageDetailBloc = MessageDetailBloc()
-        ..add(MessageDetailLoad(messageId: widget.id)),
+        ..add(MessageDetailLoad(
+            messageId: widget.id,
+            collection: widget.collection,
+            tableName: widget.tableName)),
       child: BlocBuilder<MessageDetailBloc, MessageDetailState>(
           builder: (context, state) {
         return Scaffold(

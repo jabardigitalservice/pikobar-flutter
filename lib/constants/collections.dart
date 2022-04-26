@@ -31,3 +31,5 @@ const String kEducationContent = 'education_content';
 const String kContactHistory = 'contact_history';
 const String kScores = 'scores';
 const String kIsolationCenter = 'isolation_center';
+const String kPersonalMessages = 'personal_messages';
+const String kPersonalBroadcast = 'personal_broadcasts';

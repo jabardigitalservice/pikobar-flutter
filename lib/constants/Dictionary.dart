@@ -102,6 +102,8 @@ class Dictionary {
   static String oxygenTherapy = 'Terapi Oksigen';
   static String confirmationDate = 'Tanggal Konfirmasi';
   static String testType = 'Jenis Tes';
+  static String notification = 'Notifikasi';
+  static String myMessage = 'Pesan saya';
 
   // Button Text
   static String cancel = 'Batal';
@@ -251,8 +253,11 @@ class Dictionary {
   static String textLogoutButton = 'Logout';
   static String people = 'Orang';
   static String emptyData = 'Informasi Tidak Ditemukan';
+  static String emptyMessage = 'Pesan Masih Kosong';
   static String descEmptyData =
       'Mohon maaf, sepertinya kami tidak memiliki informasi yang Anda cari';
+  static String descEmptyMessage =
+      'Anda belum memiliki pesan masuk. Tenang saja, jika terdapat informasi terbaru, Anda akan yang pertama kami beritahu.';
   static String updateAppAvailable =
       'Versi terbaru telah tersedia,\nsegera perbarui aplikasi Anda.';
   static String spreadRedaction =

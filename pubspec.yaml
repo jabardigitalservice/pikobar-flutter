@@ -13,8 +13,8 @@ publish_to: none
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # GDrive version 3.0.0+19
-# PlayStore version 2.4.2+30
-version: 2.4.6+35 # Staging Version
+# PlayStore version 2.4.8+37
+version: 2.4.8+37 # Staging Version
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
@@ -60,7 +60,9 @@ dependencies:
   flutter_downloader: ^1.5.2
   flutter_full_pdf_viewer: ^1.0.6
   flutter_html: ^1.0.2
-  flutter_inappwebview: ^4.0.0+4
+  flutter_inappwebview: 
+    git:
+      url: https://github.com/jaluowen/flutter-inappwebview.git
   flutter_local_notifications: ^3.0.1
   flutter_masked_text: ^0.8.0
   flutter_sticky_header: ^0.5.0

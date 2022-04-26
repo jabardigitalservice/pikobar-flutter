@@ -152,7 +152,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: const CircularProgressIndicator(),
                             );
                           } else if (state is ProfileLoaded) {
-                            return _buildContent(state.profile, _profileLoaded);
+                            return state.profile.exists
+                                ? _buildContent(state.profile, _profileLoaded)
+                                : Center(
+                                    child: const CircularProgressIndicator(),
+                                  );
                           } else {
                             return const Center(
                               child: const CircularProgressIndicator(),

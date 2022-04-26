@@ -51,16 +51,18 @@ class _StatisticsState extends State<Statistics> {
             ? BlocBuilder<StatisticsBloc, StatisticsState>(builder:
                 (BuildContext context, StatisticsState statisticState) {
                 return statisticState is StatisticsLoaded
-                    ? Column(
-                        children: <Widget>[
-                          _buildContent(statisticState.snapshot, remoteState,
-                              statisticState),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          _buildRapidTest(remoteState),
-                        ],
-                      )
+                    ? statisticState.snapshot.exists
+                        ? Column(
+                            children: <Widget>[
+                              _buildContent(statisticState.snapshot,
+                                  remoteState, statisticState),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              _buildRapidTest(remoteState),
+                            ],
+                          )
+                        : _buildLoading()
                     : _buildLoading();
               })
             : _buildLoading();
@@ -145,7 +147,9 @@ class _StatisticsState extends State<Statistics> {
                 urlStatistic = remoteState.remoteConfig
                     .getString(FirebaseConfig.pikobarUrl);
                 return rapidState is RapidTestLoaded
-                    ? _buildPcrTestBloc(remoteState, rapidState)
+                    ? rapidState.snapshot.exists
+                        ? _buildPcrTestBloc(remoteState, rapidState)
+                        : buildLoadingRapidTest()
                     : buildLoadingRapidTest();
               },
             ),
@@ -158,7 +162,9 @@ class _StatisticsState extends State<Statistics> {
       builder: (BuildContext context, PcrTestState pcrState) {
         this.rapidTestLoaded = rapidState;
         return pcrState is PcrTestLoaded
-            ? _buildRapidTestAntigenBloc(remoteState, rapidState, pcrState)
+            ? pcrState.snapshot.exists
+                ? _buildRapidTestAntigenBloc(remoteState, rapidState, pcrState)
+                : buildLoadingRapidTest()
             : buildLoadingRapidTest();
       },
     );
@@ -170,8 +176,10 @@ class _StatisticsState extends State<Statistics> {
       builder: (BuildContext context, RapidTestAntigenState rapidAntigenState) {
         if (rapidAntigenState is RapidTestAntigenLoaded) {
           this.rapidTestAntigenLoaded = rapidAntigenState;
-          return _buildPcrTestIndividuBloc(
-              remoteState, rapidState, pcrState, rapidAntigenState);
+          return rapidAntigenState.snapshot.exists
+              ? _buildPcrTestIndividuBloc(
+                  remoteState, rapidState, pcrState, rapidAntigenState)
+              : buildLoadingRapidTest();
         } else {
           return buildLoadingRapidTest();
         }
@@ -188,8 +196,10 @@ class _StatisticsState extends State<Statistics> {
       builder: (BuildContext context, PcrTestIndividuState pcrIndividuState) {
         if (pcrIndividuState is PcrTestIndividuLoaded) {
           this.pcrTestIndividuLoaded = pcrIndividuState;
-          return buildContentRapidTest(remoteState.remoteConfig, rapidState,
-              pcrState, rapidAntigenState, pcrIndividuState);
+          return pcrIndividuState.snapshot.exists
+              ? buildContentRapidTest(remoteState.remoteConfig, rapidState,
+                  pcrState, rapidAntigenState, pcrIndividuState)
+              : buildLoadingRapidTest();
         } else {
           return buildLoadingRapidTest();
         }
